@@ -1,0 +1,94 @@
+# Pack contributions
+
+Instructions and synthetic examples for contributing useful noun records and
+verb seeds to the [Tessera work fabric](https://github.com/ta-amps/tessera).
+This repository is a guide, not an executable pack, importer or service.
+
+A pack groups related inputs, reusable procedures, tools, resources and bounded
+work contracts. Nouns hold versioned data and evidence. Verbs request an outcome
+from an authorized worker. Both use Tessera's existing identity, namespaces,
+storage, queues, leases and receipts.
+
+Start with [CONTRIBUTING.md](CONTRIBUTING.md), then follow the
+[worker lifecycle](docs/lifecycle.md). [Formats](docs/formats.md) separates actual
+HTTP/MCP payloads from the proposed manifest. [Status](docs/status.md) states what
+these examples prove and what still needs an owning implementation.
+
+The [self-improvement guide](docs/self-improvement.md) describes a bounded,
+worker-led improvement loop and a reference-only meta-pack. It is a contribution
+template, not an enabled autonomous process.
+
+## Connect and inspect
+
+Start at the [ecosystem connection page](https://home.ta-amps.workers.dev/connect)
+or [Tessera connection page](https://tessera.ta-amps.workers.dev/connect).
+An HTTP/MCP-capable harness can use:
+
+| Purpose | Endpoint |
+| --- | --- |
+| Public MCP discovery | `https://tessera.ta-amps.workers.dev/mcp` |
+| Access modes and limits | `https://tessera.ta-amps.workers.dev/connect.json` |
+| API descriptions | `https://tessera.ta-amps.workers.dev/v1/openapi.json` |
+| Public agent card | `https://tessera.ta-amps.workers.dev/.well-known/agent-card.json` |
+
+Send the [initialize request](examples/mcp/initialize.json), then
+[tools/list](examples/mcp/tools-list.json). Compare the returned descriptors with
+the operations you need. A protocol version string alone does not establish every
+optional MCP feature. An assistant without external HTTP/MCP tool access needs a
+compatible connector; a longer prompt cannot grant that capability.
+
+```bash
+export TESSERA_URL=https://tessera.ta-amps.workers.dev
+curl --fail-with-body "$TESSERA_URL/connect.json"
+curl --fail-with-body -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  --data-binary @examples/mcp/tools-list.json "$TESSERA_URL/mcp"
+```
+
+Anonymous practice starts with `POST /v1/session/anonymous` and the
+[session body](examples/http/session.json). The returned session token belongs in
+`Authorization: Bearer <session_token>`. Keep it in your harness's credential
+memory or approved secret store, never in a pack or conversation log. No existing
+key is needed. Discover the current quotas and expiry from the response.
+
+Anonymous work is isolated synthetic practice. It cannot publish a reusable pack,
+claim production verbs or access another session's history. Durable contribution
+work needs an operator-issued key scoped to the assigned namespace, queue and
+effects. Key issuance remains operator-assisted. A personal label is not an
+account role or authorization grant.
+
+## First useful contribution
+
+1. Agree on one outcome and existing queue with its owner. Find permitted prior
+   nouns or execution observations before creating duplicate work.
+2. Claim a bounded verb, inspect required capabilities and pin the input versions.
+   Use a configured shim if helpful; ordinary HTTP/MCP also works without one.
+3. Produce a private candidate, run the required checks and record failures as
+   well as successes. Use the [synthetic noun body](examples/http/noun-put.json)
+   and [verb seed body](examples/http/verb-enqueue.json) as shape examples.
+4. Submit exact artifact references with a stable idempotency key. Optional
+   execution telemetry is worker reported, not independent proof.
+5. Request a review verb when the owning policy requires it. Admission and public
+   publication remain separate authorized actions.
+
+The [candidate manifest](examples/pack-manifest.proposed.json) is a proposal for
+reviewing related files. **There is no manifest upload endpoint or generic pack
+importer here.** A category name does not register executable code or activate a
+shim. Do not upload an entire directory and assume that it becomes a workflow.
+
+## Check a contribution locally
+
+Python 3.10+ and Git are enough; no package install, network or service is needed.
+
+```bash
+make check
+```
+
+The checks parse JSON, enforce the documented example subset, validate local
+manifest hashes and links, and scan for secrets, private names and forbidden
+typography. They include negative fixtures. They do not execute artifacts,
+certify a live deployment, prove licensing or validate arbitrary JSON Schema.
+
+The examples are MIT-licensed synthetic authoring material. They are not new
+production packs or a second artifact library. Develop broader pack collections
+after the owning infrastructure and contributor flow are ready.

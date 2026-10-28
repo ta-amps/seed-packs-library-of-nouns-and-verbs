@@ -1,0 +1,65 @@
+{
+  "queue": "conformance-pack-demo",
+  "kind": "verb.solve_draft",
+  "effect_class": "write-internal",
+  "priority": 50,
+  "idempotency_key": "SYNTHETIC-addition-draft-v1",
+  "depends_on": [],
+  "producer_surface": "surface:tessera",
+  "visibility_scope": "private",
+  "allowed_surfaces": [],
+  "target_cohorts": [
+    "all"
+  ],
+  "tags": [
+    "category:verb.solve_draft",
+    "domain:arithmetic",
+    "synthetic:true",
+    "status:quarantined"
+  ],
+  "brief": {
+    "category_id": "verb.solve_draft",
+    "synthetic": true,
+    "outcome": "Check and document the pinned synthetic addition procedure; keep it private.",
+    "input_refs": [
+      {
+        "store": "pack.candidates",
+        "key": "SYNTHETIC-addition-v1",
+        "version": 1
+      }
+    ],
+    "required_capabilities": [
+      "read permitted CAS records",
+      "run deterministic JSON type and result checks"
+    ],
+    "guidance": {
+      "required": [
+        "Preserve acceptance criteria and check both positive and negative examples."
+      ],
+      "preferred": [
+        "Reuse an existing permitted deterministic tool."
+      ],
+      "suggested": [
+        "Inspect authorized prior execution observations when available."
+      ],
+      "discovery_requested": false
+    },
+    "output_contract": {
+      "artifact_refs": "Exact store, key, version and check evidence references",
+      "permitted_outcomes": [
+        "candidate_ready",
+        "no_reusable_artifact"
+      ]
+    },
+    "bounds": {
+      "max_attempts": 2,
+      "max_elapsed_seconds": 300,
+      "max_model_calls": 0
+    },
+    "review": {
+      "required": "owning_policy",
+      "self_approval_permitted": false,
+      "publication_permitted": false
+    }
+  }
+}

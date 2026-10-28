@@ -1,0 +1,83 @@
+{
+  "format": "ta-amps.meta-pack.reference.v1",
+  "status": "reference_only",
+  "active": false,
+  "title": "SYNTHETIC bounded method-improvement contract",
+  "hypothesis": "A smaller typed procedure may reduce invalid payloads on a declared task family.",
+  "source_runs": [],
+  "source_reason": "Replace with permitted real run ids and immutable evidence references.",
+  "candidate_changes": [
+    "one versioned procedure or prompt definition"
+  ],
+  "protected_controls": [
+    "evaluation_contract",
+    "holdout_definition",
+    "permission_policy",
+    "budget_policy"
+  ],
+  "controls_mutable_by_candidate": false,
+  "evaluation": {
+    "baseline_ref": null,
+    "candidate_ref": null,
+    "evaluator_ref": null,
+    "reason": "No actual artifacts or evaluator are selected in this reference example.",
+    "splits": {
+      "adaptation": [],
+      "development": [],
+      "holdout": [],
+      "partition_rule": "Group by source task family and tenant; avoid cross-split near-duplicates."
+    },
+    "required_checks": [
+      "baseline and candidate under comparable conditions",
+      "positive expected behavior",
+      "malformed input and denied-authority controls",
+      "scope and data leakage checks"
+    ],
+    "measurements": {
+      "paired_outcome_delta": null,
+      "cost_usd": null,
+      "latency_ms": null,
+      "confidence_calibration": null,
+      "reason": "Not measured; a reference contract is not a benchmark result."
+    }
+  },
+  "workflow": [
+    "observe permitted evidence",
+    "identify one gap",
+    "draft one versioned candidate",
+    "run pinned baseline, holdout and adversarial checks",
+    "compare measured outcomes with confounders",
+    "request policy-required independent review",
+    "authorized CAS admission or leave private",
+    "monitor and authorized rollback if supported"
+  ],
+  "bounds": {
+    "max_candidates": 1,
+    "max_attempts": 2,
+    "max_elapsed_seconds": 600,
+    "max_model_calls": 0,
+    "cost_ceiling_usd": 0
+  },
+  "stop_conditions": [
+    "lease or authority lost",
+    "budget exhausted",
+    "evaluation contract unavailable or changed",
+    "regression or unexplained data leakage"
+  ],
+  "review": {
+    "required": "owning_policy",
+    "candidate_may_approve_itself": false
+  },
+  "promotion": {
+    "automatic": false,
+    "requires": "owning admission authority and exact evaluated version",
+    "activation_endpoint": null,
+    "reason": "No generic rule activation or pack importer is implemented."
+  },
+  "negative_knowledge": {
+    "scope": "source_authorized_only",
+    "automatic_public_summary": false
+  },
+  "importer": null,
+  "importer_reason": "Reference-only authoring data, not an active pack or runtime."
+}

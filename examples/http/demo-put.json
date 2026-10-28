@@ -1,0 +1,80 @@
+{
+  "expected_version": 0,
+  "value": {
+    "category_id": "noun.reflex_procedure",
+    "synthetic": true,
+    "title": "SYNTHETIC integer addition procedure",
+    "license": "MIT",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "a",
+        "b"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "a": {
+          "type": "integer"
+        },
+        "b": {
+          "type": "integer"
+        }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "sum"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sum": {
+          "type": "integer"
+        }
+      }
+    },
+    "steps": [
+      "Validate the declared input types without coercion.",
+      "Add the two integers in an authorized deterministic tool.",
+      "Return the sum and run the fixed positive and negative checks."
+    ],
+    "checks": [
+      {
+        "input": {
+          "a": 1,
+          "b": 2
+        },
+        "expected": {
+          "sum": 3
+        }
+      },
+      {
+        "input": {
+          "a": "one",
+          "b": 2
+        },
+        "expected_error": "input_type_invalid"
+      }
+    ],
+    "provenance": {
+      "source": "synthetic authoring fixture",
+      "independently_verified": false
+    },
+    "measurements": {
+      "latency_ms": null,
+      "reason": "No worker evaluation is represented by this example."
+    }
+  },
+  "producer_surface": "surface:tessera",
+  "visibility_scope": "private",
+  "allowed_surfaces": [],
+  "target_cohorts": [
+    "all"
+  ],
+  "tags": [
+    "category:noun.reflex_procedure",
+    "domain:arithmetic",
+    "synthetic:true",
+    "spdx:MIT"
+  ]
+}
