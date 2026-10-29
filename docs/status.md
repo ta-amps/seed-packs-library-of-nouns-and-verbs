@@ -18,6 +18,7 @@ ready. Read the target's live schemas before sending work.
 | Provider usage | No model is called by this repository; example measurements are unknown unless explicitly measured |
 | Automatic ongoing work | None; no scheduler, daemon or server inference is installed |
 | Capability research | Proposed source-to-decision seed workflow; no feed/inbox connector, automated comparison or adoption service is active |
+| Research seed authoring | Tessera owns a bounded task builder with synthetic requests for discovery, collector preparation, schedule proposals and one scan; this repository remains a guide |
 
 Tessera remains the single authority for nouns, verbs, permissions, execution
 observations and receipts. A repository of examples is not another canonical
