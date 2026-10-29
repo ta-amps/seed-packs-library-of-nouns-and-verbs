@@ -211,6 +211,10 @@ class VerbTemplateChecks(unittest.TestCase):
             bp.instantiate(template, {"repo_profile": good, "review_plan": good}, {})
         with self.assertRaises(bp.PackError):
             bp.instantiate(template, {"repo_profile": good, "review_plan": good, "extra": good}, {"family": "cost"})
+        for params in ({"family": "nonsense"}, {"family": "cost", "allow_sandboxed_runs": "yes"},
+                       {"family": "cost", "output_store": "Bad Store"}):
+            with self.subTest(params=params), self.assertRaises(bp.PackError):
+                bp.instantiate(template, {"repo_profile": good, "review_plan": good}, params)
         instance = bp.instantiate(template, {"repo_profile": good, "review_plan": good}, {"family": "cost"})
         with self.assertRaises(bp.PackError):
             bp.instantiate(instance, {}, {})

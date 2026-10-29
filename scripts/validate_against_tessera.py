@@ -175,6 +175,30 @@ def load_packs() -> tuple[Any, dict[str, dict[str, bytes]]]:
     return build_packs, built
 
 
+def param_stand_in(spec: dict[str, Any]) -> Any:
+    """A structurally valid parameter value: the default, the first enum value or a schema-shaped guess."""
+    if "default" in spec:
+        return spec["default"]
+    schema = spec["schema"]
+    if schema.get("enum"):
+        return schema["enum"][0]
+    kind = schema.get("type")
+    if kind == "integer":
+        return int(schema.get("minimum", 1))
+    if kind == "boolean":
+        return False
+    if kind == "object":
+        return {}
+    if kind == "array":
+        return []
+    import re  # noqa: PLC0415
+
+    for guess in ("a", "A", "stand-in", "x"):
+        if re.search(schema.get("pattern", ""), guess):
+            return guess
+    raise ValueError("no stand-in value fits the parameter schema")
+
+
 def expect_rejection(action: Any) -> str:
     try:
         result = action()
@@ -277,14 +301,7 @@ def validate(t: Tessera, build_packs: Any, built: dict[str, dict[str, bytes]]) -
                     pin = {"store": stand_in["store"], "key": stand_in["key"], "version": 1,
                            "value_sha256": t.value_sha256(stand_in["value"])}
                     slots[name] = [pin] if slot["many"] else pin
-                params = {name: (spec_["default"] if "default" in spec_ else
-                                 (spec_["schema"].get("enum") or [None])[0] if spec_["schema"].get("enum") else None)
-                          for name, spec_ in brief["param_specs"].items()}
-                params = {k: v for k, v in params.items() if v is not None}
-                missing = [k for k, s in brief["param_specs"].items() if s.get("required", True) and k not in params]
-                for name in missing:
-                    schema = brief["param_specs"][name]["schema"]
-                    params[name] = {"integer": 1, "string": "stand-in", "boolean": False, "object": {}}.get(schema.get("type"), "stand-in")
+                params = {name: param_stand_in(spec_) for name, spec_ in brief["param_specs"].items()}
                 instance = build_packs.instantiate(task, slots, params)
                 m.TaskSpec.model_validate(instance)
                 counts["instantiated_TaskSpec"] += 1

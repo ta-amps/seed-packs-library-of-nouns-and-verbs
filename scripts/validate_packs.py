@@ -33,10 +33,6 @@ BRIEF_FIELDS = {
     "dimensions", "dimension_basis", "relations",
 }
 BRIEF_OPTIONAL = {"follows_templates", "notes"}
-SCHEMA_KEYWORDS = {
-    "type", "enum", "const", "properties", "required", "additionalProperties", "items", "minItems",
-    "maxItems", "minLength", "maxLength", "pattern", "minimum", "maximum", "description",
-}
 MAX_PAYLOAD_BYTES = 32768
 MAX_README_LINES = 90
 
@@ -56,75 +52,9 @@ def load_contract(root: Path = ROOT) -> dict[str, Any]:
 # JSON Schema subset (documented keywords only)
 # ---------------------------------------------------------------------------
 
-TYPES = {
-    "object": lambda v: isinstance(v, dict),
-    "array": lambda v: isinstance(v, list),
-    "string": lambda v: isinstance(v, str),
-    "integer": lambda v: type(v) is int,
-    "number": lambda v: type(v) in (int, float) and math.isfinite(v),
-    "boolean": lambda v: type(v) is bool,
-    "null": lambda v: v is None,
-}
-
-
-def check_schema(schema: Any, where: str) -> None:
-    """A schema may use only the keywords this validator actually enforces."""
-    require(isinstance(schema, dict), f"{where}: schema must be an object")
-    unknown = set(schema) - SCHEMA_KEYWORDS
-    require(not unknown, f"{where}: unsupported schema keywords {sorted(unknown)}")
-    kinds = schema.get("type")
-    if kinds is not None:
-        for kind in kinds if isinstance(kinds, list) else [kinds]:
-            require(kind in TYPES, f"{where}: unknown type {kind!r}")
-    if "pattern" in schema:
-        re.compile(schema["pattern"])
-    for name, sub in schema.get("properties", {}).items():
-        check_schema(sub, f"{where}.{name}")
-    if "items" in schema:
-        check_schema(schema["items"], f"{where}[]")
-    if "additionalProperties" in schema:
-        require(type(schema["additionalProperties"]) is bool, f"{where}: additionalProperties must be a boolean")
-    for name in schema.get("required", []):
-        require(name in schema.get("properties", {}), f"{where}: required {name!r} has no property schema")
-
-
-def schema_errors(schema: dict[str, Any], value: Any, where: str = "$") -> list[str]:
-    errors: list[str] = []
-    kinds = schema.get("type")
-    if kinds is not None:
-        options = kinds if isinstance(kinds, list) else [kinds]
-        if not any(TYPES[kind](value) for kind in options):
-            return [f"{where}: expected {options}"]
-    if "enum" in schema and value not in schema["enum"]:
-        errors.append(f"{where}: not one of {schema['enum']}")
-    if "const" in schema and value != schema["const"]:
-        errors.append(f"{where}: must equal {schema['const']!r}")
-    if isinstance(value, str):
-        if len(value) < schema.get("minLength", 0) or len(value) > schema.get("maxLength", math.inf):
-            errors.append(f"{where}: length out of bounds")
-        if "pattern" in schema and not re.search(schema["pattern"], value):
-            errors.append(f"{where}: does not match pattern")
-    if type(value) in (int, float) and not isinstance(value, bool):
-        if value < schema.get("minimum", -math.inf) or value > schema.get("maximum", math.inf):
-            errors.append(f"{where}: out of range")
-    if isinstance(value, list):
-        if len(value) < schema.get("minItems", 0) or len(value) > schema.get("maxItems", math.inf):
-            errors.append(f"{where}: item count out of bounds")
-        if "items" in schema:
-            for i, item in enumerate(value):
-                errors += schema_errors(schema["items"], item, f"{where}[{i}]")
-    if isinstance(value, dict):
-        props = schema.get("properties", {})
-        for name in schema.get("required", []):
-            if name not in value:
-                errors.append(f"{where}: missing {name}")
-        if schema.get("additionalProperties") is False:
-            for name in sorted(set(value) - set(props)):
-                errors.append(f"{where}: unexpected {name}")
-        for name, sub in props.items():
-            if name in value:
-                errors += schema_errors(sub, value[name], f"{where}.{name}")
-    return errors
+TYPES = bp.TYPES
+check_schema = bp.check_schema
+schema_errors = bp.schema_errors
 
 
 # ---------------------------------------------------------------------------

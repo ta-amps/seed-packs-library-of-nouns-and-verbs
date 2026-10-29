@@ -18,6 +18,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -211,6 +212,92 @@ def text_list(value: Any, where: str, *, allow_empty: bool = False) -> list[str]
         if not isinstance(item, str) or not item.strip():
             fail(f"{where}: items must be non-empty strings")
     return list(value)
+
+
+# ---------------------------------------------------------------------------
+# JSON Schema subset: the keywords below are the only ones packs may use
+# ---------------------------------------------------------------------------
+
+SCHEMA_KEYWORDS = {
+    "type", "enum", "const", "properties", "required", "additionalProperties", "items", "minItems",
+    "maxItems", "minLength", "maxLength", "pattern", "minimum", "maximum", "description",
+}
+
+
+def _need(ok: bool, message: str) -> None:
+    if not ok:
+        raise PackError(message)
+
+
+TYPES = {
+    "object": lambda v: isinstance(v, dict),
+    "array": lambda v: isinstance(v, list),
+    "string": lambda v: isinstance(v, str),
+    "integer": lambda v: type(v) is int,
+    "number": lambda v: type(v) in (int, float) and math.isfinite(v),
+    "boolean": lambda v: type(v) is bool,
+    "null": lambda v: v is None,
+}
+
+
+def check_schema(schema: Any, where: str) -> None:
+    """A schema may use only the keywords this validator actually enforces."""
+    _need(isinstance(schema, dict), f"{where}: schema must be an object")
+    unknown = set(schema) - SCHEMA_KEYWORDS
+    _need(not unknown, f"{where}: unsupported schema keywords {sorted(unknown)}")
+    kinds = schema.get("type")
+    if kinds is not None:
+        for kind in kinds if isinstance(kinds, list) else [kinds]:
+            _need(kind in TYPES, f"{where}: unknown type {kind!r}")
+    if "pattern" in schema:
+        re.compile(schema["pattern"])
+    for name, sub in schema.get("properties", {}).items():
+        check_schema(sub, f"{where}.{name}")
+    if "items" in schema:
+        check_schema(schema["items"], f"{where}[]")
+    if "additionalProperties" in schema:
+        _need(type(schema["additionalProperties"]) is bool, f"{where}: additionalProperties must be a boolean")
+    for name in schema.get("required", []):
+        _need(name in schema.get("properties", {}), f"{where}: required {name!r} has no property schema")
+
+
+def schema_errors(schema: dict[str, Any], value: Any, where: str = "$") -> list[str]:
+    errors: list[str] = []
+    kinds = schema.get("type")
+    if kinds is not None:
+        options = kinds if isinstance(kinds, list) else [kinds]
+        if not any(TYPES[kind](value) for kind in options):
+            return [f"{where}: expected {options}"]
+    if "enum" in schema and value not in schema["enum"]:
+        errors.append(f"{where}: not one of {schema['enum']}")
+    if "const" in schema and value != schema["const"]:
+        errors.append(f"{where}: must equal {schema['const']!r}")
+    if isinstance(value, str):
+        if len(value) < schema.get("minLength", 0) or len(value) > schema.get("maxLength", math.inf):
+            errors.append(f"{where}: length out of bounds")
+        if "pattern" in schema and not re.search(schema["pattern"], value):
+            errors.append(f"{where}: does not match pattern")
+    if type(value) in (int, float) and not isinstance(value, bool):
+        if value < schema.get("minimum", -math.inf) or value > schema.get("maximum", math.inf):
+            errors.append(f"{where}: out of range")
+    if isinstance(value, list):
+        if len(value) < schema.get("minItems", 0) or len(value) > schema.get("maxItems", math.inf):
+            errors.append(f"{where}: item count out of bounds")
+        if "items" in schema:
+            for i, item in enumerate(value):
+                errors += schema_errors(schema["items"], item, f"{where}[{i}]")
+    if isinstance(value, dict):
+        props = schema.get("properties", {})
+        for name in schema.get("required", []):
+            if name not in value:
+                errors.append(f"{where}: missing {name}")
+        if schema.get("additionalProperties") is False:
+            for name in sorted(set(value) - set(props)):
+                errors.append(f"{where}: unexpected {name}")
+        for name, sub in props.items():
+            if name in value:
+                errors += schema_errors(sub, value[name], f"{where}.{name}")
+    return errors
 
 
 # ---------------------------------------------------------------------------
@@ -867,8 +954,12 @@ def instantiate(task: dict[str, Any], slots: dict[str, Any], params: dict[str, A
     for name, spec in brief["param_specs"].items():
         if spec.get("required", True) and filled_params.get(name) is None:
             fail(f"param {name!r} is required")
+    inputs = {"pinned": brief["inputs"]["pinned"], "slots": filled_slots, "params": filled_params}
+    problems = schema_errors(brief["input_schema"], inputs)
+    if problems:
+        fail(f"filled inputs do not match the template's input schema: {problems[:3]}")
     instance = copy.deepcopy(task)
-    instance["brief"]["inputs"] = {"pinned": brief["inputs"]["pinned"], "slots": filled_slots, "params": filled_params}
+    instance["brief"]["inputs"] = inputs
     instance["brief"]["instantiation"] = {"status": "instance", "template_idempotency_key": task["idempotency_key"]}
     prefix = task["idempotency_key"].rsplit(":", 1)[0]
     instance["idempotency_key"] = prefix + ":" + digest(
