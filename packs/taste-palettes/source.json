@@ -1,0 +1,1186 @@
+{
+  "pack_id": "taste-palettes",
+  "title": "Taste palettes",
+  "version": "0.1.0",
+  "summary": "Several versions of one brief with adjustable settings, shown side by side on any surface; the person's choice becomes a preference noun that later work can use within its scope.",
+  "dependencies": [],
+  "boundaries": [
+    "Only a person records a choice; silence is never a preference.",
+    "Preferences stay private and are used only within their scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "Taste palettes seed pack",
+      "value": {
+        "lets_workers": "Show a person a few versions of one brief side by side, each made with different adjustable settings, record which one they choose as a preference, and use that preference in later work, through any surface that can show the comparison.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "taste-palettes.draft-embodiments"
+            },
+            "when": "Once per option, as separate attempts with different settings."
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.assemble-comparison"
+            },
+            "when": "After two to four options exist; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.record-choice"
+            },
+            "when": "A person chooses, or chooses none; any surface can show the sheet."
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.update-preferences"
+            },
+            "when": "After each choice: does it agree with earlier ones?"
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.apply-preference"
+            },
+            "when": "In later work, when a pinned preference is in scope."
+          }
+        ],
+        "surface_note": "The comparison sheet is plain data. A website, app, chat client or CLI can show it; none of them stores the choice except through record-choice.",
+        "method": {
+          "$pin": "method"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "template.brief"
+        ],
+        [
+          "requires_noun",
+          "template.embodiment"
+        ],
+        [
+          "requires_noun",
+          "template.comparison-sheet"
+        ],
+        [
+          "requires_noun",
+          "template.preference"
+        ],
+        [
+          "requires_noun",
+          "template.preference-summary"
+        ],
+        [
+          "requires_noun",
+          "example.readme-tone"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How to make palettes that teach something",
+      "category_reason": "A reusable method with its guardrails for every palette.",
+      "value": {
+        "rules": [
+          "Change one to three settings at a time and hold everything else fixed, so a choice says something specific.",
+          "Show two to four options. Always allow none of these.",
+          "Label differences in plain words, such as calmer or more compact, not internal setting names.",
+          "Shuffle option order with a recorded seed so position does not decide.",
+          "Never infer a preference from silence or from a person's other data.",
+          "A preference is scoped to a medium and a use, and it can be contradicted by later choices."
+        ],
+        "confidence_rule": "One choice gives low confidence; agreement across three or more comparable choices gives high confidence; any contradiction caps confidence at medium until resolved.",
+        "privacy": "Preferences belong to the person who chose. Keep them private and never use them outside their scope."
+      }
+    },
+    {
+      "slug": "template.brief",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a palette brief: what to make, for whom, what stays fixed, which settings vary and the one question to ask",
+      "value": {
+        "describes": "a palette brief: what to make, for whom, what stays fixed, which settings vary and the one question to ask",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject",
+            "audience",
+            "purpose",
+            "medium",
+            "fixed",
+            "settings",
+            "question",
+            "decides"
+          ],
+          "properties": {
+            "subject": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "audience": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "medium": {
+              "type": "string",
+              "enum": [
+                "visual",
+                "text",
+                "motion",
+                "audio",
+                "code",
+                "layout"
+              ]
+            },
+            "fixed": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "settings": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "plain_label",
+                  "values",
+                  "default"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z_]+$"
+                  },
+                  "plain_label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "values": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 6,
+                    "items": {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    }
+                  },
+                  "default": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  }
+                }
+              }
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "decides": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "At most three settings vary.",
+          "fixed lists what every option keeps identical."
+        ],
+        "example": {
+          "subject": "SYNTHETIC: the first screen of a project README",
+          "audience": "Developers deciding in one minute whether to try the project",
+          "purpose": "Say who it is for, what it does and how to try it",
+          "medium": "text",
+          "fixed": [
+            "Facts and commands stay identical in every option.",
+            "No more than 8 lines."
+          ],
+          "settings": [
+            {
+              "name": "formality",
+              "plain_label": "How formal it sounds",
+              "values": [
+                "plain",
+                "neutral",
+                "formal"
+              ],
+              "default": "neutral"
+            },
+            {
+              "name": "density",
+              "plain_label": "How much fits on the screen",
+              "values": [
+                "airy",
+                "compact"
+              ],
+              "default": "airy"
+            }
+          ],
+          "question": "Which version would make you try the project?",
+          "decides": "The tone of the project's README first screens."
+        }
+      },
+      "category_reason": "A brief frames a hypothesis about which settings fit a purpose; choices test it."
+    },
+    {
+      "slug": "template.embodiment",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: one option made from the brief with one settings vector",
+      "value": {
+        "describes": "one option made from the brief with one settings vector",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "brief_ref",
+            "alternative",
+            "settings_vector",
+            "medium",
+            "asset",
+            "generated"
+          ],
+          "properties": {
+            "brief_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "alternative": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1,
+              "pattern": "^[A-D]$"
+            },
+            "settings_vector": {
+              "type": "object"
+            },
+            "medium": {
+              "type": "string",
+              "enum": [
+                "visual",
+                "text",
+                "motion",
+                "audio",
+                "code",
+                "layout"
+              ]
+            },
+            "asset": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "inline_text",
+                    "blob"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 4000
+                },
+                "blob_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "content_type": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 80
+                }
+              }
+            },
+            "generated": {
+              "type": "boolean"
+            },
+            "notes": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "Only the brief's settings differ between options.",
+          "generated is true when a model made the asset."
+        ]
+      },
+      "category_reason": "An embodiment binds one settings vector to a rendered or written asset, like a scene variant."
+    },
+    {
+      "slug": "template.comparison-sheet",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: the side-by-side sheet any surface can show: options, plain differences and a none option",
+      "value": {
+        "describes": "the side-by-side sheet any surface can show: options, plain differences and a none option",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "brief_ref",
+            "question",
+            "options",
+            "includes_no_preference",
+            "layout"
+          ],
+          "properties": {
+            "brief_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "options": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "embodiment_ref",
+                  "settings_vector",
+                  "plain_difference"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1,
+                    "pattern": "^[A-D]$"
+                  },
+                  "embodiment_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "settings_vector": {
+                    "type": "object"
+                  },
+                  "plain_difference": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "includes_no_preference": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "layout": {
+              "type": "string",
+              "enum": [
+                "side_by_side",
+                "stacked"
+              ]
+            },
+            "order_seed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "rules": [
+          "includes_no_preference is always true.",
+          "order_seed records how options were shuffled."
+        ]
+      },
+      "category_reason": "A comparison sheet is a declarative layout binding options for display."
+    },
+    {
+      "slug": "template.preference",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one person's recorded choice, its scope and what would show it is wrong",
+      "value": {
+        "describes": "one person's recorded choice, its scope and what would show it is wrong",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "brief_ref",
+            "sheet_ref",
+            "choice",
+            "chosen_settings",
+            "scope",
+            "confidence",
+            "falsified_when",
+            "recorded_by",
+            "recorded_at"
+          ],
+          "properties": {
+            "brief_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "sheet_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "choice": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "none"
+              ]
+            },
+            "chosen_settings": {
+              "type": "object"
+            },
+            "rejected": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1,
+                "pattern": "^[A-D]$"
+              }
+            },
+            "reason_verbatim": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            },
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "medium",
+                "applies_to"
+              ],
+              "properties": {
+                "medium": {
+                  "type": "string",
+                  "enum": [
+                    "visual",
+                    "text",
+                    "motion",
+                    "audio",
+                    "code",
+                    "layout"
+                  ]
+                },
+                "applies_to": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "audience": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                }
+              }
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "falsified_when": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "recheck_after": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "recorded_by": {
+              "type": "string",
+              "enum": [
+                "human"
+              ]
+            },
+            "recorded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "recorded_by is human.",
+          "reason_verbatim is the person's own words or empty; never paraphrase into it."
+        ],
+        "example": {
+          "brief_ref": "SYNTHETIC brief pin",
+          "sheet_ref": "SYNTHETIC comparison sheet pin",
+          "choice": "B",
+          "chosen_settings": {
+            "formality": "plain",
+            "density": "airy"
+          },
+          "rejected": [
+            "A",
+            "C"
+          ],
+          "reason_verbatim": "B tells me what to type first.",
+          "scope": {
+            "medium": "text",
+            "applies_to": "README first screens",
+            "audience": "developers"
+          },
+          "confidence": "low",
+          "falsified_when": "The same person picks a formal option in two of the next three comparable choices.",
+          "recheck_after": "2027-01-29",
+          "recorded_by": "human",
+          "recorded_at": "2026-10-29"
+        }
+      },
+      "category_reason": "A preference is a falsifiable hypothesis about taste that later choices corroborate or contradict."
+    },
+    {
+      "slug": "template.preference-summary",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: what several choices in one scope agree on, with support counts and contradictions",
+      "value": {
+        "describes": "what several choices in one scope agree on, with support counts and contradictions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scope",
+            "tendencies",
+            "contradictions",
+            "evidence_count",
+            "confidence"
+          ],
+          "properties": {
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "medium",
+                "applies_to"
+              ],
+              "properties": {
+                "medium": {
+                  "type": "string",
+                  "enum": [
+                    "visual",
+                    "text",
+                    "motion",
+                    "audio",
+                    "code",
+                    "layout"
+                  ]
+                },
+                "applies_to": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "tendencies": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "setting",
+                  "preferred_value",
+                  "support",
+                  "against"
+                ],
+                "properties": {
+                  "setting": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "preferred_value": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  },
+                  "support": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "against": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "contradictions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "preference_ref",
+                  "note"
+                ],
+                "properties": {
+                  "preference_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "evidence_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "recheck_after": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "Counts come from recorded preferences only.",
+          "Contradictions are listed, not averaged away."
+        ]
+      },
+      "category_reason": "A preference summary is a consolidated, still-falsifiable hypothesis."
+    },
+    {
+      "slug": "example.readme-tone",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "SYNTHETIC palette brief: README first-screen tone",
+      "synthetic": true,
+      "value": {
+        "brief": {
+          "subject": "SYNTHETIC: the first screen of a project README",
+          "audience": "Developers deciding in one minute whether to try the project",
+          "purpose": "Say who it is for, what it does and how to try it",
+          "medium": "text",
+          "fixed": [
+            "Facts and commands stay identical in every option.",
+            "No more than 8 lines."
+          ],
+          "settings": [
+            {
+              "name": "formality",
+              "plain_label": "How formal it sounds",
+              "values": [
+                "plain",
+                "neutral",
+                "formal"
+              ],
+              "default": "neutral"
+            },
+            {
+              "name": "density",
+              "plain_label": "How much fits on the screen",
+              "values": [
+                "airy",
+                "compact"
+              ],
+              "default": "airy"
+            }
+          ],
+          "question": "Which version would make you try the project?",
+          "decides": "The tone of the project's README first screens."
+        },
+        "conforms_to": {
+          "$pin": "template.brief"
+        },
+        "option_vectors": [
+          {
+            "formality": "plain",
+            "density": "airy"
+          },
+          {
+            "formality": "neutral",
+            "density": "compact"
+          },
+          {
+            "formality": "formal",
+            "density": "airy"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.brief",
+          "synthetic example of the template"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "draft-embodiments",
+      "kind": "verb.solve_draft",
+      "title": "Make one option",
+      "claimant": "agent",
+      "summary": "Make one version of the brief using one settings vector, keeping everything the brief fixes identical.",
+      "outcome": "A private embodiment noun. Run once per option as separate attempts with different settings.",
+      "ready_outcome": "embodiment_ready",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the palette brief."
+        }
+      ],
+      "params": {
+        "alternative": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1,
+            "pattern": "^[A-D]$"
+          },
+          "description": "Option label, A to D.",
+          "required": true
+        },
+        "settings_vector": {
+          "schema": {
+            "type": "object"
+          },
+          "description": "Value for each of the brief's settings.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "embodiment",
+          "template": "template.embodiment"
+        }
+      ],
+      "steps": [
+        "Verify the brief pin. Check that settings_vector names exactly the brief's settings with allowed values; otherwise return blocked.",
+        "Make the option. Keep every fixed item identical to the other options.",
+        "Mark generated true if a model made the asset."
+      ],
+      "acceptance": [
+        {
+          "id": "embodiment-matches-template",
+          "check": "The embodiment validates against template.embodiment's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "settings-valid",
+          "check": "settings_vector has exactly the brief's settings, each with an allowed value.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fixed-kept",
+          "check": "Everything the brief lists as fixed is unchanged.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "assemble-comparison",
+      "kind": "verb.compile_dag",
+      "title": "Assemble the comparison sheet",
+      "claimant": "agent",
+      "summary": "Put two to four options side by side with plain-language differences, a shuffled order and a none option.",
+      "outcome": "A private comparison sheet that any surface can show.",
+      "ready_outcome": "sheet_ready",
+      "model_use": "none",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the palette brief."
+        },
+        {
+          "name": "embodiments",
+          "category": "noun.scene_recipe",
+          "description": "Pins of two to four options.",
+          "many": true,
+          "max": 4
+        }
+      ],
+      "params": {
+        "order_seed": {
+          "schema": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Seed for shuffling the option order; recorded on the sheet.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "comparison_sheet",
+          "template": "template.comparison-sheet"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Require two to four embodiments of the same brief.",
+        "Shuffle the order deterministically from order_seed and assign labels A to D.",
+        "Describe each option's difference in plain words from its settings vector.",
+        "Always include the none option."
+      ],
+      "acceptance": [
+        {
+          "id": "sheet-matches-template",
+          "check": "The sheet validates against template.comparison-sheet's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-brief",
+          "check": "Every embodiment's brief_ref equals the pinned brief.",
+          "method": "deterministic"
+        },
+        {
+          "id": "order-reproducible",
+          "check": "Shuffling again with order_seed gives the same order.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 300
+      },
+      "follows": [
+        "taste-palettes.draft-embodiments"
+      ]
+    },
+    {
+      "slug": "record-choice",
+      "kind": "verb.vote_judge",
+      "title": "Record the person's choice",
+      "claimant": "human",
+      "summary": "A person looks at the sheet on any surface and picks an option or none; the choice becomes a preference noun.",
+      "outcome": "A private preference noun, or no_change when the person declines to choose.",
+      "ready_outcome": "choice_recorded",
+      "model_use": "none",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "comparison_sheet",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the comparison sheet."
+        }
+      ],
+      "produces": [
+        {
+          "name": "preference",
+          "template": "template.preference"
+        }
+      ],
+      "steps": [
+        "Look at every option before choosing. None of these is a fine answer.",
+        "Add a reason in your own words if you want to; it is optional.",
+        "The surface submits exactly what you chose; nobody chooses on your behalf."
+      ],
+      "acceptance": [
+        {
+          "id": "preference-matches-template",
+          "check": "The preference validates against template.preference's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "choice-on-sheet",
+          "check": "choice is one of the sheet's labels or none.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recorded-by-person",
+          "check": "recorded_by is human and the submitting key belongs to the person.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "capabilities": [
+        "view the comparison sheet on any surface",
+        "submit one choice"
+      ],
+      "follows": [
+        "taste-palettes.assemble-comparison"
+      ]
+    },
+    {
+      "slug": "update-preferences",
+      "kind": "verb.situate",
+      "title": "Place a new choice among earlier ones",
+      "claimant": "agent",
+      "summary": "Compare a new preference with earlier ones in the same scope and write a summary that counts agreement and lists contradictions.",
+      "outcome": "A private preference summary with corroborates or contradicts relations, or no_change when no earlier preference shares the scope.",
+      "ready_outcome": "summary_ready",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "new_preference",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the new preference."
+        },
+        {
+          "name": "prior_preferences",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of earlier preferences by the same person.",
+          "many": true,
+          "max": 40,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "preference_summary",
+          "template": "template.preference-summary"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Compare only preferences with the same person, medium and use.",
+        "Count support and against per setting from the preferences themselves.",
+        "Add corroborates or contradicts relations from the summary to each compared preference.",
+        "Apply the method's confidence rule; a contradiction caps confidence at medium."
+      ],
+      "acceptance": [
+        {
+          "id": "summary-matches-template",
+          "check": "The summary validates against template.preference-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-from-preferences",
+          "check": "Support and against counts equal the counts in the pinned preferences.",
+          "method": "deterministic"
+        },
+        {
+          "id": "relations-typed",
+          "check": "Every compared preference has exactly one corroborates or contradicts relation.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "taste-palettes.record-choice"
+      ]
+    },
+    {
+      "slug": "apply-preference",
+      "kind": "verb.solve_draft",
+      "title": "Use a preference in new work",
+      "claimant": "agent",
+      "summary": "Make something new for a later brief using pinned preferences that are in scope, and say which ones were applied and how.",
+      "outcome": "A private embodiment plus a list of applied and skipped preferences with reasons.",
+      "ready_outcome": "applied",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the new brief."
+        },
+        {
+          "name": "preferences",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of preference summaries or preferences to consider.",
+          "many": true,
+          "max": 10
+        }
+      ],
+      "params": {
+        "alternative": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1,
+            "pattern": "^[A-D]$"
+          },
+          "default": "A",
+          "description": "Label for the produced option."
+        }
+      },
+      "produces": [
+        {
+          "name": "embodiment",
+          "template": "template.embodiment"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Apply a preference only when its scope matches the new brief and its recheck date has not passed.",
+        "Prefer summaries over single choices; treat low confidence as a gentle default, not a rule.",
+        "List each preference as applied or skipped with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "embodiment-matches-template",
+          "check": "The embodiment validates against template.embodiment's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-preference-accounted",
+          "check": "Every pinned preference appears in applied or skipped.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scope-respected",
+          "check": "No applied preference is outside its scope or past its recheck date.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "output_fields": {
+        "applied": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "preference_ref",
+              "how"
+            ],
+            "properties": {
+              "preference_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "how": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "skipped": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "preference_ref",
+              "reason"
+            ],
+            "properties": {
+              "preference_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        }
+      },
+      "ready_requires": [
+        "applied",
+        "skipped"
+      ],
+      "follows": [
+        "taste-palettes.update-preferences"
+      ]
+    }
+  ]
+}

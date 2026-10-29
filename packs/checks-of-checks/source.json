@@ -1,0 +1,1133 @@
+{
+  "pack_id": "checks-of-checks",
+  "title": "Checks of checks",
+  "version": "0.1.0",
+  "summary": "Generate tests or rubric items for a verb's output and validate each one against known-good and known-bad examples, including mutations, before trusting it; with a worked example the validator recomputes.",
+  "dependencies": [
+    "tool-discovery"
+  ],
+  "boundaries": [
+    "A check is trusted only after it passes every known-good example and catches known-bad ones.",
+    "The author of a check does not build its only example set or review it.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "Checks of checks seed pack",
+      "value": {
+        "lets_workers": "Write tests or rubric items for any verb's output, then prove each check works before anyone trusts it: it must pass known-good examples and catch known-bad ones, including deliberate mutations.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "checks-of-checks.draft-checks"
+            },
+            "when": "For a verb output whose shape is defined by a template noun."
+          },
+          {
+            "verb": {
+              "$verb": "checks-of-checks.build-example-set"
+            },
+            "when": "Collect known-good outputs and known-bad ones, and add mutations."
+          },
+          {
+            "verb": {
+              "$verb": "checks-of-checks.validate-checks"
+            },
+            "when": "Run every check against every example; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "checks-of-checks.review-checks"
+            },
+            "when": "A different worker decides which checks to trust."
+          }
+        ],
+        "trust_rule": {
+          "$pin": "method"
+        },
+        "worked_example": {
+          "$pin": "example.source-card-checks"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "rule-types"
+        ],
+        [
+          "requires_noun",
+          "mutation-operators"
+        ],
+        [
+          "requires_noun",
+          "example.source-card-checks"
+        ],
+        [
+          "requires_noun",
+          "template.check-suite"
+        ],
+        [
+          "requires_noun",
+          "template.example-set"
+        ],
+        [
+          "requires_noun",
+          "template.check-validation"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "When a check can be trusted",
+      "category_reason": "A reusable verification method with its guardrails.",
+      "value": {
+        "trust_rule": [
+          "A check passes every known-good example. One failure on a known-good example means reject.",
+          "A check catches at least one known-bad example or targeted mutation. Catching nothing means revise: it is untested, not proven.",
+          "Every mutation that targets a check is caught by that check; a missed target is reported.",
+          "A deterministic check gives the same result on a repeat run.",
+          "A judgment check needs two independent judges, or a person, agreeing on the examples before it is trusted."
+        ],
+        "known_good_sources": [
+          "Accepted outputs with receipts",
+          "Authored examples reviewed by a person",
+          "Synthetic examples marked synthetic"
+        ],
+        "known_bad_sources": [
+          "Real failures from execution history, sanitized",
+          "Targeted mutations of known-good examples",
+          "Authored counterexamples"
+        ],
+        "cautions": [
+          "The worker that wrote a check does not build its only example set.",
+          "Never edit a known-good example to make a check pass.",
+          "Keep examples private when they came from private outputs."
+        ]
+      }
+    },
+    {
+      "slug": "rule-types",
+      "category": "noun.reflex_procedure",
+      "role": "rule_language",
+      "title": "Deterministic check rules",
+      "category_reason": "A zero-call deterministic rule language: the same document always gives the same result.",
+      "value": {
+        "paths": "Dotted field names from the document root; $ is the whole document.",
+        "rules": {
+          "present": "The value at path exists and is not empty.",
+          "enum": "The value at path is one of values.",
+          "min_items": "The value at path is a list with at least min items.",
+          "each_has": "Every item of the list at path has non-empty fields; min sets a minimum length.",
+          "pattern_absent": "No string anywhere under path matches pattern.",
+          "pattern_present": "Some string under path matches pattern.",
+          "when": "If the condition holds (equals or in), the nested rule must pass; otherwise the rule passes."
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "mutation-operators",
+      "category": "noun.reflex_procedure",
+      "role": "mutation_operators",
+      "title": "Mutation operators for building known-bad examples",
+      "category_reason": "Zero-call deterministic transformations of known-good examples.",
+      "value": {
+        "operators": {
+          "delete": "Remove the field at path.",
+          "clear": "Replace the value at path with an empty list, object or string.",
+          "set": "Replace the value at path with value.",
+          "append_text": "Append text to the string at path.",
+          "delete_item_field": "Remove field from every item of the list at path."
+        },
+        "model_calls": 0,
+        "guidance": [
+          "Aim each mutation at one check and name it in targets.",
+          "Prefer mutations that mirror real failures: missing fields, wrong types, copied claims, forbidden steps."
+        ]
+      }
+    },
+    {
+      "slug": "example.source-card-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "SYNTHETIC worked example: checks for tool-discovery source cards",
+      "synthetic": true,
+      "category_reason": "A golden fixture: checks, known-good and known-bad examples, mutations and recorded expected results.",
+      "value": {
+        "fixture_kind": "check_validation",
+        "purpose": "Shows the trust rule catching a wrong check (github-only fails a good card) and a too-weak check (topics-listed misses the mutation aimed at it). The validator recomputes it.",
+        "target_template_ref": {
+          "$pin": "tool-discovery:template.source-card"
+        },
+        "check_suite": [
+          {
+            "id": "https-only",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "url",
+              "pattern": "^https://"
+            },
+            "why": "Sources are read over HTTPS only."
+          },
+          {
+            "id": "publisher-named",
+            "rule": {
+              "rule": "present",
+              "path": "publisher"
+            },
+            "why": "Every source names who publishes it."
+          },
+          {
+            "id": "access-method-known",
+            "rule": {
+              "rule": "enum",
+              "path": "access_method",
+              "values": [
+                "rss",
+                "atom",
+                "api",
+                "html",
+                "newsletter"
+              ]
+            },
+            "why": "The collector depends on the access method."
+          },
+          {
+            "id": "observed-dated",
+            "rule": {
+              "rule": "present",
+              "path": "observed_at"
+            },
+            "why": "Every observation is dated."
+          },
+          {
+            "id": "verified-has-evidence",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "endpoint_status",
+                "equals": "verified"
+              },
+              "then": {
+                "rule": "present",
+                "path": "verification_evidence"
+              }
+            },
+            "why": "A verified endpoint shows how it was verified."
+          },
+          {
+            "id": "no-signup",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "next_step",
+              "pattern": "(?i)\\b(sign up|subscribe|create an account|log in|buy)\\b"
+            },
+            "why": "Discovery never signs up, subscribes, logs in or buys."
+          },
+          {
+            "id": "topics-listed",
+            "rule": {
+              "rule": "min_items",
+              "path": "topics",
+              "min": 1
+            },
+            "why": "Every source serves at least one topic."
+          },
+          {
+            "id": "github-only",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "url",
+              "pattern": "^https://github\\.com/"
+            },
+            "why": "A deliberately wrong check: it rejects a known-good arXiv card, so validation must reject it."
+          }
+        ],
+        "known_good": [
+          {
+            "id": "good-arxiv",
+            "example": {
+              "publisher": "arXiv cs.GR (Graphics)",
+              "url": "https://rss.arxiv.org/rss/cs.GR",
+              "access_method": "rss",
+              "topics": [
+                "3d"
+              ],
+              "endpoint_status": "verified",
+              "verification_evidence": "SYNTHETIC: HTTP 200 with an RSS content type on the first probe",
+              "observed_at": "2026-10-29",
+              "next_step": "Scan daily on weekdays."
+            }
+          },
+          {
+            "id": "good-releases",
+            "example": {
+              "publisher": "SYNTHETIC tool releases",
+              "url": "https://example.invalid/synthetic/tool/releases.atom",
+              "access_method": "atom",
+              "topics": [
+                "motion-graphics"
+              ],
+              "endpoint_status": "untested_suggestion",
+              "verification_evidence": "",
+              "observed_at": "2026-10-29",
+              "next_step": "Probe once before the first scan."
+            }
+          }
+        ],
+        "known_bad": [
+          {
+            "id": "bad-copied-claim",
+            "example": {
+              "publisher": "SYNTHETIC tool releases",
+              "url": "https://example.invalid/synthetic/tool/releases.atom",
+              "access_method": "atom",
+              "topics": [
+                "motion-graphics"
+              ],
+              "endpoint_status": "verified",
+              "verification_evidence": "",
+              "observed_at": "2026-10-29",
+              "next_step": "Log in to the dashboard to see private releases."
+            },
+            "why": "A real-looking failure: a suggestion copied as verified, with a login step."
+          }
+        ],
+        "mutations": [
+          {
+            "id": "drop-publisher",
+            "operator": {
+              "op": "delete",
+              "path": "publisher"
+            },
+            "applies_to": [
+              "good-arxiv",
+              "good-releases"
+            ],
+            "targets": [
+              "publisher-named"
+            ]
+          },
+          {
+            "id": "plain-http",
+            "operator": {
+              "op": "set",
+              "path": "url",
+              "value": "http://rss.arxiv.org/rss/cs.GR"
+            },
+            "applies_to": [
+              "good-arxiv"
+            ],
+            "targets": [
+              "https-only"
+            ]
+          },
+          {
+            "id": "unknown-access",
+            "operator": {
+              "op": "set",
+              "path": "access_method",
+              "value": "scrape"
+            },
+            "applies_to": [
+              "good-releases"
+            ],
+            "targets": [
+              "access-method-known"
+            ]
+          },
+          {
+            "id": "undated",
+            "operator": {
+              "op": "clear",
+              "path": "observed_at"
+            },
+            "applies_to": [
+              "good-arxiv"
+            ],
+            "targets": [
+              "observed-dated"
+            ]
+          },
+          {
+            "id": "claim-verified",
+            "operator": {
+              "op": "set",
+              "path": "endpoint_status",
+              "value": "verified"
+            },
+            "applies_to": [
+              "good-releases"
+            ],
+            "targets": [
+              "verified-has-evidence"
+            ]
+          },
+          {
+            "id": "add-signup",
+            "operator": {
+              "op": "append_text",
+              "path": "next_step",
+              "text": " Sign up for the newsletter first."
+            },
+            "applies_to": [
+              "good-arxiv"
+            ],
+            "targets": [
+              "no-signup"
+            ]
+          },
+          {
+            "id": "empty-topic",
+            "operator": {
+              "op": "set",
+              "path": "topics",
+              "value": [
+                ""
+              ]
+            },
+            "applies_to": [
+              "good-arxiv"
+            ],
+            "targets": [
+              "topics-listed"
+            ]
+          }
+        ],
+        "expected": {
+          "summary": {
+            "https-only": {
+              "passes_good": 2,
+              "kills": 1
+            },
+            "publisher-named": {
+              "passes_good": 2,
+              "kills": 2
+            },
+            "access-method-known": {
+              "passes_good": 2,
+              "kills": 1
+            },
+            "observed-dated": {
+              "passes_good": 2,
+              "kills": 1
+            },
+            "verified-has-evidence": {
+              "passes_good": 2,
+              "kills": 2
+            },
+            "no-signup": {
+              "passes_good": 2,
+              "kills": 2
+            },
+            "topics-listed": {
+              "passes_good": 2,
+              "kills": 0
+            },
+            "github-only": {
+              "passes_good": 0,
+              "kills": 9
+            }
+          },
+          "caught": {
+            "add-signup@good-arxiv": true,
+            "bad-copied-claim": true,
+            "claim-verified@good-releases": true,
+            "drop-publisher@good-arxiv": true,
+            "drop-publisher@good-releases": true,
+            "empty-topic@good-arxiv": false,
+            "plain-http@good-arxiv": true,
+            "undated@good-arxiv": true,
+            "unknown-access@good-releases": true
+          },
+          "targeted_missed": [
+            "empty-topic@good-arxiv:topics-listed"
+          ],
+          "verdicts": {
+            "https-only": "trusted",
+            "publisher-named": "trusted",
+            "access-method-known": "trusted",
+            "observed-dated": "trusted",
+            "verified-has-evidence": "trusted",
+            "no-signup": "trusted",
+            "topics-listed": "revise",
+            "github-only": "reject"
+          }
+        },
+        "reading": [
+          "github-only is rejected because it fails the known-good arXiv card, so its catches count for nothing.",
+          "topics-listed is sent back for revision: it misses the empty-topic mutation aimed at it, which no trustworthy check catches."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "rule-types"
+        ],
+        [
+          "requires_noun",
+          "mutation-operators"
+        ],
+        [
+          "requires_noun",
+          "method"
+        ]
+      ]
+    },
+    {
+      "slug": "template.check-suite",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: a suite of checks for one verb output: deterministic rules and rubric items, each with its reason",
+      "value": {
+        "describes": "a suite of checks for one verb output: deterministic rules and rubric items, each with its reason",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_template_ref",
+            "checks"
+          ],
+          "properties": {
+            "target_template_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "method",
+                  "why"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "deterministic",
+                      "judgment"
+                    ]
+                  },
+                  "rule": {
+                    "type": "object"
+                  },
+                  "rubric_item": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Deterministic checks use the rule language in rule-types.",
+          "Judgment checks state a rubric item instead of a rule."
+        ]
+      },
+      "category_reason": "A check suite is a scoring rubric with deterministic checks."
+    },
+    {
+      "slug": "template.example-set",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: known-good and known-bad examples plus targeted mutations for one output template",
+      "value": {
+        "describes": "known-good and known-bad examples plus targeted mutations for one output template",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_template_ref",
+            "known_good",
+            "known_bad",
+            "mutations"
+          ],
+          "properties": {
+            "target_template_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "known_good": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "example",
+                  "provenance"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "example": {
+                    "type": "object"
+                  },
+                  "provenance": {
+                    "type": "string",
+                    "enum": [
+                      "accepted_output_with_receipt",
+                      "authored",
+                      "synthetic"
+                    ]
+                  }
+                }
+              }
+            },
+            "known_bad": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "example",
+                  "provenance"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "example": {
+                    "type": "object"
+                  },
+                  "provenance": {
+                    "type": "string",
+                    "enum": [
+                      "real_failure",
+                      "authored",
+                      "synthetic"
+                    ]
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "mutations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "operator",
+                  "applies_to",
+                  "targets"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "operator": {
+                    "type": "object"
+                  },
+                  "applies_to": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    }
+                  },
+                  "targets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Each example records its provenance.",
+          "Each mutation names the checks it targets."
+        ]
+      },
+      "category_reason": "An example set is a fixture set with provenance."
+    },
+    {
+      "slug": "template.check-validation",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the validation result for one check suite: passes on good, kills on bad, misses and a verdict per check",
+      "value": {
+        "describes": "the validation result for one check suite: passes on good, kills on bad, misses and a verdict per check",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "suite_ref",
+            "example_set_ref",
+            "summary",
+            "verdicts",
+            "repeat_identical"
+          ],
+          "properties": {
+            "suite_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "example_set_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "summary": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "passes_good",
+                  "good_total",
+                  "kills"
+                ],
+                "properties": {
+                  "check_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "passes_good": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "good_total": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "kills": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "targeted_mutations_missed": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    }
+                  }
+                }
+              }
+            },
+            "uncaught_bad": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "verdicts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "verdict",
+                  "reason"
+                ],
+                "properties": {
+                  "check_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "verdict": {
+                    "type": "string",
+                    "enum": [
+                      "trusted",
+                      "revise",
+                      "reject"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "repeat_identical": {
+              "type": "boolean"
+            },
+            "judgment_checks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check_id",
+                  "agreement"
+                ],
+                "properties": {
+                  "check_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "agreement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Verdicts follow the method's trust rule exactly.",
+          "repeat_identical is from an actual second run."
+        ]
+      },
+      "category_reason": "A validation result is a scored run of the checks against fixtures."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "draft-checks",
+      "kind": "verb.solve_draft",
+      "title": "Draft checks for a verb's output",
+      "claimant": "agent",
+      "summary": "From the template that shapes a verb's output, write deterministic checks and rubric items that would catch the failures that matter.",
+      "outcome": "A private check suite, or no_change when an existing suite already covers the template.",
+      "ready_outcome": "suite_ready",
+      "pinned": [
+        "method",
+        "rule-types"
+      ],
+      "slots": [
+        {
+          "name": "output_template",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the template noun that defines the output shape. Any template category works; use the nearest one.",
+          "required": true
+        },
+        {
+          "name": "failure_records",
+          "category": "noun.eval_run",
+          "description": "Pins of known failures of this output, if any.",
+          "many": true,
+          "max": 20,
+          "required": false
+        }
+      ],
+      "params": {
+        "template_id": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": "The verb template whose output these checks guard.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "check_suite",
+          "template": "template.check-suite"
+        }
+      ],
+      "steps": [
+        "Verify the pins and read the output template's schema and rules.",
+        "Write a deterministic rule wherever the property can be decided from the document alone.",
+        "Write a rubric item only for properties that need judgment, and say what a good and a bad answer look like.",
+        "Give every check a reason a reader can verify."
+      ],
+      "acceptance": [
+        {
+          "id": "suite-matches-template",
+          "check": "The suite validates against template.check-suite's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rules-known",
+          "check": "Every deterministic rule uses only rule types listed in rule-types.",
+          "method": "deterministic"
+        },
+        {
+          "id": "covers-rules",
+          "check": "Every rule stated in the output template has at least one check.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "build-example-set",
+      "kind": "verb.solve_draft",
+      "title": "Build known-good and known-bad examples",
+      "claimant": "agent",
+      "summary": "Collect known-good outputs and real failures, then add targeted mutations so every check has something it should catch.",
+      "outcome": "A private example set with provenance for every example.",
+      "ready_outcome": "examples_ready",
+      "pinned": [
+        "method",
+        "mutation-operators"
+      ],
+      "slots": [
+        {
+          "name": "check_suite",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the check suite to exercise."
+        },
+        {
+          "name": "accepted_outputs",
+          "category": "noun.eval_run",
+          "description": "Pins of accepted outputs to use as known-good examples.",
+          "many": true,
+          "max": 20,
+          "required": false
+        },
+        {
+          "name": "failure_records",
+          "category": "noun.eval_run",
+          "description": "Pins of real failures to use as known-bad examples.",
+          "many": true,
+          "max": 20,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "example_set",
+          "template": "template.example-set"
+        }
+      ],
+      "steps": [
+        "Confirm you did not draft this check suite; otherwise return blocked.",
+        "Use accepted outputs with receipts as known-good where possible; sanitize anything private.",
+        "Add at least one targeted mutation for every deterministic check, using only the listed operators.",
+        "Never edit a known-good example to suit a check."
+      ],
+      "acceptance": [
+        {
+          "id": "set-matches-template",
+          "check": "The example set validates against template.example-set's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-check-targeted",
+          "check": "Every deterministic check id appears in some mutation's targets.",
+          "method": "deterministic"
+        },
+        {
+          "id": "operators-known",
+          "check": "Every mutation uses an operator listed in mutation-operators.",
+          "method": "deterministic"
+        },
+        {
+          "id": "realistic",
+          "check": "Known-bad examples resemble failures that actually happen.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "checks-of-checks.draft-checks"
+      ]
+    },
+    {
+      "slug": "validate-checks",
+      "kind": "verb.verify_gate",
+      "title": "Validate the checks",
+      "claimant": "agent",
+      "summary": "Run every deterministic check against every known-good example, known-bad example and mutation, twice, and apply the trust rule.",
+      "outcome": "A private check validation with a trusted, revise or reject verdict per check.",
+      "ready_outcome": "validation_ready",
+      "model_use": "none",
+      "pinned": [
+        "method",
+        "rule-types",
+        "mutation-operators",
+        "example.source-card-checks"
+      ],
+      "slots": [
+        {
+          "name": "check_suite",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the check suite."
+        },
+        {
+          "name": "example_set",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the example set."
+        }
+      ],
+      "produces": [
+        {
+          "name": "check_validation",
+          "template": "template.check-validation"
+        }
+      ],
+      "steps": [
+        "Reproduce the pinned worked example's expected results first; stop with blocked if they differ.",
+        "Apply each mutation to its known-good examples with the listed operators only.",
+        "Run every check on every example and mutant; run the whole pass a second time and compare.",
+        "Apply the trust rule exactly. Report targeted mutations a check missed."
+      ],
+      "acceptance": [
+        {
+          "id": "validation-matches-template",
+          "check": "The validation validates against template.check-validation's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "worked-example-reproduced",
+          "check": "The worked example's expected summary, caught map and verdicts were reproduced exactly.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdicts-follow-rule",
+          "check": "Every verdict equals the trust rule applied to its summary row.",
+          "method": "deterministic"
+        },
+        {
+          "id": "repeat-identical",
+          "check": "The second pass gave identical results.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "checks-of-checks.build-example-set"
+      ]
+    },
+    {
+      "slug": "review-checks",
+      "kind": "verb.verify_gate",
+      "title": "Review which checks to trust",
+      "claimant": "agent_or_human",
+      "summary": "A different worker or a person reviews the validation, the judgment checks and the missed targets, and confirms which checks to trust.",
+      "outcome": "A private review of the validation; admitting a check for wider use stays a separate decision.",
+      "ready_outcome": "review_ready",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "check_suite",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the check suite."
+        },
+        {
+          "name": "check_validation",
+          "category": "noun.eval_run",
+          "description": "Pin of the validation."
+        }
+      ],
+      "produces": [
+        {
+          "name": "review",
+          "template": "template.check-validation"
+        }
+      ],
+      "steps": [
+        "Confirm you did not write the suite, the examples or the validation; otherwise return blocked.",
+        "Check that verdicts follow the trust rule and that missed targets are explained.",
+        "For judgment checks, record whether two judges or a person agreed on the examples."
+      ],
+      "acceptance": [
+        {
+          "id": "distinct-reviewer",
+          "check": "The reviewing key differs from the keys that wrote the suite, examples and validation.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdicts-rechecked",
+          "check": "Every verdict was recomputed from the summary.",
+          "method": "deterministic"
+        },
+        {
+          "id": "judgment-agreement",
+          "check": "Each judgment check's agreement is recorded.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "review": "distinct_reviewer",
+      "follows": [
+        "checks-of-checks.validate-checks"
+      ]
+    }
+  ]
+}

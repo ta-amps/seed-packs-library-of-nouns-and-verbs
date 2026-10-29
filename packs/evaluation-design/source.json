@@ -1,0 +1,1647 @@
+{
+  "pack_id": "evaluation-design",
+  "title": "Evaluation design",
+  "version": "0.1.0",
+  "summary": "A general evaluation method: arms, frozen sets with manifests, pass marks committed before runs, exact-match scoring, two runs per arm, cost per case and missed marks reported, with a worked example the validator recomputes.",
+  "dependencies": [],
+  "boundaries": [
+    "Pass marks are committed by a person before any scored run and never change afterwards.",
+    "Labels are readable only by the scorer.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "Evaluation design seed pack",
+      "value": {
+        "lets_workers": "Run a fair, honest comparison: fixed arms, a frozen case set with a manifest, pass marks a person commits before any run, exact-match scoring, two runs per arm, cost per case, and missed marks reported as missed.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "evaluation-design.design-evaluation"
+            },
+            "when": "First: question, arms, metrics and draft pass marks."
+          },
+          {
+            "verb": {
+              "$verb": "evaluation-design.freeze-set"
+            },
+            "when": "Before any arm runs."
+          },
+          {
+            "verb": {
+              "$verb": "evaluation-design.commit-pass-marks"
+            },
+            "when": "A person approves the marks before the first scored run."
+          },
+          {
+            "verb": {
+              "$verb": "evaluation-design.run-arm"
+            },
+            "when": "Twice per arm, as separate attempts."
+          },
+          {
+            "verb": {
+              "$verb": "evaluation-design.score-run"
+            },
+            "when": "After each run; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "evaluation-design.report-evaluation"
+            },
+            "when": "After every run is scored."
+          },
+          {
+            "verb": {
+              "$verb": "evaluation-design.review-evaluation"
+            },
+            "when": "Last, by a different worker."
+          }
+        ],
+        "method": {
+          "$pin": "method"
+        },
+        "worked_example": {
+          "$pin": "example.worked"
+        },
+        "used_by": [
+          "tool-discovery trials",
+          "decomposition-patterns comparisons",
+          "any measured comparison in another pack"
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "scoring.exact-match"
+        ],
+        [
+          "requires_noun",
+          "example.worked"
+        ],
+        [
+          "requires_noun",
+          "template.evaluation-plan"
+        ],
+        [
+          "requires_noun",
+          "template.arm"
+        ],
+        [
+          "requires_noun",
+          "template.frozen-set-manifest"
+        ],
+        [
+          "requires_noun",
+          "template.pass-marks"
+        ],
+        [
+          "requires_noun",
+          "template.run-record"
+        ],
+        [
+          "requires_noun",
+          "template.evaluation-report"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Evaluation method: arms, frozen sets, pass marks before runs, exact-match scoring",
+      "category_reason": "A reusable evaluation method with guardrails, generalized from Shamash's evaluation plan.",
+      "value": {
+        "origin": "Generalizes the evaluation method in Shamash's docs/evaluation.md: re-run fixed arms against a frozen set, score by exact match, run each arm twice and commit pass marks first.",
+        "steps": [
+          "Write the question the evaluation answers in one sentence, and the decision it informs.",
+          "Define arms: a baseline and each change, one change per arm where possible, with exact models, prompts, tools and settings.",
+          "Freeze the case set before any arm runs: opaque case ids, a manifest of case and label digests, and the generator or source pinned.",
+          "Commit pass marks before the first scored run. A person approves them; they never change afterwards.",
+          "Run every arm twice on the full frozen set. Record cost and latency per case from actual usage.",
+          "Score by exact match against known labels with deterministic code; a model judge may grade only explanations, with a person spot-checking its grades.",
+          "Report every mark as met, missed or unknown. A missed mark is reported as missed with its diagnosis, never reworded into a pass."
+        ],
+        "rules": [
+          "Case ids must not encode labels; the drafting and answering workers never see labels.",
+          "Errors and timeouts are scored as wrong answers unless the plan says to exclude them; exclusions are reported with counts.",
+          "Cost per case is null when any case's cost is unknown; report the known subtotal and the count of unknown cases.",
+          "Spread between the two runs of an arm above the plan's limit marks the arm unstable.",
+          "Changing a pass mark, the set or the scorer after a run starts requires a new evaluation version; old results stay as they were."
+        ],
+        "metrics_menu": {
+          "accuracy_points": "Share of cases answered exactly right, in points.",
+          "recall_points": "Share of positive cases answered with the positive label, in points.",
+          "twin_fp_points": "Share of negative twin cases wrongly given the positive label, in points.",
+          "net_points": "Recall minus twin false positives, in points.",
+          "abstention_points": "Share of cases held for review instead of answered, when the plan allows abstaining.",
+          "cost_per_case_usd": "Actual usage times dated price, divided by cases; null when any case cost is unknown.",
+          "p95_latency_ms": "From recorded per-case timings."
+        }
+      }
+    },
+    {
+      "slug": "scoring.exact-match",
+      "category": "noun.reflex_procedure",
+      "role": "scoring_procedure",
+      "title": "Exact-match scoring procedure",
+      "category_reason": "A zero-call deterministic procedure: the same predictions and labels always give the same scores.",
+      "value": {
+        "inputs": [
+          "A run record",
+          "The frozen set's labels, readable only by the scorer",
+          "The committed pass marks"
+        ],
+        "steps": [
+          "Verify that the run's set reference and the manifest digests match.",
+          "For each case, the prediction is correct only if it equals the label exactly; null or an error is wrong.",
+          "Compute the plan's metrics in points with three decimals; cost per case is null if any case cost is null.",
+          "Evaluate each pass mark across the arm's runs: met, missed, or unknown when a needed value is null."
+        ],
+        "model_calls": 0,
+        "checks": [
+          "Scoring the same run twice gives identical output.",
+          "The worked example's recorded results are reproduced exactly."
+        ],
+        "worked_example": {
+          "$pin": "example.worked"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "verifies",
+          "example.worked",
+          "reproduces the recorded expected results"
+        ]
+      ]
+    },
+    {
+      "slug": "example.worked",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "SYNTHETIC worked example: two arms, two runs each, four pass marks",
+      "synthetic": true,
+      "category_reason": "A golden fixture: fixed cases, fixed predictions and the recorded expected metrics and mark results.",
+      "value": {
+        "fixture_kind": "evaluation_arithmetic",
+        "purpose": "Shows the method's arithmetic end to end, including an error counted as a miss, a missed mark and an unknown cost. The validator recomputes it.",
+        "positive_label": "flag",
+        "runs_per_arm": 2,
+        "cases": [
+          {
+            "case_id": "case-01",
+            "label": "flag"
+          },
+          {
+            "case_id": "case-02",
+            "label": "clear"
+          },
+          {
+            "case_id": "case-03",
+            "label": "flag"
+          },
+          {
+            "case_id": "case-04",
+            "label": "clear"
+          },
+          {
+            "case_id": "case-05",
+            "label": "clear"
+          },
+          {
+            "case_id": "case-06",
+            "label": "flag"
+          },
+          {
+            "case_id": "case-07",
+            "label": "clear"
+          },
+          {
+            "case_id": "case-08",
+            "label": "flag"
+          }
+        ],
+        "runs": [
+          {
+            "run_id": "A0-1",
+            "arm": "A0",
+            "predictions": {
+              "case-01": "flag",
+              "case-02": "flag",
+              "case-03": "clear",
+              "case-04": "clear",
+              "case-05": "clear",
+              "case-06": "flag",
+              "case-07": "clear",
+              "case-08": "clear"
+            },
+            "cost_usd": {
+              "case-01": 0.002,
+              "case-02": 0.002,
+              "case-03": 0.002,
+              "case-04": 0.002,
+              "case-05": 0.002,
+              "case-06": 0.002,
+              "case-07": 0.002,
+              "case-08": 0.002
+            }
+          },
+          {
+            "run_id": "A0-2",
+            "arm": "A0",
+            "predictions": {
+              "case-01": "flag",
+              "case-02": "flag",
+              "case-03": "flag",
+              "case-04": "flag",
+              "case-05": "clear",
+              "case-06": "clear",
+              "case-07": "clear",
+              "case-08": "clear"
+            },
+            "cost_usd": {
+              "case-01": 0.002,
+              "case-02": 0.002,
+              "case-03": 0.002,
+              "case-04": 0.002,
+              "case-05": 0.002,
+              "case-06": 0.002,
+              "case-07": 0.002,
+              "case-08": 0.002
+            }
+          },
+          {
+            "run_id": "A1-1",
+            "arm": "A1",
+            "predictions": {
+              "case-01": "flag",
+              "case-02": "clear",
+              "case-03": "flag",
+              "case-04": "clear",
+              "case-05": "flag",
+              "case-06": "flag",
+              "case-07": "clear",
+              "case-08": "flag"
+            },
+            "cost_usd": {
+              "case-01": 0.01,
+              "case-02": 0.01,
+              "case-03": 0.01,
+              "case-04": 0.01,
+              "case-05": 0.01,
+              "case-06": 0.01,
+              "case-07": 0.01,
+              "case-08": 0.01
+            }
+          },
+          {
+            "run_id": "A1-2",
+            "arm": "A1",
+            "predictions": {
+              "case-01": "flag",
+              "case-02": "clear",
+              "case-03": "flag",
+              "case-04": "clear",
+              "case-05": "clear",
+              "case-06": "flag",
+              "case-07": "clear",
+              "case-08": null
+            },
+            "cost_usd": {
+              "case-01": 0.01,
+              "case-02": 0.01,
+              "case-03": 0.01,
+              "case-04": 0.01,
+              "case-05": 0.01,
+              "case-06": 0.01,
+              "case-07": 0.01,
+              "case-08": null
+            }
+          }
+        ],
+        "pass_marks": [
+          {
+            "id": "M1",
+            "metric": "net_gain_points",
+            "arm": "A1",
+            "baseline": "A0",
+            "threshold": 25,
+            "rule": "A1's net points beat A0's by at least 25 in both runs."
+          },
+          {
+            "id": "M2",
+            "metric": "twin_fp_not_higher",
+            "arm": "A1",
+            "baseline": "A0",
+            "threshold": null,
+            "rule": "A1's twin false positives are no higher than A0's in both runs."
+          },
+          {
+            "id": "M3",
+            "metric": "recall_at_least",
+            "arm": "A1",
+            "threshold": 90,
+            "rule": "A1's recall is at least 90 points in both runs."
+          },
+          {
+            "id": "M4",
+            "metric": "spread_points_below",
+            "arm": "A1",
+            "threshold": 5,
+            "rule": "A1's net points differ by less than 5 between its two runs."
+          },
+          {
+            "id": "M5",
+            "metric": "cost_per_case_at_most",
+            "arm": "A1",
+            "threshold": 0.02,
+            "rule": "A1 costs at most 0.02 dollars per case in both runs."
+          }
+        ],
+        "expected": {
+          "metrics": {
+            "A0-1": {
+              "arm": "A0",
+              "recall_points": 50.0,
+              "twin_fp_points": 25.0,
+              "net_points": 25.0,
+              "errors": 0,
+              "cost_per_case_usd": 0.002
+            },
+            "A0-2": {
+              "arm": "A0",
+              "recall_points": 50.0,
+              "twin_fp_points": 50.0,
+              "net_points": 0.0,
+              "errors": 0,
+              "cost_per_case_usd": 0.002
+            },
+            "A1-1": {
+              "arm": "A1",
+              "recall_points": 100.0,
+              "twin_fp_points": 25.0,
+              "net_points": 75.0,
+              "errors": 0,
+              "cost_per_case_usd": 0.01
+            },
+            "A1-2": {
+              "arm": "A1",
+              "recall_points": 75.0,
+              "twin_fp_points": 0.0,
+              "net_points": 75.0,
+              "errors": 1,
+              "cost_per_case_usd": null
+            }
+          },
+          "marks": {
+            "M1": "met",
+            "M2": "met",
+            "M3": "missed",
+            "M4": "met",
+            "M5": "unknown"
+          }
+        },
+        "reading": [
+          "M3 is missed because the error on case-08 counts as a wrong answer; it is reported as missed, not excused.",
+          "M5 is unknown because one case's cost was not recorded; the known subtotal is reported beside it."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ]
+      ]
+    },
+    {
+      "slug": "template.evaluation-plan",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: an evaluation plan: question, decision, arms, metrics, runs per arm, scoring and cost accounting",
+      "value": {
+        "describes": "an evaluation plan: question, decision, arms, metrics, runs per arm, scoring and cost accounting",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "question",
+            "decision",
+            "arms",
+            "set_ref",
+            "metrics",
+            "runs_per_arm",
+            "scoring",
+            "spread_limit_points",
+            "cost_accounting"
+          ],
+          "properties": {
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "decision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "arms": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arm_id",
+                  "role",
+                  "change"
+                ],
+                "properties": {
+                  "arm_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "baseline",
+                      "candidate",
+                      "control"
+                    ]
+                  },
+                  "change": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "arm_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "set_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "metrics": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "runs_per_arm": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 5
+            },
+            "scoring": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "method",
+                "judge_use"
+              ],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "exact_match"
+                  ]
+                },
+                "judge_use": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "explanations_only_with_human_spot_check"
+                  ]
+                }
+              }
+            },
+            "spread_limit_points": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "cost_accounting": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "exclusions_rule": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "At least one baseline arm.",
+          "runs_per_arm is at least 2.",
+          "Scoring is exact match; a judge, if any, grades explanations only."
+        ]
+      },
+      "category_reason": "The plan fixes the harness, metrics and scoring rubric before any run."
+    },
+    {
+      "slug": "template.arm",
+      "category": "noun.skill_pack",
+      "role": "template",
+      "title": "Template: one arm: exact provider, model, prompt, tools, context, settings and budget",
+      "value": {
+        "describes": "one arm: exact provider, model, prompt, tools, context, settings and budget",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "arm_id",
+            "provider",
+            "model",
+            "prompt_ref",
+            "tools",
+            "context",
+            "settings",
+            "budget"
+          ],
+          "properties": {
+            "arm_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "provider": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 150
+            },
+            "prompt_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "tools": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 150
+              }
+            },
+            "context": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "settings": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "caller_defaults",
+                    "explicit"
+                  ]
+                },
+                "explicit": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 400
+                }
+              }
+            },
+            "budget": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "max_usd",
+                "max_calls"
+              ],
+              "properties": {
+                "max_usd": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1000
+                },
+                "max_calls": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Name the exact model identifier.",
+          "settings.source is caller_defaults unless the plan changes a setting on purpose."
+        ]
+      },
+      "category_reason": "An arm is a reusable agent configuration: model, prompt, tool bindings and guardrails."
+    },
+    {
+      "slug": "template.frozen-set-manifest",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: the frozen case set's manifest: opaque ids, case and label digests, splits and groups",
+      "value": {
+        "describes": "the frozen case set's manifest: opaque ids, case and label digests, splits and groups",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "set_id",
+            "frozen_at",
+            "generator_ref",
+            "cases",
+            "label_access"
+          ],
+          "properties": {
+            "set_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "frozen_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "generator_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "cases": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "case_id",
+                  "input_sha256",
+                  "label_sha256",
+                  "split",
+                  "group"
+                ],
+                "properties": {
+                  "case_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "input_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "label_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "split": {
+                    "type": "string",
+                    "enum": [
+                      "dev",
+                      "holdout",
+                      "adversarial"
+                    ]
+                  },
+                  "group": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                }
+              }
+            },
+            "label_access": {
+              "type": "string",
+              "enum": [
+                "scorer_only"
+              ]
+            },
+            "id_check": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "Case ids are opaque and never encode labels.",
+          "Labels are readable only by the scorer.",
+          "Near-duplicates share a group and a split."
+        ]
+      },
+      "category_reason": "A frozen-set manifest is a fixture manifest with anti-contamination digests."
+    },
+    {
+      "slug": "template.pass-marks",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: pass marks a person commits before the first scored run",
+      "value": {
+        "describes": "pass marks a person commits before the first scored run",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evaluation_ref",
+            "marks",
+            "committed_by",
+            "committed_at",
+            "immutable"
+          ],
+          "properties": {
+            "evaluation_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "marks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "metric",
+                  "arm",
+                  "rule"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "metric": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "arm": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "baseline": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                  },
+                  "threshold": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "committed_by": {
+              "type": "string",
+              "enum": [
+                "human"
+              ]
+            },
+            "committed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "immutable": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            }
+          }
+        },
+        "rules": [
+          "committed_by is human.",
+          "immutable is true; a change needs a new evaluation version."
+        ]
+      },
+      "category_reason": "Pass marks are pre-registered falsifiable predictions about the arms."
+    },
+    {
+      "slug": "template.run-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one run of one arm: per-case predictions, cost and latency, and usage",
+      "value": {
+        "describes": "one run of one arm: per-case predictions, cost and latency, and usage",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "arm_id",
+            "run_index",
+            "set_ref",
+            "marks_ref",
+            "cases",
+            "usage"
+          ],
+          "properties": {
+            "arm_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "run_index": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "set_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "marks_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "cases": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "case_id",
+                  "prediction",
+                  "cost_usd",
+                  "latency_ms"
+                ],
+                "properties": {
+                  "case_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "prediction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "error": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "cost_usd": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "latency_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "usage": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "input_tokens": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "output_tokens": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "One record per arm per run.",
+          "Unknown cost or tokens stay null with a reason."
+        ]
+      },
+      "category_reason": "A run record is a fingerprinted run with null-honest per-case measurements."
+    },
+    {
+      "slug": "template.evaluation-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the evaluation report: every mark met, missed or unknown, per-arm metrics, stability and limits",
+      "value": {
+        "describes": "the evaluation report: every mark met, missed or unknown, per-arm metrics, stability and limits",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evaluation_ref",
+            "marks",
+            "arms",
+            "limits"
+          ],
+          "properties": {
+            "evaluation_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "marks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "detail"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "met",
+                      "missed",
+                      "unknown"
+                    ]
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "diagnosis": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "arms": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arm_id",
+                  "runs",
+                  "stable"
+                ],
+                "properties": {
+                  "arm_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "stable": {
+                    "type": "boolean"
+                  },
+                  "runs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "run_index",
+                        "metrics"
+                      ],
+                      "properties": {
+                        "run_index": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 5
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "minItems": 0,
+                          "maxItems": 12,
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "name",
+                              "value"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "value": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every committed mark appears.",
+          "A missed mark has a diagnosis.",
+          "Limits list what the set and arms do not cover."
+        ]
+      },
+      "category_reason": "The report is the scorecard across arms and runs."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "design-evaluation",
+      "kind": "verb.problemize",
+      "title": "Design the evaluation",
+      "claimant": "agent",
+      "summary": "Turn a question into an evaluation plan: arms, metrics, runs per arm, scoring and draft pass marks for a person to approve.",
+      "outcome": "A private plan, one arm noun per arm and draft pass marks, or no_change when an existing evaluation already answers the question.",
+      "ready_outcome": "plan_ready",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "question",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun stating the question and the decision it informs."
+        },
+        {
+          "name": "prior_evaluations",
+          "category": "noun.eval_run",
+          "description": "Pins of earlier evaluation reports on the same question.",
+          "many": true,
+          "max": 10,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "plan",
+          "template": "template.evaluation-plan"
+        },
+        {
+          "name": "arms",
+          "template": "template.arm",
+          "max": 10
+        },
+        {
+          "name": "draft_pass_marks",
+          "template": "template.pass-marks"
+        }
+      ],
+      "steps": [
+        "Verify the pins. State the question and the decision it informs in one sentence each.",
+        "Define a baseline and the fewest arms that answer the question, one change per arm where possible.",
+        "Pick metrics from the method's menu and say why each matters to the decision.",
+        "Draft pass marks with thresholds; they stay drafts until a person commits them.",
+        "Estimate cost per arm from dated prices and label it an estimate."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The plan validates against template.evaluation-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "has-baseline",
+          "check": "Exactly one arm has role baseline, and runs_per_arm is at least 2.",
+          "method": "deterministic"
+        },
+        {
+          "id": "arms-exact",
+          "check": "Every arm noun names an exact model identifier and a settings source.",
+          "method": "deterministic"
+        },
+        {
+          "id": "marks-drafted",
+          "check": "The draft pass marks reference only arms and metrics in the plan.",
+          "method": "deterministic"
+        },
+        {
+          "id": "answers-question",
+          "check": "The arms and metrics can actually answer the stated question.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "freeze-set",
+      "kind": "verb.ingest",
+      "title": "Freeze the case set",
+      "claimant": "agent",
+      "summary": "Hash every case and label into a manifest with opaque ids before any arm runs, and check that ids cannot leak labels.",
+      "outcome": "A private frozen-set manifest; labels stay readable only by the scorer.",
+      "ready_outcome": "set_frozen",
+      "model_use": "none",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "plan",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the evaluation plan."
+        },
+        {
+          "name": "case_source",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the generator output or case collection to freeze."
+        }
+      ],
+      "produces": [
+        {
+          "name": "manifest",
+          "template": "template.frozen-set-manifest"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Assign opaque case ids that carry no label, order or source hints.",
+        "Compute SHA-256 digests of each case input and each label; store labels where only the scorer can read them.",
+        "Put near-duplicates in one group and one split.",
+        "Record the generator or source pin and the freeze time."
+      ],
+      "acceptance": [
+        {
+          "id": "manifest-matches-template",
+          "check": "The manifest validates against template.frozen-set-manifest's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "ids-opaque",
+          "check": "No case id contains a label value, and ids sorted alphabetically are not grouped by label.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-unique",
+          "check": "No two cases share an input digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "groups-respected",
+          "check": "Every group sits entirely inside one split.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "evaluation-design.design-evaluation"
+      ]
+    },
+    {
+      "slug": "commit-pass-marks",
+      "kind": "verb.verify_gate",
+      "title": "Commit the pass marks",
+      "claimant": "human",
+      "summary": "A person reads the draft pass marks, changes them if needed, and commits them before any scored run.",
+      "outcome": "Committed, immutable pass marks, or no_change if the person decides the evaluation should not run.",
+      "ready_outcome": "marks_committed",
+      "model_use": "none",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "plan",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the evaluation plan."
+        },
+        {
+          "name": "draft_pass_marks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the draft pass marks."
+        }
+      ],
+      "produces": [
+        {
+          "name": "pass_marks",
+          "template": "template.pass-marks"
+        }
+      ],
+      "steps": [
+        "Read the plan and the draft marks. Each mark should be something you would act on if it were met or missed.",
+        "Change thresholds if needed, then commit. After this, the marks never change for this evaluation version.",
+        "Commit before any run-arm task for this evaluation is claimed."
+      ],
+      "acceptance": [
+        {
+          "id": "marks-match-template",
+          "check": "The committed marks validate against template.pass-marks's schema with immutable true.",
+          "method": "deterministic"
+        },
+        {
+          "id": "before-runs",
+          "check": "No run record for this evaluation existed when the marks were committed.",
+          "method": "deterministic"
+        },
+        {
+          "id": "committed-by-person",
+          "check": "committed_by is human and the submitting key belongs to a person.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "evaluation-design.design-evaluation"
+      ]
+    },
+    {
+      "slug": "run-arm",
+      "kind": "verb.benchmark_harness",
+      "title": "Run one arm once",
+      "claimant": "agent",
+      "summary": "Run one arm over the whole frozen set exactly as defined and record every prediction, error, cost and latency.",
+      "outcome": "A private run record. Each arm runs twice, as two separate attempts with run_index 1 and 2.",
+      "ready_outcome": "run_recorded",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "plan",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the evaluation plan."
+        },
+        {
+          "name": "arm",
+          "category": "noun.skill_pack",
+          "description": "Pin of the arm to run."
+        },
+        {
+          "name": "manifest",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the frozen-set manifest."
+        },
+        {
+          "name": "pass_marks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the committed pass marks."
+        }
+      ],
+      "params": {
+        "run_index": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "description": "Which run of this arm, starting at 1.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "run_record",
+          "template": "template.run-record"
+        }
+      ],
+      "steps": [
+        "Verify every pin, and that the pass marks are committed and predate this claim; otherwise return blocked.",
+        "Run the arm exactly as its noun defines it: same model, prompt, tools, context and settings. Keep the caller's settings unless the arm says otherwise.",
+        "Never show case labels to the arm. Answer every case in the set; record errors and timeouts as they happened.",
+        "Record cost and latency per case from actual usage; unknown values stay null with a reason.",
+        "Stop at the arm's budget and record how far the run got."
+      ],
+      "acceptance": [
+        {
+          "id": "record-matches-template",
+          "check": "The run record validates against template.run-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-cases",
+          "check": "The record has exactly one entry per case in the manifest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "marks-predate",
+          "check": "The pass marks were committed before this task was claimed.",
+          "method": "deterministic"
+        },
+        {
+          "id": "arm-faithful",
+          "check": "The run used the arm's exact model and settings.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 14400
+      },
+      "capabilities": [
+        "read permitted noun versions",
+        "the arm's provider access within the worker's own allowance",
+        "write private candidate nouns"
+      ],
+      "network": "Only the arm's declared provider destination.",
+      "follows": [
+        "evaluation-design.commit-pass-marks",
+        "evaluation-design.freeze-set"
+      ]
+    },
+    {
+      "slug": "score-run",
+      "kind": "verb.verify_gate",
+      "title": "Score one run",
+      "claimant": "agent",
+      "summary": "Score one run record by exact match against the frozen labels with the deterministic scoring procedure.",
+      "outcome": "A private scored run with metrics; the scorer is the only worker that reads labels.",
+      "ready_outcome": "run_scored",
+      "model_use": "none",
+      "pinned": [
+        "scoring.exact-match",
+        "method",
+        "example.worked"
+      ],
+      "slots": [
+        {
+          "name": "run_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the run record."
+        },
+        {
+          "name": "manifest",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the frozen-set manifest."
+        },
+        {
+          "name": "pass_marks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the committed pass marks."
+        }
+      ],
+      "produces": [
+        {
+          "name": "scored_run",
+          "template": "template.run-record"
+        }
+      ],
+      "steps": [
+        "Reproduce the worked example's expected results first; stop with blocked if they differ.",
+        "Verify the label digests against the manifest before scoring.",
+        "Score exactly as the procedure says: null or an error is wrong; cost per case is null if any cost is null."
+      ],
+      "acceptance": [
+        {
+          "id": "worked-example-reproduced",
+          "check": "The scorer reproduces example.worked's expected metrics and marks exactly.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scores-repeatable",
+          "check": "Scoring the same run twice gives identical output.",
+          "method": "deterministic"
+        },
+        {
+          "id": "labels-verified",
+          "check": "Every label digest matched the manifest.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "evaluation-design.run-arm"
+      ]
+    },
+    {
+      "slug": "report-evaluation",
+      "kind": "verb.solve_draft",
+      "title": "Write the evaluation report",
+      "claimant": "agent",
+      "summary": "Report every committed mark as met, missed or unknown, with per-arm metrics, stability, cost per case and a diagnosis for each missed mark.",
+      "outcome": "A private evaluation report; missed marks stay missed.",
+      "ready_outcome": "report_ready",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "plan",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the plan."
+        },
+        {
+          "name": "pass_marks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the committed marks."
+        },
+        {
+          "name": "scored_runs",
+          "category": "noun.eval_run",
+          "description": "Pins of every scored run.",
+          "many": true,
+          "max": 20
+        }
+      ],
+      "produces": [
+        {
+          "name": "report",
+          "template": "template.evaluation-report"
+        }
+      ],
+      "steps": [
+        "Verify the pins and that every arm has runs_per_arm scored runs; otherwise report the gap as unknown.",
+        "Copy metrics from the scored runs; do not recompute them differently.",
+        "Mark an arm unstable when its spread exceeds the plan's limit.",
+        "Give each missed mark a short diagnosis. Never reword a missed mark as a partial pass."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.evaluation-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-marks",
+          "check": "Every committed mark appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "metrics-copied",
+          "check": "Every metric equals the value in its scored run.",
+          "method": "deterministic"
+        },
+        {
+          "id": "diagnoses-useful",
+          "check": "Each diagnosis points at a likely cause someone could test.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "evaluation-design.score-run"
+      ]
+    },
+    {
+      "slug": "review-evaluation",
+      "kind": "verb.verify_gate",
+      "title": "Review the evaluation",
+      "claimant": "agent",
+      "summary": "A different worker rechecks the report against the scored runs, the committed marks and the method's rules.",
+      "outcome": "Private review notes, with any rule the evaluation broke.",
+      "ready_outcome": "review_ready",
+      "pinned": [
+        "method",
+        "scoring.exact-match"
+      ],
+      "slots": [
+        {
+          "name": "report",
+          "category": "noun.eval_run",
+          "description": "Pin of the evaluation report."
+        },
+        {
+          "name": "scored_runs",
+          "category": "noun.eval_run",
+          "description": "Pins of the scored runs.",
+          "many": true,
+          "max": 20
+        },
+        {
+          "name": "pass_marks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the committed marks."
+        }
+      ],
+      "produces": [
+        {
+          "name": "review",
+          "template": "template.evaluation-report"
+        }
+      ],
+      "steps": [
+        "Confirm you did not write the report or score its runs; otherwise return blocked.",
+        "Recompute each mark from the scored runs and compare.",
+        "Check the method's rules: marks before runs, opaque ids, two runs per arm, nulls honest."
+      ],
+      "acceptance": [
+        {
+          "id": "marks-recomputed",
+          "check": "Every mark's result matches a fresh recomputation.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-reviewer",
+          "check": "The reviewing key differs from the report's and scorer's keys.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rules-checked",
+          "check": "Each method rule is marked kept or broken with evidence.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "review": "distinct_reviewer",
+      "follows": [
+        "evaluation-design.report-evaluation"
+      ]
+    }
+  ]
+}

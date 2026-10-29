@@ -1,0 +1,1282 @@
+{
+  "pack_id": "harness-onboarding-e2e",
+  "title": "Harness onboarding",
+  "version": "0.1.0",
+  "summary": "Connect a new agent harness and prove the scoped claim, read, heartbeat, write, read-back and submit lifecycle end to end, recording the exact harness version, provider and model.",
+  "dependencies": [],
+  "boundaries": [
+    "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
+    "Use a local Tessera service by default. Use a shared hosted deployment only when its health is confirmed and the owner authorized this run there.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "Harness onboarding seed pack",
+      "value": {
+        "lets_workers": "Connect a new agent harness to Tessera and prove, end to end, that it can claim, read, heartbeat, write, read back and submit within its scope, while recording the exact harness version, provider and model.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "harness-onboarding-e2e.connect-harness"
+            },
+            "when": "First: configure the harness and confirm discovery and identity."
+          },
+          {
+            "verb": {
+              "$verb": "harness-onboarding-e2e.run-lifecycle"
+            },
+            "when": "The harness under test claims and completes this verb itself."
+          },
+          {
+            "verb": {
+              "$verb": "harness-onboarding-e2e.diagnose-failure"
+            },
+            "when": "When a lifecycle step fails."
+          },
+          {
+            "verb": {
+              "$verb": "harness-onboarding-e2e.compare-harnesses"
+            },
+            "when": "Optional, across several harness runs."
+          },
+          {
+            "verb": {
+              "$verb": "harness-onboarding-e2e.review-run"
+            },
+            "when": "A different worker rechecks the receipt and audit."
+          }
+        ],
+        "credentials": "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
+        "target": "Use a local Tessera service by default. Use a shared hosted deployment only when its health is confirmed and the owner authorized this run there."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "lifecycle-checklist"
+        ],
+        [
+          "requires_noun",
+          "connection-guide"
+        ],
+        [
+          "requires_noun",
+          "recovery-playbook"
+        ],
+        [
+          "requires_noun",
+          "template.connection"
+        ],
+        [
+          "requires_noun",
+          "template.run-record"
+        ],
+        [
+          "requires_noun",
+          "template.diagnosis"
+        ],
+        [
+          "requires_noun",
+          "template.compatibility-summary"
+        ],
+        [
+          "requires_noun",
+          "template.run-review"
+        ]
+      ]
+    },
+    {
+      "slug": "lifecycle-checklist",
+      "category": "noun.benchmark_suite",
+      "role": "lifecycle_checklist",
+      "title": "Scoped lifecycle checklist: claim, read, heartbeat, write, read back, submit",
+      "category_reason": "A fixed checklist with expected observations that every harness run is scored against.",
+      "value": {
+        "steps": [
+          {
+            "id": "discover",
+            "required": true,
+            "do": "Read the access contract and list tools: HTTP GET /connect.json, or MCP initialize then tools/list.",
+            "expect": "The tool list includes claim, heartbeat, put_record, get_record, submit and my_audit, or their HTTP routes."
+          },
+          {
+            "id": "whoami",
+            "required": true,
+            "do": "Call whoami with the harness's credential.",
+            "expect": "The assigned namespace, queues, effects and expiry match what the owner issued."
+          },
+          {
+            "id": "claim",
+            "required": true,
+            "do": "Claim this verb's own task from the assigned queue.",
+            "expect": "A lease with the task id, an integer fencing token and an expiry."
+          },
+          {
+            "id": "read-pinned",
+            "required": true,
+            "do": "Read the pinned lifecycle checklist at version 1 and compute the SHA-256 of its canonical JSON value.",
+            "expect": "The digest equals the pin's value_sha256."
+          },
+          {
+            "id": "heartbeat",
+            "required": true,
+            "do": "Send at least one heartbeat with the task id and fencing token before the lease expires.",
+            "expect": "The lease is extended; no error."
+          },
+          {
+            "id": "write",
+            "required": true,
+            "do": "Write the run record as a private noun with expected version 0.",
+            "expect": "Version 1 is created."
+          },
+          {
+            "id": "read-back",
+            "required": true,
+            "do": "Read the written noun back and compare its value digest with what was sent.",
+            "expect": "Same version and same digest."
+          },
+          {
+            "id": "submit",
+            "required": true,
+            "do": "Submit the output with an Idempotency-Key and an execution report naming the exact harness version, provider and model.",
+            "expect": "Accepted with a receipt hash."
+          },
+          {
+            "id": "replay-submit",
+            "required": false,
+            "do": "Repeat the identical submit with the same Idempotency-Key.",
+            "expect": "The same receipt; no second result."
+          },
+          {
+            "id": "audit",
+            "required": true,
+            "do": "Read my_audit for this task.",
+            "expect": "Claim, heartbeat, write and submit appear in order."
+          }
+        ],
+        "negative_probes": [
+          {
+            "id": "stringified-object",
+            "do": "Send one tool call whose object argument is a JSON string instead of an object.",
+            "expect": "Rejected with a field error; nothing is written."
+          },
+          {
+            "id": "stale-fence",
+            "do": "Heartbeat once with fencing token minus one, after a successful heartbeat.",
+            "expect": "Rejected as a stale lease; the real lease is unaffected."
+          }
+        ],
+        "pass_rule": "Every required step passes. Probes are optional; a probe that is accepted instead of rejected is a failure to report.",
+        "scope_rules": [
+          "Use only the namespace, queue and store the owner assigned.",
+          "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
+          "Use a local Tessera service by default. Use a shared hosted deployment only when its health is confirmed and the owner authorized this run there."
+        ]
+      }
+    },
+    {
+      "slug": "connection-guide",
+      "category": "noun.shim_provision",
+      "role": "connection_guide",
+      "title": "Connecting a harness: transport, headers, arguments and credentials",
+      "category_reason": "Connection guidance is the adapter contract between a harness's tool calls and Tessera's interfaces.",
+      "value": {
+        "transports": {
+          "mcp": "POST JSON-RPC to the deployment's /mcp with Content-Type application/json and Accept application/json, text/event-stream. Call initialize, then tools/list.",
+          "http": "Use the routes in /v1/openapi.json with a bearer credential. The namespace goes in the path, never guessed.",
+          "shim": "An optional local shim may wrap either transport; the checks are the same without it."
+        },
+        "argument_rules": [
+          "Send objects as JSON objects, never as JSON text inside a string.",
+          "Fencing tokens are integers.",
+          "One Idempotency-Key per submission; reuse it only to replay the identical submission."
+        ],
+        "credentials": "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
+        "target": "Use a local Tessera service by default. Use a shared hosted deployment only when its health is confirmed and the owner authorized this run there.",
+        "record": "Record the harness's exact version string, the provider and the exact model identifier the harness reports, or none."
+      }
+    },
+    {
+      "slug": "recovery-playbook",
+      "category": "noun.recovery_playbook",
+      "role": "recovery_playbook",
+      "title": "What to do when a lifecycle step fails",
+      "category_reason": "A deterministic mapping from failure classes to safe recovery actions.",
+      "value": {
+        "failures": [
+          {
+            "class": "401",
+            "meaning": "Missing or expired credential.",
+            "action": "Stop. Re-authenticate through the harness's own credential store; never paste a key into the conversation."
+          },
+          {
+            "class": "403",
+            "meaning": "The credential lacks a grant.",
+            "action": "Stop and ask the owner for the exact missing grant. Never switch to another key."
+          },
+          {
+            "class": "404",
+            "meaning": "Wrong namespace, store, key or queue.",
+            "action": "Compare the path with whoami's namespace and the brief; fix only the path."
+          },
+          {
+            "class": "409",
+            "meaning": "Version conflict or lost lease.",
+            "action": "Re-read the current version. If the lease is lost, stop all effects for this task."
+          },
+          {
+            "class": "413",
+            "meaning": "Payload too large.",
+            "action": "Shrink the payload or store large bytes as a blob reference; never split it into hidden parts."
+          },
+          {
+            "class": "400 or 422",
+            "meaning": "A field has the wrong shape.",
+            "action": "Fix only the named field; at most two corrections, then report the error."
+          },
+          {
+            "class": "429",
+            "meaning": "Rate limited.",
+            "action": "Wait for Retry-After; never retry in a tight loop."
+          },
+          {
+            "class": "503",
+            "meaning": "Service unavailable, for example a storage allowance reached.",
+            "action": "Stop and record the outage with its reset time; do not move to another deployment without the owner."
+          },
+          {
+            "class": "uncertain submit",
+            "meaning": "The submit timed out or the connection dropped.",
+            "action": "Replay the identical submit with the same Idempotency-Key; never change the output under the same key."
+          }
+        ],
+        "rules": [
+          "Never retry an effect whose outcome is uncertain with a different identity.",
+          "Never fall back to an administrator key.",
+          "Record every failure, including ones that later succeeded."
+        ]
+      }
+    },
+    {
+      "slug": "template.connection",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the result of connecting a harness: identity, transport, target and which tools discovery found",
+      "value": {
+        "describes": "the result of connecting a harness: identity, transport, target and which tools discovery found",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "harness",
+            "invocation",
+            "target",
+            "discovery",
+            "identity_ok"
+          ],
+          "properties": {
+            "harness": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "exact_version"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "exact_version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              }
+            },
+            "invocation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "mcp",
+                    "http",
+                    "shim"
+                  ]
+                },
+                "client": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                }
+              }
+            },
+            "target": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "tessera_version"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "local",
+                    "hosted"
+                  ]
+                },
+                "tessera_version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              }
+            },
+            "discovery": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "present"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "present": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "identity_ok": {
+              "type": "boolean"
+            },
+            "notes": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "identity_ok is true only when whoami matches the owner's issued scope."
+        ]
+      },
+      "category_reason": "A connection record is a probe run with observed results."
+    },
+    {
+      "slug": "template.run-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one end-to-end lifecycle run: exact harness, provider, model, target, step results and failures",
+      "value": {
+        "describes": "one end-to-end lifecycle run: exact harness, provider, model, target, step results and failures",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "harness",
+            "provider",
+            "model",
+            "invocation",
+            "target",
+            "steps",
+            "probes",
+            "failures",
+            "usage",
+            "started_at",
+            "finished_at"
+          ],
+          "properties": {
+            "harness": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "exact_version"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "exact_version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "build": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                }
+              }
+            },
+            "provider": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                }
+              }
+            },
+            "model": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "revision": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 120
+                }
+              }
+            },
+            "invocation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "mcp",
+                    "http",
+                    "shim"
+                  ]
+                },
+                "client": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 200
+                }
+              }
+            },
+            "target": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "tessera_version"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "local",
+                    "hosted"
+                  ]
+                },
+                "tessera_version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              }
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "skip"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "probes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "skip"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "failures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "step",
+                  "class",
+                  "detail"
+                ],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "class": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "usage": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "input_tokens": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "output_tokens": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "started_at": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "finished_at": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "Name the exact harness version, provider and model, or none.",
+          "Every checklist step appears with pass, fail or skip.",
+          "Token counts are null with a reason unless measured."
+        ],
+        "example": {
+          "harness": {
+            "name": "SYNTHETIC harness",
+            "exact_version": "0.0.0-synthetic"
+          },
+          "provider": {
+            "name": "none",
+            "note": "SYNTHETIC example; a real run names the actual provider."
+          },
+          "model": {
+            "name": "none"
+          },
+          "invocation": {
+            "mode": "mcp"
+          },
+          "target": {
+            "kind": "local",
+            "tessera_version": "SYNTHETIC"
+          },
+          "steps": [
+            {
+              "id": "discover",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "whoami",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "claim",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "read-pinned",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "heartbeat",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "write",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "read-back",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "submit",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "replay-submit",
+              "result": "skip",
+              "evidence": "SYNTHETIC"
+            },
+            {
+              "id": "audit",
+              "result": "pass",
+              "evidence": "SYNTHETIC"
+            }
+          ],
+          "probes": [],
+          "failures": [],
+          "usage": {
+            "source": "harness_metadata",
+            "input_tokens": null,
+            "output_tokens": null,
+            "reason": "SYNTHETIC example; nothing was measured."
+          },
+          "started_at": "2026-10-29T00:00:00Z",
+          "finished_at": "2026-10-29T00:00:00Z"
+        }
+      },
+      "category_reason": "A run record is a fingerprinted lifecycle run with null-honest usage."
+    },
+    {
+      "slug": "template.diagnosis",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a diagnosis of one failed step: class, reproduction, cause, fix and whether a retry is safe",
+      "value": {
+        "describes": "a diagnosis of one failed step: class, reproduction, cause, fix and whether a retry is safe",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "run_ref",
+            "failure_class",
+            "reproduced",
+            "cause",
+            "fix",
+            "safe_to_retry"
+          ],
+          "properties": {
+            "run_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "failure_class": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "reproduced": {
+              "type": "boolean"
+            },
+            "reproduction": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            },
+            "cause": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "fix": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "safe_to_retry": {
+              "type": "boolean"
+            },
+            "retry_plan": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "safe_to_retry is false when an external effect's outcome is uncertain."
+        ]
+      },
+      "category_reason": "A diagnosis is a falsifiable cause hypothesis with a reproduction."
+    },
+    {
+      "slug": "template.compatibility-summary",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a table of harness runs: version, provider, model and required steps passed",
+      "value": {
+        "describes": "a table of harness runs: version, provider, model and required steps passed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rows"
+          ],
+          "properties": {
+            "rows": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "harness",
+                  "exact_version",
+                  "provider",
+                  "model",
+                  "required_steps_passed",
+                  "required_steps_total",
+                  "run_ref"
+                ],
+                "properties": {
+                  "harness": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "exact_version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "provider": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "model": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "required_steps_passed": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "required_steps_total": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "run_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "notes": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Rows come from run records only."
+        ]
+      },
+      "category_reason": "A compatibility summary is a scorecard across runs."
+    },
+    {
+      "slug": "template.run-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an independent recheck of one run's receipt, audit and identity",
+      "value": {
+        "describes": "an independent recheck of one run's receipt, audit and identity",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "run_ref",
+            "receipt_checked",
+            "audit_checked",
+            "identity_recorded",
+            "verdict",
+            "reasons"
+          ],
+          "properties": {
+            "run_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "receipt_checked": {
+              "type": "boolean"
+            },
+            "audit_checked": {
+              "type": "boolean"
+            },
+            "identity_recorded": {
+              "type": "boolean"
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail",
+                "inconclusive"
+              ]
+            },
+            "reasons": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "The reviewer is not the harness under test."
+        ]
+      },
+      "category_reason": "A run review is a verification run over one lifecycle run."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "connect-harness",
+      "kind": "verb.probe_source",
+      "title": "Connect a new harness",
+      "claimant": "agent_or_human",
+      "summary": "Configure the harness with its own credential store, then confirm from inside the harness that discovery and whoami match the issued scope.",
+      "outcome": "A private connection record, or blocked with the one missing setting.",
+      "ready_outcome": "connected",
+      "model_use": "none",
+      "pinned": [
+        "connection-guide",
+        "recovery-playbook"
+      ],
+      "params": {
+        "harness_label": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": "A plain label for the harness, such as its product name.",
+          "required": true
+        },
+        "target_kind": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "local",
+              "hosted"
+            ]
+          },
+          "default": "local",
+          "description": "Where the Tessera service runs."
+        }
+      },
+      "produces": [
+        {
+          "name": "connection",
+          "template": "template.connection"
+        }
+      ],
+      "steps": [
+        "Follow the connection guide for the harness's transport. Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
+        "From inside the harness, run discovery and whoami. Record which expected tools were found.",
+        "Record the harness's exact version string as the harness reports it.",
+        "Use a local Tessera service by default. Use a shared hosted deployment only when its health is confirmed and the owner authorized this run there."
+      ],
+      "acceptance": [
+        {
+          "id": "connection-matches-template",
+          "check": "The connection record validates against template.connection's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tools-found",
+          "check": "discovery lists claim, heartbeat, put_record, get_record, submit and my_audit as present.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-secrets",
+          "check": "No credential appears in the record, the output or the execution report.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "network": "Only the assigned Tessera deployment's discovery and identity routes.",
+      "capabilities": [
+        "configure the harness",
+        "the harness's own credential store",
+        "write private candidate nouns"
+      ]
+    },
+    {
+      "slug": "run-lifecycle",
+      "kind": "verb.verify_gate",
+      "title": "Run the scoped lifecycle end to end",
+      "claimant": "agent",
+      "summary": "The harness under test claims this very task and performs claim, read, heartbeat, write, read back, submit and audit, recording each result.",
+      "outcome": "A private run record whether the run passed or failed; lifecycle_passed is true only when every required step passed.",
+      "ready_outcome": "run_recorded",
+      "pinned": [
+        "lifecycle-checklist",
+        "connection-guide",
+        "recovery-playbook"
+      ],
+      "slots": [
+        {
+          "name": "connection",
+          "category": "noun.eval_run",
+          "description": "Pin of the connection record for this harness."
+        }
+      ],
+      "params": {
+        "run_probes": {
+          "schema": {
+            "type": "boolean"
+          },
+          "default": false,
+          "description": "Also run the two negative probes."
+        }
+      },
+      "produces": [
+        {
+          "name": "run_record",
+          "template": "template.run-record"
+        }
+      ],
+      "steps": [
+        "Claim this task with the harness under test; the claim is step three of the checklist.",
+        "Perform every checklist step in order and record pass, fail or skip with evidence.",
+        "On a failure, follow the recovery playbook; never switch keys or deployments.",
+        "Submit with an Idempotency-Key and an execution report naming the exact harness version, provider and model.",
+        "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation."
+      ],
+      "acceptance": [
+        {
+          "id": "record-matches-template",
+          "check": "The run record validates against template.run-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-steps-reported",
+          "check": "Every checklist step id appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "pinned-digest-verified",
+          "check": "The read-pinned step's evidence shows the computed digest equal to the pin.",
+          "method": "deterministic"
+        },
+        {
+          "id": "identity-exact",
+          "check": "harness.exact_version, provider.name and model.name are filled, using none where no model was used.",
+          "method": "deterministic"
+        },
+        {
+          "id": "passed-consistent",
+          "check": "lifecycle_passed is true exactly when every required step passed.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "network": "Only the assigned Tessera deployment.",
+      "capabilities": [
+        "claim, heartbeat, put_record, get_record, submit and my_audit within the assigned scope"
+      ],
+      "follows": [
+        "harness-onboarding-e2e.connect-harness"
+      ],
+      "output_fields": {
+        "lifecycle_passed": {
+          "type": "boolean"
+        },
+        "required_steps_passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required_steps_total": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "ready_requires": [
+        "lifecycle_passed",
+        "required_steps_passed",
+        "required_steps_total"
+      ]
+    },
+    {
+      "slug": "diagnose-failure",
+      "kind": "verb.recover_fault",
+      "title": "Diagnose a failed step",
+      "claimant": "agent",
+      "summary": "Classify a failed lifecycle step with the recovery playbook, reproduce it if possible, and propose a fix and whether a retry is safe.",
+      "outcome": "A private diagnosis; no effect is retried by this verb.",
+      "ready_outcome": "diagnosis_ready",
+      "pinned": [
+        "recovery-playbook",
+        "lifecycle-checklist"
+      ],
+      "slots": [
+        {
+          "name": "run_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the run record with the failure."
+        }
+      ],
+      "produces": [
+        {
+          "name": "diagnosis",
+          "template": "template.diagnosis"
+        }
+      ],
+      "steps": [
+        "Verify the pin. Match the failure to a class in the playbook.",
+        "Reproduce the failure locally when it is safe; never against a shared deployment.",
+        "Propose the smallest fix. Mark safe_to_retry false when an external effect's outcome is uncertain."
+      ],
+      "acceptance": [
+        {
+          "id": "diagnosis-matches-template",
+          "check": "The diagnosis validates against template.diagnosis's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "class-known",
+          "check": "failure_class is one of the playbook's classes.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cause-plausible",
+          "check": "The cause explains the recorded evidence.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "harness-onboarding-e2e.run-lifecycle"
+      ]
+    },
+    {
+      "slug": "compare-harnesses",
+      "kind": "verb.benchmark_harness",
+      "title": "Compare harness runs",
+      "claimant": "agent",
+      "summary": "Tabulate several lifecycle runs by exact harness version, provider, model and required steps passed.",
+      "outcome": "A private compatibility summary.",
+      "ready_outcome": "summary_ready",
+      "model_use": "none",
+      "pinned": [
+        "lifecycle-checklist"
+      ],
+      "slots": [
+        {
+          "name": "run_records",
+          "category": "noun.eval_run",
+          "description": "Pins of lifecycle run records.",
+          "many": true,
+          "max": 20
+        }
+      ],
+      "produces": [
+        {
+          "name": "summary",
+          "template": "template.compatibility-summary"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Copy identity and step counts from each run record; do not rerun anything.",
+        "Keep one row per run, including failed runs."
+      ],
+      "acceptance": [
+        {
+          "id": "summary-matches-template",
+          "check": "The summary validates against template.compatibility-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rows-match-runs",
+          "check": "Every row's counts equal its run record's step results.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 300
+      },
+      "follows": [
+        "harness-onboarding-e2e.run-lifecycle"
+      ]
+    },
+    {
+      "slug": "review-run",
+      "kind": "verb.verify_gate",
+      "title": "Independently recheck a run",
+      "claimant": "agent",
+      "summary": "A different worker reads the run's receipt, audit trail and written noun, and confirms the run record tells the truth.",
+      "outcome": "A private run review with pass, fail or inconclusive.",
+      "ready_outcome": "review_ready",
+      "model_use": "none",
+      "pinned": [
+        "lifecycle-checklist"
+      ],
+      "slots": [
+        {
+          "name": "run_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the run record to recheck."
+        }
+      ],
+      "produces": [
+        {
+          "name": "run_review",
+          "template": "template.run-review"
+        }
+      ],
+      "steps": [
+        "Confirm you are not the harness under test; otherwise return blocked.",
+        "Recompute the receipt hash from the recorded submission where your grants allow, and read the audit entries.",
+        "Check that the identity fields are filled and plausible."
+      ],
+      "acceptance": [
+        {
+          "id": "review-matches-template",
+          "check": "The review validates against template.run-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-reviewer",
+          "check": "The reviewing key differs from the harness's key.",
+          "method": "deterministic"
+        },
+        {
+          "id": "receipt-and-audit",
+          "check": "receipt_checked and audit_checked are true, or the verdict is inconclusive with the reason.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "review": "distinct_reviewer",
+      "follows": [
+        "harness-onboarding-e2e.run-lifecycle"
+      ]
+    }
+  ]
+}

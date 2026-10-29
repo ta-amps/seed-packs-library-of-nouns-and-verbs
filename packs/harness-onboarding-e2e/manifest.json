@@ -1,0 +1,146 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "harness-onboarding-e2e",
+  "title": "Harness onboarding",
+  "version": "0.1.0",
+  "summary": "Connect a new agent harness and prove the scoped claim, read, heartbeat, write, read-back and submit lifecycle end to end, recording the exact harness version, provider and model.",
+  "license": "MIT",
+  "store": "seedpack.harness-onboarding-e2e",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "54884019ef4824e8ba14dce101c047e7a41ba1de9026093c46342ba2069b6c11"
+    },
+    {
+      "path": "source.json",
+      "sha256": "2fe923e7dbc180b7dc480fa08d86cd435b39ccad2712edd6fb3402d4b2b92849"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "c6585629c8cd1b33e6cd701058bb7c5cffb7754019f5396511d80ee6c7d881ae"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "83cee8de1b11320328a0a02fd11dbdd7bf2580d9f647edd99270096d1da8b45e"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "harness-onboarding-e2e.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "93c39d0cb8bf13021dd8db6f5a577d1740626b5edf11e475bf37f4e02b0bec42"
+    },
+    {
+      "key": "harness-onboarding-e2e.lifecycle-checklist",
+      "category_id": "noun.benchmark_suite",
+      "role": "lifecycle_checklist",
+      "value_sha256": "c1dc0f2f466079e581c9d8c61c70dc61990615f498c21c8c333e6b23889bc9fb"
+    },
+    {
+      "key": "harness-onboarding-e2e.connection-guide",
+      "category_id": "noun.shim_provision",
+      "role": "connection_guide",
+      "value_sha256": "31a7c3dd2ea20227e62cd1f1fc39546ce83d12e08d2d55d52014512c1b0f0140"
+    },
+    {
+      "key": "harness-onboarding-e2e.recovery-playbook",
+      "category_id": "noun.recovery_playbook",
+      "role": "recovery_playbook",
+      "value_sha256": "d1c11f8d3ac2af1999d021eeb0f213a1a29a2a1662ec4e496e7e272af9f515cd"
+    },
+    {
+      "key": "harness-onboarding-e2e.template.connection",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "8a99780e7fc69993ef60fc52a19f172a8e889027236d8776b7f16a6e1715de7e"
+    },
+    {
+      "key": "harness-onboarding-e2e.template.run-record",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "45231c574f3cf4cf97a85ac2b2a50f941fd4bb2bbb5582d5d3e70771c22390ce"
+    },
+    {
+      "key": "harness-onboarding-e2e.template.diagnosis",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "6fe1bc00c902aeba1dc7c16899194c2461370613864ef305e936003dab93f683"
+    },
+    {
+      "key": "harness-onboarding-e2e.template.compatibility-summary",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "f48d5222bfbb0a4bf5484fb41507a3ad85ad337e83b86e26584bc0eed2f13f7a"
+    },
+    {
+      "key": "harness-onboarding-e2e.template.run-review",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "e6bdd11d34e9b09e9c25f2c34330022fb1f01bc96b85fc2ebe3a5371307e1a11"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "harness-onboarding-e2e.connect-harness",
+      "kind": "verb.probe_source",
+      "claimant": "agent_or_human",
+      "idempotency_key": "seedpack:harness-onboarding-e2e:connect-harness:af48b66d9a6ecb5594c821c7992811860783180929b279c61905a2f2874fc981",
+      "report_shape_sha256": "9919e87897cd421084f4e004a4acb4d2029e67cf340f767c7483a9e812bb1ffa"
+    },
+    {
+      "template_id": "harness-onboarding-e2e.run-lifecycle",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:harness-onboarding-e2e:run-lifecycle:08f5a107933b9611c76cc4e8e911fe07c867e024088a48de11c046288285c4da",
+      "report_shape_sha256": "8e78eab8b44cf11fe620432d121f20fcd39c1fc20ac2242da72c4e01904f1508"
+    },
+    {
+      "template_id": "harness-onboarding-e2e.diagnose-failure",
+      "kind": "verb.recover_fault",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:harness-onboarding-e2e:diagnose-failure:8887288cec76529f184f2a8f59b543425ce235e5b8720bd0178547571802e378",
+      "report_shape_sha256": "7059d9a1ce9da09335569da5a2fa46fdf4493ed6dec19e4b5fdfeefb81e5ae67"
+    },
+    {
+      "template_id": "harness-onboarding-e2e.compare-harnesses",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:harness-onboarding-e2e:compare-harnesses:3d66a592bdb3f00c2c44fd41e105c4a200d1d58b5d00400db0fda2c5ca026df0",
+      "report_shape_sha256": "3d784e32d0753709f61a4788a9e98848ba6b4054f4ea4f9a8f29f37ab0dd4cde"
+    },
+    {
+      "template_id": "harness-onboarding-e2e.review-run",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:harness-onboarding-e2e:review-run:f23cad36afc1fe5b72ad684ee3878213acb95d61f7e18fe701b93a9b999a3ecf",
+      "report_shape_sha256": "c50f1719e37dc6a0587c48eaf9035409d8666cee3ff60fa9c1b19d1044ae2330"
+    }
+  ],
+  "dependencies": [],
+  "boundaries": [
+    "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
+    "Use a local Tessera service by default. Use a shared hosted deployment only when its health is confirmed and the owner authorized this run there.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

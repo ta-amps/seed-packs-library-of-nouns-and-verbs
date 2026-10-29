@@ -1,0 +1,1776 @@
+{
+  "pack_id": "decomposition-patterns",
+  "title": "Decomposition patterns",
+  "version": "0.1.0",
+  "summary": "Nine reusable breakdown patterns, each with a null-honest success record, and verbs to propose a breakdown, try alternatives as separate attempts, compare them by downstream outcomes and record what worked.",
+  "dependencies": [],
+  "boundaries": [
+    "No verb in this pack enqueues children; an authorized requester does that explicitly.",
+    "Children share one budget.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "Decomposition patterns seed pack",
+      "value": {
+        "lets_workers": "Choose how to break work into verbs using proven shapes, try alternative breakdowns as separate attempts, and keep the shape that led to better downstream results, with every pattern carrying its own success record.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "decomposition-patterns.propose-breakdown"
+            },
+            "when": "For a goal that may need more than one verb; one attempt per alternative."
+          },
+          {
+            "verb": {
+              "$verb": "decomposition-patterns.materialize-attempt"
+            },
+            "when": "Turns one breakdown into child task previews; a person or authorized requester enqueues them."
+          },
+          {
+            "verb": {
+              "$verb": "decomposition-patterns.compare-breakdowns"
+            },
+            "when": "After the children of two or more attempts finish."
+          },
+          {
+            "verb": {
+              "$verb": "decomposition-patterns.record-outcome"
+            },
+            "when": "Last: add the result to the pattern's success record."
+          }
+        ],
+        "first_rule": "Prefer single-verb. Split only when parts have independent outcomes, permissions or recovery.",
+        "patterns": [
+          {
+            "$pin": "pattern.single-verb"
+          },
+          {
+            "$pin": "pattern.probe-then-build"
+          },
+          {
+            "$pin": "pattern.fan-out-by-part"
+          },
+          {
+            "$pin": "pattern.independent-attempts-then-compare"
+          },
+          {
+            "$pin": "pattern.draft-check-review"
+          },
+          {
+            "$pin": "pattern.reproduce-then-repair"
+          },
+          {
+            "$pin": "pattern.baseline-then-variant"
+          },
+          {
+            "$pin": "pattern.map-then-reduce"
+          },
+          {
+            "$pin": "pattern.human-checkpoint"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "pattern.single-verb"
+        ],
+        [
+          "requires_noun",
+          "pattern.probe-then-build"
+        ],
+        [
+          "requires_noun",
+          "pattern.fan-out-by-part"
+        ],
+        [
+          "requires_noun",
+          "pattern.independent-attempts-then-compare"
+        ],
+        [
+          "requires_noun",
+          "pattern.draft-check-review"
+        ],
+        [
+          "requires_noun",
+          "pattern.reproduce-then-repair"
+        ],
+        [
+          "requires_noun",
+          "pattern.baseline-then-variant"
+        ],
+        [
+          "requires_noun",
+          "pattern.map-then-reduce"
+        ],
+        [
+          "requires_noun",
+          "pattern.human-checkpoint"
+        ],
+        [
+          "requires_noun",
+          "template.breakdown"
+        ],
+        [
+          "requires_noun",
+          "template.attempt-plan"
+        ],
+        [
+          "requires_noun",
+          "template.comparison"
+        ],
+        [
+          "requires_noun",
+          "template.success-entry"
+        ],
+        [
+          "requires_noun",
+          "template.success-record"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.single-verb",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: do it in one verb",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "single-verb",
+        "summary": "Keep the work as one verb when one worker can hold the context, there is one outcome, and no step needs different permissions.",
+        "use_when": [
+          "One outcome and one acceptance check set.",
+          "Fits one worker's context and time limit.",
+          "No step needs a different permission or reviewer."
+        ],
+        "avoid_when": [
+          "Parts can fail independently and should be retried alone.",
+          "A step needs a different permission, tool or reviewer."
+        ],
+        "stages": [
+          {
+            "stage": "work",
+            "verb_category": "verb.solve_draft",
+            "runs": "1",
+            "after": [],
+            "note": ""
+          }
+        ],
+        "stop_rules": [
+          "Stop when the acceptance checks pass or the time limit is reached."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "Context overflow on large inputs.",
+          "One failure loses all progress."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "repo-review.profile-repo"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.single-verb"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.single-verb"
+        ]
+      ]
+    },
+    {
+      "slug": "record.single-verb",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: do it in one verb",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.single-verb",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.probe-then-build",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: probe first, then build",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "probe-then-build",
+        "summary": "Resolve the single unknown that decides the approach with a small time-boxed probe, then build only if the probe says it is feasible.",
+        "use_when": [
+          "One key uncertainty decides whether the approach works at all.",
+          "The probe is much cheaper than the build."
+        ],
+        "avoid_when": [
+          "Nothing is uncertain.",
+          "The probe would cost as much as the build."
+        ],
+        "stages": [
+          {
+            "stage": "probe",
+            "verb_category": "verb.probe_source",
+            "runs": "1",
+            "after": [],
+            "note": "Time-boxed; answers one yes or no question."
+          },
+          {
+            "stage": "build",
+            "verb_category": "verb.solve_draft",
+            "runs": "1",
+            "after": [
+              "probe"
+            ],
+            "note": "Starts only if the probe's outcome is feasible."
+          }
+        ],
+        "stop_rules": [
+          "If the probe answers not feasible, finish with no_change.",
+          "The build must check the probe's actual outcome, not only that it finished."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "The probe asks the wrong question.",
+          "A dependency on a finished but failed probe lets the build start anyway."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "harness-onboarding-e2e.connect-harness"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.probe-then-build"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.probe-then-build"
+        ]
+      ]
+    },
+    {
+      "slug": "record.probe-then-build",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: probe first, then build",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.probe-then-build",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.fan-out-by-part",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: split by independent parts, then combine",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "fan-out-by-part",
+        "summary": "Split work into independent parts, such as question families, files or sources, run them as separate verbs, then combine with one synthesis verb.",
+        "use_when": [
+          "Parts share no state and can be checked separately.",
+          "Parallel attempts save meaningful time."
+        ],
+        "avoid_when": [
+          "Parts depend on each other's results.",
+          "The synthesis would need to redo the parts' work."
+        ],
+        "stages": [
+          {
+            "stage": "parts",
+            "verb_category": "verb.solve_draft",
+            "runs": "n",
+            "after": [],
+            "note": "Cap n in the breakdown."
+          },
+          {
+            "stage": "combine",
+            "verb_category": "verb.solve_draft",
+            "runs": "1",
+            "after": [
+              "parts"
+            ],
+            "note": "Reads every part; does not redo them."
+          }
+        ],
+        "stop_rules": [
+          "Cap the number of parts.",
+          "The combine step inspects each part's outcome; a failed part is reported, not ignored."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "Parts overlap and duplicate effort.",
+          "The combiner silently drops a failed part."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "repo-review.investigate-family"
+          },
+          {
+            "$verb": "repo-review.synthesize-report"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.fan-out-by-part"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.fan-out-by-part"
+        ]
+      ]
+    },
+    {
+      "slug": "record.fan-out-by-part",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: split by independent parts, then combine",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.fan-out-by-part",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.independent-attempts-then-compare",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: try separate attempts, then compare",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "independent-attempts-then-compare",
+        "summary": "Give the same brief to two or three separate attempts with different approaches, then compare them by their acceptance outcomes.",
+        "use_when": [
+          "The best approach is unclear.",
+          "Attempts are cheap relative to a wrong choice."
+        ],
+        "avoid_when": [
+          "One approach is clearly right.",
+          "Attempts would have external effects."
+        ],
+        "stages": [
+          {
+            "stage": "attempts",
+            "verb_category": "verb.solve_draft",
+            "runs": "k",
+            "after": [],
+            "note": "Each attempt has its own lease, artifacts and receipt."
+          },
+          {
+            "stage": "compare",
+            "verb_category": "verb.benchmark_harness",
+            "runs": "1",
+            "after": [
+              "attempts"
+            ],
+            "note": "Judges by acceptance outcomes, not by length or polish."
+          }
+        ],
+        "stop_rules": [
+          "Cap k at 3.",
+          "Equal outcomes need no invented tie-break; keep both or pick the cheaper."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "Attempts converge on the same idea.",
+          "The comparison rewards style over outcomes."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "taste-palettes.draft-embodiments"
+          },
+          {
+            "$verb": "decomposition-patterns.compare-breakdowns"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.independent-attempts-then-compare"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.independent-attempts-then-compare"
+        ]
+      ]
+    },
+    {
+      "slug": "record.independent-attempts-then-compare",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: try separate attempts, then compare",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.independent-attempts-then-compare",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.draft-check-review",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: draft, check, then review",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "draft-check-review",
+        "summary": "Draft a candidate, run deterministic checks, then have a different worker review it before anyone relies on it.",
+        "use_when": [
+          "The artifact will be shared or reused.",
+          "Policy needs an independent reviewer."
+        ],
+        "avoid_when": [
+          "The result is private scratch work.",
+          "Deterministic checks already settle everything."
+        ],
+        "stages": [
+          {
+            "stage": "draft",
+            "verb_category": "verb.solve_draft",
+            "runs": "1",
+            "after": [],
+            "note": ""
+          },
+          {
+            "stage": "check",
+            "verb_category": "verb.verify_gate",
+            "runs": "1",
+            "after": [
+              "draft"
+            ],
+            "note": "Deterministic."
+          },
+          {
+            "stage": "review",
+            "verb_category": "verb.verify_gate",
+            "runs": "1",
+            "after": [
+              "check"
+            ],
+            "note": "Different worker from the drafter."
+          }
+        ],
+        "stop_rules": [
+          "A failed check sends the work back to draft at most twice.",
+          "A missing reviewer leaves the work pending, not approved."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "The reviewer rubber-stamps.",
+          "The drafter reviews its own work."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "repo-review.synthesize-report"
+          },
+          {
+            "$verb": "repo-review.independent-review"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.draft-check-review"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.draft-check-review"
+        ]
+      ]
+    },
+    {
+      "slug": "record.draft-check-review",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: draft, check, then review",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.draft-check-review",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.reproduce-then-repair",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: reproduce the failure, then repair",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "reproduce-then-repair",
+        "summary": "Turn a failure into a small fixture that fails first, then repair, then show the fixture and the existing suite pass.",
+        "use_when": [
+          "There is a reported bug or failure.",
+          "The failure can be reproduced locally."
+        ],
+        "avoid_when": [
+          "The failure cannot be reproduced; investigate instead."
+        ],
+        "stages": [
+          {
+            "stage": "reproduce",
+            "verb_category": "verb.recover_fault",
+            "runs": "1",
+            "after": [],
+            "note": "Produces a failing fixture."
+          },
+          {
+            "stage": "repair",
+            "verb_category": "verb.solve_draft",
+            "runs": "1",
+            "after": [
+              "reproduce"
+            ],
+            "note": ""
+          },
+          {
+            "stage": "verify",
+            "verb_category": "verb.verify_gate",
+            "runs": "1",
+            "after": [
+              "repair"
+            ],
+            "note": "Fixture now passes and the suite still passes."
+          }
+        ],
+        "stop_rules": [
+          "No repair starts without a failing fixture.",
+          "If the fixture cannot be made to fail, finish with unknown."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "The fixture tests the symptom, not the cause.",
+          "The repair weakens an unrelated check."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "harness-onboarding-e2e.diagnose-failure"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.reproduce-then-repair"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.reproduce-then-repair"
+        ]
+      ]
+    },
+    {
+      "slug": "record.reproduce-then-repair",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: reproduce the failure, then repair",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.reproduce-then-repair",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.baseline-then-variant",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: measure the baseline before changing anything",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "baseline-then-variant",
+        "summary": "Measure the current behavior under fixed conditions, then measure the change under the same conditions, twice each.",
+        "use_when": [
+          "Someone claims a change improves speed, cost or quality."
+        ],
+        "avoid_when": [
+          "The change has no measurable claim."
+        ],
+        "stages": [
+          {
+            "stage": "baseline",
+            "verb_category": "verb.benchmark_harness",
+            "runs": "2",
+            "after": [],
+            "note": ""
+          },
+          {
+            "stage": "variant",
+            "verb_category": "verb.benchmark_harness",
+            "runs": "2",
+            "after": [
+              "baseline"
+            ],
+            "note": ""
+          },
+          {
+            "stage": "compare",
+            "verb_category": "verb.solve_draft",
+            "runs": "1",
+            "after": [
+              "variant"
+            ],
+            "note": ""
+          }
+        ],
+        "stop_rules": [
+          "Pass marks are committed before the baseline runs.",
+          "A missed mark is reported as missed."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "Conditions drift between baseline and variant.",
+          "One lucky run is reported as the result."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "evaluation-design.run-arm"
+          },
+          {
+            "$verb": "tool-discovery.run-trial"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.baseline-then-variant"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.baseline-then-variant"
+        ]
+      ]
+    },
+    {
+      "slug": "record.baseline-then-variant",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: measure the baseline before changing anything",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.baseline-then-variant",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.map-then-reduce",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: scan many sources, then consolidate",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "map-then-reduce",
+        "summary": "Scan each source with a deterministic collector as its own verb, then consolidate items about the same thing into one candidate.",
+        "use_when": [
+          "Many sources repeat the same news.",
+          "Collection is deterministic and cheap."
+        ],
+        "avoid_when": [
+          "One source is enough."
+        ],
+        "stages": [
+          {
+            "stage": "map",
+            "verb_category": "verb.fetch_feed",
+            "runs": "n",
+            "after": [],
+            "note": "No model per item."
+          },
+          {
+            "stage": "reduce",
+            "verb_category": "verb.generate_seed",
+            "runs": "1",
+            "after": [
+              "map"
+            ],
+            "note": "Groups items about one release into one candidate."
+          }
+        ],
+        "stop_rules": [
+          "Cap sources and fetches per window.",
+          "The reduce step keeps provenance for every merged item."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "Merging unrelated items with similar names.",
+          "Running a model per scanned item."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "tool-discovery.scan-source"
+          },
+          {
+            "$verb": "tool-discovery.propose-candidate"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.map-then-reduce"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.map-then-reduce"
+        ]
+      ]
+    },
+    {
+      "slug": "record.map-then-reduce",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: scan many sources, then consolidate",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.map-then-reduce",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "pattern.human-checkpoint",
+      "category": "noun.reflex_procedure",
+      "role": "pattern",
+      "title": "Breakdown pattern: pause for a person at a value judgment",
+      "category_reason": "A breakdown pattern is a reusable, low-token plan shape distilled from work that went well; applying it needs no fresh planning.",
+      "value": {
+        "pattern_id": "human-checkpoint",
+        "summary": "Insert a human verb where the decision is a matter of taste, policy or authority, and let agents prepare the options.",
+        "use_when": [
+          "The choice depends on preference, policy or authority.",
+          "Agents can prepare comparable options."
+        ],
+        "avoid_when": [
+          "The decision is fully determined by checks."
+        ],
+        "stages": [
+          {
+            "stage": "prepare",
+            "verb_category": "verb.solve_draft",
+            "runs": "k",
+            "after": [],
+            "note": ""
+          },
+          {
+            "stage": "decide",
+            "verb_category": "verb.vote_judge",
+            "runs": "1",
+            "after": [
+              "prepare"
+            ],
+            "note": "Claimed by a person."
+          },
+          {
+            "stage": "record",
+            "verb_category": "verb.situate",
+            "runs": "1",
+            "after": [
+              "decide"
+            ],
+            "note": ""
+          }
+        ],
+        "stop_rules": [
+          "A person's no-preference answer is a valid outcome.",
+          "Agents never record a choice on a person's behalf."
+        ],
+        "budget_rule": "The whole breakdown shares one budget; children never get a fresh allowance of their own.",
+        "failure_modes": [
+          "Too many options to compare.",
+          "Options differ in ways the person did not ask about."
+        ],
+        "examples_in_library": [
+          {
+            "$verb": "taste-palettes.record-choice"
+          },
+          {
+            "$verb": "evaluation-design.commit-pass-marks"
+          }
+        ],
+        "success_record": {
+          "$pin": "record.human-checkpoint"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "record.human-checkpoint"
+        ]
+      ]
+    },
+    {
+      "slug": "record.human-checkpoint",
+      "category": "noun.eval_run",
+      "role": "success_record",
+      "title": "Success record: pause for a person at a value judgment",
+      "category_reason": "A success record is a null-honest scorecard of every recorded use of one pattern.",
+      "value": {
+        "pattern_key": "decomposition-patterns.pattern.human-checkpoint",
+        "trials": null,
+        "successes": null,
+        "counts_reason": "No recorded uses yet. record-outcome appends uses with receipts; until then the counts stay null so rankings list this pattern as unranked rather than scoring it from a prior.",
+        "uses": [],
+        "by_task_family": {}
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.success-record",
+          "follows the success record template"
+        ]
+      ]
+    },
+    {
+      "slug": "template.breakdown",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a proposed breakdown of one goal into child verbs, with budget and stop rules",
+      "value": {
+        "describes": "a proposed breakdown of one goal into child verbs, with budget and stop rules",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "goal_ref",
+            "pattern_id",
+            "alternative",
+            "children",
+            "budget",
+            "stop_rules",
+            "why_this_shape"
+          ],
+          "properties": {
+            "goal_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "pattern_id": {
+              "type": "string",
+              "enum": [
+                "single-verb",
+                "probe-then-build",
+                "fan-out-by-part",
+                "independent-attempts-then-compare",
+                "draft-check-review",
+                "reproduce-then-repair",
+                "baseline-then-variant",
+                "map-then-reduce",
+                "human-checkpoint",
+                "custom"
+              ]
+            },
+            "alternative": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "children": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "child_id",
+                  "verb_category",
+                  "outcome",
+                  "after",
+                  "acceptance"
+                ],
+                "properties": {
+                  "child_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "verb_category": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^verb\\.[a-z_]+$"
+                  },
+                  "template_id": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 120
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "after": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  },
+                  "acceptance": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  }
+                }
+              }
+            },
+            "budget": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "max_children",
+                "max_total_minutes",
+                "max_retries"
+              ],
+              "properties": {
+                "max_children": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 12
+                },
+                "max_total_minutes": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "max_retries": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 5
+                }
+              }
+            },
+            "stop_rules": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "why_this_shape": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "Children share one budget.",
+          "Every child has acceptance checks.",
+          "why_this_shape names the pattern's use_when that applies."
+        ]
+      },
+      "category_reason": "A breakdown is a falsifiable plan: downstream outcomes confirm or refute it."
+    },
+    {
+      "slug": "template.attempt-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one breakdown lowered into child task previews, never enqueued by the worker",
+      "value": {
+        "describes": "one breakdown lowered into child task previews, never enqueued by the worker",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "breakdown_ref",
+            "alternative",
+            "task_previews",
+            "enqueued"
+          ],
+          "properties": {
+            "breakdown_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "alternative": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "task_previews": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "child_id",
+                  "kind",
+                  "brief_summary",
+                  "after"
+                ],
+                "properties": {
+                  "child_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "kind": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "brief_summary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "after": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            },
+            "enqueued": {
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            }
+          }
+        },
+        "rules": [
+          "enqueued is always false; an authorized requester enqueues children explicitly."
+        ]
+      },
+      "category_reason": "An attempt plan is the breakdown compiled into a dependency graph of previews."
+    },
+    {
+      "slug": "template.comparison",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a comparison of two or three attempts by their downstream outcomes",
+      "value": {
+        "describes": "a comparison of two or three attempts by their downstream outcomes",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attempts",
+            "criteria",
+            "results",
+            "winner",
+            "reason"
+          ],
+          "properties": {
+            "attempts": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "criteria": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "results": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "attempt",
+                  "children_succeeded",
+                  "children_total",
+                  "minutes",
+                  "cost_usd",
+                  "acceptance_passed"
+                ],
+                "properties": {
+                  "attempt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "children_succeeded": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "children_total": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "minutes": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cost_usd": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "acceptance_passed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "winner": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "Compare acceptance outcomes first, then time and cost.",
+          "Unknown time or cost stays null."
+        ]
+      },
+      "category_reason": "A comparison is a scored run across attempts."
+    },
+    {
+      "slug": "template.success-entry",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one recorded use of a pattern with its receipts",
+      "value": {
+        "describes": "one recorded use of a pattern with its receipts",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pattern_id",
+            "task_family",
+            "outcome",
+            "children",
+            "receipts",
+            "observed_at"
+          ],
+          "properties": {
+            "pattern_id": {
+              "type": "string",
+              "enum": [
+                "single-verb",
+                "probe-then-build",
+                "fan-out-by-part",
+                "independent-attempts-then-compare",
+                "draft-check-review",
+                "reproduce-then-repair",
+                "baseline-then-variant",
+                "map-then-reduce",
+                "human-checkpoint"
+              ]
+            },
+            "task_family": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "succeeded",
+                "failed",
+                "abandoned"
+              ]
+            },
+            "children": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "minutes": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "cost_usd": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "receipts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "observed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "lesson": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "Every entry cites at least one receipt.",
+          "Failed and abandoned uses are recorded too."
+        ]
+      },
+      "category_reason": "A success entry is one fingerprinted observation of a pattern in use."
+    },
+    {
+      "slug": "template.success-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a pattern's success record: every recorded use and the counts derived from them",
+      "value": {
+        "describes": "a pattern's success record: every recorded use and the counts derived from them",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pattern_key",
+            "trials",
+            "successes",
+            "counts_reason",
+            "uses",
+            "by_task_family"
+          ],
+          "properties": {
+            "pattern_key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "trials": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "successes": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "counts_reason": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            },
+            "uses": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "pattern_id",
+                  "task_family",
+                  "outcome",
+                  "children",
+                  "receipts",
+                  "observed_at"
+                ],
+                "properties": {
+                  "pattern_id": {
+                    "type": "string",
+                    "enum": [
+                      "single-verb",
+                      "probe-then-build",
+                      "fan-out-by-part",
+                      "independent-attempts-then-compare",
+                      "draft-check-review",
+                      "reproduce-then-repair",
+                      "baseline-then-variant",
+                      "map-then-reduce",
+                      "human-checkpoint"
+                    ]
+                  },
+                  "task_family": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "enum": [
+                      "succeeded",
+                      "failed",
+                      "abandoned"
+                    ]
+                  },
+                  "children": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 50
+                  },
+                  "minutes": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "cost_usd": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "receipts": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    }
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                    "maxLength": 40
+                  },
+                  "lesson": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "by_task_family": {
+              "type": "object"
+            }
+          }
+        },
+        "rules": [
+          "trials and successes are null until the first entry, then derived from entries only.",
+          "A new version supersedes the old one through compare-and-set; old versions stay readable."
+        ]
+      },
+      "category_reason": "A success record is a null-honest scorecard over every recorded use of one pattern."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "propose-breakdown",
+      "kind": "verb.decompose_dag",
+      "title": "Propose a breakdown",
+      "claimant": "agent",
+      "summary": "Pick a pattern for a goal and propose child verbs with outcomes, order, acceptance checks, one shared budget and stop rules.",
+      "outcome": "A private breakdown, or no_change when the goal fits a single verb.",
+      "ready_outcome": "breakdown_ready",
+      "pinned": [
+        "pattern.single-verb",
+        "pattern.probe-then-build",
+        "pattern.fan-out-by-part",
+        "pattern.independent-attempts-then-compare",
+        "pattern.draft-check-review",
+        "pattern.reproduce-then-repair",
+        "pattern.baseline-then-variant",
+        "pattern.map-then-reduce",
+        "pattern.human-checkpoint"
+      ],
+      "slots": [
+        {
+          "name": "goal",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the goal or brief to break down."
+        }
+      ],
+      "params": {
+        "alternative": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "pattern": "^[a-z]$"
+          },
+          "description": "Attempt label, such as a, b or c. Each label is a separate attempt.",
+          "required": true
+        },
+        "pattern_hint": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "single-verb",
+              "probe-then-build",
+              "fan-out-by-part",
+              "independent-attempts-then-compare",
+              "draft-check-review",
+              "reproduce-then-repair",
+              "baseline-then-variant",
+              "map-then-reduce",
+              "human-checkpoint",
+              "any"
+            ]
+          },
+          "default": "any",
+          "description": "Pattern to try in this attempt, or any."
+        },
+        "max_children": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          },
+          "default": 6,
+          "description": "Most child verbs."
+        }
+      },
+      "produces": [
+        {
+          "name": "breakdown",
+          "template": "template.breakdown"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Check single-verb first; if the goal fits one verb, finish with no_change and say so.",
+        "Choose the pattern whose use_when best matches, or follow pattern_hint; different alternatives should try different shapes.",
+        "Give every child an outcome and acceptance checks. Children share one budget and never get their own.",
+        "Order children with after; never rely on a dependency finishing as proof that it succeeded.",
+        "Do not enqueue anything."
+      ],
+      "acceptance": [
+        {
+          "id": "breakdown-matches-template",
+          "check": "The breakdown validates against template.breakdown's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "acyclic",
+          "check": "The after graph has no cycle and every after refers to a child in the breakdown.",
+          "method": "deterministic"
+        },
+        {
+          "id": "within-cap",
+          "check": "The number of children is at most max_children.",
+          "method": "deterministic"
+        },
+        {
+          "id": "shape-justified",
+          "check": "why_this_shape matches the chosen pattern's use_when.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "notes": [
+        "Instantiate this template once per alternative label to get separate attempts with separate leases and receipts."
+      ]
+    },
+    {
+      "slug": "materialize-attempt",
+      "kind": "verb.compile_dag",
+      "title": "Lower a breakdown into task previews",
+      "claimant": "agent",
+      "summary": "Turn one breakdown into ordered child task previews that an authorized requester can enqueue; this verb enqueues nothing.",
+      "outcome": "A private attempt plan with task previews and enqueued false.",
+      "ready_outcome": "attempt_ready",
+      "model_use": "none",
+      "pinned": [
+        "template.breakdown"
+      ],
+      "slots": [
+        {
+          "name": "breakdown",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of one breakdown."
+        }
+      ],
+      "produces": [
+        {
+          "name": "attempt_plan",
+          "template": "template.attempt-plan"
+        }
+      ],
+      "steps": [
+        "Verify the pin. Map each child to a verb template id where one exists in the library, or to a verb category.",
+        "Keep the breakdown's order and budget. Write task previews only.",
+        "Set enqueued to false. Enqueueing is the requester's explicit act with their own grants."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The attempt plan validates against template.attempt-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-enqueued",
+          "check": "enqueued is false and no task was created by this verb.",
+          "method": "deterministic"
+        },
+        {
+          "id": "order-kept",
+          "check": "Every preview's after list equals its child's after list in the breakdown.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 300
+      },
+      "follows": [
+        "decomposition-patterns.propose-breakdown"
+      ]
+    },
+    {
+      "slug": "compare-breakdowns",
+      "kind": "verb.benchmark_harness",
+      "title": "Compare breakdowns by downstream outcomes",
+      "claimant": "agent",
+      "summary": "Compare two or three attempted breakdowns by what their children actually achieved: acceptance passed, children succeeded, time and cost.",
+      "outcome": "A private comparison naming the better attempt, or no_change when they are equivalent.",
+      "ready_outcome": "comparison_ready",
+      "pinned": [
+        "template.comparison"
+      ],
+      "slots": [
+        {
+          "name": "attempt_plans",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the attempt plans to compare.",
+          "many": true,
+          "max": 3
+        },
+        {
+          "name": "outcomes",
+          "category": "noun.eval_run",
+          "description": "Pins of nouns recording the children's actual outcomes and receipts.",
+          "many": true,
+          "max": 40
+        }
+      ],
+      "produces": [
+        {
+          "name": "comparison",
+          "template": "template.comparison"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Use actual child outcomes and receipts, not the plans' promises.",
+        "Compare acceptance outcomes first, then children succeeded, then time and cost.",
+        "Report equal outcomes as equal; pick the cheaper only when cost is known."
+      ],
+      "acceptance": [
+        {
+          "id": "comparison-matches-template",
+          "check": "The comparison validates against template.comparison's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-from-receipts",
+          "check": "children_succeeded matches the cited outcome nouns.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fair",
+          "check": "The attempts were compared on the same goal and conditions.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "decomposition-patterns.materialize-attempt"
+      ]
+    },
+    {
+      "slug": "record-outcome",
+      "kind": "verb.distill_reflex",
+      "title": "Record the outcome in the pattern's success record",
+      "claimant": "agent",
+      "summary": "Add one success entry to the pattern's record as a new version, with receipts, and propose a pattern revision only when evidence supports it.",
+      "outcome": "A new private version of the success record, or no_change when the use was already recorded.",
+      "ready_outcome": "record_updated",
+      "pinned": [
+        "template.success-entry"
+      ],
+      "slots": [
+        {
+          "name": "comparison",
+          "category": "noun.eval_run",
+          "description": "Pin of the comparison, or of a single attempt's outcome."
+        },
+        {
+          "name": "success_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the pattern's current success record version."
+        }
+      ],
+      "produces": [
+        {
+          "name": "success_record",
+          "template": "template.success-record"
+        }
+      ],
+      "update_slot": "success_record",
+      "steps": [
+        "Verify the pins. Write the new record version with the current version as its compare-and-set expectation.",
+        "Append one entry with receipts; failed and abandoned uses count.",
+        "Set trials and successes from the entries only; never estimate them."
+      ],
+      "acceptance": [
+        {
+          "id": "entry-matches-template",
+          "check": "The new entry validates against template.success-entry's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-consistent",
+          "check": "trials equals the number of entries and successes the number with outcome succeeded.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cas-update",
+          "check": "The write used the pinned version as its expected version.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "decomposition-patterns.compare-breakdowns"
+      ],
+      "notes": [
+        "This verb updates an existing noun through compare-and-set, so its write is the one exception to create-only in this pack."
+      ]
+    }
+  ]
+}
