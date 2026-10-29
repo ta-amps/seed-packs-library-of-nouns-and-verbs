@@ -11,7 +11,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds fifteen proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds sixteen proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -30,14 +30,15 @@ activated**, and no worker has run them yet.
 | [Decomposition patterns](packs/decomposition-patterns/README.md) | Breaking work into verbs with reusable patterns |
 | [Taste palettes](packs/taste-palettes/README.md) | Comparing options side by side and keeping a person's choice |
 | [Public-good kits](packs/public-good-kits/README.md) | Building agent kits that nonprofits can use |
+| [Exploitation evidence](packs/exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone |
 | [Harness onboarding](packs/harness-onboarding-e2e/README.md) | Connecting an agent harness and proving its lifecycle |
 | [Security review](packs/security-review/README.md) | Authorized, local-only security review of code |
 | [Cost optimization](packs/cost-optimization/README.md) | Finding and measuring cost savings |
 | [Docs improvement](packs/docs-improvement/README.md) | Making documentation clearer for a named reader |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 240
-nouns and 88 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 309
+nouns and 99 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
