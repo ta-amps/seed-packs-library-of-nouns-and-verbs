@@ -25,6 +25,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Evaluation design](evaluation-design/README.md) | Fair, pre-registered evaluations with exact-match scoring | 10 | 7 |
 | [Checks of checks](checks-of-checks/README.md) | Proving a test or rubric works before trusting it | 8 | 4 |
 | [Decomposition patterns](decomposition-patterns/README.md) | Breaking work into verbs with reusable patterns | 24 | 4 |
+| [Code composition](code-composition/README.md) | Composing verified code without rewriting it | 35 | 7 |
 | [Taste palettes](taste-palettes/README.md) | Comparing options side by side and keeping a person's choice | 8 | 5 |
 | [Public-good kits](public-good-kits/README.md) | Building agent kits that nonprofits can use | 15 | 8 |
 | [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 69 | 11 |
@@ -33,7 +34,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 
-Together: 309 nouns and 99 verb templates across sixteen packs. The
+Together: 344 nouns and 106 verb templates across seventeen packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
