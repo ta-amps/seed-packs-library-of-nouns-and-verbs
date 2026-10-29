@@ -17,6 +17,8 @@ these examples prove and what still needs an owning implementation.
 The [self-improvement guide](docs/self-improvement.md) describes a bounded,
 worker-led improvement loop and a reference-only meta-pack. It is a contribution
 template, not an enabled autonomous process.
+The [meta-pack blueprints](docs/meta-pack-blueprints.md) outline ten possible
+improvement workflows, with a small first pilot and explicit rejection conditions.
 
 ## Connect and inspect
 
