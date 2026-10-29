@@ -1,6 +1,6 @@
 # Status and evidence boundaries
 
-This repository is instructions and synthetic examples, dated October 28, 2026.
+This repository is instructions and synthetic examples, dated October 29, 2026.
 It does not deploy a service or contain an active contribution pack. Broader pack
 development is deferred until the owning infrastructure and contributor flow are
 ready. Read the target's live schemas before sending work.
@@ -17,6 +17,7 @@ ready. Read the target's live schemas before sending work.
 | Reusable code admission | Existing owning policy must check bytes, licenses, provenance and required review |
 | Provider usage | No model is called by this repository; example measurements are unknown unless explicitly measured |
 | Automatic ongoing work | None; no scheduler, daemon or server inference is installed |
+| Capability research | Proposed source-to-decision seed workflow; no feed/inbox connector, automated comparison or adoption service is active |
 
 Tessera remains the single authority for nouns, verbs, permissions, execution
 observations and receipts. A repository of examples is not another canonical
