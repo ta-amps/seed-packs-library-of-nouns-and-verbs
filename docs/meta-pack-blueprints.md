@@ -1,8 +1,9 @@
 # Reference meta-pack blueprints
 
 These are documentation blueprints, not active packs, registered new categories,
-installed executors or promises of deployment. Broader pack development remains
-deferred until infrastructure readiness. Read [the improvement lifecycle](self-improvement.md)
+installed executors or promises of deployment. Proposed seed packs now live in the
+[packs/](../packs/README.md) library as validated examples; activating any of them
+remains deferred until infrastructure readiness. Read [the improvement lifecycle](self-improvement.md)
 and [current format limits](formats.md) before proposing a pilot.
 
 Each blueprint improves a reusable process, method or guidance noun across tasks.

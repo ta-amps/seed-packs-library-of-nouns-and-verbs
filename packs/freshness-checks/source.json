@@ -1,0 +1,733 @@
+{
+  "pack_id": "freshness-checks",
+  "title": "Freshness checks",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for finding stale, deprecated or end-of-life knowledge: watch items, a deterministic freshness policy, deprecation notices, tombstones and a daily scan proposal that is not activated.",
+  "dependencies": [
+    "tool-discovery"
+  ],
+  "boundaries": [
+    "Read only public release notes, deprecation pages and package indexes. Do not sign up, log in, file reports or contact anyone.",
+    "No scheduler is activated; the daily scan is a proposal noun.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for finding stale, deprecated or end-of-life knowledge",
+      "value": {
+        "lets_workers": "Keep the nouns other packs rely on from quietly going out of date: watch the tools, packages, APIs, models and pages they pin, flag what is stale, deprecated or out of support, propose refreshes and replacements, and record do-not-use tombstones with evidence.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "freshness-checks.scan-staleness"
+            },
+            "when": "Daily, from the schedule proposal; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "freshness-checks.check-deprecations"
+            },
+            "when": "For watched items that are due or flagged."
+          },
+          {
+            "verb": {
+              "$verb": "freshness-checks.propose-replacements"
+            },
+            "when": "For deprecated items with a named replacement; it proposes trials as follow-up verbs."
+          },
+          {
+            "verb": {
+              "$verb": "freshness-checks.record-tombstone"
+            },
+            "when": "For end-of-life or unsafe versions, with evidence."
+          }
+        ],
+        "policy": {
+          "$pin": "freshness-policy"
+        },
+        "schedule": {
+          "$pin": "schedule.daily-check"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "freshness-policy"
+        ],
+        [
+          "requires_noun",
+          "schedule.daily-check"
+        ],
+        [
+          "requires_noun",
+          "template.watch-item"
+        ],
+        [
+          "requires_noun",
+          "template.deprecation-notice"
+        ],
+        [
+          "requires_noun",
+          "template.freshness-report"
+        ],
+        [
+          "requires_noun",
+          "template.tombstone"
+        ]
+      ]
+    },
+    {
+      "slug": "freshness-policy",
+      "category": "noun.reflex_procedure",
+      "role": "freshness_policy",
+      "title": "Freshness policy: max ages, flags and actions",
+      "category_reason": "A zero-call deterministic rule set: the same watch items and date give the same flags and actions.",
+      "value": {
+        "default_max_age_days": {
+          "package": 30,
+          "repository": 30,
+          "api": 14,
+          "model": 14,
+          "dataset": 90,
+          "page": 30,
+          "tool": 30
+        },
+        "flags": {
+          "older_than_max_age": "Not checked within its max age.",
+          "newer_upstream_version": "Upstream released a newer version than the pinned one.",
+          "deprecated_upstream": "Upstream marked the pinned version or feature deprecated.",
+          "end_of_life": "Upstream ended support for the pinned version.",
+          "license_changed": "The upstream license differs from the one recorded.",
+          "source_unreachable": "The upstream source failed on two checks in a row."
+        },
+        "actions": {
+          "refresh": "Re-read and write a superseding noun: older_than_max_age or newer_upstream_version.",
+          "replace": "Propose a replacement trial: deprecated_upstream with a named replacement.",
+          "tombstone": "Record a do-not-use tombstone: end_of_life, or a security advisory for the pinned version.",
+          "ask_owner": "license_changed or source_unreachable: a person decides."
+        },
+        "rule": "A 404 or timeout is not proof of deprecation; it is source_unreachable until confirmed.",
+        "model_calls": 0,
+        "starting_point": "When an item has no max age, start from its category's default half-life in the registry."
+      }
+    },
+    {
+      "slug": "template.watch-item",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one thing to keep fresh: the noun that relies on it, its upstream identity, pinned version and how to check it",
+      "value": {
+        "describes": "one thing to keep fresh: the noun that relies on it, its upstream identity, pinned version and how to check it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "noun_ref",
+            "upstream",
+            "pinned_version",
+            "check_method",
+            "max_age_days",
+            "last_checked"
+          ],
+          "properties": {
+            "noun_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "upstream": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "identity"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "package",
+                    "repository",
+                    "api",
+                    "model",
+                    "dataset",
+                    "page",
+                    "tool"
+                  ]
+                },
+                "identity": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "release_feed": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 400
+                },
+                "deprecation_page": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 400
+                }
+              }
+            },
+            "pinned_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "check_method": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "max_age_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365
+            },
+            "last_checked": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "One watch item per upstream identity and pinned version."
+        ]
+      },
+      "category_reason": "A watch item is a falsifiable assumption that a pinned version is still current."
+    },
+    {
+      "slug": "template.deprecation-notice",
+      "category": "noun.public_source",
+      "role": "template",
+      "title": "Template: an upstream deprecation or end-of-life notice with its source and date",
+      "value": {
+        "describes": "an upstream deprecation or end-of-life notice with its source and date",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "upstream_identity",
+            "what",
+            "since",
+            "replacement",
+            "source_url",
+            "read_at"
+          ],
+          "properties": {
+            "upstream_identity": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "what": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "since": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "removal_date": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "replacement": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "source_url": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400,
+              "pattern": "^https://"
+            },
+            "read_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "content_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "rules": [
+          "Quote what upstream says; do not infer deprecation from silence or a failed request."
+        ]
+      },
+      "category_reason": "A notice is a dated snapshot of a public source."
+    },
+    {
+      "slug": "template.freshness-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: flags and actions for every watched item as of one date",
+      "value": {
+        "describes": "flags and actions for every watched item as of one date",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "as_of",
+            "items"
+          ],
+          "properties": {
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "watch_ref",
+                  "flags",
+                  "action"
+                ],
+                "properties": {
+                  "watch_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "flags": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "older_than_max_age",
+                        "newer_upstream_version",
+                        "deprecated_upstream",
+                        "end_of_life",
+                        "license_changed",
+                        "source_unreachable"
+                      ]
+                    }
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "refresh",
+                      "replace",
+                      "tombstone",
+                      "ask_owner"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Flags and actions follow the freshness policy only."
+        ]
+      },
+      "category_reason": "A freshness report is a deterministic check run."
+    },
+    {
+      "slug": "template.tombstone",
+      "category": "noun.negative_tombstone",
+      "role": "template",
+      "title": "Template: a do-not-use record for one version, with evidence and the replacement",
+      "value": {
+        "describes": "a do-not-use record for one version, with evidence and the replacement",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject",
+            "version",
+            "reason",
+            "evidence",
+            "replacement",
+            "recorded_at"
+          ],
+          "properties": {
+            "subject": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "deprecated",
+                "end_of_life",
+                "security_advisory",
+                "license_changed",
+                "broken"
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "replacement": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "recorded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "Evidence cites the upstream notice or advisory.",
+          "A replacement is named, or none with the reason."
+        ]
+      },
+      "category_reason": "A tombstone is a verified negative record that prevents repeating a known failure."
+    },
+    {
+      "slug": "schedule.daily-check",
+      "category": "noun.seed_hypothesis",
+      "role": "schedule_proposal",
+      "title": "Proposed daily freshness scan (not activated)",
+      "category_reason": "A schedule proposal is stored as a seed hypothesis, following the research seed precedent.",
+      "value": {
+        "activation": "not_activated",
+        "activation_path": "Recurring execution needs Tessera's flag-gated schedule support, which is being designed now. No scheduler is activated by this pack, and a schedule noun cannot authorize work by itself.",
+        "cadence": {
+          "every": "P1D",
+          "at_utc": "05:00",
+          "start": null,
+          "stop": null,
+          "start_reason": "Set by the owner when an authorized schedule adapter exists."
+        },
+        "enqueues": [
+          {
+            "$verb": "freshness-checks.scan-staleness"
+          }
+        ],
+        "per_window": {
+          "max_items": 500,
+          "max_outstanding": 1,
+          "max_runtime_seconds": 600
+        },
+        "enqueue_identity": "SHA-256 of the schedule key, its version and the window start, so duplicate ticks never create duplicate tasks.",
+        "missed_windows": "Skip missed windows; never catch up more than one window.",
+        "follow_up": "scan-staleness proposes check-deprecations, refresh and replacement verbs for flagged items; an authorized requester enqueues those."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "freshness-policy"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "scan-staleness",
+      "kind": "verb.recheck_fragility",
+      "title": "Scan watched items for staleness",
+      "claimant": "agent",
+      "summary": "Apply the freshness policy to every watched item as of one date, using recorded check results, and propose the follow-up verbs each flag calls for.",
+      "outcome": "A freshness report with proposed follow-up verbs, or no_change when everything is current.",
+      "ready_outcome": "scanned",
+      "model_use": "none",
+      "pinned": [
+        "freshness-policy",
+        "template.freshness-report"
+      ],
+      "slots": [
+        {
+          "name": "watch_items",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the watch items.",
+          "many": true,
+          "max": 200
+        }
+      ],
+      "params": {
+        "as_of": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+            "maxLength": 40
+          },
+          "description": "The date ages are measured from.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "freshness_report",
+          "template": "template.freshness-report"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Compute flags and actions from the policy only; no network is needed for this verb.",
+        "Propose one check-deprecations verb for items that are due, and a propose-replacements or record-tombstone verb where the policy says so.",
+        "A failed request is source_unreachable, never deprecation."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.freshness-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-item",
+          "check": "Every pinned watch item appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "policy-actions",
+          "check": "Every action matches the policy's action for its flags.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "check-deprecations",
+      "kind": "verb.probe_source",
+      "title": "Check upstream for deprecations",
+      "claimant": "agent",
+      "summary": "Read the release feeds and deprecation pages of due watch items and record any deprecation or end-of-life notice with its source and date.",
+      "outcome": "Deprecation notices and updated watch items, or no_change when nothing changed upstream.",
+      "ready_outcome": "checked",
+      "pinned": [
+        "freshness-policy",
+        "template.deprecation-notice"
+      ],
+      "slots": [
+        {
+          "name": "watch_items",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the due watch items.",
+          "many": true,
+          "max": 50
+        }
+      ],
+      "params": {
+        "max_fetches": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 60
+          },
+          "default": 30,
+          "description": "Most upstream pages to read."
+        }
+      },
+      "produces": [
+        {
+          "name": "notices",
+          "template": "template.deprecation-notice",
+          "max": 50
+        },
+        {
+          "name": "watch_items",
+          "template": "template.watch-item",
+          "max": 50
+        }
+      ],
+      "steps": [
+        "Verify the pins. Read only each item's release feed and deprecation page, within max_fetches.",
+        "Quote what upstream says and record the page's digest and date.",
+        "Write a superseding watch item with the new last_checked date and any newer upstream version.",
+        "Propose a record-tombstone verb for end-of-life notices and a propose-replacements verb for deprecations that name a replacement.",
+        "Read only public release notes, deprecation pages and package indexes. Do not sign up, log in, file reports or contact anyone."
+      ],
+      "acceptance": [
+        {
+          "id": "nouns-match-templates",
+          "check": "Notices and watch items validate against their templates.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quoted",
+          "check": "Every notice's what field is supported by its source page.",
+          "method": "judgment"
+        },
+        {
+          "id": "within-allowance",
+          "check": "Pages read are at most max_fetches.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "network": [
+        "read_only",
+        "Read-only requests to the watched items' release feeds and deprecation pages, at most max_fetches."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "bounded outbound read-only HTTP",
+        "write candidate nouns"
+      ],
+      "follows": [
+        "freshness-checks.scan-staleness"
+      ]
+    },
+    {
+      "slug": "propose-replacements",
+      "kind": "verb.generate_seed",
+      "title": "Propose replacements",
+      "claimant": "agent",
+      "summary": "For each deprecated item with a named replacement, describe the replacement as a candidate and propose a comparable trial as a follow-up verb.",
+      "outcome": "Proposed follow-up verbs and nouns, or no_change when no replacement is named.",
+      "ready_outcome": "replacements_proposed",
+      "pinned": [
+        "freshness-policy"
+      ],
+      "slots": [
+        {
+          "name": "notices",
+          "category": "noun.public_source",
+          "description": "Pins of the deprecation notices.",
+          "many": true,
+          "max": 20
+        },
+        {
+          "name": "profile",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the project and hardware profile."
+        }
+      ],
+      "produces": [
+        {
+          "name": "candidates",
+          "template": "tool-discovery:template.tool-candidate",
+          "max": 10
+        }
+      ],
+      "steps": [
+        "Verify the pins. Write one candidate card per named replacement, with its license read at a pinned revision.",
+        "Propose a tool-discovery run-trial verb for each candidate worth trialing, with the pins it needs.",
+        "Read only public release notes, deprecation pages and package indexes. Do not sign up, log in, file reports or contact anyone."
+      ],
+      "acceptance": [
+        {
+          "id": "cards-match-template",
+          "check": "Every card validates against the tool-candidate template.",
+          "method": "deterministic"
+        },
+        {
+          "id": "follow-ups-proposed",
+          "check": "Every candidate worth trialing has a proposed run-trial verb.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fit",
+          "check": "Each replacement plausibly fits the profile.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "network": [
+        "read_only",
+        "Read-only requests to the replacements' upstream pages."
+      ],
+      "follows": [
+        "freshness-checks.check-deprecations"
+      ]
+    },
+    {
+      "slug": "record-tombstone",
+      "kind": "verb.verify_gate",
+      "title": "Record a do-not-use tombstone",
+      "claimant": "agent_or_human",
+      "summary": "Check the evidence that a version is end of life or unsafe and record a tombstone that stops workers from using it again.",
+      "outcome": "A tombstone, or no_change when the evidence does not support one.",
+      "ready_outcome": "tombstone_recorded",
+      "pinned": [
+        "freshness-policy"
+      ],
+      "slots": [
+        {
+          "name": "notice",
+          "category": "noun.public_source",
+          "description": "Pin of the deprecation, end-of-life or advisory notice."
+        },
+        {
+          "name": "watch_item",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the affected watch item."
+        }
+      ],
+      "produces": [
+        {
+          "name": "tombstone",
+          "template": "template.tombstone"
+        }
+      ],
+      "steps": [
+        "Verify the pins and reread the notice's evidence.",
+        "Record a tombstone only when the notice clearly covers the pinned version.",
+        "Name the replacement, or say none with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "tombstone-matches-template",
+          "check": "The tombstone validates against template.tombstone's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "evidence-cited",
+          "check": "Every evidence entry cites the notice or an advisory.",
+          "method": "deterministic"
+        },
+        {
+          "id": "version-covered",
+          "check": "The notice covers the tombstoned version.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "freshness-checks.check-deprecations"
+      ]
+    }
+  ]
+}

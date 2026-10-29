@@ -1,0 +1,1375 @@
+{
+  "pack_id": "benchmark-scores",
+  "title": "Benchmark scores",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for keeping benchmark scores current and comparable: scores with source, date, hardware, setup and method, daily refresh, deterministic staleness flags, checks on our own hardware and a daily schedule proposal that is not activated.",
+  "dependencies": [
+    "evaluation-design"
+  ],
+  "boundaries": [
+    "Read only public pages and permitted exports. Do not sign up, log in, submit results or contact anyone.",
+    "No scheduler is activated; the daily refresh is a proposal noun.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for keeping benchmark scores current and comparable",
+      "value": {
+        "lets_workers": "Keep a set of benchmark scores you care about current and honest: record every score with its source, date, hardware, setup and method, refresh them daily, flag the stale ones, and check important claims on your own hardware.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "benchmark-scores.collect-scores"
+            },
+            "when": "When a watched benchmark or subject has a new reported score."
+          },
+          {
+            "verb": {
+              "$verb": "benchmark-scores.refresh-scores"
+            },
+            "when": "Daily, from the schedule proposal: re-read each watched score's source."
+          },
+          {
+            "verb": {
+              "$verb": "benchmark-scores.flag-stale"
+            },
+            "when": "Daily after refresh; deterministic, and it proposes refresh or comparison verbs."
+          },
+          {
+            "verb": {
+              "$verb": "benchmark-scores.compare-on-profile"
+            },
+            "when": "For claims that could change a decision; two runs on your hardware."
+          },
+          {
+            "verb": {
+              "$verb": "benchmark-scores.situate-score"
+            },
+            "when": "When a new score may agree or disagree with earlier ones."
+          }
+        ],
+        "schedule": {
+          "$pin": "schedule.daily-refresh"
+        },
+        "rule": "A score never stands alone: no source, date, setup and method means it cannot be compared."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "staleness-policy"
+        ],
+        [
+          "requires_noun",
+          "example.staleness"
+        ],
+        [
+          "requires_noun",
+          "schedule.daily-refresh"
+        ],
+        [
+          "requires_noun",
+          "template.score"
+        ],
+        [
+          "requires_noun",
+          "template.benchmark"
+        ],
+        [
+          "requires_noun",
+          "template.watch-list"
+        ],
+        [
+          "requires_noun",
+          "template.comparison"
+        ],
+        [
+          "requires_noun",
+          "template.staleness-report"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Comparing benchmark scores honestly",
+      "category_reason": "A reusable method with guardrails for every verb in this pack.",
+      "value": {
+        "rules": [
+          "Two scores are comparable only with the same benchmark version, split and metric definition, and a known setup.",
+          "Keep who reported a score: vendor, paper, leaderboard, community or our own run.",
+          "Unknown setup fields stay null; a missing hardware field makes a score unverified, not wrong.",
+          "Our own reproduction runs twice under committed pass marks, on the pinned profile's hardware.",
+          "Never average unrelated leaderboards into one number.",
+          "Read only public pages and permitted exports. Do not sign up, log in, submit results or contact anyone."
+        ],
+        "reproduction_method": {
+          "$pin": "evaluation-design:method"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "evaluation-design:method"
+        ]
+      ]
+    },
+    {
+      "slug": "staleness-policy",
+      "category": "noun.reflex_procedure",
+      "role": "staleness_policy",
+      "title": "Staleness policy: when a benchmark score needs refreshing",
+      "category_reason": "A zero-call deterministic rule: the same scores and date always give the same flags.",
+      "value": {
+        "max_age_days": {
+          "vendor": 30,
+          "leaderboard": 30,
+          "community": 30,
+          "paper": 90,
+          "our_run": 60
+        },
+        "contradiction_tolerance_ratio": 0.1,
+        "flags": {
+          "older_than_max_age": "The score was observed longer ago than its reporter's max age.",
+          "subject_changed": "The subject now has a newer exact version than the one scored.",
+          "benchmark_changed": "The benchmark now has a newer version than the one scored.",
+          "contradicted_by_our_run": "Our own run differs from the claim by more than the tolerance ratio.",
+          "missing_setup": "The hardware is unknown, so the score cannot be compared with ours."
+        },
+        "status_rule": "contradicted if contradicted_by_our_run; otherwise stale if older_than_max_age, subject_changed or benchmark_changed; otherwise unverified if missing_setup; otherwise current.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "example.staleness",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "SYNTHETIC worked example: six scores and their staleness flags",
+      "synthetic": true,
+      "category_reason": "A golden fixture with recorded expected flags that the validator recomputes.",
+      "value": {
+        "fixture_kind": "staleness_flags",
+        "as_of": "2026-10-29",
+        "policy": {
+          "max_age_days": {
+            "vendor": 30,
+            "leaderboard": 30,
+            "community": 30,
+            "paper": 90,
+            "our_run": 60
+          },
+          "contradiction_tolerance_ratio": 0.1,
+          "flags": {
+            "older_than_max_age": "The score was observed longer ago than its reporter's max age.",
+            "subject_changed": "The subject now has a newer exact version than the one scored.",
+            "benchmark_changed": "The benchmark now has a newer version than the one scored.",
+            "contradicted_by_our_run": "Our own run differs from the claim by more than the tolerance ratio.",
+            "missing_setup": "The hardware is unknown, so the score cannot be compared with ours."
+          },
+          "status_rule": "contradicted if contradicted_by_our_run; otherwise stale if older_than_max_age, subject_changed or benchmark_changed; otherwise unverified if missing_setup; otherwise current."
+        },
+        "scores": [
+          {
+            "id": "s1",
+            "reported_by": "leaderboard",
+            "observed_at": "2026-10-20",
+            "subject_version": "1.2",
+            "current_subject_version": "1.2",
+            "benchmark_version": "v2",
+            "current_benchmark_version": "v2",
+            "value": 71.0,
+            "our_value": null,
+            "hardware": "SYNTHETIC GPU A"
+          },
+          {
+            "id": "s2",
+            "reported_by": "vendor",
+            "observed_at": "2026-08-01",
+            "subject_version": "3.1",
+            "current_subject_version": "3.1",
+            "benchmark_version": "v2",
+            "current_benchmark_version": "v2",
+            "value": 12.5,
+            "our_value": null,
+            "hardware": "SYNTHETIC GPU B"
+          },
+          {
+            "id": "s3",
+            "reported_by": "paper",
+            "observed_at": "2026-09-01",
+            "subject_version": "1.0",
+            "current_subject_version": "2.0",
+            "benchmark_version": "v2",
+            "current_benchmark_version": "v2",
+            "value": 0.82,
+            "our_value": null,
+            "hardware": "SYNTHETIC cluster"
+          },
+          {
+            "id": "s4",
+            "reported_by": "leaderboard",
+            "observed_at": "2026-10-25",
+            "subject_version": "5.0",
+            "current_subject_version": "5.0",
+            "benchmark_version": "v1",
+            "current_benchmark_version": "v2",
+            "value": 55.0,
+            "our_value": null,
+            "hardware": "SYNTHETIC GPU A"
+          },
+          {
+            "id": "s5",
+            "reported_by": "vendor",
+            "observed_at": "2026-10-28",
+            "subject_version": "2.4",
+            "current_subject_version": "2.4",
+            "benchmark_version": "v2",
+            "current_benchmark_version": "v2",
+            "value": 80.0,
+            "our_value": 60.0,
+            "hardware": "SYNTHETIC GPU C"
+          },
+          {
+            "id": "s6",
+            "reported_by": "community",
+            "observed_at": "2026-10-01",
+            "subject_version": "0.9",
+            "current_subject_version": "0.9",
+            "benchmark_version": "v2",
+            "current_benchmark_version": "v2",
+            "value": 33.0,
+            "our_value": null,
+            "hardware": null
+          }
+        ],
+        "expected": {
+          "s1": {
+            "flags": [],
+            "status": "current"
+          },
+          "s2": {
+            "flags": [
+              "older_than_max_age"
+            ],
+            "status": "stale"
+          },
+          "s3": {
+            "flags": [
+              "subject_changed"
+            ],
+            "status": "stale"
+          },
+          "s4": {
+            "flags": [
+              "benchmark_changed"
+            ],
+            "status": "stale"
+          },
+          "s5": {
+            "flags": [
+              "contradicted_by_our_run"
+            ],
+            "status": "contradicted"
+          },
+          "s6": {
+            "flags": [
+              "missing_setup"
+            ],
+            "status": "unverified"
+          }
+        },
+        "reading": [
+          "s2 is 89 days old against a vendor limit of 30.",
+          "s5 differs from our run by 25 percent, beyond the 10 percent tolerance.",
+          "s6 has no hardware, so it stays unverified rather than stale."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "staleness-policy"
+        ]
+      ]
+    },
+    {
+      "slug": "template.score",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one benchmark score with its source, date, hardware, setup and method",
+      "value": {
+        "describes": "one benchmark score with its source, date, hardware, setup and method",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "benchmark",
+            "subject",
+            "value",
+            "unit",
+            "reported_by",
+            "source",
+            "setup",
+            "method",
+            "status",
+            "checked_at"
+          ],
+          "properties": {
+            "benchmark": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "version",
+                "metric",
+                "direction"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "split": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 60
+                },
+                "metric": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "direction": {
+                  "type": "string",
+                  "enum": [
+                    "higher",
+                    "lower"
+                  ]
+                }
+              }
+            },
+            "subject": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "exact_version",
+                "kind"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "exact_version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "model",
+                    "tool",
+                    "harness",
+                    "library",
+                    "service"
+                  ]
+                }
+              }
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "reported_by": {
+              "type": "string",
+              "enum": [
+                "vendor",
+                "paper",
+                "leaderboard",
+                "community",
+                "our_run"
+              ]
+            },
+            "source": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "ref",
+                "retrieved_at"
+              ],
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "retrieved_at": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  "maxLength": 40
+                },
+                "published_at": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 40
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "setup": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "hardware"
+              ],
+              "properties": {
+                "hardware": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "accelerator_memory_gb": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "cpu": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "ram_gb": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "os": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "precision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "batch_size": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1
+                },
+                "harness": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 160
+                },
+                "settings": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 400
+                }
+              }
+            },
+            "method": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "sample_size": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "current",
+                "stale",
+                "contradicted",
+                "unverified"
+              ]
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "A score without hardware is unverified.",
+          "value is null when the source gives no number."
+        ],
+        "example": {
+          "benchmark": {
+            "name": "SYNTHETIC title-card render",
+            "version": "v2",
+            "metric": "wall time for a 10-second 1080p render",
+            "direction": "lower"
+          },
+          "subject": {
+            "name": "SYNTHETIC motion library",
+            "exact_version": "1.2.0",
+            "kind": "library"
+          },
+          "value": 4.8,
+          "unit": "s",
+          "reported_by": "vendor",
+          "source": {
+            "ref": "SYNTHETIC release note",
+            "retrieved_at": "2026-10-29"
+          },
+          "setup": {
+            "hardware": null,
+            "settings": "defaults"
+          },
+          "method": "Reported by the vendor; the measurement method was not published.",
+          "sample_size": null,
+          "status": "unverified",
+          "checked_at": "2026-10-29"
+        }
+      },
+      "category_reason": "A score is a null-honest scorecard entry with its provenance."
+    },
+    {
+      "slug": "template.benchmark",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: a benchmark definition: task, version, metrics and the setup fields needed to compare scores",
+      "value": {
+        "describes": "a benchmark definition: task, version, metrics and the setup fields needed to compare scores",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "version",
+            "task",
+            "metrics",
+            "required_setup_fields",
+            "source"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "task": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "metrics": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "unit",
+                  "direction"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "higher",
+                      "lower"
+                    ]
+                  }
+                }
+              }
+            },
+            "splits": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "required_setup_fields": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "A new benchmark version is a new noun; scores name the version they used."
+        ]
+      },
+      "category_reason": "A benchmark definition is the harness and rubric that scores refer to."
+    },
+    {
+      "slug": "template.watch-list",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: which benchmarks and subjects to watch, why, and how old a score may get",
+      "value": {
+        "describes": "which benchmarks and subjects to watch, why, and how old a score may get",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "profile_ref",
+            "items"
+          ],
+          "properties": {
+            "profile_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "benchmark",
+                  "subjects",
+                  "why",
+                  "max_age_days"
+                ],
+                "properties": {
+                  "benchmark": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "subjects": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160
+                    }
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "max_age_days": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 365
+                  },
+                  "sources": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every item says why it matters to the pinned profile."
+        ]
+      },
+      "category_reason": "A watch list is a falsifiable bet about which scores will matter for decisions."
+    },
+    {
+      "slug": "template.comparison",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a claim checked on our own hardware: two runs, comparability and a verdict",
+      "value": {
+        "describes": "a claim checked on our own hardware: two runs, comparability and a verdict",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_ref",
+            "profile_ref",
+            "our_runs",
+            "comparable",
+            "difference_ratio",
+            "verdict",
+            "reasons"
+          ],
+          "properties": {
+            "claim_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "profile_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "our_runs": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "run_index",
+                  "value",
+                  "unit"
+                ],
+                "properties": {
+                  "run_index": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "value": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "reason_if_null": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "comparable": {
+              "type": "boolean"
+            },
+            "difference_ratio": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "reproduced",
+                "not_reproduced",
+                "not_comparable",
+                "unknown"
+              ]
+            },
+            "reasons": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Two runs at least.",
+          "not_comparable when the setup differs in a way that matters."
+        ]
+      },
+      "category_reason": "A comparison is a measured run against a reported claim."
+    },
+    {
+      "slug": "template.staleness-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the staleness flags for every watched score as of one date",
+      "value": {
+        "describes": "the staleness flags for every watched score as of one date",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "as_of",
+            "items",
+            "proposed_refreshes"
+          ],
+          "properties": {
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "score_ref",
+                  "flags",
+                  "status"
+                ],
+                "properties": {
+                  "score_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "flags": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "older_than_max_age",
+                        "subject_changed",
+                        "benchmark_changed",
+                        "contradicted_by_our_run",
+                        "missing_setup"
+                      ]
+                    }
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "current",
+                      "stale",
+                      "contradicted",
+                      "unverified"
+                    ]
+                  }
+                }
+              }
+            },
+            "proposed_refreshes": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "rules": [
+          "Flags come from the staleness policy only."
+        ]
+      },
+      "category_reason": "A staleness report is a deterministic check run."
+    },
+    {
+      "slug": "schedule.daily-refresh",
+      "category": "noun.seed_hypothesis",
+      "role": "schedule_proposal",
+      "title": "Proposed daily score refresh (not activated)",
+      "category_reason": "A schedule proposal is stored as a seed hypothesis, following the research seed precedent.",
+      "value": {
+        "activation": "not_activated",
+        "activation_path": "Recurring execution needs Tessera's flag-gated schedule support, which is being designed now. No scheduler is activated by this pack, and a schedule noun cannot authorize work by itself.",
+        "cadence": {
+          "every": "P1D",
+          "at_utc": "06:00",
+          "start": null,
+          "stop": null,
+          "start_reason": "Set by the owner when an authorized schedule adapter exists."
+        },
+        "enqueues": [
+          {
+            "$verb": "benchmark-scores.refresh-scores"
+          },
+          {
+            "$verb": "benchmark-scores.flag-stale"
+          }
+        ],
+        "per_window": {
+          "max_sources": 20,
+          "max_fetches": 40,
+          "max_outstanding": 2,
+          "max_runtime_seconds": 1200
+        },
+        "enqueue_identity": "SHA-256 of the schedule key, its version and the window start, so duplicate ticks never create duplicate tasks.",
+        "missed_windows": "Skip missed windows; never catch up more than one window.",
+        "follow_up": "flag-stale proposes refresh or comparison verbs for flagged scores; an authorized requester enqueues those."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "staleness-policy"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "collect-scores",
+      "kind": "verb.ingest",
+      "title": "Collect reported scores",
+      "claimant": "agent",
+      "summary": "Read pinned public sources and record each new score with its source, date, hardware, setup and method, leaving unknown fields null.",
+      "outcome": "Score nouns, or no_change when the sources have nothing new.",
+      "ready_outcome": "scores_collected",
+      "pinned": [
+        "method",
+        "template.score"
+      ],
+      "slots": [
+        {
+          "name": "watch_list",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the watch list."
+        },
+        {
+          "name": "sources",
+          "category": "noun.public_source",
+          "description": "Pins of source cards to read.",
+          "many": true,
+          "max": 20
+        }
+      ],
+      "params": {
+        "max_fetches": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "default": 20,
+          "description": "Most pages to read."
+        }
+      },
+      "produces": [
+        {
+          "name": "scores",
+          "template": "template.score",
+          "max": 30
+        }
+      ],
+      "steps": [
+        "Verify the pins. Read only the pinned sources.",
+        "Record one score per benchmark, subject version and setup; keep the reporter.",
+        "Store the source's content digest and retrieval date.",
+        "Leave every unknown setup field null; never guess hardware.",
+        "Read only public pages and permitted exports. Do not sign up, log in, submit results or contact anyone."
+      ],
+      "acceptance": [
+        {
+          "id": "scores-match-template",
+          "check": "Every score validates against template.score's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "provenance-complete",
+          "check": "Every score has a source ref, retrieval date and reporter.",
+          "method": "deterministic"
+        },
+        {
+          "id": "within-allowance",
+          "check": "Pages read are at most max_fetches.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "network": [
+        "read_only",
+        "Read-only requests to the pinned public sources, within max_fetches."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "bounded outbound read-only HTTP",
+        "write candidate nouns"
+      ]
+    },
+    {
+      "slug": "refresh-scores",
+      "kind": "verb.recheck_fragility",
+      "title": "Refresh watched scores",
+      "claimant": "agent",
+      "summary": "Re-read the source of every watched score and write a superseding score where the number, setup or source changed.",
+      "outcome": "New private score versions with supersedes relations, or no_change when nothing changed.",
+      "ready_outcome": "scores_refreshed",
+      "pinned": [
+        "method",
+        "template.score"
+      ],
+      "slots": [
+        {
+          "name": "watch_list",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the watch list."
+        },
+        {
+          "name": "scores",
+          "category": "noun.eval_run",
+          "description": "Pins of the current scores.",
+          "many": true,
+          "max": 60
+        }
+      ],
+      "params": {
+        "as_of": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+            "maxLength": 40
+          },
+          "description": "The refresh date.",
+          "required": true
+        },
+        "max_fetches": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "default": 40,
+          "description": "Most pages to read."
+        }
+      },
+      "produces": [
+        {
+          "name": "refreshed_scores",
+          "template": "template.score",
+          "max": 60
+        }
+      ],
+      "steps": [
+        "Verify the pins. Compare each source's content digest with the stored one before reading it in full.",
+        "Write a new score only when the number, setup or source changed, with a supersedes relation to the old one.",
+        "Set checked_at to as_of on every refreshed score.",
+        "Read only public pages and permitted exports. Do not sign up, log in, submit results or contact anyone."
+      ],
+      "acceptance": [
+        {
+          "id": "scores-match-template",
+          "check": "Every new score validates against template.score's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "only-changed",
+          "check": "Every new score differs from the one it supersedes.",
+          "method": "deterministic"
+        },
+        {
+          "id": "within-allowance",
+          "check": "Pages read are at most max_fetches.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "network": [
+        "read_only",
+        "Read-only requests to the pinned public sources, within max_fetches."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "bounded outbound read-only HTTP",
+        "write candidate nouns"
+      ],
+      "follows": [
+        "benchmark-scores.collect-scores"
+      ]
+    },
+    {
+      "slug": "flag-stale",
+      "kind": "verb.verify_gate",
+      "title": "Flag stale scores",
+      "claimant": "agent",
+      "summary": "Apply the staleness policy to every watched score as of one date and propose refresh or comparison verbs for the flagged ones.",
+      "outcome": "A staleness report and proposed follow-up verbs.",
+      "ready_outcome": "staleness_reported",
+      "model_use": "none",
+      "pinned": [
+        "staleness-policy",
+        "example.staleness"
+      ],
+      "slots": [
+        {
+          "name": "scores",
+          "category": "noun.eval_run",
+          "description": "Pins of the scores to check.",
+          "many": true,
+          "max": 60
+        },
+        {
+          "name": "watch_list",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the watch list, for current versions."
+        }
+      ],
+      "params": {
+        "as_of": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+            "maxLength": 40
+          },
+          "description": "The date ages are measured from.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "staleness_report",
+          "template": "template.staleness-report"
+        }
+      ],
+      "steps": [
+        "Reproduce the worked example's expected flags first; stop with blocked if they differ.",
+        "Apply the policy exactly as written; flags come from the policy only.",
+        "Propose one refresh-scores verb for stale scores and one compare-on-profile verb for each contradicted score."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.staleness-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "worked-example-reproduced",
+          "check": "The worked example's expected flags were reproduced exactly.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-score-checked",
+          "check": "Every pinned score appears exactly once.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 300
+      },
+      "follows": [
+        "benchmark-scores.refresh-scores"
+      ]
+    },
+    {
+      "slug": "compare-on-profile",
+      "kind": "verb.benchmark_harness",
+      "title": "Check a claim on our own hardware",
+      "claimant": "agent",
+      "summary": "Reproduce one reported score twice on the pinned profile's hardware under committed pass marks and say whether it holds.",
+      "outcome": "A comparison: reproduced, not reproduced, not comparable or unknown.",
+      "ready_outcome": "comparison_ready",
+      "pinned": [
+        "method",
+        "evaluation-design:method",
+        "template.comparison"
+      ],
+      "slots": [
+        {
+          "name": "claim",
+          "category": "noun.eval_run",
+          "description": "Pin of the score to check."
+        },
+        {
+          "name": "benchmark",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the benchmark definition."
+        },
+        {
+          "name": "profile",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the project and hardware profile."
+        },
+        {
+          "name": "pass_marks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of pass marks committed before the runs."
+        }
+      ],
+      "produces": [
+        {
+          "name": "comparison",
+          "template": "template.comparison"
+        }
+      ],
+      "steps": [
+        "Verify the pins and that the pass marks predate this claim.",
+        "Match the claim's setup as closely as the profile allows and record every difference.",
+        "Run twice in a sandbox without credentials; unknown values stay null with a reason.",
+        "Say not_comparable when a setup difference makes the numbers incomparable."
+      ],
+      "acceptance": [
+        {
+          "id": "comparison-matches-template",
+          "check": "The comparison validates against template.comparison's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "two-runs",
+          "check": "There are at least two runs.",
+          "method": "deterministic"
+        },
+        {
+          "id": "marks-predate",
+          "check": "The pass marks existed before this task was claimed.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fair",
+          "check": "The setup differences are stated and the verdict follows from them.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 7200
+      },
+      "network": [
+        "sandbox_packages",
+        "Package downloads into the sandbox only, from the subject's documented sources."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an isolated sandbox without credentials on the profile's hardware",
+        "write candidate nouns"
+      ],
+      "follows": [
+        "benchmark-scores.flag-stale",
+        "evaluation-design.commit-pass-marks"
+      ]
+    },
+    {
+      "slug": "situate-score",
+      "kind": "verb.situate",
+      "title": "Place a new score among earlier ones",
+      "claimant": "agent",
+      "summary": "Compare a new score with earlier scores of the same benchmark and subject and record whether it corroborates or contradicts them.",
+      "outcome": "A score version with corroborates or contradicts relations, or no_change when no earlier score is comparable.",
+      "ready_outcome": "score_situated",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "new_score",
+          "category": "noun.eval_run",
+          "description": "Pin of the new score."
+        },
+        {
+          "name": "earlier_scores",
+          "category": "noun.eval_run",
+          "description": "Pins of earlier scores of the same benchmark and subject.",
+          "many": true,
+          "max": 40
+        }
+      ],
+      "produces": [
+        {
+          "name": "situated_score",
+          "template": "template.score"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Compare only scores with the same benchmark version, metric and a known setup.",
+        "Add corroborates or contradicts relations; leave conflicts for a person to resolve.",
+        "Propose a compare-on-profile verb when a contradiction could change a decision."
+      ],
+      "acceptance": [
+        {
+          "id": "score-matches-template",
+          "check": "The situated score validates against template.score's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "comparable-only",
+          "check": "Every relation targets a score with the same benchmark version and metric.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reasoned",
+          "check": "Each relation's note says why the scores agree or disagree.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "benchmark-scores.collect-scores"
+      ]
+    }
+  ]
+}

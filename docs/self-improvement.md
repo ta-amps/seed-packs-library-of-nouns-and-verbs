@@ -7,8 +7,9 @@ evaluation that judges it or approve its own promotion.
 
 The [reference meta-pack](../examples/meta/self-improvement.reference.json) is an
 authoring contract only. It creates no active pack, importer, evaluator service or
-background loop. New packs remain deferred until the owning infrastructure and
-contributor path are ready. Existing Tessera nouns and verbs carry any authorized
+background loop. Proposed packs live in the [packs/](../packs/README.md) library as
+validated examples; installing or activating them waits until the owning
+infrastructure and contributor path are ready. Existing Tessera nouns and verbs carry any authorized
 work; ordinary task reasoning happens in workers.
 
 ## One bounded improvement cycle

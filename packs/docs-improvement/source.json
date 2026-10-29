@@ -1,0 +1,981 @@
+{
+  "pack_id": "docs-improvement",
+  "title": "Docs improvement",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for making documentation clearer for a named reader: an eight-criterion rubric, with verbs to audit, find gaps, draft fact-preserving rewrites, run examples and links, and review.",
+  "dependencies": [],
+  "boundaries": [
+    "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act.",
+    "Rewrites never change a fact, command or number.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for making documentation clearer for a named reader",
+      "value": {
+        "lets_workers": "Make documentation easier to understand and act on: audit pages against a plain rubric for a named reader, find the missing pages, draft rewrites that keep every fact, run the examples and links, and have another worker check the result.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "docs-improvement.audit-docs"
+            },
+            "when": "First, for a named reader persona."
+          },
+          {
+            "verb": {
+              "$verb": "docs-improvement.find-gaps"
+            },
+            "when": "After the audit."
+          },
+          {
+            "verb": {
+              "$verb": "docs-improvement.draft-rewrite"
+            },
+            "when": "Per page; tone choices can go through taste-palettes."
+          },
+          {
+            "verb": {
+              "$verb": "docs-improvement.check-examples"
+            },
+            "when": "Before and after rewrites; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "docs-improvement.review-docs"
+            },
+            "when": "Last, by a different worker."
+          }
+        ],
+        "rubric": {
+          "$pin": "doc-rubric"
+        },
+        "publication": "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "doc-rubric"
+        ],
+        [
+          "requires_noun",
+          "template.reader-persona"
+        ],
+        [
+          "requires_noun",
+          "template.doc-audit"
+        ],
+        [
+          "requires_noun",
+          "template.doc-gaps"
+        ],
+        [
+          "requires_noun",
+          "template.rewrite"
+        ],
+        [
+          "requires_noun",
+          "template.example-run"
+        ],
+        [
+          "requires_noun",
+          "template.review"
+        ]
+      ]
+    },
+    {
+      "slug": "doc-rubric",
+      "category": "noun.benchmark_suite",
+      "role": "rubric",
+      "title": "Documentation rubric: eight criteria",
+      "category_reason": "A fixed scoring rubric every audit and review uses.",
+      "value": {
+        "criteria": [
+          {
+            "id": "first-screen",
+            "asks": "The first screen says who it is for, what it does and how to try it.",
+            "evidence": "Quote the first 30 lines and name what is missing."
+          },
+          {
+            "id": "one-reading-order",
+            "asks": "A newcomer can tell which page to read first and next.",
+            "evidence": "List entry pages and the order each one gives."
+          },
+          {
+            "id": "task-coverage",
+            "asks": "The first tasks readers try each have a page.",
+            "evidence": "Map likely first tasks to pages."
+          },
+          {
+            "id": "runnable-examples",
+            "asks": "Copy-paste examples run as written.",
+            "evidence": "Run each code block in a sandbox and record pass, fail or not runnable."
+          },
+          {
+            "id": "plain-language",
+            "asks": "Sentences are short, terms are defined where first used, and outcomes come before mechanisms.",
+            "evidence": "Quote the worst passages with a plain rewrite."
+          },
+          {
+            "id": "honest-status",
+            "asks": "Claims about what works match the evidence; dated status beats timeless claims.",
+            "evidence": "Cite each stale or unsupported claim and the evidence that contradicts it."
+          },
+          {
+            "id": "working-links",
+            "asks": "Local links resolve and external links name what they point to.",
+            "evidence": "List broken local links; external links are checked only when allowed."
+          },
+          {
+            "id": "accessible-structure",
+            "asks": "Headings are in order, images have text alternatives and tables have headers.",
+            "evidence": "List each structural problem with its location."
+          }
+        ],
+        "levels": {
+          "good": "Meets the criterion with no material gap.",
+          "needs_work": "A gap a reader would notice; fixable in place.",
+          "broken": "Misleads readers or blocks a first task."
+        },
+        "rules": [
+          "Judge for the named reader, not for the author.",
+          "A rewrite keeps every fact, command and number; it changes words, order and structure.",
+          "Status claims need evidence with a date."
+        ]
+      }
+    },
+    {
+      "slug": "template.reader-persona",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the reader the docs are judged for: who they are, what they want in a minute, what they know",
+      "value": {
+        "describes": "the reader the docs are judged for: who they are, what they want in a minute, what they know",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "who",
+            "wants_in_one_minute",
+            "already_knows",
+            "does_not_know"
+          ],
+          "properties": {
+            "who": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "wants_in_one_minute": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "already_knows": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "does_not_know": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "One persona per audit."
+        ],
+        "example": {
+          "who": "SYNTHETIC: a developer evaluating the project during a hackathon",
+          "wants_in_one_minute": "Whether it solves their problem and the first command to try",
+          "already_knows": [
+            "git",
+            "Python"
+          ],
+          "does_not_know": [
+            "The project's vocabulary",
+            "Which page to read first"
+          ]
+        }
+      },
+      "category_reason": "A persona is an assumption about the reader that audits and readers' feedback can test."
+    },
+    {
+      "slug": "template.doc-audit",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an audit of a set of pages: issues with locations and evidence, and a level per criterion",
+      "value": {
+        "describes": "an audit of a set of pages: issues with locations and evidence, and a level per criterion",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pages",
+            "issues",
+            "scores"
+          ],
+          "properties": {
+            "pages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "issues": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "criterion",
+                  "location",
+                  "level",
+                  "evidence",
+                  "suggestion"
+                ],
+                "properties": {
+                  "criterion": {
+                    "type": "string",
+                    "enum": [
+                      "first-screen",
+                      "one-reading-order",
+                      "task-coverage",
+                      "runnable-examples",
+                      "plain-language",
+                      "honest-status",
+                      "working-links",
+                      "accessible-structure"
+                    ]
+                  },
+                  "location": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "needs_work",
+                      "broken"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "suggestion": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "scores": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "criterion",
+                  "level"
+                ],
+                "properties": {
+                  "criterion": {
+                    "type": "string",
+                    "enum": [
+                      "first-screen",
+                      "one-reading-order",
+                      "task-coverage",
+                      "runnable-examples",
+                      "plain-language",
+                      "honest-status",
+                      "working-links",
+                      "accessible-structure"
+                    ]
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "good",
+                      "needs_work",
+                      "broken"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every issue cites a file and line or a heading.",
+          "Every criterion gets exactly one level."
+        ]
+      },
+      "category_reason": "An audit is a scored run of the rubric over the pages."
+    },
+    {
+      "slug": "template.doc-gaps",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the first tasks the reader would try that no page covers",
+      "value": {
+        "describes": "the first tasks the reader would try that no page covers",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "gaps"
+          ],
+          "properties": {
+            "gaps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task",
+                  "reader",
+                  "missing",
+                  "priority"
+                ],
+                "properties": {
+                  "task": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "reader": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "missing": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "priority": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Each gap names the task and what is missing."
+        ]
+      },
+      "category_reason": "Gaps are hypotheses about what readers need."
+    },
+    {
+      "slug": "template.rewrite",
+      "category": "noun.public_source",
+      "role": "template",
+      "title": "Template: a draft rewrite of one page as a patch, explaining which issue each change fixes",
+      "value": {
+        "describes": "a draft rewrite of one page as a patch, explaining which issue each change fixes",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "before_sha256",
+            "patch",
+            "explains"
+          ],
+          "properties": {
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "before_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "patch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16000
+            },
+            "explains": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "issue_ref",
+                  "change"
+                ],
+                "properties": {
+                  "issue_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "change": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "facts_changed": {
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            }
+          }
+        },
+        "rules": [
+          "facts_changed is always false.",
+          "before_sha256 pins the page version the patch applies to."
+        ]
+      },
+      "category_reason": "A rewrite is documentation content pinned to the page version it changes."
+    },
+    {
+      "slug": "template.example-run",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: results of running every code block and checking every local link",
+      "value": {
+        "describes": "results of running every code block and checking every local link",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "blocks",
+            "links"
+          ],
+          "properties": {
+            "blocks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "location",
+                  "language",
+                  "result",
+                  "output_excerpt"
+                ],
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "not_runnable"
+                    ]
+                  },
+                  "output_excerpt": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "links": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "location",
+                  "target",
+                  "result"
+                ],
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "target": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "broken",
+                      "not_checked"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "External links are not_checked unless network access was allowed."
+        ]
+      },
+      "category_reason": "An example run is a deterministic check run."
+    },
+    {
+      "slug": "template.review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an independent review of a rewrite against the audit's issues",
+      "value": {
+        "describes": "an independent review of a rewrite against the audit's issues",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "checked",
+            "verdict",
+            "reasons"
+          ],
+          "properties": {
+            "checked": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "issue_ref",
+                  "result"
+                ],
+                "properties": {
+                  "issue_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "fixed",
+                      "not_fixed",
+                      "made_worse"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "accept",
+                "revise",
+                "reject"
+              ]
+            },
+            "reasons": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "The reviewer did not write the rewrite."
+        ]
+      },
+      "category_reason": "A review is a verification run."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "audit-docs",
+      "kind": "verb.situate",
+      "title": "Audit the docs for one reader",
+      "claimant": "agent",
+      "summary": "Read the pages as the named reader would and record issues with locations and evidence, plus a level for each rubric criterion.",
+      "outcome": "An audit, or no_change when every criterion is already good.",
+      "ready_outcome": "audit_ready",
+      "pinned": [
+        "doc-rubric"
+      ],
+      "slots": [
+        {
+          "name": "docs_snapshot",
+          "category": "noun.public_source",
+          "description": "Pin of a snapshot noun naming the repository and exact commit, like repo-review's snapshot template."
+        },
+        {
+          "name": "persona",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the reader persona."
+        }
+      ],
+      "produces": [
+        {
+          "name": "audit",
+          "template": "template.doc-audit"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Read the entry pages first, in the order a newcomer would.",
+        "Cite every issue's location and evidence.",
+        "Give each criterion exactly one level.",
+        "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
+      ],
+      "acceptance": [
+        {
+          "id": "audit-matches-template",
+          "check": "The audit validates against template.doc-audit's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-criteria",
+          "check": "Each of the eight criteria has exactly one level.",
+          "method": "deterministic"
+        },
+        {
+          "id": "issues-located",
+          "check": "Every issue has a location.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800,
+        "max_pages": 100
+      },
+      "network": [
+        "read_only",
+        "Read-only fetch of the pinned snapshot."
+      ]
+    },
+    {
+      "slug": "find-gaps",
+      "kind": "verb.problemize",
+      "title": "Find the missing pages",
+      "claimant": "agent",
+      "summary": "List the first tasks the reader would try that no page covers, ranked by how often a reader would hit them.",
+      "outcome": "Doc gaps, or no_change when the first tasks are covered.",
+      "ready_outcome": "gaps_ready",
+      "pinned": [
+        "doc-rubric"
+      ],
+      "slots": [
+        {
+          "name": "audit",
+          "category": "noun.eval_run",
+          "description": "Pin of the audit."
+        },
+        {
+          "name": "persona",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the reader persona."
+        }
+      ],
+      "produces": [
+        {
+          "name": "gaps",
+          "template": "template.doc-gaps"
+        }
+      ],
+      "steps": [
+        "Infer first tasks from the persona and the project's stated purpose.",
+        "Check each against the audited pages.",
+        "Rank by how soon a reader meets it.",
+        "Propose a draft-rewrite verb for each gap worth fixing now."
+      ],
+      "acceptance": [
+        {
+          "id": "gaps-match-template",
+          "check": "The gaps validate against template.doc-gaps's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tasks-real",
+          "check": "Each gap is a task the persona would plausibly try first.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "docs-improvement.audit-docs"
+      ]
+    },
+    {
+      "slug": "draft-rewrite",
+      "kind": "verb.solve_draft",
+      "title": "Draft a rewrite of one page",
+      "claimant": "agent",
+      "summary": "Rewrite one page as a patch that fixes audited issues in plain language while keeping every fact, command and number.",
+      "outcome": "A rewrite patch, or no_change when the page needs none.",
+      "ready_outcome": "rewrite_ready",
+      "pinned": [
+        "doc-rubric"
+      ],
+      "slots": [
+        {
+          "name": "audit",
+          "category": "noun.eval_run",
+          "description": "Pin of the audit."
+        },
+        {
+          "name": "persona",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the reader persona."
+        },
+        {
+          "name": "preferences",
+          "category": "noun.seed_hypothesis",
+          "description": "Optional tone preferences from taste-palettes.",
+          "many": true,
+          "max": 5,
+          "required": false
+        }
+      ],
+      "params": {
+        "page": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "description": "Path of the page to rewrite.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "rewrite",
+          "template": "template.rewrite"
+        }
+      ],
+      "steps": [
+        "Keep every fact, command and number; change words, order and structure only.",
+        "Lead with the outcome for the reader.",
+        "Explain which audited issue each change fixes.",
+        "Apply in-scope tone preferences when pinned.",
+        "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
+      ],
+      "acceptance": [
+        {
+          "id": "rewrite-matches-template",
+          "check": "The rewrite validates against template.rewrite's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "facts-kept",
+          "check": "Every command, number and link target in the page before appears after.",
+          "method": "deterministic"
+        },
+        {
+          "id": "issues-addressed",
+          "check": "Each explained change maps to an audited issue on this page.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "docs-improvement.audit-docs"
+      ]
+    },
+    {
+      "slug": "check-examples",
+      "kind": "verb.verify_gate",
+      "title": "Run the examples and check the links",
+      "claimant": "agent",
+      "summary": "Run every code block in a sandbox and check every local link, recording pass, fail or not runnable.",
+      "outcome": "An example run.",
+      "ready_outcome": "examples_checked",
+      "model_use": "none",
+      "pinned": [
+        "doc-rubric"
+      ],
+      "slots": [
+        {
+          "name": "docs_snapshot",
+          "category": "noun.public_source",
+          "description": "Pin of the docs snapshot."
+        },
+        {
+          "name": "rewrite",
+          "category": "noun.public_source",
+          "description": "Optional rewrite to check instead of the current page.",
+          "required": false
+        }
+      ],
+      "params": {
+        "allow_network": {
+          "schema": {
+            "type": "boolean"
+          },
+          "default": false,
+          "description": "Check external links too."
+        }
+      },
+      "produces": [
+        {
+          "name": "example_run",
+          "template": "template.example-run"
+        }
+      ],
+      "steps": [
+        "Run code blocks in a sandbox without credentials, in document order.",
+        "Check local links against the snapshot.",
+        "Mark external links not_checked unless allow_network is true."
+      ],
+      "acceptance": [
+        {
+          "id": "run-matches-template",
+          "check": "The example run validates against template.example-run's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-block",
+          "check": "Every fenced code block appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "repeatable",
+          "check": "A second run gives the same results.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "network": [
+        "read_only",
+        "None unless allow_network is true, then read-only requests to linked pages."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an isolated sandbox without credentials",
+        "write candidate nouns in the requester's scope"
+      ]
+    },
+    {
+      "slug": "review-docs",
+      "kind": "verb.verify_gate",
+      "title": "Review a rewrite",
+      "claimant": "agent_or_human",
+      "summary": "A different worker or a person checks each audited issue against the rewrite: fixed, not fixed or made worse.",
+      "outcome": "A review with a verdict.",
+      "ready_outcome": "review_ready",
+      "pinned": [
+        "doc-rubric"
+      ],
+      "slots": [
+        {
+          "name": "rewrite",
+          "category": "noun.public_source",
+          "description": "Pin of the rewrite."
+        },
+        {
+          "name": "audit",
+          "category": "noun.eval_run",
+          "description": "Pin of the audit."
+        },
+        {
+          "name": "example_run",
+          "category": "noun.eval_run",
+          "description": "Pin of the example run on the rewrite.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "review",
+          "template": "template.review"
+        }
+      ],
+      "steps": [
+        "Confirm you did not write the rewrite; otherwise return blocked.",
+        "Check every issue the rewrite claims to fix.",
+        "Reject any rewrite that changed a fact.",
+        "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
+      ],
+      "acceptance": [
+        {
+          "id": "review-matches-template",
+          "check": "The review validates against template.review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-reviewer",
+          "check": "The reviewer is not the rewrite's author.",
+          "method": "deterministic"
+        },
+        {
+          "id": "facts-verified",
+          "check": "facts_changed is false and the reviewer confirmed it.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "review": "distinct_reviewer",
+      "follows": [
+        "docs-improvement.draft-rewrite",
+        "docs-improvement.check-examples"
+      ]
+    }
+  ]
+}

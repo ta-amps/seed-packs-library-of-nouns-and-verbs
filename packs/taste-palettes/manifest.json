@@ -1,0 +1,140 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "taste-palettes",
+  "title": "Taste palettes",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for comparing options side by side and keeping a person's choice: several versions of one brief with adjustable settings, a choice recorded as a preference noun, and later work that uses it within its scope.",
+  "license": "MIT",
+  "store": "seedpack.taste-palettes",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "d223c25d8277a920e1f7b9852f2306735fd6dfc76e0d494028b9c85c2511b28e"
+    },
+    {
+      "path": "source.json",
+      "sha256": "86a17a5b5b917e0718732015684ef30cdc7dfa5d82a84e69a80fcddd8f69be77"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "d896b114501e2d7f8ad6d9ae7db2098a561c86afebfd7caebe042f2c1722c1c2"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "c92103cb4cffdcac32a58b095e5dd888ffa0d64474d4cf99ff7bd9f72c6b90c3"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "taste-palettes.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "b0fbfcc511e5f3199dcc0113cc1b4e5863354e81d9dd573090005f14c4685663"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "3fa6926cf500ce99be23cee0d29e86c201e21648266a4574fe7bd1247cedcd9c"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.template.brief",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "9fa5e93e894305e8e7d177dc74975dd157b713f8ef5d5e6382c3cba4da2d54a6"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.template.embodiment",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "940ae6252e43e14aeaae547616adee9c375c90d0d58143ab5c62c63fe5bbade0"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.template.comparison-sheet",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "436bb7de3206d8c85c087a2a8b6c9a08fc32328c76ce98c9d283b217e0ac888a"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.template.preference",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "450ccb8b6a1675df1de8bd496f51288c740ec702853134b99a73f3b9b7161f14"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.template.preference-summary",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "80312db299774f24a92ff96aba685859f4ca716ab03a664b38397cf3156fbdec"
+    },
+    {
+      "key": "taste-palettes.v0.1.0.example.readme-tone",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "0be219cbd90d21e6be6e568fcc55a9250b2ddccf0d38a5775369adf635c05825"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "taste-palettes.draft-embodiments",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:taste-palettes:draft-embodiments:d79c114c2a4ec7bd12efb4ad367c8833001bb8a54fd398605fc0875a41d01dab",
+      "report_shape_sha256": "56dcab30d128ca891e683558b5ec88efbf5224d6dfbe3d1311fdfa95d7f481ff"
+    },
+    {
+      "template_id": "taste-palettes.assemble-comparison",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:taste-palettes:assemble-comparison:b27accbdd44fe61e74b75bfe977ed7a7cec73a329645a5439e838f7d3964efcd",
+      "report_shape_sha256": "7e31ed43d9a29e35bd041593bfddf3223c350f919cb75acbceef8d8b11faf919"
+    },
+    {
+      "template_id": "taste-palettes.record-choice",
+      "kind": "verb.vote_judge",
+      "claimant": "human",
+      "idempotency_key": "seedpack:taste-palettes:record-choice:f9fbaf37d843ff3cad75608b40addfba33e34b73c5f1f80269d08d182d2dcdde",
+      "report_shape_sha256": "989fb862af6f9919bf658c049c5afe16098ed348d352dc2632d87b08fc09ec28"
+    },
+    {
+      "template_id": "taste-palettes.update-preferences",
+      "kind": "verb.situate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:taste-palettes:update-preferences:ad3d1e4318e6a9e46e1bcb6ea8022f88d00dbdc22ac76dc68a71e1e5e47da352",
+      "report_shape_sha256": "1daafe3fc9ae1d20d39278a8abe8dcf86c2ae751f0b05f767d5ae95e6c8b9c1a"
+    },
+    {
+      "template_id": "taste-palettes.apply-preference",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:taste-palettes:apply-preference:1c74d5872822793ce61c7028c4abfbe7eb03400d5997c770d20d9404e60c440c",
+      "report_shape_sha256": "a9c7a4e0d8e3ace5b3305c2ac17ee95476a8bc17d8d3031540c83cd70b049c71"
+    }
+  ],
+  "dependencies": [],
+  "boundaries": [
+    "Only a person records a choice; silence is never a preference.",
+    "Preferences belong to the person who chose and are used only within their scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

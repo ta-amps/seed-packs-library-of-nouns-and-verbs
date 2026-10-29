@@ -1,0 +1,134 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "freshness-checks",
+  "title": "Freshness checks",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for finding stale, deprecated or end-of-life knowledge: watch items, a deterministic freshness policy, deprecation notices, tombstones and a daily scan proposal that is not activated.",
+  "license": "MIT",
+  "store": "seedpack.freshness-checks",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "17f7988c05d85467ddd54fc4c9d5c890e69cc86cca53b5aa610e6e73e46fe470"
+    },
+    {
+      "path": "source.json",
+      "sha256": "4f5054cd68000e6aafd2312791920e3e397e68dad617008c5689718c0f49329e"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "ed0514dca8d956778bccd1dd3abd04043fd6a401e998de0ee3296c40dbc296f7"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "3f3ce95d45fc54cf8478c3dd2425cb04cf3c13c112fb3a6fc12d1b0c4a800e01"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "freshness-checks.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "df49e9b18f8751da17520284d99cec24509b595f9639b41d4389e2632a45fdd2"
+    },
+    {
+      "key": "freshness-checks.v0.1.0.freshness-policy",
+      "category_id": "noun.reflex_procedure",
+      "role": "freshness_policy",
+      "value_sha256": "c043cfdb37eec3a9afcf81bab9dc82aa44d0ffc345764153636c9c39b868ae95"
+    },
+    {
+      "key": "freshness-checks.v0.1.0.template.watch-item",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "c3ddd99a0ee5e03ae403f272f43e5c1efc5e7821ebc673fe11ab346753aad41e"
+    },
+    {
+      "key": "freshness-checks.v0.1.0.template.deprecation-notice",
+      "category_id": "noun.public_source",
+      "role": "template",
+      "value_sha256": "eacbeba1f1bfb4d77c1dbb6d27d2751510d4485a3ad1205f5a8adc79d5e62ead"
+    },
+    {
+      "key": "freshness-checks.v0.1.0.template.freshness-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "28ecc5bdcc2f5408a39287961e084557961768b56e7a443630a48629d7032b3b"
+    },
+    {
+      "key": "freshness-checks.v0.1.0.template.tombstone",
+      "category_id": "noun.negative_tombstone",
+      "role": "template",
+      "value_sha256": "6d54cd11e238b39e7df2940582f7fde57ecae9252202e205ee8a990d3b055f1d"
+    },
+    {
+      "key": "freshness-checks.v0.1.0.schedule.daily-check",
+      "category_id": "noun.seed_hypothesis",
+      "role": "schedule_proposal",
+      "value_sha256": "7ecef79c394d9f7f7e54a0c9595a8113e37a92c6c788135cb8bdc13bff201ada"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "freshness-checks.scan-staleness",
+      "kind": "verb.recheck_fragility",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:freshness-checks:scan-staleness:7ba7a11581034bd6aeee27cb4301e4365b6d78457bdbf7dac18c07b0798a8044",
+      "report_shape_sha256": "e09565f6b415e64642ce9377368b1fec76b1e37551ff3e82863a3460fb3c5b64"
+    },
+    {
+      "template_id": "freshness-checks.check-deprecations",
+      "kind": "verb.probe_source",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:freshness-checks:check-deprecations:3a624dab52a69bd7b87d6ef2ec3a21e918872f014fe64ca8bd46dddd4bfb68dd",
+      "report_shape_sha256": "b73cf3915a0ef137a060da8d1c1a2b7a951e6b9309233595eb0198d21d461cd2"
+    },
+    {
+      "template_id": "freshness-checks.propose-replacements",
+      "kind": "verb.generate_seed",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:freshness-checks:propose-replacements:665313a01b077d5a45f100afc0e6cdcbeae43834df4a983bfe3fa13729b781db",
+      "report_shape_sha256": "31ce6472d956cb13afcfd1cb327bd1e3b32ebf5f2588a45d858f30107d820ef1"
+    },
+    {
+      "template_id": "freshness-checks.record-tombstone",
+      "kind": "verb.verify_gate",
+      "claimant": "agent_or_human",
+      "idempotency_key": "seedpack:freshness-checks:record-tombstone:710edee74f4fb8ef210b0303b587483d3d9cefddf4af1cbee41f2c075a8fac48",
+      "report_shape_sha256": "d71b5da1b63ddfe7b1966cdba637f2ae2168aebc27f688d184e9907a76681c97"
+    }
+  ],
+  "dependencies": [
+    {
+      "pack_id": "tool-discovery",
+      "keys": [
+        "tool-discovery.v0.1.0.template.tool-candidate"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Read only public release notes, deprecation pages and package indexes. Do not sign up, log in, file reports or contact anyone.",
+    "No scheduler is activated; the daily scan is a proposal noun.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}
