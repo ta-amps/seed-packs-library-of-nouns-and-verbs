@@ -11,30 +11,38 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds eleven proposed seed packs: bundles of nouns
-(knowledge, templates, tool cards and examples) and verbs (work an authorized worker
-can claim). They are proposals and validated examples, **not installed, imported,
-admitted or activated**, and no worker has run them yet.
+The [packs/](packs/README.md) folder holds fifteen proposed seed packs. Each is a
+collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
+authorized worker can claim), named in plain English and kept separate from any surface.
+They are proposals and validated examples, **not installed, imported, admitted or
+activated**, and no worker has run them yet.
 
-| Pack | What it lets workers do |
+| Pack | A collection of nouns and verbs for |
 | --- | --- |
-| [Repository review](packs/repo-review/README.md) | Review a repository privately with 50 evidence-requiring questions |
-| [Video showcase](packs/video-showcase/README.md) | Make a truthful demo video with evidence for every on-screen number |
-| [Tool discovery](packs/tool-discovery/README.md) | Find, trial and decide on new tools for your own hardware |
-| [Evaluation design](packs/evaluation-design/README.md) | Compare arms fairly with frozen sets and pass marks committed first |
-| [Checks of checks](packs/checks-of-checks/README.md) | Prove a test or rubric works before trusting it |
-| [Decomposition patterns](packs/decomposition-patterns/README.md) | Split work using shapes that worked and learn which ones do |
-| [Taste palettes](packs/taste-palettes/README.md) | Show options side by side and keep a person's choice as a preference |
-| [Harness onboarding](packs/harness-onboarding-e2e/README.md) | Connect a harness and prove the claim-to-submit lifecycle |
-| [Security review](packs/security-review/README.md) | Review authorized code locally and propose tested fixes, privately |
-| [Cost optimization](packs/cost-optimization/README.md) | Find where money goes and measure savings before recommending them |
-| [Docs improvement](packs/docs-improvement/README.md) | Audit docs for a named reader and draft fact-preserving rewrites |
+| [Repository review](packs/repo-review/README.md) | Reviewing a repository with 50 evidence-requiring questions |
+| [Video showcase](packs/video-showcase/README.md) | Making a truthful demo video, from script to QA, review and release |
+| [Visual and 3D rendering](packs/visual-rendering/README.md) | Rendering images, motion graphics and 3D scenes and checking them |
+| [Tool discovery](packs/tool-discovery/README.md) | Discovering, trialing, deciding on and refreshing new tools |
+| [Benchmark scores](packs/benchmark-scores/README.md) | Keeping benchmark scores current and comparable |
+| [Freshness checks](packs/freshness-checks/README.md) | Finding stale, deprecated or end-of-life knowledge |
+| [Evaluation design](packs/evaluation-design/README.md) | Fair, pre-registered evaluations with exact-match scoring |
+| [Checks of checks](packs/checks-of-checks/README.md) | Proving a test or rubric works before trusting it |
+| [Decomposition patterns](packs/decomposition-patterns/README.md) | Breaking work into verbs with reusable patterns |
+| [Taste palettes](packs/taste-palettes/README.md) | Comparing options side by side and keeping a person's choice |
+| [Public-good kits](packs/public-good-kits/README.md) | Building agent kits that nonprofits can use |
+| [Harness onboarding](packs/harness-onboarding-e2e/README.md) | Connecting an agent harness and proving its lifecycle |
+| [Security review](packs/security-review/README.md) | Authorized, local-only security review of code |
+| [Cost optimization](packs/cost-optimization/README.md) | Finding and measuring cost savings |
+| [Docs improvement](packs/docs-improvement/README.md) | Making documentation clearer for a named reader |
 
-Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. All
-193 nouns and 62 verb templates were checked offline with Tessera's own models at a pinned
-commit; the [receipt](packs/VALIDATION.json) records exactly what was checked. Packing
-nouns and verbs adds no entity type, runtime, authority or scheduler, and reading or
-importing a pack runs and grants nothing.
+Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 240
+nouns and 88 verb templates were checked offline with Tessera's own models at a pinned
+commit, and a two-key probe on a throwaway local Store showed a team surface can read,
+claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
+records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
+packs onto making a video, building nonprofit kits and keeping knowledge fresh, and lists
+what is still missing. Reading or importing a pack runs and grants nothing.
 
 ## Start here
 

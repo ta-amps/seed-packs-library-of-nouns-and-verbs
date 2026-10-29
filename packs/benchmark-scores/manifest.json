@@ -1,0 +1,159 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "benchmark-scores",
+  "title": "Benchmark scores",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for keeping benchmark scores current and comparable: scores with source, date, hardware, setup and method, daily refresh, deterministic staleness flags, checks on our own hardware and a daily schedule proposal that is not activated.",
+  "license": "MIT",
+  "store": "seedpack.benchmark-scores",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "5950965942efdc629143841c253d90ef382658fcf112d8177a1d3952e5221c95"
+    },
+    {
+      "path": "source.json",
+      "sha256": "6ed41db674a54814569c1988ef8f7b6fe1da75b80dda8047785f55dd43d06c2c"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "f39c0a254d45e6317f42a620cd49bcfcdfd0722c147f5a3a2d1393808e211dae"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "1b4d4bb8b2e1f6013b6d992b767c514dbf9b4aead039d33909f6174f4431d6a6"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "benchmark-scores.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "5080e6382de4ab71399ffc929baf79dd207af482a6ccb0cd08f23d9af557d9e7"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "9372bad2eabcf666e3f55daa8f03afb15b367fc68f56f4234cbca0d21eebd3f0"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.staleness-policy",
+      "category_id": "noun.reflex_procedure",
+      "role": "staleness_policy",
+      "value_sha256": "210c6ec64da0074129e37424a84e3e0e79ecdd0499404da0ce8558640fcadb86"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.example.staleness",
+      "category_id": "noun.benchmark_suite",
+      "role": "worked_example",
+      "value_sha256": "19db5ab3646d6041916862d1d756ad9ecd183c45d350161fed76d19dc26f528d"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.template.score",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "0e460121d6f34db99ed6738944b65186c9417925c50e4242ae2573209abc10cf"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.template.benchmark",
+      "category_id": "noun.benchmark_suite",
+      "role": "template",
+      "value_sha256": "adccfd50bbcc4ab8b0decdf76d6400f90930b29239bd86b555922d602f4c7140"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.template.watch-list",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "dcdef1ea759bd36a319b92c6afd065a5e058daa9e12a65e2638b04c1d48712a6"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.template.comparison",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "6b02a3a743c79e3b8aad5bfb22ee2bb1d5acd3b7a08f327c2f1dac10391e113c"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.template.staleness-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "3451338e6299df2336320167c24f9ec47fc1302c69ba475ea4fcb3a1cd671e7f"
+    },
+    {
+      "key": "benchmark-scores.v0.1.0.schedule.daily-refresh",
+      "category_id": "noun.seed_hypothesis",
+      "role": "schedule_proposal",
+      "value_sha256": "720193abd3b11de09252abb0c049004e2be936076b435d2cc73ba9436df34f5a"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "benchmark-scores.collect-scores",
+      "kind": "verb.ingest",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:benchmark-scores:collect-scores:02420be3b0815fa6e039f5e2c2c36f1a5879daec829c1c6a85ea6bf966bea7dc",
+      "report_shape_sha256": "8142b353bead214486259164ac416ec03126e0e6609c766df6e1d6949abfd440"
+    },
+    {
+      "template_id": "benchmark-scores.refresh-scores",
+      "kind": "verb.recheck_fragility",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:benchmark-scores:refresh-scores:ffa14d6572edd565cdd9b7fc09819928d217d329bbbc4d476c4ba8f151c39f51",
+      "report_shape_sha256": "be57b61ec63a2e0c87e4a4f593bd9cd19b98b27d0f92d7a9d4e24c5f20096780"
+    },
+    {
+      "template_id": "benchmark-scores.flag-stale",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:benchmark-scores:flag-stale:4c9f905d098768124c319d3ff1e2eae65e5732fbac644a699d50a14992789b06",
+      "report_shape_sha256": "0b986f64da83edd59dd8e05435fa77ed502a3ab6fad7cc2e05bb02a2f1c51cba"
+    },
+    {
+      "template_id": "benchmark-scores.compare-on-profile",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:benchmark-scores:compare-on-profile:cd94b3f31f41f87df8c840ead3090f3f2261db46c677a4caa2db4402e2811f39",
+      "report_shape_sha256": "ff0c464dc8e21a810f9439c8cf202489709ddefc0bcbbba79d4e3a8a4620586d"
+    },
+    {
+      "template_id": "benchmark-scores.situate-score",
+      "kind": "verb.situate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:benchmark-scores:situate-score:b9a55a5402a743607152c62d658f1268d5234c757affd233c4c8fe3d0771ff48",
+      "report_shape_sha256": "88bc186cf347630c50fa7bfccaabf1719cb56166ef33c6886d36a9801ffe9de1"
+    }
+  ],
+  "dependencies": [
+    {
+      "pack_id": "evaluation-design",
+      "keys": [
+        "evaluation-design.v0.1.0.method"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Read only public pages and permitted exports. Do not sign up, log in, submit results or contact anyone.",
+    "No scheduler is activated; the daily refresh is a proposal noun.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

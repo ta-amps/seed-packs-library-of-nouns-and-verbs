@@ -2,7 +2,7 @@
   "pack_id": "evaluation-design",
   "title": "Evaluation design",
   "version": "0.1.0",
-  "summary": "A general evaluation method: arms, frozen sets with manifests, pass marks committed before runs, exact-match scoring, two runs per arm, cost per case and missed marks reported, with a worked example the validator recomputes.",
+  "summary": "A collection of nouns and verbs for fair, pre-registered evaluations: arms, frozen sets with manifests, pass marks committed before runs, exact-match scoring, two runs per arm, cost per case and missed marks reported, with a worked example the validator recomputes.",
   "dependencies": [],
   "boundaries": [
     "Pass marks are committed by a person before any scored run and never change afterwards.",
@@ -14,7 +14,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Evaluation design seed pack",
+      "title": "A collection of nouns and verbs for fair, pre-registered evaluations",
       "value": {
         "lets_workers": "Run a fair, honest comparison: fixed arms, a frozen case set with a manifest, pass marks a person commits before any run, exact-match scoring, two runs per arm, cost per case, and missed marks reported as missed.",
         "flow": [
@@ -71,6 +71,9 @@
           "tool-discovery trials",
           "decomposition-patterns comparisons",
           "any measured comparison in another pack"
+        ],
+        "provenance_notes": [
+          "The method generalizes docs/evaluation.md in the shamash repository (arms, frozen set, pass marks committed before runs, exact-match scoring, two runs per arm)."
         ]
       },
       "relations": [
@@ -117,9 +120,9 @@
       "category": "noun.skill_pack",
       "role": "method",
       "title": "Evaluation method: arms, frozen sets, pass marks before runs, exact-match scoring",
-      "category_reason": "A reusable evaluation method with guardrails, generalized from Shamash's evaluation plan.",
+      "category_reason": "A reusable evaluation method with guardrails, generalized from an evaluation plan used in this ecosystem.",
       "value": {
-        "origin": "Generalizes the evaluation method in Shamash's docs/evaluation.md: re-run fixed arms against a frozen set, score by exact match, run each arm twice and commit pass marks first.",
+        "origin": "Generalizes an existing evaluation plan: re-run fixed arms against a frozen set, score by exact match, run each arm twice and commit pass marks first. The source is named in the descriptor's provenance_notes.",
         "steps": [
           "Write the question the evaluation answers in one sentence, and the decision it informs.",
           "Define arms: a baseline and each change, one change per arm where possible, with exact models, prompts, tools and settings.",
@@ -1149,7 +1152,7 @@
       "title": "Design the evaluation",
       "claimant": "agent",
       "summary": "Turn a question into an evaluation plan: arms, metrics, runs per arm, scoring and draft pass marks for a person to approve.",
-      "outcome": "A private plan, one arm noun per arm and draft pass marks, or no_change when an existing evaluation already answers the question.",
+      "outcome": "A plan, one arm noun per arm and draft pass marks, or no_change when an existing evaluation already answers the question.",
       "ready_outcome": "plan_ready",
       "pinned": [
         "method"
@@ -1189,7 +1192,8 @@
         "Define a baseline and the fewest arms that answer the question, one change per arm where possible.",
         "Pick metrics from the method's menu and say why each matters to the decision.",
         "Draft pass marks with thresholds; they stay drafts until a person commits them.",
-        "Estimate cost per arm from dated prices and label it an estimate."
+        "Estimate cost per arm from dated prices and label it an estimate.",
+        "Propose a freeze-set verb, a commit-pass-marks verb for a person, and two run-arm verbs per arm to follow them."
       ],
       "acceptance": [
         {
@@ -1228,7 +1232,7 @@
       "title": "Freeze the case set",
       "claimant": "agent",
       "summary": "Hash every case and label into a manifest with opaque ids before any arm runs, and check that ids cannot leak labels.",
-      "outcome": "A private frozen-set manifest; labels stay readable only by the scorer.",
+      "outcome": "A frozen-set manifest; labels stay readable only by the scorer.",
       "ready_outcome": "set_frozen",
       "model_use": "none",
       "pinned": [
@@ -1352,7 +1356,7 @@
       "title": "Run one arm once",
       "claimant": "agent",
       "summary": "Run one arm over the whole frozen set exactly as defined and record every prediction, error, cost and latency.",
-      "outcome": "A private run record. Each arm runs twice, as two separate attempts with run_index 1 and 2.",
+      "outcome": "A run record. Each arm runs twice, as two separate attempts with run_index 1 and 2.",
       "ready_outcome": "run_recorded",
       "pinned": [
         "method"
@@ -1431,9 +1435,12 @@
       "capabilities": [
         "read permitted noun versions",
         "the arm's provider access within the worker's own allowance",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ],
-      "network": "Only the arm's declared provider destination.",
+      "network": [
+        "provider_destination",
+        "Only the arm's declared provider destination."
+      ],
       "follows": [
         "evaluation-design.commit-pass-marks",
         "evaluation-design.freeze-set"
@@ -1445,7 +1452,7 @@
       "title": "Score one run",
       "claimant": "agent",
       "summary": "Score one run record by exact match against the frozen labels with the deterministic scoring procedure.",
-      "outcome": "A private scored run with metrics; the scorer is the only worker that reads labels.",
+      "outcome": "A scored run with metrics; the scorer is the only worker that reads labels.",
       "ready_outcome": "run_scored",
       "model_use": "none",
       "pinned": [
@@ -1511,7 +1518,7 @@
       "title": "Write the evaluation report",
       "claimant": "agent",
       "summary": "Report every committed mark as met, missed or unknown, with per-arm metrics, stability, cost per case and a diagnosis for each missed mark.",
-      "outcome": "A private evaluation report; missed marks stay missed.",
+      "outcome": "An evaluation report; missed marks stay missed.",
       "ready_outcome": "report_ready",
       "pinned": [
         "method"
@@ -1582,7 +1589,7 @@
       "title": "Review the evaluation",
       "claimant": "agent",
       "summary": "A different worker rechecks the report against the scored runs, the committed marks and the method's rules.",
-      "outcome": "Private review notes, with any rule the evaluation broke.",
+      "outcome": "Review notes, with any rule the evaluation broke.",
       "ready_outcome": "review_ready",
       "pinned": [
         "method",

@@ -82,14 +82,19 @@ three generated files. `scripts/build_packs.py` builds them offline and byte for
 
 | File | Contents |
 | --- | --- |
-| `nouns.json` | `RecordWrite` bodies: store, key, `expected_version: 0`, private governance, a `status:quarantined` tag and the value. The namespace is assigned by the owner, so it is left out |
+| `nouns.json` | `RecordWrite` bodies: store, a key that carries the pack version, `expected_version: 0`, `surface_only` governance, a `status:quarantined` tag and the value. The namespace is assigned by the owner, so it is left out |
 | `verbs.json` | `TaskSpec` templates in the placeholder queue `conformance-seed-packs`, with pinned pack nouns, unfilled slots, typed input and output schemas, outcomes, acceptance checks, bounds and an optional execution-report template |
 | `manifest.json` | Format `ta-amps.seed-pack.proposal.v1`: file digests, each noun's value SHA-256, each verb's idempotency key and execution shape fingerprint, `importer: null` |
 
 Pins use Tessera's `NounRef` fields exactly: `store`, `key`, `version` and
 `value_sha256`, the SHA-256 of the value's canonical JSON. A template's slots are null
 until a requester fills them with exact pins (`scripts/build_packs.py --instantiate`
-prints the filled TaskSpec and never enqueues). Each noun value and verb brief carries
+checks the filled inputs against the template's input schema, takes `--queue` for an
+assigned queue, prints the TaskSpec and never enqueues). Producer surface
+`surface:tessera` is a placeholder: Tessera records the importing key's own surface, and
+`surface_only` then shares the pack with keys on that surface only. Every output schema
+has `proposed_verbs` and `proposed_nouns`, so a worker can return follow-up work it
+never enqueues itself. Each noun value and verb brief carries
 Tessera's required category dimensions at their lowest value, a `dimension_basis` that
 says nothing was measured, and typed `relations` that its category allows.
 

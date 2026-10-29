@@ -2,10 +2,10 @@
   "pack_id": "repo-review",
   "title": "Repository review",
   "version": "0.1.0",
-  "summary": "Fifty evidence-requiring questions in five families (cost, reliability and security, speed, reach and distribution, revenue), with verbs to profile a repository, select questions, investigate, compare fixes, report privately and review independently.",
+  "summary": "A collection of nouns and verbs for reviewing a code repository with evidence: fifty questions in five families (cost, reliability and security, speed, reach and distribution, revenue), with verbs to profile, select questions, investigate, compare fixes, report privately and review independently.",
   "dependencies": [],
   "boundaries": [
-    "Findings stay private to the requester; nothing is published.",
+    "Findings stay inside the requester's scope; nothing is published.",
     "No verb contacts the reviewed project's maintainers, users or services.",
     "Repository code runs only when the requester allows it, in an isolated sandbox without credentials.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -15,9 +15,9 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Repository review seed pack",
+      "title": "A collection of nouns and verbs for reviewing a code repository with evidence",
       "value": {
-        "lets_workers": "Review a code repository with evidence: profile it, choose the questions that matter, investigate them, compare fixes and write a short private report that an independent reviewer checks.",
+        "lets_workers": "Review a code repository with evidence: profile it, choose the questions that matter, investigate them, compare fixes and write a short report that an independent reviewer checks.",
         "question_bank": {
           "$pin": "question-bank"
         },
@@ -62,7 +62,7 @@
             "when": "Last, by a different worker than the report's author."
           }
         ],
-        "privacy": "Findings stay private to the requester. No verb contacts the reviewed project's maintainers, users or services, and nothing is published.",
+        "privacy": "Findings stay inside the requester's scope. No verb contacts the reviewed project's maintainers, users or services, and nothing is published.",
         "applies_to": "Any repository the requester is permitted to read, public or private."
       },
       "relations": [
@@ -1186,14 +1186,14 @@
               "path": "$",
               "pattern": "(?i)\\b(contact|e-?mail|notify|ping|reach out to|open an? issue|file an? issue|open a pull request|submit a pull request|send a message to)\\b[^.]{0,40}\\b(maintainers?|authors?|owners?|developers?|team)\\b"
             },
-            "why": "Findings stay private to the requester; no step contacts the reviewed project's people."
+            "why": "Findings stay inside the requester's scope; no step contacts the reviewed project's people."
           },
           {
             "id": "no-secret-values",
             "rule": {
               "rule": "pattern_absent",
               "path": "$",
-              "pattern": "(?i)\\b(api[_-]?key|secret|token|password)\\b\\s*[:=]\\s*[A-Za-z0-9_\\-/+]{12,}"
+              "pattern": "(?i:\\b(?:api[_-]?key|secret|token|password|passwd|pwd|access[_-]?key|client[_-]?secret)\\b[\"']?\\s*[:=]\\s*[\"']?[A-Za-z0-9_\\-/+=.]{8,})|(?i:\\bbearer\\s+[A-Za-z0-9_\\-.=+/]{12,})|\\b[A-Z0-9_]*(?:SECRET|TOKEN|PASSWORD|API_KEY)[A-Z0-9_]*\\s*=\\s*[^\\s\"']{8,}"
             },
             "why": "Report where a secret is, never its value."
           }
@@ -1333,6 +1333,63 @@
               "next_step": "Remove the echo and rotate the credential."
             },
             "label": "known_bad"
+          },
+          {
+            "id": "bad-quoted-secret",
+            "finding": {
+              "question_id": "reliability-security.secret-exposure",
+              "verdict": "concern_confirmed",
+              "statement": "A deploy script echoes its credential.",
+              "evidence": [
+                {
+                  "kind": "file",
+                  "location": "config/app.json:7",
+                  "excerpt": "sets \"token\": \"abcd1234efgh5678\" for the API"
+                }
+              ],
+              "numbers": [],
+              "confidence": "high",
+              "next_step": "Remove the echo and rotate the credential."
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-bearer-header",
+            "finding": {
+              "question_id": "reliability-security.secret-exposure",
+              "verdict": "concern_confirmed",
+              "statement": "A deploy script echoes its credential.",
+              "evidence": [
+                {
+                  "kind": "file",
+                  "location": "app/log.py:22",
+                  "excerpt": "logs Authorization: Bearer abcdefghijklmnop1234"
+                }
+              ],
+              "numbers": [],
+              "confidence": "high",
+              "next_step": "Remove the echo and rotate the credential."
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-env-secret",
+            "finding": {
+              "question_id": "reliability-security.secret-exposure",
+              "verdict": "concern_confirmed",
+              "statement": "A deploy script echoes its credential.",
+              "evidence": [
+                {
+                  "kind": "file",
+                  "location": "deploy.env:2",
+                  "excerpt": "AWS_SECRET_ACCESS_KEY=notarealvalue1234"
+                }
+              ],
+              "numbers": [],
+              "confidence": "high",
+              "next_step": "Remove the echo and rotate the credential."
+            },
+            "label": "known_bad"
           }
         ],
         "expected": {
@@ -1363,6 +1420,24 @@
             ]
           },
           "bad-secret-value": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-secret-values"
+            ]
+          },
+          "bad-quoted-secret": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-secret-values"
+            ]
+          },
+          "bad-bearer-header": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-secret-values"
+            ]
+          },
+          "bad-env-secret": {
             "verdict": "fail",
             "failed_checks": [
               "no-secret-values"
@@ -4062,9 +4137,9 @@
       "slug": "template.repo-profile",
       "category": "noun.public_source",
       "role": "template",
-      "title": "Template: a private profile of one repository at one exact commit",
+      "title": "Template: a profile of one repository at one exact commit",
       "value": {
-        "describes": "a private profile of one repository at one exact commit",
+        "describes": "a profile of one repository at one exact commit",
         "schema": {
           "type": "object",
           "additionalProperties": false,
@@ -4598,9 +4673,9 @@
       "slug": "template.review-report",
       "category": "noun.eval_run",
       "role": "template",
-      "title": "Template: the private review report: up to five actions, per-family results, unknowns, method and limits",
+      "title": "Template: the review report: up to five actions, per-family results, unknowns, method and limits",
       "value": {
-        "describes": "the private review report: up to five actions, per-family results, unknowns, method and limits",
+        "describes": "the review report: up to five actions, per-family results, unknowns, method and limits",
         "schema": {
           "type": "object",
           "additionalProperties": false,
@@ -4852,7 +4927,7 @@
       "title": "SYNTHETIC repository snapshot for trying a verb template",
       "synthetic": true,
       "value": {
-        "snapshot": {
+        "instance": {
           "repository": "https://example.invalid/synthetic/tiny-service",
           "commit": "1111111111111111111111111111111111111111",
           "snapshot_kind": "public_git",
@@ -4878,8 +4953,8 @@
       "kind": "verb.situate",
       "title": "Profile a repository",
       "claimant": "agent",
-      "summary": "Read one pinned repository snapshot and write a short private profile: what it is, who it serves, and how it is built, tested, deployed and paid for.",
-      "outcome": "A private repo-profile noun with cited facts and explicit unknowns, ready for question selection.",
+      "summary": "Read one pinned repository snapshot and write a short profile: what it is, who it serves, and how it is built, tested, deployed and paid for.",
+      "outcome": "A repo-profile noun with cited facts and explicit unknowns, ready for question selection.",
       "ready_outcome": "profile_ready",
       "pinned": [
         "evidence-standard"
@@ -4902,8 +4977,8 @@
         "Work from the exact commit in the snapshot. Read files only; this verb does not run repository code.",
         "Record languages, entry points, build and test commands, CI, deployment targets, external services, paid APIs, data stores, license, docs and stated audience. Cite a path, command or source for each fact.",
         "List every fact you could not establish as unknown with a reason. Never guess traffic, revenue or cost.",
-        "Keep everything private to the requester. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything.",
-        "Write one private profile noun create-only, read it back, and return it with its pin and value."
+        "Keep everything inside the requester's scope. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything.",
+        "Write one profile noun create-only, read it back, and return it with its pin."
       ],
       "preferred": [
         "List tracked files and parse manifests before reading individual files."
@@ -4938,11 +5013,14 @@
       "bounds": {
         "max_files_read": 400
       },
-      "network": "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project.",
+      "network": [
+        "read_only",
+        "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project."
+      ],
       "capabilities": [
         "read permitted noun versions",
         "read-only access to the pinned repository snapshot",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ],
       "output_fields": {
         "commit": {
@@ -4960,7 +5038,7 @@
       "title": "Select the questions that apply",
       "claimant": "agent",
       "summary": "Use the profile to choose the few questions from the bank whose answers could change a decision, and say why the others were skipped.",
-      "outcome": "A private review plan listing selected questions with reasons and priorities, and skipped questions with reasons.",
+      "outcome": "A review plan listing selected questions with reasons and priorities, and skipped questions with reasons.",
       "ready_outcome": "plan_ready",
       "pinned": [
         "question-bank",
@@ -5013,8 +5091,9 @@
         "Select a question only when its applies_when conditions hold for the profile and the answer could change what the requester does next.",
         "Respect max_questions and focus_families. Rank by expected decision value; priority 1 is the most consequential.",
         "Give every skipped question that might look relevant a one-line reason, such as skip_when matched or evidence unreachable.",
-        "Keep everything private to the requester. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything.",
-        "Write the plan as a private noun and return it with its pin and value."
+        "Keep everything inside the requester's scope. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything.",
+        "Write the plan as a noun and return it with its pin.",
+        "Propose one investigate-family verb per family that has selected questions, with the profile and plan pinned."
       ],
       "acceptance": [
         {
@@ -5063,7 +5142,7 @@
       "title": "Investigate one question family",
       "claimant": "agent",
       "summary": "Answer the selected questions of one family with located evidence: confirm the concern, rule it out, or mark it unknown.",
-      "outcome": "One private finding per selected question in the family, each passing the evidence standard's deterministic checks.",
+      "outcome": "One finding per selected question in the family, each passing the evidence standard's deterministic checks.",
       "ready_outcome": "findings_ready",
       "pinned": [
         "question-bank",
@@ -5122,8 +5201,8 @@
         "Run repository code only when allow_sandboxed_runs is true, inside an isolated sandbox with no credentials; record commands, environment and sample counts.",
         "Write one finding per question. A no_concern, not_applicable or unknown verdict is a valid answer; never stretch evidence to confirm a concern.",
         "Run the evidence standard's deterministic checks on every finding before writing it; fix or downgrade any finding that fails.",
-        "Keep everything private to the requester. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything.",
-        "Write findings as private nouns and return them with pins and values."
+        "Keep everything inside the requester's scope. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything.",
+        "Write findings as nouns and return them with their pins."
       ],
       "preferred": [
         "Answer the highest-priority questions first so a time limit leaves the most useful findings."
@@ -5155,12 +5234,15 @@
         "max_findings": 15,
         "max_sandbox_runs": 10
       },
-      "network": "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project.",
+      "network": [
+        "read_only",
+        "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project."
+      ],
       "capabilities": [
         "read permitted noun versions",
         "read-only access to the pinned repository snapshot",
         "an isolated sandbox without credentials when allow_sandboxed_runs is true",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ],
       "output_fields": {
         "family": {
@@ -5219,7 +5301,7 @@
       "title": "Compare fixes for one finding",
       "claimant": "agent",
       "summary": "For one confirmed concern, compare up to three fixes and keeping things as they are, on effect, cost to adopt and risk.",
-      "outcome": "A private option comparison with a recommendation, or no_change when no fix is worth its cost.",
+      "outcome": "An option comparison with a recommendation, or no_change when no fix is worth its cost.",
       "ready_outcome": "comparison_ready",
       "pinned": [
         "evidence-standard"
@@ -5258,7 +5340,7 @@
         "Describe each option as a concrete change. Always consider keeping things as they are.",
         "For each option state expected effect, cost to adopt, risks and evidence, and mark it measured or estimated.",
         "Recommend one option, or no_change when no option is worth its cost. A measured comparison is a separate evaluation-design run.",
-        "Keep everything private to the requester. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything."
+        "Keep everything inside the requester's scope. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything."
       ],
       "acceptance": [
         {
@@ -5280,7 +5362,10 @@
       "bounds": {
         "max_elapsed_seconds": 1200
       },
-      "network": "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project.",
+      "network": [
+        "read_only",
+        "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project."
+      ],
       "follows": [
         "repo-review.investigate-family"
       ]
@@ -5288,10 +5373,10 @@
     {
       "slug": "synthesize-report",
       "kind": "verb.solve_draft",
-      "title": "Write the private review report",
+      "title": "Write the review report",
       "claimant": "agent",
       "summary": "Combine the findings and comparisons into a short report that leads with at most five actions and keeps unknowns visible.",
-      "outcome": "A private review report whose counts come from the findings and whose actions cite the questions behind them.",
+      "outcome": "A review report whose counts come from the findings and whose actions cite the questions behind them.",
       "ready_outcome": "report_ready",
       "pinned": [
         "question-bank",
@@ -5335,7 +5420,7 @@
         "Lead with at most five actions, each citing the question ids it comes from, ranked by impact over effort.",
         "Count confirmed, ruled out and unknown answers per family directly from the findings.",
         "Keep unknowns and limits explicit. Do not upgrade a finding's confidence or verdict.",
-        "Keep everything private to the requester. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything."
+        "Keep everything inside the requester's scope. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything."
       ],
       "acceptance": [
         {
@@ -5372,7 +5457,7 @@
       "title": "Independently review the report",
       "claimant": "agent",
       "summary": "A different worker rechecks the report and its findings against the evidence standard and the question rubrics.",
-      "outcome": "A private review verdict: accept, revise or reject, with the findings upheld, disputed or unverifiable.",
+      "outcome": "A review verdict: accept, revise or reject, with the findings upheld, disputed or unverifiable.",
       "ready_outcome": "verdict_ready",
       "pinned": [
         "question-bank",
@@ -5408,7 +5493,7 @@
         "Run every deterministic check of the evidence standard on every finding and record the result.",
         "Spot-check the evidence of each finding behind a top action against the pinned snapshot.",
         "Judge each finding against its question's rubric: upheld, disputed with the failing evidence, or unverifiable.",
-        "Keep everything private to the requester. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything."
+        "Keep everything inside the requester's scope. Do not open issues, pull requests, comments, emails or messages to anyone, and do not publish anything."
       ],
       "acceptance": [
         {
@@ -5435,7 +5520,10 @@
       "bounds": {
         "max_elapsed_seconds": 1800
       },
-      "network": "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project.",
+      "network": [
+        "read_only",
+        "Read-only fetch of the pinned repository snapshot and cited public pages. No requests to the reviewed project's hosted services, no load tests and no authenticated access to anything of the reviewed project."
+      ],
       "review": "distinct_reviewer",
       "follows": [
         "repo-review.synthesize-report"

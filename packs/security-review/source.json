@@ -2,7 +2,7 @@
   "pack_id": "security-review",
   "title": "Security review",
   "version": "0.1.0",
-  "summary": "Authorized, local-only security review of code: scope check, threat model, a 16-area catalog, sandbox reproduction, tested fixes and independent review, with a worked example of the finding checks.",
+  "summary": "A collection of nouns and verbs for authorized, local-only security review of code: scope check, threat model, a 16-area catalog, sandbox reproduction, tested fixes and independent review, with a worked example of the finding checks.",
   "dependencies": [],
   "boundaries": [
     "Review only code the requester owns or is explicitly authorized to review, from a local copy. Never scan, probe, exploit or load-test any running system, including the requester's own production.",
@@ -15,7 +15,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Security review seed pack",
+      "title": "A collection of nouns and verbs for authorized, local-only security review of code",
       "value": {
         "lets_workers": "Review code you own or are authorized to review for security problems, reproduce them only in a local sandbox, propose tested fixes and have another worker check the findings, all privately.",
         "flow": [
@@ -214,6 +214,95 @@
           "informational": "A risky pattern with no demonstrated impact."
         },
         "confidence_rule": "High needs a local reproduction; reasoning from code alone is at most medium.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "area",
+            "title",
+            "severity",
+            "confidence",
+            "location",
+            "explanation",
+            "reproduction",
+            "fix",
+            "status"
+          ],
+          "properties": {
+            "area": {
+              "type": "string",
+              "enum": [
+                "object-authorization",
+                "authentication-sessions",
+                "injection",
+                "path-traversal",
+                "server-side-requests",
+                "unsafe-deserialization",
+                "output-encoding",
+                "cross-site-requests",
+                "secrets-handling",
+                "dependency-advisories",
+                "ci-supply-chain",
+                "cryptography",
+                "abuse-and-cost",
+                "uploads",
+                "sensitive-logging",
+                "agent-tool-boundaries"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low",
+                "informational"
+              ]
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "location": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "explanation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1200
+            },
+            "reproduction": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1500
+            },
+            "fix": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 800
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "reproduced_locally",
+                "reasoned_not_reproduced",
+                "not_reproducible"
+              ]
+            }
+          }
+        },
         "deterministic_checks": [
           {
             "id": "area-known",
@@ -275,18 +364,17 @@
           {
             "id": "local-only",
             "rule": {
-              "rule": "pattern_absent",
-              "path": "reproduction",
-              "pattern": "(?i)https?://(?!localhost\\b|127\\.0\\.0\\.1\\b|\\[::1\\]|example\\.invalid\\b)"
+              "rule": "hosts_local_only",
+              "path": "reproduction"
             },
-            "why": "Reproductions target only local sandboxes."
+            "why": "Reproductions target only local sandboxes: every host named must be localhost, a loopback address or .invalid."
           },
           {
             "id": "no-secret-values",
             "rule": {
               "rule": "pattern_absent",
               "path": "$",
-              "pattern": "(?i)\\b(api[_-]?key|secret|token|password)\\b\\s*[:=]\\s*[A-Za-z0-9_\\-/+]{12,}"
+              "pattern": "(?i:\\b(?:api[_-]?key|secret|token|password|passwd|pwd|access[_-]?key|client[_-]?secret)\\b[\"']?\\s*[:=]\\s*[\"']?[A-Za-z0-9_\\-/+=.]{8,})|(?i:\\bbearer\\s+[A-Za-z0-9_\\-.=+/]{12,})|\\b[A-Z0-9_]*(?:SECRET|TOKEN|PASSWORD|API_KEY)[A-Z0-9_]*\\s*=\\s*[^\\s\"']{8,}"
             },
             "why": "Report where a secret is, never its value."
           }
@@ -366,6 +454,96 @@
               "status": "reproduced_locally"
             },
             "label": "known_bad"
+          },
+          {
+            "id": "bad-userinfo-host",
+            "finding": {
+              "area": "object-authorization",
+              "title": "Any signed-in user can read another user's invoice",
+              "severity": "high",
+              "confidence": "high",
+              "location": "app/routes/invoices.py:41-58",
+              "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
+              "reproduction": "Requested http://localhost@203.0.113.9/invoices/1 as a second user.",
+              "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
+              "status": "reproduced_locally"
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-lookalike-host",
+            "finding": {
+              "area": "object-authorization",
+              "title": "Any signed-in user can read another user's invoice",
+              "severity": "high",
+              "confidence": "high",
+              "location": "app/routes/invoices.py:41-58",
+              "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
+              "reproduction": "Requested http://localhost.attacker.example/invoices/1 as a second user.",
+              "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
+              "status": "reproduced_locally"
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-wildcard-dns",
+            "finding": {
+              "area": "object-authorization",
+              "title": "Any signed-in user can read another user's invoice",
+              "severity": "high",
+              "confidence": "high",
+              "location": "app/routes/invoices.py:41-58",
+              "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
+              "reproduction": "Requested http://127.0.0.1.nip.io:8000/invoices/1 as a second user.",
+              "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
+              "status": "reproduced_locally"
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-bare-address",
+            "finding": {
+              "area": "object-authorization",
+              "title": "Any signed-in user can read another user's invoice",
+              "severity": "high",
+              "confidence": "high",
+              "location": "app/routes/invoices.py:41-58",
+              "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
+              "reproduction": "Sent the request to 198.51.100.7:8080 from a second account.",
+              "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
+              "status": "reproduced_locally"
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-bare-domain",
+            "finding": {
+              "area": "object-authorization",
+              "title": "Any signed-in user can read another user's invoice",
+              "severity": "high",
+              "confidence": "high",
+              "location": "app/routes/invoices.py:41-58",
+              "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
+              "reproduction": "Requested billing.example.com/invoices/1 from a second account.",
+              "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
+              "status": "reproduced_locally"
+            },
+            "label": "known_bad"
+          },
+          {
+            "id": "bad-quoted-secret",
+            "finding": {
+              "area": "secrets-handling",
+              "title": "Deploy key committed",
+              "severity": "high",
+              "confidence": "high",
+              "location": "deploy/config.env:3",
+              "explanation": "The file sets \"password\": \"hunter2hunter2\" for the database.",
+              "reproduction": "Read the file at the pinned commit.",
+              "fix": "Remove it and rotate the credential.",
+              "status": "reproduced_locally"
+            },
+            "label": "known_bad"
           }
         ],
         "expected": {
@@ -393,6 +571,42 @@
             "verdict": "fail",
             "failed_checks": [
               "located"
+            ]
+          },
+          "bad-userinfo-host": {
+            "verdict": "fail",
+            "failed_checks": [
+              "local-only"
+            ]
+          },
+          "bad-lookalike-host": {
+            "verdict": "fail",
+            "failed_checks": [
+              "local-only"
+            ]
+          },
+          "bad-wildcard-dns": {
+            "verdict": "fail",
+            "failed_checks": [
+              "local-only"
+            ]
+          },
+          "bad-bare-address": {
+            "verdict": "fail",
+            "failed_checks": [
+              "local-only"
+            ]
+          },
+          "bad-bare-domain": {
+            "verdict": "fail",
+            "failed_checks": [
+              "local-only"
+            ]
+          },
+          "bad-quoted-secret": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-secret-values"
             ]
           }
         }
@@ -1035,7 +1249,10 @@
       "bounds": {
         "max_elapsed_seconds": 300
       },
-      "network": "None beyond reading the local copy. No requests to any deployed system."
+      "network": [
+        "none",
+        "None beyond reading the local copy. No requests to any deployed system."
+      ]
     },
     {
       "slug": "threat-model",
@@ -1043,7 +1260,7 @@
       "title": "Sketch the threat model",
       "claimant": "agent",
       "summary": "List assets, entry points, trust boundaries and likely attackers, and choose the catalog areas to review first.",
-      "outcome": "A private threat model.",
+      "outcome": "A threat model.",
       "ready_outcome": "model_ready",
       "pinned": [
         "scope-rules",
@@ -1093,7 +1310,10 @@
       "bounds": {
         "max_elapsed_seconds": 1200
       },
-      "network": "None beyond reading the local copy. No requests to any deployed system.",
+      "network": [
+        "none",
+        "None beyond reading the local copy. No requests to any deployed system."
+      ],
       "follows": [
         "security-review.check-scope"
       ]
@@ -1104,7 +1324,7 @@
       "title": "Review one area of the code",
       "claimant": "agent",
       "summary": "Review the code for one catalog area and write findings with locations, severity, confidence and fixes.",
-      "outcome": "Private findings for the area, or no_change when the area holds up.",
+      "outcome": "Findings for the area, or no_change when the area holds up.",
       "ready_outcome": "findings_ready",
       "pinned": [
         "scope-rules",
@@ -1191,7 +1411,10 @@
         "max_elapsed_seconds": 2400,
         "max_findings": 12
       },
-      "network": "None beyond reading the local copy. No requests to any deployed system.",
+      "network": [
+        "none",
+        "None beyond reading the local copy. No requests to any deployed system."
+      ],
       "follows": [
         "security-review.threat-model"
       ]
@@ -1202,7 +1425,7 @@
       "title": "Reproduce a finding locally",
       "claimant": "agent",
       "summary": "Build the pinned commit in a sandbox with synthetic data and no credentials, and try to reproduce one finding.",
-      "outcome": "A private reproduction record: reproduced, not reproduced or inconclusive.",
+      "outcome": "A reproduction record: reproduced, not reproduced or inconclusive.",
       "ready_outcome": "reproduction_recorded",
       "pinned": [
         "scope-rules"
@@ -1257,11 +1480,14 @@
       "bounds": {
         "max_elapsed_seconds": 2400
       },
-      "network": "Only services the sandbox itself starts.",
+      "network": [
+        "local_only",
+        "Only services the sandbox itself starts."
+      ],
       "capabilities": [
         "read permitted noun versions",
         "an isolated sandbox without credentials",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "security-review.review-code"
@@ -1273,7 +1499,7 @@
       "title": "Propose a tested fix",
       "claimant": "agent",
       "summary": "Write the smallest patch that fixes a confirmed finding plus a test that fails before and passes after, without pushing anything.",
-      "outcome": "A private fix noun pinned by patch digest, or no_change when the fix belongs to the owner's design decision.",
+      "outcome": "A fix noun pinned by patch digest, or no_change when the fix belongs to the owner's design decision.",
       "ready_outcome": "fix_ready",
       "pinned": [
         "scope-rules"
@@ -1327,7 +1553,10 @@
       "bounds": {
         "max_elapsed_seconds": 2400
       },
-      "network": "None beyond reading the local copy. No requests to any deployed system.",
+      "network": [
+        "none",
+        "None beyond reading the local copy. No requests to any deployed system."
+      ],
       "follows": [
         "security-review.reproduce-locally"
       ]
@@ -1338,7 +1567,7 @@
       "title": "Independently review the findings",
       "claimant": "agent",
       "summary": "A different worker reruns the rubric checks and decides whether each finding is upheld, downgraded or rejected.",
-      "outcome": "A private review with a verdict.",
+      "outcome": "A review with a verdict.",
       "ready_outcome": "review_ready",
       "pinned": [
         "severity-rubric",
@@ -1393,7 +1622,10 @@
       "bounds": {
         "max_elapsed_seconds": 1800
       },
-      "network": "None beyond reading the local copy. No requests to any deployed system.",
+      "network": [
+        "none",
+        "None beyond reading the local copy. No requests to any deployed system."
+      ],
       "review": "distinct_reviewer",
       "follows": [
         "security-review.propose-fix"

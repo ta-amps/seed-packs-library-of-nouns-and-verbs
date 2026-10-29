@@ -29,7 +29,7 @@ BRIEF_FIELDS = {
     "category_id", "contract", "pack", "pack_version", "template_id", "title", "plain_summary", "outcome",
     "claimant", "inputs", "slot_specs", "param_specs", "input_schema", "output_contract", "output_schema",
     "permitted_outcomes", "outcome_meanings", "outcome_requirements", "acceptance_checks", "guidance",
-    "required_capabilities", "bounds", "execution", "review", "instantiation", "execution_report",
+    "required_capabilities", "bounds", "execution", "review", "instantiation", "execution_report", "creates",
     "dimensions", "dimension_basis", "relations",
 }
 BRIEF_OPTIONAL = {"follows_templates", "notes"}
@@ -129,7 +129,7 @@ def check_relations(category: str, relations: Any, contract: dict[str, Any], tar
 
 def check_governance(doc: dict[str, Any], category: str, where: str) -> None:
     require(doc["producer_surface"] == bp.PRODUCER, f"{where}: producer surface")
-    require(doc["visibility_scope"] == "private", f"{where}: pack payloads stay private")
+    require(doc["visibility_scope"] == "surface_only", f"{where}: pack payloads stay inside the importing team's surface")
     require(doc["allowed_surfaces"] == [], f"{where}: no cross-surface grants")
     require(doc["target_cohorts"] == ["all"], f"{where}: unexpected cohort")
     tags = doc["tags"]
@@ -144,13 +144,69 @@ def size_ok(doc: Any, where: str) -> None:
     require(len(bp.canonical_json(doc).encode()) <= MAX_PAYLOAD_BYTES, f"{where}: payload exceeds {MAX_PAYLOAD_BYTES} bytes")
 
 
-def check_record(record: dict[str, Any], pack_id: str, contract: dict[str, Any], targets: dict[str, str]) -> None:
+# Instructions use base verb forms ("Publish the report"); descriptions use other forms ("how it is deployed").
+OUTBOUND = re.compile(
+    r"(?i)\b(e-?mails?|posts?(?!-)|publish(?:es)?|tweets?|push(?:es)?|deploys?|merges?|sends?|contacts?|notify|"
+    r"pings?|subscribes?|sign up|log in|buys?|purchases?|open (?:an? |the )?(?:issue|pull request)|file an? issue|"
+    r"public_commons|unrestricted)\b"
+)
+NEGATED = re.compile(
+    r"(?i)\b(do not|don't|never|no|not|nothing|nobody|without|instead of|refuse\w*|cannot|is the owner's|owner's separate)\b"
+)
+BOUND_CAPS = {"max_attempts": 5, "max_elapsed_seconds": 604800}
+
+
+def outbound_instruction(texts: list[str]) -> str | None:
+    """A sentence that tells a worker to contact, publish, push, buy or widen access, without negating it."""
+    for text in texts:
+        for sentence in re.split(r"(?<=[.;!?])\s+", text):
+            if OUTBOUND.search(sentence) and not NEGATED.search(sentence):
+                return sentence
+    return None
+
+
+SURFACE_NAMES = re.compile(r"(?i)\b(kinema|kothar|shamash|eranos|agora|herma)\b")
+
+
+def branded_text(value: Any) -> str | None:
+    """Seed packs are not branded: surface and product names appear only in provenance_notes."""
+    if isinstance(value, str):
+        return value if SURFACE_NAMES.search(value) else None
+    if isinstance(value, dict):
+        for name, item in value.items():
+            if name == "provenance_notes":
+                continue
+            found = branded_text(item)
+            if found:
+                return found
+    if isinstance(value, list):
+        for item in value:
+            found = branded_text(item)
+            if found:
+                return found
+    return None
+
+
+def check_conformance(value: dict[str, Any], values: dict[str, Any] | None, where: str) -> None:
+    """An example that claims to conform to a template must match the template's schema."""
+    if "conforms_to" not in value or values is None:
+        return
+    pin = value["conforms_to"]
+    template = values.get(f"{pin['store']}/{pin['key']}")
+    require(template is not None and template.get("role") == "template", f"{where}: conforms_to names a template noun")
+    require("instance" in value, f"{where}: a conforming example keeps its payload in instance")
+    problems = schema_errors(template["schema"], value["instance"])
+    require(not problems, f"{where}: instance does not match {pin['key']}: {problems[:3]}")
+
+
+def check_record(record: dict[str, Any], pack_id: str, contract: dict[str, Any], targets: dict[str, str],
+                 values: dict[str, Any] | None = None, version: str | None = None) -> None:
     where = f"{pack_id}/{record.get('key')}"
     require(set(record) == RECORD_FIELDS, f"{where}: RecordWrite fields")
     require(re.fullmatch(contract["patterns"]["name"], record["store"]) is not None, f"{where}: store name")
     require(record["store"] == f"seedpack.{pack_id}", f"{where}: pack store")
     require(re.fullmatch(contract["patterns"]["record_key"], record["key"]) is not None, f"{where}: record key")
-    require(record["key"].startswith(pack_id + "."), f"{where}: key prefix")
+    require(record["key"].startswith(f"{pack_id}.v{version or record['value'].get('pack_version')}."), f"{where}: key carries pack and version")
     require(type(record["expected_version"]) is int and record["expected_version"] == 0, f"{where}: create-only")
     value = record["value"]
     require(isinstance(value, dict), f"{where}: value must be an object")
@@ -159,6 +215,8 @@ def check_record(record: dict[str, Any], pack_id: str, contract: dict[str, Any],
     require(not contract["categories"][category]["human_sensitive"], f"{where}: human-sensitive noun categories are out of scope")
     check_governance(record, category, where)
     require(payload_categories(value, contract) <= {category}, f"{where}: value fields declare a conflicting category")
+    tagging = (set(contract["payload_tag_fields"]) - {"category_id"}) | {"tags", "metadata_tags"}
+    require(not tagging & set(value), f"{where}: value fields {sorted(tagging & set(value))} would become stored tags")
     for name, expected in (("pack", pack_id), ("status", "proposal"), ("admission", "not_admitted"), ("license", "MIT")):
         require(value.get(name) == expected, f"{where}: {name} must be {expected!r}")
     require(value.get("content_kind") in {"authored_guidance", "synthetic_example"}, f"{where}: content kind")
@@ -171,6 +229,11 @@ def check_record(record: dict[str, Any], pack_id: str, contract: dict[str, Any],
     require(isinstance(value.get("title"), str) and value["title"].strip(), f"{where}: title")
     for name in ("trials", "successes"):
         require(value.get(name) is None, f"{where}: {name} stays null until uses are recorded with receipts")
+    check_conformance(value, values, where)
+    found = branded_text(value)
+    require(found is None, f"{where}: surface or product name outside provenance_notes: {found!r}")
+    if "provenance_notes" in value:
+        require(value["role"] == "pack" and isinstance(value["provenance_notes"], list), f"{where}: provenance_notes belong on the descriptor noun")
     if value["role"] == "template":
         require(isinstance(value.get("describes"), str) and value["describes"].strip(), f"{where}: template says what it describes")
         check_schema(value.get("schema"), f"{where}.schema")
@@ -246,11 +309,20 @@ def check_task(task: dict[str, Any], pack_id: str, contract: dict[str, Any], pin
     checks = brief["acceptance_checks"]
     require(checks and len({c["id"] for c in checks}) == len(checks), f"{where}: acceptance checks")
     require(any(c["method"] == "deterministic" for c in checks), f"{where}: at least one deterministic check")
-    require(brief["guidance"]["required"], f"{where}: required guidance")
+    require(brief["guidance"]["required"] and brief["guidance"]["required"][-1] == bp.FOLLOW_UP_STEP, f"{where}: required guidance ends with the follow-up rule")
+    require(brief["creates"] == bp.CREATES, f"{where}: says that workers create nouns and propose verbs")
+    for name in ("proposed_verbs", "proposed_nouns"):
+        require(name in brief["output_schema"]["properties"], f"{where}: output can carry {name}")
     # Authority
     execution = brief["execution"]
     require(execution["server_fallback"] is False and execution["maximum_automatically_enqueued_children"] == 0, f"{where}: no server fallback or automatic children")
     require(execution["external_effects"] == "none" and execution["inference_allowance"] == bp.INFERENCE_ALLOWANCE, f"{where}: no external effects or spending")
+    net = execution["network"]
+    require(isinstance(net, dict) and set(net) == {"mode", "detail"} and net["mode"] in bp.NETWORK_MODES and net["detail"].strip(), f"{where}: network mode")
+    texts = [brief["plain_summary"], brief["outcome"], net["detail"], *brief["guidance"]["required"],
+             *brief["guidance"]["preferred"], *brief["guidance"]["suggested"], *brief["required_capabilities"]]
+    sentence = outbound_instruction(texts)
+    require(sentence is None, f"{where}: instruction to contact, publish, push, buy or widen access: {sentence!r}")
     require(execution["model_use"] in bp.MODEL_USE, f"{where}: model use")
     if brief["claimant"] == "human":
         require(execution["model_use"] == "none" and execution["reasoning"] == "human", f"{where}: human verbs use no model")
@@ -258,15 +330,17 @@ def check_task(task: dict[str, Any], pack_id: str, contract: dict[str, Any], pin
     require(review["required"] in bp.REVIEW_RULES, f"{where}: review rule")
     require(not review["self_approval_permitted"] and not review["publication_permitted"] and not review["admission_permitted"], f"{where}: no self-approval, publication or admission")
     for name, bound in brief["bounds"].items():
-        require(type(bound) is int and bound >= 0, f"{where}: bound {name}")
+        require(type(bound) is int and 0 <= bound <= BOUND_CAPS.get(name, 10000), f"{where}: bound {name} out of range")
     oc = brief["output_contract"]
-    require(oc["visibility_scope"] == "private" and oc["allowed_surfaces"] == [], f"{where}: outputs stay private")
+    require(oc["visibility_scope"] == "surface_only" and oc["allowed_surfaces"] == [], f"{where}: outputs stay inside the requester's surface")
     if oc["write_mode"] == "create_only":
-        require(oc["expected_version"] == 0, f"{where}: create-only writes use expected version 0")
+        require(oc["expected_version"] == 0 and oc["store_param"] == "output_store", f"{where}: create-only writes use expected version 0")
     else:
-        require(oc["write_mode"] == "compare_and_set" and set(oc["expected_version"]) == {"from_slot"}, f"{where}: write mode")
-        slot = oc["expected_version"]["from_slot"]
-        require(slot in brief["slot_specs"] and not brief["slot_specs"][slot]["many"], f"{where}: compare-and-set names one pinned slot")
+        require(oc["write_mode"] == "compare_and_set" and oc["expected_version"] == {"from_slot": oc.get("target_slot")}, f"{where}: write mode")
+        spec = brief["slot_specs"].get(oc["target_slot"])
+        require(spec is not None and not spec["many"] and spec["required"], f"{where}: compare-and-set names one required pinned slot")
+    produced = sum(item["max"] for item in oc["produces"])
+    require(brief["output_schema"]["properties"]["artifacts"]["maxItems"] >= produced, f"{where}: artifacts list too short for the declared outputs")
     require(brief["instantiation"]["status"] == "template", f"{where}: template status")
     for item in brief.get("follows_templates", []):
         require(item in templates, f"{where}: follows unknown template {item}")
@@ -280,6 +354,8 @@ def check_task(task: dict[str, Any], pack_id: str, contract: dict[str, Any], pin
     check_dimensions(kind, brief["dimensions"], contract, where)
     require(brief["dimension_basis"] == bp.DIMENSION_BASIS, f"{where}: unmeasured basis")
     check_relations(kind, brief["relations"], contract, targets, where)
+    found = branded_text(brief)
+    require(found is None, f"{where}: surface or product name in a verb template: {found!r}")
     pinned_targets = {f"{p['store']}/{p['key']}" for p in inputs["pinned"]}
     produced_targets = {f"{p['template']['store']}/{p['template']['key']}" for p in oc["produces"]}
     require({r["target_id"] for r in brief["relations"] if r["relation"] == "requires_noun"} == pinned_targets, f"{where}: requires_noun mirrors pins")
@@ -301,6 +377,32 @@ def get_path(doc: Any, path: str) -> Any:
             return None
         current = current[part]
     return current
+
+
+LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1"}
+URL = re.compile(r"(?i)\b[a-z][a-z0-9+.-]*://[^\s\"'<>]+|(?<![\w/])//[^\s\"'<>/]+")
+IPV4 = re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?![\w.]*\w)")
+BARE_HOST = re.compile(r"(?i)(?<![\w.@/-])(?:[a-z0-9-]+\.)+(?:com|net|org|io|dev|app|co|ai|cloud|example|info|biz|xyz|site|me)(?::\d+)?(?![\w.-])")
+
+
+def hosts_in(text: str) -> list[str]:
+    """Hosts named by URLs (parsed, so user-info tricks are seen through), IPv4 literals and bare domain names."""
+    from urllib.parse import urlsplit
+
+    hosts = []
+    for match in URL.findall(text):
+        target = match if "://" in match else "http:" + match
+        try:
+            hosts.append((urlsplit(target).hostname or "").lower())
+        except ValueError:
+            hosts.append(match)
+    hosts += IPV4.findall(text)
+    hosts += [m.split(":")[0].lower() for m in BARE_HOST.findall(text)]
+    return hosts
+
+
+def host_is_local(host: str) -> bool:
+    return host in LOCAL_HOSTS or host.endswith(".invalid") or host == "invalid"
 
 
 def strings_under(value: Any) -> list[str]:
@@ -338,6 +440,8 @@ def rule_passes(rule: dict[str, Any], doc: Any) -> bool:
         )
     if kind == "pattern_absent":
         return not any(re.search(rule["pattern"], s) for s in strings_under(value))
+    if kind == "hosts_local_only":
+        return all(host_is_local(host) for s in strings_under(value) for host in hosts_in(s))
     if kind == "pattern_present":
         return any(re.search(rule["pattern"], s) for s in strings_under(value))
     raise bp.PackError(f"unknown rule type {kind!r}")
@@ -379,6 +483,10 @@ def mutate(doc: Any, operator: dict[str, Any]) -> Any:
 
 def run_finding_checks(value: dict[str, Any]) -> dict[str, Any]:
     checks = value["deterministic_checks"]
+    for fixture in value["golden_fixtures"]:
+        if fixture["label"] == "known_good" and "finding_schema" in value:
+            problems = schema_errors(value["finding_schema"], fixture["finding"])
+            require(not problems, f"golden fixture {fixture['id']} does not match finding_schema: {problems[:3]}")
     results = {}
     for fixture in value["golden_fixtures"]:
         failed = failing_checks(checks, fixture["finding"])
@@ -466,14 +574,59 @@ def run_evaluation_arithmetic(value: dict[str, Any]) -> dict[str, Any]:
     return {"metrics": metrics, "marks": marks}
 
 
+def run_staleness_flags(value: dict[str, Any]) -> dict[str, Any]:
+    """Benchmark score staleness: ages, version changes, contradiction by our run and missing setup."""
+    from datetime import date
+
+    as_of, policy = date.fromisoformat(value["as_of"]), value["policy"]
+    stale_flags = {"older_than_max_age", "subject_changed", "benchmark_changed"}
+    out = {}
+    for score in value["scores"]:
+        flags = []
+        if (as_of - date.fromisoformat(score["observed_at"])).days > policy["max_age_days"][score["reported_by"]]:
+            flags.append("older_than_max_age")
+        if score["subject_version"] != score["current_subject_version"]:
+            flags.append("subject_changed")
+        if score["benchmark_version"] != score["current_benchmark_version"]:
+            flags.append("benchmark_changed")
+        ours, theirs = score["our_value"], score["value"]
+        if ours is not None and theirs not in (None, 0) and abs(theirs - ours) / abs(theirs) > policy["contradiction_tolerance_ratio"]:
+            flags.append("contradicted_by_our_run")
+        if score["hardware"] is None:
+            flags.append("missing_setup")
+        status = ("contradicted" if "contradicted_by_our_run" in flags else "stale" if stale_flags & set(flags)
+                  else "unverified" if "missing_setup" in flags else "current")
+        out[score["id"]] = {"flags": flags, "status": status}
+    return out
+
+
+def run_contrast_ratio(value: dict[str, Any]) -> dict[str, Any]:
+    """WCAG contrast ratios from relative luminance of linearized sRGB channels."""
+
+    def luminance(color: str) -> float:
+        channels = [int(color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    out = {}
+    for pair in value["pairs"]:
+        a, b = luminance(pair["foreground"]), luminance(pair["background"])
+        ratio = (max(a, b) + 0.05) / (min(a, b) + 0.05)
+        out[pair["id"]] = {"ratio": round(ratio, 2), "normal_text": ratio >= value["thresholds"]["normal_text"],
+                           "large_text": ratio >= value["thresholds"]["large_text"]}
+    return out
+
+
 FIXTURES = {
     "finding_checks": run_finding_checks,
     "check_validation": run_check_validation,
     "evaluation_arithmetic": run_evaluation_arithmetic,
+    "staleness_flags": run_staleness_flags,
+    "contrast_ratio": run_contrast_ratio,
 }
 
 
-def check_fixtures(records: list[dict[str, Any]]) -> int:
+def check_fixtures(records: list[dict[str, Any]], values: dict[str, Any] | None = None) -> int:
     count = 0
     for record in records:
         value = record["value"]
@@ -483,6 +636,13 @@ def check_fixtures(records: list[dict[str, Any]]) -> int:
         require(kind in FIXTURES, f"{record['key']}: unknown fixture kind")
         for check in value.get("deterministic_checks", []) + value.get("check_suite", []):
             require(set(check) >= {"id", "rule"}, f"{record['key']}: check needs id and rule")
+        target = value.get("target_template_ref")
+        if target and values is not None:
+            template = values.get(f"{target['store']}/{target['key']}")
+            require(template is not None and template.get("role") == "template", f"{record['key']}: target_template_ref names a template")
+            for good in value["known_good"]:
+                problems = schema_errors(template["schema"], good["example"])
+                require(not problems, f"{record['key']}: known-good {good['id']} does not match its target template: {problems[:3]}")
         computed = FIXTURES[kind](value)
         require(computed == value["expected"], f"{record['key']}: worked example result differs from its recorded expectation: {computed}")
         count += 1
@@ -502,6 +662,9 @@ def check_readme(text: str, title: str, where: str) -> None:
     for heading in ("## Nouns", "## Verbs", "## Limits"):
         require(heading in headings, f"{where}: README needs {heading}")
     require(len(lines) <= MAX_README_LINES, f"{where}: README is longer than {MAX_README_LINES} lines")
+    first = text.split("## What this pack lets workers do", 1)[1].strip()
+    require(first.startswith(bp.PACK_PHRASE), f"{where}: the first sentence says {bp.PACK_PHRASE!r}")
+    require(not SURFACE_NAMES.search(text), f"{where}: README names a surface or product")
 
 
 def check_receipt(root: Path, built: dict[str, dict[str, bytes]]) -> dict[str, Any]:
@@ -510,6 +673,9 @@ def check_receipt(root: Path, built: dict[str, dict[str, bytes]]) -> dict[str, A
     require(receipt.get("format") == "ta-amps.seed-pack-validation.v1", "unexpected validation receipt")
     require(receipt["contract_snapshot_sha256"] == hashlib.sha256(contract_bytes).hexdigest(), "contract snapshot changed after the Tessera validation; rerun it")
     require(not receipt["errors"] and all(v == "rejected" for v in receipt["negative_probes"].values()), "Tessera validation recorded errors")
+    probe = receipt["local_store_probe"]
+    require(probe["passed"] is True and probe["records_hidden_from_other_surfaces"] == probe["records_written"], "the two-key store probe did not pass")
+    require(receipt["fabric_records_written"] == 0 and receipt["fabric_tasks_enqueued"] == 0, "the receipt claims fabric writes")
     require(set(receipt["packs"]) == set(built), "Tessera validation does not cover every pack; rerun it")
     for pack_id, files in built.items():
         entry = receipt["packs"][pack_id]
@@ -530,12 +696,14 @@ class Index:
         self.docs = {pack: {name: json.loads(data) for name, data in files.items()} for pack, files in self.built.items()}
         self.pins: dict[tuple[str, str], str] = {}
         self.targets: dict[str, str] = {}
+        self.values: dict[str, Any] = {}
         for files in self.docs.values():
             for record in files["nouns.json"]["records"]:
                 ident = (record["store"], record["key"])
                 require(ident not in self.pins, f"duplicate noun {ident}")
                 self.pins[ident] = bp.value_sha256(record["value"])
                 self.targets[f"{record['store']}/{record['key']}"] = record["value"]["category_id"]
+                self.values[f"{record['store']}/{record['key']}"] = record["value"]
         self.templates = {t["brief"]["template_id"] for d in self.docs.values() for t in d["verbs.json"]["tasks"]}
 
 
@@ -561,7 +729,7 @@ def check_doc_counts(root: Path, idx: "Index") -> None:
     require(rows == actual, f"packs/README.md table differs from the library: {rows} != {actual}")
     nouns, verbs = sum(n for n, _ in actual.values()), sum(v for _, v in actual.values())
     for name in ("README.md", "docs/status.md", "packs/README.md"):
-        stated = re.findall(r"(\d+) nouns and (\d+) verb templates", (root / name).read_text(encoding="utf-8"))
+        stated = re.findall(r"(\d+)\s+nouns\s+and\s+(\d+)\s+verb\s+templates", (root / name).read_text(encoding="utf-8"))
         require(stated, f"{name} states the library totals")
         require(all((int(n), int(v)) == (nouns, verbs) for n, v in stated), f"{name} totals differ from {nouns} nouns and {verbs} verb templates")
 
@@ -581,13 +749,13 @@ def validate_library(root: Path = ROOT) -> dict[str, Any]:
         records = files["nouns.json"]["records"]
         require("pack" in {record["value"]["role"] for record in records}, f"{pack_id}: descriptor noun")
         for record in records:
-            check_record(record, pack_id, idx.contract, idx.targets)
+            check_record(record, pack_id, idx.contract, idx.targets, idx.values, idx.lib.sources[pack_id]["version"])
         for task in files["verbs.json"]["tasks"]:
             check_task(task, pack_id, idx.contract, idx.pins, idx.targets, idx.templates)
         totals["packs"] += 1
         totals["nouns"] += len(records)
         totals["verbs"] += len(files["verbs.json"]["tasks"])
-        totals["worked_examples"] += check_fixtures(records)
+        totals["worked_examples"] += check_fixtures(records, idx.values)
     check_doc_counts(root, idx)
     receipt = check_receipt(root, idx.built)
     return {

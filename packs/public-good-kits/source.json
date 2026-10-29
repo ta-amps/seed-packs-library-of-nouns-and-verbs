@@ -1,0 +1,1724 @@
+{
+  "pack_id": "public-good-kits",
+  "title": "Public-good kits",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for building agent kits that nonprofits can use: need briefs, skill files, read-only tool definitions, prompts, synthetic test cases, self-checks, independent review, accessibility and translation checks, and a steward's release decision.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+    "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path.",
+    "Steps that touch a person's safety, rights or records stay with people.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for building agent kits that nonprofits can use",
+      "value": {
+        "lets_workers": "Turn a nonprofit's need into a small, tested kit of agent files: skill instructions, read-only tool definitions, prompts, ready-to-use files and synthetic test cases. The drafting worker checks its own work, a different worker reviews it, accessibility and translations are checked, and a person, the steward, decides whether to release it.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "public-good-kits.frame-need"
+            },
+            "when": "First: one need, its users and the steps that must stay human."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.draft-kit"
+            },
+            "when": "After the need brief; it proposes write-test-cases."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.write-test-cases"
+            },
+            "when": "Synthetic cases, including hand-offs and refusals."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.self-check"
+            },
+            "when": "By the drafting worker; deterministic checks."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.independent-review"
+            },
+            "when": "By a different worker than the drafter."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.check-accessibility"
+            },
+            "when": "Before release."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.translate-kit"
+            },
+            "when": "Once per language the need brief lists; each translation is reviewed by a fluent reviewer."
+          },
+          {
+            "verb": {
+              "$verb": "public-good-kits.steward-release"
+            },
+            "when": "Last: a person decides release or hold."
+          }
+        ],
+        "human_only": [
+          "Interviewing a client or collecting their story.",
+          "Crisis and safety planning.",
+          "Deciding a person's eligibility, benefits or legal position.",
+          "Filing anything with a court, agency or funder.",
+          "Contacting a person on the organization's behalf."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+          "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path.",
+          "Tools are read-only by default; anything with side effects stays a human step."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "self-checks"
+        ],
+        [
+          "requires_noun",
+          "accessibility-criteria"
+        ],
+        [
+          "requires_noun",
+          "template.need-brief"
+        ],
+        [
+          "requires_noun",
+          "template.kit-manifest"
+        ],
+        [
+          "requires_noun",
+          "template.skill-file"
+        ],
+        [
+          "requires_noun",
+          "template.mcp-tool"
+        ],
+        [
+          "requires_noun",
+          "template.prompt-file"
+        ],
+        [
+          "requires_noun",
+          "template.test-cases"
+        ],
+        [
+          "requires_noun",
+          "template.self-check"
+        ],
+        [
+          "requires_noun",
+          "template.review"
+        ],
+        [
+          "requires_noun",
+          "template.accessibility-check"
+        ],
+        [
+          "requires_noun",
+          "template.translation"
+        ],
+        [
+          "requires_noun",
+          "template.release-record"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How to build a kit a nonprofit can trust",
+      "category_reason": "A reusable method with its guardrails for every verb in this pack.",
+      "value": {
+        "rules": [
+          "Solve one need well; a kit is small enough for a volunteer to understand in ten minutes.",
+          "Keep every step in the human_only list with a person, and say so in the skill file.",
+          "Tools read; people act. A tool that would write, send or file is a human step instead.",
+          "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+          "The worker that drafts a kit never reviews it.",
+          "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path."
+        ],
+        "human_only": [
+          "Interviewing a client or collecting their story.",
+          "Crisis and safety planning.",
+          "Deciding a person's eligibility, benefits or legal position.",
+          "Filing anything with a court, agency or funder.",
+          "Contacting a person on the organization's behalf."
+        ]
+      }
+    },
+    {
+      "slug": "self-checks",
+      "category": "noun.benchmark_suite",
+      "role": "self_checks",
+      "title": "Deterministic self-checks for a kit",
+      "category_reason": "A fixed set of checks every kit is scored against before review.",
+      "value": {
+        "checks": [
+          {
+            "id": "manifest-digests",
+            "check": "Every file in the manifest exists and matches its SHA-256."
+          },
+          {
+            "id": "tools-read-only",
+            "check": "Every MCP tool spec validates against template.mcp-tool and is read_only with no side effects."
+          },
+          {
+            "id": "tool-schemas-valid",
+            "check": "Every tool's input and output schemas are valid JSON Schema objects."
+          },
+          {
+            "id": "prompt-variables",
+            "check": "Every variable a prompt uses is listed, and every listed variable is used."
+          },
+          {
+            "id": "human-boundaries-present",
+            "check": "Every skill names its human handoffs, and every boundary in the need brief appears in the manifest."
+          },
+          {
+            "id": "synthetic-only",
+            "check": "Test cases are marked synthetic and contain no real names, addresses, phone numbers or case numbers."
+          },
+          {
+            "id": "test-cases-run",
+            "check": "Every test case that a deterministic tool can answer was run and matched its expected result."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "accessibility-criteria",
+      "category": "noun.benchmark_suite",
+      "role": "accessibility_criteria",
+      "title": "Accessibility and language criteria for kits",
+      "category_reason": "A fixed rubric every kit is checked against before release.",
+      "value": {
+        "criteria": [
+          {
+            "id": "plain-language",
+            "asks": "Instructions read at about a grade 8 level, with terms defined where first used."
+          },
+          {
+            "id": "headings-and-lists",
+            "asks": "Files use real headings and lists, so screen readers can navigate them."
+          },
+          {
+            "id": "alt-text",
+            "asks": "Every image or diagram has a text alternative."
+          },
+          {
+            "id": "not-color-alone",
+            "asks": "No instruction depends on color alone."
+          },
+          {
+            "id": "printable",
+            "asks": "Checklists and directories work when printed in black and white."
+          },
+          {
+            "id": "languages",
+            "asks": "Every language the need brief lists has a translated and reviewed version, or is marked pending."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "template.need-brief",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one nonprofit need: who has it, the constraints, how success is measured and which steps stay human",
+      "value": {
+        "describes": "one nonprofit need: who has it, the constraints, how success is measured and which steps stay human",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "organization_type",
+            "problem",
+            "users",
+            "constraints",
+            "success_measure",
+            "human_boundaries",
+            "languages"
+          ],
+          "properties": {
+            "organization_type": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "problem": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "users": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "success_measure": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "human_boundaries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "languages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            }
+          }
+        },
+        "rules": [
+          "One need per brief.",
+          "Describe the organization by type, never by name or with real people's details."
+        ],
+        "example": {
+          "organization_type": "SYNTHETIC: a small tenant-rights hotline",
+          "problem": "Volunteers spend the first ten minutes of every call finding which local office handles a repair complaint.",
+          "users": [
+            "Hotline volunteers"
+          ],
+          "constraints": [
+            "No client data leaves the call notes system.",
+            "Works offline from a printed directory export."
+          ],
+          "success_measure": "A volunteer finds the right office in under two minutes on 18 of 20 synthetic test calls.",
+          "human_boundaries": [
+            "Interviewing a client or collecting their story.",
+            "Crisis and safety planning.",
+            "Deciding a person's eligibility, benefits or legal position."
+          ],
+          "languages": [
+            "en",
+            "es"
+          ]
+        }
+      },
+      "category_reason": "A need brief frames a falsifiable claim that a kit will help, with a success measure."
+    },
+    {
+      "slug": "template.kit-manifest",
+      "category": "noun.skill_pack",
+      "role": "template",
+      "title": "Template: a kit manifest: purpose, every file with its digest, human boundaries, license and languages",
+      "value": {
+        "describes": "a kit manifest: purpose, every file with its digest, human boundaries, license and languages",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kit_id",
+            "version",
+            "purpose",
+            "files",
+            "human_boundaries",
+            "license",
+            "languages"
+          ],
+          "properties": {
+            "kit_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "kind",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "skill",
+                      "mcp_tool",
+                      "prompt",
+                      "sop",
+                      "checklist",
+                      "csv_template",
+                      "directory",
+                      "test_cases"
+                    ]
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "human_boundaries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "license": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "languages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every file is pinned by SHA-256.",
+          "human_boundaries repeats the need brief's list."
+        ]
+      },
+      "category_reason": "A kit is a reusable multi-step agent skill bundle with tool bindings and guardrails."
+    },
+    {
+      "slug": "template.skill-file",
+      "category": "noun.skill_pack",
+      "role": "template",
+      "title": "Template: a skill file: when to use it, steps, inputs, outputs, guardrails and human hand-offs",
+      "value": {
+        "describes": "a skill file: when to use it, steps, inputs, outputs, guardrails and human hand-offs",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "description",
+            "when_to_use",
+            "steps",
+            "inputs",
+            "outputs",
+            "guardrails",
+            "human_handoffs"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "when_to_use": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "inputs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "outputs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "guardrails": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "human_handoffs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every human_only step appears in human_handoffs.",
+          "Steps are short and plain."
+        ]
+      },
+      "category_reason": "A skill file is one reusable agent skill with its guardrails."
+    },
+    {
+      "slug": "template.mcp-tool",
+      "category": "noun.mcp_server",
+      "role": "template",
+      "title": "Template: a read-only MCP tool definition with input and output schemas",
+      "value": {
+        "describes": "a read-only MCP tool definition with input and output schemas",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "description",
+            "input_schema",
+            "output_schema",
+            "read_only",
+            "side_effects",
+            "auth"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[a-z][a-z0-9_]{0,63}$"
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "input_schema": {
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "read_only": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "side_effects": {
+              "type": "string",
+              "enum": [
+                "none"
+              ]
+            },
+            "auth": {
+              "type": "string",
+              "enum": [
+                "none",
+                "organization_key"
+              ]
+            },
+            "rate_limit_per_minute": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 600
+            }
+          }
+        },
+        "rules": [
+          "read_only is true and side_effects is none.",
+          "The tool reads the organization's own data only."
+        ],
+        "example": {
+          "name": "find_office",
+          "description": "Look up which office handles a complaint type in a postal area, from the organization's own directory export.",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "complaint_type",
+              "postal_area"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "complaint_type": {
+                "type": "string"
+              },
+              "postal_area": {
+                "type": "string"
+              }
+            }
+          },
+          "output_schema": {
+            "type": "object",
+            "required": [
+              "offices"
+            ],
+            "properties": {
+              "offices": {
+                "type": "array"
+              }
+            }
+          },
+          "read_only": true,
+          "side_effects": "none",
+          "auth": "none",
+          "rate_limit_per_minute": 60
+        }
+      },
+      "category_reason": "An MCP tool definition is a capability card with tool schemas and auth scope."
+    },
+    {
+      "slug": "template.prompt-file",
+      "category": "noun.prompt_shim",
+      "role": "template",
+      "title": "Template: a prompt file: purpose, text, variables and when to refuse and hand off",
+      "value": {
+        "describes": "a prompt file: purpose, text, variables and when to refuse and hand off",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "purpose",
+            "text",
+            "variables",
+            "refuse_and_hand_off",
+            "max_output_tokens"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 6000
+            },
+            "variables": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "refuse_and_hand_off": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "max_output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            }
+          }
+        },
+        "rules": [
+          "Every variable in the text is listed.",
+          "Refusals hand off to a person rather than guessing."
+        ]
+      },
+      "category_reason": "No registered category is named for prompt files; a governed prompt with explicit limits is the closest."
+    },
+    {
+      "slug": "template.test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: synthetic test cases: normal, edge, must-hand-off, must-refuse and adversarial",
+      "value": {
+        "describes": "synthetic test cases: normal, edge, must-hand-off, must-refuse and adversarial",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cases",
+            "synthetic"
+          ],
+          "properties": {
+            "synthetic": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "cases": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "case_id",
+                  "input",
+                  "expected",
+                  "kind"
+                ],
+                "properties": {
+                  "case_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "input": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200
+                  },
+                  "expected": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "normal",
+                      "edge",
+                      "must_hand_off",
+                      "must_refuse",
+                      "adversarial"
+                    ]
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "synthetic is true.",
+          "At least one must_hand_off and one adversarial case."
+        ]
+      },
+      "category_reason": "Test cases are golden fixtures for a kit."
+    },
+    {
+      "slug": "template.self-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the drafting worker's self-check results",
+      "value": {
+        "describes": "the drafting worker's self-check results",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kit_ref",
+            "checks",
+            "passed"
+          ],
+          "properties": {
+            "kit_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "not_run",
+                      "not_applicable"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "Every check in self-checks appears once."
+        ]
+      },
+      "category_reason": "A self-check is a scored run."
+    },
+    {
+      "slug": "template.review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an independent review of a kit by a different worker",
+      "value": {
+        "describes": "an independent review of a kit by a different worker",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kit_ref",
+            "reviewer_kind",
+            "findings",
+            "verdict"
+          ],
+          "properties": {
+            "kit_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "reviewer_kind": {
+              "type": "string",
+              "enum": [
+                "agent",
+                "human"
+              ]
+            },
+            "findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "file",
+                  "issue",
+                  "severity"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "issue": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "blocker",
+                      "major",
+                      "minor"
+                    ]
+                  }
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "accept",
+                "revise",
+                "reject"
+              ]
+            }
+          }
+        },
+        "rules": [
+          "The reviewer is not the drafter."
+        ]
+      },
+      "category_reason": "A review is a verification run."
+    },
+    {
+      "slug": "template.accessibility-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: accessibility and language results for a kit",
+      "value": {
+        "describes": "accessibility and language results for a kit",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kit_ref",
+            "criteria",
+            "passed"
+          ],
+          "properties": {
+            "kit_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "criteria": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "note"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "not_applicable"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "Every criterion appears once."
+        ]
+      },
+      "category_reason": "An accessibility check is a scored run."
+    },
+    {
+      "slug": "template.translation",
+      "category": "noun.skill_pack",
+      "role": "template",
+      "title": "Template: a translated kit: language, files with their sources' digests, glossary and fluent-review state",
+      "value": {
+        "describes": "a translated kit: language, files with their sources' digests, glossary and fluent-review state",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_kit_ref",
+            "language",
+            "files",
+            "glossary",
+            "fluent_review"
+          ],
+          "properties": {
+            "source_kit_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "language": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "sha256",
+                  "source_sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "source_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "glossary": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "term",
+                  "translation"
+                ],
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "translation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "fluent_review": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "done"
+              ]
+            }
+          }
+        },
+        "rules": [
+          "Each file names the digest of the source file it translates.",
+          "fluent_review stays pending until a fluent reviewer checks it."
+        ]
+      },
+      "category_reason": "A translation is the same skill bundle adapted for another language cohort."
+    },
+    {
+      "slug": "template.release-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the steward's release or hold decision with its evidence",
+      "value": {
+        "describes": "the steward's release or hold decision with its evidence",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kit_ref",
+            "decision",
+            "steward",
+            "decided_at",
+            "evidence"
+          ],
+          "properties": {
+            "kit_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "release",
+                "hold"
+              ]
+            },
+            "steward": {
+              "type": "string",
+              "enum": [
+                "human"
+              ]
+            },
+            "decided_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "conditions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "steward is human.",
+          "Evidence names the self-check, review and accessibility results."
+        ]
+      },
+      "category_reason": "A release record is a steward-attested verification decision."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "frame-need",
+      "kind": "verb.problemize",
+      "title": "Frame the need",
+      "claimant": "agent",
+      "summary": "Turn a nonprofit's request into one need brief with users, constraints, a success measure and the steps that must stay human.",
+      "outcome": "A need brief, or no_change when the request is not something a kit can help with.",
+      "ready_outcome": "need_framed",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the request in the organization's words, with real details removed."
+        }
+      ],
+      "produces": [
+        {
+          "name": "need_brief",
+          "template": "template.need-brief"
+        }
+      ],
+      "steps": [
+        "Verify the pin. Describe the organization by type and remove any real person's details.",
+        "Name one need and how a volunteer would know the kit helped.",
+        "List every step from the method's human_only list that the need touches.",
+        "Propose a draft-kit verb with the need brief pinned.",
+        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
+      ],
+      "acceptance": [
+        {
+          "id": "brief-matches-template",
+          "check": "The brief validates against template.need-brief's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The brief contains no names, addresses, phone numbers or case numbers.",
+          "method": "deterministic"
+        },
+        {
+          "id": "measurable",
+          "check": "The success measure can be checked with synthetic test cases.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "draft-kit",
+      "kind": "verb.solve_draft",
+      "title": "Draft the kit files",
+      "claimant": "agent",
+      "summary": "Write the skill files, read-only tool definitions, prompts and ready-to-use files a need brief calls for, and a manifest that pins them.",
+      "outcome": "A kit manifest and its files, or no_change when an existing kit already meets the need.",
+      "ready_outcome": "kit_drafted",
+      "pinned": [
+        "method",
+        "self-checks"
+      ],
+      "slots": [
+        {
+          "name": "need_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the need brief."
+        },
+        {
+          "name": "existing_kits",
+          "category": "noun.skill_pack",
+          "description": "Pins of existing kits to reuse or extend.",
+          "many": true,
+          "max": 10,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "kit_manifest",
+          "template": "template.kit-manifest"
+        },
+        {
+          "name": "skill_files",
+          "template": "template.skill-file",
+          "max": 6
+        },
+        {
+          "name": "tools",
+          "template": "template.mcp-tool",
+          "max": 6
+        },
+        {
+          "name": "prompts",
+          "template": "template.prompt-file",
+          "max": 6
+        }
+      ],
+      "steps": [
+        "Verify the pins. Reuse an existing kit when it fits.",
+        "Keep tools read-only. Never let a tool write, send or file anything; make those human hand-offs in the skill file.",
+        "Pin every file by SHA-256 in the manifest.",
+        "Propose a write-test-cases verb and a self-check verb.",
+        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+        "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path."
+      ],
+      "acceptance": [
+        {
+          "id": "files-match-templates",
+          "check": "The manifest, skills, tools and prompts validate against their templates.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tools-read-only",
+          "check": "Every tool has read_only true and side_effects none.",
+          "method": "deterministic"
+        },
+        {
+          "id": "boundaries-carried",
+          "check": "Every human boundary from the need brief appears in the manifest and in a skill's hand-offs.",
+          "method": "deterministic"
+        },
+        {
+          "id": "usable",
+          "check": "A volunteer could follow the skill files without extra training.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 2400
+      },
+      "follows": [
+        "public-good-kits.frame-need"
+      ]
+    },
+    {
+      "slug": "write-test-cases",
+      "kind": "verb.generate_seed",
+      "title": "Write synthetic test cases",
+      "claimant": "agent",
+      "summary": "Write synthetic test cases for the kit: normal, edge, must-hand-off, must-refuse and adversarial, each with the expected behavior.",
+      "outcome": "A synthetic test case set.",
+      "ready_outcome": "cases_written",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "need_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the need brief."
+        },
+        {
+          "name": "kit_manifest",
+          "category": "noun.skill_pack",
+          "description": "Pin of the kit manifest."
+        }
+      ],
+      "params": {
+        "max_cases": {
+          "schema": {
+            "type": "integer",
+            "minimum": 4,
+            "maximum": 200
+          },
+          "default": 20,
+          "description": "Most cases to write."
+        }
+      },
+      "produces": [
+        {
+          "name": "test_cases",
+          "template": "template.test-cases"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Cover the success measure, every human hand-off and at least one adversarial input.",
+        "Mark the set synthetic and invent every detail; never adapt a real case.",
+        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
+      ],
+      "acceptance": [
+        {
+          "id": "cases-match-template",
+          "check": "The cases validate against template.test-cases's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "coverage",
+          "check": "There is at least one case of each kind and one per human boundary.",
+          "method": "deterministic"
+        },
+        {
+          "id": "synthetic",
+          "check": "No case contains a real-looking phone number, address or case number.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "public-good-kits.draft-kit"
+      ]
+    },
+    {
+      "slug": "self-check",
+      "kind": "verb.verify_gate",
+      "title": "Self-check the kit",
+      "claimant": "agent",
+      "summary": "The drafting worker runs every deterministic self-check on its own kit and fixes what fails before asking for review.",
+      "outcome": "A self-check report.",
+      "ready_outcome": "self_checked",
+      "model_use": "none",
+      "pinned": [
+        "self-checks"
+      ],
+      "slots": [
+        {
+          "name": "kit_manifest",
+          "category": "noun.skill_pack",
+          "description": "Pin of the kit manifest."
+        },
+        {
+          "name": "test_cases",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the test cases."
+        }
+      ],
+      "produces": [
+        {
+          "name": "self_check",
+          "template": "template.self-check"
+        }
+      ],
+      "steps": [
+        "Run every self-check and record the evidence.",
+        "passed is true only if every check is pass or not_applicable.",
+        "Propose an independent-review verb when every check passes."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.self-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-checks",
+          "check": "Every self-check appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "passed-consistent",
+          "check": "passed is true exactly when every check is pass or not_applicable.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "public-good-kits.write-test-cases"
+      ]
+    },
+    {
+      "slug": "independent-review",
+      "kind": "verb.verify_gate",
+      "title": "Review the kit independently",
+      "claimant": "agent",
+      "summary": "A different worker than the drafter reviews the kit's files, test cases and self-check, and accepts, asks for revision or rejects.",
+      "outcome": "A review.",
+      "ready_outcome": "reviewed",
+      "pinned": [
+        "method",
+        "self-checks"
+      ],
+      "slots": [
+        {
+          "name": "kit_manifest",
+          "category": "noun.skill_pack",
+          "description": "Pin of the kit manifest."
+        },
+        {
+          "name": "test_cases",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the test cases."
+        },
+        {
+          "name": "self_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the self-check report."
+        }
+      ],
+      "produces": [
+        {
+          "name": "review",
+          "template": "template.review"
+        }
+      ],
+      "steps": [
+        "Confirm you did not draft this kit; otherwise return blocked.",
+        "Rerun the self-checks and read every file.",
+        "Try the adversarial cases yourself and confirm the hand-offs happen.",
+        "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path."
+      ],
+      "acceptance": [
+        {
+          "id": "review-matches-template",
+          "check": "The review validates against template.review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-reviewer",
+          "check": "The reviewing key differs from the drafter's key.",
+          "method": "deterministic"
+        },
+        {
+          "id": "blockers-explained",
+          "check": "Every blocker names the file and the fix needed.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "review": "distinct_reviewer",
+      "follows": [
+        "public-good-kits.self-check"
+      ]
+    },
+    {
+      "slug": "check-accessibility",
+      "kind": "verb.verify_gate",
+      "title": "Check accessibility and languages",
+      "claimant": "agent_or_human",
+      "summary": "Check the kit's files against the accessibility and language criteria and say what to fix.",
+      "outcome": "An accessibility check.",
+      "ready_outcome": "accessibility_checked",
+      "pinned": [
+        "accessibility-criteria"
+      ],
+      "slots": [
+        {
+          "name": "kit_manifest",
+          "category": "noun.skill_pack",
+          "description": "Pin of the kit manifest."
+        },
+        {
+          "name": "translations",
+          "category": "noun.skill_pack",
+          "description": "Pins of translations, if any.",
+          "many": true,
+          "max": 10,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "accessibility_check",
+          "template": "template.accessibility-check"
+        }
+      ],
+      "steps": [
+        "Check every criterion and note where a file falls short.",
+        "Mark languages pending when a translation has no fluent review yet.",
+        "Propose a translate-kit verb for each missing language."
+      ],
+      "acceptance": [
+        {
+          "id": "check-matches-template",
+          "check": "The check validates against template.accessibility-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-criteria",
+          "check": "Every criterion appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plain-enough",
+          "check": "A volunteer with no technical background can follow the files.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "public-good-kits.independent-review"
+      ]
+    },
+    {
+      "slug": "translate-kit",
+      "kind": "verb.solve_draft",
+      "title": "Translate the kit",
+      "claimant": "agent",
+      "summary": "Translate a reviewed kit into one language, keeping tool names and schemas unchanged, with a glossary for key terms.",
+      "outcome": "A translation awaiting a fluent reviewer.",
+      "ready_outcome": "translated",
+      "pinned": [
+        "accessibility-criteria"
+      ],
+      "slots": [
+        {
+          "name": "kit_manifest",
+          "category": "noun.skill_pack",
+          "description": "Pin of the reviewed kit manifest."
+        }
+      ],
+      "params": {
+        "language": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+          },
+          "description": "Target language tag, such as es or pt-BR.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "translation",
+          "template": "template.translation"
+        }
+      ],
+      "steps": [
+        "Translate instructions and messages; never translate tool names, schema field names or file formats.",
+        "Record each translated file with the digest of its source.",
+        "Leave fluent_review pending.",
+        "Propose an independent review of the translation by a fluent reviewer.",
+        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
+      ],
+      "acceptance": [
+        {
+          "id": "translation-matches-template",
+          "check": "The translation validates against template.translation's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sources-pinned",
+          "check": "Every file's source_sha256 matches a file in the kit manifest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-pending",
+          "check": "fluent_review is pending.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "public-good-kits.independent-review"
+      ]
+    },
+    {
+      "slug": "steward-release",
+      "kind": "verb.verify_gate",
+      "title": "Decide release or hold (steward)",
+      "claimant": "human",
+      "summary": "A person, the steward, reads the kit, its self-check, independent review and accessibility check, and decides release or hold.",
+      "outcome": "A release record; releasing into a catalog then follows that catalog's own reviewed path.",
+      "ready_outcome": "decided",
+      "model_use": "none",
+      "pinned": [
+        "method",
+        "accessibility-criteria"
+      ],
+      "slots": [
+        {
+          "name": "kit_manifest",
+          "category": "noun.skill_pack",
+          "description": "Pin of the kit manifest."
+        },
+        {
+          "name": "self_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the self-check."
+        },
+        {
+          "name": "review",
+          "category": "noun.eval_run",
+          "description": "Pin of the independent review."
+        },
+        {
+          "name": "accessibility_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the accessibility check."
+        }
+      ],
+      "produces": [
+        {
+          "name": "release_record",
+          "template": "template.release-record"
+        }
+      ],
+      "steps": [
+        "Read the kit and every report. Release only with a passing self-check, an accepting review and a passing accessibility check.",
+        "Write any conditions, such as languages still pending.",
+        "Holding is a valid decision; say why.",
+        "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path."
+      ],
+      "acceptance": [
+        {
+          "id": "record-matches-template",
+          "check": "The release record validates against template.release-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "release-needs-evidence",
+          "check": "A release decision cites a passing self-check, an accept review and a passing accessibility check.",
+          "method": "deterministic"
+        },
+        {
+          "id": "steward-is-person",
+          "check": "steward is human and the submitting key belongs to the steward.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "capabilities": [
+        "read permitted noun versions",
+        "write candidate nouns"
+      ],
+      "follows": [
+        "public-good-kits.check-accessibility"
+      ]
+    }
+  ]
+}

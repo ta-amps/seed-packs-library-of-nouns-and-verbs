@@ -2,11 +2,11 @@
   "pack_id": "taste-palettes",
   "title": "Taste palettes",
   "version": "0.1.0",
-  "summary": "Several versions of one brief with adjustable settings, shown side by side on any surface; the person's choice becomes a preference noun that later work can use within its scope.",
+  "summary": "A collection of nouns and verbs for comparing options side by side and keeping a person's choice: several versions of one brief with adjustable settings, a choice recorded as a preference noun, and later work that uses it within its scope.",
   "dependencies": [],
   "boundaries": [
     "Only a person records a choice; silence is never a preference.",
-    "Preferences stay private and are used only within their scope.",
+    "Preferences belong to the person who chose and are used only within their scope.",
     "Importing the pack writes nothing and enqueues nothing."
   ],
   "nouns": [
@@ -14,7 +14,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Taste palettes seed pack",
+      "title": "A collection of nouns and verbs for comparing options side by side and keeping a person's choice",
       "value": {
         "lets_workers": "Show a person a few versions of one brief side by side, each made with different adjustable settings, record which one they choose as a preference, and use that preference in later work, through any surface that can show the comparison.",
         "flow": [
@@ -101,7 +101,7 @@
           "A preference is scoped to a medium and a use, and it can be contradicted by later choices."
         ],
         "confidence_rule": "One choice gives low confidence; agreement across three or more comparable choices gives high confidence; any contradiction caps confidence at medium until resolved.",
-        "privacy": "Preferences belong to the person who chose. Keep them private and never use them outside their scope."
+        "privacy": "Preferences belong to the person who chose. Keep them with the person who chose and never use them outside their scope."
       }
     },
     {
@@ -734,7 +734,7 @@
       "title": "SYNTHETIC palette brief: README first-screen tone",
       "synthetic": true,
       "value": {
-        "brief": {
+        "instance": {
           "subject": "SYNTHETIC: the first screen of a project README",
           "audience": "Developers deciding in one minute whether to try the project",
           "purpose": "Say who it is for, what it does and how to try it",
@@ -801,7 +801,7 @@
       "title": "Make one option",
       "claimant": "agent",
       "summary": "Make one version of the brief using one settings vector, keeping everything the brief fixes identical.",
-      "outcome": "A private embodiment noun. Run once per option as separate attempts with different settings.",
+      "outcome": "An embodiment noun. Run once per option as separate attempts with different settings.",
       "ready_outcome": "embodiment_ready",
       "pinned": [
         "method"
@@ -870,7 +870,7 @@
       "title": "Assemble the comparison sheet",
       "claimant": "agent",
       "summary": "Put two to four options side by side with plain-language differences, a shuffled order and a none option.",
-      "outcome": "A private comparison sheet that any surface can show.",
+      "outcome": "A comparison sheet that any surface can show.",
       "ready_outcome": "sheet_ready",
       "model_use": "none",
       "pinned": [
@@ -942,7 +942,7 @@
       "title": "Record the person's choice",
       "claimant": "human",
       "summary": "A person looks at the sheet on any surface and picks an option or none; the choice becomes a preference noun.",
-      "outcome": "A private preference noun, or no_change when the person declines to choose.",
+      "outcome": "A preference noun, or no_change when the person declines to choose.",
       "ready_outcome": "choice_recorded",
       "model_use": "none",
       "pinned": [
@@ -1000,7 +1000,7 @@
       "title": "Place a new choice among earlier ones",
       "claimant": "agent",
       "summary": "Compare a new preference with earlier ones in the same scope and write a summary that counts agreement and lists contradictions.",
-      "outcome": "A private preference summary with corroborates or contradicts relations, or no_change when no earlier preference shares the scope.",
+      "outcome": "A preference summary with corroborates or contradicts relations, or no_change when no earlier preference shares the scope.",
       "ready_outcome": "summary_ready",
       "pinned": [
         "method"
@@ -1062,7 +1062,7 @@
       "title": "Use a preference in new work",
       "claimant": "agent",
       "summary": "Make something new for a later brief using pinned preferences that are in scope, and say which ones were applied and how.",
-      "outcome": "A private embodiment plus a list of applied and skipped preferences with reasons.",
+      "outcome": "An embodiment plus a list of applied and skipped preferences with reasons.",
       "ready_outcome": "applied",
       "pinned": [
         "method"

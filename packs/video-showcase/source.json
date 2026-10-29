@@ -2,11 +2,11 @@
   "pack_id": "video-showcase",
   "title": "Video showcase",
   "version": "0.1.0",
-  "summary": "Nouns and verbs for a truthful demo video: script, storyboard, shot list, capture plan, media, sequence, captions, evidence links and tool cards, with verbs from script to QA and review.",
+  "summary": "A collection of nouns and verbs for making a truthful demo video: script, storyboard, shot list, capture plan, media, audio, layers and styles, sequence, captions, evidence links and tool cards, with verbs from script to QA, review and the owner's publication record.",
   "dependencies": [],
   "boundaries": [
     "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
-    "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision.",
+    "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision.",
     "Narration is recorded by a person; any generated media is labeled.",
     "Importing the pack writes nothing and enqueues nothing."
   ],
@@ -15,7 +15,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Video showcase seed pack",
+      "title": "A collection of nouns and verbs for making a truthful demo video",
       "value": {
         "lets_workers": "Make a truthful demo video as ordinary claimed work: script, storyboard, screen capture, human narration, captions, rendering, assembly in 16:9 with an optional 9:16 cut, automatic QA and review, where every on-screen number links to its evidence.",
         "flow": [
@@ -57,6 +57,12 @@
           },
           {
             "verb": {
+              "$verb": "video-showcase.prepare-audio"
+            },
+            "when": "After narration exists: music, sound effects and ambience under the license policy."
+          },
+          {
+            "verb": {
               "$verb": "video-showcase.assemble"
             },
             "when": "After media, narration and captions exist."
@@ -71,19 +77,29 @@
             "verb": {
               "$verb": "video-showcase.review-video"
             },
-            "when": "Last, by a person or a different worker."
+            "when": "By a person or a different worker."
+          },
+          {
+            "verb": {
+              "$verb": "video-showcase.record-publication"
+            },
+            "when": "Last: the owner releases the approved cut, or holds it, and records which."
           }
         ],
-        "kinema_alignment": {
-          "status": "Kinema is being extended on a separate branch with 16:9 output, media and sequence nouns, and render and QA verbs. Nothing here depends on that work landing.",
-          "shared_words": {
-            "scene recipe": "Kinema's noun.scene_recipe; render-scenes hands rendered scenes to Kinema's deterministic renderer when it is available.",
-            "media": "A hash-pinned recording, image or audio file, the same meaning Kinema uses.",
-            "sequence": "The ordered clips with cuts and crossfades that assemble encodes, the same meaning Kinema uses.",
-            "render": "Deterministic frame production with no model call per frame.",
-            "QA": "Post-encode checks: black and frozen frames, loudness, captions, format and frame-hash spot checks."
-          }
+        "shared_words": {
+          "scene recipe": "A declarative scene; render-scenes hands pinned scene recipes to a qualified deterministic renderer.",
+          "media": "A hash-pinned recording, image or audio file.",
+          "sequence": "The ordered clips, layers, cuts and crossfades that assemble encodes.",
+          "render": "Deterministic frame production with no model call per frame.",
+          "QA": "Post-encode checks: black and frozen frames, loudness, captions, format, licenses and frame spot checks."
         },
+        "aspects": {
+          "16:9": "1920x1080, the primary output",
+          "9:16": "1080x1920, the optional vertical cut"
+        },
+        "provenance_notes": [
+          "These terms match the kinema repository's seed pack: media and sequence nouns are noun.scene_recipe, render is verb.compile_dag and post-encode QA is verb.verify_gate. Its aspect ids are landscape_16x9 (on an unmerged branch when this pack was written) and reels_9x16."
+        ],
         "style_guide": {
           "$pin": "style-guide"
         },
@@ -91,7 +107,7 @@
           "$pin": "qa-thresholds"
         },
         "privacy": "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
-        "publication": "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision."
+        "publication": "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
       },
       "relations": [
         [
@@ -104,6 +120,14 @@
         ],
         [
           "requires_noun",
+          "asset-policy"
+        ],
+        [
+          "requires_noun",
+          "style-presets"
+        ],
+        [
+          "requires_noun",
           "tool.ffmpeg"
         ],
         [
@@ -113,6 +137,14 @@
         [
           "requires_noun",
           "tool.chromium"
+        ],
+        [
+          "requires_noun",
+          "template.audio-cue-sheet"
+        ],
+        [
+          "requires_noun",
+          "template.publication-record"
         ],
         [
           "requires_noun",
@@ -242,8 +274,13 @@
           },
           {
             "id": "frame-spot-checks",
-            "threshold": "Spot frames of rendered scenes match the render manifest's frame digests.",
-            "method": "Extract the same frame indexes and compare SHA-256 digests of decoded frames."
+            "threshold": "Spot frames of the encoded output match the rendered source frames with SSIM of at least 0.97; exact SHA-256 digests are compared only between the lossless rendered files and the render manifest. not_applicable when nothing was rendered.",
+            "method": "ffmpeg -i <encoded> -i <rendered scene> -lavfi ssim -f null - at the scene's timestamps, and sha256 of the rendered files."
+          },
+          {
+            "id": "asset-licenses",
+            "threshold": "Every music, sound-effect, still and third-party clip has a license from the audio and asset policy, with attribution where required.",
+            "method": "Deterministic join of sequence clips and audio cues with media nouns' rights fields against the policy's allowed list."
           },
           {
             "id": "evidence-coverage",
@@ -258,7 +295,7 @@
         ],
         "rules": [
           "Every check reports its measurement, not only pass or fail.",
-          "A check that cannot run is not_run with the reason, never pass.",
+          "A check that cannot run is not_run with the reason, never pass; one that does not apply is not_applicable with the reason.",
           "Thresholds come from the style guide unless the brief overrides them; record which applied."
         ],
         "tool": {
@@ -359,7 +396,8 @@
           "Rasterizing SVG scene frames to PNG for assembly."
         ],
         "cautions": [
-          "Check the built-in video recording's codec, frame rate and sharpness before relying on it; timed screenshots or a platform screen recorder may give crisper results.",
+          "Built-in recording writes WebM at about 25 frames per second. Its size defaults to the viewport scaled down to fit within 800x800 and ignores the device scale factor, so set the recording size explicitly to the capture size.",
+          "Timed screenshots or a platform screen recorder may give crisper results than built-in recording.",
           "Use a fresh browser profile with no signed-in accounts."
         ],
         "used_by": [
@@ -375,7 +413,7 @@
         },
         "install_policy": "This card installs nothing; browser downloads happen only under the worker's own execution policy.",
         "checks": [
-          "Capture a 2-second recording of a local static page at 1920x1080 and confirm its dimensions with ffprobe."
+          "Capture a 2-second recording of a local static page with the recording size set to 1920x1080 and confirm its dimensions with ffprobe."
         ]
       },
       "relations": [
@@ -409,6 +447,296 @@
           }
         ]
       }
+    },
+    {
+      "slug": "asset-policy",
+      "category": "noun.skill_pack",
+      "role": "asset_policy",
+      "title": "Audio and asset license policy",
+      "category_reason": "A reusable guardrail every verb that adds music, sound effects, stills or third-party clips must follow.",
+      "value": {
+        "allowed": [
+          {
+            "license": "CC0-1.0",
+            "attribution": "Not required; credit is still kind."
+          },
+          {
+            "license": "CC-BY-4.0",
+            "attribution": "Required, in the description and on the end card."
+          },
+          {
+            "license": "owner-recorded",
+            "attribution": "Not required."
+          },
+          {
+            "license": "licensed-with-receipt",
+            "attribution": "As the license says.",
+            "evidence": "The stored license file or receipt, pinned by digest."
+          }
+        ],
+        "refused": [
+          "A missing or unknown license.",
+          "CC-BY-ND for music or sound placed in a video: syncing audio to moving images counts as an adaptation under the CC 4.0 licenses.",
+          "CC-BY-NC unless the owner confirms the video is non-commercial.",
+          "Audio or clips copied from a streaming service or another video.",
+          "Generated audio or images whose model terms forbid this use."
+        ],
+        "rules": [
+          "Every media noun records license, source or receipt, creator and attribution text.",
+          "Generated media is labeled generated and records the generator and its terms.",
+          "Music stays under the narration; duck it while the narrator speaks."
+        ],
+        "sources": [
+          "https://creativecommons.org/licenses/by/4.0/legalcode",
+          "https://creativecommons.org/publicdomain/zero/1.0/legalcode"
+        ]
+      }
+    },
+    {
+      "slug": "style-presets",
+      "category": "noun.skill_pack",
+      "role": "style_presets",
+      "title": "Layer style presets: titles, lower thirds, captions, highlights and end cards",
+      "category_reason": "Reusable visual conventions every render and assembly verb applies.",
+      "value": {
+        "fonts": [
+          {
+            "family": "Inter",
+            "license": "OFL-1.1"
+          },
+          {
+            "family": "Atkinson Hyperlegible",
+            "license": "OFL-1.1"
+          }
+        ],
+        "presets": [
+          {
+            "id": "title",
+            "size_px_at_1080p": 72,
+            "position": "center",
+            "background": "none"
+          },
+          {
+            "id": "lower_third",
+            "size_px_at_1080p": 40,
+            "position": "bottom left inside the title-safe area",
+            "background": "panel at 80 percent opacity"
+          },
+          {
+            "id": "caption",
+            "size_px_at_1080p": 44,
+            "position": "bottom center, above player controls",
+            "background": "panel at 70 percent opacity"
+          },
+          {
+            "id": "highlight",
+            "stroke_px": 6,
+            "shape": "rounded rectangle",
+            "motion": "fade in over 0.3 s"
+          },
+          {
+            "id": "end_card",
+            "size_px_at_1080p": 56,
+            "includes": "title, address to try it, attributions"
+          }
+        ],
+        "rules": [
+          "Text contrast at least 4.5:1 against what is behind it, or 3:1 for text 24 px and larger.",
+          "Keep text inside the inner 90 percent of the frame.",
+          "One accent color; never color alone to carry meaning."
+        ]
+      }
+    },
+    {
+      "slug": "template.audio-cue-sheet",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: an audio cue sheet: narration, music, sound effects and ambience with timing, gain, ducking and licenses",
+      "value": {
+        "describes": "an audio cue sheet: narration, music, sound effects and ambience with timing, gain, ducking and licenses",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cues",
+            "loudness_target_lufs",
+            "true_peak_dbtp"
+          ],
+          "properties": {
+            "cues": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cue_id",
+                  "layer",
+                  "media_ref",
+                  "start_s",
+                  "end_s",
+                  "gain_db",
+                  "license"
+                ],
+                "properties": {
+                  "cue_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "layer": {
+                    "type": "string",
+                    "enum": [
+                      "narration",
+                      "music",
+                      "sound_effect",
+                      "ambience"
+                    ]
+                  },
+                  "media_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "gain_db": {
+                    "type": "number",
+                    "minimum": -60,
+                    "maximum": 12
+                  },
+                  "fade_in_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 30
+                  },
+                  "fade_out_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 30
+                  },
+                  "duck_under_narration_db": {
+                    "type": "number",
+                    "minimum": -40,
+                    "maximum": 0
+                  },
+                  "license": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "attribution": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "loudness_target_lufs": {
+              "type": "number",
+              "minimum": -40,
+              "maximum": 0
+            },
+            "true_peak_dbtp": {
+              "type": "number",
+              "minimum": -10,
+              "maximum": 0
+            }
+          }
+        },
+        "rules": [
+          "Every cue names its license, allowed by the asset policy.",
+          "Music is ducked under narration."
+        ]
+      },
+      "category_reason": "A cue sheet binds audio media to the timeline like a scene binds assets."
+    },
+    {
+      "slug": "template.publication-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the owner's record of whether and where the approved cut was released",
+      "value": {
+        "describes": "the owner's record of whether and where the approved cut was released",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decision",
+            "file_sha256",
+            "recorded_by",
+            "recorded_at"
+          ],
+          "properties": {
+            "decision": {
+              "type": "string",
+              "enum": [
+                "released",
+                "held"
+              ]
+            },
+            "platform": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 120
+            },
+            "address": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            },
+            "visibility": {
+              "type": "string",
+              "enum": [
+                "public",
+                "unlisted",
+                "private"
+              ]
+            },
+            "released_at": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "file_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "attributions_in_description": {
+              "type": "boolean"
+            },
+            "generated_media_labeled": {
+              "type": "boolean"
+            },
+            "recorded_by": {
+              "type": "string",
+              "enum": [
+                "owner"
+              ]
+            },
+            "recorded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "file_sha256 equals the approved encoded output's digest.",
+          "recorded_by is the owner."
+        ]
+      },
+      "category_reason": "A publication record is a verification run comparing what was released with what was approved."
     },
     {
       "slug": "template.video-brief",
@@ -1180,7 +1508,7 @@
           "seconds": 14,
           "width": 1920,
           "height": 1080,
-          "fps": 30,
+          "fps": 25,
           "source": "SYNTHETIC: capture-screen run for capture result-page",
           "generated": false,
           "rights": {
@@ -1189,7 +1517,7 @@
           }
         }
       },
-      "category_reason": "Kinema binds media assets into scenes; a media noun is that asset binding with digest, timing and rights."
+      "category_reason": "Scene recipes bind media assets into scenes; a media noun is that asset binding with digest, timing and rights."
     },
     {
       "slug": "template.evidence-link",
@@ -1650,6 +1978,83 @@
                 }
               }
             },
+            "layers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "layer_id",
+                  "kind",
+                  "start_s",
+                  "end_s",
+                  "z"
+                ],
+                "properties": {
+                  "layer_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "background",
+                      "screen",
+                      "overlay",
+                      "title",
+                      "lower_third",
+                      "caption",
+                      "highlight",
+                      "logo",
+                      "end_card"
+                    ]
+                  },
+                  "media_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "style_preset": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "z": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 20
+                  },
+                  "opacity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              }
+            },
+            "audio_cue_sheet_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
             "outputs": {
               "type": "array",
               "minItems": 1,
@@ -1712,7 +2117,7 @@
           "Each output records its digest and format."
         ]
       },
-      "category_reason": "Kinema's sequence noun: ordered clips with cuts and crossfades bound into an encoded deliverable."
+      "category_reason": "A sequence is ordered clips and layers with cuts and crossfades, bound into an encoded deliverable."
     },
     {
       "slug": "template.qa-report",
@@ -1758,7 +2163,8 @@
                     "enum": [
                       "pass",
                       "fail",
-                      "not_run"
+                      "not_run",
+                      "not_applicable"
                     ]
                   },
                   "measurement": {
@@ -1781,7 +2187,7 @@
         },
         "rules": [
           "Every threshold check from qa-thresholds appears with its measurement.",
-          "passed is true only if every check passed."
+          "A check that does not apply is not_applicable with the reason; passed is true only if every check is pass or not_applicable."
         ]
       },
       "category_reason": "A QA report is a scored run over one output with measurements."
@@ -1878,7 +2284,7 @@
       "title": "Draft the script",
       "claimant": "agent",
       "summary": "Write a timed narration script from the video brief, listing every on-screen number as a claim with an id.",
-      "outcome": "A private script noun and one unverified evidence-link draft per claim.",
+      "outcome": "A script noun and one unverified evidence-link draft per claim.",
       "ready_outcome": "script_ready",
       "pinned": [
         "style-guide"
@@ -1906,7 +2312,8 @@
         "Write beats in plain words, one idea per beat, within the brief's target length.",
         "List every number that will be spoken or shown as a claim with an id. Draft its evidence link from the brief's evidence sources with result unverified.",
         "Leave a claim out rather than include a number you cannot trace.",
-        "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision."
+        "Propose a storyboard verb with the script and brief pinned.",
+        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
       ],
       "acceptance": [
         {
@@ -1940,7 +2347,7 @@
       "title": "Storyboard the video",
       "claimant": "agent",
       "summary": "Turn the script into scenes, a shot list and a capture plan that a capture worker and a renderer can follow exactly.",
-      "outcome": "Private storyboard, shot-list and capture-plan nouns.",
+      "outcome": "Storyboard, shot-list and capture-plan nouns.",
       "ready_outcome": "storyboard_ready",
       "pinned": [
         "style-guide"
@@ -1976,7 +2383,8 @@
         "Prefer real screen captures of the working product; use rendered scenes for titles, diagrams and transitions.",
         "Write a capture plan step by step with viewport 1920x1080, synthetic or demo data and privacy checks.",
         "Mark which shots need a 9:16 variant when the brief asks for one.",
-        "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision."
+        "Propose one capture-screen verb per capture and a render-scenes verb for rendered shots.",
+        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
       ],
       "acceptance": [
         {
@@ -2013,7 +2421,7 @@
       "title": "Capture the screen",
       "claimant": "agent_or_human",
       "summary": "Run the capture plan's scripted steps against local or demo targets and store each recording as a hash-pinned media noun.",
-      "outcome": "One private media noun per capture, each with its digest, dimensions and duration.",
+      "outcome": "One media noun per capture, each with its digest, dimensions and duration.",
       "ready_outcome": "media_ready",
       "model_use": "none",
       "pinned": [
@@ -2056,7 +2464,7 @@
       "steps": [
         "Verify the pins and the pinned Playwright and Chromium builds before running anything.",
         "Use a fresh browser profile, signed out of every account, with notifications off.",
-        "Run each capture's steps exactly, at its viewport, against its local or demo target only.",
+        "Run each capture's steps exactly, at its viewport, against its local or demo target only. Set the recording size to the viewport explicitly; the default is smaller.",
         "Store each recording as a blob, compute its SHA-256, and write a media noun with generated false.",
         "Stop and return blocked if any frame would show a credential, real personal data or an unplanned site."
       ],
@@ -2073,7 +2481,7 @@
         },
         {
           "id": "dimensions-match",
-          "check": "Width and height match the capture plan's viewport times its scale factor.",
+          "check": "Width and height match the capture plan's viewport, with the recording size set to it explicitly.",
           "method": "deterministic"
         },
         {
@@ -2086,12 +2494,15 @@
         "max_elapsed_seconds": 1800,
         "max_captures": 40
       },
-      "network": "Only the local or demo targets named in the capture plan. No other sites, accounts or services.",
+      "network": [
+        "local_only",
+        "Only the local or demo targets named in the capture plan. No other sites, accounts or services."
+      ],
       "capabilities": [
         "read permitted noun versions",
         "a qualified Playwright and Chromium build",
-        "store private blobs",
-        "write private candidate nouns"
+        "store blobs in the requester's scope",
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "video-showcase.storyboard"
@@ -2106,7 +2517,7 @@
       "title": "Record the narration",
       "claimant": "human",
       "summary": "A person reads the script in their own voice and uploads the take; no model is involved.",
-      "outcome": "A private narration media noun, or no_change if the person decides to keep an earlier take.",
+      "outcome": "A narration media noun, or no_change if the person decides to keep an earlier take.",
       "ready_outcome": "narration_ready",
       "model_use": "none",
       "pinned": [
@@ -2128,8 +2539,9 @@
       "steps": [
         "Read the script aloud in a quiet room; small departures from the script are fine and will be captured by transcription.",
         "Record at 48 kHz, mono or stereo, without music.",
-        "Upload the take as a private blob and write a media noun with kind narration and generated false.",
-        "Nobody else's voice and no synthetic voice is used in this verb."
+        "Upload the take as a blob in your team's scope and write a media noun with kind narration and generated false.",
+        "Nobody else's voice and no synthetic voice is used in this verb.",
+        "When the take is stored, propose a transcribe-captions verb with it pinned."
       ],
       "acceptance": [
         {
@@ -2157,8 +2569,8 @@
         "max_elapsed_seconds": 86400
       },
       "capabilities": [
-        "upload a private blob",
-        "write private candidate nouns"
+        "upload a blob in the requester's scope",
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "video-showcase.storyboard"
@@ -2170,7 +2582,7 @@
       "title": "Transcribe captions",
       "claimant": "agent",
       "summary": "Transcribe the narration into timed captions and list where the speech differs from the script.",
-      "outcome": "A private caption track that follows the style guide's caption rules.",
+      "outcome": "A caption track that follows the style guide's caption rules.",
       "ready_outcome": "captions_ready",
       "pinned": [
         "style-guide"
@@ -2198,7 +2610,7 @@
         "Transcribe with the speech-to-text tool or model your allowance permits; record which one in the execution report.",
         "Split cues by the style guide's caption rules and align them to the audio.",
         "List each difference between script and speech instead of silently correcting it.",
-        "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision."
+        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
       ],
       "acceptance": [
         {
@@ -2235,7 +2647,7 @@
       "title": "Render scenes",
       "claimant": "agent",
       "summary": "Render the storyboard's title cards, diagrams and transitions deterministically and record frame digests.",
-      "outcome": "Private media nouns for each rendered scene and a render manifest with digests.",
+      "outcome": "Media nouns for each rendered scene and a render manifest with digests.",
       "ready_outcome": "render_ready",
       "model_use": "none",
       "pinned": [
@@ -2258,7 +2670,7 @@
         {
           "name": "scene_recipes",
           "category": "noun.scene_recipe",
-          "description": "Optional pins of Kinema scene recipes for rendered shots.",
+          "description": "Optional pins of scene recipes for rendered shots.",
           "many": true,
           "max": 20,
           "required": false
@@ -2277,10 +2689,10 @@
       ],
       "steps": [
         "Verify every pin and every tool build before rendering.",
-        "Render only rendered_scene and title_card shots. Use Kinema's deterministic renderer for pinned scene recipes when it is installed and qualified.",
+        "Render only rendered_scene and title_card shots. Use a qualified deterministic scene renderer for pinned scene recipes when one is installed.",
         "Use no model per frame. Record frame counts, sizes and spot-frame digests in the render manifest.",
         "Render the 9:16 variant only for shots that list it.",
-        "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision."
+        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
       ],
       "acceptance": [
         {
@@ -2311,11 +2723,96 @@
       "capabilities": [
         "read permitted noun versions",
         "qualified rendering tools",
-        "store private blobs",
-        "write private candidate nouns"
+        "store blobs in the requester's scope",
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "video-showcase.storyboard"
+      ]
+    },
+    {
+      "slug": "prepare-audio",
+      "kind": "verb.compile_dag",
+      "title": "Prepare the audio layers",
+      "claimant": "agent",
+      "summary": "Lay out narration, music, sound effects and ambience on a cue sheet with licenses checked, duck music under the narration, and mix to the loudness target.",
+      "outcome": "An audio cue sheet and mixed audio media, or no_change when the video needs only narration.",
+      "ready_outcome": "audio_ready",
+      "model_use": "none",
+      "pinned": [
+        "asset-policy",
+        "style-guide",
+        "tool.ffmpeg"
+      ],
+      "slots": [
+        {
+          "name": "narration",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the narration media noun."
+        },
+        {
+          "name": "audio_assets",
+          "category": "noun.scene_recipe",
+          "description": "Pins of music, sound-effect and ambience media nouns.",
+          "many": true,
+          "max": 40,
+          "required": false
+        },
+        {
+          "name": "storyboard",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the storyboard, for timing."
+        }
+      ],
+      "produces": [
+        {
+          "name": "audio_cue_sheet",
+          "template": "template.audio-cue-sheet"
+        },
+        {
+          "name": "mixed_audio",
+          "template": "template.media"
+        }
+      ],
+      "steps": [
+        "Verify every pin and every audio blob digest.",
+        "Use only assets whose license the asset policy allows; leave any other asset out and list it in unknowns with the reason.",
+        "Place cues on the storyboard's timing, duck music under the narration, and mix to the style guide's loudness target with the pinned FFmpeg build.",
+        "Record each cue's license and attribution on the cue sheet."
+      ],
+      "acceptance": [
+        {
+          "id": "cue-sheet-matches-template",
+          "check": "The cue sheet validates against template.audio-cue-sheet's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "licenses-allowed",
+          "check": "Every cue's license is on the asset policy's allowed list.",
+          "method": "deterministic"
+        },
+        {
+          "id": "loudness-measured",
+          "check": "The mixed audio's integrated loudness and true peak were measured with ebur128 and are within the targets.",
+          "method": "deterministic"
+        },
+        {
+          "id": "mix-balanced",
+          "check": "Narration stays clearly audible over music and effects.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "capabilities": [
+        "read permitted noun versions",
+        "a qualified FFmpeg build",
+        "store blobs in the assigned scope",
+        "write candidate nouns"
+      ],
+      "follows": [
+        "video-showcase.record-narration"
       ]
     },
     {
@@ -2324,12 +2821,13 @@
       "title": "Assemble and encode",
       "claimant": "agent",
       "summary": "Cut the media into the storyboard's sequence with crossfades, mix the narration, attach captions and encode 16:9 and the optional 9:16 output.",
-      "outcome": "A private sequence noun and encoded output media with digests.",
+      "outcome": "A sequence noun and encoded output media with digests.",
       "ready_outcome": "sequence_ready",
       "model_use": "none",
       "pinned": [
         "tool.ffmpeg",
-        "style-guide"
+        "style-guide",
+        "style-presets"
       ],
       "slots": [
         {
@@ -2358,6 +2856,12 @@
           "name": "caption_track",
           "category": "noun.scene_recipe",
           "description": "Pin of the caption track."
+        },
+        {
+          "name": "audio_cue_sheet",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the audio cue sheet, if music or effects were added.",
+          "required": false
         }
       ],
       "params": {
@@ -2400,10 +2904,11 @@
       ],
       "steps": [
         "Verify every pin and every media blob digest before cutting.",
-        "Build the timeline from the storyboard: cuts and crossfades only, in storyboard order.",
+        "Build the timeline from the storyboard: cuts and crossfades only, in storyboard order. Add title, lower-third, caption, highlight and end-card layers with the style presets.",
         "Mix narration to the style guide's loudness target, attach the sidecar captions and burn them in only when asked.",
         "Encode each requested aspect with the pinned FFmpeg build and record each output's digest and format.",
-        "Keep every output private. Publishing, uploading or posting the video is the owner's separate decision."
+        "Propose one video-qa verb per encoded output.",
+        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
       ],
       "acceptance": [
         {
@@ -2433,8 +2938,8 @@
       "capabilities": [
         "read permitted noun versions",
         "a qualified FFmpeg build",
-        "store private blobs",
-        "write private candidate nouns"
+        "store blobs in the requester's scope",
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "video-showcase.transcribe-captions",
@@ -2448,13 +2953,14 @@
       "title": "Check the encoded video",
       "claimant": "agent",
       "summary": "Run every QA check on one encoded output: black and frozen frames, loudness, format, duration, captions, frame spot checks, evidence coverage and generated-media labels.",
-      "outcome": "A private QA report with a measurement for every check.",
+      "outcome": "A QA report with a measurement for every check.",
       "ready_outcome": "qa_ready",
       "model_use": "none",
       "pinned": [
         "qa-thresholds",
         "tool.ffmpeg",
-        "style-guide"
+        "style-guide",
+        "asset-policy"
       ],
       "slots": [
         {
@@ -2466,6 +2972,16 @@
           "name": "sequence",
           "category": "noun.scene_recipe",
           "description": "Pin of the sequence."
+        },
+        {
+          "name": "video_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the video brief, for the target length."
+        },
+        {
+          "name": "narration",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the narration media noun, for caption coverage."
         },
         {
           "name": "script",
@@ -2490,6 +3006,12 @@
           "category": "noun.eval_run",
           "description": "Pin of the render manifest, if scenes were rendered.",
           "required": false
+        },
+        {
+          "name": "audio_cue_sheet",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the audio cue sheet, if music or effects were added.",
+          "required": false
         }
       ],
       "produces": [
@@ -2501,8 +3023,9 @@
       "steps": [
         "Verify the pins and the output blob's digest.",
         "Run each check in qa-thresholds with the pinned FFmpeg build and record its measurement.",
-        "Mark a check not_run with its reason when it cannot run; never mark it pass.",
-        "Set passed to true only when every check passed."
+        "Mark a check not_run with its reason when it cannot run, or not_applicable when it does not apply; never mark either as pass.",
+        "Set passed to true only when every check is pass or not_applicable.",
+        "When a check fails, propose the assemble, render-scenes or prepare-audio verb that would fix it, naming the failed check."
       ],
       "acceptance": [
         {
@@ -2517,7 +3040,7 @@
         },
         {
           "id": "passed-consistent",
-          "check": "passed is true exactly when every check result is pass.",
+          "check": "passed is true exactly when every check result is pass or not_applicable.",
           "method": "deterministic"
         }
       ],
@@ -2527,7 +3050,7 @@
       "capabilities": [
         "read permitted noun versions",
         "a qualified FFmpeg build",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "video-showcase.assemble"
@@ -2539,7 +3062,7 @@
       "title": "Review the cut",
       "claimant": "agent_or_human",
       "summary": "A person or a different worker watches the cut with its QA report and evidence links and decides whether it is ready for the owner.",
-      "outcome": "Private review notes with a decision; publishing remains the owner's separate act.",
+      "outcome": "Review notes with a decision; publishing remains the owner's separate act.",
       "ready_outcome": "review_ready",
       "pinned": [
         "style-guide",
@@ -2610,6 +3133,76 @@
       "review": "distinct_reviewer",
       "follows": [
         "video-showcase.video-qa"
+      ]
+    },
+    {
+      "slug": "record-publication",
+      "kind": "verb.verify_gate",
+      "title": "Release and record it (person)",
+      "claimant": "human",
+      "summary": "The owner releases the approved cut on a platform of their choice, outside the fabric, or holds it, and records which file went where and when.",
+      "outcome": "A publication record whose file digest matches the approved cut, or no_change when the owner holds the video.",
+      "ready_outcome": "publication_recorded",
+      "model_use": "none",
+      "pinned": [
+        "asset-policy"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the approved encoded output."
+        },
+        {
+          "name": "review_notes",
+          "category": "noun.eval_run",
+          "description": "Pin of the review notes that marked it ready for the owner."
+        }
+      ],
+      "produces": [
+        {
+          "name": "publication_record",
+          "template": "template.publication-record"
+        }
+      ],
+      "steps": [
+        "Releasing the video is the owner's separate act on the platform of their choice; this verb records what happened.",
+        "Check that the review notes say ready_for_owner_decision before releasing anything.",
+        "Confirm the uploaded file has the same SHA-256 as the approved encoded output.",
+        "Record the platform, address, date and visibility, and whether attributions and generated-media labels are in the description.",
+        "If you hold the video instead, finish with no_change and say why."
+      ],
+      "acceptance": [
+        {
+          "id": "record-matches-template",
+          "check": "The record validates against template.publication-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digest-matches",
+          "check": "file_sha256 equals the approved encoded output's blob digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-ready",
+          "check": "The pinned review notes have decision ready_for_owner_decision.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recorded-by-owner",
+          "check": "recorded_by is owner and the submitting key belongs to the owner.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "capabilities": [
+        "read permitted noun versions",
+        "write candidate nouns"
+      ],
+      "follows": [
+        "video-showcase.review-video"
       ]
     }
   ]

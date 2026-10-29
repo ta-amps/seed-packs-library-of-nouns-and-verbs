@@ -2,7 +2,7 @@
   "pack_id": "cost-optimization",
   "title": "Cost optimization",
   "version": "0.1.0",
-  "summary": "Ledgers from supplied usage and dated prices, savings proposed with arithmetic, before-and-after measurements and owner-facing recommendations, keeping billed, measured, estimated and credit apart.",
+  "summary": "A collection of nouns and verbs for finding and measuring cost savings: ledgers from supplied usage and dated prices, savings proposed with arithmetic, before-and-after measurements and recommendations for the owner, keeping billed, measured, estimated and credit apart.",
   "dependencies": [
     "evaluation-design"
   ],
@@ -17,7 +17,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Cost optimization seed pack",
+      "title": "A collection of nouns and verbs for finding and measuring cost savings",
       "value": {
         "lets_workers": "Find where a project's money goes and how to spend less without breaking anything: build a ledger from supplied usage and dated prices, propose savings with their arithmetic, measure the promising ones before and after, and recommend changes for the owner to make.",
         "flow": [
@@ -315,8 +315,16 @@
               "maxLength": 80
             },
             "price": {
-              "type": "number",
+              "type": [
+                "number",
+                "null"
+              ],
               "minimum": 0
+            },
+            "unknown_reason": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
             },
             "currency": {
               "type": "string",
@@ -349,7 +357,7 @@
         },
         "rules": [
           "read_at is the date the page was read.",
-          "Prices behind a login are out of scope."
+          "A price that is not public is null with unknown_reason; prices behind a login are out of scope."
         ],
         "example": {
           "provider": "SYNTHETIC cloud",
@@ -481,7 +489,8 @@
               "additionalProperties": false,
               "required": [
                 "amount",
-                "unit"
+                "unit",
+                "basis"
               ],
               "properties": {
                 "amount": {
@@ -494,6 +503,15 @@
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 80
+                },
+                "basis": {
+                  "type": "string",
+                  "enum": [
+                    "billed",
+                    "measured",
+                    "estimated",
+                    "credit"
+                  ]
                 }
               }
             },
@@ -502,7 +520,8 @@
               "additionalProperties": false,
               "required": [
                 "amount",
-                "unit"
+                "unit",
+                "basis"
               ],
               "properties": {
                 "amount": {
@@ -515,6 +534,15 @@
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 80
+                },
+                "basis": {
+                  "type": "string",
+                  "enum": [
+                    "billed",
+                    "measured",
+                    "estimated",
+                    "credit"
+                  ]
                 }
               }
             },
@@ -730,7 +758,7 @@
       "title": "Build the cost ledger",
       "claimant": "agent",
       "summary": "Turn supplied usage exports and invoices into a ledger with one line per service and unit, keeping billed, measured, estimated and credit apart.",
-      "outcome": "A private cost ledger with unknown amounts left null.",
+      "outcome": "A cost ledger with unknown amounts left null.",
       "ready_outcome": "ledger_ready",
       "pinned": [
         "method"
@@ -789,7 +817,7 @@
       "title": "Read current prices",
       "claimant": "agent",
       "summary": "Read the public pricing pages for ledger lines that lack a dated price and store each price as a dated card.",
-      "outcome": "Private price cards, or unknown for prices that are not public.",
+      "outcome": "Price cards, or unknown for prices that are not public.",
       "ready_outcome": "prices_ready",
       "pinned": [
         "method",
@@ -840,7 +868,10 @@
       "bounds": {
         "max_elapsed_seconds": 900
       },
-      "network": "Read-only requests to public pricing pages, at most max_fetches. No logins.",
+      "network": [
+        "read_only",
+        "Read-only requests to public pricing pages, at most max_fetches. No logins."
+      ],
       "follows": [
         "cost-optimization.inventory-costs"
       ]
@@ -851,7 +882,7 @@
       "title": "Propose savings",
       "claimant": "agent",
       "summary": "From the ledger, propose a few concrete savings with their arithmetic, risks and how each would be measured.",
-      "outcome": "Private saving hypotheses, or no_change when nothing is worth changing.",
+      "outcome": "Saving hypotheses, or no_change when nothing is worth changing.",
       "ready_outcome": "hypotheses_ready",
       "pinned": [
         "method"
@@ -925,7 +956,7 @@
       "title": "Measure one saving",
       "claimant": "agent",
       "summary": "Measure cost and quality before and after one change in a sandbox or a local copy, two runs each, without touching production.",
-      "outcome": "A private saving result with the measured saving and whether quality held.",
+      "outcome": "A saving result with the measured saving and whether quality held.",
       "ready_outcome": "result_ready",
       "pinned": [
         "method",
@@ -978,7 +1009,7 @@
       "capabilities": [
         "read permitted noun versions",
         "an isolated sandbox or local copy",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ],
       "follows": [
         "cost-optimization.propose-savings",
@@ -991,7 +1022,7 @@
       "title": "Recommend changes",
       "claimant": "agent",
       "summary": "Recommend do, measure first or no change for each proposed saving, with evidence and trade-offs, for the owner to act on.",
-      "outcome": "A private recommendation; adoption_authorized is always false.",
+      "outcome": "A recommendation; adoption_authorized is always false.",
       "ready_outcome": "recommendation_ready",
       "pinned": [
         "method"
@@ -1054,7 +1085,7 @@
       "title": "Review the recommendation",
       "claimant": "agent",
       "summary": "A different worker rechecks the arithmetic, the bases of the numbers and the trade-offs.",
-      "outcome": "A private review with a verdict.",
+      "outcome": "A review with a verdict.",
       "ready_outcome": "review_ready",
       "pinned": [
         "method"

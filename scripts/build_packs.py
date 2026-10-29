@@ -44,9 +44,11 @@ PACK_ID = re.compile(r"^[a-z][a-z0-9-]{1,40}$")
 SLUG = re.compile(r"^[a-z0-9][a-z0-9.-]{0,100}$")
 SLOT = re.compile(r"^[a-z][a-z0-9_]{0,40}$")
 
+# Packs are shared inside one team surface: Tessera records the importing key's own surface as the
+# producer, and surface_only makes items readable, claimable and updatable only by keys on that surface.
 GOVERNANCE = {
     "producer_surface": PRODUCER,
-    "visibility_scope": "private",
+    "visibility_scope": "surface_only",
     "allowed_surfaces": [],
     "target_cohorts": ["all"],
 }
@@ -79,6 +81,9 @@ OUTCOME_MEANINGS = {
     "blocked": "A required input, permission or capability is missing. Ask one precise question.",
 }
 CLAIMANTS = {"agent", "human", "agent_or_human"}
+NETWORK_MODES = {"none", "read_only", "local_only", "sandbox_packages", "assigned_tessera", "provider_destination"}
+# Value fields Tessera's store turns into stored tags (extract_payload_tags); packs never set them.
+TAGGING_FIELDS = {"tags", "metadata_tags", "domain", "surface", "stage", "kind", "category", "area", "track"}
 MODEL_USE = {"worker_allowance", "none"}
 REVIEW_RULES = {"owning_policy", "distinct_reviewer"}
 INFERENCE_ALLOWANCE = (
@@ -107,6 +112,19 @@ RUN_NOTES_SCHEMA = {
         "next_steps": TEXT_LIST,
         "ideas": TEXT_LIST,
     },
+}
+PACK_PHRASE = "A collection of nouns and verbs for "
+FOLLOW_UP_STEP = (
+    "Return follow-up work the results justify as proposed_verbs and nouns worth creating later as "
+    "proposed_nouns. Never enqueue them yourself; an authorized requester decides which to run."
+)
+CREATES = {
+    "nouns": "The worker writes the nouns listed in output_contract.produces and returns their pins.",
+    "verbs": (
+        "The worker proposes follow-up verbs in output.proposed_verbs, such as a breakdown into smaller "
+        "verbs or a research follow-up, with the pins they need. Proposals are never enqueued by the "
+        "worker; an authorized requester enqueues the ones worth doing."
+    ),
 }
 REPORT_FILL_RULES = [
     "Copy contract.input_schema and contract.output_schema unchanged, so every run of this template shares one shape fingerprint.",
@@ -250,7 +268,13 @@ def check_schema(schema: Any, where: str) -> None:
         for kind in kinds if isinstance(kinds, list) else [kinds]:
             _need(kind in TYPES, f"{where}: unknown type {kind!r}")
     if "pattern" in schema:
-        re.compile(schema["pattern"])
+        pattern = schema["pattern"]
+        re.compile(pattern)
+        _need(not re.search(r"\(\?[=!<P]|\\[1-9]", pattern),
+              f"{where}: patterns avoid lookaround and backreferences so every JSON Schema engine agrees")
+    for low, high in (("minItems", "maxItems"), ("minLength", "maxLength"), ("minimum", "maximum")):
+        if low in schema and high in schema:
+            _need(schema[low] <= schema[high], f"{where}: {low} is above {high}")
     for name, sub in schema.get("properties", {}).items():
         check_schema(sub, f"{where}.{name}")
     if "items" in schema:
@@ -259,6 +283,11 @@ def check_schema(schema: Any, where: str) -> None:
         _need(type(schema["additionalProperties"]) is bool, f"{where}: additionalProperties must be a boolean")
     for name in schema.get("required", []):
         _need(name in schema.get("properties", {}), f"{where}: required {name!r} has no property schema")
+
+
+def end_of_text(pattern: str) -> str:
+    """JSON Schema engines read a final $ as end of text; Python's $ would also accept a final newline."""
+    return pattern[:-1] + "\\Z" if pattern.endswith("$") and not pattern.endswith("\\$") else pattern
 
 
 def schema_errors(schema: dict[str, Any], value: Any, where: str = "$") -> list[str]:
@@ -275,7 +304,7 @@ def schema_errors(schema: dict[str, Any], value: Any, where: str = "$") -> list[
     if isinstance(value, str):
         if len(value) < schema.get("minLength", 0) or len(value) > schema.get("maxLength", math.inf):
             errors.append(f"{where}: length out of bounds")
-        if "pattern" in schema and not re.search(schema["pattern"], value):
+        if "pattern" in schema and not re.search(end_of_text(schema["pattern"]), value):
             errors.append(f"{where}: does not match pattern")
     if type(value) in (int, float) and not isinstance(value, bool):
         if value < schema.get("minimum", -math.inf) or value > schema.get("maximum", math.inf):
@@ -336,9 +365,9 @@ class Library:
     def store(pack_id: str) -> str:
         return f"seedpack.{pack_id}"
 
-    @staticmethod
-    def key(pack_id: str, slug: str) -> str:
-        return f"{pack_id}.{slug}"
+    def key(self, pack_id: str, slug: str) -> str:
+        """Keys carry the pack version, so a new version never collides with an earlier one."""
+        return f"{pack_id}.v{self.sources[pack_id]['version']}.{slug}"
 
     def locate(self, pack_id: str, ref: str, where: str) -> tuple[str, str]:
         target_pack, _, slug = ref.rpartition(":")
@@ -359,10 +388,12 @@ class Library:
         }
 
     def resolve(self, pack_id: str, obj: Any, where: str) -> Any:
-        """Replace {"$pin": ref} with a NounRef and {"$verb": id} with a checked template id."""
+        """Replace {"$pin": ref} with a NounRef, {"$key": ref} with a key and {"$verb": id} with a template id."""
         if isinstance(obj, dict):
             if set(obj) == {"$pin"}:
                 return self.pin(pack_id, obj["$pin"], where)
+            if set(obj) == {"$key"}:
+                return self.key(*self.locate(pack_id, obj["$key"], where))
             if set(obj) == {"$verb"}:
                 if obj["$verb"] not in self.templates:
                     fail(f"{where}: unknown verb template {obj['$verb']!r}")
@@ -401,6 +432,7 @@ class Library:
         reserved = {"category_id", "role", "pack", "pack_version", "title", "status", "admission",
                     "license", "content_kind", "provenance", "dimensions", "dimension_basis",
                     "relations", "category_reason"}
+        reserved |= TAGGING_FIELDS
         if reserved & set(content):
             fail(f"{where}: value may not set reserved fields {sorted(reserved & set(content))}")
         value: dict[str, Any] = {
@@ -444,6 +476,8 @@ def check_source(pack_id: str, source: Any) -> None:
         fail(f"{pack_id}: pack_id must match its directory and use lowercase words")
     if not re.fullmatch(r"\d+\.\d+\.\d+", source["version"]):
         fail(f"{pack_id}: version is a display version such as 0.1.0")
+    if not str(source["summary"]).startswith(PACK_PHRASE):
+        fail(f"{pack_id}: the summary starts with {PACK_PHRASE!r}, in plain English")
     for dep in source.get("dependencies", []):
         if not isinstance(dep, str) or dep == pack_id:
             fail(f"{pack_id}: invalid dependency {dep!r}")
@@ -460,6 +494,9 @@ def check_source(pack_id: str, source: Any) -> None:
             fail(f"{where}: value must be an object")
     if "pack" not in seen:
         fail(f"{pack_id}: every pack needs a descriptor noun with slug 'pack'")
+    descriptor = next(noun for noun in source["nouns"] if noun["slug"] == "pack")
+    if not descriptor["title"].startswith(PACK_PHRASE):
+        fail(f"{pack_id}: the descriptor noun's title starts with {PACK_PHRASE!r}")
     verbs: set[str] = set()
     for i, verb in enumerate(source["verbs"]):
         where = f"{pack_id}.verbs[{i}]"
@@ -522,6 +559,8 @@ def slot_schema(slot: dict[str, Any]) -> dict[str, Any]:
     if slot.get("many"):
         return {"type": "array", "minItems": 1 if slot.get("required", True) else 0,
                 "maxItems": int(slot.get("max", 8)), "items": NOUN_REF_SCHEMA}
+    if not slot.get("required", True):
+        return {**NOUN_REF_SCHEMA, "type": ["object", "null"]}
     return NOUN_REF_SCHEMA
 
 
@@ -551,12 +590,13 @@ def build_input_schema(verb: dict[str, Any], pinned_count: int) -> dict[str, Any
 
 
 def build_output_schema(verb: dict[str, Any]) -> dict[str, Any]:
+    produced = sum(int(item.get("max", 1)) for item in verb["produces"])
     properties: dict[str, Any] = {
         "outcome": {"type": "string", "enum": [verb["ready_outcome"], *STANDARD_OUTCOMES]},
         "summary": {"type": "string", "minLength": 1, "maxLength": 1200},
         "artifacts": {
             "type": "array",
-            "maxItems": 32,
+            "maxItems": produced,
             "items": {
                 "type": "object",
                 "additionalProperties": False,
@@ -598,6 +638,39 @@ def build_output_schema(verb: dict[str, Any]) -> dict[str, Any]:
         },
         "no_change_reason": {"type": "string", "minLength": 1, "maxLength": 2000},
         "blocked_question": {"type": "string", "minLength": 1, "maxLength": 1000},
+        "proposed_verbs": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["kind", "title", "outcome", "why", "priority"],
+                "properties": {
+                    "kind": {"type": "string", "pattern": "^verb\\.[a-z_]+$"},
+                    "template_id": {"type": "string", "minLength": 1, "maxLength": 160},
+                    "title": {"type": "string", "minLength": 1, "maxLength": 160},
+                    "outcome": {"type": "string", "minLength": 1, "maxLength": 600},
+                    "why": {"type": "string", "minLength": 1, "maxLength": 600},
+                    "input_pins": {"type": "array", "maxItems": 16, "items": NOUN_REF_SCHEMA},
+                    "priority": {"type": "integer", "minimum": 1, "maximum": 3},
+                },
+            },
+        },
+        "proposed_nouns": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["category", "role", "title", "why"],
+                "properties": {
+                    "category": {"type": "string", "pattern": "^noun\\.[a-z_]+$"},
+                    "role": {"type": "string", "minLength": 1, "maxLength": 64},
+                    "title": {"type": "string", "minLength": 1, "maxLength": 160},
+                    "why": {"type": "string", "minLength": 1, "maxLength": 600},
+                },
+            },
+        },
         "run_notes": RUN_NOTES_SCHEMA,
     }
     for name, schema in verb.get("output_fields", {}).items():
@@ -634,17 +707,27 @@ def report_template(input_schema: dict[str, Any], output_schema: dict[str, Any])
     }
 
 
-def write_mode(verb: dict[str, Any], slots: list[dict[str, Any]], where: str) -> dict[str, Any]:
-    """Create-only by default; an explicit update slot allows one compare-and-set write."""
+def network(verb: dict[str, Any], where: str) -> dict[str, str]:
+    raw = verb.get("network", "none")
+    mode, detail = ("none", "No network access.") if raw == "none" else (raw if isinstance(raw, list) and len(raw) == 2 else (None, None))
+    if mode not in NETWORK_MODES or not isinstance(detail, str) or not detail.strip():
+        fail(f"{where}: network is 'none' or [mode, detail] with mode in {sorted(NETWORK_MODES)}")
+    return {"mode": mode, "detail": detail}
+
+
+def write_target(pack_id: str, verb: dict[str, Any], slots: list[dict[str, Any]], where: str) -> dict[str, Any]:
+    """Create-only by default; an explicit update slot allows one compare-and-set write to that noun."""
     slot = verb.get("update_slot")
     if slot is None:
-        return {"write_mode": "create_only", "expected_version": 0}
-    if slot not in {item["name"] for item in slots if not item.get("many")}:
-        fail(f"{where}: update_slot must name a single-valued slot")
+        return {"write_mode": "create_only", "store_param": "output_store",
+                "key_rule": f"{pack_id}.<role>.<task_id>[.<n>]", "expected_version": 0}
+    if slot not in {item["name"] for item in slots if not item.get("many") and item.get("required", True)}:
+        fail(f"{where}: update_slot must name a required single-valued slot")
     return {
         "write_mode": "compare_and_set",
+        "target_slot": slot,
         "expected_version": {"from_slot": slot},
-        "update_rule": f"Write a new version of the noun pinned in slot {slot!r} with its pinned version as the expected version; a version conflict means re-read and stop.",
+        "update_rule": f"Write a new version of the noun pinned in slot {slot!r}, in its own store and key, with its pinned version as the expected version. A version conflict means re-read and stop.",
     }
 
 
@@ -666,7 +749,7 @@ def build_verb(lib: Library, pack_id: str, verb: dict[str, Any]) -> dict[str, An
         **{name: {key: spec[key] for key in ("description", "schema", "required", "default") if key in spec}
            for name, spec in params.items()},
         "output_store": {
-            "description": "Store for the produced private nouns. The default is a placeholder; use the store your owner assigned.",
+            "description": "Store for the produced nouns. The default is a placeholder; use the store your owner assigned.",
             "schema": {"type": "string", "pattern": NAME_PATTERN},
             "required": True,
             "default": f"{lib.store(pack_id)}.outputs",
@@ -713,19 +796,18 @@ def build_verb(lib: Library, pack_id: str, verb: dict[str, Any]) -> dict[str, An
         "param_specs": param_specs,
         "input_schema": input_schema,
         "output_contract": {
-            "visibility_scope": "private",
+            "visibility_scope": "surface_only",
             "allowed_surfaces": [],
-            "store_param": "output_store",
-            "key_rule": f"{pack_id}.<role>.<task_id>[.<n>]",
-            **write_mode(verb, slots, where),
+            **write_target(pack_id, verb, slots, where),
             "produces": [
                 {"name": item["name"], "template": ref, "max": int(item.get("max", 1))}
                 for item, ref in zip(produces, template_refs)
             ],
             "delivery": (
-                "Private nouns are readable only by the key that wrote them. Include each produced "
-                "value in output.artifacts[].value with its pin so the requester can verify it "
-                "through the task result. Never widen visibility or allowlist other surfaces."
+                "Write produced nouns surface_only under your own authenticated surface, which is the "
+                "requester's assigned surface, so the requester and that surface's reviewers can read "
+                "them. Never use public_commons or allowlist other surfaces. Return every produced "
+                "noun's pin in output.artifacts; add its value when the requester asks for inline delivery."
             ),
         },
         "output_schema": output_schema,
@@ -741,14 +823,15 @@ def build_verb(lib: Library, pack_id: str, verb: dict[str, Any]) -> dict[str, An
             "blocked": ["blocked_question"],
         },
         "acceptance_checks": [dict(check) for check in verb["acceptance"]],
+        "creates": dict(CREATES),
         "guidance": {
-            "required": text_list(verb["steps"], f"{where}.steps"),
+            "required": [*text_list(verb["steps"], f"{where}.steps"), FOLLOW_UP_STEP],
             "preferred": text_list(verb.get("preferred", []), f"{where}.preferred", allow_empty=True),
             "suggested": text_list(verb.get("suggested", []), f"{where}.suggested", allow_empty=True),
             "discovery_requested": bool(verb.get("discovery_requested", False)),
         },
         "required_capabilities": text_list(
-            verb.get("capabilities", ["read permitted noun versions", "write private candidate nouns"]),
+            verb.get("capabilities", ["read permitted noun versions", "write candidate nouns in the requester's scope"]),
             f"{where}.capabilities",
         ),
         "bounds": bounds,
@@ -758,7 +841,7 @@ def build_verb(lib: Library, pack_id: str, verb: dict[str, Any]) -> dict[str, An
             "inference_allowance": INFERENCE_ALLOWANCE,
             "server_fallback": False,
             "maximum_automatically_enqueued_children": 0,
-            "network": verb.get("network", "none"),
+            "network": network(verb, where),
             "external_effects": "none",
         },
         "review": {
@@ -927,8 +1010,10 @@ def build_library(lib: Library) -> dict[str, dict[str, bytes]]:
 # ---------------------------------------------------------------------------
 
 
-def instantiate(task: dict[str, Any], slots: dict[str, Any], params: dict[str, Any]) -> dict[str, Any]:
-    """Fill a verb template with exact pins and params; return a new TaskSpec dict."""
+def instantiate(
+    task: dict[str, Any], slots: dict[str, Any], params: dict[str, Any], queue: str | None = None
+) -> dict[str, Any]:
+    """Fill a verb template with exact pins and params, optionally in an assigned queue; return a new TaskSpec."""
     brief = task["brief"]
     if brief.get("instantiation", {}).get("status") != "template":
         fail("only a verb template can be instantiated")
@@ -958,13 +1043,19 @@ def instantiate(task: dict[str, Any], slots: dict[str, Any], params: dict[str, A
     problems = schema_errors(brief["input_schema"], inputs)
     if problems:
         fail(f"filled inputs do not match the template's input schema: {problems[:3]}")
+    target_queue = task["queue"] if queue is None else queue
+    if not isinstance(target_queue, str) or not re.fullmatch(NAME_PATTERN, target_queue):
+        fail("queue must be an assigned Tessera queue name")
     instance = copy.deepcopy(task)
+    instance["queue"] = target_queue
     instance["brief"]["inputs"] = inputs
     instance["brief"]["instantiation"] = {"status": "instance", "template_idempotency_key": task["idempotency_key"]}
     prefix = task["idempotency_key"].rsplit(":", 1)[0]
-    instance["idempotency_key"] = prefix + ":" + digest(
-        {"template": task["idempotency_key"], "inputs": instance["brief"]["inputs"]}
-    )
+    try:
+        identity = digest({"template": task["idempotency_key"], "queue": target_queue, "inputs": inputs})
+    except ValueError as exc:
+        fail(f"inputs are not canonical JSON: {exc}")
+    instance["idempotency_key"] = prefix + ":" + identity
     return instance
 
 
@@ -1003,6 +1094,7 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--check", action="store_true", help="fail when generated files are stale")
     mode.add_argument("--instantiate", metavar="TEMPLATE_ID", help="print one filled TaskSpec; never enqueues")
     parser.add_argument("--inputs", type=Path, help='JSON object {"slots": {...}, "params": {...}} for --instantiate')
+    parser.add_argument("--queue", help="assigned queue for --instantiate (default: the template's placeholder)")
     args = parser.parse_args(argv)
     try:
         if args.instantiate:
@@ -1019,11 +1111,11 @@ def main(argv: list[str] | None = None) -> int:
                 parser.error("unknown verb template")
             inputs = load_json(args.inputs)
             require_fields(inputs, "inputs", set(), {"slots", "params"})
-            task = instantiate(match[0], inputs.get("slots", {}), inputs.get("params", {}))
+            task = instantiate(match[0], inputs.get("slots", {}), inputs.get("params", {}), args.queue)
             print(json.dumps({"enqueued": False, "task": task}, indent=2, ensure_ascii=False))
             return 0
         problems = write_or_check(args.check)
-    except PackError as exc:
+    except (PackError, ValueError, OSError) as exc:
         print(f"build_packs: {exc}", file=sys.stderr)
         return 1
     if problems:

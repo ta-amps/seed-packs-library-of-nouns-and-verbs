@@ -2,11 +2,12 @@
 
 ## What this pack lets workers do
 
-When the right answer is a matter of taste, workers make two to four versions of the
-same brief, each with different adjustable settings (for example, how formal or how
-compact), and show them side by side on any surface: a website, an app, a chat client
-or a command line. A person picks one or none. The choice becomes a preference noun
-that later work can use, within its scope, and later choices can confirm or contradict.
+A collection of nouns and verbs for comparing options side by side and keeping a
+person's choice. Workers make two to four versions of one brief, each with different
+adjustable settings, such as how formal or how compact. Any website, app, chat client
+or command line can show them side by side. A person picks one or none; the choice
+becomes a preference noun that later work uses within its scope, and later choices can
+confirm or contradict it.
 
 ## Nouns
 
@@ -18,24 +19,26 @@ that later work can use, within its scope, and later choices can confirm or cont
 
 ## Verbs
 
-| Verb | Who | What happens | Produces |
-| --- | --- | --- | --- |
-| draft-embodiments | agent | Makes one option from one settings vector; one attempt per option | Option |
-| assemble-comparison | agent | Puts options side by side with a recorded shuffle; deterministic | Comparison sheet |
-| record-choice | person | Picks an option or none, optionally with a reason in their own words | Preference |
-| update-preferences | agent | Counts agreement with earlier choices and lists contradictions | Preference summary |
-| apply-preference | agent | Uses in-scope preferences in new work and says which it applied | Option |
+| Verb | Who | What happens |
+| --- | --- | --- |
+| draft-embodiments | agent | Makes one option from one settings vector; one attempt per option |
+| assemble-comparison | agent | Puts options side by side with a recorded shuffle; deterministic |
+| record-choice | person | Picks an option or none, optionally with a reason in their own words |
+| update-preferences | agent | Counts agreement with earlier choices and lists contradictions |
+| apply-preference | agent | Uses in-scope preferences in new work and says which it applied |
 
-Each verb can also end with `no_change`, `unknown` or `blocked`.
+Each verb can also end with `no_change`, `unknown` or `blocked`, and can propose
+follow-up verbs, such as another palette when a choice was close.
 
 ## How to use it
 
-Write the nouns in [nouns.json](nouns.json) create-only, write a brief shaped like
-`template.brief`, then fill `draft-embodiments` from [verbs.json](verbs.json) once per
-option with `scripts/build_packs.py --instantiate` and enqueue them yourself.
+Write a brief shaped like `template.brief`. Write the nouns in [nouns.json](nouns.json) create-only with a key scoped to your team's
+surface, then fill a template from [verbs.json](verbs.json) with
+`scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>`
+and enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
 - Only a person records a choice, and silence is never a preference.
-- Preferences stay private and apply only in their scope until their recheck date.
+- Preferences stay in the person's scope and apply only until their recheck date.
 - One choice gives low confidence; it is a gentle default, not a rule.

@@ -2,7 +2,7 @@
   "pack_id": "harness-onboarding-e2e",
   "title": "Harness onboarding",
   "version": "0.1.0",
-  "summary": "Connect a new agent harness and prove the scoped claim, read, heartbeat, write, read-back and submit lifecycle end to end, recording the exact harness version, provider and model.",
+  "summary": "A collection of nouns and verbs for connecting an agent harness and proving the scoped claim, read, heartbeat, write, read-back and submit lifecycle end to end, recording the exact harness version, provider and model.",
   "dependencies": [],
   "boundaries": [
     "Keep credentials in the harness's own credential store. Never put a key in a brief, an output, a log, a noun or a conversation.",
@@ -14,7 +14,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Harness onboarding seed pack",
+      "title": "A collection of nouns and verbs for connecting an agent harness and proving its lifecycle",
       "value": {
         "lets_workers": "Connect a new agent harness to Tessera and prove, end to end, that it can claim, read, heartbeat, write, read back and submit within its scope, while recording the exact harness version, provider and model.",
         "flow": [
@@ -128,7 +128,7 @@
           {
             "id": "write",
             "required": true,
-            "do": "Write the run record as a private noun with expected version 0.",
+            "do": "Write the run record as a noun with expected version 0.",
             "expect": "Version 1 is created."
           },
           {
@@ -953,7 +953,7 @@
       "title": "Connect a new harness",
       "claimant": "agent_or_human",
       "summary": "Configure the harness with its own credential store, then confirm from inside the harness that discovery and whoami match the issued scope.",
-      "outcome": "A private connection record, or blocked with the one missing setting.",
+      "outcome": "A connection record, or blocked with the one missing setting.",
       "ready_outcome": "connected",
       "model_use": "none",
       "pinned": [
@@ -1014,11 +1014,14 @@
       "bounds": {
         "max_elapsed_seconds": 900
       },
-      "network": "Only the assigned Tessera deployment's discovery and identity routes.",
+      "network": [
+        "assigned_tessera",
+        "Only the assigned Tessera deployment's discovery and identity routes."
+      ],
       "capabilities": [
         "configure the harness",
         "the harness's own credential store",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ]
     },
     {
@@ -1027,7 +1030,7 @@
       "title": "Run the scoped lifecycle end to end",
       "claimant": "agent",
       "summary": "The harness under test claims this very task and performs claim, read, heartbeat, write, read back, submit and audit, recording each result.",
-      "outcome": "A private run record whether the run passed or failed; lifecycle_passed is true only when every required step passed.",
+      "outcome": "A run record whether the run passed or failed; lifecycle_passed is true only when every required step passed.",
       "ready_outcome": "run_recorded",
       "pinned": [
         "lifecycle-checklist",
@@ -1093,7 +1096,10 @@
       "bounds": {
         "max_elapsed_seconds": 1800
       },
-      "network": "Only the assigned Tessera deployment.",
+      "network": [
+        "assigned_tessera",
+        "Only the assigned Tessera deployment."
+      ],
       "capabilities": [
         "claim, heartbeat, put_record, get_record, submit and my_audit within the assigned scope"
       ],
@@ -1125,7 +1131,7 @@
       "title": "Diagnose a failed step",
       "claimant": "agent",
       "summary": "Classify a failed lifecycle step with the recovery playbook, reproduce it if possible, and propose a fix and whether a retry is safe.",
-      "outcome": "A private diagnosis; no effect is retried by this verb.",
+      "outcome": "A diagnosis; no effect is retried by this verb.",
       "ready_outcome": "diagnosis_ready",
       "pinned": [
         "recovery-playbook",
@@ -1179,7 +1185,7 @@
       "title": "Compare harness runs",
       "claimant": "agent",
       "summary": "Tabulate several lifecycle runs by exact harness version, provider, model and required steps passed.",
-      "outcome": "A private compatibility summary.",
+      "outcome": "A compatibility summary.",
       "ready_outcome": "summary_ready",
       "model_use": "none",
       "pinned": [
@@ -1229,7 +1235,7 @@
       "title": "Independently recheck a run",
       "claimant": "agent",
       "summary": "A different worker reads the run's receipt, audit trail and written noun, and confirms the run record tells the truth.",
-      "outcome": "A private run review with pass, fail or inconclusive.",
+      "outcome": "A run review with pass, fail or inconclusive.",
       "ready_outcome": "review_ready",
       "model_use": "none",
       "pinned": [

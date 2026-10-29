@@ -2,10 +2,10 @@
   "pack_id": "docs-improvement",
   "title": "Docs improvement",
   "version": "0.1.0",
-  "summary": "An eight-criterion documentation rubric judged for a named reader, with verbs to audit, find gaps, draft fact-preserving rewrites, run examples and links, and review.",
+  "summary": "A collection of nouns and verbs for making documentation clearer for a named reader: an eight-criterion rubric, with verbs to audit, find gaps, draft fact-preserving rewrites, run examples and links, and review.",
   "dependencies": [],
   "boundaries": [
-    "Rewrites are private drafts. Committing, publishing or opening a pull request is the owner's separate act.",
+    "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act.",
     "Rewrites never change a fact, command or number.",
     "Importing the pack writes nothing and enqueues nothing."
   ],
@@ -14,7 +14,7 @@
       "slug": "pack",
       "category": "noun.skill_pack",
       "role": "pack",
-      "title": "Docs improvement seed pack",
+      "title": "A collection of nouns and verbs for making documentation clearer for a named reader",
       "value": {
         "lets_workers": "Make documentation easier to understand and act on: audit pages against a plain rubric for a named reader, find the missing pages, draft rewrites that keep every fact, run the examples and links, and have another worker check the result.",
         "flow": [
@@ -52,7 +52,7 @@
         "rubric": {
           "$pin": "doc-rubric"
         },
-        "publication": "Rewrites are private drafts. Committing, publishing or opening a pull request is the owner's separate act."
+        "publication": "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
       },
       "relations": [
         [
@@ -400,9 +400,9 @@
       "slug": "template.rewrite",
       "category": "noun.public_source",
       "role": "template",
-      "title": "Template: a private draft rewrite of one page as a patch, explaining which issue each change fixes",
+      "title": "Template: a draft rewrite of one page as a patch, explaining which issue each change fixes",
       "value": {
-        "describes": "a private draft rewrite of one page as a patch, explaining which issue each change fixes",
+        "describes": "a draft rewrite of one page as a patch, explaining which issue each change fixes",
         "schema": {
           "type": "object",
           "additionalProperties": false,
@@ -647,7 +647,7 @@
       "title": "Audit the docs for one reader",
       "claimant": "agent",
       "summary": "Read the pages as the named reader would and record issues with locations and evidence, plus a level for each rubric criterion.",
-      "outcome": "A private audit, or no_change when every criterion is already good.",
+      "outcome": "An audit, or no_change when every criterion is already good.",
       "ready_outcome": "audit_ready",
       "pinned": [
         "doc-rubric"
@@ -674,7 +674,7 @@
         "Verify the pins. Read the entry pages first, in the order a newcomer would.",
         "Cite every issue's location and evidence.",
         "Give each criterion exactly one level.",
-        "Rewrites are private drafts. Committing, publishing or opening a pull request is the owner's separate act."
+        "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
       ],
       "acceptance": [
         {
@@ -697,7 +697,10 @@
         "max_elapsed_seconds": 1800,
         "max_pages": 100
       },
-      "network": "Read-only fetch of the pinned snapshot."
+      "network": [
+        "read_only",
+        "Read-only fetch of the pinned snapshot."
+      ]
     },
     {
       "slug": "find-gaps",
@@ -705,7 +708,7 @@
       "title": "Find the missing pages",
       "claimant": "agent",
       "summary": "List the first tasks the reader would try that no page covers, ranked by how often a reader would hit them.",
-      "outcome": "Private doc gaps, or no_change when the first tasks are covered.",
+      "outcome": "Doc gaps, or no_change when the first tasks are covered.",
       "ready_outcome": "gaps_ready",
       "pinned": [
         "doc-rubric"
@@ -731,7 +734,8 @@
       "steps": [
         "Infer first tasks from the persona and the project's stated purpose.",
         "Check each against the audited pages.",
-        "Rank by how soon a reader meets it."
+        "Rank by how soon a reader meets it.",
+        "Propose a draft-rewrite verb for each gap worth fixing now."
       ],
       "acceptance": [
         {
@@ -758,7 +762,7 @@
       "title": "Draft a rewrite of one page",
       "claimant": "agent",
       "summary": "Rewrite one page as a patch that fixes audited issues in plain language while keeping every fact, command and number.",
-      "outcome": "A private rewrite patch, or no_change when the page needs none.",
+      "outcome": "A rewrite patch, or no_change when the page needs none.",
       "ready_outcome": "rewrite_ready",
       "pinned": [
         "doc-rubric"
@@ -805,7 +809,7 @@
         "Lead with the outcome for the reader.",
         "Explain which audited issue each change fixes.",
         "Apply in-scope tone preferences when pinned.",
-        "Rewrites are private drafts. Committing, publishing or opening a pull request is the owner's separate act."
+        "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
       ],
       "acceptance": [
         {
@@ -837,7 +841,7 @@
       "title": "Run the examples and check the links",
       "claimant": "agent",
       "summary": "Run every code block in a sandbox and check every local link, recording pass, fail or not runnable.",
-      "outcome": "A private example run.",
+      "outcome": "An example run.",
       "ready_outcome": "examples_checked",
       "model_use": "none",
       "pinned": [
@@ -896,11 +900,14 @@
       "bounds": {
         "max_elapsed_seconds": 1800
       },
-      "network": "None unless allow_network is true, then read-only requests to linked pages.",
+      "network": [
+        "read_only",
+        "None unless allow_network is true, then read-only requests to linked pages."
+      ],
       "capabilities": [
         "read permitted noun versions",
         "an isolated sandbox without credentials",
-        "write private candidate nouns"
+        "write candidate nouns in the requester's scope"
       ]
     },
     {
@@ -909,7 +916,7 @@
       "title": "Review a rewrite",
       "claimant": "agent_or_human",
       "summary": "A different worker or a person checks each audited issue against the rewrite: fixed, not fixed or made worse.",
-      "outcome": "A private review with a verdict.",
+      "outcome": "A review with a verdict.",
       "ready_outcome": "review_ready",
       "pinned": [
         "doc-rubric"
@@ -942,7 +949,7 @@
         "Confirm you did not write the rewrite; otherwise return blocked.",
         "Check every issue the rewrite claims to fix.",
         "Reject any rewrite that changed a fact.",
-        "Rewrites are private drafts. Committing, publishing or opening a pull request is the owner's separate act."
+        "Rewrites are drafts in the requester's scope. Committing, publishing or opening a pull request is the owner's separate act."
       ],
       "acceptance": [
         {

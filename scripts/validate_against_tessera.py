@@ -10,17 +10,24 @@ registry, validate_category_payload, canonical tags, NounRef and execution-repor
 checks, and validates the generated pack files against them. It also derives the
 contract snapshot that `scripts/validate_packs.py` uses without Tessera installed.
 
-It reads files only. It opens no network connection, calls no model, writes no
-record, enqueues no task and activates nothing. `--write` updates
-packs/tessera-contract.json and packs/VALIDATION.json; the default mode compares.
+It runs the checked-out Tessera's own code in-process. Beyond reading files, it
+writes only a throwaway local Store database in a temporary directory for the
+two-key lifecycle probe, and deletes it afterwards. It opens no network
+connection, calls no model, and writes nothing to any real fabric. `--write`
+updates packs/tessera-contract.json and packs/VALIDATION.json; the default mode
+compares. It refuses `--write` when the Tessera files it uses are modified,
+unless `--allow-dirty` is given, and records whether they were clean.
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
+import subprocess
 import sys
+import tempfile
 import typing
 from pathlib import Path
 from typing import Any
@@ -42,20 +49,45 @@ PAYLOAD_TAG_PROBE = (
 )
 
 
-def git_head(checkout: Path) -> str:
-    """Read the checked-out commit from .git files without running git."""
+def git_dirs(checkout: Path) -> tuple[Path, Path]:
+    """The checkout's own git directory and the common directory, for clones and worktrees alike."""
     git = checkout / ".git"
+    if git.is_file():
+        line = git.read_text().strip()
+        if not line.startswith("gitdir: "):
+            raise ValueError("unrecognized .git file")
+        git = (checkout / line[8:]).resolve()
+    common = git
+    if (git / "commondir").exists():
+        common = (git / (git / "commondir").read_text().strip()).resolve()
+    return git, common
+
+
+def git_head(checkout: Path) -> str:
+    """Read the checked-out commit from git files."""
+    git, common = git_dirs(checkout)
     head = (git / "HEAD").read_text().strip()
     if not head.startswith("ref: "):
         return head
     ref = head[5:]
-    loose = git / ref
-    if loose.exists():
-        return loose.read_text().strip()
-    for line in (git / "packed-refs").read_text().splitlines():
-        if line.endswith(" " + ref):
-            return line.split(" ", 1)[0]
+    for base in (git, common):
+        if (base / ref).exists():
+            return (base / ref).read_text().strip()
+    packed = common / "packed-refs"
+    if packed.exists():
+        for line in packed.read_text().splitlines():
+            if line.endswith(" " + ref):
+                return line.split(" ", 1)[0]
     raise ValueError("cannot resolve the Tessera checkout's HEAD")
+
+
+def files_clean(checkout: Path) -> bool:
+    """Whether the Tessera files this check depends on match the checked-out commit (read-only git)."""
+    result = subprocess.run(
+        ["git", "-C", str(checkout), "status", "--porcelain", "--", *TESSERA_FILES],
+        capture_output=True, text=True, check=True,
+    )
+    return result.stdout.strip() == ""
 
 
 def pattern_of(model: Any, field: str) -> str:
@@ -175,6 +207,113 @@ def load_packs() -> tuple[Any, dict[str, dict[str, bytes]]]:
     return build_packs, built
 
 
+def stand_in_instance(t: Any, build_packs: Any, task: dict[str, Any], records_by_ref: dict[Any, Any],
+                      required_only: bool, queue: str | None = None) -> dict[str, Any]:
+    """Fill a template with schema-valid stand-ins: any pack noun of each slot's category."""
+    brief = task["brief"]
+    slots: dict[str, Any] = {}
+    for name, slot in brief["slot_specs"].items():
+        if required_only and not slot["required"]:
+            continue
+        noun = next((r for r in records_by_ref.values() if r["value"]["category_id"] == slot["category"]), None)
+        if noun is None:
+            raise ValueError(f"no stand-in noun of category {slot['category']}")
+        pin = {"store": noun["store"], "key": noun["key"], "version": 1, "value_sha256": t.value_sha256(noun["value"])}
+        slots[name] = [pin] if slot["many"] else pin
+    params = {name: param_stand_in(spec) for name, spec in brief["param_specs"].items()}
+    return build_packs.instantiate(task, slots, params, queue)
+
+
+def store_probe(t: Any, build_packs: Any, docs: dict[str, Any], records_by_ref: dict[Any, Any]) -> dict[str, Any]:
+    """Exercise real Store visibility with distinct keys on a throwaway local database.
+
+    An importer on a team surface writes every pack noun; a different worker key on the same surface
+    reads each one back and claims every instantiated template; keys on another surface, or with no
+    surface, see and claim nothing. Workers submit a blocked output with the template's execution
+    report, write one surface-only output the requester can read, and update a success record by
+    compare-and-set. The embedded Store applies visibility and ownership; HTTP grants are a separate layer.
+    """
+    from tessera import QueueConfig, RecordWrite, Store, TaskSpec  # noqa: PLC0415
+    from tessera.errors import NotFound  # noqa: PLC0415
+
+    team, other, queue = "seedpack-team", "other-team", "probe-queue"
+    records = [r for files in docs.values() for r in files["nouns.json"]["records"]]
+    tasks = [task for files in docs.values() for task in files["verbs.json"]["tasks"]]
+    out: dict[str, Any] = {"records_written": 0, "records_read_by_second_key": 0, "records_hidden_from_other_surfaces": 0,
+                           "instances_enqueued": 0, "claimed_by_second_key": 0, "claims_by_other_surfaces": 0,
+                           "blocked_outputs_submitted": 0, "output_read_by_requester": False,
+                           "output_hidden_from_other_surface": False, "cas_update_by_second_key": False}
+    with tempfile.TemporaryDirectory() as directory:
+        store = Store(Path(directory) / "probe.db")
+        store.define_queue(QueueConfig(name=queue))
+        with store.scope_context(key_id="importer", surface=team):
+            store.put_records([RecordWrite.model_validate(r) for r in records])
+            out["records_written"] = len(records)
+        with store.scope_context(key_id="worker", surface=team):
+            for r in records:
+                got = store.get_record(r["store"], r["key"], 1)
+                if t.value_sha256(got.value) == t.value_sha256(r["value"]) and got.producer_surface == f"surface:{team}":
+                    out["records_read_by_second_key"] += 1
+        hidden_counts = []
+        for scope in ({"key_id": "outsider", "surface": other}, {"key_id": "outsider"}):
+            hidden = 0
+            with store.scope_context(**scope):
+                for r in records:
+                    try:
+                        store.get_record(r["store"], r["key"], 1)
+                    except NotFound:
+                        hidden += 1
+            hidden_counts.append(hidden)
+        out["records_hidden_from_other_surfaces"] = min(hidden_counts)
+        with store.scope_context(key_id="requester", surface=team):
+            for task in tasks:
+                store.enqueue(TaskSpec.model_validate(stand_in_instance(t, build_packs, task, records_by_ref, True, queue)))
+                out["instances_enqueued"] += 1
+        for scope in ({"key_id": "outsider", "surface": other}, {"key_id": "outsider"}):
+            with store.scope_context(**scope):
+                if store.claim(queue, "outsider-worker") is not None:
+                    out["claims_by_other_surfaces"] += 1
+        with store.scope_context(key_id="worker", surface=team):
+            while (lease := store.claim(queue, "worker-1")) is not None:
+                out["claimed_by_second_key"] += 1
+                brief = lease.brief
+                output = {"outcome": "blocked", "summary": "Store probe: lifecycle check only.", "artifacts": [],
+                          "checks": [], "unknowns": [], "blocked_question": "This is a store probe; no work was attempted."}
+                if build_packs.schema_errors(brief["output_schema"], output):
+                    raise ValueError(f"{brief['template_id']}: probe output does not match the output schema")
+                report = copy.deepcopy(brief["execution_report"]["template"])
+                report["harness"] = {"name": "validate_against_tessera store probe", "version": "1"}
+                report["model"] = {"name": "none"}
+                store.submit(lease.task_id, lease.fencing_token, output, idempotency_key=f"probe:{lease.task_id}",
+                             execution_report=report)
+                out["blocked_outputs_submitted"] += 1
+            output_noun = RecordWrite.model_validate({
+                "store": "seedpack.probe.outputs", "key": "probe.output.1", "expected_version": 0,
+                "visibility_scope": "surface_only", "value": {"category_id": "noun.eval_run", "note": "probe"},
+                "tags": ["category:noun.eval_run", "status:quarantined"]})
+            store.put_records([output_noun])
+            success = next(r for r in records if r["value"]["role"] == "success_record")
+            update = copy.deepcopy(success)
+            update["expected_version"] = 1
+            update["value"]["counts_reason"] = "probe update"
+            store.put_records([RecordWrite.model_validate(update)])
+            out["cas_update_by_second_key"] = store.get_record(success["store"], success["key"], 2).version == 2
+        with store.scope_context(key_id="requester", surface=team):
+            out["output_read_by_requester"] = store.get_record("seedpack.probe.outputs", "probe.output.1", 1).version == 1
+        with store.scope_context(key_id="outsider", surface=other):
+            try:
+                store.get_record("seedpack.probe.outputs", "probe.output.1", 1)
+            except NotFound:
+                out["output_hidden_from_other_surface"] = True
+    out["passed"] = (
+        out["records_read_by_second_key"] == out["records_written"] == out["records_hidden_from_other_surfaces"]
+        and out["claimed_by_second_key"] == out["instances_enqueued"] == len(tasks) == out["blocked_outputs_submitted"]
+        and out["claims_by_other_surfaces"] == 0
+        and out["output_read_by_requester"] and out["output_hidden_from_other_surface"] and out["cas_update_by_second_key"]
+    )
+    return out
+
+
 def param_stand_in(spec: dict[str, Any]) -> Any:
     """A structurally valid parameter value: the default, the first enum value or a schema-shaped guess."""
     if "default" in spec:
@@ -193,8 +332,8 @@ def param_stand_in(spec: dict[str, Any]) -> Any:
         return []
     import re  # noqa: PLC0415
 
-    for guess in ("a", "A", "stand-in", "x"):
-        if re.search(schema.get("pattern", ""), guess):
+    for guess in ("a", "A", "en", "2026-10-29", "stand-in", "x"):
+        if re.search(schema.get("pattern", ""), guess) and len(guess) >= schema.get("minLength", 0):
             return guess
     raise ValueError("no stand-in value fits the parameter schema")
 
@@ -245,6 +384,8 @@ def validate(t: Tessera, build_packs: Any, built: dict[str, dict[str, bytes]]) -
                 )
                 if effective[0] != f"category:{cat}" or c.CATEGORY_REGISTRY[cat].kind != "noun":
                     errors.append(f"{where}: category tag projection {effective[:1]}")
+                if set(effective) != set(m.normalize_tags(w.tags)):
+                    errors.append(f"{where}: the store would add tags {sorted(set(effective) - set(w.tags))}")
                 counts["canonical_category_tags_strict"] += 1
                 result = c.validate_category_payload(cat, record["value"]["dimensions"], record["value"]["relations"], w.tags)
                 if not result.valid or result.errors or result.warnings:
@@ -290,20 +431,9 @@ def validate(t: Tessera, build_packs: Any, built: dict[str, dict[str, bytes]]) -
                     errors.append(f"{where}: execution shape fingerprint differs")
                 else:
                     counts["shape_hash"] += 1
-                slots = {}
-                for name, slot in brief["slot_specs"].items():
-                    stand_in = next(
-                        (r for r in records_by_ref.values() if r["value"]["category_id"] == slot["category"]), None
-                    )
-                    if stand_in is None:
-                        errors.append(f"{where}: no stand-in noun of category {slot['category']}")
-                        continue
-                    pin = {"store": stand_in["store"], "key": stand_in["key"], "version": 1,
-                           "value_sha256": t.value_sha256(stand_in["value"])}
-                    slots[name] = [pin] if slot["many"] else pin
-                params = {name: param_stand_in(spec_) for name, spec_ in brief["param_specs"].items()}
-                instance = build_packs.instantiate(task, slots, params)
-                m.TaskSpec.model_validate(instance)
+                for required_only in (True, False):
+                    instance = stand_in_instance(t, build_packs, task, records_by_ref, required_only)
+                    m.TaskSpec.model_validate(instance)
                 counts["instantiated_TaskSpec"] += 1
             except Exception as exc:  # noqa: BLE001 - every failure is reported
                 errors.append(f"{where}: {type(exc).__name__}: {exc}")
@@ -339,14 +469,24 @@ def validate(t: Tessera, build_packs: Any, built: dict[str, dict[str, bytes]]) -
     for name, outcome in probes.items():
         if outcome != "rejected":
             errors.append(f"negative probe {name} was accepted")
-    return {"packs": packs_summary, "checks": counts, "negative_probes": probes, "errors": errors}
+    try:
+        probe = store_probe(t, build_packs, docs, records_by_ref)
+    except Exception as exc:  # noqa: BLE001 - reported as an error, never hidden
+        probe = {"passed": False, "error": f"{type(exc).__name__}: {exc}"}
+    if not probe.get("passed"):
+        errors.append(f"store probe failed: {probe}")
+    return {"packs": packs_summary, "checks": counts, "negative_probes": probes, "store_probe": probe, "errors": errors}
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--tessera", type=Path, required=True, help="path to a Tessera checkout")
     parser.add_argument("--write", action="store_true", help="write the contract snapshot and receipt")
+    parser.add_argument("--allow-dirty", action="store_true", help="write even if the Tessera files are modified")
     args = parser.parse_args(argv)
+    clean = files_clean(args.tessera.resolve())
+    if args.write and not clean and not args.allow_dirty:
+        parser.error("the Tessera files differ from their commit; use a clean checkout or --allow-dirty")
     t = Tessera(args.tessera.resolve())
     build_packs, built = load_packs()
     contract_bytes = dumps(t.contract())
@@ -355,19 +495,21 @@ def main(argv: list[str] | None = None) -> int:
         "format": "ta-amps.seed-pack-validation.v1",
         "scope": (
             "Offline validation of every generated noun and verb with Tessera's own models and "
-            "functions at the commit below. Shape, category, relation, digest and report checks only; "
-            "not admission, import, execution or deployment evidence."
+            "functions at the commit below, plus a two-key lifecycle probe on a throwaway local Store. "
+            "Shape, category, relation, digest, report and visibility checks only; not admission, "
+            "import into a real fabric, worker execution or deployment evidence."
         ),
-        "tessera": json.loads(contract_bytes)["tessera"],
+        "tessera": {**json.loads(contract_bytes)["tessera"], "files_clean": clean},
         "contract_snapshot_sha256": hashlib.sha256(contract_bytes).hexdigest(),
         "packs": result["packs"],
         "checks": result["checks"],
         "negative_probes": result["negative_probes"],
         "errors": result["errors"],
+        "local_store_probe": result["store_probe"],
         "network_requests": 0,
         "model_calls": 0,
-        "records_written": 0,
-        "tasks_enqueued": 0,
+        "fabric_records_written": 0,
+        "fabric_tasks_enqueued": 0,
     }
     receipt_bytes = dumps(receipt)
     if result["errors"]:
