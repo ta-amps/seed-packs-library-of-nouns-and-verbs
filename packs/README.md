@@ -22,6 +22,11 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Decomposition patterns](decomposition-patterns/README.md) | Split work using shapes that worked, and learn which ones do | 24 | 4 |
 | [Taste palettes](taste-palettes/README.md) | Show options side by side and record a person's choice as a preference | 8 | 5 |
 | [Harness onboarding](harness-onboarding-e2e/README.md) | Connect a harness and prove the claim-to-submit lifecycle | 9 | 5 |
+| [Security review](security-review/README.md) | Review authorized code locally, reproduce in a sandbox, propose tested fixes | 11 | 6 |
+| [Cost optimization](cost-optimization/README.md) | Build a cost ledger, propose and measure savings, recommend changes | 8 | 6 |
+| [Docs improvement](docs-improvement/README.md) | Audit docs for a named reader and draft fact-preserving rewrites | 8 | 5 |
+
+Together: 193 nouns and 62 verb templates across eleven packs.
 
 ## What is in each pack folder
 
@@ -70,7 +75,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, authority limits, template examples, README rules and the three worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, authority limits, template examples, README rules, the counts stated in these docs and the four worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, `canonical_category_tags`, `validate_category_payload`, `NounRef` and execution-report code, plus ten negative probes | Locally, with a Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit and the

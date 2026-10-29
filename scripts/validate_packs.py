@@ -620,6 +620,22 @@ def check_manifest(manifest: dict[str, Any], pack_dir: Path, pack_id: str) -> No
         require(entry["sha256"] == hashlib.sha256((pack_dir / entry["path"]).read_bytes()).hexdigest(), f"{pack_id}: manifest digest for {entry['path']}")
 
 
+def check_doc_counts(root: Path, idx: "Index") -> None:
+    """The library table and every stated total must match the packs actually present."""
+    rows = {}
+    for line in (root / "packs" / "README.md").read_text(encoding="utf-8").splitlines():
+        match = re.fullmatch(r"\| \[[^\]]+\]\(([a-z0-9-]+)/README\.md\) \| [^|]+ \| (\d+) \| (\d+) \|", line)
+        if match:
+            rows[match.group(1)] = (int(match.group(2)), int(match.group(3)))
+    actual = {pack: (len(files["nouns.json"]["records"]), len(files["verbs.json"]["tasks"])) for pack, files in idx.docs.items()}
+    require(rows == actual, f"packs/README.md table differs from the library: {rows} != {actual}")
+    nouns, verbs = sum(n for n, _ in actual.values()), sum(v for _, v in actual.values())
+    for name in ("README.md", "docs/status.md", "packs/README.md"):
+        stated = re.findall(r"(\d+) nouns and (\d+) verb templates", (root / name).read_text(encoding="utf-8"))
+        require(stated, f"{name} states the library totals")
+        require(all((int(n), int(v)) == (nouns, verbs) for n, v in stated), f"{name} totals differ from {nouns} nouns and {verbs} verb templates")
+
+
 def validate_library(root: Path = ROOT) -> dict[str, Any]:
     idx = Index(root)
     packs_dir = root / "packs"
@@ -642,6 +658,7 @@ def validate_library(root: Path = ROOT) -> dict[str, Any]:
         totals["nouns"] += len(records)
         totals["verbs"] += len(files["verbs.json"]["tasks"])
         totals["worked_examples"] += check_fixtures(records)
+    check_doc_counts(root, idx)
     receipt = check_receipt(root, idx.built)
     return {
         **totals,

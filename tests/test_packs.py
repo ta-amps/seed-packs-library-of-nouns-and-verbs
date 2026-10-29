@@ -72,13 +72,14 @@ class LibraryChecks(unittest.TestCase):
         self.assertGreaterEqual(summary["packs"], 8)
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 3)
+        self.assertEqual(summary["worked_examples"], 4)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
     def test_required_packs_present(self):
         for pack in ("repo-review", "video-showcase", "tool-discovery", "evaluation-design", "checks-of-checks",
-                     "decomposition-patterns", "taste-palettes", "harness-onboarding-e2e"):
+                     "decomposition-patterns", "taste-palettes", "harness-onboarding-e2e", "security-review",
+                     "cost-optimization", "docs-improvement"):
             self.assertIn(pack, PACKS)
 
     def test_repo_review_question_bank(self):
@@ -434,8 +435,28 @@ class WorkedExamples(unittest.TestCase):
         self.assertEqual(results["marks"]["M5"], "unknown")
         self.assertEqual(results["metrics"]["A1-2"]["errors"], 1)
 
+    def test_security_findings_must_stay_local_and_masked(self):
+        value = record("security-review.severity-rubric")["value"]
+        results = vp.run_finding_checks(value)
+        self.assertEqual(results, value["expected"])
+        self.assertEqual(results["bad-live-target"]["failed_checks"], ["local-only"])
+        self.assertEqual(results["good-reasoned"]["verdict"], "pass")
+
+    def test_doc_counts_must_match_the_library(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in ("README.md", "docs/status.md", "packs/README.md"):
+                (root / name).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(ROOT / name, root / name)
+            vp.check_doc_counts(root, IDX)
+            text = (root / "README.md").read_text().replace("verb templates were", "verb templates (stale) were")
+            (root / "README.md").write_text(text.replace(" nouns and ", " nouns and 1", 1))
+            with self.assertRaises(bp.PackError):
+                vp.check_doc_counts(root, IDX)
+
     def test_tampered_expectations_fail(self):
-        for key in ("repo-review.evidence-standard", "checks-of-checks.example.source-card-checks", "evaluation-design.example.worked"):
+        for key in ("repo-review.evidence-standard", "checks-of-checks.example.source-card-checks", "evaluation-design.example.worked",
+                    "security-review.severity-rubric"):
             item = record(key)
             expected = item["value"]["expected"]
             first = next(iter(expected))

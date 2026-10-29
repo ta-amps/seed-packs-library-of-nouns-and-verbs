@@ -11,7 +11,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds eight proposed seed packs: bundles of nouns
+The [packs/](packs/README.md) folder holds eleven proposed seed packs: bundles of nouns
 (knowledge, templates, tool cards and examples) and verbs (work an authorized worker
 can claim). They are proposals and validated examples, **not installed, imported,
 admitted or activated**, and no worker has run them yet.
@@ -26,9 +26,12 @@ admitted or activated**, and no worker has run them yet.
 | [Decomposition patterns](packs/decomposition-patterns/README.md) | Split work using shapes that worked and learn which ones do |
 | [Taste palettes](packs/taste-palettes/README.md) | Show options side by side and keep a person's choice as a preference |
 | [Harness onboarding](packs/harness-onboarding-e2e/README.md) | Connect a harness and prove the claim-to-submit lifecycle |
+| [Security review](packs/security-review/README.md) | Review authorized code locally and propose tested fixes, privately |
+| [Cost optimization](packs/cost-optimization/README.md) | Find where money goes and measure savings before recommending them |
+| [Docs improvement](packs/docs-improvement/README.md) | Audit docs for a named reader and draft fact-preserving rewrites |
 
-Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. All 166
-nouns and 45 verb templates were checked offline with Tessera's own models at a pinned
+Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. All
+193 nouns and 62 verb templates were checked offline with Tessera's own models at a pinned
 commit; the [receipt](packs/VALIDATION.json) records exactly what was checked. Packing
 nouns and verbs adds no entity type, runtime, authority or scheduler, and reading or
 importing a pack runs and grants nothing.

@@ -2,7 +2,7 @@
 
 This repository is instructions, synthetic examples and a library of proposed seed
 packs, dated October 29, 2026. It does not deploy a service and contains no active
-pack. The [packs/](../packs/README.md) library holds eight proposals that are validated
+pack. The [packs/](../packs/README.md) library holds eleven proposals that are validated
 examples only: none is installed, imported, admitted or activated, and no worker has
 run their verbs. Read the target's live schemas before sending work.
 
@@ -20,9 +20,9 @@ run their verbs. Read the target's live schemas before sending work.
 | Automatic ongoing work | None; no scheduler, daemon or server inference is installed |
 | Capability research | Proposed source-to-decision seed workflow; no feed/inbox connector, automated comparison or adoption service is active |
 | Research seed authoring | Tessera owns a bounded task builder with synthetic requests for discovery, collector preparation, schedule proposals and one scan; this repository remains a guide |
-| Seed pack library | Eight proposed packs, 166 nouns and 45 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
+| Seed pack library | Eleven proposed packs, 193 nouns and 62 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
 | Tessera model validation | Every pack noun and verb passed Tessera's own `RecordWrite`, `TaskSpec`, category, relation, `NounRef` and execution-report checks at the commit in [VALIDATION.json](../packs/VALIDATION.json); shape evidence only |
-| Pack worked examples | Three deterministic examples (finding checks, check validation, evaluation arithmetic) are recomputed by `make check`; they are synthetic |
+| Pack worked examples | Four deterministic examples (repository and security finding checks, check validation, evaluation arithmetic) are recomputed by `make check`; they are synthetic |
 | Pack execution | None. No verb from the library has been claimed, run, measured or reviewed |
 | Recurring tool discovery | A daily schedule proposal noun only; it needs Tessera's flag-gated schedule support, which is being designed, and no scheduler is activated |
 
