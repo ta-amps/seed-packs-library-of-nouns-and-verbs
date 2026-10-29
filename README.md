@@ -19,6 +19,8 @@ worker-led improvement loop and a reference-only meta-pack. It is a contribution
 template, not an enabled autonomous process.
 The [meta-pack blueprints](docs/meta-pack-blueprints.md) outline ten possible
 improvement workflows, with a small first pilot and explicit rejection conditions.
+The [context, combined outcomes and result guide](docs/context-composition-and-results.md)
+explains bounded worker inputs, integration checks and concise receipt-backed updates.
 
 ## Connect and inspect
 
