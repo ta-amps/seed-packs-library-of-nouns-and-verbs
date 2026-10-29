@@ -2,7 +2,7 @@
 
 This repository is instructions, synthetic examples and a library of proposed seed
 packs, dated October 29, 2026. It does not deploy a service and contains no active
-pack. The [packs/](../packs/README.md) library holds sixteen proposals that are validated
+pack. The [packs/](../packs/README.md) library holds seventeen proposals that are validated
 examples only: none is installed, imported, admitted or activated, and no worker has
 run their verbs. Read the target's live schemas before sending work.
 
@@ -20,7 +20,7 @@ run their verbs. Read the target's live schemas before sending work.
 | Automatic ongoing work | None; no scheduler, daemon or server inference is installed |
 | Capability research | Proposed source-to-decision seed workflow; no feed/inbox connector, automated comparison or adoption service is active |
 | Research seed authoring | Tessera owns a bounded task builder with synthetic requests for discovery, collector preparation, schedule proposals and one scan; this repository remains a guide |
-| Seed pack library | Sixteen proposed packs, 309 nouns and 99 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
+| Seed pack library | Seventeen proposed packs, 344 nouns and 106 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
 | Pack scope probe | On a throwaway local Store, a key on the importing team's surface read every pack noun, claimed and submitted every instantiated template and updated a success record by compare-and-set; keys on other surfaces or none saw nothing. HTTP grants were not exercised |
 | Pack inventory | [Plain-English map](pack-inventory.md) of packs for making a video, building nonprofit kits and keeping knowledge fresh, with what is still missing |
 | Tessera model validation | Every pack noun and verb passed Tessera's own `RecordWrite`, `TaskSpec`, category, relation, `NounRef` and execution-report checks at the commit in [VALIDATION.json](../packs/VALIDATION.json); shape evidence only |

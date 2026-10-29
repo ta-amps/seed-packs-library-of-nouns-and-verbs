@@ -1,0 +1,330 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "code-composition",
+  "title": "Code composition",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for composing verified code without rewriting it: a pinned catalog of 18 prewritten, tested code nodes with typed contracts, three declarative recipes with digests measured at the pinned commit, and verbs to verify the tools, compose, compile, run and compare recipes, and propose new nodes for review.",
+  "license": "MIT",
+  "store": "seedpack.code-composition",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "35179649f3d6baf73c7451b99800e372134e58dce5079798521f1526c9fbc741"
+    },
+    {
+      "path": "source.json",
+      "sha256": "f81499530093384cfc5dcb9972ea01d4266d501f4073b8fc3826467b83cd9aa7"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "497b79590fa4eb9577673daf54632b46049a1ab14a325c3a9b88268386b7a83d"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "ebd23907348c22c3f273f02d9a68e28e6c4c29489c26d21bcc70007687fe3a64"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "code-composition.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "ea58d9fc5b15917ebc268c884c64b232d72acdf1380eb9bfb002fe74b1de7840"
+    },
+    {
+      "key": "code-composition.v0.1.0.tool.composition-tools",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "d1f369269f1cfc64aff0da3c188f888b567801e3216c50ad994063da19d005f8"
+    },
+    {
+      "key": "code-composition.v0.1.0.runtime",
+      "category_id": "noun.code_node",
+      "role": "runtime_manifest",
+      "value_sha256": "2032e34041b938d9a692acb9a58e4fad9c2dece6188884250c1046919c53354b"
+    },
+    {
+      "key": "code-composition.v0.1.0.catalog",
+      "category_id": "noun.skill_pack",
+      "role": "catalog",
+      "value_sha256": "71d90b01487ac05a2cfc9961ef91548ae6fedaf63064ae1882d63d7d87cc0377"
+    },
+    {
+      "key": "code-composition.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "7fe92a8ef8bdbc9527cfa8a81205707e0b5372c6ac71e3251b25d1cee29a7a5b"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.ingest.csv-rows",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "3059fbb709a1d220b76d175e469546a1d6654833d1b4985486de18d15d47a522"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.clean.dedupe-by-key",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "8141367409296ac132427065f9c90a16e0ccc4578f465047a79144efb799dd92"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.clean.impute-numeric",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "cb3e10806f138b4a12886b234c63f65a4110797eefd325133b5a1b4a2c2cb772"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.clean.winsorize-outliers",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "a58c576a9f1d0de35f2ea876050c5bfcb3cd0b948b97a860802e08dfb70c5ce3"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.feature.ratio-column",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "3597387bdbf6e4a79cfd3ef62ab92b86dad91c08d0403e64553b6630ad1ba906"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.feature.rolling-zscore",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "d31ea882459aa21d9f42f8992e36eebe1428d069ff62551cb748e46961d613f2"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.text.normalize-whitespace",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "ac4937176c3681b03deaa8cbd2ee7564abac04570c5b00a4ecdd296ad6f958ff"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.text.regex-extract",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "654d2fff69decc33b86e22ce8ea2b6f38a8589a3dcb29f42df5d38155b8a3748"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.filter.threshold-gate",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "44763999db01a74ae24fe9e2769bed0e7950c49f8ae724644a9e6cf523263574"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.join.keyed-enrich",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "81f097141bacd7bdd06df84036327697916e2c633802cd457df63e25252e4be4"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.model.linear-risk-score",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "9288d34aa2637cff8ba8bb337ef1ebef1da2a938a01ae9dea031f351597e4dc2"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.model.keyword-weighted-score",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "94b7a60c26ca46c5ea10cba923f9caa7cc313f809060a1edb1ca618232fe292f"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.validate.schema-contract",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "267b9f4f7cf86ed6cd31e089222c597a2ce38367cda58a23367f9559d88527bd"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.validate.holdout-split",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "e35b895306b816613260042456bb782912aa57172fe5b679201a786658775ee9"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.eval.binary-metrics",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "5eb9ce42fa7020a60ada2adf96ed8a961967fd381f3fbf8ffbb8c9f578f4ebfd"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.eval.shrinkage-select",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "5e096285f3202a2da43b0bac8bc770764db7149d0ac34868cca31310a6858f1e"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.agg.group-summary",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "3335a1e3b0e0450ac7ac2ba74f12c24a85907506bc1652ac1a963595b9f11d4b"
+    },
+    {
+      "key": "code-composition.v0.1.0.node.format.markdown-report",
+      "category_id": "noun.code_node",
+      "role": "prewritten_node",
+      "value_sha256": "6af06d0683e0f97be82c3c4026849b18d5e746aec74a4c0f79eb0d185c8bdd74"
+    },
+    {
+      "key": "code-composition.v0.1.0.recipe.ab-candidate-selection",
+      "category_id": "noun.skill_pack",
+      "role": "recipe",
+      "value_sha256": "5f48a1efff8ff5fd1f1561022e94f7033b93ef96d274cbffef23d9a5dfcde096"
+    },
+    {
+      "key": "code-composition.v0.1.0.recipe.document-signal-digest",
+      "category_id": "noun.skill_pack",
+      "role": "recipe",
+      "value_sha256": "629ca1a1b58446573ffac00678a75bfdd76025a438078a9c149ce7fbc51a823c"
+    },
+    {
+      "key": "code-composition.v0.1.0.recipe.tabular-anomaly-triage",
+      "category_id": "noun.skill_pack",
+      "role": "recipe",
+      "value_sha256": "031dc42a3c5d55e9c834345530e1cf25d4799561a7505727add37f20ffeb338d"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.recipe-candidate",
+      "category_id": "noun.skill_pack",
+      "role": "template",
+      "value_sha256": "b1cd1707135b6ea330d20455478687005336c78ebf009be9cf8ab5b90be8f7c6"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.compile-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "805e8c7feb13673496b9ceeeb75a43da457757ed49be397abe73cf58172bc3ef"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.run-inputs",
+      "category_id": "noun.benchmark_suite",
+      "role": "template",
+      "value_sha256": "7e95f8754880a32f4bebe3442da895dcfde11a714b4fff89c7bd6c6372180b75"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.run-receipt",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "2a5ff985e9adf17a135b3a5973ccee032f6715a0ad735f6b3c282f349511a018"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.verification-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "622a11fc6fd43b1023788478c43044b6ac51c83f61915ab9852df2e8829a060c"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.comparison",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "19978fe70ed72da5bb527b6f54bb87ffc675e41d2da50ea2730054913f1e784e"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.node-proposal",
+      "category_id": "noun.code_node",
+      "role": "template",
+      "value_sha256": "33cd93ffdc5678673d95c81e22ecff9eed5cdff5d3cdf7edaf455d3d2d34d5d0"
+    },
+    {
+      "key": "code-composition.v0.1.0.template.review-notes",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "5f13e14bcc66e9ddf9bbbcb8bb89c00d0af299166ee809fa027969b5f077353d"
+    },
+    {
+      "key": "code-composition.v0.1.0.example.prefix-reuse",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "eb3c98c08e2e71bc8f6c25ae410d0f77bb175a7bafa7ac851dc488b2dad1afd5"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "code-composition.verify-tools",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:code-composition:verify-tools:57e1d6f9ba261400bdf51486a96a6eec6c2b0a7d6d409e4ba3f91baf9f54aa10",
+      "report_shape_sha256": "223dcd3f28ea7c4bf49f14bb3a00bec65ab64c52f8d657c416943cd589a7e13b"
+    },
+    {
+      "template_id": "code-composition.compose-recipe",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:code-composition:compose-recipe:f34576d6535a7edfe7ff85de99ff53dec0fc4f432168b46c1c2f251ead701795",
+      "report_shape_sha256": "42741be454208d2216dd1bf6915be8adf8418515e1e71c92560d807fb44fd482"
+    },
+    {
+      "template_id": "code-composition.compile-recipe",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:code-composition:compile-recipe:6e9894158b57c186896ae72b01a1b49e2ddf19e3ac77103cd9a26e40e0ba5167",
+      "report_shape_sha256": "e2fea592a98a0116566eb7749e9188a78e79c4c2865659ae451e1296be0105de"
+    },
+    {
+      "template_id": "code-composition.run-recipe",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:code-composition:run-recipe:feeff4a068aa4dcc3dda56e9c09a0ccca3d7a39bf54e2526025b4463bc6baf0a",
+      "report_shape_sha256": "20c7eea176505715c554599488c532774d9cb4d47c745b10e7ccd9eeb1789f75"
+    },
+    {
+      "template_id": "code-composition.compare-runs",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:code-composition:compare-runs:f931102a8df7e5067e41cd223d1a92fbb6b427a01649f822fb24f37d5f46e235",
+      "report_shape_sha256": "58fedaa2cb88d5fbe3a99b225ba297c18842691ccea6f0792b484c233318bade"
+    },
+    {
+      "template_id": "code-composition.propose-node",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:code-composition:propose-node:dbcbbd20135faca59b6f17ea1e9350d2ba59625db845f0eb14e570a8e2cac6b2",
+      "report_shape_sha256": "7908f1a101cb12934f8649e701053ea45c3f2a2e167545840fb483ec74e8c2c1"
+    },
+    {
+      "template_id": "code-composition.review-node",
+      "kind": "verb.verify_gate",
+      "claimant": "agent_or_human",
+      "idempotency_key": "seedpack:code-composition:review-node:aad7ea7fa4d1a4f513a373a15dca93c02e9bf2dae5314d13b46f982a8b1e4a70",
+      "report_shape_sha256": "ee541de3a9315d973119a01298216531a399557bdce52abae79ce78f4042f1fb"
+    }
+  ],
+  "dependencies": [
+    {
+      "pack_id": "checks-of-checks",
+      "keys": [
+        "checks-of-checks.v0.1.0.method"
+      ]
+    },
+    {
+      "pack_id": "decomposition-patterns",
+      "keys": [
+        "decomposition-patterns.v0.1.0.pattern.baseline-then-variant"
+      ]
+    }
+  ],
+  "boundaries": [
+    "The pack holds contracts, digests, recipes and results, never runnable code. Workers run code only from a checkout of the tool card's pinned commit that passed verify-tools.",
+    "Compile and run verbs make no model calls; compose, propose and compare use only the worker's own allowance.",
+    "A proposed node stays a candidate until a different worker or a person reviews it; adding it to the repository is the owner's decision.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}
