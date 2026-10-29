@@ -29,6 +29,10 @@ The [seed operations guide](docs/seed-operations.md) separates the existing seed
 expander, the bounded research task authoring tool, reference meta-packs and the
 remaining mailbox/scheduling work.
 
+The [Opportunity Lab guide](docs/opportunity-lab.md) links the runnable Tessera
+showcase: shared briefs, independent solutions, candidate nouns and later
+comparison or remix verbs.
+
 ## Connect and inspect
 
 Start at the [ecosystem connection page](https://home.ta-amps.workers.dev/connect)
