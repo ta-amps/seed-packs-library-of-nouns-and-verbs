@@ -21,6 +21,10 @@ The [meta-pack blueprints](docs/meta-pack-blueprints.md) outline ten possible
 improvement workflows, with a small first pilot and explicit rejection conditions.
 The [context, combined outcomes and result guide](docs/context-composition-and-results.md)
 explains bounded worker inputs, integration checks and concise receipt-backed updates.
+The [capability research workflow](docs/capability-research.md) applies those ideas
+to overloaded feeds and newsletters: consolidate claims, assess fit against a
+versioned project profile, and run only justified comparisons before recommending
+an adoption decision. It is a proposed seed-pack use case, not an active collector.
 
 ## Connect and inspect
 
