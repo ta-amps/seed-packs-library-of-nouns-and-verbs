@@ -74,6 +74,25 @@ They are not Tessera canonical receipt hashes. For remote references pin the rea
 namespace, store/key/version and content digest under their governing policy;
 do not replace a missing hash with zeros or an invented measurement.
 
+## Seed pack files
+
+Each folder in [packs/](../packs/README.md) holds an authored `source.json`, a README and
+three generated files. `scripts/build_packs.py` builds them offline and byte for byte;
+`make check` fails when a committed byte differs from a fresh build.
+
+| File | Contents |
+| --- | --- |
+| `nouns.json` | `RecordWrite` bodies: store, key, `expected_version: 0`, private governance, a `status:quarantined` tag and the value. The namespace is assigned by the owner, so it is left out |
+| `verbs.json` | `TaskSpec` templates in the placeholder queue `conformance-seed-packs`, with pinned pack nouns, unfilled slots, typed input and output schemas, outcomes, acceptance checks, bounds and an optional execution-report template |
+| `manifest.json` | Format `ta-amps.seed-pack.proposal.v1`: file digests, each noun's value SHA-256, each verb's idempotency key and execution shape fingerprint, `importer: null` |
+
+Pins use Tessera's `NounRef` fields exactly: `store`, `key`, `version` and
+`value_sha256`, the SHA-256 of the value's canonical JSON. A template's slots are null
+until a requester fills them with exact pins (`scripts/build_packs.py --instantiate`
+prints the filled TaskSpec and never enqueues). Each noun value and verb brief carries
+Tessera's required category dimensions at their lowest value, a `dimension_basis` that
+says nothing was measured, and typed `relations` that its category allows.
+
 The proposed override policy allows no automatic merge. A future resolver would
 need explicit override slots, compatibility checks, immutable definitions and a
 resolved manifest that workers can consume without manual merges. This repository

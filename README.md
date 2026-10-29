@@ -9,6 +9,32 @@ work contracts. Nouns hold versioned data and evidence. Verbs request an outcome
 from an authorized worker. Both use Tessera's existing identity, namespaces,
 storage, queues, leases and receipts.
 
+## Seed pack library
+
+The [packs/](packs/README.md) folder holds eight proposed seed packs: bundles of nouns
+(knowledge, templates, tool cards and examples) and verbs (work an authorized worker
+can claim). They are proposals and validated examples, **not installed, imported,
+admitted or activated**, and no worker has run them yet.
+
+| Pack | What it lets workers do |
+| --- | --- |
+| [Repository review](packs/repo-review/README.md) | Review a repository privately with 50 evidence-requiring questions |
+| [Video showcase](packs/video-showcase/README.md) | Make a truthful demo video with evidence for every on-screen number |
+| [Tool discovery](packs/tool-discovery/README.md) | Find, trial and decide on new tools for your own hardware |
+| [Evaluation design](packs/evaluation-design/README.md) | Compare arms fairly with frozen sets and pass marks committed first |
+| [Checks of checks](packs/checks-of-checks/README.md) | Prove a test or rubric works before trusting it |
+| [Decomposition patterns](packs/decomposition-patterns/README.md) | Split work using shapes that worked and learn which ones do |
+| [Taste palettes](packs/taste-palettes/README.md) | Show options side by side and keep a person's choice as a preference |
+| [Harness onboarding](packs/harness-onboarding-e2e/README.md) | Connect a harness and prove the claim-to-submit lifecycle |
+
+Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. All 166
+nouns and 45 verb templates were checked offline with Tessera's own models at a pinned
+commit; the [receipt](packs/VALIDATION.json) records exactly what was checked. Packing
+nouns and verbs adds no entity type, runtime, authority or scheduler, and reading or
+importing a pack runs and grants nothing.
+
+## Start here
+
 Start with [CONTRIBUTING.md](CONTRIBUTING.md), then follow the
 [worker lifecycle](docs/lifecycle.md). [Formats](docs/formats.md) separates actual
 HTTP/MCP payloads from the proposed manifest. [Status](docs/status.md) states what
@@ -100,10 +126,15 @@ make check
 ```
 
 The checks parse JSON, enforce the documented example subset, validate local
-manifest hashes and links, and scan for secrets, private names and forbidden
-typography. They include negative fixtures. They do not execute artifacts,
-certify a live deployment, prove licensing or validate arbitrary JSON Schema.
+manifest hashes and links, rebuild every seed pack byte for byte, validate the packs
+against a snapshot of Tessera's contract, recompute the packs' worked examples, and
+scan for secrets, private names and forbidden typography. They include negative
+fixtures. They do not execute artifacts, certify a live deployment, prove licensing or
+validate arbitrary JSON Schema.
 
-The examples are MIT-licensed synthetic authoring material. They are not new
-production packs or a second artifact library. Develop broader pack collections
-after the owning infrastructure and contributor flow are ready.
+With a local Tessera checkout, `make check-tessera TESSERA_SRC=<path>` also runs every
+pack noun and verb through Tessera's own models; see the [library guide](packs/README.md).
+
+The examples and packs are MIT-licensed authoring material. They are not production
+packs or a second artifact library: accepted artifacts and evidence belong in Tessera.
+Installing or activating packs waits for the owning infrastructure and contributor flow.

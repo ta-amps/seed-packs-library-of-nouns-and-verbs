@@ -33,6 +33,17 @@ registry, scheduler, compiler, reasoning service or pack importer. Validation co
 may inspect repository files offline; it must not issue API requests or run user
 content. No new server-paid model layer is introduced by a contribution guide.
 
+## Changing a seed pack
+
+Edit `packs/<pack>/source.json` or the pack README, never the generated `nouns.json`,
+`verbs.json` or `manifest.json`. Run `python3 scripts/build_packs.py`, then
+`make check-tessera TESSERA_SRC=<path>` with a Tessera checkout's own Python
+environment, then `make check`. Use only registered categories and the relations each
+category allows; say why in `category_reason` when the fit is not obvious. Keep
+dimensions at the unmeasured floor, keep every verb's `no_change`, `unknown` and
+`blocked` outcomes, and never add a step that contacts people, publishes, enqueues
+children or spends beyond the worker's own allowance.
+
 ## Revisions, extensions and forks
 
 Pin dependencies to immutable record versions, file digests or source revisions.
