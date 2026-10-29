@@ -25,6 +25,9 @@ The [capability research workflow](docs/capability-research.md) applies those id
 to overloaded feeds and newsletters: consolidate claims, assess fit against a
 versioned project profile, and run only justified comparisons before recommending
 an adoption decision. It is a proposed seed-pack use case, not an active collector.
+The [seed operations guide](docs/seed-operations.md) separates the existing seed
+expander, the bounded research task authoring tool, reference meta-packs and the
+remaining mailbox/scheduling work.
 
 ## Connect and inspect
 
