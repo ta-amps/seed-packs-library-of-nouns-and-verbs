@@ -1,0 +1,3220 @@
+{
+  "pack_id": "video-review",
+  "title": "Video review",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for reviewing a video with a fixed rubric, run by a person or a worker that did not make it: panels of the exact bytes at the sizes people watch on, every number traced to its evidence, timestamped findings with a severity, the evidence seen and the verb that would fix each one, a second opinion where reviewers disagree, a person who watches and listens, and a re-review of the fixed cut.",
+  "dependencies": [
+    "video-showcase",
+    "video-motion",
+    "findings-to-fixes",
+    "accessibility-audit",
+    "screenshot-design-review"
+  ],
+  "boundaries": [
+    "A review is by a person or a worker that did not make the cut, and it names the exact bytes it watched.",
+    "A review recommends; only a person approves publishing, outside this pack.",
+    "Findings and reviews stay on the record; a re-review answers every earlier finding.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for reviewing a video with a fixed rubric, run by a person or a worker that did not make it",
+      "value": {
+        "lets_workers": "Review a video against a fixed ten-area rubric as a person or a worker that did not make it: panels of the exact bytes, sized for the screens people will watch on; every number traced to its evidence; timestamped findings with a severity, what was seen, how it was seen and the verb that would fix it; a second reviewer's comparison where reviewers disagree; a person who watches and listens; findings routed to the verbs that fix their causes; and a re-review of the fixed cut against the same finding ids.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "video-qa.compile-qa-report"
+            },
+            "when": "Measurements first: the extended QA report for the exact file."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.make-panels"
+            },
+            "when": "Contact sheets, strips and display-scale sheets of those bytes."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.trace-claims"
+            },
+            "when": "Every number and claim, traced before the story is judged."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.review-cut"
+            },
+            "when": "The rubric, findings, scores, top fixes and a decision."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.compare-reviews"
+            },
+            "when": "A second reviewer on the same panels; disagreements get a second look."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.watch-and-listen"
+            },
+            "when": "A person watches start to finish and listens on headphones and a phone speaker."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.route-findings"
+            },
+            "when": "Each finding to the verb that fixes its cause, grouped by cause."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.re-review"
+            },
+            "when": "The fixed cut, against every earlier finding id."
+          },
+          {
+            "verb": {
+              "$verb": "video-showcase.record-publication"
+            },
+            "when": "Only the owner releases or holds, and records which."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.reviewer-did-not-make-it"
+          },
+          {
+            "$pin": "guardrail.evidence-for-every-finding"
+          },
+          {
+            "$pin": "guardrail.trace-every-number"
+          },
+          {
+            "$pin": "guardrail.review-binds-to-bytes"
+          },
+          {
+            "$pin": "guardrail.a-person-approves-release"
+          }
+        ],
+        "worked_example": "Synthetic: a 45-second explainer for a fictional pantry. The claim trace disputes one number, the review finds seven problems from a blocker to a note and decides revise, and the re-review of the fixed cut finds the blocker fixed, one minor not fixed and one new minor, and decides ready for the owner.",
+        "complements": "The video showcase pack's review-video decides whether a cut is ready; this pack gives that decision a fixed rubric, timestamped findings, routes to fix verbs and a re-review. The video QA pack measures; this pack judges with the measurements in hand.",
+        "provenance_notes": [
+          "Generalizes an adversarial review practice from a working short-form video studio: assume problems until the panels show otherwise, give a timestamp and what was seen for every claim, fixed question banks with scores, a second model on the same panels with disagreements looked at again, fixes routed to the template that caused them, and reviews bound to the exact master hash.",
+          "Applied to ta-amps's own 3:00 explainer film on October 30, 2026 while this pack was written: a review of its second final cut with 23 findings and a top-ten list, kept privately with the film's evidence."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.reviewer-did-not-make-it"
+        ],
+        [
+          "requires_noun",
+          "guardrail.evidence-for-every-finding"
+        ],
+        [
+          "requires_noun",
+          "guardrail.trace-every-number"
+        ],
+        [
+          "requires_noun",
+          "guardrail.review-binds-to-bytes"
+        ],
+        [
+          "requires_noun",
+          "guardrail.a-person-approves-release"
+        ],
+        [
+          "requires_noun",
+          "rubric"
+        ],
+        [
+          "requires_noun",
+          "severity-guide"
+        ],
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "fix-routes"
+        ],
+        [
+          "requires_noun",
+          "template.review-scope"
+        ],
+        [
+          "requires_noun",
+          "template.panel-set"
+        ],
+        [
+          "requires_noun",
+          "template.claim-trace"
+        ],
+        [
+          "requires_noun",
+          "template.review-findings"
+        ],
+        [
+          "requires_noun",
+          "template.review-comparison"
+        ],
+        [
+          "requires_noun",
+          "template.listening-record"
+        ],
+        [
+          "requires_noun",
+          "template.fix-routing"
+        ],
+        [
+          "requires_noun",
+          "template.re-review"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.reviewer-did-not-make-it",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the reviewer did not make the cut",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A review is by a person or a worker that did not script, capture, edit, compose or render the cut under review. A worker that did any of those returns blocked.",
+        "how_it_is_checked": "The review names its reviewer kind and reviewer_made_cut is false; the reviewing key differs from every key on the cut's production receipts."
+      }
+    },
+    {
+      "slug": "guardrail.evidence-for-every-finding",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every finding carries its evidence",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Start from the assumption that the cut has problems and look until the panels show otherwise, but never invent one. A finding names its time range, what was seen and how it was seen: a frame, a strip, a sheet, a measurement, a quote or listening. A suspicion without evidence is a reason for a second look, not a finding.",
+        "how_it_is_checked": "Every finding has start_s, end_s, seen, how_seen and evidence filled."
+      }
+    },
+    {
+      "slug": "guardrail.trace-every-number",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every number is traced to its evidence",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every number and factual claim spoken, captioned or shown is listed with its time and traced to the record or dated source it came from. An untraced or disputed number is a blocker, whatever else the cut does well.",
+        "how_it_is_checked": "The claim trace lists numbers_found and numbers_traced, and a ready decision needs every claim upheld."
+      }
+    },
+    {
+      "slug": "guardrail.review-binds-to-bytes",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a review is about one file's exact bytes",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A review names the SHA-256 of the file it watched. Any byte change makes it stale; a re-review watches the new bytes and names both digests.",
+        "how_it_is_checked": "The review's media sha256 equals the panels' and the QA report's."
+      }
+    },
+    {
+      "slug": "guardrail.a-person-approves-release",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: only a person approves publishing",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A review ends in a recommendation: ready for the owner's decision, revise, or reject. Only a person approves publishing, outside this pack, and nothing here posts, uploads or releases a video.",
+        "how_it_is_checked": "published is always false in a review, and no verb in this pack has a release step."
+      }
+    },
+    {
+      "slug": "rubric",
+      "category": "noun.benchmark_suite",
+      "role": "rubric",
+      "title": "Rubric: ten areas and the questions a reviewer answers",
+      "category_reason": "A fixed question bank with pass criteria and the severity of each failure, the suite every review answers.",
+      "value": {
+        "areas": [
+          "story_and_hook",
+          "clarity",
+          "pacing",
+          "readability",
+          "captions",
+          "claims",
+          "accessibility",
+          "labels",
+          "call_to_action",
+          "technical"
+        ],
+        "questions": {
+          "story_and_hook": [
+            {
+              "id": "hook-first-second",
+              "question": "What happens on screen in the first second, and would a viewer who did not choose this video keep watching?",
+              "answered_by": "panel",
+              "passes_when": "Something visibly changes from the first frame, and the opening line, spoken and shown, opens a question the video answers.",
+              "if_failed": "major"
+            },
+            {
+              "id": "hook-honest",
+              "question": "Does the opening promise only what the video delivers, with no invented record, deadline or contradiction?",
+              "answered_by": "judgment",
+              "passes_when": "Every promise in the first 3 s is paid off later in the cut.",
+              "if_failed": "major"
+            },
+            {
+              "id": "setup-turn-payoff",
+              "question": "Is there a setup, a turn and a payoff, in that order, and does each act say why it follows the last?",
+              "answered_by": "judgment",
+              "passes_when": "A bridge line or picture joins every act.",
+              "if_failed": "major"
+            }
+          ],
+          "clarity": [
+            {
+              "id": "sound-off",
+              "question": "With the sound off, is the point clear from the frames alone?",
+              "answered_by": "panel",
+              "passes_when": "The contact sheet, read without audio, tells the story.",
+              "if_failed": "major"
+            },
+            {
+              "id": "one-sentence",
+              "question": "Could a first-time viewer say in one sentence what it does and who it is for?",
+              "answered_by": "judgment",
+              "passes_when": "The reviewer's own one-sentence summary matches the brief; real viewers are the video audience acceptance pack's work.",
+              "if_failed": "major"
+            },
+            {
+              "id": "terms-explained",
+              "question": "Is any word used on screen before it is explained?",
+              "answered_by": "panel",
+              "passes_when": "Every new term is spoken or shown with its meaning the first time.",
+              "if_failed": "minor"
+            }
+          ],
+          "pacing": [
+            {
+              "id": "beat-cadence",
+              "question": "Is there a new visual event at least every 3 s, outside declared holds?",
+              "answered_by": "measured",
+              "passes_when": "The cut cadence row has no stretch warnings, or each has a written reason.",
+              "if_failed": "minor"
+            },
+            {
+              "id": "read-or-listen",
+              "question": "Does any shot ask the viewer to read a paragraph while the voice says something else?",
+              "answered_by": "panel",
+              "passes_when": "On-screen words either repeat the narration or are short enough to read in the shot's reading time.",
+              "if_failed": "major"
+            },
+            {
+              "id": "pacing-report",
+              "question": "Does the pacing report flag a shot as rushed, slack, unreadable, long or dense?",
+              "answered_by": "measured",
+              "passes_when": "No flag, or each flag accepted with a reason.",
+              "if_failed": "minor"
+            }
+          ],
+          "readability": [
+            {
+              "id": "smallest-display",
+              "question": "Is every piece of text that must be read at least the legibility floor on the smallest planned display?",
+              "answered_by": "measured",
+              "passes_when": "The legibility row has no size problem for must-read text, and the half-scale and quarter-scale sheets read.",
+              "if_failed": "major"
+            },
+            {
+              "id": "nothing-covers-text",
+              "question": "Is any text cut by the frame edge, a label, a callout, a transition or a camera move?",
+              "answered_by": "panel",
+              "passes_when": "Every text element sits whole inside the safe area with nothing over it.",
+              "if_failed": "major"
+            },
+            {
+              "id": "time-to-read",
+              "question": "Is text on screen for its reading time, 0.5 s plus 3 words per second?",
+              "answered_by": "measured",
+              "passes_when": "No must-read text leaves early.",
+              "if_failed": "minor"
+            }
+          ],
+          "captions": [
+            {
+              "id": "word-for-word",
+              "question": "Do captions match what is said, word for word, including numbers as spoken?",
+              "answered_by": "measured",
+              "passes_when": "The caption check lists no deviation without a decision.",
+              "if_failed": "major"
+            },
+            {
+              "id": "lint-and-sync",
+              "question": "Do the sidecars pass the caption lint, agree with each other and follow the speech?",
+              "answered_by": "measured",
+              "passes_when": "The captions row passes.",
+              "if_failed": "major"
+            },
+            {
+              "id": "caption-place",
+              "question": "Do burned-in captions avoid the text, faces and controls the shot is about?",
+              "answered_by": "panel",
+              "passes_when": "No caption covers what the line refers to.",
+              "if_failed": "minor"
+            }
+          ],
+          "claims": [
+            {
+              "id": "every-number-traced",
+              "question": "Does every number and factual claim, spoken or shown, match its evidence in the claim trace?",
+              "answered_by": "measured",
+              "passes_when": "Every claim is upheld.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "qualifiers-kept",
+              "question": "Are qualifiers kept wherever the evidence has them: synthetic, one task, a local run, a date?",
+              "answered_by": "judgment",
+              "passes_when": "No claim reads stronger than its record.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "words-match-picture",
+              "question": "Do the words match the picture they sit on, such as a spoken label and the highlighted one?",
+              "answered_by": "panel",
+              "passes_when": "No spoken term contradicts the text it highlights.",
+              "if_failed": "minor"
+            }
+          ],
+          "accessibility": [
+            {
+              "id": "captions-for-speech",
+              "question": "Are captions provided for all speech?",
+              "answered_by": "measured",
+              "passes_when": "Coverage of measured speech is at least 0.95.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "no-flashes",
+              "question": "Does anything flash more than three times in one second, or flash a large bright area?",
+              "answered_by": "measured",
+              "passes_when": "No black or flat-frame flash outside the plan, and no flash pattern on the strips.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "contrast-and-color",
+              "question": "Does text meet 4.5 to 1 contrast, or 3 to 1 when large, and is nothing carried by color alone?",
+              "answered_by": "measured",
+              "passes_when": "Every measured pair passes, unrounded.",
+              "if_failed": "major"
+            },
+            {
+              "id": "said-and-shown",
+              "question": "Is important visual information also spoken, or described?",
+              "answered_by": "judgment",
+              "passes_when": "A listener without the picture loses nothing that matters.",
+              "if_failed": "minor"
+            }
+          ],
+          "labels": [
+            {
+              "id": "ai-labeled",
+              "question": "Is every AI-generated voice, image or clip labeled where it appears, readably?",
+              "answered_by": "panel",
+              "passes_when": "The label passes the legibility floor and is on screen whenever the voice or image is.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "synthetic-labeled",
+              "question": "Are synthetic data, scripted stand-ins and illustrations labeled as such on screen?",
+              "answered_by": "panel",
+              "passes_when": "Each appears with its label in the same shot.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "nothing-private",
+              "question": "Does any capture show private data, a credential, a notification or a person who did not agree?",
+              "answered_by": "panel",
+              "passes_when": "Nothing private in any frame.",
+              "if_failed": "blocker"
+            }
+          ],
+          "call_to_action": [
+            {
+              "id": "one-next-step",
+              "question": "Does the ending give exactly one next step a viewer can act on?",
+              "answered_by": "judgment",
+              "passes_when": "One step, named once in words and once on screen.",
+              "if_failed": "major"
+            },
+            {
+              "id": "end-hold",
+              "question": "Does the end card hold long enough after the last word to read the address?",
+              "answered_by": "measured",
+              "passes_when": "The card's text stays for its reading time after the last word, or at least 2 s.",
+              "if_failed": "minor"
+            },
+            {
+              "id": "address-usable",
+              "question": "Is the address short enough to type or easy to find?",
+              "answered_by": "judgment",
+              "passes_when": "A viewer can find it again from memory.",
+              "if_failed": "minor"
+            }
+          ],
+          "technical": [
+            {
+              "id": "post-encode",
+              "question": "Do the eight post-encode checks and the extended QA checks pass for these exact bytes, or is every failure explained?",
+              "answered_by": "measured",
+              "passes_when": "Both reports name this file's digest and every failure has a decision.",
+              "if_failed": "blocker"
+            },
+            {
+              "id": "listened",
+              "question": "Has a person listened on headphones and on a phone speaker?",
+              "answered_by": "listening",
+              "passes_when": "The listening record exists for these bytes.",
+              "if_failed": "major"
+            }
+          ]
+        },
+        "score_anchors": {
+          "1": "Broken or misleading.",
+          "2": "Weak: most viewers will notice.",
+          "3": "Acceptable, with clear fixes.",
+          "4": "Strong: only small fixes.",
+          "5": "Exemplary: nothing to fix."
+        },
+        "answered_by": {
+          "measured": "A row of the video QA or video and motion checks gives the answer.",
+          "panel": "The reviewer answers from panels and full-size frames.",
+          "listening": "Only a person can answer.",
+          "judgment": "The reviewer's judgment, written with its reason."
+        },
+        "hand_offs": {
+          "page_and_player": {
+            "$verb": "accessibility-audit.check-media"
+          },
+          "single_frames": {
+            "$verb": "screenshot-design-review.check-design-rules"
+          },
+          "real_viewers": {
+            "$verb": "video-uat.plan-acceptance"
+          }
+        },
+        "rules": [
+          "Answer every question; a question that does not apply says why.",
+          "The rubric judges the video's own pixels and sound. The page and player around it, with the captions track loading, named controls, audio description and sound that starts on its own, belong to the accessibility audit pack's check-media; a single frame with known layout to the screenshot design review pack.",
+          "Score each area 1 to 5 from the anchors. A score never offsets a blocker.",
+          "A failed question becomes a finding at the severity it names, unless the evidence shows a lower one; say why.",
+          "Questions about real viewers belong to the video audience acceptance pack; this rubric judges the cut, not an audience."
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "accessibility-audit:media-and-motion-rules"
+        ]
+      ]
+    },
+    {
+      "slug": "severity-guide",
+      "category": "noun.benchmark_suite",
+      "role": "severity_guide",
+      "title": "Severity guide for video findings",
+      "category_reason": "Fixed levels with their meanings and responses, so different reviewers rate the same problem the same way.",
+      "value": {
+        "levels": {
+          "blocker": {
+            "means": "A wrong or untraced number or claim, a missing or unreadable AI or synthetic-data label, private data on screen, a flash hazard, missing captions, or a broken file.",
+            "respond": "Fix before any release. Never accepted with a reason.",
+            "findings_to_fixes": "P1, or P0 when the cut is already published"
+          },
+          "major": {
+            "means": "Something most viewers will notice that weakens the point: must-read text too small or covered, a hook with nothing happening, text ghosted by a dissolve, captions out of sync, an ending that cannot be acted on.",
+            "respond": "Fix before release, or a person accepts it in writing.",
+            "findings_to_fixes": "P2"
+          },
+          "minor": {
+            "means": "Noticeable on a careful watch: a word clipped at an edge for a moment, a small overlap, a dip in pace, a spoken word that differs from the label it highlights.",
+            "respond": "Fix when nearby, or batch similar ones.",
+            "findings_to_fixes": "P3"
+          },
+          "note": {
+            "means": "A taste call, an idea or a measurement worth keeping.",
+            "respond": "Never blocks.",
+            "findings_to_fixes": "none"
+          }
+        },
+        "rules": [
+          "Rate the effect on viewers and on trust, not the effort to fix.",
+          "Never lower a severity to make a cut look ready; a workaround is named when it lowers one.",
+          "Group findings that share a cause; fix the cause, not each frame."
+        ],
+        "levels_map": {
+          "$pin": "findings-to-fixes:severity-guide"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "findings-to-fixes:severity-guide"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: panels first, claims next, then the rubric",
+      "category_reason": "A short ordered method every review follows, with the reason for each step.",
+      "value": {
+        "steps": [
+          "Hash the file and confirm every report and panel names the same digest.",
+          "Panels before opinions: a contact sheet at one frame per second, a hook strip of the first 3 s at four frames per second, an ending strip of the last 3 s and the first second, a strip at full frame rate from 0.5 s before to 0.5 s after each transition, and full-size frames at every text change.",
+          "Display-scale sheets: key frames at half size, about a phone held sideways for a 16:9 cut, and at a quarter, about a phone held upright. Text you cannot read there, a viewer on that screen cannot read either. They are a video's counterpart of the screenshot design review pack's capture matrix.",
+          "Contact sheets make dense text look worse than it is and full frames make small text look better than it will be on a phone; judge size on full frames and display-scale sheets, never on contact sheets.",
+          "Trace every claim before judging the story.",
+          "Answer the rubric with the QA rows in hand. Measure margins, timings and sizes instead of estimating them when a doubt matters.",
+          "Write each finding with its time range, area, severity, what was seen, how it was seen, its cause and the verb that would fix it.",
+          "End with the top fixes in priority order, the scores, what the review could not do, and a decision.",
+          "A second reviewer, ideally a different model or a person, answers the same rubric on the same panels; where they disagree, look again and record who was right.",
+          "A person listens once on headphones and once on a phone speaker. A worker reports that it could not listen."
+        ],
+        "panel_tool": {
+          "$pin": "video-motion:tool.ffmpeg"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "screenshot-design-review:capture-matrix"
+        ]
+      ]
+    },
+    {
+      "slug": "fix-routes",
+      "category": "noun.reflex_procedure",
+      "role": "routes",
+      "title": "Fix routes: the verb that fixes each kind of finding",
+      "category_reason": "A zero-call lookup: the same finding cause always routes to the same fix verb.",
+      "value": {
+        "routes": [
+          {
+            "cause": "pacing, transitions, framing, chip or label placement in the edit",
+            "fix_verb": {
+              "$verb": "video-editing.revise-edit"
+            },
+            "then": "video-editing.check-pacing and a re-review"
+          },
+          {
+            "cause": "a reframe or push-in that crops content",
+            "fix_verb": {
+              "$verb": "video-editing.plan-reframes"
+            },
+            "then": "video-editing.revise-edit"
+          },
+          {
+            "cause": "audio levels, ducking or gaps",
+            "fix_verb": {
+              "$verb": "video-editing.plan-mix"
+            },
+            "then": "video-qa.check-sound"
+          },
+          {
+            "cause": "a scene built in code: sizes, timing, counters, labels",
+            "fix_verb": {
+              "$verb": "narrated-explainer-video.build-stage-scenes"
+            },
+            "then": "narrated-explainer-video.render-slices"
+          },
+          {
+            "cause": "caption text or timing for a synthetic voice",
+            "fix_verb": {
+              "$verb": "narrated-explainer-video.time-captions"
+            },
+            "then": "video-qa.lint-captions"
+          },
+          {
+            "cause": "caption text or timing for a person's voice",
+            "fix_verb": {
+              "$verb": "video-showcase.transcribe-captions"
+            },
+            "then": "video-qa.lint-captions"
+          },
+          {
+            "cause": "a wrong, unsupported or missing line",
+            "fix_verb": {
+              "$verb": "video-showcase.draft-script"
+            },
+            "then": "video-review.trace-claims, and new narration through the voice narration pack"
+          },
+          {
+            "cause": "a capture too small, private or out of date",
+            "fix_verb": {
+              "$verb": "video-showcase.capture-screen"
+            },
+            "then": "video-qa.check-legibility"
+          },
+          {
+            "cause": "a render or file failure",
+            "fix_verb": {
+              "$verb": "video-motion.render-sequence"
+            },
+            "then": "video-motion.check-video and video-qa.compile-qa-report"
+          }
+        ],
+        "always": "Record every finding through findings to fixes, so it stays on the record until it is verified fixed or accepted by a person.",
+        "record_verb": {
+          "$verb": "findings-to-fixes.record-finding"
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.review-scope",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: what one review covers",
+      "value": {
+        "describes": "the exact file, the rubric version, the reviewer and the panels and reports the review will use",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_file",
+            "media_sha256",
+            "cut_id",
+            "rubric_version",
+            "reviewer_kind",
+            "reviewer_made_cut",
+            "display_scales",
+            "panels",
+            "qa_reports",
+            "claim_trace"
+          ],
+          "properties": {
+            "media_file": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "rubric_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "reviewer_kind": {
+              "type": "string",
+              "enum": [
+                "human",
+                "agent"
+              ]
+            },
+            "reviewer_made_cut": {
+              "type": "boolean"
+            },
+            "display_scales": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "number",
+                "minimum": 0.05,
+                "maximum": 1
+              }
+            },
+            "panels": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "contact_sheet",
+                  "hook_strip",
+                  "ending_strip",
+                  "transition_strips",
+                  "text_frames",
+                  "display_scales"
+                ]
+              }
+            },
+            "qa_reports": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "claim_trace": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.panel-set",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the panels made from one file",
+      "value": {
+        "describes": "every contact sheet, strip and display-scale sheet made from one file, with the times each shows and its digest",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "sheets",
+            "frames_decoded",
+            "made_with"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "sheets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "panel",
+                  "path",
+                  "sha256",
+                  "times_s",
+                  "scale"
+                ],
+                "properties": {
+                  "panel": {
+                    "type": "string",
+                    "enum": [
+                      "contact_sheet",
+                      "hook_strip",
+                      "ending_strip",
+                      "transition_strip",
+                      "text_frame",
+                      "display_scale"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "times_s": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 400,
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 86400
+                    }
+                  },
+                  "scale": {
+                    "type": "number",
+                    "minimum": 0.05,
+                    "maximum": 1
+                  }
+                }
+              }
+            },
+            "frames_decoded": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000000
+            },
+            "made_with": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.claim-trace",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: every claim traced to its evidence",
+      "value": {
+        "describes": "each number and factual claim spoken, captioned or shown, with its time, the evidence it was traced to and the result",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "claims",
+            "numbers_found",
+            "numbers_traced"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "claims": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claim_id",
+                  "time_s",
+                  "where",
+                  "says",
+                  "evidence",
+                  "result"
+                ],
+                "properties": {
+                  "claim_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "where": {
+                    "type": "string",
+                    "enum": [
+                      "narration",
+                      "caption",
+                      "on_screen"
+                    ]
+                  },
+                  "says": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "evidence_says": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "upheld",
+                      "disputed",
+                      "unverifiable"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "numbers_found": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "numbers_traced": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.review-findings",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a rubric review's findings and decision",
+      "value": {
+        "describes": "one review of one file: scores per rubric area, timestamped findings with severity, evidence and fix verb, the top fixes in order, what the review could not do, and a decision that never publishes",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "cut_id",
+            "rubric_version",
+            "reviewer_kind",
+            "reviewer_made_cut",
+            "scores",
+            "findings",
+            "open_blockers",
+            "top_fixes",
+            "not_done",
+            "decision",
+            "published"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "rubric_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "reviewer_kind": {
+              "type": "string",
+              "enum": [
+                "human",
+                "agent"
+              ]
+            },
+            "reviewer_made_cut": {
+              "type": "boolean"
+            },
+            "scores": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "story_and_hook",
+                "clarity",
+                "pacing",
+                "readability",
+                "captions",
+                "claims",
+                "accessibility",
+                "labels",
+                "call_to_action",
+                "technical"
+              ],
+              "properties": {
+                "story_and_hook": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "clarity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "pacing": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "readability": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "captions": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "claims": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "accessibility": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "labels": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "call_to_action": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "technical": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                }
+              }
+            },
+            "findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "finding_id",
+                  "area",
+                  "start_s",
+                  "end_s",
+                  "severity",
+                  "title",
+                  "seen",
+                  "how_seen",
+                  "evidence",
+                  "fix_verb",
+                  "status"
+                ],
+                "properties": {
+                  "finding_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[A-Z][A-Z0-9-]{0,19}$"
+                  },
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "story_and_hook",
+                      "clarity",
+                      "pacing",
+                      "readability",
+                      "captions",
+                      "claims",
+                      "accessibility",
+                      "labels",
+                      "call_to_action",
+                      "technical"
+                    ]
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "blocker",
+                      "major",
+                      "minor",
+                      "note"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "seen": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "how_seen": {
+                    "type": "string",
+                    "enum": [
+                      "frame",
+                      "strip",
+                      "sheet",
+                      "measurement",
+                      "quote",
+                      "listening"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "cause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "fix_verb": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 160,
+                    "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "accepted_with_reason",
+                      "fixed",
+                      "not_fixed",
+                      "regressed"
+                    ]
+                  },
+                  "accepted_reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "open_blockers": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 80
+            },
+            "top_fixes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            },
+            "not_done": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "ready_for_owner_decision",
+                "revise",
+                "reject"
+              ]
+            },
+            "published": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "A decision of ready_for_owner_decision needs open_blockers of 0.",
+          "published is always false."
+        ]
+      }
+    },
+    {
+      "slug": "template.review-comparison",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: two independent reviews of the same bytes compared",
+      "value": {
+        "describes": "where two reviewers of the same file agreed and disagreed, what a second look found and who was right",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "reviews",
+            "agreed",
+            "disagreed",
+            "merged_top_fixes"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "reviews": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "agreed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 80,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            },
+            "disagreed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "topic",
+                  "first_said",
+                  "second_said",
+                  "second_look",
+                  "right"
+                ],
+                "properties": {
+                  "topic": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "first_said": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "second_said": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "second_look": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "right": {
+                    "type": "string",
+                    "enum": [
+                      "first",
+                      "second",
+                      "both",
+                      "neither"
+                    ]
+                  }
+                }
+              }
+            },
+            "merged_top_fixes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.listening-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's watch-and-listen record",
+      "value": {
+        "describes": "a person's record of watching one file start to finish and listening on headphones and a phone speaker, with what they noticed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "person_role",
+            "watched_start_to_finish",
+            "listened_on",
+            "noticed",
+            "agrees_with_decision",
+            "decision"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "person_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "watched_start_to_finish": {
+              "type": "boolean"
+            },
+            "listened_on": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "headphones",
+                  "phone_speaker",
+                  "desktop_speakers",
+                  "television"
+                ]
+              }
+            },
+            "noticed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "time_s",
+                  "what"
+                ],
+                "properties": {
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "what": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "agrees_with_decision": {
+              "type": "boolean"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "ready_for_owner_decision",
+                "revise",
+                "reject"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.fix-routing",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: findings grouped by cause and routed to fix verbs",
+      "value": {
+        "describes": "each open finding of a review with its cause and the verb that fixes it, grouped so one fix answers every finding with the same cause",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review",
+            "groups"
+          ],
+          "properties": {
+            "review": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "groups": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cause",
+                  "findings",
+                  "fix_verb"
+                ],
+                "properties": {
+                  "cause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "findings": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 40,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20
+                    }
+                  },
+                  "fix_verb": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 160,
+                    "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.re-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a re-review of the fixed cut",
+      "value": {
+        "describes": "a review of a new file against every finding of an earlier one: fixed, not fixed, regressed or no longer applicable, with evidence from the new bytes, plus new findings",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "previous_review",
+            "previous_sha256",
+            "media_sha256",
+            "results",
+            "new_findings",
+            "open_blockers",
+            "decision",
+            "published"
+          ],
+          "properties": {
+            "previous_review": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "previous_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "results": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "finding_id",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "finding_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "fixed",
+                      "not_fixed",
+                      "regressed",
+                      "not_applicable"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "new_findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "finding_id",
+                  "area",
+                  "start_s",
+                  "end_s",
+                  "severity",
+                  "title",
+                  "seen",
+                  "how_seen",
+                  "evidence",
+                  "fix_verb",
+                  "status"
+                ],
+                "properties": {
+                  "finding_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[A-Z][A-Z0-9-]{0,19}$"
+                  },
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "story_and_hook",
+                      "clarity",
+                      "pacing",
+                      "readability",
+                      "captions",
+                      "claims",
+                      "accessibility",
+                      "labels",
+                      "call_to_action",
+                      "technical"
+                    ]
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "blocker",
+                      "major",
+                      "minor",
+                      "note"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "seen": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "how_seen": {
+                    "type": "string",
+                    "enum": [
+                      "frame",
+                      "strip",
+                      "sheet",
+                      "measurement",
+                      "quote",
+                      "listening"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "cause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "fix_verb": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 160,
+                    "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "accepted_with_reason",
+                      "fixed",
+                      "not_fixed",
+                      "regressed"
+                    ]
+                  },
+                  "accepted_reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "open_blockers": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 80
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "ready_for_owner_decision",
+                "revise",
+                "reject"
+              ]
+            },
+            "published": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "review-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Review checks, with one good and seven bad reviews the validator recomputes",
+      "category_reason": "A golden fixture: fixed review summaries and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks a review passes before anyone relies on it, each shown failing on a bad review for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "reviewer_kind",
+            "reviewer_made_cut",
+            "findings",
+            "open_blockers",
+            "decision",
+            "top_fixes",
+            "not_done",
+            "published"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "reviewer_kind": {
+              "type": "string",
+              "enum": [
+                "human",
+                "agent"
+              ]
+            },
+            "reviewer_made_cut": {
+              "type": "boolean"
+            },
+            "findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "finding_id": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                  },
+                  "area": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "severity": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                  },
+                  "seen": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "how_seen": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "fix_verb": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 160
+                  }
+                }
+              }
+            },
+            "open_blockers": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 80
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "ready_for_owner_decision",
+                "revise",
+                "reject"
+              ]
+            },
+            "top_fixes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            },
+            "not_done": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "published": {
+              "type": "boolean"
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "bound-to-bytes",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "media_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "A review names the digest of the file it watched."
+          },
+          {
+            "id": "distinct-reviewer",
+            "rule": {
+              "rule": "enum",
+              "path": "reviewer_made_cut",
+              "values": [
+                false
+              ]
+            },
+            "why": "The reviewer did not make the cut."
+          },
+          {
+            "id": "findings-carry-evidence",
+            "rule": {
+              "rule": "each_has",
+              "path": "findings",
+              "fields": [
+                "finding_id",
+                "area",
+                "start_s",
+                "end_s",
+                "severity",
+                "seen",
+                "how_seen",
+                "evidence",
+                "fix_verb"
+              ],
+              "min": 0
+            },
+            "why": "Every finding has its times, what was seen, how, its evidence and its fix verb."
+          },
+          {
+            "id": "no-ready-with-a-blocker",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "decision",
+                "equals": "ready_for_owner_decision"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "open_blockers",
+                "values": [
+                  0
+                ]
+              }
+            },
+            "why": "A cut with an open blocker is never ready."
+          },
+          {
+            "id": "revise-names-fixes",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "decision",
+                "equals": "revise"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "top_fixes",
+                "min": 1
+              }
+            },
+            "why": "A revise decision says what to fix first."
+          },
+          {
+            "id": "agent-says-it-could-not-listen",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "reviewer_kind",
+                "equals": "agent"
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "not_done",
+                "pattern": "(?i)listen"
+              }
+            },
+            "why": "A worker states that a person still has to listen."
+          },
+          {
+            "id": "never-published",
+            "rule": {
+              "rule": "enum",
+              "path": "published",
+              "values": [
+                false
+              ]
+            },
+            "why": "A review never publishes."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-revise",
+            "label": "known_good",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-no-digest",
+            "label": "known_bad",
+            "fails": "bound-to-bytes",
+            "finding": {
+              "media_sha256": "the final cut",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-own-cut",
+            "label": "known_bad",
+            "fails": "distinct-reviewer",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": true,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-finding-without-evidence",
+            "label": "known_bad",
+            "fails": "findings-carry-evidence",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-ready-with-blocker",
+            "label": "known_bad",
+            "fails": "no-ready-with-a-blocker",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "ready_for_owner_decision",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-revise-without-fixes",
+            "label": "known_bad",
+            "fails": "revise-names-fixes",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-agent-claims-it-listened",
+            "label": "known_bad",
+            "fails": "agent-says-it-could-not-listen",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Nothing; the review is complete."
+              ],
+              "published": false
+            }
+          },
+          {
+            "id": "bad-published",
+            "label": "known_bad",
+            "fails": "never-published",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+              "reviewer_kind": "agent",
+              "reviewer_made_cut": false,
+              "findings": [
+                {
+                  "finding_id": "F1",
+                  "area": "claims",
+                  "start_s": 21.0,
+                  "end_s": 24.5,
+                  "severity": "blocker",
+                  "seen": "120 households on screen",
+                  "how_seen": "frame",
+                  "evidence": "frame at 22.0 s",
+                  "fix_verb": "video-showcase.draft-script"
+                }
+              ],
+              "open_blockers": 1,
+              "decision": "revise",
+              "top_fixes": [
+                "F1"
+              ],
+              "not_done": [
+                "Listening: an agent cannot listen; the person's watch-and-listen verb is open."
+              ],
+              "published": true
+            }
+          }
+        ],
+        "expected": {
+          "good-revise": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-digest": {
+            "verdict": "fail",
+            "failed_checks": [
+              "bound-to-bytes"
+            ]
+          },
+          "bad-own-cut": {
+            "verdict": "fail",
+            "failed_checks": [
+              "distinct-reviewer"
+            ]
+          },
+          "bad-finding-without-evidence": {
+            "verdict": "fail",
+            "failed_checks": [
+              "findings-carry-evidence"
+            ]
+          },
+          "bad-ready-with-blocker": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-ready-with-a-blocker"
+            ]
+          },
+          "bad-revise-without-fixes": {
+            "verdict": "fail",
+            "failed_checks": [
+              "revise-names-fixes"
+            ]
+          },
+          "bad-agent-claims-it-listened": {
+            "verdict": "fail",
+            "failed_checks": [
+              "agent-says-it-could-not-listen"
+            ]
+          },
+          "bad-published": {
+            "verdict": "fail",
+            "failed_checks": [
+              "never-published"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.review-findings"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs when watching and listening",
+      "category_reason": "A short checklist a person runs is part of the review's guardrails.",
+      "value": {
+        "items": [
+          "Watch the whole cut once at normal speed with sound, without stopping, before reading any findings.",
+          "Listen once on headphones and once on a phone speaker; note any word you could not make out.",
+          "Watch once with the sound off: is the point clear from the picture?",
+          "Read every label and number on a phone; anything you cannot read is a finding.",
+          "Say in one sentence what the video does and who it is for; compare with the brief.",
+          "Decide: ready for the owner, revise, or reject. Never publish from a review."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for video review",
+      "value": {
+        "sources": [
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.2.2, Captions (Prerecorded)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html",
+            "used_for": "Captions for all prerecorded speech (Level A)",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.4.3, Contrast (Minimum)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+            "used_for": "4.5 to 1 for text, 3 to 1 for large text, never rounded",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 2.3.1, Three Flashes or Below Threshold",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html",
+            "used_for": "Nothing flashes more than three times in any one second",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C: WebVTT, the Web Video Text Tracks Format",
+            "url": "https://www.w3.org/TR/webvtt1/",
+            "used_for": "Reading caption sidecars and their settings",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Netflix Partner Help Center: English (USA) Timed Text Style Guide",
+            "url": "https://partnerhelp.netflixstudios.com/hc/en-us/articles/217350977-English-USA-Timed-Text-Style-Guide",
+            "used_for": "42 characters per line, two lines, reading speed limits",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "FFmpeg Filters Documentation",
+            "url": "https://ffmpeg.org/ffmpeg-filters.html",
+            "used_for": "select, fps, scale and tile for panels",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for video review",
+      "value": {
+        "cases": [
+          {
+            "id": "VR-OWN-CUT",
+            "scenario": "The worker that composed the cut is asked to review it",
+            "sample_input": "SYNTHETIC: the reviewing key matches the compose-sequence receipt's key.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "distinct_reviewer_required"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VR-NUMBER-DISPUTED",
+            "scenario": "A number on screen differs from its record",
+            "sample_input": "SYNTHETIC: the cut says 120 households a week; the intake record says 112.",
+            "expected_outcome": "review_written",
+            "expected_indicators": [
+              "claim_disputed",
+              "blocker_finding",
+              "decision_revise"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "VR-STALE-BYTES",
+            "scenario": "The QA report names a different digest from the file under review",
+            "sample_input": "SYNTHETIC: the QA report is for an earlier render.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "stale_report_named",
+              "measure_these_bytes"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VR-CONTACT-SHEET-ONLY",
+            "scenario": "A reviewer judges text size from a contact sheet",
+            "sample_input": "SYNTHETIC: a 480 px wide thumbnail makes 28 px body text look unreadable.",
+            "expected_outcome": "review_written",
+            "expected_indicators": [
+              "full_frame_checked",
+              "display_scale_sheet_used"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VR-REVIEWERS-DISAGREE",
+            "scenario": "Two reviewers disagree about whether a label is readable",
+            "sample_input": "SYNTHETIC: one says the 20 px label reads; the other says it does not.",
+            "expected_outcome": "reviews_compared",
+            "expected_indicators": [
+              "second_look_recorded",
+              "measurement_decides"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VR-FIXED-BUT-REGRESSED",
+            "scenario": "A fix for one finding breaks another",
+            "sample_input": "SYNTHETIC: enlarging the board pushed its counter under the AI-voice label.",
+            "expected_outcome": "re_reviewed",
+            "expected_indicators": [
+              "regressed_result",
+              "new_finding_recorded"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VR-NO-LISTENER",
+            "scenario": "No person has listened yet",
+            "sample_input": "SYNTHETIC: the review is complete but no listening record exists.",
+            "expected_outcome": "review_written",
+            "expected_indicators": [
+              "listening_not_done_stated",
+              "technical_area_open"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.review-scope",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the scope of a review",
+      "value": {
+        "notice": "SYNTHETIC. A fictional pantry's 45-second explainer; no video exists.",
+        "conforms_to": {
+          "$pin": "template.review-scope"
+        },
+        "instance": {
+          "media_file": "pantry-45s.mp4",
+          "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+          "cut_id": "45s",
+          "rubric_version": "0.1.0",
+          "reviewer_kind": "agent",
+          "reviewer_made_cut": false,
+          "display_scales": [
+            0.5,
+            0.25
+          ],
+          "panels": [
+            "contact_sheet",
+            "hook_strip",
+            "ending_strip",
+            "transition_strips",
+            "text_frames",
+            "display_scales"
+          ],
+          "qa_reports": [
+            "example extended QA report for pantry-45s.mp4"
+          ],
+          "claim_trace": "example.claim-trace"
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.claim-trace",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a claim trace with one disputed number",
+      "value": {
+        "notice": "SYNTHETIC. The records named are fictional.",
+        "conforms_to": {
+          "$pin": "template.claim-trace"
+        },
+        "instance": {
+          "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+          "claims": [
+            {
+              "claim_id": "C1",
+              "time_s": 6.2,
+              "where": "narration",
+              "says": "Three volunteers check the shelves every evening.",
+              "evidence": "SYNTHETIC volunteer roster noun",
+              "evidence_says": "3 volunteers on the evening rota",
+              "result": "upheld"
+            },
+            {
+              "claim_id": "C2",
+              "time_s": 21.0,
+              "where": "on_screen",
+              "says": "120 households a week",
+              "evidence": "SYNTHETIC intake log noun, week of 2026-10-19",
+              "evidence_says": "112 households",
+              "result": "disputed",
+              "note": "The cut rounds up and drops the week."
+            },
+            {
+              "claim_id": "C3",
+              "time_s": 30.5,
+              "where": "caption",
+              "says": "Every claim in the report is cited.",
+              "evidence": "SYNTHETIC report check noun",
+              "evidence_says": "14 of 14 claims cited",
+              "result": "upheld"
+            },
+            {
+              "claim_id": "C4",
+              "time_s": 38.0,
+              "where": "narration",
+              "says": "The list is ready in two minutes.",
+              "evidence": "none found",
+              "evidence_says": "",
+              "result": "unverifiable",
+              "note": "No timing was recorded for the run."
+            }
+          ],
+          "numbers_found": 4,
+          "numbers_traced": 3
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.review-findings",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: seven findings from a blocker to a note",
+      "value": {
+        "notice": "SYNTHETIC. Times, sizes and records are illustrative; the library's tests recheck their consistency.",
+        "conforms_to": {
+          "$pin": "template.review-findings"
+        },
+        "instance": {
+          "media_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+          "cut_id": "45s",
+          "rubric_version": "0.1.0",
+          "reviewer_kind": "agent",
+          "reviewer_made_cut": false,
+          "scores": {
+            "story_and_hook": 2,
+            "clarity": 4,
+            "pacing": 3,
+            "readability": 4,
+            "captions": 4,
+            "claims": 1,
+            "accessibility": 4,
+            "labels": 2,
+            "call_to_action": 2,
+            "technical": 5
+          },
+          "findings": [
+            {
+              "finding_id": "F1",
+              "area": "claims",
+              "start_s": 21.0,
+              "end_s": 24.5,
+              "severity": "blocker",
+              "title": "A number on screen is not its record",
+              "seen": "The card says 120 households a week; the intake log says 112, for one week only.",
+              "how_seen": "frame",
+              "evidence": "claim trace C2; frame at 22.0 s",
+              "cause": "rounded and unqualified number",
+              "fix_verb": "video-showcase.draft-script",
+              "status": "open"
+            },
+            {
+              "finding_id": "F2",
+              "area": "labels",
+              "start_s": 0.0,
+              "end_s": 45.0,
+              "severity": "major",
+              "title": "The AI-voice label is too small on a phone",
+              "seen": "The corner label is 18 px at 1080p: 7.9 CSS px on a phone held sideways, under the 12 px floor.",
+              "how_seen": "measurement",
+              "evidence": "legibility row: label 18 px, needs 27.3 px",
+              "cause": "label size in the stage",
+              "fix_verb": "narrated-explainer-video.build-stage-scenes",
+              "status": "open"
+            },
+            {
+              "finding_id": "F3",
+              "area": "story_and_hook",
+              "start_s": 0.0,
+              "end_s": 2.5,
+              "severity": "major",
+              "title": "Nothing happens in the first 2.5 s",
+              "seen": "A still title card; the scene score stays under 0.002 until 2.5 s and no line is on screen.",
+              "how_seen": "strip",
+              "evidence": "hook strip, 0 to 3 s at 4 fps; cadence row",
+              "cause": "a static opening card",
+              "fix_verb": "video-editing.revise-edit",
+              "status": "open"
+            },
+            {
+              "finding_id": "F4",
+              "area": "readability",
+              "start_s": 14.8,
+              "end_s": 15.6,
+              "severity": "minor",
+              "title": "A dissolve shows two texts at once",
+              "seen": "The checklist card dissolves over the map; both texts are legible together for 0.8 s.",
+              "how_seen": "strip",
+              "evidence": "transition strip at 15.0 s",
+              "cause": "a dissolve between text frames",
+              "fix_verb": "video-editing.revise-edit",
+              "status": "open"
+            },
+            {
+              "finding_id": "F5",
+              "area": "captions",
+              "start_s": 27.1,
+              "end_s": 29.9,
+              "severity": "minor",
+              "title": "One caption starts late",
+              "seen": "Cue 9 appears 600 ms after its words begin.",
+              "how_seen": "measurement",
+              "evidence": "captions row: cue 9 late by 600 ms",
+              "cause": "a cue snapped to the wrong pause",
+              "fix_verb": "narrated-explainer-video.time-captions",
+              "status": "open"
+            },
+            {
+              "finding_id": "F6",
+              "area": "call_to_action",
+              "start_s": 41.0,
+              "end_s": 45.0,
+              "severity": "major",
+              "title": "The end card leaves too soon",
+              "seen": "The address is on screen for 0.4 s after the last word.",
+              "how_seen": "measurement",
+              "evidence": "VTT last cue ends 44.6 s; file ends 45.0 s",
+              "cause": "no end hold in the cut plan",
+              "fix_verb": "video-editing.revise-edit",
+              "status": "open"
+            },
+            {
+              "finding_id": "F7",
+              "area": "pacing",
+              "start_s": 33.0,
+              "end_s": 36.0,
+              "severity": "note",
+              "title": "A taste note on the music",
+              "seen": "The bed's brighter section could start at the payoff instead of 2 s before it.",
+              "how_seen": "listening",
+              "evidence": "a person's note in the listening record",
+              "cause": "bed arrangement",
+              "fix_verb": "video-editing.plan-mix",
+              "status": "open"
+            }
+          ],
+          "open_blockers": 1,
+          "top_fixes": [
+            "F1",
+            "F2",
+            "F3",
+            "F6",
+            "F5"
+          ],
+          "not_done": [
+            "Listening: an agent cannot listen; the person's watch-and-listen verb is open.",
+            "A second reviewer has not answered the rubric."
+          ],
+          "decision": "revise",
+          "published": false
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.re-review",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the re-review of the fixed cut",
+      "value": {
+        "notice": "SYNTHETIC. The new digest stands for the fixed render.",
+        "conforms_to": {
+          "$pin": "template.re-review"
+        },
+        "instance": {
+          "previous_review": "example.review-findings",
+          "previous_sha256": "000000000000000000000000000000000000000000000000000000000000000c",
+          "media_sha256": "000000000000000000000000000000000000000000000000000000000000000d",
+          "results": [
+            {
+              "finding_id": "F1",
+              "result": "fixed",
+              "evidence": "The card now says 112 households in the week of 19 October; the claim trace upholds it."
+            },
+            {
+              "finding_id": "F2",
+              "result": "fixed",
+              "evidence": "Label 30 px: 13.2 CSS px on a phone held sideways."
+            },
+            {
+              "finding_id": "F3",
+              "result": "fixed",
+              "evidence": "The title types on from frame 0; the hook strip changes every frame."
+            },
+            {
+              "finding_id": "F4",
+              "result": "not_fixed",
+              "evidence": "The dissolve at 15.0 s is unchanged."
+            },
+            {
+              "finding_id": "F5",
+              "result": "fixed",
+              "evidence": "Cue 9 starts 40 ms after its words."
+            },
+            {
+              "finding_id": "F6",
+              "result": "fixed",
+              "evidence": "The address holds 2.2 s after the last word."
+            },
+            {
+              "finding_id": "F7",
+              "result": "not_applicable",
+              "evidence": "A taste note; the owner kept the bed."
+            }
+          ],
+          "new_findings": [
+            {
+              "finding_id": "N1",
+              "area": "readability",
+              "start_s": 3.0,
+              "end_s": 4.2,
+              "severity": "minor",
+              "title": "The new typed title wraps one word alone",
+              "seen": "The title's last line holds only 'tonight'.",
+              "how_seen": "frame",
+              "evidence": "frame at 3.5 s",
+              "cause": "line break in the stage",
+              "fix_verb": "narrated-explainer-video.build-stage-scenes",
+              "status": "open"
+            }
+          ],
+          "open_blockers": 0,
+          "decision": "ready_for_owner_decision",
+          "published": false
+        }
+      },
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "make-panels",
+      "kind": "verb.compile_dag",
+      "title": "Make the panels for one file",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Hash the file, then decode it into a one-per-second sheet of frames, a hook strip, an ending strip, a strip around every transition, full-size frames at text changes and display-scale sheets, each with its times and digest, and write the review's scope.",
+      "outcome": "The review scope and the panel set for one file.",
+      "ready_outcome": "panels_made",
+      "pinned": [
+        "method",
+        "guardrail.review-binds-to-bytes",
+        "video-motion:tool.ffmpeg"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "sequence",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the sequence or cut plan, for transition and text-change times.",
+          "required": false
+        },
+        {
+          "name": "qa_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the extended QA report for the same file.",
+          "required": false
+        }
+      ],
+      "params": {
+        "display_scales": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "number",
+              "minimum": 0.05,
+              "maximum": 1
+            }
+          },
+          "description": "Scales for display-scale sheets: 0.5 is about a phone held sideways for a 16:9 cut.",
+          "default": [
+            0.5,
+            0.25
+          ]
+        }
+      },
+      "network": [
+        "local_only",
+        "Only the worker's own machine: FFmpeg decodes a local copy of the file."
+      ],
+      "produces": [
+        {
+          "name": "review_scope",
+          "template": "template.review-scope"
+        },
+        {
+          "name": "panel_set",
+          "template": "template.panel-set"
+        }
+      ],
+      "steps": [
+        "Hash the file and confirm the media noun and any QA report name the same digest.",
+        "Make every panel the method lists, labeling each frame with its time.",
+        "Write the scope with the panels, the reports and the display scales."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-templates",
+          "check": "Both outputs validate against their templates' schemas.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-bytes",
+          "check": "Every panel and the scope name the file's digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "transitions-covered",
+          "check": "Every transition in the pinned sequence has a strip.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-qa.compile-qa-report"
+      ]
+    },
+    {
+      "slug": "trace-claims",
+      "kind": "verb.verify_gate",
+      "title": "Trace every claim in the cut",
+      "claimant": "agent",
+      "review": "distinct_reviewer",
+      "summary": "List every number and factual claim spoken, captioned or shown, with its time, trace each one to the record or dated source it came from, and mark it upheld, disputed or unverifiable, without editing the script.",
+      "outcome": "A claim trace for one file.",
+      "ready_outcome": "claims_traced",
+      "pinned": [
+        "guardrail.trace-every-number",
+        "guardrail.reviewer-did-not-make-it"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "script",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the script."
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption track."
+        },
+        {
+          "name": "evidence",
+          "category": "noun.eval_run",
+          "description": "Pins of the evidence links and records the script cites.",
+          "required": false,
+          "many": true,
+          "max": 40
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the dated public sources the evidence names; nothing is changed."
+      ],
+      "produces": [
+        {
+          "name": "claim_trace",
+          "template": "template.claim-trace"
+        }
+      ],
+      "steps": [
+        "Read the captions and the frames at every text change and list each number and claim with its time.",
+        "Find the record or dated source for each; quote what it says.",
+        "Mark each claim upheld, disputed or unverifiable, with a note when the cut drops a qualifier."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.claim-trace's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-agree",
+          "check": "numbers_traced equals the claims marked upheld or disputed.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-number-listed",
+          "check": "Every number in the caption track appears in a claim.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "video-review.make-panels"
+      ]
+    },
+    {
+      "slug": "review-cut",
+      "kind": "verb.verify_gate",
+      "title": "Review the cut with the rubric",
+      "claimant": "agent_or_human",
+      "review": "distinct_reviewer",
+      "summary": "Answer every rubric question with the panels, the QA reports and the claim trace, write each problem as a timestamped finding with its severity, evidence and fix verb, score each area, list the top fixes in order and what the review could not do, and decide ready, revise or reject without publishing anything.",
+      "outcome": "Review findings with scores, top fixes and a decision.",
+      "ready_outcome": "review_written",
+      "pinned": [
+        "rubric",
+        "severity-guide",
+        "method",
+        "fix-routes",
+        "review-checks",
+        "guardrail.reviewer-did-not-make-it",
+        "guardrail.evidence-for-every-finding",
+        "guardrail.a-person-approves-release"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "panel_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the panel set."
+        },
+        {
+          "name": "claim_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the claim trace."
+        },
+        {
+          "name": "qa_reports",
+          "category": "noun.eval_run",
+          "description": "Pins of the post-encode and extended QA reports.",
+          "many": true,
+          "max": 4
+        },
+        {
+          "name": "video_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the video brief, for the audience and the point.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "review_findings",
+          "template": "template.review-findings"
+        }
+      ],
+      "steps": [
+        "Confirm you made no part of this cut; if you did, return blocked.",
+        "Answer every rubric question; measure margins, sizes and timings when a doubt matters.",
+        "Write findings with times, severity, what was seen, how, evidence, cause and fix verb from the fix routes.",
+        "Score each area, order the top fixes, list what you could not do, and decide."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.review-findings's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-checks-pass",
+          "check": "The review's summary passes every check in review-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "routes-exist",
+          "check": "Every fix verb names a verb template in the library.",
+          "method": "deterministic"
+        },
+        {
+          "id": "findings-are-real",
+          "check": "Each finding is visible at its time in the panels or present in its measurement.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 7200
+      },
+      "follows": [
+        "video-review.trace-claims"
+      ]
+    },
+    {
+      "slug": "compare-reviews",
+      "kind": "verb.verify_gate",
+      "title": "Compare two independent reviews of the same bytes",
+      "claimant": "agent",
+      "review": "distinct_reviewer",
+      "summary": "Set two reviews of the same file side by side, list where they agree and disagree, take a second look at each disagreement with the panels or a measurement, record who was right, and combine the top fixes.",
+      "outcome": "A review comparison.",
+      "ready_outcome": "reviews_compared",
+      "pinned": [
+        "rubric",
+        "method",
+        "guardrail.review-binds-to-bytes"
+      ],
+      "slots": [
+        {
+          "name": "reviews",
+          "category": "noun.eval_run",
+          "description": "Pins of two to four reviews of the same file.",
+          "many": true,
+          "max": 4
+        },
+        {
+          "name": "panel_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the panel set they used."
+        }
+      ],
+      "produces": [
+        {
+          "name": "comparison",
+          "template": "template.review-comparison"
+        }
+      ],
+      "steps": [
+        "Confirm every review names the same digest.",
+        "For each disagreement, look again at the frames or measure, then record who was right and why.",
+        "Combine the top fixes, keeping each review's evidence."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.review-comparison's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-bytes",
+          "check": "Every compared review names the comparison's digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "each-disagreement-looked-at",
+          "check": "Every disagreement has a second look and a verdict.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut"
+      ]
+    },
+    {
+      "slug": "watch-and-listen",
+      "kind": "verb.verify_gate",
+      "title": "Watch the cut start to finish and listen",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person watches the whole cut without stopping, listens once on headphones and once on a phone speaker, watches once with the sound off, notes what they noticed with times, and says whether they agree with the review's decision.",
+      "outcome": "A listening record from a person.",
+      "ready_outcome": "watched_and_listened",
+      "pinned": [
+        "checklist",
+        "guardrail.a-person-approves-release"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "review_findings",
+          "category": "noun.eval_run",
+          "description": "Pin of the review to agree or disagree with.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "listening_record",
+          "template": "template.listening-record"
+        }
+      ],
+      "steps": [
+        "Watch first, read the review after.",
+        "Note each moment you noticed, with its time, in your own words.",
+        "Say whether you agree with the decision. This record approves nothing for publication."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.listening-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "both-listens",
+          "check": "listened_on includes headphones and phone_speaker.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut"
+      ]
+    },
+    {
+      "slug": "route-findings",
+      "kind": "verb.decompose_dag",
+      "title": "Route findings to the verbs that fix their causes",
+      "claimant": "agent",
+      "summary": "Group a review's open findings by cause, give each group the fix verb from the fix routes, and propose a findings-to-fixes record for every finding and one fix verb per cause, without enqueueing anything.",
+      "outcome": "A fix routing, and proposed verbs for records and fixes.",
+      "ready_outcome": "findings_routed",
+      "pinned": [
+        "fix-routes",
+        "severity-guide"
+      ],
+      "slots": [
+        {
+          "name": "review_findings",
+          "category": "noun.eval_run",
+          "description": "Pin of the review whose findings are routed."
+        }
+      ],
+      "produces": [
+        {
+          "name": "fix_routing",
+          "template": "template.fix-routing"
+        }
+      ],
+      "steps": [
+        "Group open findings that share a cause; one fix answers the group.",
+        "Take each group's fix verb from the fix routes; a cause with no route is a question for the requester.",
+        "Propose one findings-to-fixes record-finding per finding and one fix verb per group, highest severity first."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.fix-routing's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-open-finding-routed",
+          "check": "Every open finding of the review appears in exactly one group.",
+          "method": "deterministic"
+        },
+        {
+          "id": "routes-exist",
+          "check": "Every fix verb names a verb template in the library.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut"
+      ]
+    },
+    {
+      "slug": "re-review",
+      "kind": "verb.verify_gate",
+      "title": "Re-review the fixed cut against every earlier finding",
+      "claimant": "agent_or_human",
+      "review": "distinct_reviewer",
+      "summary": "Watch the new file against every finding of the earlier review, mark each fixed, not fixed, regressed or no longer applicable with evidence from the new bytes, record new findings, and decide again without publishing.",
+      "outcome": "A re-review of the new file.",
+      "ready_outcome": "re_reviewed",
+      "pinned": [
+        "rubric",
+        "severity-guide",
+        "guardrail.review-binds-to-bytes",
+        "guardrail.a-person-approves-release"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "previous_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the earlier review."
+        },
+        {
+          "name": "panel_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the panels made from the new file."
+        }
+      ],
+      "produces": [
+        {
+          "name": "re_review",
+          "template": "template.re-review"
+        }
+      ],
+      "steps": [
+        "Confirm the new file's digest differs from the earlier review's and the panels name the new one.",
+        "Check every earlier finding at its time in the new file, with side-by-side frames where it helps.",
+        "Record anything newly broken as a new finding; decide again."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.re-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-finding-answered",
+          "check": "Every finding id of the earlier review has exactly one result.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-ready-with-a-blocker",
+          "check": "A ready decision has open_blockers of 0.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut",
+        "video-editing.revise-edit"
+      ]
+    }
+  ]
+}
