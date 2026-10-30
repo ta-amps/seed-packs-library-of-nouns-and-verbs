@@ -1,0 +1,229 @@
+{
+  "recipe_id": "01-pov-role-skit",
+  "title": "POV: Wall-Clock Screen Recorder Meets Frame-Indexed Seek",
+  "synopsis": "Two-character technical POV skit contrasting wall-clock screen capture drift with pure frame-addressable scene evaluation.",
+  "fps": 30,
+  "duration_s": 16.0,
+  "seed": 101,
+  "background_hex": "#0b1020",
+  "cover_frame_index": 345,
+  "beats": [
+    { "phase": "hook", "start_s": 0.0, "end_s": 0.6, "target_energy": 0.9 },
+    { "phase": "orientation", "start_s": 0.6, "end_s": 2.0, "target_energy": 0.62 },
+    { "phase": "setup", "start_s": 2.0, "end_s": 6.0, "target_energy": 0.48 },
+    { "phase": "escalation", "start_s": 6.0, "end_s": 11.0, "target_energy": 0.8 },
+    { "phase": "punchline", "start_s": 11.0, "end_s": 14.8, "target_energy": 0.94 },
+    { "phase": "hold", "start_s": 14.8, "end_s": 16.0, "target_energy": 0.12 }
+  ],
+  "actors": [
+    {
+      "actor_id": "sre_lead",
+      "kind": "character",
+      "label": "On-Call Engineer",
+      "asset_id": "char-sre-lead",
+      "z_index": 10,
+      "width": 250.0,
+      "height": 270.0,
+      "fill_hex": "#172554",
+      "accent_hex": "#38bdf8",
+      "is_subject_focus": true,
+      "data_points": [],
+      "tracks": [
+        {
+          "property": "x",
+          "keyframes": [
+            { "t_s": 0.0, "value": 240.0, "easing": "spring_pop" },
+            { "t_s": 0.6, "value": 295.0, "easing": "ease_out_cubic" },
+            { "t_s": 6.0, "value": 315.0, "easing": "ease_in_out_cubic" },
+            { "t_s": 14.8, "value": 300.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "y",
+          "keyframes": [
+            { "t_s": 0.0, "value": 540.0, "easing": "ease_out_cubic" },
+            { "t_s": 6.0, "value": 510.0, "easing": "ease_in_out_cubic" },
+            { "t_s": 14.8, "value": 525.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "scale",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.9, "easing": "spring_pop" },
+            { "t_s": 0.6, "value": 1.0, "easing": "ease_in_out_cubic" },
+            { "t_s": 11.0, "value": 1.05, "easing": "ease_out_cubic" },
+            { "t_s": 14.8, "value": 1.02, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "draw_progress",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.05, "easing": "linear" },
+            { "t_s": 14.8, "value": 1.0, "easing": "step_hold" }
+          ]
+        }
+      ],
+      "aspect_overrides": {
+        "feed_4x5": { "dx": 20.0, "dy": -14.0, "scale_mul": 0.94 }
+      }
+    },
+    {
+      "actor_id": "deploy_bot",
+      "kind": "character",
+      "label": "Deploy Bot",
+      "asset_id": "char-deploy-bot",
+      "z_index": 12,
+      "width": 250.0,
+      "height": 270.0,
+      "fill_hex": "#1e1b4b",
+      "accent_hex": "#a78bfa",
+      "is_subject_focus": true,
+      "data_points": [],
+      "tracks": [
+        {
+          "property": "x",
+          "keyframes": [
+            { "t_s": 0.0, "value": 680.0, "easing": "spring_pop" },
+            { "t_s": 2.0, "value": 635.0, "easing": "ease_in_out_cubic" },
+            { "t_s": 11.0, "value": 615.0, "easing": "spring_pop" },
+            { "t_s": 14.8, "value": 625.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "y",
+          "keyframes": [
+            { "t_s": 0.0, "value": 560.0, "easing": "ease_out_cubic" },
+            { "t_s": 11.0, "value": 535.0, "easing": "ease_out_cubic" },
+            { "t_s": 14.8, "value": 545.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "draw_progress",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.1, "easing": "ease_in_out_cubic" },
+            { "t_s": 14.8, "value": 1.0, "easing": "step_hold" }
+          ]
+        }
+      ],
+      "aspect_overrides": {
+        "feed_4x5": { "dx": 55.0, "dy": -14.0, "scale_mul": 0.94 }
+      }
+    }
+  ],
+  "captions": [
+    {
+      "cue_id": "cue-01",
+      "role_label": "HOOK",
+      "speaker": "Deploy Bot",
+      "text": "Why did frame 142 drift again?",
+      "start_s": 0.0,
+      "end_s": 0.5,
+      "anchor": "top_banner",
+      "font_px": 42.0,
+      "max_chars_per_line": 26,
+      "box_override": {}
+    },
+    {
+      "cue_id": "cue-02",
+      "role_label": "ORIENT",
+      "speaker": "On-Call Engineer",
+      "text": "Wall-clock timers slip when host load spikes.",
+      "start_s": 0.7,
+      "end_s": 1.85,
+      "anchor": "lower_third",
+      "font_px": 42.0,
+      "max_chars_per_line": 26,
+      "box_override": {}
+    },
+    {
+      "cue_id": "cue-03",
+      "role_label": "SETUP",
+      "speaker": "On-Call Engineer",
+      "text": "Engine computes every transform from frame_index over fps.",
+      "start_s": 2.1,
+      "end_s": 5.8,
+      "anchor": "lower_third",
+      "font_px": 42.0,
+      "max_chars_per_line": 26,
+      "box_override": {}
+    },
+    {
+      "cue_id": "cue-04",
+      "role_label": "ESCALATE",
+      "speaker": "Deploy Bot",
+      "text": "Forward, reverse, or shuffled seeks render byte identical.",
+      "start_s": 6.1,
+      "end_s": 10.8,
+      "anchor": "lower_third",
+      "font_px": 42.0,
+      "max_chars_per_line": 26,
+      "box_override": {}
+    },
+    {
+      "cue_id": "cue-05",
+      "role_label": "PUNCHLINE",
+      "speaker": "On-Call Engineer",
+      "text": "Zero dropped beats and every safe zone verified.",
+      "start_s": 11.1,
+      "end_s": 14.7,
+      "anchor": "lower_third",
+      "font_px": 42.0,
+      "max_chars_per_line": 26,
+      "box_override": {}
+    }
+  ],
+  "audio_cues": [
+    {
+      "cue_id": "vo-skit",
+      "stem_kind": "voiceover",
+      "asset_id": "stem-vo-skit",
+      "start_s": 0.0,
+      "duration_s": 14.7,
+      "peak_dbfs": -6.0,
+      "duck_db": 0.0
+    },
+    {
+      "cue_id": "bed-skit",
+      "stem_kind": "music_bed",
+      "asset_id": "stem-bed-synth",
+      "start_s": 0.0,
+      "duration_s": 16.0,
+      "peak_dbfs": -14.0,
+      "duck_db": 9.0
+    }
+  ],
+  "attributions": [
+    {
+      "asset_id": "char-deploy-bot",
+      "license": "CC0-1.0",
+      "creator": "video-motion open rig pack",
+      "source_uri": "urn:video-motion:catalog:char-deploy-bot",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "char-sre-lead",
+      "license": "LicenseRef-Video-Motion-Procedural",
+      "creator": "video-motion vector studio",
+      "source_uri": "urn:video-motion:catalog:char-sre-lead",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "stem-bed-synth",
+      "license": "CC-BY-4.0",
+      "creator": "video-motion audio lab",
+      "source_uri": "urn:video-motion:audio:stem-bed-synth",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "stem-vo-skit",
+      "license": "LicenseRef-Video-Motion-Procedural",
+      "creator": "video-motion voice synth",
+      "source_uri": "urn:video-motion:audio:stem-vo-skit",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "digest_basis": "illustrative"
+    }
+  ]
+}

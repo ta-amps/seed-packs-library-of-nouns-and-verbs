@@ -8,15 +8,16 @@ wires prewritten, tested code nodes together. A compiler checks the recipe befor
 runs. The runtime then executes it with no model calls, reuses cached results of unchanged
 steps and proves that the emitted standalone Python gives byte-identical outputs.
 
-The pack contains no code. Its tool card points at the code by address and commit:
-`https://github.com/ta-amps/code-composition-tools` at
-`6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078`. Every digest in the pack was measured there.
+The tested code is part of the pack, as nouns, in [code/](code/README.md). The tool card pins
+that folder by the digest the manifest also lists; the build recomputes it from the files, and
+the code's own tests check the module, node and recipe pins in CI. The library never runs the
+code except in CI tests; workers run it under their own permissions. Importing runs nothing.
 
 ## Nouns
 
 | Noun | What it holds |
 | --- | --- |
-| Tool card | The repository, the pinned commit, license, requirements, interfaces, checks and cautions |
+| Tool card | The code folder's path and digest, license, requirements, interfaces, checks and cautions |
 | Compiler and runtime | Entry points, compile checks, runtime behavior and the SHA-256 of the six modules every compile and run uses |
 | Node catalog | Signatures of the 18 nodes, port and parameter types, the edge rule and the code digest rule |
 | Prewritten nodes (18) | One per node: typed ports and parameters, source digest, license, built-in tests and the recipes that use it |
@@ -29,7 +30,7 @@ The pack contains no code. Its tool card points at the code by address and commi
 
 | Verb | Who | What happens |
 | --- | --- | --- |
-| verify-tools | agent | Checks a fresh checkout of the pinned commit: digests, node tests and the repository's own checks |
+| verify-tools | agent | Checks the code folder of a fresh library checkout: folder and module digests, node tests and the code's own checks |
 | compose-recipe | agent | Turns a goal into a recipe the pinned compiler accepts, repairing it from the diagnostics |
 | compile-recipe | agent | Compiles a recipe twice and records its plan digest and emitted module; deterministic |
 | run-recipe | agent | Runs it with pinned inputs and records the receipt; no model calls |
@@ -53,28 +54,28 @@ and enqueue the printed task yourself. Workers need keys on the same surface.
 
 - In this library, `make check` rebuilds the pack byte for byte and validates it, and
   `make check-tessera TESSERA_SRC=<Tessera checkout>` runs it through Tessera's own models.
-- In a clone of the pinned commit, run `uv sync --locked --all-groups`, then
-  `make lint types test public architecture demo`, and with a prepared Tessera checkout
-  `make tessera-integration TESSERA_DIR=<path>`. `make index-check` fails in a clone with a
-  different folder name or origin address, because the generated indexes embed both.
+- In `code/`, run `make setup`, `make check` and `make demo`, and with a prepared Tessera
+  checkout `make tessera-integration TESSERA_DIR=<path>`. A path-filtered CI job runs all of
+  them, the Tessera integration at the tool card's Tessera commit included, whenever this
+  pack changes.
 
 ## Real and planned
 
-- Real: on October 29, 2026 the pack author ran the pinned commit locally on Python 3.12.13
-  and 3.13.13. All 18 node tests passed, the three recipes compiled and ran with identical
-  digests on both, pytest reported 51 passed and 2 skipped on both, and the Tessera
-  integration passed 2 of 2. This is the author's measurement, not independent verification.
-- Planned: the repository's rename to the plain address above. If that address does not
-  resolve, verify-tools ends blocked instead of guessing another one.
+- Real: on October 29, 2026 the pack author ran the code in this folder on Python 3.12.13 and
+  3.13.13. All 18 node tests passed, the three recipes compiled and ran with identical digests
+  on both, pytest reported 41 passed and 2 skipped on both, and the Tessera integration passed
+  2 of 2. Node, recipe, plan, input, output and receipt digests are unchanged from version
+  0.1.0; module and emitted-module digests changed with the code's plain name. This is the
+  author's measurement, not independent verification.
 - Not done: no worker has claimed these verbs, and nothing is installed, imported, admitted
-  or activated. The descriptor's provenance notes record where the pack was moved from.
+  or activated. The pack's `moved_from` field records the repository and commit its code came from.
 
 ## Limits
 
-- The digests hold for the pinned commit only. A later commit is a different tool and needs a
-  new pack version.
+- The digests hold for the pinned code only. A code change gives a new folder digest and needs
+  a new pack version, as 0.2.0 did when the code moved here.
 - Node code and emitted Python run in the worker's own process; this is not a sandbox.
-- At the pinned commit the repository still uses its former name for its import package,
-  command and environment variables, so the tool card names them by role.
+- The holdout split keeps its original default salt so earlier partitions reproduce; pass
+  `salt` explicitly, as the bundled A/B recipe does.
 - The catalog covers tabular, text and evaluation steps. Anything else needs propose-node and
   an independent review.

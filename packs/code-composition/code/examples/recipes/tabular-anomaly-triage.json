@@ -1,0 +1,117 @@
+{
+  "recipe_id": "tabular-anomaly-triage",
+  "title": "Tabular Telemetry Anomaly Triage with Owner Enrichment",
+  "goal": "Parse service telemetry and owner lookup CSVs, enforce schema contracts, clean and standardize latency/error features, gate high-risk anomalies, join owning teams, and emit a Markdown triage report.",
+  "steps": [
+    {
+      "step_id": "ingest_events",
+      "node_id": "ingest.csv_rows",
+      "params": { "delimiter": ",", "strip_values": true },
+      "description": "Parse raw operational telemetry CSV."
+    },
+    {
+      "step_id": "check_contract",
+      "node_id": "validate.schema_contract",
+      "params": {
+        "required_fields": ["event_id", "service", "errors", "requests", "latency_ms"],
+        "min_rows": 2,
+        "strict": true
+      },
+      "description": "Verify required telemetry columns before cleaning."
+    },
+    {
+      "step_id": "dedupe_events",
+      "node_id": "clean.dedupe_by_key",
+      "params": { "key_field": "event_id", "keep": "first" },
+      "description": "Drop duplicate event IDs."
+    },
+    {
+      "step_id": "impute_metrics",
+      "node_id": "clean.impute_numeric",
+      "params": {
+        "fields": ["errors", "requests", "latency_ms"],
+        "strategy": "median",
+        "fill_value": 0.0
+      },
+      "description": "Impute missing numeric telemetry cells via median."
+    },
+    {
+      "step_id": "clamp_latency",
+      "node_id": "clean.winsorize_outliers",
+      "params": { "field": "latency_ms", "lower_q": 0.05, "upper_q": 0.95 },
+      "description": "Clamp extreme latency spikes to empirical [p05, p95] bounds."
+    },
+    {
+      "step_id": "error_rate",
+      "node_id": "feature.ratio_column",
+      "params": {
+        "numerator": "errors",
+        "denominator": "requests",
+        "output_field": "error_rate"
+      },
+      "description": "Compute safe per-window error rate."
+    },
+    {
+      "step_id": "latency_z",
+      "node_id": "feature.rolling_zscore",
+      "params": { "field": "latency_ms", "output_field": "latency_z", "window": 4 },
+      "description": "Standardize trailing latency shifts."
+    },
+    {
+      "step_id": "score_risk",
+      "node_id": "model.linear_risk_score",
+      "params": {
+        "feature_fields": ["error_rate", "latency_z"],
+        "weights_csv": "8.0,1.25",
+        "bias": -1.1,
+        "output_field": "risk_score"
+      },
+      "description": "Compute calibrated logistic anomaly risk."
+    },
+    {
+      "step_id": "gate_anomalies",
+      "node_id": "filter.threshold_gate",
+      "params": { "field": "risk_score", "op": "gte", "threshold": 0.5 },
+      "description": "Isolate high-risk telemetry windows."
+    },
+    {
+      "step_id": "ingest_owners",
+      "node_id": "ingest.csv_rows",
+      "params": { "delimiter": ",", "strip_values": true },
+      "description": "Parse service-to-team ownership lookup CSV."
+    },
+    {
+      "step_id": "enrich_owners",
+      "node_id": "join.keyed_enrich",
+      "params": { "key_field": "service", "how": "left", "right_prefix": "" },
+      "description": "Join owning engineering team onto passing anomaly records."
+    },
+    {
+      "step_id": "summarize_teams",
+      "node_id": "agg.group_summary",
+      "params": { "group_field": "team", "value_field": "risk_score" },
+      "description": "Aggregate flagged risk scores per team."
+    },
+    {
+      "step_id": "render_report",
+      "node_id": "format.markdown_report",
+      "params": { "title": "Tabular Anomaly Triage Report", "max_rows": 20 },
+      "description": "Render deterministic Markdown triage report."
+    }
+  ],
+  "edges": [
+    { "src_step": "ingest_events", "src_port": "rows", "dst_step": "check_contract", "dst_port": "rows" },
+    { "src_step": "check_contract", "src_port": "rows", "dst_step": "dedupe_events", "dst_port": "rows" },
+    { "src_step": "dedupe_events", "src_port": "rows", "dst_step": "impute_metrics", "dst_port": "rows" },
+    { "src_step": "impute_metrics", "src_port": "rows", "dst_step": "clamp_latency", "dst_port": "rows" },
+    { "src_step": "clamp_latency", "src_port": "rows", "dst_step": "error_rate", "dst_port": "rows" },
+    { "src_step": "error_rate", "src_port": "rows", "dst_step": "latency_z", "dst_port": "rows" },
+    { "src_step": "latency_z", "src_port": "rows", "dst_step": "score_risk", "dst_port": "rows" },
+    { "src_step": "score_risk", "src_port": "rows", "dst_step": "gate_anomalies", "dst_port": "rows" },
+    { "src_step": "gate_anomalies", "src_port": "passed", "dst_step": "enrich_owners", "dst_port": "left_rows" },
+    { "src_step": "ingest_owners", "src_port": "rows", "dst_step": "enrich_owners", "dst_port": "right_rows" },
+    { "src_step": "enrich_owners", "src_port": "rows", "dst_step": "summarize_teams", "dst_port": "rows" },
+    { "src_step": "summarize_teams", "src_port": "summary_table", "dst_step": "render_report", "dst_port": "summary_table" },
+    { "src_step": "gate_anomalies", "src_port": "gate_stats", "dst_step": "render_report", "dst_port": "headline_metrics" }
+  ]
+}

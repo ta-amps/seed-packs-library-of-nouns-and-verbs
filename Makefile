@@ -1,10 +1,12 @@
-.PHONY: check packs check-tessera
+.PHONY: check packs check-tessera check-exploitation-evidence-code
 
 # check-tessera needs a clean Tessera checkout and its Python environment, for example
 #   make check-tessera TESSERA_SRC=../tessera-checkout TESSERA_ARGS=--write
 TESSERA_SRC ?=
 TESSERA_PYTHON ?= $(TESSERA_SRC)/.venv/bin/python
 TESSERA_ARGS ?=
+# Python with the pack code's test packages (packs/exploitation-evidence/code/requirements-test.txt).
+PACK_CODE_PYTHON ?= python3
 
 check:
 	python3 scripts/validate_examples.py
@@ -19,3 +21,6 @@ packs:
 check-tessera:
 	@test -n "$(TESSERA_SRC)" || { echo "set TESSERA_SRC to a clean Tessera checkout that has a .venv" >&2; exit 2; }
 	$(TESSERA_PYTHON) scripts/validate_against_tessera.py --tessera $(TESSERA_SRC) $(TESSERA_ARGS)
+
+check-exploitation-evidence-code:
+	$(MAKE) -C packs/exploitation-evidence/code test PYTHON=$(PACK_CODE_PYTHON)

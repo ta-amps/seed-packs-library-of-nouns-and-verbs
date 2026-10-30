@@ -1,16 +1,20 @@
 {
   "pack_id": "code-composition",
   "title": "Code composition",
-  "version": "0.1.0",
-  "summary": "A collection of nouns and verbs for composing verified code without rewriting it: a pinned catalog of 18 prewritten, tested code nodes with typed contracts, three declarative recipes with digests measured at the pinned commit, and verbs to verify the tools, compose, compile, run and compare recipes, and propose new nodes for review.",
+  "version": "0.2.0",
+  "summary": "A collection of nouns and verbs for composing verified code without rewriting it: the tested code itself, a pinned catalog of 18 prewritten code nodes with typed contracts, three declarative recipes with digests measured with that code, and verbs to verify the code, compose, compile, run and compare recipes, and propose new nodes for review.",
+  "moved_from": {
+    "repository": "https://github.com/ta-amps/kothar",
+    "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078"
+  },
   "dependencies": [
     "checks-of-checks",
     "decomposition-patterns"
   ],
   "boundaries": [
-    "The pack holds contracts, digests, recipes and results, never runnable code. Workers run code only from a checkout of the tool card's pinned commit that passed verify-tools.",
+    "The pack keeps its tested code as nouns in its code folder. The library never runs that code except in CI tests; workers run it under their own permissions, only from a checkout whose code folder matches the tool card and passed verify-tools. Importing the pack runs nothing.",
     "Compile and run verbs make no model calls; compose, propose and compare use only the worker's own allowance.",
-    "A proposed node stays a candidate until a different worker or a person reviews it; adding it to the repository is the owner's decision.",
+    "A proposed node stays a candidate until a different worker or a person reviews it; adding it to the pack's code is the owner's decision.",
     "Importing the pack writes nothing and enqueues nothing."
   ],
   "nouns": [
@@ -24,11 +28,11 @@
           "Write a small declarative recipe that wires prewritten, tested code nodes together, instead of writing new code for routine data steps.",
           "Compile a recipe into a checked graph: unknown nodes, wrong port types, bad parameters, missing wiring and cycles are refused with typed diagnostics before anything runs.",
           "Run a compiled recipe with no model calls, reuse the cached results of unchanged upstream steps, and prove that the emitted standalone Python gives byte-identical outputs.",
-          "Check that a local copy of the code matches this pack's pins: commit, module digests, node digests and built-in tests.",
+          "Check that a local copy of the code matches this pack's pins: folder digest, module digests, node digests and built-in tests.",
           "Compare a baseline recipe with a variant by their receipts, and propose a reviewed new node when the catalog lacks a capability."
         ],
         "flow": [
-          "verify-tools checks a checkout of the pinned commit against the pins, once per sandbox.",
+          "verify-tools checks a library checkout's code folder against the pins, once per sandbox.",
           "compose-recipe turns a goal into a recipe candidate that compiles.",
           "compile-recipe compiles a pinned recipe and records its plan digest.",
           "run-recipe executes it with pinned inputs and records the receipt.",
@@ -36,13 +40,14 @@
           "propose-node, then review-node by a different worker or a person, when no node fits."
         ],
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "card": {
             "$pin": "tool.composition-tools"
           }
         },
-        "contains_no_code": "These nouns hold contracts, digests, recipes and results. The code stays in the repository at the pinned commit, and a worker runs it only from a checkout that passed verify-tools.",
         "related_packs": [
           {
             "pack_id": "checks-of-checks",
@@ -57,16 +62,7 @@
             "use": "Trial another composition tool against this one with a comparable trial."
           }
         ],
-        "provenance_notes": [
-          {
-            "kind": "source_repository",
-            "id": "source",
-            "repository": "https://github.com/ta-amps/kothar",
-            "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
-            "plain_name": "https://github.com/ta-amps/code-composition-tools",
-            "note": "This pack was moved from that repository at that commit on 2026-10-29. The code stays in the repository; the tool card uses its plain name."
-          }
-        ]
+        "code_as_nouns": "The tested code lives in this pack's code folder as nouns, pinned by the folder digest that the manifest also lists. The library never runs it except in CI tests; a worker runs it under its own permissions, only from a checkout that passed verify-tools. Importing the pack runs nothing."
       },
       "relations": [
         [
@@ -212,30 +208,31 @@
       "category": "noun.code_node",
       "role": "tool_card",
       "title": "Tool card: code composition tools",
-      "category_reason": "A tool card pins an outside repository's identity, license, interfaces and checks for the verbs that run it.",
+      "category_reason": "A tool card pins the code's identity, license, interfaces and checks for the verbs that run it.",
       "value": {
         "name": "Code composition tools",
-        "source": "https://github.com/ta-amps/code-composition-tools",
+        "source": "https://github.com/ta-amps/pack-contributions/tree/main/packs/code-composition/code",
         "tool_license": {
           "spdx": "MIT",
-          "how_to_determine": "Read LICENSE and pyproject.toml at the pinned commit."
+          "how_to_determine": "Read pyproject.toml in the code folder and the library's LICENSE."
         },
         "pin": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078"
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          }
         },
-        "pin_reason": "Every digest in this pack was measured at this commit. Any other commit is a different tool until a new pack version pins it and verify-tools passes.",
-        "address_note": "This is the repository's plain address. If it does not resolve, end blocked and say so; do not substitute another address. The commit is what must match.",
+        "pin_reason": "The code lives in this pack, so it is pinned by content, not by commit. Every digest in this pack was measured on the files that folder.sha256 covers. A code folder with another digest is a different tool until a new pack version pins it and verify-tools passes.",
+        "folder_rule": "folder.sha256 is the library's pack-code digest: SHA-256 of `pack-code-v1` and a NUL byte, then the canonical JSON of the sorted [path, file SHA-256] pairs of every file under the code folder, skipping caches, virtual environments, build output and egg-info. The library build computes it from the files and the pack manifest repeats it, so a pin that no longer matches the code fails make check. To recompute it from a checkout's root: python3 -c \"import sys; sys.path.insert(0, 'scripts'); import build_packs as b; from pathlib import Path; print(b.code_digest(Path('packs/code-composition')))\"",
+        "address_note": "Use a checkout of this library whose code folder matches folder.sha256. If none does, end blocked and say so; do not substitute another source. The folder digest is what must match.",
         "package_path_rule": "Module names in this pack, such as compiler.py, are relative to the import package that pyproject.toml lists under [tool.hatch.build.targets.wheel] packages.",
         "requires": {
           "python": ">=3.12",
           "dependencies": [
             "pydantic>=2.9",
-            "httpx>=0.27",
-            "fastapi>=0.115",
-            "uvicorn>=0.30"
+            "httpx>=0.27"
           ],
-          "lockfile": "uv.lock at the pinned commit; install with uv sync --locked --all-groups.",
+          "lockfile": "uv.lock in the code folder; install with uv sync --locked --all-groups there.",
           "tessera_for_integration": {
             "repository": "https://github.com/ta-amps/tessera",
             "commit": "55458514e84eaf1e524637c3bd04916ebb4b3c35",
@@ -248,7 +245,7 @@
           "Execute a compiled plan with a sub-graph cache and a SHA-256 receipt (runtime.DeterministicRuntime.execute).",
           "List, verify and register prewritten nodes in a SQLite node database (registry.NodeDatabase).",
           "Check one claimed seed task against its pins before running it (seed_worker.execute_seed_task).",
-          "Export the repository's own Tessera-shaped seed nouns and tasks as an offline preview document (seed_pack.build_seed_pack)."
+          "Export the code's own Tessera-shaped seed nouns and tasks as an offline preview document (seed_pack.build_seed_pack)."
         ],
         "interfaces": {
           "python": [
@@ -258,50 +255,41 @@
             "registry.NodeDatabase",
             "seed_worker.execute_seed_task"
           ],
-          "command_line": "The console script that pyproject.toml declares under [project.scripts], with subcommands init, nodes, verify-nodes, seed-pack, compile, run, compose, demo and serve.",
+          "command_line": "The code-composition console script that pyproject.toml declares under [project.scripts], with subcommands init, nodes, verify-nodes, seed-pack, compile, run, compose and demo.",
           "make_targets": {
-            "setup": "uv sync --all-groups",
-            "lint": "ruff check and ruff format --check",
-            "types": "mypy in strict mode",
-            "test": "pytest",
-            "public": "secret and private-name scan",
-            "architecture": "architecture.json must match the code",
+            "setup": "uv sync --locked --all-groups",
+            "check": "ruff check, ruff format --check, mypy in strict mode and pytest",
             "demo": "verify all 18 nodes, compile and run the 3 recipes with the Python equivalence check, and show cached prefix reuse",
-            "tessera-integration": "the seed export against Tessera's real models, with TESSERA_DIR set to a prepared Tessera checkout",
-            "index-check": "freshness of the generated repository indexes"
+            "tessera-integration": "the seed export against Tessera's real models, with TESSERA_DIR set to a prepared Tessera checkout"
           }
         },
         "checks": [
           {
-            "command": "make lint types test public architecture demo",
-            "result_at_pin": "pass; pytest reports 51 passed and 2 skipped on Python 3.12.13 and 3.13.13 (the 2 Tessera tests skip without Tessera's environment)"
+            "command": "make check demo, in the code folder",
+            "result_at_pin": "pass; pytest reports 41 passed and 2 skipped on Python 3.12.13 and 3.13.13 (the 2 Tessera tests skip without Tessera's environment)"
           },
           {
-            "command": "make tessera-integration TESSERA_DIR=<Tessera checkout at the commit above>",
+            "command": "make tessera-integration TESSERA_DIR=<Tessera checkout at the commit above>, in the code folder",
             "result_at_pin": "pass; 2 passed"
           },
           {
-            "command": "make index-check",
-            "result_at_pin": "fails in a clone whose folder name or origin address differs from the original, because the generated indexes embed both. It checks index freshness, not behavior; record it as expected_failure."
+            "command": "make check, in the library",
+            "result_at_pin": "pass; the build recomputes the folder digest from the files, and the code's own tests, run by its CI job, check the runtime, node and recipe pins against the code"
           }
         ],
-        "measured": "Measured on October 29, 2026 by the pack author in fresh local clones on Linux, with Python 3.12.13 and 3.13.13 giving identical digests. This is not independent verification.",
+        "measured": "Measured on October 29, 2026 by the pack author in a library checkout on Linux, with Python 3.12.13 and 3.13.13 giving identical digests. A path-filtered CI job reruns these checks on every change to this pack. This is not independent verification.",
         "cautions": [
-          "Run code only from a checkout of the pinned commit that passed verify-tools. Never execute source code copied out of a noun.",
+          "Run code only from a checkout whose code folder matches folder.sha256 and passed verify-tools. Never execute source code copied out of a noun.",
           "Node code and emitted Python run in the worker's own Python process; this is not a security sandbox.",
-          "Every subcommand except seed-pack creates or migrates a SQLite file at its --db path, and without --db uses a default path under the current directory; seed-pack opens an existing file read-only. Pass a path inside the task workspace.",
-          "The compose subcommand calls a model endpoint when the model variables in docs/setup.md are set, and looks up earlier recipes in a Tessera deployment whenever TESSERA_URL is set, even with --offline. The verbs in this pack need neither; leave both unset.",
-          "The serve subcommand starts a local HTTP service. The verbs in this pack do not use it.",
-          "At the pinned commit the import package, command, environment variables and some strings still carry the repository's former name. Refer to them by role, as this card does."
+          "Every subcommand except seed-pack creates or migrates a SQLite file at its --db path, and without --db uses CODE_COMPOSITION_DB or a default path under the current directory; seed-pack opens an existing file read-only. Pass a path inside the task workspace.",
+          "The compose subcommand calls a model endpoint when CODE_COMPOSITION_LLM_BASE_URL is set, and looks up earlier recipes in a Tessera deployment whenever TESSERA_URL is set, even with --offline. The verbs in this pack need neither; leave both unset.",
+          "Seed export provenance reads the library checkout's HEAD only when the code sits at the pinned path; a copy anywhere else must pass --source-commit."
         ],
-        "install_policy": "This card installs nothing. A worker clones the pinned commit and installs its locked dependencies in its own task workspace under its execution policy.",
+        "install_policy": "This card installs nothing. A worker checks out the library, confirms the code folder's digest and installs its locked dependencies in its own task workspace under its execution policy.",
         "docs": [
-          "https://github.com/ta-amps/code-composition-tools/blob/6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078/README.md",
-          "https://github.com/ta-amps/code-composition-tools/blob/6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078/docs/architecture.md",
-          "https://github.com/ta-amps/code-composition-tools/blob/6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078/docs/summary.md",
-          "https://github.com/ta-amps/code-composition-tools/blob/6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078/docs/seed-packs.md",
-          "https://github.com/ta-amps/code-composition-tools/blob/6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078/docs/setup.md",
-          "https://github.com/ta-amps/code-composition-tools/blob/6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078/examples/recipes/README.md"
+          "https://github.com/ta-amps/pack-contributions/blob/main/packs/code-composition/README.md",
+          "https://github.com/ta-amps/pack-contributions/blob/main/packs/code-composition/code/README.md",
+          "https://github.com/ta-amps/pack-contributions/blob/main/packs/code-composition/code/examples/recipes/README.md"
         ],
         "used_by": [
           {
@@ -332,12 +320,14 @@
       "slug": "runtime",
       "category": "noun.code_node",
       "role": "runtime_manifest",
-      "title": "Compiler and runtime: entry points, checks and module digests at the pinned commit",
+      "title": "Compiler and runtime: entry points, checks and module digests of the pinned code",
       "category_reason": "Pins the exact compiler and runtime modules that every compile and run verb must use.",
       "value": {
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078"
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          }
         },
         "entry_points": [
           "compiler.DeterministicCompiler.compile",
@@ -345,17 +335,17 @@
           "runtime.DeterministicRuntime.execute"
         ],
         "module_sha256": {
-          "compiler.py": "9df2243aca9e0ce2bde4e82e1ec3f3a4df4fd248e7efa4ff7d91d862f2bf8b27",
-          "errors.py": "a851926de4f3e56d6321ce2d811aa1f86932e0fa2daa28b327914e636de29f3c",
-          "public_limits.py": "918f7c4b4254265cbd674c7241b46d69577b3a990ede67078396d0ae70019cf8",
-          "registry.py": "c66530fe4e49d3a212a4bfd1637642e41443e3202718e2b67e7a924cb17c9c73",
-          "runtime.py": "f35478b8729f7411695fc1caabccd5a1b384d7953e15023b960f2be1a8ee45fc",
+          "compiler.py": "481335073a73015822905bdd5033c72fca6d30571586af06b23fd4356d7fbcd0",
+          "errors.py": "c35453098e6271a0800dda655d8cf1e93f40303417415e538dc00748e5e0a308",
+          "public_limits.py": "a02d48edb97537eca6303e5948e19ff5aec8a30e3031b62038f00270e6c4c9df",
+          "registry.py": "cee27cba94fcef1db9b2c5f9bd0e2f3a4f39a76a409433e2e6756e6a05e95d2d",
+          "runtime.py": "0e4d8895a8e7dc45075249559c87936f47171676d654d34b5c59be546c33a25c",
           "schemas.py": "63b64f41774bf155d2c26bdcb484aeea733e6677999977931554e74db47b293a"
         },
-        "digest_rule": "SHA-256 of each module file's bytes with CRLF line endings normalized to LF. The repository's seed_worker module applies the same rule before it runs a seed task.",
+        "digest_rule": "SHA-256 of each module file's bytes with CRLF line endings normalized to LF. The code's seed_worker module applies the same rule before it runs a seed task, and the code's own tests check these pins in CI.",
         "compile_checks": [
           "Every step names a node in the node database; an unknown node id gets a close-match suggestion (node_not_found).",
-          "Governance lens: the node's source matches its code_sha256, the node carries the repository's own verified status tag and no quarantine tag, and its SPDX license is one of Apache-2.0, BSD-3-Clause, CC0-1.0, MIT (node_governance_failed).",
+          "Governance lens: the node's source matches its code_sha256, the node carries the code's own verified status tag and no quarantine tag, and its SPDX license is one of Apache-2.0, BSD-3-Clause, CC0-1.0, MIT (node_governance_failed).",
           "Parameters: unknown names are refused, int refuses booleans, numeric bounds and string choices are enforced, and a required parameter without a default must be set (parameter_constraint_failed).",
           "Edges: both ports exist, with a suggestion on a typo (port_not_found); source and destination port types are exactly equal (port_type_mismatch); an input port takes at most one edge (duplicate_input_wiring).",
           "Unwired inputs of root steps, and inputs listed in external_inputs as step.port, become graph entry inputs; an unwired required input on any other step is refused with its compatible upstream outputs (missing_required_input).",
@@ -387,8 +377,10 @@
       "category_reason": "The catalog is the vocabulary a recipe may use: tool bindings with typed signatures.",
       "value": {
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078"
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          }
         },
         "port_types": {
           "records": "a list of objects",
@@ -582,11 +574,11 @@
           ]
         },
         "token_estimate_at_pin": {
-          "signature_chars": 4323,
+          "signature_chars": 4316,
           "raw_source_chars": 22476,
-          "signature_tokens_est": 1081,
+          "signature_tokens_est": 1079,
           "raw_source_tokens_est": 5619,
-          "method": "The repository's own catalog statistics at the pinned commit; tokens are estimated as characters divided by 4."
+          "method": "The code's own catalog statistics with the pinned code; tokens are estimated as characters divided by 4."
         }
       },
       "relations": [
@@ -680,11 +672,11 @@
           "Read signatures, not source: the catalog's one-line signatures are enough to write a recipe.",
           "Compile before running. The compiler refuses unknown nodes, wrong port types, bad parameters, missing wiring and cycles with a typed error code, the step, the port and often a suggestion.",
           "Repair from diagnostics: change the step, port or parameter the compiler names. Never work around a refusal by writing code into a recipe or a node.",
-          "Run only pinned, verified code: a checkout of the tool card's commit that passed verify-tools. Never execute source code copied out of a noun.",
+          "Run only pinned, verified code: a checkout whose code folder matches the tool card's folder digest and passed verify-tools. Never execute source code copied out of a noun.",
           "Runs make no model calls, and every receipt shows it.",
-          "Pin everything: tool commit, node digests, recipe digest and input digest. A change to any of them is a new run, not an update to an old receipt.",
+          "Pin everything: tool folder digest, node digests, recipe digest and input digest. A change to any of them is a new run, not an update to an old receipt.",
           "Change one thing at a time. A variant that keeps upstream steps unchanged reuses their cached outputs, so the comparison is cheap and its differences are attributable.",
-          "Grow the catalog deliberately. When no node fits, propose one with exact-value tests; a different worker or a person reviews it, and adding it to the repository is the owner's decision."
+          "Grow the catalog deliberately. When no node fits, propose one with exact-value tests; a different worker or a person reviews it, and adding it to the pack's code is the owner's decision."
         ],
         "repair_codes": {
           "node_not_found": "Use a catalog node id; the diagnostic suggests the closest one.",
@@ -760,8 +752,10 @@
         ],
         "function_name": "node_ingest_csv_rows",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "8f6a01cec2e2c7514e0b578b58b2ec4c5b9fbd9786c35cd0d6e4fed6534dcf20",
           "source_lines": 37
@@ -840,8 +834,10 @@
         ],
         "function_name": "node_clean_dedupe_by_key",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "ce12ccb08e0b6aa4e3576dba816f43df875758e68c1be5a49741a1acf5eed74e",
           "source_lines": 27
@@ -929,8 +925,10 @@
         ],
         "function_name": "node_clean_impute_numeric",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "558f7cbc0d6428bebea826dd02539328efbd36d0f7c674b2535d9d09a5a50d6f",
           "source_lines": 40
@@ -1016,8 +1014,10 @@
         ],
         "function_name": "node_clean_winsorize_outliers",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "d2c65e712754e091f70d8833e2a36000442204402171336b50938c3258a3343d",
           "source_lines": 49
@@ -1106,8 +1106,10 @@
         ],
         "function_name": "node_feature_ratio_column",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "7623a86d7f774a0da83f23dc62413325cbaa4a2a627a2f3838877a03e8e05c15",
           "source_lines": 20
@@ -1191,8 +1193,10 @@
         ],
         "function_name": "node_feature_rolling_zscore",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "7d78a7bf2559b0abb9dae2a00102a604c0203f064a87ab6e879ad6a196ed90e5",
           "source_lines": 25
@@ -1267,8 +1271,10 @@
         ],
         "function_name": "node_text_normalize_whitespace",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "d734197b1bd36e19863b2b32e296c660568c8520e491796f003b5457138afd74",
           "source_lines": 27
@@ -1342,8 +1348,10 @@
         ],
         "function_name": "node_text_regex_extract",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "574f723411a467c47213744ec8dba97674fe042a797bb8fa46db09e1468f3c7c",
           "source_lines": 29
@@ -1436,8 +1444,10 @@
         ],
         "function_name": "node_filter_threshold_gate",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "dd4bdce30f000d468f32f9ac9b42ddb4dbebf9cb2264fd3645bf45f3a9971d7a",
           "source_lines": 35
@@ -1529,8 +1539,10 @@
         ],
         "function_name": "node_join_keyed_enrich",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "407c9086f2cf17d5de483e220a330ffc995187cb0efdf64e55c041b064522072",
           "source_lines": 40
@@ -1620,8 +1632,10 @@
         ],
         "function_name": "node_model_linear_risk_score",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "cdc2934bb2c7d9779ad4d4ce38d63e9b3cfd964488c4ff0a48a53768298fd266",
           "source_lines": 34
@@ -1712,8 +1726,10 @@
         ],
         "function_name": "node_model_keyword_weighted_score",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "22274b95aad1180c92d79c16e5581eb4bbf421d164d8c22abd95d73bb590dc4b",
           "source_lines": 20
@@ -1796,8 +1812,10 @@
         ],
         "function_name": "node_validate_schema_contract",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "ce23196d7a1eb6149c5d01da62c52332ab0d428ee8326e3eb764ed7abe13d7c4",
           "source_lines": 33
@@ -1885,8 +1903,10 @@
         ],
         "function_name": "node_validate_holdout_split",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "6f2e82304825ed01c41e0bf676f053cee928c1e8ea7085b99c6cd64362e5e7e2",
           "source_lines": 36
@@ -1965,8 +1985,10 @@
         ],
         "function_name": "node_eval_binary_metrics",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "2fe1605b34f6b9a739274c476b55707c456cd558a8aeb4001582969397c0cd94",
           "source_lines": 48
@@ -2074,8 +2096,10 @@
         ],
         "function_name": "node_eval_shrinkage_select",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "584854abcc0623604c6c6c29549bf00eb529774178911ce43ebb23700acaedb0",
           "source_lines": 47
@@ -2148,8 +2172,10 @@
         ],
         "function_name": "node_agg_group_summary",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "f7043f84a8805e035ecfb94590c3a14dbd5fdb93ba053a8b945ea7619dec8da6",
           "source_lines": 32
@@ -2240,8 +2266,10 @@
         ],
         "function_name": "node_format_markdown_report",
         "code": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "folder": {
+            "$code": "code-composition"
+          },
           "module": "seed_nodes.py",
           "code_sha256": "11c195fa0d91473282ab4c974cdcb3071ed65a56ac108fea0787926fb1c4cba6",
           "source_lines": 31
@@ -2499,23 +2527,16 @@
           ],
           "title": "Holdout A/B Candidate Model Selection with Shrinkage"
         },
-        "recipe_form": "Whole-number floats are written as integers, as Tessera stores them. The compiler reads both forms the same way, but the recipe and plan digests differ from the repository file's, so both are listed.",
+        "recipe_form": "Whole-number floats are written as integers, as Tessera stores them. The compiler reads both forms the same way, but the recipe and plan digests differ from the code folder file's, so both are listed.",
         "as_stored_here": {
           "recipe_sha256": "ddd0dc03c95619ab7dbd40da494d6925554ca7cb5384418b9ca1a2342e1f0c74",
           "plan_sha256": "be45b452d1cdbea8c072589f641635752e9e6f9f7341e2e46efaeb9efcb9704b",
-          "emitted_python_sha256": "ac62d19740180368229650da1f6c561d78564ca992337e4ace02eb1ec8f97d17"
-        },
-        "as_in_the_repository_file": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
-          "path": "examples/recipes/ab-candidate-selection.json",
-          "file_sha256": "6d2883519d97dd5c56ea747dc86bc2a39e8d815cd6f352409b13fc085725eaab",
-          "recipe_sha256": "8d88b6eabda350f10c5adb4f81072d538f35d072b86bdda12938233853744c4f",
-          "plan_sha256": "7a0f9ea316c2269b525059748866af345c0dcf609062067400bea26b64da2c0d"
+          "emitted_python_sha256": "75021a5f098f7ef7dcbce3867eafb0657c44c47ca7c56143b2148bb1c9895e07"
         },
         "digest_rules": {
           "recipe_sha256": "SHA-256 of the recipe's canonical JSON (sorted keys, no spaces), as the compiler records it.",
-          "sample_inputs_sha256": "SHA-256 of the sample inputs' canonical JSON (sorted keys, no spaces)."
+          "sample_inputs_sha256": "SHA-256 of the sample inputs' canonical JSON (sorted keys, no spaces).",
+          "file_sha256": "SHA-256 of the recipe file in the code folder with CRLF normalized to LF; the code's own tests check it in CI."
         },
         "compiled_at_pin": {
           "steps": 12,
@@ -2580,7 +2601,14 @@
           "python_equivalence_verified": true,
           "llm_tokens_at_runtime": 0
         },
-        "measured": "Compiled and run twice in fresh in-memory databases at the pinned commit on October 29, 2026, on Python 3.12.13 and 3.13.13, with identical digests. The digests as stored here also match the repository's own seed export at that commit."
+        "measured": "Compiled and run twice in fresh in-memory databases with the pinned code on October 29, 2026, on Python 3.12.13 and 3.13.13, with identical digests. The recipe, plan, input, output and receipt digests are the same as before the code lost its former name; only the emitted module digest changed, because its header named it. The plan digests as stored here also match the code's own seed export.",
+        "as_in_the_code_folder": {
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "path": "packs/code-composition/code/examples/recipes/ab-candidate-selection.json",
+          "file_sha256": "6d2883519d97dd5c56ea747dc86bc2a39e8d815cd6f352409b13fc085725eaab",
+          "recipe_sha256": "8d88b6eabda350f10c5adb4f81072d538f35d072b86bdda12938233853744c4f",
+          "plan_sha256": "7a0f9ea316c2269b525059748866af345c0dcf609062067400bea26b64da2c0d"
+        }
       },
       "relations": [
         [
@@ -2760,23 +2788,16 @@
           ],
           "title": "Unstructured Incident Log Signal Digest"
         },
-        "recipe_form": "Whole-number floats are written as integers, as Tessera stores them. The compiler reads both forms the same way, but the recipe and plan digests differ from the repository file's, so both are listed.",
+        "recipe_form": "Whole-number floats are written as integers, as Tessera stores them. The compiler reads both forms the same way, but the recipe and plan digests differ from the code folder file's, so both are listed.",
         "as_stored_here": {
           "recipe_sha256": "10d432fd071f160a53cfca699d28a4544f8c8c26b873db52e47bdd4638059561",
           "plan_sha256": "522432d0778c6ead3258efe5d2ab00332d3114e9856893779d40d1a4f09c80a7",
-          "emitted_python_sha256": "5e3fc037feefb9a3beeee1f6db412428ed6fac986db29f7946efbcdbee67c046"
-        },
-        "as_in_the_repository_file": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
-          "path": "examples/recipes/document-signal-digest.json",
-          "file_sha256": "563192f4783c9dbf6e2d03096a974dce19d929386ce66abe3faaa2e18dbdd273",
-          "recipe_sha256": "7c192d58186803f91aff932b85f505fa5b21cb2b71da11276cefdd54b956b989",
-          "plan_sha256": "023b572aadc152a9d281ef87dbea0a560d5508e9064b22fa201c4f99813bda99"
+          "emitted_python_sha256": "ce41ee2fbe44c142374e350472ab853fa95faa0ce8386d37e917c5f5c14c7087"
         },
         "digest_rules": {
           "recipe_sha256": "SHA-256 of the recipe's canonical JSON (sorted keys, no spaces), as the compiler records it.",
-          "sample_inputs_sha256": "SHA-256 of the sample inputs' canonical JSON (sorted keys, no spaces)."
+          "sample_inputs_sha256": "SHA-256 of the sample inputs' canonical JSON (sorted keys, no spaces).",
+          "file_sha256": "SHA-256 of the recipe file in the code folder with CRLF normalized to LF; the code's own tests check it in CI."
         },
         "compiled_at_pin": {
           "steps": 7,
@@ -2830,7 +2851,14 @@
           "python_equivalence_verified": true,
           "llm_tokens_at_runtime": 0
         },
-        "measured": "Compiled and run twice in fresh in-memory databases at the pinned commit on October 29, 2026, on Python 3.12.13 and 3.13.13, with identical digests. The digests as stored here also match the repository's own seed export at that commit."
+        "measured": "Compiled and run twice in fresh in-memory databases with the pinned code on October 29, 2026, on Python 3.12.13 and 3.13.13, with identical digests. The recipe, plan, input, output and receipt digests are the same as before the code lost its former name; only the emitted module digest changed, because its header named it. The plan digests as stored here also match the code's own seed export.",
+        "as_in_the_code_folder": {
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "path": "packs/code-composition/code/examples/recipes/document-signal-digest.json",
+          "file_sha256": "563192f4783c9dbf6e2d03096a974dce19d929386ce66abe3faaa2e18dbdd273",
+          "recipe_sha256": "7c192d58186803f91aff932b85f505fa5b21cb2b71da11276cefdd54b956b989",
+          "plan_sha256": "023b572aadc152a9d281ef87dbea0a560d5508e9064b22fa201c4f99813bda99"
+        }
       },
       "relations": [
         [
@@ -3101,23 +3129,16 @@
           ],
           "title": "Tabular Telemetry Anomaly Triage with Owner Enrichment"
         },
-        "recipe_form": "Whole-number floats are written as integers, as Tessera stores them. The compiler reads both forms the same way, but the recipe and plan digests differ from the repository file's, so both are listed.",
+        "recipe_form": "Whole-number floats are written as integers, as Tessera stores them. The compiler reads both forms the same way, but the recipe and plan digests differ from the code folder file's, so both are listed.",
         "as_stored_here": {
           "recipe_sha256": "0f2cd1a8a4cc97c475495b0751dc3d0fe34da0eac9b362f7045a36f63b41d273",
           "plan_sha256": "3b44769bcaea94364484c352a42246ab11c92d3a302af691293a35ad24f85839",
-          "emitted_python_sha256": "05f815265c2c834948a5d4b0018906cb74211119e70bb411cbffcd1e3f0c3c29"
-        },
-        "as_in_the_repository_file": {
-          "repository": "https://github.com/ta-amps/code-composition-tools",
-          "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
-          "path": "examples/recipes/tabular-anomaly-triage.json",
-          "file_sha256": "69bb5aa2e1beede60f9dc43ba14d63cde518f9517f2ad9d6c792682dacca7c16",
-          "recipe_sha256": "71b6a9b3deea70783e055cf69ad172f907502ec6a8baa9cfb367bcb3cdfa8832",
-          "plan_sha256": "a712747079bfc80bc00871509acabf5d859cc6e4891bbb9078dc4da65fe23e48"
+          "emitted_python_sha256": "a4314407dd223b762ccf6fe8e6ce693c6dcaa13482734453f3c9908eb8d8040b"
         },
         "digest_rules": {
           "recipe_sha256": "SHA-256 of the recipe's canonical JSON (sorted keys, no spaces), as the compiler records it.",
-          "sample_inputs_sha256": "SHA-256 of the sample inputs' canonical JSON (sorted keys, no spaces)."
+          "sample_inputs_sha256": "SHA-256 of the sample inputs' canonical JSON (sorted keys, no spaces).",
+          "file_sha256": "SHA-256 of the recipe file in the code folder with CRLF normalized to LF; the code's own tests check it in CI."
         },
         "compiled_at_pin": {
           "steps": 13,
@@ -3190,7 +3211,14 @@
           "python_equivalence_verified": true,
           "llm_tokens_at_runtime": 0
         },
-        "measured": "Compiled and run twice in fresh in-memory databases at the pinned commit on October 29, 2026, on Python 3.12.13 and 3.13.13, with identical digests. The digests as stored here also match the repository's own seed export at that commit."
+        "measured": "Compiled and run twice in fresh in-memory databases with the pinned code on October 29, 2026, on Python 3.12.13 and 3.13.13, with identical digests. The recipe, plan, input, output and receipt digests are the same as before the code lost its former name; only the emitted module digest changed, because its header named it. The plan digests as stored here also match the code's own seed export.",
+        "as_in_the_code_folder": {
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "path": "packs/code-composition/code/examples/recipes/tabular-anomaly-triage.json",
+          "file_sha256": "69bb5aa2e1beede60f9dc43ba14d63cde518f9517f2ad9d6c792682dacca7c16",
+          "recipe_sha256": "71b6a9b3deea70783e055cf69ad172f907502ec6a8baa9cfb367bcb3cdfa8832",
+          "plan_sha256": "a712747079bfc80bc00871509acabf5d859cc6e4891bbb9078dc4da65fe23e48"
+        }
       },
       "relations": [
         [
@@ -3259,7 +3287,7 @@
           "additionalProperties": false,
           "required": [
             "recipe",
-            "tool_commit",
+            "tool_code",
             "compile"
           ],
           "properties": {
@@ -3366,9 +3394,30 @@
                 }
               }
             },
-            "tool_commit": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{40}$"
+            "tool_code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "files",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
             },
             "compile": {
               "type": "object",
@@ -3446,7 +3495,7 @@
           "additionalProperties": false,
           "required": [
             "recipe_ref",
-            "tool_commit",
+            "tool_code",
             "valid",
             "replay_identical",
             "model_calls"
@@ -3457,9 +3506,30 @@
               "minLength": 1,
               "maxLength": 300
             },
-            "tool_commit": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{40}$"
+            "tool_code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "files",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
             },
             "valid": {
               "type": "boolean"
@@ -3648,7 +3718,7 @@
           "additionalProperties": false,
           "required": [
             "recipe_ref",
-            "tool_commit",
+            "tool_code",
             "plan_sha256",
             "input_sha256",
             "output_sha256",
@@ -3672,9 +3742,30 @@
               ],
               "maxLength": 300
             },
-            "tool_commit": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{40}$"
+            "tool_code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "files",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
             },
             "plan_sha256": {
               "type": "string",
@@ -3776,13 +3867,13 @@
       "role": "template",
       "title": "Template: a check of one checkout against the tool card's commit, the runtime's module digests and the catalog's nodes",
       "value": {
-        "describes": "a check of one checkout against the tool card's commit, the runtime's module digests and the catalog's nodes",
+        "describes": "a check of one library checkout's code folder against the tool card's folder digest, the runtime's module digests and the catalog's nodes",
         "schema": {
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "tool_commit",
-            "head_matches",
+            "tool_code",
+            "code_matches",
             "working_tree_clean",
             "module_digests",
             "nodes",
@@ -3794,11 +3885,36 @@
               "type": "string",
               "maxLength": 200
             },
-            "tool_commit": {
+            "library_commit": {
               "type": "string",
               "pattern": "^[0-9a-f]{40}$"
             },
-            "head_matches": {
+            "tool_code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "files",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "code_matches": {
               "type": "boolean"
             },
             "working_tree_clean": {
@@ -3959,9 +4075,8 @@
           }
         },
         "rules": [
-          "head_matches compares the checkout's HEAD with the tool card's commit.",
-          "Module digests use the runtime noun's digest rule; node digests use the catalog's code digest rule.",
-          "index-check in a clone with a different folder name or origin address is recorded as expected_failure, with that reason."
+          "code_matches compares the code folder's digest, computed with the tool card's folder rule, with the tool card's folder.sha256; library_commit records which commit was checked out.",
+          "Module digests use the runtime noun's digest rule; node digests use the catalog's code digest rule."
         ]
       }
     },
@@ -3978,7 +4093,7 @@
           "required": [
             "baseline_ref",
             "variant_ref",
-            "tool_commit",
+            "tool_code",
             "changed_steps",
             "shared_steps",
             "variant_memo_hits",
@@ -3999,9 +4114,30 @@
               "minLength": 1,
               "maxLength": 300
             },
-            "tool_commit": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{40}$"
+            "tool_code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "files",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
             },
             "changed_steps": {
               "type": "array",
@@ -4109,7 +4245,7 @@
             "spdx_license",
             "test_cases",
             "why_needed",
-            "tool_commit"
+            "tool_code"
           ],
           "properties": {
             "node_id": {
@@ -4335,9 +4471,30 @@
                 "maxLength": 300
               }
             },
-            "tool_commit": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{40}$"
+            "tool_code": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "files",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "files": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10000
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
             },
             "local_tests": {
               "type": "object",
@@ -4360,7 +4517,7 @@
           }
         },
         "rules": [
-          "The author never adds the repository's verified status tag; only the repository's own review can.",
+          "The author never adds the code's verified status tag; only the library's own review can.",
           "code_sha256 recomputes from source_code with the catalog's code digest rule.",
           "At least one test case has exact expected output values.",
           "The function is pure: no network, files, processes, clocks or randomness."
@@ -4458,7 +4615,7 @@
         },
         "rules": [
           "The reviewer is not the proposal's author.",
-          "accept means the owner may add the node through the repository's own change review; these notes change nothing by themselves."
+          "accept means the owner may add the node to the pack's code through the library's own change review; these notes change nothing by themselves."
         ]
       }
     },
@@ -4476,8 +4633,10 @@
           "baseline_ref": {
             "$key": "recipe.ab-candidate-selection"
           },
-          "variant_ref": "The baseline with score_arm_b changed, as in the repository's demo",
-          "tool_commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
+          "variant_ref": "The baseline with score_arm_b changed, as in the code's demo",
+          "tool_code": {
+            "$code": "code-composition"
+          },
           "changed_steps": [
             {
               "step_id": "score_arm_b",
@@ -4518,7 +4677,7 @@
           ],
           "finding": "The variant reused the 7 upstream steps it shares with the baseline and executed only the changed arm and the 4 steps downstream of it."
         },
-        "reading": "Measured at the pinned commit with the recipe's synthetic sample inputs, baseline first and variant second in one fresh cache. The inputs are synthetic, so the numbers show reuse, not model quality."
+        "reading": "Measured with the pinned code and the recipe's synthetic sample inputs, baseline first and variant second in one fresh cache. The inputs are synthetic, so the numbers show reuse, not model quality."
       },
       "relations": [
         [
@@ -4532,11 +4691,11 @@
     {
       "slug": "verify-tools",
       "kind": "verb.verify_gate",
-      "title": "Verify a checkout of the pinned tools",
+      "title": "Verify the pinned code in a library checkout",
       "claimant": "agent",
       "model_use": "none",
-      "summary": "Check a fresh checkout of the tool card's commit against this pack's pins and run the repository's own checks, before any compile or run verb relies on it.",
-      "outcome": "A verification report: commit, module digests, node digests and tests, and each repository check with its result.",
+      "summary": "Check the code folder of a fresh library checkout against this pack's pins and run the code's own checks, before any compile or run verb relies on it.",
+      "outcome": "A verification report: folder digest, module digests, node digests and tests, and each check with its result.",
       "ready_outcome": "tools_verified",
       "pinned": [
         "tool.composition-tools",
@@ -4549,7 +4708,7 @@
             "type": "boolean"
           },
           "default": false,
-          "description": "Also run the repository's Tessera integration check with Tessera at the commit the tool card names."
+          "description": "Also run the code's Tessera integration check with Tessera at the commit the tool card names."
         }
       },
       "produces": [
@@ -4559,14 +4718,13 @@
         }
       ],
       "steps": [
-        "Verify the pins, clone the tool card's repository into the task workspace and check out the pinned commit.",
-        "Require HEAD to equal the pinned commit and the working tree to be clean; otherwise end blocked.",
-        "Install the locked dependencies with uv sync --locked --all-groups inside the workspace.",
+        "Verify the pins and check out the library into the task workspace.",
+        "Compute the code folder's digest with the tool card's folder rule; require it to equal folder.sha256 and the working tree to be clean, otherwise end blocked.",
+        "Install the locked dependencies with uv sync --locked --all-groups in the code folder.",
         "Hash each module the runtime noun lists with its digest rule and compare every digest with its pin.",
         "Load the packaged node catalog in an in-memory database. Compare each node's code_sha256, ports and parameters with its node noun, comparing numbers by value and a parameter marked default_set_in_code by name and type only, then run every node's built-in tests.",
-        "Run make lint, types, test, public, architecture and demo, and record each result with the last lines of its output.",
-        "Record make index-check as expected_failure when the clone's folder name or origin address differs from the original, with that reason.",
-        "When run_tessera_integration is true, prepare Tessera at the tool card's Tessera commit with uv sync --locked --all-extras and run make tessera-integration with TESSERA_DIR set to that checkout."
+        "Run make check and make demo in the code folder, and record each result with the last lines of its output.",
+        "When run_tessera_integration is true, prepare Tessera at the tool card's Tessera commit with uv sync --locked --all-extras and run make tessera-integration in the code folder with TESSERA_DIR set to that checkout."
       ],
       "acceptance": [
         {
@@ -4575,8 +4733,8 @@
           "method": "deterministic"
         },
         {
-          "id": "commit-matches",
-          "check": "head_matches and working_tree_clean are both true.",
+          "id": "code-matches",
+          "check": "code_matches and working_tree_clean are both true.",
           "method": "deterministic"
         },
         {
@@ -4591,7 +4749,7 @@
         },
         {
           "id": "checks-pass",
-          "check": "lint, types, test, public, architecture and demo each report pass.",
+          "check": "make check and make demo in the code folder each report pass.",
           "method": "deterministic"
         }
       ],
@@ -4600,7 +4758,7 @@
       },
       "network": [
         "sandbox_packages",
-        "Clone the pinned repository from GitHub and install its locked packages from PyPI into the task sandbox; with run_tessera_integration, also clone Tessera at its pinned commit. No other hosts."
+        "Clone the library from GitHub and install the code's locked packages from PyPI into the task sandbox; with run_tessera_integration, also clone Tessera at its pinned commit. No other hosts."
       ],
       "capabilities": [
         "read permitted noun versions",
@@ -4617,7 +4775,7 @@
       "title": "Compose a recipe for a goal",
       "claimant": "agent",
       "summary": "Turn a goal into a declarative recipe that uses only catalog nodes, repairing it from the compiler's diagnostics until the pinned compiler accepts it.",
-      "outcome": "A recipe candidate that compiles at the pinned commit, or no_change that names the missing capabilities.",
+      "outcome": "A recipe candidate that compiles with the pinned code, or no_change that names the missing capabilities.",
       "ready_outcome": "recipe_ready",
       "pinned": [
         "catalog",
@@ -4692,7 +4850,7 @@
       },
       "capabilities": [
         "read permitted noun versions",
-        "a checkout of the pinned commit that passed verify-tools",
+        "a library checkout whose code folder matches the tool card and passed verify-tools",
         "write candidate nouns in the requester's scope"
       ],
       "follows": [
@@ -4743,7 +4901,7 @@
         }
       ],
       "steps": [
-        "Verify the pins and confirm that the verification report is for the tool card's commit and passed.",
+        "Verify the pins and confirm that the verification report is for the tool card's folder digest and passed.",
         "Read the recipe JSON exactly as the noun stores it and compile it twice with the verified checkout's compiler.",
         "Record the plan digest, topological order, entry inputs, terminal outputs and warnings, or the error code and diagnostics.",
         "When the recipe noun records an expected plan digest, require an exact match; a mismatch ends blocked.",
@@ -4776,7 +4934,7 @@
       },
       "capabilities": [
         "read permitted noun versions",
-        "a checkout of the pinned commit that passed verify-tools",
+        "a library checkout whose code folder matches the tool card and passed verify-tools",
         "store blobs in the requester's scope",
         "write candidate nouns in the requester's scope"
       ],
@@ -4835,7 +4993,7 @@
         }
       ],
       "steps": [
-        "Verify the pins and confirm that the verification report is for the tool card's commit and passed.",
+        "Verify the pins and confirm that the verification report is for the tool card's folder digest and passed.",
         "Compile the recipe as stored and require the plan digest the recipe noun records, when it records one.",
         "Execute with the pinned inputs, or the recipe noun's sample inputs, in a node database inside the task workspace with the Python equivalence check on.",
         "Copy the runtime's receipt fields unchanged into the run receipt and store the terminal outputs as a blob in the requester's scope.",
@@ -4868,7 +5026,7 @@
       },
       "capabilities": [
         "read permitted noun versions",
-        "a checkout of the pinned commit that passed verify-tools",
+        "a library checkout whose code folder matches the tool card and passed verify-tools",
         "store blobs in the requester's scope",
         "write candidate nouns in the requester's scope"
       ],
@@ -4922,7 +5080,7 @@
         }
       ],
       "steps": [
-        "Verify the pins and confirm that the verification report is for the tool card's commit and passed.",
+        "Verify the pins and confirm that the verification report is for the tool card's folder digest and passed.",
         "List the steps whose node, parameters or wiring differ between the two recipes.",
         "Compile both and list the variant's steps whose sub-graph fingerprints match the baseline's.",
         "Run the baseline first and the variant second, with the same inputs, in one fresh node database inside the task workspace, with the equivalence check on.",
@@ -4956,7 +5114,7 @@
       },
       "capabilities": [
         "read permitted noun versions",
-        "a checkout of the pinned commit that passed verify-tools",
+        "a library checkout whose code folder matches the tool card and passed verify-tools",
         "write candidate nouns in the requester's scope"
       ],
       "follows": [
@@ -5043,7 +5201,7 @@
       },
       "capabilities": [
         "read permitted noun versions",
-        "a checkout of the pinned commit that passed verify-tools",
+        "a library checkout whose code folder matches the tool card and passed verify-tools",
         "write candidate nouns in the requester's scope"
       ],
       "follows": [
@@ -5089,7 +5247,7 @@
         "Verify the pins and confirm that you are not the proposal's author.",
         "Recompute code_sha256 from source_code and rerun every test case by registering the candidate in an in-memory node database of the verified checkout.",
         "Read the source for purity, input mutation, type safety and license, and check that the contract matches what the code returns.",
-        "Decide accept, revise or reject and give each blocking finding. Adding an accepted node to the repository is the owner's separate decision through the repository's own review."
+        "Decide accept, revise or reject and give each blocking finding. Adding an accepted node to the pack's code is the owner's separate decision through the library's own review."
       ],
       "acceptance": [
         {
@@ -5118,7 +5276,7 @@
       },
       "capabilities": [
         "read permitted noun versions",
-        "a checkout of the pinned commit that passed verify-tools",
+        "a library checkout whose code folder matches the tool card and passed verify-tools",
         "write candidate nouns in the requester's scope"
       ],
       "follows": [

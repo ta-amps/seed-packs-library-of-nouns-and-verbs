@@ -17,7 +17,8 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | Pack | A collection of nouns and verbs for | Nouns | Verbs |
 | --- | --- | --- | --- |
 | [Repository review](repo-review/README.md) | Reviewing a code repository with 50 evidence-requiring questions | 66 | 6 |
-| [Video showcase](video-showcase/README.md) | Making a truthful demo video, from script to QA, review and release | 22 | 11 |
+| [Video and motion with code](video-motion/README.md) | Video and motion made with code: seeking frames, fitting motion, compiling, rendering and checking | 28 | 8 |
+| [Video showcase](video-showcase/README.md) | Making a truthful demo video, from script to review and release | 15 | 8 |
 | [Visual and 3D rendering](visual-rendering/README.md) | Rendering images, motion graphics and 3D scenes and checking them | 11 | 5 |
 | [Tool discovery](tool-discovery/README.md) | Discovering, trialing, deciding on and refreshing new tools | 23 | 7 |
 | [Prior art and alternatives](prior-art-and-alternatives/README.md) | Finding what already exists and what the alternatives are, before anything new is built | 21 | 7 |
@@ -29,14 +30,14 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Code composition](code-composition/README.md) | Composing verified code without rewriting it | 35 | 7 |
 | [Taste palettes](taste-palettes/README.md) | Comparing options side by side and keeping a person's choice | 8 | 5 |
 | [Public-good kits](public-good-kits/README.md) | Building agent kits that nonprofits can use | 15 | 8 |
-| [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 69 | 11 |
+| [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 70 | 11 |
 | [Harness onboarding](harness-onboarding-e2e/README.md) | Connecting an agent harness and proving its lifecycle | 9 | 5 |
 | [Security review](security-review/README.md) | Authorized, local-only security review of code | 11 | 6 |
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
 
-Together: 389 nouns and 123 verb templates across nineteen packs. The
+Together: 411 nouns and 128 verb templates across twenty packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -97,7 +98,8 @@ and decomposition's breakdowns become child task previews.
   rankings list them as unranked instead of scoring them from a prior.
 - **Typed relations only**, of the kinds each category allows.
 - **No branding.** Surface and product names appear only in a descriptor's
-  `provenance_notes`, which say where an idea came from.
+  `provenance_notes`, which say where an idea came from, or in `source.json`'s
+  `moved_from`, the one field that records the repository and commit a pack moved from.
 
 ## How the packs are checked
 

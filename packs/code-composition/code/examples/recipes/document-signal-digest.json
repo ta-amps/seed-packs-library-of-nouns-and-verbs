@@ -1,0 +1,66 @@
+{
+  "recipe_id": "document-signal-digest",
+  "title": "Unstructured Incident Log Signal Digest",
+  "goal": "Normalize raw multi-line incident notes, extract structured entries via regex, deduplicate revisions, score severity keywords, filter high-signal alerts, and render a channel digest.",
+  "steps": [
+    {
+      "step_id": "normalize_notes",
+      "node_id": "text.normalize_whitespace",
+      "params": { "lowercase": false, "collapse_blank_lines": true },
+      "description": "Normalize raw log whitespace and strip blank lines."
+    },
+    {
+      "step_id": "extract_entries",
+      "node_id": "text.regex_extract",
+      "params": {
+        "pattern": "^\\[(?P<doc_id>[A-Z0-9-]+)\\]\\s+(?P<channel>[a-z_]+):\\s+(?P<message>.+)$",
+        "record_prefix": "inc"
+      },
+      "description": "Parse bracketed incident IDs, channels, and messages."
+    },
+    {
+      "step_id": "dedupe_docs",
+      "node_id": "clean.dedupe_by_key",
+      "params": { "key_field": "doc_id", "keep": "last" },
+      "description": "Retain the latest revision per incident ID."
+    },
+    {
+      "step_id": "score_keywords",
+      "node_id": "model.keyword_weighted_score",
+      "params": {
+        "text_field": "message",
+        "keywords": ["outage", "timeout", "rollback", "degraded", "critical"],
+        "scale": 2.0,
+        "output_field": "signal_score"
+      },
+      "description": "Score incident urgency terms."
+    },
+    {
+      "step_id": "filter_alerts",
+      "node_id": "filter.threshold_gate",
+      "params": { "field": "signal_score", "op": "gte", "threshold": 0.5 },
+      "description": "Keep high-signal incident entries."
+    },
+    {
+      "step_id": "channel_summary",
+      "node_id": "agg.group_summary",
+      "params": { "group_field": "channel", "value_field": "signal_score" },
+      "description": "Aggregate alert counts and mean severity per channel."
+    },
+    {
+      "step_id": "digest_report",
+      "node_id": "format.markdown_report",
+      "params": { "title": "Document Signal Digest", "max_rows": 15 },
+      "description": "Render deterministic Markdown incident digest."
+    }
+  ],
+  "edges": [
+    { "src_step": "normalize_notes", "src_port": "clean_text", "dst_step": "extract_entries", "dst_port": "clean_text" },
+    { "src_step": "extract_entries", "src_port": "rows", "dst_step": "dedupe_docs", "dst_port": "rows" },
+    { "src_step": "dedupe_docs", "src_port": "rows", "dst_step": "score_keywords", "dst_port": "rows" },
+    { "src_step": "score_keywords", "src_port": "rows", "dst_step": "filter_alerts", "dst_port": "rows" },
+    { "src_step": "filter_alerts", "src_port": "passed", "dst_step": "channel_summary", "dst_port": "rows" },
+    { "src_step": "channel_summary", "src_port": "summary_table", "dst_step": "digest_report", "dst_port": "summary_table" },
+    { "src_step": "filter_alerts", "src_port": "gate_stats", "dst_step": "digest_report", "dst_port": "headline_metrics" }
+  ]
+}

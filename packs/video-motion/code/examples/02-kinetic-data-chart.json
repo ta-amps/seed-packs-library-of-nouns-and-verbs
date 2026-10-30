@@ -1,0 +1,195 @@
+{
+  "recipe_id": "02-kinetic-data-chart",
+  "title": "Kinetic Chart: Illustrative Bars Driven by Frame Index",
+  "synopsis": "Animated bar-and-polyline chart with progressive draw_progress reveal and a reclaimed 4:5 lower-right badge. The bar values are illustrative examples, not measurements.",
+  "fps": 30,
+  "duration_s": 12.0,
+  "seed": 202,
+  "background_hex": "#090f1c",
+  "cover_frame_index": 270,
+  "beats": [
+    { "phase": "hook", "start_s": 0.0, "end_s": 0.6, "target_energy": 0.85 },
+    { "phase": "orientation", "start_s": 0.6, "end_s": 1.8, "target_energy": 0.55 },
+    { "phase": "setup", "start_s": 1.8, "end_s": 4.8, "target_energy": 0.5 },
+    { "phase": "escalation", "start_s": 4.8, "end_s": 8.4, "target_energy": 0.78 },
+    { "phase": "punchline", "start_s": 8.4, "end_s": 10.8, "target_energy": 0.9 },
+    { "phase": "hold", "start_s": 10.8, "end_s": 12.0, "target_energy": 0.1 }
+  ],
+  "actors": [
+    {
+      "actor_id": "latency_chart",
+      "kind": "chart",
+      "label": "Illustrative values (not measured)",
+      "asset_id": "chart-latency-bars",
+      "z_index": 10,
+      "width": 680.0,
+      "height": 420.0,
+      "fill_hex": "#0f172a",
+      "accent_hex": "#34d399",
+      "is_subject_focus": false,
+      "data_points": [24.0, 48.0, 74.0, 92.0, 100.0],
+      "tracks": [
+        {
+          "property": "x",
+          "keyframes": [
+            { "t_s": 0.0, "value": 465.0, "easing": "ease_out_cubic" },
+            { "t_s": 10.8, "value": 465.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "y",
+          "keyframes": [
+            { "t_s": 0.0, "value": 740.0, "easing": "spring_pop" },
+            { "t_s": 1.8, "value": 700.0, "easing": "ease_in_out_cubic" },
+            { "t_s": 10.8, "value": 690.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "scale",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.92, "easing": "spring_pop" },
+            { "t_s": 0.6, "value": 1.0, "easing": "ease_out_cubic" },
+            { "t_s": 10.8, "value": 1.02, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "draw_progress",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.08, "easing": "ease_out_cubic" },
+            { "t_s": 4.8, "value": 0.55, "easing": "ease_in_out_cubic" },
+            { "t_s": 10.8, "value": 1.0, "easing": "step_hold" }
+          ]
+        }
+      ],
+      "aspect_overrides": {
+        "feed_4x5": { "dx": -40.0, "dy": -30.0, "scale_mul": 0.92 }
+      }
+    },
+    {
+      "actor_id": "metric_badge",
+      "kind": "card",
+      "label": "SHA-256 Frame Hash",
+      "asset_id": "card-metric-callout",
+      "z_index": 15,
+      "width": 330.0,
+      "height": 118.0,
+      "fill_hex": "#111827",
+      "accent_hex": "#fbbf24",
+      "is_subject_focus": false,
+      "data_points": [],
+      "tracks": [
+        {
+          "property": "x",
+          "keyframes": [
+            { "t_s": 0.0, "value": 465.0, "easing": "spring_pop" },
+            { "t_s": 10.8, "value": 465.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "y",
+          "keyframes": [
+            { "t_s": 0.0, "value": 380.0, "easing": "ease_out_cubic" },
+            { "t_s": 10.8, "value": 395.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "draw_progress",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.12, "easing": "linear" },
+            { "t_s": 10.8, "value": 1.0, "easing": "step_hold" }
+          ]
+        }
+      ],
+      "aspect_overrides": {
+        "feed_4x5": { "dx": 355.0, "dy": 585.0, "scale_mul": 0.92 }
+      }
+    }
+  ],
+  "captions": [
+    {
+      "cue_id": "chart-01",
+      "role_label": "METRIC",
+      "speaker": "Example",
+      "text": "Illustrative bars: example values, not data.",
+      "start_s": 0.0,
+      "end_s": 1.6,
+      "anchor": "top_banner",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    },
+    {
+      "cue_id": "chart-02",
+      "role_label": "SETUP",
+      "speaker": "Example",
+      "text": "Wall-clock capture can drift when load changes.",
+      "start_s": 1.85,
+      "end_s": 4.65,
+      "anchor": "lower_third",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    },
+    {
+      "cue_id": "chart-03",
+      "role_label": "ESCALATE",
+      "speaker": "Example",
+      "text": "Pure frame evaluation locks every bar height to t_s.",
+      "start_s": 4.9,
+      "end_s": 8.2,
+      "anchor": "lower_third",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    },
+    {
+      "cue_id": "chart-04",
+      "role_label": "RESULT",
+      "speaker": "Example",
+      "text": "Same recipe, frame and aspect give the same hash.",
+      "start_s": 8.45,
+      "end_s": 10.75,
+      "anchor": "lower_third",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    }
+  ],
+  "audio_cues": [
+    {
+      "cue_id": "bed-chart",
+      "stem_kind": "music_bed",
+      "asset_id": "stem-bed-synth",
+      "start_s": 0.0,
+      "duration_s": 12.0,
+      "peak_dbfs": -12.0,
+      "duck_db": 6.0
+    }
+  ],
+  "attributions": [
+    {
+      "asset_id": "card-metric-callout",
+      "license": "MIT",
+      "creator": "video-motion UI primitives",
+      "source_uri": "urn:video-motion:catalog:card-metric-callout",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "chart-latency-bars",
+      "license": "CC-BY-4.0",
+      "creator": "video-motion data graphics",
+      "source_uri": "urn:video-motion:catalog:chart-latency-bars",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "stem-bed-synth",
+      "license": "CC-BY-4.0",
+      "creator": "video-motion audio lab",
+      "source_uri": "urn:video-motion:audio:stem-bed-synth",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "digest_basis": "illustrative"
+    }
+  ]
+}

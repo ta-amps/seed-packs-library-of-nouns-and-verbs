@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import fnmatch
 import hashlib
 import json
 import math
@@ -353,20 +354,59 @@ VERB_OPTIONAL = {
     "update_slot",
 }
 SOURCE_FIELDS = {"pack_id", "title", "version", "summary", "nouns", "verbs"}
-SOURCE_OPTIONAL = {"dependencies", "boundaries"}
+SOURCE_OPTIONAL = {"dependencies", "boundaries", "moved_from"}
+# moved_from is provenance only: the repository and exact commit a pack moved from. It stays in
+# source.json; nothing generated copies it.
+MOVED_FROM_REPOSITORY = re.compile(r"https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+")
+MOVED_FROM_COMMIT = re.compile(r"[0-9a-f]{40}")
+
+
+def code_ignore_rules(root: Path) -> list[tuple[str, bool, bool]]:
+    """Simple patterns from the code folder's own top-level .gitignore: (pattern, anchored, folders only).
+
+    Generated data, caches and local output that the folder ignores are not part of the pinned code.
+    """
+    path = root / ".gitignore"
+    if not path.is_file():
+        return []
+    rules = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("!"):
+            fail(f"{root.parent.name}/{CODE_DIR}/.gitignore: negated patterns are not supported ({line})")
+        folders_only = line.endswith("/")
+        line = line.rstrip("/")
+        rules.append((line.lstrip("/"), line.startswith("/") or "/" in line, folders_only))
+    return rules
+
+
+def code_ignored(rel: Path, is_dir: bool, rules: list[tuple[str, bool, bool]]) -> bool:
+    for pattern, anchored, folders_only in rules:
+        if folders_only and not is_dir:
+            continue
+        if fnmatch.fnmatchcase(rel.as_posix() if anchored else rel.name, pattern):
+            return True
+    return False
 
 
 def code_files(pack_dir: Path) -> list[Path]:
-    """The files of a pack's code/ folder that the pack pins; caches and build output are skipped."""
+    """The files of a pack's code/ folder that the pack pins; caches, build output and the folder's
+    own .gitignore entries are skipped."""
     root = pack_dir / CODE_DIR
     if not root.exists():
         return []
     if root.is_symlink() or not root.is_dir():
         fail(f"{pack_dir.name}: {CODE_DIR} must be a folder")
+    rules = code_ignore_rules(root)
     found = []
     for path in sorted(root.rglob("*")):
         rel = path.relative_to(root)
         if any(part in CODE_SKIP_DIRS or part.endswith(".egg-info") for part in rel.parts):
+            continue
+        parents = [Path(*rel.parts[:i]) for i in range(1, len(rel.parts))]
+        if any(code_ignored(parent, True, rules) for parent in parents) or code_ignored(rel, path.is_dir(), rules):
             continue
         if path.is_symlink():
             fail(f"{pack_dir.name}/{CODE_DIR}: symbolic links are not allowed ({rel.as_posix()})")
@@ -533,6 +573,12 @@ def check_source(pack_id: str, source: Any) -> None:
     for dep in source.get("dependencies", []):
         if not isinstance(dep, str) or dep == pack_id:
             fail(f"{pack_id}: invalid dependency {dep!r}")
+    if "moved_from" in source:
+        moved = source["moved_from"]
+        require_fields(moved, f"{pack_id}.moved_from", {"repository", "commit"})
+        if not (isinstance(moved["repository"], str) and MOVED_FROM_REPOSITORY.fullmatch(moved["repository"])
+                and isinstance(moved["commit"], str) and MOVED_FROM_COMMIT.fullmatch(moved["commit"])):
+            fail(f"{pack_id}: moved_from names a GitHub repository URL and a full 40-character commit")
     seen: set[str] = set()
     for i, noun in enumerate(source["nouns"]):
         where = f"{pack_id}.nouns[{i}]"

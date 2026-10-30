@@ -16,6 +16,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -52,6 +53,16 @@ def task(template_id: str) -> dict:
             if item["brief"]["template_id"] == template_id:
                 return copy.deepcopy(item)
     raise KeyError(template_id)
+
+
+# A made-up product name. Inside synthetic_name() it joins the hashed surface-name list, so the
+# negative checks below can name a product without this repository naming a real one.
+SYNTHETIC_NAME = "acme"
+
+
+def synthetic_name():
+    digest = hashlib.sha256(SYNTHETIC_NAME.encode()).hexdigest()
+    return mock.patch.object(vp, "SURFACE_NAME_HASHES", vp.SURFACE_NAME_HASHES | {digest})
 
 
 def pin(pack: str, slug: str) -> dict:
@@ -126,7 +137,7 @@ class LibraryChecks(unittest.TestCase):
             descriptor = record(pack, "pack")
             self.assertTrue(descriptor["value"]["title"].startswith(bp.PACK_PHRASE), pack)
             readme = (ROOT / "packs" / pack / "README.md").read_text()
-            self.assertIsNone(vp.SURFACE_NAMES.search(readme), pack)
+            self.assertFalse(vp.surface_name_in(readme), pack)
 
     def test_repo_review_question_bank(self):
         questions = [r for r in IDX.docs["repo-review"]["nouns.json"]["records"] if r["value"]["role"] == "question"]
@@ -398,13 +409,14 @@ class NegativeChecks(unittest.TestCase):
             lambda r: r["value"].update(status="admitted"),
             lambda r: r["value"].update(trials=3, successes=3),
             lambda r: r["value"]["dimension_basis"].update(measured=True),
-            lambda r: r["value"].update(why_it_matters="A Kinema feature."),
+            lambda r: r["value"].update(why_it_matters="An Acme feature."),
             lambda r: r["value"].update(padding="x" * 40000),
             lambda r: r.update(namespace="main"),
         ]
-        for mutate in cases:
-            with self.subTest(mutate=mutate):
-                self.assert_record_rejected(mutate)
+        with synthetic_name():
+            for mutate in cases:
+                with self.subTest(mutate=mutate):
+                    self.assert_record_rejected(mutate)
 
     def test_task_boundaries(self):
         cases = [
@@ -440,7 +452,7 @@ class NegativeChecks(unittest.TestCase):
             lambda t: t["brief"]["guidance"]["required"].insert(0, "Email the report to the maintainers and post a summary publicly."),
             lambda t: t["brief"]["required_capabilities"].append("publish to public_commons"),
             lambda t: t["brief"]["bounds"].update(max_attempts=1000000),
-            lambda t: t["brief"]["guidance"]["preferred"].append("Use the Kothar compiler."),
+            lambda t: t["brief"]["guidance"]["preferred"].append("Use the Acme compiler."),
             lambda t: t["brief"]["execution_report"]["template"].update(went_right=["x"]),
             lambda t: t["brief"]["execution_report"]["template"]["usage"].update(input_tokens=123),
             lambda t: t["brief"]["execution_report"].update(shape_sha256="0" * 64),
@@ -448,9 +460,10 @@ class NegativeChecks(unittest.TestCase):
             lambda t: t["brief"]["instantiation"].update(status="instance"),
             lambda t: t["brief"].update(notes=["x" * 40000]),
         ]
-        for mutate in cases:
-            with self.subTest(mutate=mutate):
-                self.assert_task_rejected(mutate)
+        with synthetic_name():
+            for mutate in cases:
+                with self.subTest(mutate=mutate):
+                    self.assert_task_rejected(mutate)
 
     def test_tampered_idempotency_key(self):
         self.assert_task_rejected(lambda t: t.update(idempotency_key=t["idempotency_key"][:-1] + "0"), rekeyed=False)
@@ -495,9 +508,9 @@ class NegativeChecks(unittest.TestCase):
                     good.replace("## Limits", "## Notes"),
                     good.replace("# Repository review", "# Something else", 1),
                     good.replace("A collection of nouns and verbs for reviewing", "This pack reviews"),
-                    good.replace("## Limits", "## Limits\n\nBuilt on Shamash."),
+                    good.replace("## Limits", "## Limits\n\nBuilt on Acme."),
                     good + "\n" * 100):
-            with self.assertRaises(bp.PackError):
+            with self.assertRaises(bp.PackError), synthetic_name():
                 vp.check_readme(bad, "Repository review", "repo-review")
 
     def test_template_examples_and_conforming_instances_must_match(self):
@@ -514,11 +527,47 @@ class NegativeChecks(unittest.TestCase):
 
     def test_provenance_notes_are_the_only_place_for_source_names(self):
         descriptor = record("evaluation-design", "pack")
-        self.assertTrue(any("shamash" in note for note in descriptor["value"]["provenance_notes"]))
+        self.assertTrue(any(vp.surface_name_in(note) for note in descriptor["value"]["provenance_notes"]))
         check_record(descriptor)
-        descriptor["value"]["lets_workers"] += " Uses Shamash."
-        with self.assertRaises(bp.PackError):
+        descriptor["value"]["lets_workers"] += " Uses Acme."
+        with self.assertRaises(bp.PackError), synthetic_name():
             check_record(descriptor)
+
+    def test_surface_names_are_stored_only_as_hashes(self):
+        self.assertEqual(len(vp.SURFACE_NAME_HASHES), 6)
+        # The three earlier product names of packs that moved into this library.
+        moved = {
+            "d488476689bd8ff0424956c989ae7508815f2821f9524dfd3ea5aea931911978",
+            "4322a6b237d4d0f47990bad6edf90913cd88d2a1a6a9698a756b73e4dfd69329",
+            "9410a442dd664c9234966c5ecc0ff595431749474bc67b7e2ce5ccaaed7793ec",
+        }
+        self.assertLessEqual(moved, vp.SURFACE_NAME_HASHES)
+        for path in ("scripts/validate_packs.py", "scripts/build_packs.py", "tests/test_packs.py"):
+            self.assertFalse(vp.surface_name_in((ROOT / path).read_text(encoding="utf-8")), path)
+        self.assertFalse(vp.surface_name_in("Made with Acme."))
+        with synthetic_name():
+            for text in ("Made with Acme.", "ACME tools", "acme-labs", "the acme_tool helper"):
+                self.assertTrue(vp.surface_name_in(text), text)
+            for text in ("Acmeish", "academy"):
+                self.assertFalse(vp.surface_name_in(text), text)
+
+    def test_moved_from_is_one_provenance_field_that_nothing_copies(self):
+        source = IDX.lib.sources["video-motion"]
+        moved = source["moved_from"]
+        self.assertEqual(set(moved), {"repository", "commit"})
+        for name, data in IDX.built["video-motion"].items():
+            self.assertNotIn(moved["repository"].encode(), data, name)
+            self.assertNotIn(moved["commit"].encode(), data, name)
+        good = {"repository": "https://github.com/example-org/example-repo", "commit": "0123456789abcdef0123456789abcdef01234567"}
+        for bad in ({**good, "commit": "0123456"}, {**good, "repository": "http://example.invalid/x"},
+                    {**good, "note": "extra"}, {"repository": good["repository"]}, "github.com/example-org/x"):
+            changed = copy.deepcopy(source)
+            changed["moved_from"] = bad
+            with self.subTest(bad=bad), self.assertRaises(bp.PackError):
+                bp.check_source("video-motion", changed)
+        changed = copy.deepcopy(source)
+        changed["moved_from"] = good
+        bp.check_source("video-motion", changed)
 
     def test_schema_bounds_and_patterns(self):
         for schema in ({"type": "array", "minItems": 3, "maxItems": 2}, {"type": "string", "pattern": "^(?=a)"},
@@ -574,6 +623,23 @@ class PackCodeChecks(unittest.TestCase):
                 vp.validate_library(root)
             changed = json.loads(bp.build_library(bp.load_library(root / "packs"))["repo-review"]["manifest.json"])
             self.assertNotEqual(changed["code"]["sha256"], expected["sha256"])
+
+    def test_code_folder_ignores_what_its_gitignore_ignores(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.copy_with_code(directory)
+            code_dir = root / "packs" / "repo-review" / bp.CODE_DIR
+            before = bp.code_digest(root / "packs" / "repo-review")
+            (code_dir / ".gitignore").write_text("# generated\n/generated/\n*.log\nout/\n")
+            kept = {"README.md", "tool/run.py", ".gitignore", "sub/generated/keep.py"}
+            for rel in ("generated/data.json", "run.log", "sub/out/frame.png", "sub/generated/keep.py"):
+                (code_dir / rel).parent.mkdir(parents=True, exist_ok=True)
+                (code_dir / rel).write_text("x")
+            pinned = {path.relative_to(code_dir).as_posix() for path in bp.code_files(root / "packs" / "repo-review")}
+            self.assertEqual(pinned, kept)
+            self.assertNotEqual(bp.code_digest(root / "packs" / "repo-review")["sha256"], before["sha256"])
+            (code_dir / ".gitignore").write_text("!keep.py\n")
+            with self.assertRaises(bp.PackError):
+                bp.code_files(root / "packs" / "repo-review")
 
     def test_code_folder_rules(self):
         def broken(change):

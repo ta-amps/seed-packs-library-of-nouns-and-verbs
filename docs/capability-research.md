@@ -61,10 +61,11 @@ record value. This table does not introduce new top-level TaskSpec fields.
 
 Deterministic URL canonicalization, hashing, ordinary retrieval, arithmetic and
 receipt checks stay tools inside these verbs. Workers perform interpretation,
-research planning and judgment. Herma can optionally provide scoped context.
-Kothar can supply verified deterministic experiment steps where available; Kinema
-can supply relevant motion/frame checks. Their availability does not establish
-that a proposed adapter or evaluation already exists.
+research planning and judgment. A request middleware can optionally provide scoped
+context. The [code composition pack](../packs/code-composition/README.md)'s tested code can
+supply verified deterministic experiment steps where available, and the
+[video and motion pack](../packs/video-motion/README.md) can supply frame and motion checks.
+Their availability does not establish that a proposed adapter or evaluation already exists.
 
 ## Comparable evidence
 
