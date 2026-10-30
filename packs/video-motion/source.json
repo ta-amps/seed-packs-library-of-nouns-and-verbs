@@ -1,0 +1,3504 @@
+{
+  "pack_id": "video-motion",
+  "title": "Video and motion with code",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for video and motion made with code: tested code shipped in the pack and pinned by digest, scene recipes, a procedural asset catalog, motion formulas, aspect, caption and audio rules, every-frame and post-encode checks, a demo sequence, media and tool cards, with verbs to seek frames, fit motion, draft, compile and check scenes, and plan, render and check a video.",
+  "moved_from": {
+    "repository": "https://github.com/ta-amps/kinema",
+    "commit": "78bd7224bf2cf259c34bd941fce2fbea1dcfc28b"
+  },
+  "boundaries": [
+    "Keep every output in the requester's scope. Releasing a video is the owner's separate decision.",
+    "Rendering and checking use no model per frame or per check.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code.",
+    "Workers run the pack's code only from an installation that matches its digest, under their own permissions."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for video and motion made with code",
+      "value": {
+        "lets_workers": "Make video and motion with code as ordinary claimed work: seek any frame, fit motion formulas from traces, draft and compile scene recipes into checked social formats, and plan, render and check a video with the tested code this pack ships, pinned by digest.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "video-motion.draft-scene"
+            },
+            "when": "For each scene that is drawn rather than captured."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.seek-frame"
+            },
+            "when": "Any time, to inspect frames or prove a recipe is order invariant."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.fit-motion"
+            },
+            "when": "When a timing reference exists as an observation trace."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.compile-social-formats"
+            },
+            "when": "For standalone social cuts of one scene."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.check-social-formats"
+            },
+            "when": "After each compile, ideally by a different worker."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.plan-sequence"
+            },
+            "when": "When the scenes, media, narration and captions exist."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.render-sequence"
+            },
+            "when": "After the sequence plans cleanly."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.check-video"
+            },
+            "when": "After each render, ideally by a different worker."
+          }
+        ],
+        "shared_words": {
+          "scene recipe": "A declarative scene: beats, actors with motion tracks, captions, audio cues and attributions.",
+          "media": "A hash-pinned recording, image or audio file with its license and provenance.",
+          "sequence": "Ordered scene and media clips with cuts, crossfades, narration, a music bed and captions.",
+          "render": "Deterministic frame production with no model call per frame.",
+          "QA": "Every-frame checks on scene state, and post-encode checks on decoded pixels and audio."
+        },
+        "tools": {
+          "$pin": "tool.video-motion-tools"
+        },
+        "aspects": {
+          "9:16": "1080x1920",
+          "4:5": "1080x1350",
+          "16:9": "1920x1080"
+        },
+        "other_packs": "The video showcase pack uses these verbs to render and check its videos, and the visual and 3D rendering pack reuses these tool cards and the media template."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "tool.video-motion-tools"
+        ],
+        [
+          "requires_noun",
+          "tool.ffmpeg"
+        ],
+        [
+          "requires_noun",
+          "tool.playwright"
+        ],
+        [
+          "requires_noun",
+          "tool.chromium"
+        ],
+        [
+          "requires_noun",
+          "tools.reference-builds"
+        ],
+        [
+          "requires_noun",
+          "catalog.assets"
+        ],
+        [
+          "requires_noun",
+          "catalog.motion-formulas"
+        ],
+        [
+          "requires_noun",
+          "rules.aspects"
+        ],
+        [
+          "requires_noun",
+          "rules.captions"
+        ],
+        [
+          "requires_noun",
+          "rules.audio"
+        ],
+        [
+          "requires_noun",
+          "checks.scene"
+        ],
+        [
+          "requires_noun",
+          "checks.video"
+        ],
+        [
+          "requires_noun",
+          "recipe.pov-role-skit"
+        ],
+        [
+          "requires_noun",
+          "recipe.kinetic-data-chart"
+        ],
+        [
+          "requires_noun",
+          "recipe.algorithm-race"
+        ],
+        [
+          "requires_noun",
+          "sequence.demo"
+        ],
+        [
+          "requires_noun",
+          "trace.sample-motion"
+        ],
+        [
+          "requires_noun",
+          "template.scene-recipe"
+        ],
+        [
+          "requires_noun",
+          "template.sequence"
+        ],
+        [
+          "requires_noun",
+          "template.media"
+        ],
+        [
+          "requires_noun",
+          "template.observation-trace"
+        ],
+        [
+          "requires_noun",
+          "template.motion-profile"
+        ],
+        [
+          "requires_noun",
+          "template.frame-check"
+        ],
+        [
+          "requires_noun",
+          "template.deliverable"
+        ],
+        [
+          "requires_noun",
+          "template.scene-qa-report"
+        ],
+        [
+          "requires_noun",
+          "template.render-manifest"
+        ],
+        [
+          "requires_noun",
+          "template.video-qa-report"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.video-motion-tools",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: the video and motion tools",
+      "value": {
+        "name": "Video and motion tools",
+        "homepage": "https://github.com/ta-amps/pack-contributions/tree/main/packs/video-motion/code",
+        "source": "https://github.com/ta-amps/pack-contributions/tree/main/packs/video-motion/code",
+        "pin": {
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "path": "packs/video-motion/code",
+          "code": {
+            "$code": "video-motion"
+          },
+          "commit": "f19fb678150475bef1adc89f2a430e67c31187fc"
+        },
+        "pin_reason": "The code ships in this pack, in its code folder. code.sha256 pins every file's bytes and commit names the library commit that holds them. The recipe, sequence, media, trace and reference-build nouns pin files in the same folder by SHA-256.",
+        "tool_license": {
+          "spdx": "MIT"
+        },
+        "install": [
+          "Check out the pack library at the pinned commit and change to the code folder.",
+          "uv sync --frozen --all-groups --extra video",
+          "uv run playwright install chromium-headless-shell"
+        ],
+        "install_policy": "This card installs nothing. A worker uses an already qualified installation of this code or prepares one in its own workspace under its task's execution policy.",
+        "checks": [
+          "The code folder's digest equals code.sha256; the library's make check computes it.",
+          "make check passes in the code folder.",
+          "VIDEO_MOTION_REQUIRE_VIDEO=1 uv run pytest -q tests/test_video_worker_e2e.py passes before the first render on a new machine."
+        ],
+        "used_by": [
+          {
+            "$verb": "video-motion.seek-frame"
+          },
+          {
+            "$verb": "video-motion.fit-motion"
+          },
+          {
+            "$verb": "video-motion.draft-scene"
+          },
+          {
+            "$verb": "video-motion.compile-social-formats"
+          },
+          {
+            "$verb": "video-motion.check-social-formats"
+          },
+          {
+            "$verb": "video-motion.plan-sequence"
+          },
+          {
+            "$verb": "video-motion.render-sequence"
+          },
+          {
+            "$verb": "video-motion.check-video"
+          }
+        ],
+        "requires": [
+          {
+            "$pin": "tool.ffmpeg"
+          },
+          {
+            "$pin": "tool.playwright"
+          },
+          {
+            "$pin": "tool.chromium"
+          }
+        ],
+        "tool_facts": {
+          "repository": "https://github.com/ta-amps/pack-contributions",
+          "path": "packs/video-motion/code",
+          "python_package": "video_motion",
+          "package_version": "0.1.0",
+          "requires_python": ">=3.12",
+          "command": "video-motion",
+          "commands": [
+            "demo",
+            "learn",
+            "qa",
+            "recipes",
+            "render",
+            "video check",
+            "video demo",
+            "video plan",
+            "video probe-tools",
+            "video render"
+          ],
+          "entrypoints": {
+            "seek_frame": "video_motion.timeline:evaluate_frame",
+            "render_svg_frame": "video_motion.timeline:render_svg_frame",
+            "fit_motion": "video_motion.motion:learn_motion_profile",
+            "retarget_motion": "video_motion.motion:retarget_motion",
+            "scene_qa": "video_motion.qa:audit_recipe",
+            "compile_social_formats": "video_motion.social:compile_deliverable",
+            "plan_sequence": "video_motion.sequence:plan_sequence",
+            "prerender_qa": "video_motion.sequence:audit_sequence",
+            "render_sequence": "video_motion.video_worker:render_sequence",
+            "check_video": "video_motion.video_worker:check_rendered_video"
+          },
+          "optional_extra": {
+            "video": [
+              "imageio-ffmpeg>=0.5",
+              "playwright>=1.47"
+            ]
+          },
+          "required_ffmpeg_components": [
+            "encoder:libx264",
+            "encoder:aac",
+            "encoder:pcm_s16le",
+            "encoder:pcm_f32le",
+            "encoder:png",
+            "muxer:mp4",
+            "muxer:wav",
+            "muxer:framemd5",
+            "muxer:null",
+            "muxer:image2",
+            "filter:overlay",
+            "filter:xfade",
+            "filter:concat",
+            "filter:amix",
+            "filter:asplit",
+            "filter:sidechaincompress",
+            "filter:adelay",
+            "filter:apad",
+            "filter:atrim",
+            "filter:aresample",
+            "filter:aformat",
+            "filter:volume",
+            "filter:loudnorm",
+            "filter:ebur128",
+            "filter:silencedetect",
+            "filter:blackdetect",
+            "filter:freezedetect",
+            "filter:ssim",
+            "filter:select",
+            "filter:scale",
+            "filter:pad",
+            "filter:crop",
+            "filter:fps",
+            "filter:format",
+            "filter:setsar",
+            "filter:settb",
+            "filter:setpts",
+            "filter:trim",
+            "filter:colorchannelmixer"
+          ]
+        }
+      },
+      "category_reason": "A tool card pins the tested code a verb runs: where it is, its digest, commands, entrypoints and requirements.",
+      "relations": [
+        [
+          "requires_noun",
+          "tool.ffmpeg"
+        ],
+        [
+          "requires_noun",
+          "tool.playwright"
+        ],
+        [
+          "requires_noun",
+          "tool.chromium"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.ffmpeg",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: FFmpeg",
+      "category_reason": "A tool card pins an external executable's identity, license and required capabilities for verbs that invoke it.",
+      "value": {
+        "name": "FFmpeg",
+        "homepage": "https://ffmpeg.org",
+        "source": "https://git.ffmpeg.org/ffmpeg.git",
+        "tool_license": {
+          "spdx_by_build": [
+            {
+              "build": "default configuration",
+              "spdx": "LGPL-2.1-or-later"
+            },
+            {
+              "build": "configured with --enable-gpl (needed for libx264)",
+              "spdx": "GPL-2.0-or-later"
+            },
+            {
+              "build": "configured with --enable-gpl --enable-version3",
+              "spdx": "GPL-3.0-or-later"
+            },
+            {
+              "build": "configured with --enable-nonfree",
+              "spdx": "none: not redistributable"
+            }
+          ],
+          "how_to_determine": "Run ffmpeg -hide_banner -version and ffmpeg -hide_banner -L, and record the configuration line and the license text they print."
+        },
+        "pin": null,
+        "pin_reason": "Pin the exact build a worker uses: version string, configuration line and the binary's SHA-256. This card names no build.",
+        "required_capabilities": [
+          "libx264 and aac encoders",
+          "ebur128, loudnorm, silencedetect, blackdetect, freezedetect and ssim filters",
+          "every component the video and motion tools list on their tool card",
+          "ffprobe JSON output"
+        ],
+        "used_by": [
+          {
+            "$verb": "video-motion.render-sequence"
+          },
+          {
+            "$verb": "video-motion.check-video"
+          },
+          {
+            "$verb": "video-showcase.prepare-audio"
+          },
+          {
+            "$verb": "visual-rendering.render"
+          }
+        ],
+        "checks": [
+          "ffmpeg -hide_banner -encoders lists libx264 and aac.",
+          "video-motion video probe-tools reports no missing capability for this build."
+        ],
+        "install_policy": "This card installs nothing. A worker uses an already qualified build or prepares one in its own workspace under its task's execution policy.",
+        "docs": [
+          "https://ffmpeg.org/ffmpeg.html",
+          "https://ffmpeg.org/ffmpeg-filters.html",
+          "https://ffmpeg.org/legal.html"
+        ]
+      }
+    },
+    {
+      "slug": "tool.playwright",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: Playwright",
+      "category_reason": "A tool card pins a library's identity, license and use for verbs that invoke it.",
+      "value": {
+        "name": "Playwright",
+        "homepage": "https://playwright.dev",
+        "source": "https://github.com/microsoft/playwright",
+        "tool_license": {
+          "spdx": "Apache-2.0"
+        },
+        "pin": null,
+        "pin_reason": "Pin the exact Playwright version; it also fixes the browser build it downloads.",
+        "uses": [
+          "Scripted screen capture at a fixed viewport from a capture plan.",
+          "Rasterizing scene and caption frames to PNG for the video and motion tools."
+        ],
+        "cautions": [
+          "Built-in recording writes WebM at about 25 frames per second. Its size defaults to the viewport scaled down to fit within 800x800 and ignores the device scale factor, so set the recording size explicitly to the capture size.",
+          "Timed screenshots or a platform screen recorder may give crisper results than built-in recording.",
+          "Use a fresh browser profile with no signed-in accounts."
+        ],
+        "used_by": [
+          {
+            "$verb": "video-showcase.capture-screen"
+          },
+          {
+            "$verb": "video-motion.render-sequence"
+          },
+          {
+            "$verb": "visual-rendering.render"
+          }
+        ],
+        "requires": {
+          "$pin": "tool.chromium"
+        },
+        "install_policy": "This card installs nothing; browser downloads happen only under the worker's own execution policy.",
+        "checks": [
+          "Capture a 2-second recording of a local static page with the recording size set to 1920x1080 and confirm its dimensions with ffprobe."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "tool.chromium"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.chromium",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: Chromium",
+      "category_reason": "A tool card pins a browser's identity and license for the capture and rasterization verbs.",
+      "value": {
+        "name": "Chromium",
+        "homepage": "https://www.chromium.org",
+        "tool_license": {
+          "spdx": "BSD-3-Clause",
+          "note": "BSD-3-Clause covers Chromium's own code. Bundled third-party components carry their own licenses, listed on the build's chrome://credits page; record that list for the exact build."
+        },
+        "pin": null,
+        "pin_reason": "Use the browser build fixed by the pinned Playwright version and record its version string.",
+        "used_by": [
+          {
+            "$verb": "video-showcase.capture-screen"
+          },
+          {
+            "$verb": "video-motion.render-sequence"
+          },
+          {
+            "$verb": "visual-rendering.render"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "tools.reference-builds",
+      "category": "noun.code_node",
+      "role": "tool_observation",
+      "title": "Reference builds of FFmpeg, Chromium and Playwright for byte-identical renders",
+      "value": {
+        "summary": "The exact FFmpeg, Chromium and Playwright builds the reference render worker used, as recorded by video-motion video probe-tools.",
+        "use": "A worker that probes the same SHA-256 values can reproduce the reference MP4s byte for byte. Other builds can produce different bytes and still pass every check; record your own cards either way. File paths are relative to the pack's code folder.",
+        "tool_facts": {
+          "file": {
+            "path": "examples/sequences/reference-tools.json",
+            "sha256": "120ca15ee121b5100fb8272cab0337faae38592313a87dec78ce6de5226977fc"
+          },
+          "cards": [
+            {
+              "name": "FFmpeg",
+              "version": "7.0.2-static",
+              "spdx": "GPL-3.0-or-later",
+              "binary_sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99"
+            },
+            {
+              "name": "chrome-headless-shell",
+              "version": "156.0.8078.4",
+              "spdx": "BSD-3-Clause",
+              "binary_sha256": "4fa61f0ba0b4f89b7bec242c32ca16d3bccf69dbfef0651924a9ba8fede5f9d6"
+            },
+            {
+              "name": "Playwright for Python",
+              "version": "1.64.1",
+              "spdx": "Apache-2.0",
+              "binary_sha256": "e32e2d16081cf644f88392934288086e7662529d0d43277c34f7aad2207cfafb"
+            }
+          ]
+        }
+      },
+      "category_reason": "Recorded observations of exact tool binaries, pinned by digest, for reproducible rendering.",
+      "relations": [
+        [
+          "requires_noun",
+          "tool.ffmpeg"
+        ],
+        [
+          "requires_noun",
+          "tool.chromium"
+        ],
+        [
+          "requires_noun",
+          "tool.playwright"
+        ]
+      ]
+    },
+    {
+      "slug": "catalog.assets",
+      "category": "noun.scene_recipe",
+      "role": "asset_catalog",
+      "title": "Procedural asset catalog for scene recipes",
+      "value": {
+        "summary": "Characters, cards, charts and mechanisms drawn by the tools' own SVG renderer. There are no media files: each digest covers the procedural definition.",
+        "rules": [
+          "A scene may cast only assets whose license is one of allowed_licenses, with a creator and a 64-hex digest; anything else stops casting.",
+          "digest_basis procedural_definition means the digest covers the asset's definition, not file bytes.",
+          "The labels describe drawings; they are not claims about real people, products or measurements."
+        ],
+        "tool_facts": {
+          "assets": [
+            {
+              "asset_id": "card-metric-callout",
+              "kind": "card",
+              "label": "Frame Hash Callout",
+              "license": "MIT",
+              "creator": "video-motion UI primitives",
+              "source_uri": "urn:video-motion:catalog:card-metric-callout",
+              "sha256": "4a8bdc516df4b4a6ab94948b0b0b67fee4ddabcaba4377133349c70107dd5f01",
+              "fill_hex": "#111827",
+              "accent_hex": "#fbbf24",
+              "digest_basis": "procedural_definition"
+            },
+            {
+              "asset_id": "char-deploy-bot",
+              "kind": "character",
+              "label": "Deploy Bot",
+              "license": "CC0-1.0",
+              "creator": "video-motion open rig pack",
+              "source_uri": "urn:video-motion:catalog:char-deploy-bot",
+              "sha256": "64e4575722db321e1ced8e7ce6cd1ce3d6838a2096d17d8bc65138c2fd66d658",
+              "fill_hex": "#1e1b4b",
+              "accent_hex": "#a78bfa",
+              "digest_basis": "procedural_definition"
+            },
+            {
+              "asset_id": "char-sre-lead",
+              "kind": "character",
+              "label": "On-Call Engineer",
+              "license": "LicenseRef-Video-Motion-Procedural",
+              "creator": "video-motion vector studio",
+              "source_uri": "urn:video-motion:catalog:char-sre-lead",
+              "sha256": "3c74f13845e5420ba8e1e46aeb005c9102037d6ec31931a4ec75a8a9c5ee61db",
+              "fill_hex": "#172554",
+              "accent_hex": "#38bdf8",
+              "digest_basis": "procedural_definition"
+            },
+            {
+              "asset_id": "chart-latency-bars",
+              "kind": "chart",
+              "label": "Frame Seek Latency (ms)",
+              "license": "CC-BY-4.0",
+              "creator": "video-motion data graphics",
+              "source_uri": "urn:video-motion:catalog:chart-latency-bars",
+              "sha256": "a1d21a9465bf2971c63f64a1b9c7963121caaf8d0a9987024472a21ca17ab578",
+              "fill_hex": "#0f172a",
+              "accent_hex": "#34d399",
+              "digest_basis": "procedural_definition"
+            },
+            {
+              "asset_id": "mech-frameseek-lane",
+              "kind": "mechanism",
+              "label": "Deterministic Seek(f)",
+              "license": "LicenseRef-Video-Motion-Procedural",
+              "creator": "video-motion mechanism kit",
+              "source_uri": "urn:video-motion:catalog:mech-frameseek-lane",
+              "sha256": "d6776820bf3278d7e8e10fc57601cf12619278a3a73508a3bf3ee8ccc67d8815",
+              "fill_hex": "#0f2922",
+              "accent_hex": "#2dd4bf",
+              "digest_basis": "procedural_definition"
+            },
+            {
+              "asset_id": "mech-wallclock-lane",
+              "kind": "mechanism",
+              "label": "Wall-Clock Recorder",
+              "license": "LicenseRef-Video-Motion-Procedural",
+              "creator": "video-motion mechanism kit",
+              "source_uri": "urn:video-motion:catalog:mech-wallclock-lane",
+              "sha256": "097f5f0f7589a58f1dc2fc80728ceffe896e72b8b839443568ea897a17e21516",
+              "fill_hex": "#27151d",
+              "accent_hex": "#fb7185",
+              "digest_basis": "procedural_definition"
+            }
+          ],
+          "allowed_licenses": [
+            "CC-BY-4.0",
+            "CC0-1.0",
+            "LicenseRef-Video-Motion-Procedural",
+            "MIT"
+          ]
+        }
+      },
+      "category_reason": "Scene recipes bind assets; this is the catalog of procedural assets they may cast."
+    },
+    {
+      "slug": "catalog.motion-formulas",
+      "category": "noun.motion_profile",
+      "role": "motion_catalog",
+      "title": "Motion formulas: six narrative beats and five easing curves",
+      "value": {
+        "summary": "Timing and motion as formulas, not footage: six beats with canonical proportions, five easing curves, and two built-in profiles.",
+        "beats": [
+          {
+            "phase": "hook",
+            "share": "0 to 0.0375",
+            "job": "The subject pops into frame at once."
+          },
+          {
+            "phase": "orientation",
+            "share": "0.0375 to 0.125",
+            "job": "Establish the cast and the problem."
+          },
+          {
+            "phase": "setup",
+            "share": "0.125 to 0.375",
+            "job": "Introduce the baseline or the contrast."
+          },
+          {
+            "phase": "escalation",
+            "share": "0.375 to 0.6875",
+            "job": "Compounding change and rapid turns."
+          },
+          {
+            "phase": "punchline",
+            "share": "0.6875 to 0.925",
+            "job": "The payoff or the final comparison."
+          },
+          {
+            "phase": "hold",
+            "share": "0.925 to 1",
+            "job": "A clean hold so viewers can read the last frame."
+          }
+        ],
+        "easings": {
+          "linear": "f(u) = u",
+          "ease_out_cubic": "f(u) = 1 - (1 - u)^3",
+          "ease_in_out_cubic": "a cubic S-curve that accelerates to u = 0.5 and decelerates to 1",
+          "spring_pop": "f(u) = 1 - (1 - u) * exp(-5u) * cos(2.5 * pi * u), overshooting about 1.05",
+          "step_hold": "0 until u = 1, then 1"
+        },
+        "rules": [
+          "Retargeting maps each beat boundary to an exact frame: round(ratio * total_frames) / fps.",
+          "A learned profile stores ratios, easing fits, cut cadence, normalized waypoints and its digest; never media."
+        ],
+        "tool_facts": {
+          "beat_phases": [
+            "hook",
+            "orientation",
+            "setup",
+            "escalation",
+            "punchline",
+            "hold"
+          ],
+          "canonical_boundary_ratios": [
+            0.0,
+            0.0375,
+            0.125,
+            0.375,
+            0.6875,
+            0.925,
+            1.0
+          ],
+          "easings": [
+            "linear",
+            "ease_out_cubic",
+            "ease_in_out_cubic",
+            "spring_pop",
+            "step_hold"
+          ],
+          "profiles": [
+            {
+              "profile_id": "prof-snappy-skit",
+              "title": "Snappy POV Skit Formula",
+              "source_trace_id": "builtin-snappy",
+              "reference_duration_s": 16.0,
+              "median_cut_cadence_s": 2.4,
+              "mean_motion_intensity": 0.64,
+              "dominant_easing": "spring_pop",
+              "beat_proportions": [
+                {
+                  "phase": "hook",
+                  "start_ratio": 0.0,
+                  "end_ratio": 0.04,
+                  "mean_energy": 0.88,
+                  "dominant_easing": "spring_pop",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "orientation",
+                  "start_ratio": 0.04,
+                  "end_ratio": 0.13,
+                  "mean_energy": 0.58,
+                  "dominant_easing": "ease_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "setup",
+                  "start_ratio": 0.13,
+                  "end_ratio": 0.38,
+                  "mean_energy": 0.45,
+                  "dominant_easing": "ease_in_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "escalation",
+                  "start_ratio": 0.38,
+                  "end_ratio": 0.69,
+                  "mean_energy": 0.76,
+                  "dominant_easing": "ease_in_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "punchline",
+                  "start_ratio": 0.69,
+                  "end_ratio": 0.92,
+                  "mean_energy": 0.92,
+                  "dominant_easing": "spring_pop",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "hold",
+                  "start_ratio": 0.92,
+                  "end_ratio": 1.0,
+                  "mean_energy": 0.12,
+                  "dominant_easing": "step_hold",
+                  "fit_rmse": 0.0
+                }
+              ],
+              "trajectories": [
+                {
+                  "role_slot": "lead",
+                  "waypoints": [
+                    {
+                      "ratio": 0.0,
+                      "norm_x": 0.22,
+                      "norm_y": 0.38,
+                      "scale": 0.92,
+                      "easing": "spring_pop"
+                    },
+                    {
+                      "ratio": 0.04,
+                      "norm_x": 0.35,
+                      "norm_y": 0.34,
+                      "scale": 1.02,
+                      "easing": "ease_out_cubic"
+                    },
+                    {
+                      "ratio": 0.13,
+                      "norm_x": 0.42,
+                      "norm_y": 0.36,
+                      "scale": 1.0,
+                      "easing": "ease_in_out_cubic"
+                    },
+                    {
+                      "ratio": 0.38,
+                      "norm_x": 0.52,
+                      "norm_y": 0.4,
+                      "scale": 1.04,
+                      "easing": "ease_in_out_cubic"
+                    },
+                    {
+                      "ratio": 0.69,
+                      "norm_x": 0.48,
+                      "norm_y": 0.32,
+                      "scale": 1.08,
+                      "easing": "spring_pop"
+                    },
+                    {
+                      "ratio": 0.92,
+                      "norm_x": 0.48,
+                      "norm_y": 0.32,
+                      "scale": 1.05,
+                      "easing": "step_hold"
+                    },
+                    {
+                      "ratio": 1.0,
+                      "norm_x": 0.48,
+                      "norm_y": 0.32,
+                      "scale": 1.05,
+                      "easing": "step_hold"
+                    }
+                  ]
+                }
+              ],
+              "profile_sha256": "cc1306461b2debe9ce448366a3b61c1f232e9eaef32283f8b65543c6d7f93738"
+            },
+            {
+              "profile_id": "prof-measured-explainer",
+              "title": "Measured Technical Explainer Formula",
+              "source_trace_id": "builtin-explainer",
+              "reference_duration_s": 16.0,
+              "median_cut_cadence_s": 3.1,
+              "mean_motion_intensity": 0.49,
+              "dominant_easing": "ease_out_cubic",
+              "beat_proportions": [
+                {
+                  "phase": "hook",
+                  "start_ratio": 0.0,
+                  "end_ratio": 0.04,
+                  "mean_energy": 0.88,
+                  "dominant_easing": "ease_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "orientation",
+                  "start_ratio": 0.04,
+                  "end_ratio": 0.13,
+                  "mean_energy": 0.58,
+                  "dominant_easing": "ease_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "setup",
+                  "start_ratio": 0.13,
+                  "end_ratio": 0.38,
+                  "mean_energy": 0.45,
+                  "dominant_easing": "ease_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "escalation",
+                  "start_ratio": 0.38,
+                  "end_ratio": 0.69,
+                  "mean_energy": 0.76,
+                  "dominant_easing": "ease_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "punchline",
+                  "start_ratio": 0.69,
+                  "end_ratio": 0.92,
+                  "mean_energy": 0.92,
+                  "dominant_easing": "ease_out_cubic",
+                  "fit_rmse": 0.01
+                },
+                {
+                  "phase": "hold",
+                  "start_ratio": 0.92,
+                  "end_ratio": 1.0,
+                  "mean_energy": 0.12,
+                  "dominant_easing": "step_hold",
+                  "fit_rmse": 0.0
+                }
+              ],
+              "trajectories": [
+                {
+                  "role_slot": "lead",
+                  "waypoints": [
+                    {
+                      "ratio": 0.0,
+                      "norm_x": 0.22,
+                      "norm_y": 0.38,
+                      "scale": 0.92,
+                      "easing": "spring_pop"
+                    },
+                    {
+                      "ratio": 0.04,
+                      "norm_x": 0.35,
+                      "norm_y": 0.34,
+                      "scale": 1.02,
+                      "easing": "ease_out_cubic"
+                    },
+                    {
+                      "ratio": 0.13,
+                      "norm_x": 0.42,
+                      "norm_y": 0.36,
+                      "scale": 1.0,
+                      "easing": "ease_in_out_cubic"
+                    },
+                    {
+                      "ratio": 0.38,
+                      "norm_x": 0.52,
+                      "norm_y": 0.4,
+                      "scale": 1.04,
+                      "easing": "ease_in_out_cubic"
+                    },
+                    {
+                      "ratio": 0.69,
+                      "norm_x": 0.48,
+                      "norm_y": 0.32,
+                      "scale": 1.08,
+                      "easing": "spring_pop"
+                    },
+                    {
+                      "ratio": 0.92,
+                      "norm_x": 0.48,
+                      "norm_y": 0.32,
+                      "scale": 1.05,
+                      "easing": "step_hold"
+                    },
+                    {
+                      "ratio": 1.0,
+                      "norm_x": 0.48,
+                      "norm_y": 0.32,
+                      "scale": 1.05,
+                      "easing": "step_hold"
+                    }
+                  ]
+                }
+              ],
+              "profile_sha256": "cfb3e595a421a5eef0cbfa71f7c403f07e80b28fe0636ced2708b270c50f166f"
+            }
+          ]
+        }
+      },
+      "category_reason": "Reusable parametric motion: beat proportions and easing curves for any cast and duration."
+    },
+    {
+      "slug": "rules.aspects",
+      "category": "noun.skill_pack",
+      "role": "aspect_rules",
+      "title": "Aspect profiles and safe zones for 9:16, 4:5 and 16:9",
+      "value": {
+        "summary": "Three output aspects, each with its size, platform keep-out boxes, safe canvas and minimum caption size.",
+        "rules": [
+          "A recipe's stage_aspect names the safe canvas its coordinates use; other aspects map positions between safe canvases and scale sizes to fit.",
+          "Per-aspect overrides (dx, dy, scale_mul, opacity_mul, rotation_offset_deg) adapt the layout, for example restacking a 16:9 diagram for 9:16.",
+          "On 4:5 the lower-right area is usable; on 9:16 it is under the platform's buttons."
+        ],
+        "tool_facts": {
+          "aspects": {
+            "reels_9x16": {
+              "aspect_id": "reels_9x16",
+              "title": "Vertical Reels / Shorts (9:16, 1080x1920)",
+              "width": 1080,
+              "height": 1920,
+              "safe_canvas": {
+                "x": 64.0,
+                "y": 180.0,
+                "width": 820.0,
+                "height": 1360.0,
+                "label": "reels_safe_canvas"
+              },
+              "ui_keep_outs": [
+                {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "width": 1080.0,
+                  "height": 160.0,
+                  "label": "reels_top_chrome"
+                },
+                {
+                  "x": 900.0,
+                  "y": 920.0,
+                  "width": 180.0,
+                  "height": 760.0,
+                  "label": "reels_right_rail_buttons"
+                },
+                {
+                  "x": 0.0,
+                  "y": 1560.0,
+                  "width": 1080.0,
+                  "height": 360.0,
+                  "label": "reels_bottom_caption_overlay"
+                }
+              ],
+              "min_font_px": 38.0
+            },
+            "feed_4x5": {
+              "aspect_id": "feed_4x5",
+              "title": "Portrait Feed Card (4:5, 1080x1350)",
+              "width": 1080,
+              "height": 1350,
+              "safe_canvas": {
+                "x": 64.0,
+                "y": 72.0,
+                "width": 952.0,
+                "height": 1206.0,
+                "label": "feed_safe_canvas"
+              },
+              "ui_keep_outs": [
+                {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "width": 1080.0,
+                  "height": 60.0,
+                  "label": "feed_top_margin"
+                },
+                {
+                  "x": 0.0,
+                  "y": 1290.0,
+                  "width": 1080.0,
+                  "height": 60.0,
+                  "label": "feed_bottom_margin"
+                }
+              ],
+              "min_font_px": 38.0
+            },
+            "landscape_16x9": {
+              "aspect_id": "landscape_16x9",
+              "title": "Landscape Video (16:9, 1920x1080)",
+              "width": 1920,
+              "height": 1080,
+              "safe_canvas": {
+                "x": 96.0,
+                "y": 80.0,
+                "width": 1728.0,
+                "height": 904.0,
+                "label": "landscape_title_safe"
+              },
+              "ui_keep_outs": [
+                {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "width": 1920.0,
+                  "height": 64.0,
+                  "label": "landscape_top_title_overlay"
+                },
+                {
+                  "x": 0.0,
+                  "y": 1004.0,
+                  "width": 1920.0,
+                  "height": 76.0,
+                  "label": "landscape_bottom_player_controls"
+                }
+              ],
+              "min_font_px": 38.0
+            }
+          }
+        }
+      },
+      "category_reason": "A reusable layout method: sizes, safe areas and keep-outs that every render and check reads."
+    },
+    {
+      "slug": "rules.captions",
+      "category": "noun.skill_pack",
+      "role": "caption_rules",
+      "title": "Caption rules: size, wrapping, timing and placement",
+      "value": {
+        "summary": "How the tools wrap, time and place captions, and what pre-render QA enforces.",
+        "rules": [
+          "Lines are wrapped for balance (minimum raggedness), at most 3 lines per cue, none longer than the cue's max_chars_per_line plus 4.",
+          "Captions are at least min_font_px tall for the aspect and stay inside its safe canvas, clear of keep-out boxes and subjects.",
+          "Each cue shows for at least min_display_s and reads at most max_chars_per_second; no 1 to 2 frame blink gaps.",
+          "Captions are burned in from PNG overlays and also written as SRT and WebVTT sidecars with the same timings."
+        ],
+        "tool_facts": {
+          "max_chars_per_second": 20.0,
+          "min_display_s": 0.7,
+          "min_font_px": {
+            "reels_9x16": 38.0,
+            "feed_4x5": 38.0,
+            "landscape_16x9": 38.0
+          },
+          "prerender_checks": [
+            "scene_clip_qa",
+            "caption_safe_zone",
+            "caption_readability",
+            "caption_overlap",
+            "caption_subject_occlusion",
+            "caption_media_keep_out"
+          ],
+          "sidecars": [
+            "srt",
+            "webvtt"
+          ]
+        }
+      },
+      "category_reason": "A reusable caption method with its limits, read by drafting, rendering and checking verbs."
+    },
+    {
+      "slug": "rules.audio",
+      "category": "noun.skill_pack",
+      "role": "audio_plan",
+      "title": "Audio plan: narration, a ducked music bed and loudness",
+      "value": {
+        "summary": "How a sequence's audio is planned and mixed.",
+        "rules": [
+          "Narration elements play where the sequence places them; one optional music bed is ducked under narration by sidechain compression.",
+          "The mix is normalized to the sequence's loudness target with two linear loudnorm passes, at or below its true-peak limit.",
+          "Audio is AAC at sample_rate_hz in stereo. Per-stem peaks stay at or below -1 dBFS in scene QA.",
+          "Sound effects and ambience are mixed into the music bed before rendering; the tools mix only narration and one bed."
+        ],
+        "tool_facts": {
+          "default_loudness_target_lufs": -14.0,
+          "default_music_duck_db": 9.0,
+          "default_true_peak_limit_dbtp": -1.0,
+          "loudness_tolerance_lu": 1.0,
+          "loudnorm_lra": 20.0,
+          "sample_rate_hz": 48000,
+          "stem_kinds": [
+            "voiceover",
+            "music_bed",
+            "sfx_hit",
+            "ambience"
+          ]
+        }
+      },
+      "category_reason": "A reusable audio method: placement, ducking, loudness target and limits for rendered sequences."
+    },
+    {
+      "slug": "checks.scene",
+      "category": "noun.benchmark_suite",
+      "role": "qa_checks",
+      "title": "Every-frame scene checks",
+      "value": {
+        "summary": "Eight deterministic checks on every frame of a scene recipe, for each aspect, before a deliverable can pass.",
+        "checks": [
+          {
+            "id": "platform_ui_keep_out",
+            "threshold": "Every caption and callout box is inside the frame and clear of the aspect's keep-out boxes."
+          },
+          {
+            "id": "min_font_and_line_balance",
+            "threshold": "Type at least the aspect's minimum size; at most 3 lines; balanced lines with no one-word orphans."
+          },
+          {
+            "id": "subject_keep_out_occlusion",
+            "threshold": "No caption covers a visible focal subject's keep-out box."
+          },
+          {
+            "id": "caption_flicker_jitter",
+            "threshold": "No cue shorter than max(4, 0.14 x fps) frames, no 1 to 2 frame blink gaps, no box jitter above 1.5 px."
+          },
+          {
+            "id": "black_or_frozen_frames",
+            "threshold": "No unintended dark run of 3 or more frames and no frozen state over 1.5 s outside the hold beat."
+          },
+          {
+            "id": "luminance_flash_rate",
+            "threshold": "At most 3 flashes (6 luminance jumps of 0.20 or more) in any 1 s window."
+          },
+          {
+            "id": "audio_peak_and_caption_overlap",
+            "threshold": "Stems and the ducked mix at or below -1 dBFS; no overlapping captions on one anchor."
+          },
+          {
+            "id": "asset_attribution_completeness",
+            "threshold": "Every actor and audio asset has an allowed license, a creator and a 64-hex digest."
+          }
+        ],
+        "rules": [
+          "The report commits every check, finding and the credit line into qa_receipt_sha256.",
+          "These checks read scene state and declared audio levels, not decoded pixels or waveforms, and attest no rights.",
+          "The flash check is a parametric screening rule, not a photosensitivity certification."
+        ],
+        "tool_facts": {
+          "checks": [
+            "platform_ui_keep_out",
+            "min_font_and_line_balance",
+            "subject_keep_out_occlusion",
+            "caption_flicker_jitter",
+            "black_or_frozen_frames",
+            "luminance_flash_rate",
+            "audio_peak_and_caption_overlap",
+            "asset_attribution_completeness"
+          ]
+        }
+      },
+      "category_reason": "A fixed set of deterministic checks with thresholds that every scene deliverable is scored against.",
+      "relations": [
+        [
+          "requires_noun",
+          "rules.aspects"
+        ],
+        [
+          "requires_noun",
+          "rules.captions"
+        ]
+      ]
+    },
+    {
+      "slug": "checks.video",
+      "category": "noun.benchmark_suite",
+      "role": "qa_checks",
+      "title": "Post-encode video checks",
+      "value": {
+        "summary": "Eight checks on the decoded pixels and audio of a rendered MP4, judged against its sequence plan. Every check must pass.",
+        "checks": [
+          {
+            "id": "container_and_streams",
+            "threshold": "H.264 yuv420p at the aspect's size and the plan's frame rate; AAC 48 kHz stereo."
+          },
+          {
+            "id": "duration_and_frames",
+            "threshold": "Decoded frames equal the plan; container duration within one frame plus aac_slack_s."
+          },
+          {
+            "id": "frame_hash_spot_checks",
+            "threshold": "On spot_frames frames of one scene clip: the manifest hash equals a fresh evaluation, the reference PNG is unchanged, and SSIM is at least ssim_min and higher than against a visibly different frame."
+          },
+          {
+            "id": "black_frames",
+            "threshold": "No black run of black_min_s or longer."
+          },
+          {
+            "id": "frozen_frames",
+            "threshold": "Every freeze of freeze_min_s or longer lies inside a planned hold, allowing 0.75 s of easing tail."
+          },
+          {
+            "id": "integrated_loudness",
+            "threshold": "Within loudness_tolerance_lu of the sequence's target; true peak at or below its limit."
+          },
+          {
+            "id": "caption_timing_coverage",
+            "threshold": "Captions cover at least caption_coverage_min of measured speech, no cue without speech, sidecars equal the track."
+          },
+          {
+            "id": "synthetic_disclosure",
+            "threshold": "The file's title and disclosure comment are exactly what the render manifest records."
+          }
+        ],
+        "rules": [
+          "Before FFmpeg runs, every manifest path is confined to the render directory and every recorded digest is verified; the manifest's commands are never executed.",
+          "Caption coverage is measured against narration loudness, not words.",
+          "Spot checks cover frames showing exactly one scene clip; transitions and overlays are covered by the stream, black, freeze and loudness checks."
+        ],
+        "tool_facts": {
+          "aac_slack_s": 0.05,
+          "black_min_s": 0.5,
+          "caption_coverage_min": 0.95,
+          "checks": [
+            "container_and_streams",
+            "duration_and_frames",
+            "frame_hash_spot_checks",
+            "black_frames",
+            "frozen_frames",
+            "integrated_loudness",
+            "caption_timing_coverage",
+            "synthetic_disclosure"
+          ],
+          "freeze_min_s": 2.0,
+          "loudness_tolerance_lu": 1.0,
+          "spot_frames": 12,
+          "ssim_min": 0.95
+        }
+      },
+      "category_reason": "A fixed set of measured checks with thresholds that every rendered video is scored against.",
+      "relations": [
+        [
+          "requires_noun",
+          "rules.audio"
+        ],
+        [
+          "requires_noun",
+          "rules.captions"
+        ]
+      ]
+    },
+    {
+      "slug": "recipe.pov-role-skit",
+      "category": "noun.scene_recipe",
+      "role": "scene_recipe",
+      "title": "Scene recipe: POV: Wall-Clock Screen Recorder Meets Frame-Indexed Seek",
+      "value": {
+        "shows": "A two-character point-of-view skit about frames that drift under load, showing beat cadence, a face keep-out, voiceover ducking and layout across aspects.",
+        "use": "A worked example to start from or to check the tools on. Read the pinned file, in the pack's code folder, and verify its SHA-256.",
+        "cautions": [
+          "Characters, captions and attributions are illustrative; attribution digests attest no media bytes."
+        ],
+        "tool_facts": {
+          "file": {
+            "path": "examples/01-pov-role-skit.json",
+            "sha256": "96e24e77940f70e78ed7a0ac5559885b05e5ddd5d526ae04ef9025d8b996a9cf"
+          },
+          "recipe_id": "01-pov-role-skit",
+          "title": "POV: Wall-Clock Screen Recorder Meets Frame-Indexed Seek",
+          "fps": 30,
+          "duration_s": 16.0,
+          "total_frames": 480,
+          "stage_aspect": "reels_9x16",
+          "actors": 2,
+          "captions": 5,
+          "attributions": 4
+        }
+      },
+      "category_reason": "A pinned, declarative scene recipe file in the tools' format.",
+      "relations": [
+        [
+          "requires_noun",
+          "catalog.assets"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "recipe.kinetic-data-chart",
+      "category": "noun.scene_recipe",
+      "role": "scene_recipe",
+      "title": "Scene recipe: Kinetic Chart: Illustrative Bars Driven by Frame Index",
+      "value": {
+        "shows": "An animated bar chart revealed with draw progress, using the reclaimed lower-right area of 4:5.",
+        "use": "A worked example to start from or to check the tools on. Read the pinned file, in the pack's code folder, and verify its SHA-256.",
+        "cautions": [
+          "Characters, captions and attributions are illustrative; attribution digests attest no media bytes.",
+          "Its values are illustrative examples, not measurements."
+        ],
+        "tool_facts": {
+          "file": {
+            "path": "examples/02-kinetic-data-chart.json",
+            "sha256": "3a7cb69c43eb9ecfb9883fb63bf00863452fed5c7e484734deef9842d4eb21ce"
+          },
+          "recipe_id": "02-kinetic-data-chart",
+          "title": "Kinetic Chart: Illustrative Bars Driven by Frame Index",
+          "fps": 30,
+          "duration_s": 12.0,
+          "total_frames": 360,
+          "stage_aspect": "reels_9x16",
+          "actors": 2,
+          "captions": 4,
+          "attributions": 3
+        }
+      },
+      "category_reason": "A pinned, declarative scene recipe file in the tools' format.",
+      "relations": [
+        [
+          "requires_noun",
+          "catalog.assets"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "recipe.algorithm-race",
+      "category": "noun.scene_recipe",
+      "role": "scene_recipe",
+      "title": "Scene recipe: Algorithm Race: Wall-Clock Capture vs. Frame-Addressable Seek",
+      "value": {
+        "shows": "Two lanes side by side: wall-clock capture that drifts against frame-indexed evaluation that does not.",
+        "use": "A worked example to start from or to check the tools on. Read the pinned file, in the pack's code folder, and verify its SHA-256.",
+        "cautions": [
+          "Characters, captions and attributions are illustrative; attribution digests attest no media bytes."
+        ],
+        "tool_facts": {
+          "file": {
+            "path": "examples/03-algorithm-race-explainer.json",
+            "sha256": "a06a5bac3cbc43d92913c5647879f1e9b36f072eba37214ddbe57c930e1ce351"
+          },
+          "recipe_id": "03-algorithm-race-explainer",
+          "title": "Algorithm Race: Wall-Clock Capture vs. Frame-Addressable Seek",
+          "fps": 30,
+          "duration_s": 15.0,
+          "total_frames": 450,
+          "stage_aspect": "reels_9x16",
+          "actors": 2,
+          "captions": 4,
+          "attributions": 3
+        }
+      },
+      "category_reason": "A pinned, declarative scene recipe file in the tools' format.",
+      "relations": [
+        [
+          "requires_noun",
+          "catalog.assets"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "sequence.demo",
+      "category": "noun.scene_recipe",
+      "role": "sequence",
+      "title": "Demo sequence: nouns to verbs to workers",
+      "value": {
+        "shows": "A 21.4-second sequence staged in 16:9: a title card, an animated diagram of nouns, verbs and workers, and a closing card, joined by a crossfade and a cut, with narration, a music bed, an inset image and six captions, in 16:9 and 9:16 from one sequence.",
+        "use": "Render it with render-sequence and check it with check-video to qualify a worker, or start a new sequence from it.",
+        "cautions": [
+          "Its narration is a generated tone, its music bed a generated pad and its inset a generated test card. They are labeled as generated in file metadata and manifests.",
+          "Replace them with real narration and screen captures, as captured media nouns, before anyone releases a video."
+        ],
+        "tool_facts": {
+          "file": {
+            "path": "examples/sequences/hackathon-demo.json",
+            "sha256": "c61cc824057a5654e6f8e3716c30ad95f1ad30ee8ad1470e511fb21782ce2e37"
+          },
+          "media_file": {
+            "path": "examples/sequences/hackathon-demo.media.json",
+            "sha256": "b795770cc427244ea4c06a3a44cd05aae933f3827fb881f842de35c727a91286"
+          },
+          "sequence_id": "hackathon-demo",
+          "title": "Video from nouns and verbs",
+          "fps": 30,
+          "outputs": [
+            "landscape_16x9",
+            "reels_9x16"
+          ],
+          "total_frames": 642,
+          "duration_s": 21.4,
+          "plan_sha256": "ea1360c6eb7b839f443da0198ec960601eda606aed87f50022c26b549421d122",
+          "prerender_qa": {
+            "landscape_16x9": "f1dc861b007b026a1b503486c10a893c0bf6c7dd3d09a1d274ba641cfe9998d9",
+            "reels_9x16": "42de96fda61b95ba6c22fb0cb776e894d8b338f371fb2475a845934468604056"
+          },
+          "media": [
+            {
+              "media_id": "music-bed-placeholder",
+              "media_kind": "audio",
+              "blob_sha256": "c5ba57fffc869ec8e31330bdd2c8b78689e94da37267683fb18c89e453af8859",
+              "generator": "video_motion.media:pad_wav"
+            },
+            {
+              "media_id": "narration-placeholder",
+              "media_kind": "audio",
+              "blob_sha256": "0a5a4f789b855bef81fbf8c6769f552adcef53a788ceb7ed0940f2e91ec2f557",
+              "generator": "video_motion.media:tone_bursts_wav"
+            },
+            {
+              "media_id": "screen-capture-placeholder",
+              "media_kind": "image",
+              "blob_sha256": "dbff2647268c431e4c49efb429d3b18596215445469d9ce62517121cbbff87e9",
+              "generator": "video_motion.media:placeholder_card_png"
+            }
+          ]
+        }
+      },
+      "category_reason": "A pinned sequence noun: ordered clips, transitions, audio and captions for the render verb.",
+      "relations": [
+        [
+          "requires_noun",
+          "recipe.pov-role-skit"
+        ],
+        [
+          "requires_noun",
+          "rules.audio"
+        ],
+        [
+          "requires_noun",
+          "rules.captions"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "trace.sample-motion",
+      "category": "noun.motion_profile",
+      "role": "observation_trace",
+      "title": "Sample motion trace (synthetic)",
+      "value": {
+        "summary": "A synthetic 16-second trace of motion energy, cuts, speakers and normalized positions: the input fit-motion reads.",
+        "use": "Fit it with fit-motion to see a learned profile, or use it as the shape for traces measured from your own footage. A trace holds numbers only, never media.",
+        "tool_facts": {
+          "file": {
+            "path": "examples/sample-motion-trace.json",
+            "sha256": "27779e5e7dfbba503141169e023103745d426986f9bb0325a2b73b292b4cf871"
+          },
+          "trace_id": "sample-pov-cadence",
+          "fps": 30,
+          "duration_s": 16.0,
+          "samples": 21
+        }
+      },
+      "category_reason": "Observations a motion profile is fitted from.",
+      "synthetic": true
+    },
+    {
+      "slug": "template.scene-recipe",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: a scene recipe in the tools' format: beats, actors with tracks, captions, audio cues and attributions",
+      "value": {
+        "describes": "a scene recipe in the tools' format: beats, actors with tracks, captions, audio cues and attributions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "actors",
+            "beats",
+            "duration_s",
+            "recipe_id",
+            "title"
+          ],
+          "properties": {
+            "recipe_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "synopsis": {
+              "type": "string"
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 12,
+              "maximum": 120
+            },
+            "duration_s": {
+              "type": "number",
+              "maximum": 180.0
+            },
+            "seed": {
+              "type": "integer"
+            },
+            "stage_aspect": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            },
+            "background_hex": {
+              "type": "string"
+            },
+            "cover_frame_index": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "beats": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object"
+              }
+            },
+            "actors": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object"
+              }
+            },
+            "captions": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "audio_cues": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "attributions": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "rules": [
+          "The tools' SceneRecipe model is the full contract; video-motion qa rejects anything it does not accept.",
+          "Every actor and audio asset needs an attribution with an allowed license, a creator and a digest."
+        ],
+        "tool_facts": {
+          "fields": [
+            "actors",
+            "attributions",
+            "audio_cues",
+            "background_hex",
+            "beats",
+            "captions",
+            "cover_frame_index",
+            "duration_s",
+            "fps",
+            "recipe_id",
+            "seed",
+            "stage_aspect",
+            "synopsis",
+            "title"
+          ],
+          "required": [
+            "actors",
+            "beats",
+            "duration_s",
+            "recipe_id",
+            "title"
+          ]
+        }
+      },
+      "category_reason": "A declarative scene recipe."
+    },
+    {
+      "slug": "template.sequence",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: a sequence in the tools' format: clips, transitions, narration, music bed, captions and loudness",
+      "value": {
+        "describes": "a sequence in the tools' format: clips, transitions, narration, music bed, captions and loudness",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "clips",
+            "outputs",
+            "sequence_id",
+            "title"
+          ],
+          "properties": {
+            "sequence_id": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "synopsis": {
+              "type": "string"
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 12,
+              "maximum": 60
+            },
+            "outputs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "reels_9x16",
+                  "feed_4x5",
+                  "landscape_16x9"
+                ]
+              }
+            },
+            "clips": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 64,
+              "items": {
+                "type": "object"
+              }
+            },
+            "narration": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "object"
+              }
+            },
+            "music_bed": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "music_duck_db": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 36.0
+            },
+            "captions": {
+              "type": "array",
+              "maxItems": 256,
+              "items": {
+                "type": "object"
+              }
+            },
+            "loudness_target_lufs": {
+              "type": "number",
+              "minimum": -30.0,
+              "maximum": -8.0
+            },
+            "true_peak_limit_dbtp": {
+              "type": "number",
+              "minimum": -9.0,
+              "maximum": 0.0
+            },
+            "disclosures": {
+              "type": "array",
+              "maxItems": 16,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "rules": [
+          "The tools' VideoSequence model is the full contract; video-motion video plan rejects anything it does not accept.",
+          "Each media element pins its media noun by store, key, version and value digest and repeats the bytes digest."
+        ],
+        "tool_facts": {
+          "fields": [
+            "captions",
+            "clips",
+            "disclosures",
+            "fps",
+            "loudness_target_lufs",
+            "music_bed",
+            "music_duck_db",
+            "narration",
+            "outputs",
+            "sequence_id",
+            "synopsis",
+            "title",
+            "true_peak_limit_dbtp"
+          ],
+          "required": [
+            "clips",
+            "outputs",
+            "sequence_id",
+            "title"
+          ]
+        }
+      },
+      "category_reason": "A sequence orders scene and media clips; it is a scene recipe for a whole video."
+    },
+    {
+      "slug": "template.media",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: one hash-pinned media file: a recording, image or audio file with its digest, license and provenance",
+      "value": {
+        "describes": "one hash-pinned media file: a recording, image or audio file with its digest, license and provenance",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "blob_sha256",
+            "byte_size",
+            "creator",
+            "disclosure",
+            "kind",
+            "license",
+            "media_id",
+            "mime_type",
+            "provenance",
+            "source_uri",
+            "synthetic",
+            "title"
+          ],
+          "properties": {
+            "media_id": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_.-]{0,95}$"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "recording",
+                "image",
+                "audio"
+              ]
+            },
+            "mime_type": {
+              "type": "string",
+              "enum": [
+                "video/mp4",
+                "video/quicktime",
+                "video/webm",
+                "image/png",
+                "image/jpeg",
+                "audio/wav"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "blob_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "byte_size": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "width": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 8192
+            },
+            "height": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 8192
+            },
+            "duration_s": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "maximum": 3600.0
+            },
+            "fps": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "maximum": 240.0
+            },
+            "sample_rate_hz": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 8000,
+              "maximum": 192000
+            },
+            "channels": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 8
+            },
+            "license": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "description": "An SPDX license id."
+            },
+            "creator": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source_uri": {
+              "type": "string",
+              "minLength": 1
+            },
+            "provenance": {
+              "type": "string",
+              "enum": [
+                "captured",
+                "generated",
+                "licensed"
+              ]
+            },
+            "synthetic": {
+              "type": "boolean"
+            },
+            "disclosure": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generator": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "object_ref": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        },
+        "rules": [
+          "render-sequence accepts only CC0-1.0, CC-BY-4.0, MIT and LicenseRef-Video-Motion-Procedural; record media under any other license as such and leave it out of rendering.",
+          "Generated media name the generator and parameters that rebuild the exact bytes and are labeled synthetic; captured and licensed media have no generator.",
+          "Visual media need width and height; timed media need duration_s; audio needs sample_rate_hz and channels.",
+          "blob_sha256 is the SHA-256 of the stored bytes; object_ref names the stored object when there is one."
+        ],
+        "example": {
+          "blob_sha256": "dbff2647268c431e4c49efb429d3b18596215445469d9ce62517121cbbff87e9",
+          "byte_size": 1555923,
+          "channels": null,
+          "creator": "video-motion media generators",
+          "disclosure": "The inset image is a generated test card standing in for a screen capture.",
+          "duration_s": null,
+          "fps": null,
+          "generator": {
+            "params": {
+              "height": 540,
+              "width": 960
+            },
+            "tool": "video_motion.media:placeholder_card_png"
+          },
+          "height": 540,
+          "kind": "image",
+          "license": "LicenseRef-Video-Motion-Procedural",
+          "media_id": "screen-capture-placeholder",
+          "mime_type": "image/png",
+          "object_ref": null,
+          "provenance": "generated",
+          "sample_rate_hz": null,
+          "source_uri": "urn:video-motion:generated:placeholder_card_png",
+          "synthetic": true,
+          "title": "Placeholder for a screen capture",
+          "width": 960
+        },
+        "tool_facts": {
+          "fields": [
+            "blob_sha256",
+            "byte_size",
+            "channels",
+            "creator",
+            "disclosure",
+            "duration_s",
+            "fps",
+            "generator",
+            "height",
+            "kind",
+            "license",
+            "media_id",
+            "mime_type",
+            "object_ref",
+            "provenance",
+            "sample_rate_hz",
+            "source_uri",
+            "synthetic",
+            "title",
+            "width"
+          ],
+          "required": [
+            "blob_sha256",
+            "byte_size",
+            "creator",
+            "disclosure",
+            "kind",
+            "license",
+            "media_id",
+            "mime_type",
+            "provenance",
+            "source_uri",
+            "synthetic",
+            "title"
+          ],
+          "media_kinds": [
+            "recording",
+            "image",
+            "audio"
+          ],
+          "mime_types": [
+            "audio/wav",
+            "image/jpeg",
+            "image/png",
+            "video/mp4",
+            "video/quicktime",
+            "video/webm"
+          ],
+          "provenance": [
+            "captured",
+            "generated",
+            "licensed"
+          ],
+          "generators": [
+            "video_motion.media:tone_bursts_wav",
+            "video_motion.media:pad_wav",
+            "video_motion.media:placeholder_card_png"
+          ],
+          "renderer_licenses": [
+            "CC-BY-4.0",
+            "CC0-1.0",
+            "LicenseRef-Video-Motion-Procedural",
+            "MIT"
+          ]
+        }
+      },
+      "category_reason": "Scene recipes bind media assets; a media noun is that asset with its digest, timing and rights."
+    },
+    {
+      "slug": "template.observation-trace",
+      "category": "noun.motion_profile",
+      "role": "template",
+      "title": "Template: a timestamped motion observation trace: motion energy, cuts, speakers and normalized positions",
+      "value": {
+        "describes": "a timestamped motion observation trace: motion energy, cuts, speakers and normalized positions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "duration_s",
+            "samples",
+            "title",
+            "trace_id"
+          ],
+          "properties": {
+            "trace_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 12,
+              "maximum": 120
+            },
+            "duration_s": {
+              "type": "number",
+              "maximum": 180.0
+            },
+            "samples": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "rules": [
+          "Numbers only: never embed media, local paths or unattributed clips."
+        ]
+      },
+      "category_reason": "Observations a motion profile is fitted from."
+    },
+    {
+      "slug": "template.motion-profile",
+      "category": "noun.motion_profile",
+      "role": "template",
+      "title": "Template: a motion profile learned from a trace: beat proportions, easing fits, cut cadence and waypoints",
+      "value": {
+        "describes": "a motion profile learned from a trace: beat proportions, easing fits, cut cadence and waypoints",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "beat_proportions",
+            "dominant_easing",
+            "mean_motion_intensity",
+            "median_cut_cadence_s",
+            "profile_id",
+            "profile_sha256",
+            "reference_duration_s",
+            "source_trace_id",
+            "title",
+            "trajectories"
+          ],
+          "properties": {
+            "profile_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source_trace_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reference_duration_s": {
+              "type": "number"
+            },
+            "median_cut_cadence_s": {
+              "type": "number"
+            },
+            "mean_motion_intensity": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "dominant_easing": {
+              "type": "string",
+              "enum": [
+                "linear",
+                "ease_out_cubic",
+                "ease_in_out_cubic",
+                "spring_pop",
+                "step_hold"
+              ]
+            },
+            "beat_proportions": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": {
+                "type": "object"
+              }
+            },
+            "trajectories": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object"
+              }
+            },
+            "profile_sha256": {
+              "type": "string"
+            }
+          }
+        },
+        "rules": [
+          "profile_sha256 is the canonical digest of the profile without that field."
+        ]
+      },
+      "category_reason": "A learned, reusable motion profile."
+    },
+    {
+      "slug": "template.frame-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the result of seeking frames of one scene recipe in one aspect",
+      "value": {
+        "describes": "the result of seeking frames of one scene recipe in one aspect",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "recipe",
+            "aspect",
+            "tool_commit",
+            "frames",
+            "orders_compared",
+            "timeline_sha256"
+          ],
+          "properties": {
+            "recipe": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            },
+            "tool_commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "frames": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 64,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "frame_index",
+                  "frame_hash_sha256",
+                  "svg_sha256"
+                ],
+                "properties": {
+                  "frame_index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "frame_hash_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "svg_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "orders_compared": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "forward",
+                  "backward",
+                  "shuffled"
+                ]
+              }
+            },
+            "timeline_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "rules": [
+          "timeline_sha256 is the SHA-256 of every frame hash in order joined by colons, as the demo computes it."
+        ]
+      },
+      "category_reason": "A frame check is a fingerprinted evaluation record."
+    },
+    {
+      "slug": "template.deliverable",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one compiled social deliverable: aspects, files with digests, bundle digest and QA receipt",
+      "value": {
+        "describes": "one compiled social deliverable: aspects, files with digests, bundle digest and QA receipt",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "recipe",
+            "aspects",
+            "tool_commit",
+            "bundle_sha256",
+            "qa_passed",
+            "qa_receipt_sha256",
+            "files"
+          ],
+          "properties": {
+            "recipe": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "aspects": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "reels_9x16",
+                  "feed_4x5",
+                  "landscape_16x9"
+                ]
+              }
+            },
+            "tool_commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "bundle_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "qa_passed": {
+              "type": "boolean"
+            },
+            "qa_receipt_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "qa_passed is true only when every-frame QA passed for every aspect; the tools refuse to finish otherwise."
+        ]
+      },
+      "category_reason": "A deliverable record is a fingerprinted run with output digests."
+    },
+    {
+      "slug": "template.scene-qa-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an every-frame QA report for one scene recipe, as video-motion qa writes it",
+      "value": {
+        "describes": "an every-frame QA report for one scene recipe, as video-motion qa writes it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "aspects_checked",
+            "attribution_credit_line",
+            "checks",
+            "findings",
+            "frames_audited",
+            "passed",
+            "qa_receipt_sha256",
+            "recipe_id",
+            "score"
+          ],
+          "properties": {
+            "recipe_id": {
+              "type": "string"
+            },
+            "aspects_checked": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "reels_9x16",
+                  "feed_4x5",
+                  "landscape_16x9"
+                ]
+              }
+            },
+            "frames_audited": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "score": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 100.0
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "findings": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "attribution_credit_line": {
+              "type": "string"
+            },
+            "qa_receipt_sha256": {
+              "type": "string"
+            }
+          }
+        },
+        "rules": [
+          "Every one of the eight scene checks appears in checks.",
+          "passed is true only when no check has an error finding."
+        ]
+      },
+      "category_reason": "A QA report is a scored run over one recipe with findings and a receipt."
+    },
+    {
+      "slug": "template.render-manifest",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the render manifest the tools write for one aspect: frames, captions, audio, commands, tools and outputs",
+      "value": {
+        "describes": "the render manifest the tools write for one aspect: frames, captions, audio, commands, tools and outputs",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "aspect",
+            "audio",
+            "captions",
+            "commands",
+            "disclosure",
+            "fps",
+            "height",
+            "media",
+            "outputs",
+            "plan_sha256",
+            "prerender_qa_receipt_sha256",
+            "scene_frames",
+            "sequence_id",
+            "sequence_sha256",
+            "tool_source_files",
+            "tool_version",
+            "tools",
+            "total_frames",
+            "width"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "const": "video_motion.video-render.v1"
+            },
+            "sequence_id": {
+              "type": "string"
+            },
+            "sequence_sha256": {
+              "type": "string"
+            },
+            "plan_sha256": {
+              "type": "string"
+            },
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "fps": {
+              "type": "integer"
+            },
+            "total_frames": {
+              "type": "integer"
+            },
+            "tool_version": {
+              "type": "string"
+            },
+            "tool_source_files": {
+              "type": "object"
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "media": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "scene_frames": {
+              "type": "object"
+            },
+            "captions": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "audio": {
+              "type": "object"
+            },
+            "commands": {
+              "type": "object"
+            },
+            "outputs": {
+              "type": "object"
+            },
+            "disclosure": {
+              "type": "string"
+            },
+            "synthetic_visuals": {
+              "type": "boolean"
+            },
+            "synthetic_media": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "prerender_qa_receipt_sha256": {
+              "type": "string"
+            }
+          }
+        },
+        "rules": [
+          "Manifests carry no timestamps or local paths; the same tool builds give byte-identical manifests.",
+          "tool_source_files hashes every module the render tool can import."
+        ],
+        "tool_facts": {
+          "format": "video_motion.video-render.v1",
+          "fields": [
+            "aspect",
+            "audio",
+            "captions",
+            "commands",
+            "disclosure",
+            "format",
+            "fps",
+            "height",
+            "media",
+            "outputs",
+            "plan_sha256",
+            "prerender_qa_receipt_sha256",
+            "scene_frames",
+            "sequence_id",
+            "sequence_sha256",
+            "synthetic_media",
+            "synthetic_visuals",
+            "tool_source_files",
+            "tool_version",
+            "tools",
+            "total_frames",
+            "width"
+          ],
+          "required": [
+            "aspect",
+            "audio",
+            "captions",
+            "commands",
+            "disclosure",
+            "fps",
+            "height",
+            "media",
+            "outputs",
+            "plan_sha256",
+            "prerender_qa_receipt_sha256",
+            "scene_frames",
+            "sequence_id",
+            "sequence_sha256",
+            "tool_source_files",
+            "tool_version",
+            "tools",
+            "total_frames",
+            "width"
+          ]
+        }
+      },
+      "category_reason": "A render manifest is a fingerprinted run record with output digests."
+    },
+    {
+      "slug": "template.video-qa-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the post-encode QA report for one rendered MP4, with a result for every check and a receipt",
+      "value": {
+        "describes": "the post-encode QA report for one rendered MP4, with a result for every check and a receipt",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "aspect",
+            "checks",
+            "mp4_sha256",
+            "passed",
+            "plan_sha256",
+            "render_manifest_sha256",
+            "sequence_id"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "const": "video_motion.video-qa.v1"
+            },
+            "sequence_id": {
+              "type": "string"
+            },
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            },
+            "mp4_sha256": {
+              "type": "string"
+            },
+            "render_manifest_sha256": {
+              "type": "string"
+            },
+            "plan_sha256": {
+              "type": "string"
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "receipt_sha256": {
+              "type": "string"
+            }
+          }
+        },
+        "rules": [
+          "Every one of the eight video checks appears once; passed is true only when all pass."
+        ],
+        "tool_facts": {
+          "format": "video_motion.video-qa.v1",
+          "fields": [
+            "aspect",
+            "checks",
+            "format",
+            "mp4_sha256",
+            "passed",
+            "plan_sha256",
+            "receipt_sha256",
+            "render_manifest_sha256",
+            "sequence_id"
+          ],
+          "required": [
+            "aspect",
+            "checks",
+            "mp4_sha256",
+            "passed",
+            "plan_sha256",
+            "render_manifest_sha256",
+            "sequence_id"
+          ],
+          "checks": [
+            "container_and_streams",
+            "duration_and_frames",
+            "frame_hash_spot_checks",
+            "black_frames",
+            "frozen_frames",
+            "integrated_loudness",
+            "caption_timing_coverage",
+            "synthetic_disclosure"
+          ]
+        }
+      },
+      "category_reason": "A video QA report is a scored run over one output with measurements and a receipt."
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "seek-frame",
+      "kind": "verb.compile_dag",
+      "title": "Seek frames of a scene recipe",
+      "claimant": "agent",
+      "summary": "Evaluate any frame of a pinned scene recipe directly by its number in one aspect, draw chosen frames as standalone SVGs, and confirm that forward, backward and shuffled evaluation give identical frame hashes.",
+      "outcome": "A frame check with each drawn frame's hash and SVG digest and the timeline digest.",
+      "ready_outcome": "frames_checked",
+      "model_use": "none",
+      "pinned": [
+        "tool.video-motion-tools",
+        "rules.aspects"
+      ],
+      "slots": [
+        {
+          "name": "recipe",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the scene recipe noun to evaluate."
+        }
+      ],
+      "params": {
+        "aspect": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "reels_9x16",
+              "feed_4x5",
+              "landscape_16x9"
+            ]
+          },
+          "default": "reels_9x16",
+          "description": "The aspect to evaluate."
+        },
+        "frames": {
+          "schema": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "default": [],
+          "description": "Frames to draw as SVG; empty means the first, middle and last frame."
+        }
+      },
+      "produces": [
+        {
+          "name": "frame_check",
+          "template": "template.frame-check"
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Read the recipe file the recipe noun pins and verify its SHA-256 before evaluating anything.",
+        "Evaluate every frame with evaluate_frame forward, backward and in a shuffled order, and compare the three lists of frame hashes.",
+        "Stop with unknown if any frame hash differs between orders; report the first frame that differs.",
+        "Draw each requested frame with render_svg_frame and record its frame hash and the SVG's SHA-256."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.frame-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "order-invariant",
+          "check": "Forward, backward and shuffled evaluation gave identical hashes for every frame.",
+          "method": "deterministic"
+        },
+        {
+          "id": "frames-in-range",
+          "check": "Every drawn frame index is below the recipe's total_frames.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "fit-motion",
+      "kind": "verb.ingest",
+      "title": "Fit a motion formula to an observation trace",
+      "claimant": "agent",
+      "summary": "Fit the six-beat formula and five easing curves to a pinned observation trace with least squares, and optionally retarget the learned profile to a new duration and check the result.",
+      "outcome": "A motion profile noun with beat proportions, easing fits, cut cadence and its digest.",
+      "ready_outcome": "profile_ready",
+      "model_use": "none",
+      "pinned": [
+        "tool.video-motion-tools",
+        "catalog.motion-formulas"
+      ],
+      "slots": [
+        {
+          "name": "trace",
+          "category": "noun.motion_profile",
+          "description": "Pin of an observation trace noun in the tools' trace format."
+        }
+      ],
+      "params": {
+        "retarget_duration_s": {
+          "schema": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 180
+          },
+          "default": null,
+          "required": false,
+          "description": "Optional new duration in seconds to retarget the learned profile to."
+        }
+      },
+      "produces": [
+        {
+          "name": "motion_profile",
+          "template": "template.motion-profile"
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Validate the trace against the tools' trace model and verify any file digest it pins.",
+        "Run video-motion learn with the trace and keep the written profile and its profile_sha256.",
+        "When retarget_duration_s is set, retarget the profile with retarget_motion and run every-frame QA on the resulting recipe; report its receipt.",
+        "Use only timing and trajectory numbers. Never copy media from whatever the trace was measured on."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.motion-profile's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "six-beats",
+          "check": "The profile has the six beats in order, covering 0 to 1 without gaps.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digest-recomputed",
+          "check": "profile_sha256 equals the canonical digest of the written profile.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "draft-scene",
+      "kind": "verb.solve_draft",
+      "title": "Draft a scene recipe",
+      "claimant": "agent",
+      "summary": "Write a scene recipe in the tools' format for one storyboard scene or brief, using catalog assets and motion formulas, and revise it until every-frame QA passes in each requested aspect.",
+      "outcome": "A scene recipe noun that passes every-frame QA, or no_change when an existing recipe already fits.",
+      "ready_outcome": "recipe_ready",
+      "pinned": [
+        "tool.video-motion-tools",
+        "catalog.assets",
+        "catalog.motion-formulas",
+        "rules.aspects",
+        "rules.captions",
+        "checks.scene"
+      ],
+      "slots": [
+        {
+          "name": "brief",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the storyboard scene or scene brief to draw."
+        },
+        {
+          "name": "start_from",
+          "category": "noun.scene_recipe",
+          "description": "Optional pin of a recipe to start from, such as one of this pack's recipes.",
+          "required": false
+        }
+      ],
+      "params": {
+        "aspects": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            }
+          },
+          "default": [
+            "reels_9x16",
+            "feed_4x5"
+          ],
+          "description": "Aspects the recipe must pass in."
+        }
+      },
+      "produces": [
+        {
+          "name": "scene_recipe",
+          "template": "template.scene-recipe"
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Write the recipe with catalog assets, or with assets whose allowed license, creator and digest you can state; label example numbers as illustrative.",
+        "Time the beats with the motion formulas and keep every caption inside the caption rules.",
+        "Run video-motion qa on the recipe for each requested aspect and revise until it passes. Never weaken a check to pass it."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.scene-recipe's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "qa-passed",
+          "check": "video-motion qa passed for every requested aspect.",
+          "method": "deterministic"
+        },
+        {
+          "id": "licenses-allowed",
+          "check": "Every attribution's license is one the catalog allows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fits-the-brief",
+          "check": "The scene shows what the brief asks for, plainly.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "compile-social-formats",
+      "kind": "verb.compile_dag",
+      "title": "Compile social formats",
+      "claimant": "agent",
+      "summary": "Compile a pinned scene recipe into 9:16, 4:5 and optional 16:9 SVG frames and frame overview sheets, SRT and WebVTT captions, an attribution manifest and an every-frame QA report.",
+      "outcome": "A deliverable record with every file's digest, the bundle digest and the QA receipt.",
+      "ready_outcome": "deliverable_ready",
+      "model_use": "none",
+      "pinned": [
+        "tool.video-motion-tools",
+        "checks.scene",
+        "rules.aspects"
+      ],
+      "slots": [
+        {
+          "name": "recipe",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the scene recipe noun to compile."
+        }
+      ],
+      "params": {
+        "aspects": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            }
+          },
+          "default": [
+            "reels_9x16",
+            "feed_4x5"
+          ],
+          "description": "Aspects to compile."
+        }
+      },
+      "produces": [
+        {
+          "name": "deliverable",
+          "template": "template.deliverable"
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Read the recipe file the recipe noun pins and verify its SHA-256.",
+        "Run video-motion render with the recipe and the requested aspects; it refuses to finish when every-frame QA fails.",
+        "Compile it a second time and compare the bundle digests.",
+        "Store the files in the requester's scope and record each file's SHA-256 in the deliverable record."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.deliverable's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "qa-passed",
+          "check": "qa_passed is true and the receipt is recorded.",
+          "method": "deterministic"
+        },
+        {
+          "id": "repeatable",
+          "check": "A second compile gave the same bundle digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "files-hashed",
+          "check": "Every listed file's SHA-256 matches the stored file.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "video-motion.draft-scene"
+      ]
+    },
+    {
+      "slug": "check-social-formats",
+      "kind": "verb.verify_gate",
+      "title": "Check social formats",
+      "claimant": "agent",
+      "summary": "Run the eight every-frame checks on a pinned scene recipe for each requested aspect, and compare the receipt with a deliverable's when one is pinned.",
+      "outcome": "A scene QA report with every check's result and findings.",
+      "ready_outcome": "checked",
+      "model_use": "none",
+      "pinned": [
+        "tool.video-motion-tools",
+        "checks.scene",
+        "rules.aspects",
+        "rules.captions"
+      ],
+      "slots": [
+        {
+          "name": "recipe",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the scene recipe noun to check."
+        },
+        {
+          "name": "deliverable",
+          "category": "noun.eval_run",
+          "description": "Optional pin of a deliverable record to compare.",
+          "required": false
+        }
+      ],
+      "params": {
+        "aspects": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            }
+          },
+          "default": [
+            "reels_9x16",
+            "feed_4x5"
+          ],
+          "description": "Aspects to check."
+        }
+      },
+      "produces": [
+        {
+          "name": "scene_qa_report",
+          "template": "template.scene-qa-report"
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Run video-motion qa on the recipe for the requested aspects and keep the report as written.",
+        "When a deliverable is pinned, its QA receipt must equal the one you computed; report a difference as a failed check.",
+        "A failed check is a result to report, not an error to retry away."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.scene-qa-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-checks",
+          "check": "All eight scene checks appear in the report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "receipt-compared",
+          "check": "When a deliverable is pinned, its receipt was compared and the result recorded.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "preferred": [
+        "Run on a different worker than the one that compiled the deliverable."
+      ],
+      "follows": [
+        "video-motion.compile-social-formats"
+      ]
+    },
+    {
+      "slug": "plan-sequence",
+      "kind": "verb.solve_draft",
+      "title": "Plan a video sequence",
+      "claimant": "agent",
+      "summary": "Assemble a sequence in the tools' format from pinned scene recipes, media, narration, a music bed and captions, with cuts and crossfades, and revise it until the frame plan and pre-render QA pass for every output.",
+      "outcome": "A sequence noun that plans onto exact frames and passes pre-render QA, with its media nouns.",
+      "ready_outcome": "sequence_ready",
+      "pinned": [
+        "tool.video-motion-tools",
+        "rules.aspects",
+        "rules.captions",
+        "rules.audio"
+      ],
+      "slots": [
+        {
+          "name": "scene_recipes",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the scene recipes to use as clips.",
+          "many": true,
+          "max": 20
+        },
+        {
+          "name": "media",
+          "category": "noun.scene_recipe",
+          "description": "Pins of captured, licensed or generated media to use.",
+          "many": true,
+          "max": 40,
+          "required": false
+        },
+        {
+          "name": "storyboard",
+          "category": "noun.scene_recipe",
+          "description": "Optional pin of the storyboard, for order and timing.",
+          "required": false
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Optional pin of a timed caption track.",
+          "required": false
+        }
+      ],
+      "params": {
+        "outputs": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            }
+          },
+          "default": [
+            "landscape_16x9",
+            "reels_9x16"
+          ],
+          "description": "Output aspects."
+        },
+        "loudness_target_lufs": {
+          "schema": {
+            "type": "number",
+            "minimum": -30,
+            "maximum": -8
+          },
+          "default": -14,
+          "description": "Integrated loudness target for the mix."
+        }
+      },
+      "produces": [
+        {
+          "name": "sequence",
+          "template": "template.sequence"
+        },
+        {
+          "name": "media",
+          "template": "template.media",
+          "max": 40
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Write a media noun in template.media's format for every file the sequence uses, with the exact bytes digest, and pin each media element by that noun's version and value digest.",
+        "Use only media whose license the renderer accepts. Leave anything else out and list it in unknowns with the reason.",
+        "Run video-motion video plan on the sequence and revise until the plan and pre-render QA pass for every output.",
+        "Keep the disclosure honest: label every generated or synthetic element as such."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.sequence's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "prerender-passed",
+          "check": "video-motion video plan reported pre-render QA passing for every output.",
+          "method": "deterministic"
+        },
+        {
+          "id": "media-pins-verified",
+          "check": "Every media element's pin and bytes digest match its media noun and file.",
+          "method": "deterministic"
+        },
+        {
+          "id": "licenses-accepted",
+          "check": "Every media license is one the renderer accepts.",
+          "method": "deterministic"
+        },
+        {
+          "id": "follows-the-storyboard",
+          "check": "Clip order and timing follow the storyboard when one is pinned.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "render-sequence",
+      "kind": "verb.compile_dag",
+      "title": "Render a sequence to video",
+      "claimant": "agent",
+      "summary": "Render a pinned sequence and its media to H.264/AAC MP4 at 1920x1080 and 1080x1920 with SRT and WebVTT sidecars, a render manifest per aspect and a tool card for every binary that ran.",
+      "outcome": "One MP4 media noun and one render manifest per aspect, ready for check-video.",
+      "ready_outcome": "render_ready",
+      "model_use": "none",
+      "pinned": [
+        "tool.video-motion-tools",
+        "tool.ffmpeg",
+        "tool.playwright",
+        "tool.chromium",
+        "tools.reference-builds",
+        "rules.audio"
+      ],
+      "slots": [
+        {
+          "name": "sequence",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the sequence noun to render."
+        },
+        {
+          "name": "media",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the media nouns the sequence uses.",
+          "many": true,
+          "max": 40,
+          "required": false
+        }
+      ],
+      "params": {
+        "aspects": {
+          "schema": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            }
+          },
+          "default": [],
+          "description": "A subset of the sequence's outputs; empty means all."
+        },
+        "processes": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16
+          },
+          "default": 4,
+          "description": "Rasterizer processes; the output bytes do not depend on it."
+        }
+      },
+      "produces": [
+        {
+          "name": "video",
+          "template": "template.media",
+          "max": 3
+        },
+        {
+          "name": "render_manifest",
+          "template": "template.render-manifest",
+          "max": 3
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Run video-motion video probe-tools and keep the cards. Compare them with the reference builds and report every difference; do not hide one.",
+        "Rebuild generated media from their generators and verify each blob digest; read captured media only from their pinned objects and verify the bytes.",
+        "Run video-motion video render with the sequence and its media nouns. It refuses to render when pre-render QA, a pin or a digest fails.",
+        "Store the MP4s, sidecars and manifests as nouns in the requester's scope, labeled as synthetic wherever the manifest says so."
+      ],
+      "preferred": [
+        "Use the reference builds when available, so a second render can be byte-identical."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.render-manifest's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-recorded",
+          "check": "Every MP4 and sidecar digest in each manifest matches the stored file.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tool-cards-recorded",
+          "check": "Each manifest lists a tool card for FFmpeg, Chromium and Playwright.",
+          "method": "deterministic"
+        },
+        {
+          "id": "prerender-passed",
+          "check": "Pre-render QA passed for every rendered aspect.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "FFmpeg with the components the tool card lists",
+        "headless Chromium through Playwright",
+        "store blobs in the requester's scope",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "video-motion.plan-sequence"
+      ]
+    },
+    {
+      "slug": "check-video",
+      "kind": "verb.verify_gate",
+      "title": "Check a rendered video",
+      "claimant": "agent",
+      "summary": "Run the eight post-encode checks on each rendered MP4 against its sequence plan: streams, exact frames and duration, frame spot checks with SSIM, black and frozen frames, integrated loudness, caption timing and the disclosure.",
+      "outcome": "One video QA report per aspect with every check's result and a receipt digest.",
+      "ready_outcome": "checked",
+      "model_use": "none",
+      "pinned": [
+        "tool.video-motion-tools",
+        "checks.video",
+        "tool.ffmpeg"
+      ],
+      "slots": [
+        {
+          "name": "sequence",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the sequence noun that was rendered."
+        },
+        {
+          "name": "render_manifests",
+          "category": "noun.eval_run",
+          "description": "Pins of the render manifests to check.",
+          "many": true,
+          "max": 3
+        },
+        {
+          "name": "videos",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the rendered MP4 media nouns.",
+          "many": true,
+          "max": 3
+        }
+      ],
+      "produces": [
+        {
+          "name": "video_qa_report",
+          "template": "template.video-qa-report",
+          "max": 3
+        }
+      ],
+      "steps": [
+        "Verify every pin, then use an installation of this pack's code whose files match the tool card's code digest.",
+        "Inspect the render's outcome and verify the MP4 and manifest digests before measuring; a finished render is not proof that it succeeded.",
+        "Run video-motion video check with the sequence and the render directory. It confines every path and verifies every recorded digest before FFmpeg runs, and never executes the manifest's commands.",
+        "A failed check is a result to report, not an error to retry away; keep every report."
+      ],
+      "preferred": [
+        "Run on a different worker than the one that rendered the video."
+      ],
+      "acceptance": [
+        {
+          "id": "output-matches-template",
+          "check": "Every produced noun validates against template.video-qa-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "code-matches-pin",
+          "check": "The code that ran matches the tool card's code digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-checks",
+          "check": "All eight video checks appear once in every report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "passed-consistent",
+          "check": "passed is true exactly when every check passed.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-verified",
+          "check": "Each report's mp4_sha256 and render_manifest_sha256 match the pinned nouns.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to fetch the pack library at the pinned commit and the code's Python packages from PyPI when no qualified installation exists; no other host."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "an installation of this pack's code that matches its digest",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "video-motion.render-sequence"
+      ]
+    }
+  ]
+}

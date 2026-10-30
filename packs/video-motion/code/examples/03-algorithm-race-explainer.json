@@ -1,0 +1,187 @@
+{
+  "recipe_id": "03-algorithm-race-explainer",
+  "title": "Algorithm Race: Wall-Clock Capture vs. Frame-Addressable Seek",
+  "synopsis": "Side-by-side procedural race lanes showing wall-clock recorder stalls versus pure O(1) random-access seek(frame_index).",
+  "fps": 30,
+  "duration_s": 15.0,
+  "seed": 303,
+  "background_hex": "#0a111f",
+  "cover_frame_index": 330,
+  "beats": [
+    { "phase": "hook", "start_s": 0.0, "end_s": 0.6, "target_energy": 0.88 },
+    { "phase": "orientation", "start_s": 0.6, "end_s": 2.0, "target_energy": 0.58 },
+    { "phase": "setup", "start_s": 2.0, "end_s": 5.5, "target_energy": 0.46 },
+    { "phase": "escalation", "start_s": 5.5, "end_s": 10.5, "target_energy": 0.82 },
+    { "phase": "punchline", "start_s": 10.5, "end_s": 13.8, "target_energy": 0.92 },
+    { "phase": "hold", "start_s": 13.8, "end_s": 15.0, "target_energy": 0.1 }
+  ],
+  "actors": [
+    {
+      "actor_id": "lane_wallclock",
+      "kind": "mechanism",
+      "label": "Wall-Clock Screen Capture",
+      "asset_id": "mech-wallclock-lane",
+      "z_index": 10,
+      "width": 700.0,
+      "height": 185.0,
+      "fill_hex": "#27151d",
+      "accent_hex": "#fb7185",
+      "is_subject_focus": false,
+      "data_points": [],
+      "tracks": [
+        {
+          "property": "x",
+          "keyframes": [
+            { "t_s": 0.0, "value": 465.0, "easing": "ease_out_cubic" },
+            { "t_s": 13.8, "value": 465.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "y",
+          "keyframes": [
+            { "t_s": 0.0, "value": 500.0, "easing": "spring_pop" },
+            { "t_s": 13.8, "value": 510.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "draw_progress",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.02, "easing": "linear" },
+            { "t_s": 4.0, "value": 0.31, "easing": "ease_out_cubic" },
+            { "t_s": 8.5, "value": 0.44, "easing": "ease_in_out_cubic" },
+            { "t_s": 13.8, "value": 0.72, "easing": "step_hold" }
+          ]
+        }
+      ],
+      "aspect_overrides": {
+        "feed_4x5": { "dx": 30.0, "dy": -20.0, "scale_mul": 0.95 }
+      }
+    },
+    {
+      "actor_id": "lane_frameseek",
+      "kind": "mechanism",
+      "label": "Frame-Indexed Seek(f)",
+      "asset_id": "mech-frameseek-lane",
+      "z_index": 12,
+      "width": 700.0,
+      "height": 185.0,
+      "fill_hex": "#0f2922",
+      "accent_hex": "#2dd4bf",
+      "is_subject_focus": false,
+      "data_points": [],
+      "tracks": [
+        {
+          "property": "x",
+          "keyframes": [
+            { "t_s": 0.0, "value": 465.0, "easing": "ease_out_cubic" },
+            { "t_s": 13.8, "value": 465.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "y",
+          "keyframes": [
+            { "t_s": 0.0, "value": 790.0, "easing": "spring_pop" },
+            { "t_s": 13.8, "value": 780.0, "easing": "step_hold" }
+          ]
+        },
+        {
+          "property": "draw_progress",
+          "keyframes": [
+            { "t_s": 0.0, "value": 0.0, "easing": "ease_in_out_cubic" },
+            { "t_s": 13.8, "value": 1.0, "easing": "step_hold" }
+          ]
+        }
+      ],
+      "aspect_overrides": {
+        "feed_4x5": { "dx": 30.0, "dy": -10.0, "scale_mul": 0.95 }
+      }
+    }
+  ],
+  "captions": [
+    {
+      "cue_id": "race-01",
+      "role_label": "RACE",
+      "speaker": "Narrator",
+      "text": "Two pipelines render the exact same 450-frame story.",
+      "start_s": 0.0,
+      "end_s": 1.8,
+      "anchor": "top_banner",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    },
+    {
+      "cue_id": "race-02",
+      "role_label": "STALL",
+      "speaker": "Narrator",
+      "text": "Top lane waits on real-time timers and drops cues.",
+      "start_s": 2.05,
+      "end_s": 5.3,
+      "anchor": "lower_third",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    },
+    {
+      "cue_id": "race-03",
+      "role_label": "SEEK",
+      "speaker": "Narrator",
+      "text": "Bottom lane evaluates any frame in parallel with zero drift.",
+      "start_s": 5.55,
+      "end_s": 10.3,
+      "anchor": "lower_third",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    },
+    {
+      "cue_id": "race-04",
+      "role_label": "FINISH",
+      "speaker": "Narrator",
+      "text": "Every beat lands on frame and passes 8 QA checks.",
+      "start_s": 10.55,
+      "end_s": 13.7,
+      "anchor": "lower_third",
+      "font_px": 40.0,
+      "max_chars_per_line": 28,
+      "box_override": {}
+    }
+  ],
+  "audio_cues": [
+    {
+      "cue_id": "bed-race",
+      "stem_kind": "music_bed",
+      "asset_id": "stem-bed-synth",
+      "start_s": 0.0,
+      "duration_s": 15.0,
+      "peak_dbfs": -13.0,
+      "duck_db": 8.0
+    }
+  ],
+  "attributions": [
+    {
+      "asset_id": "mech-frameseek-lane",
+      "license": "LicenseRef-Video-Motion-Procedural",
+      "creator": "video-motion mechanism kit",
+      "source_uri": "urn:video-motion:catalog:mech-frameseek-lane",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "mech-wallclock-lane",
+      "license": "LicenseRef-Video-Motion-Procedural",
+      "creator": "video-motion mechanism kit",
+      "source_uri": "urn:video-motion:catalog:mech-wallclock-lane",
+      "sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "digest_basis": "illustrative"
+    },
+    {
+      "asset_id": "stem-bed-synth",
+      "license": "CC-BY-4.0",
+      "creator": "video-motion audio lab",
+      "source_uri": "urn:video-motion:audio:stem-bed-synth",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "digest_basis": "illustrative"
+    }
+  ]
+}

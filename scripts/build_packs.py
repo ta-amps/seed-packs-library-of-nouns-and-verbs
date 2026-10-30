@@ -353,7 +353,11 @@ VERB_OPTIONAL = {
     "update_slot",
 }
 SOURCE_FIELDS = {"pack_id", "title", "version", "summary", "nouns", "verbs"}
-SOURCE_OPTIONAL = {"dependencies", "boundaries"}
+SOURCE_OPTIONAL = {"dependencies", "boundaries", "moved_from"}
+# moved_from is provenance only: the repository and exact commit a pack moved from. It stays in
+# source.json; nothing generated copies it.
+MOVED_FROM_REPOSITORY = re.compile(r"https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+")
+MOVED_FROM_COMMIT = re.compile(r"[0-9a-f]{40}")
 
 
 def code_files(pack_dir: Path) -> list[Path]:
@@ -533,6 +537,12 @@ def check_source(pack_id: str, source: Any) -> None:
     for dep in source.get("dependencies", []):
         if not isinstance(dep, str) or dep == pack_id:
             fail(f"{pack_id}: invalid dependency {dep!r}")
+    if "moved_from" in source:
+        moved = source["moved_from"]
+        require_fields(moved, f"{pack_id}.moved_from", {"repository", "commit"})
+        if not (isinstance(moved["repository"], str) and MOVED_FROM_REPOSITORY.fullmatch(moved["repository"])
+                and isinstance(moved["commit"], str) and MOVED_FROM_COMMIT.fullmatch(moved["commit"])):
+            fail(f"{pack_id}: moved_from names a GitHub repository URL and a full 40-character commit")
     seen: set[str] = set()
     for i, noun in enumerate(source["nouns"]):
         where = f"{pack_id}.nouns[{i}]"

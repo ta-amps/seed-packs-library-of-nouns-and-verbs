@@ -1,0 +1,149 @@
+{
+  "audio": {
+    "loudnorm_normalization": "linear",
+    "master_sha256": "98b2f42e8dbb55e82391a17596632281938d24d82d3f79c9f804b88058b6630f"
+  },
+  "code": {
+    "moved_from_commit": "78bd7224bf2cf259c34bd941fce2fbea1dcfc28b",
+    "note": "This file is committed together with the code it describes; sequence.tool_sources_sha256 identifies the exact modules that rendered and checked the video.",
+    "path": "packs/video-motion/code",
+    "repository": "https://github.com/ta-amps/pack-contributions"
+  },
+  "comparison_with_earlier_names": {
+    "against": "A render of the same sequence by the tools at 78bd7224, before the plain-name change, on the same machine and builds.",
+    "container_metadata_changed": [
+      "comment"
+    ],
+    "decoded_audio_identical": true,
+    "decoded_video_frames_identical": true,
+    "reason": "Only the disclosure comment changed: it now says the visuals are rendered from code. Manifests and QA receipts changed because they record renamed ids, licenses and source digests."
+  },
+  "date": "2026-10-29",
+  "determinism": "A second render at the same code (4 rasterizer processes instead of 2) produced byte-identical MP4s, render manifests and QA reports for both cuts.",
+  "format": "seed-pack.video-demo-evidence.v1",
+  "limits": [
+    "Narration, music and the inset image are generated placeholders, labeled in file metadata; replace them with real narration and screen captures before publishing.",
+    "Pixel identity depends on the exact Chromium build and system fonts; another machine can differ while still passing QA.",
+    "Spot checks cover frames that show exactly one scene clip; transition, overlay and recording frames are checked by stream, black, freeze and loudness measurements only."
+  ],
+  "outputs": {
+    "landscape_16x9": {
+      "checks": {
+        "black_frames": true,
+        "caption_timing_coverage": true,
+        "container_and_streams": true,
+        "duration_and_frames": true,
+        "frame_hash_spot_checks": true,
+        "frozen_frames": true,
+        "integrated_loudness": true,
+        "synthetic_disclosure": true
+      },
+      "height": 1080,
+      "measured": {
+        "black_runs": 0,
+        "caption_coverage": 1.0,
+        "container_duration_s": 21.4,
+        "decoded_frames": 642,
+        "freezes": [
+          {
+            "end_s": 21.0,
+            "start_s": 18.7
+          }
+        ],
+        "integrated_lufs": -14.0,
+        "loudness_range_lu": 2.1,
+        "min_spot_ssim": 0.999317,
+        "spot_checks": 12,
+        "true_peak_dbtp": -11.0,
+        "unexplained_freezes": 0
+      },
+      "mp4_bytes": 1531259,
+      "mp4_sha256": "609d421400d541d4f6aede3bc5d39af7f9d4eee69ff0fcaa39415dd16a27d06c",
+      "qa_passed": true,
+      "qa_receipt_sha256": "941d17d1caca53f66f1d55c914215b6866576fa407b8840c49fcb8907d87204e",
+      "render_manifest_sha256": "dde90188b5fbbea65f02b2013f1c164359608f807f157a3a766c4c8b83770ca1",
+      "width": 1920
+    },
+    "reels_9x16": {
+      "checks": {
+        "black_frames": true,
+        "caption_timing_coverage": true,
+        "container_and_streams": true,
+        "duration_and_frames": true,
+        "frame_hash_spot_checks": true,
+        "frozen_frames": true,
+        "integrated_loudness": true,
+        "synthetic_disclosure": true
+      },
+      "height": 1920,
+      "measured": {
+        "black_runs": 0,
+        "caption_coverage": 1.0,
+        "container_duration_s": 21.4,
+        "decoded_frames": 642,
+        "freezes": [
+          {
+            "end_s": 21.0,
+            "start_s": 18.7
+          }
+        ],
+        "integrated_lufs": -14.0,
+        "loudness_range_lu": 2.1,
+        "min_spot_ssim": 0.999311,
+        "spot_checks": 12,
+        "true_peak_dbtp": -11.0,
+        "unexplained_freezes": 0
+      },
+      "mp4_bytes": 1461133,
+      "mp4_sha256": "ca513272d9b22899ad623e7407301d3155e809dd2732ee5157594b4df4348eb5",
+      "qa_passed": true,
+      "qa_receipt_sha256": "9901cdb90a5eb3afb44cf0de0a7f1aee0ca5e0aa5378b6884942a437b2a06354",
+      "render_manifest_sha256": "8a78328bd1cdad144e1202faf33d8435e5ee26a884e72e1a9be2054df15f1c84",
+      "width": 1080
+    }
+  },
+  "pack": "video-motion",
+  "sequence": {
+    "disclosure": "Synthetic visuals: procedural motion graphics rendered from code. Generated media: Narration is a generated placeholder tone, not a voice. The inset image is a generated test card standing in for a screen capture. The music bed is a generated placeholder chord. Replace the placeholder tone, chord and test card with real narration and screen captures before publishing.",
+    "duration_s": 21.4,
+    "fps": 30,
+    "frames": 642,
+    "plan_sha256": "ea1360c6eb7b839f443da0198ec960601eda606aed87f50022c26b549421d122",
+    "sequence_id": "hackathon-demo",
+    "sequence_sha256": "f78536a20be225f369f5e589cd52989b695918eb1f2e91e9e8442cb5a85c203d",
+    "synthetic_media": [
+      "music-bed",
+      "narration",
+      "outro-screen-capture"
+    ],
+    "tool_sources_sha256": "4256a9cd3af73f951ed4f1fbf7912560d430ad449d88613edc7a8b5f0541c3f7"
+  },
+  "timing": "About 115 s wall time to render and check both cuts with 2 rasterizer processes, 72 s with 4, on a 16-thread CPU (no GPU use).",
+  "tools": [
+    {
+      "distribution": "imageio-ffmpeg 0.6.0 wheel binary (ffmpeg version 7.0.2-static https://johnvansickle.com/ffmpeg/)",
+      "license_spdx": "GPL-3.0-or-later",
+      "name": "FFmpeg",
+      "sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99",
+      "tool_id": "ffmpeg",
+      "version": "7.0.2-static"
+    },
+    {
+      "distribution": "Playwright 1.64.1 browser build chromium_headless_shell-1248",
+      "license_spdx": "BSD-3-Clause",
+      "name": "chrome-headless-shell",
+      "sha256": "4fa61f0ba0b4f89b7bec242c32ca16d3bccf69dbfef0651924a9ba8fede5f9d6",
+      "tool_id": "chromium",
+      "version": "156.0.8078.4"
+    },
+    {
+      "distribution": "playwright 1.64.1 wheel (driver/node is the hashed binary)",
+      "license_spdx": "Apache-2.0",
+      "name": "Playwright for Python",
+      "sha256": "e32e2d16081cf644f88392934288086e7662529d0d43277c34f7aad2207cfafb",
+      "tool_id": "playwright",
+      "version": "1.64.1"
+    }
+  ],
+  "what": "Local worker render and post-encode QA of examples/sequences/hackathon-demo.json with `video-motion video demo`, after the plain-name change and the move into the pack library. Not deployed, published or admitted; the MP4 files are kept outside the repository."
+}

@@ -11,19 +11,19 @@
   "files": [
     {
       "path": "README.md",
-      "sha256": "969e19c9edc308017f8ee37e11bb50c729eb86e774a270780125291393be22a8"
+      "sha256": "786920273c0ab837e7b663b4c3e8069fa1dad56a09560827daf97956a7b1a4c4"
     },
     {
       "path": "source.json",
-      "sha256": "946cc7bf0b85cc3e79a6259d71870908a5db70f9206cc38ed5e92d90735da107"
+      "sha256": "cdeca29a8b0c9dedd1bef9f26728cb70452d4c6c459058a1da822cd047fc2583"
     },
     {
       "path": "nouns.json",
-      "sha256": "4d2cd5687bd3ce9180e91e8f60d6e22be573dc5a3298ecd7557dc3d1042d528f"
+      "sha256": "18f817469b8cb21900070d4a4b7095bc46b0eae3d43fba49ce0140bcbded318a"
     },
     {
       "path": "verbs.json",
-      "sha256": "aa42356973944422b9094d7aa95b8211db126d89a0864736c352a0a6a8b34e12"
+      "sha256": "d9e90595201b06995777dc7248d829ccbbc15207e6da72aa339e51ee81c7d0c0"
     }
   ],
   "nouns": [
@@ -31,7 +31,7 @@
       "key": "visual-rendering.v0.1.0.pack",
       "category_id": "noun.skill_pack",
       "role": "pack",
-      "value_sha256": "f011ce627f2f437ec5ef7a55c17bb5efb029f0dfcce867197e75785599ca3b3c"
+      "value_sha256": "67859732e4f1a2ed91d993fdae7863c783c41bac1830e66a6553f782b1815150"
     },
     {
       "key": "visual-rendering.v0.1.0.quality-checks",
@@ -113,7 +113,7 @@
       "template_id": "visual-rendering.render",
       "kind": "verb.compile_dag",
       "claimant": "agent",
-      "idempotency_key": "seedpack:visual-rendering:render:7a065c46626f1e49484c87dded6d3460e1ce59ba218d7ef5bb937efef412ffa4",
+      "idempotency_key": "seedpack:visual-rendering:render:e331c053d2e3b53813f1b0a79552e28bb9d5d936f8b28a1f330a024f9e7dfacc",
       "report_shape_sha256": "02db7a1ebe5fc55c127e2c0ae3903aa5f5a1532b49ae8d7e2f016102456fcacc"
     },
     {
@@ -133,13 +133,18 @@
   ],
   "dependencies": [
     {
+      "pack_id": "video-motion",
+      "keys": [
+        "video-motion.v0.1.0.template.media",
+        "video-motion.v0.1.0.tool.chromium",
+        "video-motion.v0.1.0.tool.ffmpeg",
+        "video-motion.v0.1.0.tool.playwright"
+      ]
+    },
+    {
       "pack_id": "video-showcase",
       "keys": [
-        "video-showcase.v0.1.0.asset-policy",
-        "video-showcase.v0.1.0.template.media",
-        "video-showcase.v0.1.0.tool.chromium",
-        "video-showcase.v0.1.0.tool.ffmpeg",
-        "video-showcase.v0.1.0.tool.playwright"
+        "video-showcase.v0.1.0.asset-policy"
       ]
     }
   ],

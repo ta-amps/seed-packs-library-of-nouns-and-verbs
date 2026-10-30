@@ -18,6 +18,12 @@ GOVERNANCE = {
 }
 
 
+# Caches, environments and build output, which pack code folders accumulate locally; the same set
+# check_public.py skips.
+SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__", ".mypy_cache",
+             ".ruff_cache", ".pytest_cache", ".tox", ".hypothesis", "private", "test-results"}
+
+
 def require(ok: bool, message: str) -> None:
     if not ok:
         raise ValueError(message)
@@ -186,7 +192,8 @@ def validate_repository(root: Path = ROOT) -> dict:
     meta_contract(parsed["meta/self-improvement.reference.json"])
     text_count = 0
     for path in root.rglob("*"):
-        if not path.is_file() or any(part in {".git", "__pycache__", ".ruff_cache"} for part in path.relative_to(root).parts):
+        parts = path.relative_to(root).parts
+        if not path.is_file() or any(part in SKIP_DIRS or part.endswith(".egg-info") for part in parts):
             continue
         text = path.read_text()
         require(chr(8212) not in text, "forbidden typography in " + path.relative_to(root).as_posix())

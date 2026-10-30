@@ -14,7 +14,7 @@ reduced-motion alternative, and have someone else review it.
 | --- | --- |
 | Quality checks | Eleven checks with thresholds and methods |
 | Contrast example | Synthetic: five color pairs with their published contrast ratios, which the validator recomputes |
-| Tool cards | Blender (GPL-2.0-or-later code; your renders are yours) and three.js (MIT); the video pack's FFmpeg, Playwright and Chromium cards are reused |
+| Tool cards | Blender (GPL-2.0-or-later code; your renders are yours) and three.js (MIT); the [video and motion pack](../video-motion/README.md)'s FFmpeg, Playwright and Chromium cards and media template are reused |
 | Templates | Scene recipe, asset recipe, motion profile, render manifest, check report and review notes |
 
 ## Verbs

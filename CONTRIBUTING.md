@@ -56,7 +56,10 @@ Edit `packs/<pack>/source.json` or the pack README, never the generated `nouns.j
 environment, then `make check`. Use only registered categories and the relations each
 category allows; say why in `category_reason` when the fit is not obvious. Name and
 describe a pack in plain English as "a collection of nouns and verbs for ...", and keep
-surface or product names in the descriptor's `provenance_notes`. Keep dimensions at the
+surface or product names in the descriptor's `provenance_notes`. A pack moved from another
+repository may instead record that repository and the exact commit once, in `source.json`'s
+`moved_from`, which nothing generated copies. The validator keeps the names it rejects only as
+SHA-256 hashes in `scripts/surface-names.sha256`. Keep dimensions at the
 unmeasured floor, keep every verb's `no_change`, `unknown` and `blocked` outcomes, give
 each verb a network mode, and never add a step that contacts people, publishes, enqueues
 children or spends beyond the worker's own allowance; the validator flags such steps.

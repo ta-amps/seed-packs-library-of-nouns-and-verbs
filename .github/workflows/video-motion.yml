@@ -1,0 +1,42 @@
+name: video-motion code
+
+# Runs only when the video and motion pack or this workflow changes. GitHub applies path
+# filters per workflow, so this job lives in its own file; check.yml is unchanged.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/video-motion/**"
+      - ".github/workflows/video-motion.yml"
+  pull_request:
+    paths:
+      - "packs/video-motion/**"
+      - ".github/workflows/video-motion.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  video-motion-code:
+    # The pack's code with real Chromium and FFmpeg renders and the pinned Tessera. Outputs stay
+    # on the runner; nothing is uploaded, published or deployed.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: packs/video-motion/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install the code, FFmpeg (the video extra's bundled build) and Tessera at its pinned commit
+        run: uv sync --frozen --all-groups --extra video
+      - name: Install headless Chromium for the pinned Playwright
+        run: uv run playwright install --with-deps chromium-headless-shell
+      - name: Lint, strict types and every test, with real renders, Tessera and the pack check (must not skip)
+        env:
+          VIDEO_MOTION_REQUIRE_VIDEO: "1"
+          VIDEO_MOTION_REQUIRE_TESSERA: "1"
+          VIDEO_MOTION_REQUIRE_PACK: "1"
+        run: make check
+      - name: Render and check the demo sequence in 16:9 and 9:16
+        run: uv run video-motion video demo --out "$RUNNER_TEMP/video-motion-demo" --processes 2

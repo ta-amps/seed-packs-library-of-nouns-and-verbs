@@ -17,7 +17,8 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | Pack | A collection of nouns and verbs for | Nouns | Verbs |
 | --- | --- | --- | --- |
 | [Repository review](repo-review/README.md) | Reviewing a code repository with 50 evidence-requiring questions | 66 | 6 |
-| [Video showcase](video-showcase/README.md) | Making a truthful demo video, from script to QA, review and release | 22 | 11 |
+| [Video and motion with code](video-motion/README.md) | Video and motion made with code: seeking frames, fitting motion, compiling, rendering and checking | 28 | 8 |
+| [Video showcase](video-showcase/README.md) | Making a truthful demo video, from script to review and release | 15 | 8 |
 | [Visual and 3D rendering](visual-rendering/README.md) | Rendering images, motion graphics and 3D scenes and checking them | 11 | 5 |
 | [Tool discovery](tool-discovery/README.md) | Discovering, trialing, deciding on and refreshing new tools | 23 | 7 |
 | [Prior art and alternatives](prior-art-and-alternatives/README.md) | Finding what already exists and what the alternatives are, before anything new is built | 21 | 7 |
@@ -36,7 +37,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
 
-Together: 389 nouns and 123 verb templates across nineteen packs. The
+Together: 410 nouns and 128 verb templates across twenty packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -97,7 +98,8 @@ and decomposition's breakdowns become child task previews.
   rankings list them as unranked instead of scoring them from a prior.
 - **Typed relations only**, of the kinds each category allows.
 - **No branding.** Surface and product names appear only in a descriptor's
-  `provenance_notes`, which say where an idea came from.
+  `provenance_notes`, which say where an idea came from, or in `source.json`'s
+  `moved_from`, the one field that records the repository and commit a pack moved from.
 
 ## How the packs are checked
 
