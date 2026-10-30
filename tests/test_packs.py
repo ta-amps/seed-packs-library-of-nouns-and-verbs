@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 7)
+        self.assertEqual(summary["worked_examples"], 11)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -802,6 +802,21 @@ class WorkedExamples(unittest.TestCase):
                 self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
         caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
         self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]})
+
+    def test_recurring_work_record_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug in (("direction-to-work", "direction-checks"), ("status-and-handoff", "status-checks"),
+                           ("release-and-verify", "release-checks"), ("rename-and-relink", "rename-checks")):
+            value = record(pack, slug)["value"]
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(value["finding_schema"], fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
 
     def test_real_findings_are_public_and_rechecked(self):
         schema = record("findings-to-fixes", "template.finding")["value"]["schema"]

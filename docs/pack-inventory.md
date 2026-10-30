@@ -67,6 +67,27 @@ which need human-sensitive handling and a person in every decision.
 **Still needed for freshness:** scoring which sources are worth reading; newsletter
 intake; and a person-led verb for resolving contradictions between sources.
 
+## 4. Steering, status, releases and renames
+
+Added October 30, 2026, for work that comes back in almost every project: turning a person's
+direction into rules and verbs, answering status questions with evidence, releasing changes and
+proving what is live, and renaming things without leaving old names or broken links behind.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| A message becomes typed parts | [Direction to work](../packs/direction-to-work/README.md): split-message | Added now | seed_hypothesis (intake) | situate | draft-directions, record-finding, plan-work, decide-or-ask |
+| Directions with scope, source and supersession | Direction to work: draft-directions, find-conflicts, confirm-directions, a person's verb | Added now | seed_hypothesis (direction, conflict, confirmation), reflex_procedure (supersession, term rules, ask policy) | distill_reflex, recheck_fragility, reconcile_conflict (human) | find-conflicts, confirm-directions |
+| Requests become atomic verbs; choices are decided or asked once | Direction to work: plan-work, decide-or-ask | Added now | seed_hypothesis (work plan, decision) | decompose_dag, solve_draft | propose-breakdown, record-finding |
+| Later work follows the directions | Direction to work: sweep-compliance | Added now | eval_run (compliance report) | verify_gate | record-finding per violation |
+| What is done, what is next and where to resume | [Status and handoff](../packs/status-and-handoff/README.md): take-snapshot, write-status, recheck-claims, rank-next-steps, write-handoff, resume-from-handoff | Added now | eval_run (snapshot, status, claim check, resume check), seed_hypothesis (next steps, handoff), recovery_playbook (resume) | probe_source, situate, verify_gate, decompose_dag, solve_draft, recover_fault | record-finding for contradicted claims |
+| Releasing a change and proving what is live | [Release and verify](../packs/release-and-verify/README.md): plan-release, check-head, record-release (the release owner's verb), verify-parity, run-smoke, write-receipt, prepare-rollback | Added now | seed_hypothesis (plan, rollback brief), eval_run (head check, record, parity, smoke, receipt), benchmark_suite (smoke checklist) | decompose_dag, verify_gate, benchmark_harness, recover_fault | prepare-rollback, record-finding |
+| Renames that reach every reference | [Rename and relink](../packs/rename-and-relink/README.md): build-inventory, plan-rewrites, rewrite-references, record-host-renames (the owner's verb), check-links, sweep-old-names, write-archive-notice | Added now | seed_hypothesis (map, plan), eval_run (inventory, link check, record, sweep), code_node (rewrite), public_source (notice) | probe_source, decompose_dag, solve_draft, verify_gate | record-finding for names that come back |
+
+**Still needed here:** review of a screenshot sent with little or no text, turned into findings
+with a capture matrix of widths and themes; mining past session prompts into categories and
+reusable verbs under strict privacy rules; and finishing the most valuable work first when a
+usage allowance is about to run out.
+
 ## Work that supports every goal
 
 [Repository review](../packs/repo-review/README.md), [Decomposition patterns](../packs/decomposition-patterns/README.md),

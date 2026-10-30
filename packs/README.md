@@ -47,8 +47,12 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Donor thank-you letters kit](kit-donor-thank-you-letters/README.md) | A small nonprofit's agent kit that drafts donor thank-you letters from a coded gift list with the finance lead's acknowledgment wording and checks donors' privacy choices first, while staff decide special handling and sign every letter | 14 | 5 |
 | [Flyer translation check kit](kit-flyer-translation-check/README.md) | A community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed | 13 | 4 |
 | [Food bank inventory and pickup kit](kit-food-bank-pickups/README.md) | A food bank's agent kit | 13 | 4 |
+| [Direction to work](direction-to-work/README.md) | Turning a stakeholder's message into direction nouns, finding nouns and atomic verbs, with superseded directions kept on the record | 17 | 7 |
+| [Status and handoff](status-and-handoff/README.md) | Answering what is done, what is next and where to resume, with evidence | 15 | 6 |
+| [Release and verify](release-and-verify/README.md) | Releasing a change and proving what is live, from the exact tested head to a receipt with a rollback target | 16 | 7 |
+| [Rename and relink](rename-and-relink/README.md) | Renaming products, repositories and pages and rewriting every reference and link, with no redirect relied on | 17 | 7 |
 
-Together: 556 nouns and 182 verb templates across thirty-one packs. The
+Together: 621 nouns and 209 verb templates across thirty-five packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -117,7 +121,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the seven worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the eleven worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether

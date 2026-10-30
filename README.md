@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds thirty-one proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds thirty-five proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -51,10 +51,14 @@ activated**, and no worker has run them yet.
 | [Donor thank-you letters kit](packs/kit-donor-thank-you-letters/README.md) | A small nonprofit's agent kit that drafts donor thank-you letters from a coded gift list with the finance lead's acknowledgment wording and checks donors' privacy choices first, while staff decide special handling and sign every letter |
 | [Flyer translation check kit](packs/kit-flyer-translation-check/README.md) | A community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed |
 | [Food bank inventory and pickup kit](packs/kit-food-bank-pickups/README.md) | A food bank's agent kit |
+| [Direction to work](packs/direction-to-work/README.md) | Turning a stakeholder's message into direction nouns, finding nouns and atomic verbs, with superseded directions kept on the record |
+| [Status and handoff](packs/status-and-handoff/README.md) | Answering what is done, what is next and where to resume, with evidence |
+| [Release and verify](packs/release-and-verify/README.md) | Releasing a change and proving what is live, from the exact tested head to a receipt with a rollback target |
+| [Rename and relink](packs/rename-and-relink/README.md) | Renaming products, repositories and pages and rewriting every reference and link, with no redirect relied on |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 556
-nouns and 182 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 621
+nouns and 209 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
