@@ -1,0 +1,3365 @@
+{
+  "pack_id": "release-and-verify",
+  "title": "Release and verify",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for releasing a change and proving what is live: a plan around the exact tested head, checks confirmed on that head, the release owner's act recorded with its identifiers, live bytes compared with built bytes, read-only smoke checks, a kept rollback target and one receipt whose verdict follows from its parts.",
+  "dependencies": [
+    "findings-to-fixes",
+    "status-and-handoff"
+  ],
+  "boundaries": [
+    "Workers plan, read, hash, check and record. Landing changes, switching live versions and changing host settings are the release owner's acts, recorded by a person's verb.",
+    "Every network request in these verbs is read-only; a check that would write runs only against a target the release owner named for it.",
+    "A failed or partial receipt stays on the record; the next attempt gets its own receipt.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for releasing a change and proving what is live",
+      "value": {
+        "lets_workers": "Plan a release around the exact tested head, confirm every required check ran on that head, have the release owner record what they landed and switched live, compare the live bytes with the built bytes, run read-only smoke checks, keep the version to go back to, and write one receipt whose verdict follows from its parts.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "release-and-verify.plan-release"
+            },
+            "when": "Before anything is landed."
+          },
+          {
+            "verb": {
+              "$verb": "release-and-verify.check-head"
+            },
+            "when": "Right before the release owner acts, on the exact head."
+          },
+          {
+            "verb": {
+              "$verb": "release-and-verify.record-release"
+            },
+            "when": "Right after the release owner acts; a person's verb."
+          },
+          {
+            "verb": {
+              "$verb": "release-and-verify.verify-parity"
+            },
+            "when": "After the live version changes."
+          },
+          {
+            "verb": {
+              "$verb": "release-and-verify.run-smoke"
+            },
+            "when": "After the live version changes, alongside parity."
+          },
+          {
+            "verb": {
+              "$verb": "release-and-verify.write-receipt"
+            },
+            "when": "When the parts are in; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "release-and-verify.prepare-rollback"
+            },
+            "when": "When parity or a smoke check fails."
+          }
+        ],
+        "guardrails": [
+          "Workers plan, check and record. Landing changes and switching live versions are the release owner's acts.",
+          "A check that ran on another head is not evidence for this one.",
+          "Verified means the live bytes match and no smoke check failed; anything less says what was not checked."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "release-checks"
+          },
+          {
+            "$pin": "example.release-plan"
+          },
+          {
+            "$pin": "example.release-receipt"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "release-stages"
+        ],
+        [
+          "requires_noun",
+          "authority-boundaries"
+        ],
+        [
+          "requires_noun",
+          "parity-methods"
+        ],
+        [
+          "requires_noun",
+          "smoke-checklist"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How a release is planned, checked, recorded and verified",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "plan-release names the tested head, required checks, holds, rollback target, parity method, smoke checks and the owner's acts.",
+          "check-head confirms every required check ran and passed on that exact head.",
+          "The release owner lands the change and switches the live version, then records both with record-release.",
+          "verify-parity hashes the live bytes and compares them with the built bytes.",
+          "run-smoke checks live behavior with read-only requests.",
+          "write-receipt assembles the chain and derives the verdict from its parts.",
+          "prepare-rollback briefs the release owner when parity or a smoke check fails."
+        ],
+        "rules": [
+          "If the landed commit differs from the tested head, the checks run again on the landed commit before anything goes live.",
+          "A release without a recorded rollback target is incomplete.",
+          "Partial evidence gives a partial verdict that lists exactly what was not checked.",
+          "Failures stay on the record: a failed receipt is kept, and the next attempt gets its own receipt.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "failure": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "status": {
+            "$verb": "status-and-handoff.write-status"
+          }
+        }
+      }
+    },
+    {
+      "slug": "release-stages",
+      "category": "noun.skill_pack",
+      "role": "release_stages",
+      "title": "Release stages and the evidence each needs",
+      "category_reason": "Shared definitions every receipt uses.",
+      "value": {
+        "stages": [
+          {
+            "stage_name": "planned",
+            "needs": "a release plan naming the tested head"
+          },
+          {
+            "stage_name": "checks_green_at_head",
+            "needs": "a head check with every required run on the exact head"
+          },
+          {
+            "stage_name": "landed",
+            "needs": "the landed commit, recorded by the release owner"
+          },
+          {
+            "stage_name": "live",
+            "needs": "the live version identifier and the version it replaced"
+          },
+          {
+            "stage_name": "parity_verified",
+            "needs": "a parity check with verdict match"
+          },
+          {
+            "stage_name": "smoke_passed",
+            "needs": "a smoke report with no failed check"
+          },
+          {
+            "stage_name": "verified",
+            "needs": "all of the above in one receipt"
+          },
+          {
+            "stage_name": "rolled_back",
+            "needs": "a new receipt for the version switched back to"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "authority-boundaries",
+      "category": "noun.reflex_procedure",
+      "role": "authority_boundaries",
+      "title": "Who may do what in a release",
+      "category_reason": "A deterministic rule that separates worker verbs from the release owner's acts.",
+      "value": {
+        "release_owner_acts": [
+          "landing a change on a protected branch",
+          "switching or reverting a live version",
+          "changing names, addresses or settings on a host",
+          "anything that spends money or changes access"
+        ],
+        "worker_verbs": [
+          "planning",
+          "reading check results",
+          "hashing live bytes",
+          "read-only smoke checks",
+          "writing receipts and rollback briefs"
+        ],
+        "holds": "A freeze or an owner's hold stops the plan at check-head; the plan records it and waits.",
+        "never": "A worker never performs a release owner act, even when its credentials would allow it."
+      }
+    },
+    {
+      "slug": "parity-methods",
+      "category": "noun.reflex_procedure",
+      "role": "parity_methods",
+      "title": "Comparing live bytes with built bytes",
+      "category_reason": "Deterministic comparison procedures for common targets.",
+      "value": {
+        "methods": [
+          {
+            "target_type": "static files",
+            "how": "Hash each built file and the same path fetched live with caching bypassed."
+          },
+          {
+            "target_type": "a script bundle on a hosted runtime",
+            "how": "Hash the bundle that was uploaded and the bundle the host reports for the live version."
+          },
+          {
+            "target_type": "a container image",
+            "how": "Compare the image digest that was built with the digest the running service reports."
+          },
+          {
+            "target_type": "a package",
+            "how": "Compare the digest of the built archive with the registry's digest for that version."
+          }
+        ],
+        "unknown_when": [
+          "a cache serves an older copy",
+          "the host does not expose the live bytes or their digest",
+          "the live version cannot be named"
+        ],
+        "rule": "When parity cannot be read, the verdict is unknown, never match."
+      }
+    },
+    {
+      "slug": "smoke-checklist",
+      "category": "noun.benchmark_suite",
+      "role": "smoke_checklist",
+      "title": "Read-only smoke checks for a live release",
+      "category_reason": "A small suite of checks run against every release.",
+      "value": {
+        "checks": [
+          {
+            "id": "health",
+            "what": "The health address returns 200."
+          },
+          {
+            "id": "version-reports-release",
+            "what": "The version address names the version just recorded."
+          },
+          {
+            "id": "home-page",
+            "what": "The main page returns 200 and contains a marker from the new build."
+          },
+          {
+            "id": "key-path",
+            "what": "One read-only path the change touched answers correctly."
+          },
+          {
+            "id": "no-secret-strings",
+            "what": "No response contains a string shaped like a credential."
+          }
+        ],
+        "optional_with_permission": "A check that sends a write, even one expected to be refused, runs only against a target the release owner named for it.",
+        "rule": "Record every check as pass, fail or not_run with its evidence; not_run is never counted as pass."
+      }
+    },
+    {
+      "slug": "template.release-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a release plan around the exact tested head, with holds, rollback target, parity method, smoke checks and the owner's acts",
+      "category_reason": "A plan is a proposal about how a release should go.",
+      "value": {
+        "describes": "a release plan around the exact tested head, with holds, rollback target, parity method, smoke checks and the owner's acts",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan_id",
+            "repository",
+            "change_ref",
+            "tested_head",
+            "target",
+            "release_owner_role",
+            "required_checks",
+            "holds",
+            "rollback_target",
+            "parity_method",
+            "smoke_checks",
+            "owner_acts"
+          ],
+          "properties": {
+            "plan_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "repository": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "change_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "tested_head": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{7,40}$",
+              "maxLength": 40
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "release_owner_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "required_checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "holds": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "rollback_target": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            },
+            "parity_method": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "smoke_checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "owner_acts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "owner_acts lists the steps only the release owner performs, in order.",
+          "rollback_target is the live version at planning time."
+        ]
+      }
+    },
+    {
+      "slug": "template.head-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the required checks for one exact head and whether all of them passed on it",
+      "category_reason": "A head check is a recorded verification run.",
+      "value": {
+        "describes": "the required checks for one exact head and whether all of them passed on it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository",
+            "branch",
+            "head",
+            "checked_at",
+            "runs",
+            "all_required_on_head",
+            "missing_required",
+            "verdict"
+          ],
+          "properties": {
+            "repository": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "head": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{7,40}$",
+              "maxLength": 40
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "runs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "run_id",
+                  "head",
+                  "conclusion"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "run_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "head": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{7,40}$",
+                    "maxLength": 40
+                  },
+                  "conclusion": {
+                    "type": "string",
+                    "enum": [
+                      "success",
+                      "failure",
+                      "cancelled",
+                      "skipped",
+                      "pending"
+                    ]
+                  }
+                }
+              }
+            },
+            "all_required_on_head": {
+              "type": "boolean"
+            },
+            "missing_required": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "not_ready",
+                "unknown"
+              ]
+            }
+          }
+        },
+        "rules": [
+          "ready only when every required check passed on exactly this head.",
+          "A run on any other head counts as missing."
+        ]
+      }
+    },
+    {
+      "slug": "template.release-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: what the release owner landed and switched live, with the version it replaced",
+      "category_reason": "A release record is the evidence of a person's act.",
+      "value": {
+        "describes": "what the release owner landed and switched live, with the version it replaced",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "performed_by_role",
+            "recorded_at",
+            "target",
+            "tested_head",
+            "merged_commit",
+            "deployed_version",
+            "previous_version",
+            "notes"
+          ],
+          "properties": {
+            "performed_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "recorded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "tested_head": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{7,40}$",
+              "maxLength": 40
+            },
+            "merged_commit": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{7,40}$",
+              "maxLength": 40
+            },
+            "deployed_version": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            },
+            "previous_version": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            },
+            "notes": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 500
+            }
+          }
+        },
+        "rules": [
+          "Only the release owner writes this record.",
+          "previous_version is the rollback target."
+        ]
+      }
+    },
+    {
+      "slug": "template.parity-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a comparison of live bytes with built bytes for one live version",
+      "category_reason": "A parity check is a recorded verification run.",
+      "value": {
+        "describes": "a comparison of live bytes with built bytes for one live version",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "deployed_version",
+            "checked_at",
+            "method",
+            "expected",
+            "observed",
+            "mismatches",
+            "verdict",
+            "why_unknown"
+          ],
+          "properties": {
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "deployed_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "method": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "expected": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 64,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$",
+                    "maxLength": 64
+                  }
+                }
+              }
+            },
+            "observed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 64,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$",
+                    "maxLength": 64
+                  }
+                }
+              }
+            },
+            "mismatches": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "match",
+                "mismatch",
+                "unknown"
+              ]
+            },
+            "why_unknown": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "match only when every expected digest is observed and equal.",
+          "unknown needs why_unknown."
+        ]
+      }
+    },
+    {
+      "slug": "template.smoke-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: read-only smoke checks against one live version",
+      "category_reason": "A smoke report is a recorded check run.",
+      "value": {
+        "describes": "read-only smoke checks against one live version",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "deployed_version",
+            "checked_at",
+            "checks",
+            "failed",
+            "not_run_reasons"
+          ],
+          "properties": {
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "deployed_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "what",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "what": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "not_run"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "not_run_reasons": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "failed equals the number of checks with result fail.",
+          "not_run checks carry a reason."
+        ]
+      }
+    },
+    {
+      "slug": "template.rollback-brief",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a brief for the release owner: what to switch back to, why, and what to check after",
+      "category_reason": "A rollback brief is a proposal backed by evidence.",
+      "value": {
+        "describes": "a brief for the release owner: what to switch back to, why, and what to check after",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "current_version",
+            "rollback_version",
+            "why",
+            "evidence_refs",
+            "what_changes",
+            "checks_after",
+            "decision_needed_from"
+          ],
+          "properties": {
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "current_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "rollback_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "evidence_refs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "what_changes": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "checks_after": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "decision_needed_from": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          }
+        },
+        "rules": [
+          "The brief proposes; the release owner decides and acts.",
+          "checks_after repeats the failed checks and parity."
+        ]
+      }
+    },
+    {
+      "slug": "template.release-receipt",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one receipt for a release: tested head, checks on that head, the owner's act, built digests, parity, smoke checks, rollback target and verdict",
+      "category_reason": "A receipt is the recorded outcome of a release and its checks.",
+      "value": {
+        "describes": "one receipt for a release: tested head, checks on that head, the owner's act, built digests, parity, smoke checks, rollback target and verdict",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "receipt_id",
+            "change",
+            "ci",
+            "release_act",
+            "build",
+            "parity",
+            "smoke",
+            "rollback",
+            "verdict",
+            "not_checked"
+          ],
+          "properties": {
+            "receipt_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "change": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "repository",
+                "change_ref",
+                "tested_head"
+              ],
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "change_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "tested_head": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "maxLength": 40
+                }
+              }
+            },
+            "ci": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "head",
+                "runs",
+                "all_on_head"
+              ],
+              "properties": {
+                "head": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "maxLength": 40
+                },
+                "runs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 32,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "name",
+                      "run_id",
+                      "head",
+                      "conclusion"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "run_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "head": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{7,40}$",
+                        "maxLength": 40
+                      },
+                      "conclusion": {
+                        "type": "string",
+                        "enum": [
+                          "success",
+                          "failure",
+                          "cancelled",
+                          "skipped",
+                          "pending"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "all_on_head": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "release_act": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "performed_by_role",
+                "recorded_at",
+                "merged_commit",
+                "deployed_version",
+                "previous_version"
+              ],
+              "properties": {
+                "performed_by_role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "recorded_at": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                },
+                "merged_commit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "maxLength": 40
+                },
+                "deployed_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "previous_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                }
+              }
+            },
+            "build": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "artifact_digests"
+              ],
+              "properties": {
+                "artifact_digests": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 64,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "path",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$",
+                        "maxLength": 64
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "parity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "method",
+                "verdict",
+                "observed"
+              ],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "verdict": {
+                  "type": "string",
+                  "enum": [
+                    "match",
+                    "mismatch",
+                    "unknown"
+                  ]
+                },
+                "observed": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 64,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "path",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$",
+                        "maxLength": 64
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "smoke": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "checks",
+                "failed"
+              ],
+              "properties": {
+                "checks": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 32,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "result"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "result": {
+                        "type": "string",
+                        "enum": [
+                          "pass",
+                          "fail",
+                          "not_run"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "failed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000
+                }
+              }
+            },
+            "rollback": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "target_version",
+                "how"
+              ],
+              "properties": {
+                "target_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "how": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "verified",
+                "partially_verified",
+                "failed",
+                "unknown"
+              ]
+            },
+            "not_checked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "The verdict follows from the parts, as the release checks state.",
+          "not_checked lists everything a partial verdict leaves out."
+        ]
+      }
+    },
+    {
+      "slug": "release-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for release receipts, with synthetic golden receipts",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every release receipt must pass before a status may call a release verified. The two synthetic good receipts pass all of them; each synthetic bad receipt fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "tested-head-recorded",
+            "rule": {
+              "rule": "present",
+              "path": "change.tested_head"
+            },
+            "why": "The receipt names the exact head that was tested."
+          },
+          {
+            "id": "ci-on-head",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "in": [
+                  "verified",
+                  "partially_verified"
+                ]
+              },
+              "then": {
+                "rule": "enum",
+                "path": "ci.all_on_head",
+                "values": [
+                  true
+                ]
+              }
+            },
+            "why": "A green check on a different head proves nothing about this change."
+          },
+          {
+            "id": "merged-commit-recorded",
+            "rule": {
+              "rule": "present",
+              "path": "release_act.merged_commit"
+            },
+            "why": "The receipt names the commit that was landed."
+          },
+          {
+            "id": "release-act-recorded",
+            "rule": {
+              "rule": "present",
+              "path": "release_act.deployed_version"
+            },
+            "why": "The receipt names the version that went live."
+          },
+          {
+            "id": "digests-recorded",
+            "rule": {
+              "rule": "min_items",
+              "path": "build.artifact_digests",
+              "min": 1
+            },
+            "why": "Parity needs the built bytes' digests."
+          },
+          {
+            "id": "verified-needs-parity",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "equals": "verified"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "parity.verdict",
+                "values": [
+                  "match"
+                ]
+              }
+            },
+            "why": "Verified means the live bytes match the built bytes."
+          },
+          {
+            "id": "verified-needs-clean-smoke",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "equals": "verified"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "smoke.failed",
+                "values": [
+                  0
+                ]
+              }
+            },
+            "why": "Verified means no smoke check failed."
+          },
+          {
+            "id": "smoke-ran",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "in": [
+                  "verified",
+                  "partially_verified"
+                ]
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "smoke.checks",
+                "min": 1
+              }
+            },
+            "why": "Some live behavior was checked."
+          },
+          {
+            "id": "rollback-recorded",
+            "rule": {
+              "rule": "present",
+              "path": "rollback.target_version"
+            },
+            "why": "Every release keeps the version to go back to."
+          },
+          {
+            "id": "partial-says-what",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "equals": "partially_verified"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "not_checked",
+                "min": 1
+              }
+            },
+            "why": "A partial verdict says exactly what was not checked."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-verified",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "good-partial",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "receipt_id": "R-22",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site.",
+                "verdict": "unknown",
+                "observed": []
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "partially_verified",
+              "not_checked": [
+                "Live bytes: the edge cache served the previous copy for ten minutes, so parity could not be read."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-tested-head",
+            "label": "known_bad",
+            "fails": "tested-head-recorded",
+            "why": "No tested head.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": ""
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-ci-other-head",
+            "label": "known_bad",
+            "fails": "ci-on-head",
+            "why": "Checks passed on another head.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": false
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-no-merged-commit",
+            "label": "known_bad",
+            "fails": "merged-commit-recorded",
+            "why": "The landed commit is not named.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": null,
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-no-release-act",
+            "label": "known_bad",
+            "fails": "release-act-recorded",
+            "why": "No deployed version recorded.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": null,
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-no-digests",
+            "label": "known_bad",
+            "fails": "digests-recorded",
+            "why": "No built digests.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": []
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-mismatch-called-verified",
+            "label": "known_bad",
+            "fails": "verified-needs-parity",
+            "why": "Verified while the live bytes differ.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "mismatch",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-failed-smoke-called-verified",
+            "label": "known_bad",
+            "fails": "verified-needs-clean-smoke",
+            "why": "Verified with a failed smoke check.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "fail"
+                  }
+                ],
+                "failed": 1
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-no-smoke",
+            "label": "known_bad",
+            "fails": "smoke-ran",
+            "why": "Partially verified with no smoke check at all.",
+            "finding": {
+              "receipt_id": "R-22",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site.",
+                "verdict": "unknown",
+                "observed": []
+              },
+              "smoke": {
+                "checks": [],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "partially_verified",
+              "not_checked": [
+                "Live bytes: the edge cache served the previous copy for ten minutes, so parity could not be read."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-rollback",
+            "label": "known_bad",
+            "fails": "rollback-recorded",
+            "why": "No version to go back to.",
+            "finding": {
+              "receipt_id": "R-21",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+                "verdict": "match",
+                "observed": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "search-answers",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "no-secret-strings",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": null,
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "verified",
+              "not_checked": []
+            }
+          },
+          {
+            "id": "bad-partial-silent",
+            "label": "known_bad",
+            "fails": "partial-says-what",
+            "why": "Partial without saying what was not checked.",
+            "finding": {
+              "receipt_id": "R-22",
+              "change": {
+                "repository": "the catalog site repository",
+                "change_ref": "change 57: search timeout fix",
+                "tested_head": "9c1e2d7a41b0"
+              },
+              "ci": {
+                "head": "9c1e2d7a41b0",
+                "runs": [
+                  {
+                    "name": "tests",
+                    "run_id": "4411",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  },
+                  {
+                    "name": "build",
+                    "run_id": "4412",
+                    "head": "9c1e2d7a41b0",
+                    "conclusion": "success"
+                  }
+                ],
+                "all_on_head": true
+              },
+              "release_act": {
+                "performed_by_role": "release owner",
+                "recorded_at": "2026-10-30T15:10Z",
+                "merged_commit": "5d0f3a9b7c21",
+                "deployed_version": "site v-2026-10-30-1",
+                "previous_version": "site v-2026-10-29-2"
+              },
+              "build": {
+                "artifact_digests": [
+                  {
+                    "path": "index.html",
+                    "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+                  },
+                  {
+                    "path": "app.js",
+                    "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+                  }
+                ]
+              },
+              "parity": {
+                "method": "Fetched each built file from the live site.",
+                "verdict": "unknown",
+                "observed": []
+              },
+              "smoke": {
+                "checks": [
+                  {
+                    "id": "health",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "version-reports-release",
+                    "result": "pass"
+                  },
+                  {
+                    "id": "home-page",
+                    "result": "pass"
+                  }
+                ],
+                "failed": 0
+              },
+              "rollback": {
+                "target_version": "site v-2026-10-29-2",
+                "how": "The host's version history can switch back to this version id."
+              },
+              "verdict": "partially_verified",
+              "not_checked": []
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "receipt_id",
+            "change",
+            "ci",
+            "release_act",
+            "build",
+            "parity",
+            "smoke",
+            "rollback",
+            "verdict",
+            "not_checked"
+          ],
+          "properties": {
+            "receipt_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "change": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "repository",
+                "change_ref",
+                "tested_head"
+              ],
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "change_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "tested_head": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "maxLength": 40
+                }
+              }
+            },
+            "ci": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "head",
+                "runs",
+                "all_on_head"
+              ],
+              "properties": {
+                "head": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "maxLength": 40
+                },
+                "runs": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 32,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "name",
+                      "run_id",
+                      "head",
+                      "conclusion"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "run_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "head": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{7,40}$",
+                        "maxLength": 40
+                      },
+                      "conclusion": {
+                        "type": "string",
+                        "enum": [
+                          "success",
+                          "failure",
+                          "cancelled",
+                          "skipped",
+                          "pending"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "all_on_head": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "release_act": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "performed_by_role",
+                "recorded_at",
+                "merged_commit",
+                "deployed_version",
+                "previous_version"
+              ],
+              "properties": {
+                "performed_by_role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "recorded_at": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                },
+                "merged_commit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{7,40}$",
+                  "maxLength": 40
+                },
+                "deployed_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "previous_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                }
+              }
+            },
+            "build": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "artifact_digests"
+              ],
+              "properties": {
+                "artifact_digests": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 64,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "path",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$",
+                        "maxLength": 64
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "parity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "method",
+                "verdict",
+                "observed"
+              ],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "verdict": {
+                  "type": "string",
+                  "enum": [
+                    "match",
+                    "mismatch",
+                    "unknown"
+                  ]
+                },
+                "observed": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 64,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "path",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$",
+                        "maxLength": 64
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "smoke": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "checks",
+                "failed"
+              ],
+              "properties": {
+                "checks": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 32,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "result"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "result": {
+                        "type": "string",
+                        "enum": [
+                          "pass",
+                          "fail",
+                          "not_run"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "failed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000
+                }
+              }
+            },
+            "rollback": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "target_version",
+                "how"
+              ],
+              "properties": {
+                "target_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "how": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "verified",
+                "partially_verified",
+                "failed",
+                "unknown"
+              ]
+            },
+            "not_checked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "expected": {
+          "good-verified": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-partial": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-tested-head": {
+            "verdict": "fail",
+            "failed_checks": [
+              "tested-head-recorded"
+            ]
+          },
+          "bad-ci-other-head": {
+            "verdict": "fail",
+            "failed_checks": [
+              "ci-on-head"
+            ]
+          },
+          "bad-no-merged-commit": {
+            "verdict": "fail",
+            "failed_checks": [
+              "merged-commit-recorded"
+            ]
+          },
+          "bad-no-release-act": {
+            "verdict": "fail",
+            "failed_checks": [
+              "release-act-recorded"
+            ]
+          },
+          "bad-no-digests": {
+            "verdict": "fail",
+            "failed_checks": [
+              "digests-recorded"
+            ]
+          },
+          "bad-mismatch-called-verified": {
+            "verdict": "fail",
+            "failed_checks": [
+              "verified-needs-parity"
+            ]
+          },
+          "bad-failed-smoke-called-verified": {
+            "verdict": "fail",
+            "failed_checks": [
+              "verified-needs-clean-smoke"
+            ]
+          },
+          "bad-no-smoke": {
+            "verdict": "fail",
+            "failed_checks": [
+              "smoke-ran"
+            ]
+          },
+          "bad-no-rollback": {
+            "verdict": "fail",
+            "failed_checks": [
+              "rollback-recorded"
+            ]
+          },
+          "bad-partial-silent": {
+            "verdict": "fail",
+            "failed_checks": [
+              "partial-says-what"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.release-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a release plan for a small site fix",
+      "synthetic": true,
+      "category_reason": "A synthetic plan in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.release-plan"
+        },
+        "instance": {
+          "plan_id": "RP-21",
+          "repository": "the catalog site repository",
+          "change_ref": "change 57: search timeout fix",
+          "tested_head": "9c1e2d7a41b0",
+          "target": "the public catalog site",
+          "release_owner_role": "release owner",
+          "required_checks": [
+            "tests",
+            "build"
+          ],
+          "holds": [
+            "None recorded; confirm no freeze is announced before landing."
+          ],
+          "rollback_target": "site v-2026-10-29-2",
+          "parity_method": "Hash index.html and app.js from the build and from the live site with caching bypassed.",
+          "smoke_checks": [
+            "health returns 200",
+            "version endpoint reports the new version",
+            "home page returns 200",
+            "a search answers within two seconds",
+            "no secret-looking strings in responses"
+          ],
+          "owner_acts": [
+            "Land change 57 exactly at head 9c1e2d7a41b0, or rerun the checks on the landed commit.",
+            "Switch the live site to the build of the landed commit.",
+            "Record both identifiers with record-release."
+          ]
+        },
+        "shows": "The plan names the tested head, the two required checks, the rollback target, how parity is read and the three acts only the release owner performs.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.release-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a verified receipt whose verdict follows from its parts",
+      "synthetic": true,
+      "category_reason": "A synthetic receipt in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.release-receipt"
+        },
+        "instance": {
+          "receipt_id": "R-21",
+          "change": {
+            "repository": "the catalog site repository",
+            "change_ref": "change 57: search timeout fix",
+            "tested_head": "9c1e2d7a41b0"
+          },
+          "ci": {
+            "head": "9c1e2d7a41b0",
+            "runs": [
+              {
+                "name": "tests",
+                "run_id": "4411",
+                "head": "9c1e2d7a41b0",
+                "conclusion": "success"
+              },
+              {
+                "name": "build",
+                "run_id": "4412",
+                "head": "9c1e2d7a41b0",
+                "conclusion": "success"
+              }
+            ],
+            "all_on_head": true
+          },
+          "release_act": {
+            "performed_by_role": "release owner",
+            "recorded_at": "2026-10-30T15:10Z",
+            "merged_commit": "5d0f3a9b7c21",
+            "deployed_version": "site v-2026-10-30-1",
+            "previous_version": "site v-2026-10-29-2"
+          },
+          "build": {
+            "artifact_digests": [
+              {
+                "path": "index.html",
+                "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+              },
+              {
+                "path": "app.js",
+                "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+              }
+            ]
+          },
+          "parity": {
+            "method": "Fetched each built file from the live site with caching bypassed and hashed the bytes.",
+            "verdict": "match",
+            "observed": [
+              {
+                "path": "index.html",
+                "sha256": "8c25e78bab6819987a46320cdc81a3453605fa12eced6726e5ef5a3fe2a815b3"
+              },
+              {
+                "path": "app.js",
+                "sha256": "218f7614315b78875b26dc00dde02adfc10ce2829679703e445829790c530b3a"
+              }
+            ]
+          },
+          "smoke": {
+            "checks": [
+              {
+                "id": "health",
+                "result": "pass"
+              },
+              {
+                "id": "version-reports-release",
+                "result": "pass"
+              },
+              {
+                "id": "home-page",
+                "result": "pass"
+              },
+              {
+                "id": "search-answers",
+                "result": "pass"
+              },
+              {
+                "id": "no-secret-strings",
+                "result": "pass"
+              }
+            ],
+            "failed": 0
+          },
+          "rollback": {
+            "target_version": "site v-2026-10-29-2",
+            "how": "The host's version history can switch back to this version id."
+          },
+          "verdict": "verified",
+          "not_checked": []
+        },
+        "shows": "Both checks ran on the tested head, the owner recorded the landed commit and the live version, the live bytes match the build, five smoke checks pass and the previous version is kept for rollback.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-release",
+      "kind": "verb.decompose_dag",
+      "title": "Plan the release",
+      "claimant": "agent",
+      "summary": "Write a release plan around the exact tested head: required checks, holds, rollback target, parity method, smoke checks and the acts only the release owner performs.",
+      "outcome": "A release plan the release owner can follow step by step.",
+      "ready_outcome": "release_planned",
+      "pinned": [
+        "method",
+        "authority-boundaries",
+        "parity-methods",
+        "smoke-checklist"
+      ],
+      "slots": [
+        {
+          "name": "change",
+          "category": "noun.code_node",
+          "description": "Pin of the change to release, naming the exact commit that was tested."
+        }
+      ],
+      "produces": [
+        {
+          "name": "release_plan",
+          "template": "template.release-plan"
+        }
+      ],
+      "steps": [
+        "Take the tested head from the pinned change and name the checks the repository requires for it.",
+        "Record holds and freezes that apply; a hold stops the plan here.",
+        "Record the current live version as the rollback target.",
+        "Choose the parity method for the target type and the smoke checks for what the change touched.",
+        "List the acts only the release owner performs, in order. Never perform any of them yourself."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The plan validates against template.release-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "head-named",
+          "check": "tested_head equals the pinned change's tested commit.",
+          "method": "deterministic"
+        },
+        {
+          "id": "owner-acts-separate",
+          "check": "No owner act appears as a worker step.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "check-head",
+      "kind": "verb.verify_gate",
+      "title": "Confirm the checks on the exact head",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Read the check runs for the exact head and confirm every required check ran and passed on it.",
+      "outcome": "A head check: ready, not_ready or unknown.",
+      "ready_outcome": "head_checked",
+      "slots": [
+        {
+          "name": "release_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the release plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "head_check",
+          "template": "template.head-check"
+        }
+      ],
+      "steps": [
+        "Read every run for the plan's tested head from the code host.",
+        "Count a required check as missing if its latest run is on any other head, or did not succeed.",
+        "Mark ready only when nothing required is missing; never rerun or change anything."
+      ],
+      "acceptance": [
+        {
+          "id": "head-check-matches-template",
+          "check": "The head check validates against template.head-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "runs-on-head",
+          "check": "Every run counted as passing has head equal to the plan's tested head.",
+          "method": "deterministic"
+        },
+        {
+          "id": "ready-consistent",
+          "check": "verdict ready exactly when missing_required is empty.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the code host's check-run API for the named repository; nothing is changed."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "read-only access to the repository's check runs",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 300
+      }
+    },
+    {
+      "slug": "record-release",
+      "kind": "verb.verify_gate",
+      "title": "Record what the release owner carried out",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "The release owner records the commit they landed, the version now live and the version it replaced. This template performs nothing itself.",
+      "outcome": "A release record with the landed commit, the live version and the rollback target.",
+      "ready_outcome": "release_recorded",
+      "slots": [
+        {
+          "name": "release_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the release plan."
+        },
+        {
+          "name": "head_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the head check that said ready."
+        }
+      ],
+      "produces": [
+        {
+          "name": "release_record",
+          "template": "template.release-record"
+        }
+      ],
+      "steps": [
+        "Write the identifiers exactly as the code host and the host report them.",
+        "If the landed commit differs from the tested head, say so in notes and have the checks rerun on it."
+      ],
+      "acceptance": [
+        {
+          "id": "record-matches-template",
+          "check": "The record validates against template.release-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "previous-version-kept",
+          "check": "previous_version is filled whenever deployed_version is.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      }
+    },
+    {
+      "slug": "verify-parity",
+      "kind": "verb.verify_gate",
+      "title": "Compare live bytes with built bytes",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Hash what is live for the recorded version and compare it with the digests of the build.",
+      "outcome": "A parity check: match, mismatch or unknown with the reason.",
+      "ready_outcome": "parity_checked",
+      "pinned": [
+        "parity-methods"
+      ],
+      "slots": [
+        {
+          "name": "release_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the release record."
+        },
+        {
+          "name": "build",
+          "category": "noun.code_node",
+          "description": "Pin of the build with its file digests."
+        }
+      ],
+      "produces": [
+        {
+          "name": "parity_check",
+          "template": "template.parity-check"
+        }
+      ],
+      "steps": [
+        "Use the parity method for the target type, bypassing caches where the host allows it.",
+        "Compare every expected digest; list each mismatch by path.",
+        "Write unknown with the reason whenever the live bytes cannot be read; never write match from partial evidence."
+      ],
+      "acceptance": [
+        {
+          "id": "parity-matches-template",
+          "check": "The parity check validates against template.parity-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "match-is-complete",
+          "check": "verdict match only when every expected path was observed with an equal digest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "unknown-explained",
+          "check": "verdict unknown only with why_unknown filled.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the live target's public addresses for the files being compared; nothing is changed."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "run-smoke",
+      "kind": "verb.benchmark_harness",
+      "title": "Run read-only smoke checks",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run the planned smoke checks against the live version with read-only requests and record each result with evidence.",
+      "outcome": "A smoke report with every check passed, failed or not run.",
+      "ready_outcome": "smoke_recorded",
+      "pinned": [
+        "smoke-checklist"
+      ],
+      "slots": [
+        {
+          "name": "release_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the release plan listing the smoke checks."
+        },
+        {
+          "name": "release_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the release record naming the live version."
+        }
+      ],
+      "produces": [
+        {
+          "name": "smoke_report",
+          "template": "template.smoke-report"
+        }
+      ],
+      "steps": [
+        "Run each planned check with read-only requests and keep the response evidence short.",
+        "Skip any check that would write unless the release owner named a target for it; record it as not_run with the reason.",
+        "Count failed checks exactly; never retry a failure into a pass without recording both runs."
+      ],
+      "acceptance": [
+        {
+          "id": "smoke-matches-template",
+          "check": "The smoke report validates against template.smoke-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "failed-count",
+          "check": "failed equals the number of checks with result fail.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-run-explained",
+          "check": "Every not_run check has a reason.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the live target's public addresses named in the plan; nothing is changed."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "write-receipt",
+      "kind": "verb.verify_gate",
+      "title": "Write the release receipt",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Assemble the plan, head check, release record, parity check and smoke report into one receipt whose verdict follows from its parts.",
+      "outcome": "A release receipt that passes the release checks.",
+      "ready_outcome": "receipt_written",
+      "pinned": [
+        "release-checks",
+        "release-stages"
+      ],
+      "slots": [
+        {
+          "name": "parts",
+          "category": "noun.eval_run",
+          "description": "Pins of the head check, release record, parity check and smoke report.",
+          "many": true,
+          "max": 8
+        },
+        {
+          "name": "release_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the release plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "release_receipt",
+          "template": "template.release-receipt"
+        }
+      ],
+      "steps": [
+        "Copy identifiers from the parts exactly; never fill a gap from memory.",
+        "Derive the verdict from the parts: verified, partially_verified with not_checked, failed or unknown.",
+        "Run the release checks on the receipt before writing it; propose prepare-rollback when parity or a smoke check failed."
+      ],
+      "acceptance": [
+        {
+          "id": "receipt-matches-template",
+          "check": "The receipt validates against template.release-receipt's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "release-checks-pass",
+          "check": "The receipt passes the pinned release checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdict-derived",
+          "check": "Recomputing the verdict from the pinned parts gives the same verdict.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "release-and-verify.verify-parity",
+        "release-and-verify.run-smoke"
+      ]
+    },
+    {
+      "slug": "prepare-rollback",
+      "kind": "verb.recover_fault",
+      "title": "Prepare a rollback brief",
+      "claimant": "agent",
+      "summary": "When parity or a smoke check fails, brief the release owner on the version to switch back to, why, what changes and what to check after.",
+      "outcome": "A rollback brief; the release owner decides and acts.",
+      "ready_outcome": "rollback_briefed",
+      "pinned": [
+        "authority-boundaries"
+      ],
+      "slots": [
+        {
+          "name": "release_receipt",
+          "category": "noun.eval_run",
+          "description": "Pin of the failed or partial receipt."
+        }
+      ],
+      "produces": [
+        {
+          "name": "rollback_brief",
+          "template": "template.rollback-brief"
+        }
+      ],
+      "steps": [
+        "Name the rollback version from the receipt; if none was recorded, end blocked with that question.",
+        "Cite the failed checks and parity evidence, and say what users would see change.",
+        "List the checks to run after the switch back. Never switch versions yourself."
+      ],
+      "acceptance": [
+        {
+          "id": "brief-matches-template",
+          "check": "The brief validates against template.rollback-brief's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "target-from-receipt",
+          "check": "rollback_version equals the receipt's rollback target.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "release-and-verify.write-receipt"
+      ]
+    }
+  ]
+}

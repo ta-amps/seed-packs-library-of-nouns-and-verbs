@@ -1,0 +1,3590 @@
+{
+  "pack_id": "status-and-handoff",
+  "title": "Status and handoff",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for answering what is done, what is next and where to resume, with evidence: read-only snapshots, status reports where done means verified, independent rechecks of claims, ranked next steps, handoffs when a session stops and resuming without trusting stale claims.",
+  "dependencies": [
+    "decomposition-patterns",
+    "findings-to-fixes"
+  ],
+  "boundaries": [
+    "Snapshots and rechecks only read; they change no repository, deployment or worker.",
+    "Done means verified with evidence. A claim from another worker or session counts as reported until a different worker rechecks it.",
+    "Failures and unknowns stay in every status; nothing is rounded up.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for answering what is done, what is next and where to resume, with evidence",
+      "value": {
+        "lets_workers": "Observe the real state of repositories, checks, deployments and workers; write a status where every item has a level and the evidence that level needs; have a different worker recheck claims; rank next steps with the person's decisions kept short; write a handoff when a session ends; and resume from a handoff by rechecking its claims before trusting them.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "status-and-handoff.take-snapshot"
+            },
+            "when": "Before any status, and first thing when resuming."
+          },
+          {
+            "verb": {
+              "$verb": "status-and-handoff.write-status"
+            },
+            "when": "When someone asks what is done or open, and at every checkpoint."
+          },
+          {
+            "verb": {
+              "$verb": "status-and-handoff.recheck-claims"
+            },
+            "when": "For claims reported by another worker or session, before they count as done."
+          },
+          {
+            "verb": {
+              "$verb": "status-and-handoff.rank-next-steps"
+            },
+            "when": "After a status, or when asked what is next."
+          },
+          {
+            "verb": {
+              "$verb": "status-and-handoff.write-handoff"
+            },
+            "when": "Before a session stops for any reason, including a usage or context limit."
+          },
+          {
+            "verb": {
+              "$verb": "status-and-handoff.resume-from-handoff"
+            },
+            "when": "When a worker or session picks up someone else's work."
+          }
+        ],
+        "guardrails": [
+          "Done means verified with evidence; anything else says what it is.",
+          "A claim from another session is a claim until rechecked.",
+          "Failures and unknowns stay in the status; nothing is rounded up."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "status-checks"
+          },
+          {
+            "$pin": "example.status-report"
+          },
+          {
+            "$pin": "example.handoff"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "status-levels"
+        ],
+        [
+          "requires_noun",
+          "evidence-rules"
+        ],
+        [
+          "requires_noun",
+          "ranking-rules"
+        ],
+        [
+          "requires_noun",
+          "resume-playbook"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How status, next steps and handoffs stay true",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "take-snapshot reads the current state from its sources, read-only.",
+          "write-status places every item at one level with the evidence that level needs.",
+          "recheck-claims has a different worker confirm or contradict reported claims.",
+          "rank-next-steps orders the work and keeps the person's list to three items.",
+          "write-handoff records ownership, next steps, open questions and claims to recheck.",
+          "resume-from-handoff rechecks those claims and looks for concurrent work before continuing."
+        ],
+        "rules": [
+          "One status noun per checkpoint; never overwrite an earlier one.",
+          "Separate what was observed from what was reported, and date both.",
+          "A status answers in counts first, then the items that need the person.",
+          "Stopping without a handoff is a finding.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "failure": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "large_next_step": {
+            "$verb": "decomposition-patterns.propose-breakdown"
+          }
+        }
+      }
+    },
+    {
+      "slug": "status-levels",
+      "category": "noun.skill_pack",
+      "role": "status_levels",
+      "title": "Seven status levels and the evidence each needs",
+      "category_reason": "Shared definitions every status uses.",
+      "value": {
+        "levels": [
+          {
+            "level": "done_verified",
+            "means": "Checked by a named worker with evidence of the right type.",
+            "needs": "evidence and checked_by"
+          },
+          {
+            "level": "done_reported",
+            "means": "Someone says it is done; nobody has rechecked it here.",
+            "needs": "claimed_by, claimed_at and how to recheck"
+          },
+          {
+            "level": "in_progress",
+            "means": "A named owner is working on it.",
+            "needs": "owner and since"
+          },
+          {
+            "level": "blocked",
+            "means": "It cannot move without an answer, a credential, money, other work or an outside party.",
+            "needs": "one precise question"
+          },
+          {
+            "level": "failed",
+            "means": "It was tried and did not work; it stays on the record.",
+            "needs": "evidence and where it is kept"
+          },
+          {
+            "level": "unknown",
+            "means": "Its state could not be read.",
+            "needs": "what would resolve it"
+          },
+          {
+            "level": "not_started",
+            "means": "Planned, with no work yet.",
+            "needs": "nothing beyond the item"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "evidence-rules",
+      "category": "noun.reflex_procedure",
+      "role": "evidence_rules",
+      "title": "Which evidence supports which claim, and when it goes stale",
+      "category_reason": "Deterministic matching of claims to evidence types and ages.",
+      "value": {
+        "claim_to_evidence": {
+          "merged": "merged_commit on the target branch",
+          "checks passed": "ci_run that ran on the exact head",
+          "live": "deployed_version with a matching digest from a parity check",
+          "tested": "test_run with the command, the counts and the exit code",
+          "reviewed": "review by a worker other than the author",
+          "link works": "link_check with the final address and status"
+        },
+        "max_age_minutes": {
+          "ci_run": 60,
+          "deployed_version": 60,
+          "repository head": 60,
+          "worker state": 15,
+          "document": 1440
+        },
+        "rule": "Evidence older than its maximum age is rechecked before a status relies on it; if it cannot be, the item is unknown, not done."
+      }
+    },
+    {
+      "slug": "ranking-rules",
+      "category": "noun.reflex_procedure",
+      "role": "ranking_rules",
+      "title": "How next steps are ranked",
+      "category_reason": "A deterministic ordering with stated tie-breaks.",
+      "value": {
+        "order": [
+          "Items with high deadline risk first.",
+          "Then items that unblock the most other items.",
+          "Then items whose evidence is going stale.",
+          "Then small items before large ones of equal value."
+        ],
+        "person_list": "At most three items need the person, each as one decision with a recommended default.",
+        "never": "Never rank a step that needs spending, credentials or a public release as a worker step."
+      }
+    },
+    {
+      "slug": "resume-playbook",
+      "category": "noun.recovery_playbook",
+      "role": "resume_playbook",
+      "title": "Resuming after a usage limit, a context limit, a crash or a reassignment",
+      "category_reason": "A recovery procedure for interrupted work.",
+      "value": {
+        "steps": [
+          "Read the latest handoff and the status report it points to.",
+          "Take a fresh snapshot; compare heads, checks and deployments with the handoff.",
+          "Recheck every claim the handoff lists, and every done_reported item you will build on.",
+          "Look for concurrent work: branches, locks and workers named in do_not_touch or seen in the snapshot.",
+          "Decide continue, continue with changes, or stop and ask; write that decision down before the first edit."
+        ],
+        "if_no_handoff": "Treat the earlier session's claims as unknown, record a finding that it stopped without a handoff, and rebuild the status from a snapshot."
+      }
+    },
+    {
+      "slug": "template.snapshot",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a read-only observation of repositories, checks, deployments and workers at one time",
+      "category_reason": "A snapshot is a recorded observation run.",
+      "value": {
+        "describes": "a read-only observation of repositories, checks, deployments and workers at one time",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observed_at",
+            "observer",
+            "repositories",
+            "deployments",
+            "workers",
+            "unread"
+          ],
+          "properties": {
+            "observed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "observer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "repositories": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "repository",
+                  "branch",
+                  "head",
+                  "ci",
+                  "ci_run",
+                  "open_changes"
+                ],
+                "properties": {
+                  "repository": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "branch": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "head": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{7,40}$",
+                    "maxLength": 40
+                  },
+                  "ci": {
+                    "type": "string",
+                    "enum": [
+                      "passed",
+                      "failed",
+                      "running",
+                      "none",
+                      "unknown"
+                    ]
+                  },
+                  "ci_run": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "open_changes": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  }
+                }
+              }
+            },
+            "deployments": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "version",
+                  "observed_digest",
+                  "health"
+                ],
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "version": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "observed_digest": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 64
+                  },
+                  "health": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "degraded",
+                      "down",
+                      "unknown"
+                    ]
+                  }
+                }
+              }
+            },
+            "workers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "worker",
+                  "work",
+                  "state"
+                ],
+                "properties": {
+                  "worker": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "work": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "running",
+                      "stopped",
+                      "unknown"
+                    ]
+                  }
+                }
+              }
+            },
+            "unread": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every value was read, not remembered.",
+          "Sources that could not be read are listed in unread."
+        ]
+      }
+    },
+    {
+      "slug": "template.status-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a status: every item at one level with the evidence that level needs, counts first",
+      "category_reason": "A status report is a recorded assessment against evidence.",
+      "value": {
+        "describes": "a status: every item at one level with the evidence that level needs, counts first",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "scope",
+            "observed_at",
+            "headline",
+            "done_verified",
+            "done_reported",
+            "in_progress",
+            "blocked",
+            "failed",
+            "unknown",
+            "needs_person",
+            "next_steps",
+            "sources"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "observed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "headline": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "done_verified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "evidence",
+                  "checked_by"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "evidence_type",
+                        "ref",
+                        "observed_at"
+                      ],
+                      "properties": {
+                        "evidence_type": {
+                          "type": "string",
+                          "enum": [
+                            "receipt",
+                            "ci_run",
+                            "merged_commit",
+                            "deployed_version",
+                            "test_run",
+                            "link_check",
+                            "review",
+                            "log_excerpt"
+                          ]
+                        },
+                        "ref": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "observed_at": {
+                          "type": "string",
+                          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                          "maxLength": 30
+                        }
+                      }
+                    }
+                  },
+                  "checked_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "done_reported": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "claimed_by",
+                  "claimed_at",
+                  "recheck"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "claimed_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "claimed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  },
+                  "recheck": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "in_progress": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "owner",
+                  "since"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "owner": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "since": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  }
+                }
+              }
+            },
+            "blocked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "question",
+                  "needs"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "needs": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "credential",
+                      "spending",
+                      "other_work",
+                      "outside_party"
+                    ]
+                  }
+                }
+              }
+            },
+            "failed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "evidence",
+                  "kept_at"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "evidence_type",
+                        "ref",
+                        "observed_at"
+                      ],
+                      "properties": {
+                        "evidence_type": {
+                          "type": "string",
+                          "enum": [
+                            "receipt",
+                            "ci_run",
+                            "merged_commit",
+                            "deployed_version",
+                            "test_run",
+                            "link_check",
+                            "review",
+                            "log_excerpt"
+                          ]
+                        },
+                        "ref": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "observed_at": {
+                          "type": "string",
+                          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                          "maxLength": 30
+                        }
+                      }
+                    }
+                  },
+                  "kept_at": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "unknown": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "would_resolve"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "would_resolve": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "needs_person": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "next_steps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "step",
+                  "owner",
+                  "outcome"
+                ],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "owner": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "observed_at",
+                  "rechecked"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  },
+                  "rechecked": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "The headline gives counts and never says everything is done.",
+          "needs_person holds at most three decisions."
+        ]
+      }
+    },
+    {
+      "slug": "template.claim-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a recheck of reported claims by a worker other than the claimant",
+      "category_reason": "A claim check is a recorded verification run.",
+      "value": {
+        "describes": "a recheck of reported claims by a worker other than the claimant",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_ref",
+            "checked_by",
+            "checked_at",
+            "claims"
+          ],
+          "properties": {
+            "report_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "checked_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "claims": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claim",
+                  "prior_level",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "prior_level": {
+                    "type": "string",
+                    "enum": [
+                      "done_verified",
+                      "done_reported",
+                      "in_progress",
+                      "failed",
+                      "unknown"
+                    ]
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "confirmed",
+                      "contradicted",
+                      "unverifiable"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "The checker is not the claimant.",
+          "contradicted claims become proposed findings."
+        ]
+      }
+    },
+    {
+      "slug": "template.next-steps",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: ranked next steps with their outcome, authority, effort and what they unblock",
+      "category_reason": "A ranking is a proposal about what to do next.",
+      "value": {
+        "describes": "ranked next steps with their outcome, authority, effort and what they unblock",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "based_on",
+            "steps",
+            "needs_person"
+          ],
+          "properties": {
+            "based_on": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rank",
+                  "step",
+                  "verb_kind",
+                  "outcome",
+                  "authority",
+                  "effort",
+                  "unblocks",
+                  "deadline_risk"
+                ],
+                "properties": {
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "verb_kind": {
+                    "type": "string",
+                    "pattern": "^verb\\.[a-z_]+$",
+                    "maxLength": 40
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "authority": {
+                    "type": "string",
+                    "enum": [
+                      "worker",
+                      "requester",
+                      "person"
+                    ]
+                  },
+                  "effort": {
+                    "type": "string",
+                    "enum": [
+                      "small",
+                      "medium",
+                      "large"
+                    ]
+                  },
+                  "unblocks": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "deadline_risk": {
+                    "type": "string",
+                    "enum": [
+                      "high",
+                      "medium",
+                      "low",
+                      "none"
+                    ]
+                  }
+                }
+              }
+            },
+            "needs_person": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Ranks follow the ranking rules.",
+          "Steps needing the person are authority person and appear in needs_person."
+        ]
+      }
+    },
+    {
+      "slug": "template.handoff",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a handoff: what the receiver owns, what to leave alone, next steps, open questions and claims to recheck",
+      "category_reason": "A handoff is a claim about the state of work that the receiver must check.",
+      "value": {
+        "describes": "a handoff: what the receiver owns, what to leave alone, next steps, open questions and claims to recheck",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "handoff_id",
+            "from_worker",
+            "to",
+            "written_at",
+            "reason",
+            "owned_scope",
+            "do_not_touch",
+            "status_report_ref",
+            "next_steps",
+            "claims_to_recheck",
+            "open_questions",
+            "resume_check",
+            "valid_until"
+          ],
+          "properties": {
+            "handoff_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "from_worker": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "to": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "written_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "usage_limit",
+                "end_of_session",
+                "context_limit",
+                "reassignment",
+                "pause",
+                "other"
+              ]
+            },
+            "owned_scope": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "do_not_touch": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "status_report_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "next_steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "step",
+                  "outcome",
+                  "first_check"
+                ],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "first_check": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "claims_to_recheck": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "open_questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "resume_check": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "valid_until": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Every next step has a first check that proves the state before any edit.",
+          "Claims not rechecked before stopping are listed."
+        ]
+      }
+    },
+    {
+      "slug": "template.resume-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the checks made when resuming from a handoff, and the decision that followed",
+      "category_reason": "A resume check is a recorded verification run.",
+      "value": {
+        "describes": "the checks made when resuming from a handoff, and the decision that followed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "handoff_ref",
+            "resumed_by",
+            "resumed_at",
+            "claims",
+            "concurrent_work",
+            "decision",
+            "first_step"
+          ],
+          "properties": {
+            "handoff_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "resumed_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "resumed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "claims": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claim",
+                  "result",
+                  "evidence"
+                ],
+                "properties": {
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "confirmed",
+                      "contradicted",
+                      "unverifiable"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "concurrent_work": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "where",
+                  "who",
+                  "action"
+                ],
+                "properties": {
+                  "where": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "who": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "leave_alone",
+                      "coordinate",
+                      "conflict"
+                    ]
+                  }
+                }
+              }
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "continue",
+                "continue_with_changes",
+                "stop_and_ask"
+              ]
+            },
+            "first_step": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "stop_and_ask when a claim is contradicted and the fix needs the person.",
+          "A conflict with concurrent work stops the resume."
+        ]
+      }
+    },
+    {
+      "slug": "status-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for status reports, with synthetic golden reports",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every status report must pass before anyone relies on it. The two synthetic good reports pass all of them; each synthetic bad report fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "observed-at",
+            "rule": {
+              "rule": "present",
+              "path": "observed_at"
+            },
+            "why": "A status is true only as of a time."
+          },
+          {
+            "id": "headline-counts",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "headline",
+              "pattern": "\\b[0-9]+ verified\\b"
+            },
+            "why": "The headline states counts, starting from what is verified."
+          },
+          {
+            "id": "headline-no-blanket-claim",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "headline",
+              "pattern": "(?i)\\b(all|everything)\\b[^.]{0,20}\\b(done|complete|completed|finished|working)\\b"
+            },
+            "why": "A headline never says everything is done; it says how many items are verified."
+          },
+          {
+            "id": "verified-has-evidence",
+            "rule": {
+              "rule": "each_has",
+              "path": "done_verified",
+              "fields": [
+                "item",
+                "evidence",
+                "checked_by"
+              ]
+            },
+            "why": "Verified means a named check with evidence."
+          },
+          {
+            "id": "reported-has-claimant",
+            "rule": {
+              "rule": "each_has",
+              "path": "done_reported",
+              "fields": [
+                "item",
+                "claimed_by",
+                "claimed_at"
+              ]
+            },
+            "why": "A claim not yet rechecked says who made it and when."
+          },
+          {
+            "id": "blocked-has-question",
+            "rule": {
+              "rule": "each_has",
+              "path": "blocked",
+              "fields": [
+                "item",
+                "question"
+              ]
+            },
+            "why": "A blocked item carries the one question that unblocks it."
+          },
+          {
+            "id": "failed-kept",
+            "rule": {
+              "rule": "each_has",
+              "path": "failed",
+              "fields": [
+                "item",
+                "evidence"
+              ]
+            },
+            "why": "Failures stay on the record with their evidence."
+          },
+          {
+            "id": "unknown-has-resolver",
+            "rule": {
+              "rule": "each_has",
+              "path": "unknown",
+              "fields": [
+                "item",
+                "would_resolve"
+              ]
+            },
+            "why": "An unknown says what would resolve it."
+          },
+          {
+            "id": "next-steps-owned",
+            "rule": {
+              "rule": "each_has",
+              "path": "next_steps",
+              "min": 1,
+              "fields": [
+                "step",
+                "owner",
+                "outcome"
+              ]
+            },
+            "why": "Every status ends with at least one owned next step."
+          },
+          {
+            "id": "sources-dated",
+            "rule": {
+              "rule": "each_has",
+              "path": "sources",
+              "min": 1,
+              "fields": [
+                "source",
+                "observed_at"
+              ]
+            },
+            "why": "Every fact comes from a dated source."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-mixed",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "good-small",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "S-8",
+              "scope": "the volunteer form fix",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "3 verified, nothing open",
+              "done_verified": [
+                {
+                  "item": "Form validation fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4420 passed on head 1a2b3c4",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Form error copy",
+                  "evidence": [
+                    {
+                      "evidence_type": "review",
+                      "ref": "review R-9 by agent C",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent C"
+                },
+                {
+                  "item": "Form accessibility labels",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "label checks: 12 passed",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [],
+              "in_progress": [],
+              "blocked": [],
+              "failed": [],
+              "unknown": [],
+              "needs_person": [],
+              "next_steps": [
+                {
+                  "step": "Close the three findings",
+                  "owner": "agent B",
+                  "outcome": "Closed findings with their verifications linked."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-time",
+            "label": "known_bad",
+            "fails": "observed-at",
+            "why": "No observation time.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-counts",
+            "label": "known_bad",
+            "fails": "headline-counts",
+            "why": "A headline without counts.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "Most of the work is finished",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-blanket-claim",
+            "label": "known_bad",
+            "fails": "headline-no-blanket-claim",
+            "why": "Claims everything is done while a claim is unchecked.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "All done: 2 verified",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-verified-no-evidence",
+            "label": "known_bad",
+            "fails": "verified-has-evidence",
+            "why": "Verified with no evidence.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-reported-no-claimant",
+            "label": "known_bad",
+            "fails": "reported-has-claimant",
+            "why": "A claim with no claimant.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the page."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-blocked-no-question",
+            "label": "known_bad",
+            "fails": "blocked-has-question",
+            "why": "Blocked with no question.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup",
+                  "question": "",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-failure-dropped",
+            "label": "known_bad",
+            "fails": "failed-kept",
+            "why": "A failure without its evidence.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-unknown-no-resolver",
+            "label": "known_bad",
+            "fails": "unknown-has-resolver",
+            "why": "An unknown with no way to resolve it.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Sitemap",
+                  "would_resolve": ""
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-next-step",
+            "label": "known_bad",
+            "fails": "next-steps-owned",
+            "why": "No next step.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [],
+              "sources": [
+                {
+                  "source": "the code host's API",
+                  "observed_at": "2026-10-30T14:00Z",
+                  "rechecked": true
+                },
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "2026-10-30T09:30Z",
+                  "rechecked": false
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-undated-source",
+            "label": "known_bad",
+            "fails": "sources-dated",
+            "why": "A source with no time.",
+            "finding": {
+              "report_id": "S-7",
+              "scope": "the parts catalog site and its nightly jobs",
+              "observed_at": "2026-10-30T14:00Z",
+              "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+              "done_verified": [
+                {
+                  "item": "Search page timeout fix",
+                  "evidence": [
+                    {
+                      "evidence_type": "ci_run",
+                      "ref": "run 4411 passed on head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    },
+                    {
+                      "evidence_type": "deployed_version",
+                      "ref": "site version v-2026-10-29-2; live digest matched the build",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                },
+                {
+                  "item": "Price list import",
+                  "evidence": [
+                    {
+                      "evidence_type": "test_run",
+                      "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "checked_by": "agent B"
+                }
+              ],
+              "done_reported": [
+                {
+                  "item": "Spanish translation of the hours page",
+                  "claimed_by": "agent C",
+                  "claimed_at": "2026-10-30T09:30Z",
+                  "recheck": "Open the deployed hours page and compare it with the translation noun."
+                }
+              ],
+              "in_progress": [
+                {
+                  "item": "Image upload size limit",
+                  "owner": "agent A",
+                  "since": "2026-10-30T11:00Z"
+                }
+              ],
+              "blocked": [
+                {
+                  "item": "Nightly backup to object storage",
+                  "question": "Which storage account may the backup job use?",
+                  "needs": "credential"
+                }
+              ],
+              "failed": [
+                {
+                  "item": "Weekly bulletin draft",
+                  "evidence": [
+                    {
+                      "evidence_type": "log_excerpt",
+                      "ref": "render step exited with code 1; log digest kept with finding F-12",
+                      "observed_at": "2026-10-30T14:00Z"
+                    }
+                  ],
+                  "kept_at": "finding F-12"
+                }
+              ],
+              "unknown": [
+                {
+                  "item": "Whether the sitemap lists every page",
+                  "would_resolve": "Read the sitemap and compare it with the page list."
+                }
+              ],
+              "needs_person": [
+                "Choose the storage account the backup job may use."
+              ],
+              "next_steps": [
+                {
+                  "step": "Recheck the Spanish hours page on the deployed site",
+                  "owner": "agent B",
+                  "outcome": "The translation moves to verified, or a finding is recorded."
+                },
+                {
+                  "step": "Reproduce the bulletin render failure",
+                  "owner": "agent A",
+                  "outcome": "A reproduction noun for finding F-12."
+                }
+              ],
+              "sources": [
+                {
+                  "source": "agent C's handoff H-3",
+                  "observed_at": "",
+                  "rechecked": false
+                }
+              ]
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "scope",
+            "observed_at",
+            "headline",
+            "done_verified",
+            "done_reported",
+            "in_progress",
+            "blocked",
+            "failed",
+            "unknown",
+            "needs_person",
+            "next_steps",
+            "sources"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "observed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "headline": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "done_verified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "evidence",
+                  "checked_by"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "evidence_type",
+                        "ref",
+                        "observed_at"
+                      ],
+                      "properties": {
+                        "evidence_type": {
+                          "type": "string",
+                          "enum": [
+                            "receipt",
+                            "ci_run",
+                            "merged_commit",
+                            "deployed_version",
+                            "test_run",
+                            "link_check",
+                            "review",
+                            "log_excerpt"
+                          ]
+                        },
+                        "ref": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "observed_at": {
+                          "type": "string",
+                          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                          "maxLength": 30
+                        }
+                      }
+                    }
+                  },
+                  "checked_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "done_reported": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "claimed_by",
+                  "claimed_at",
+                  "recheck"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "claimed_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "claimed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  },
+                  "recheck": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "in_progress": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "owner",
+                  "since"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "owner": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "since": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  }
+                }
+              }
+            },
+            "blocked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "question",
+                  "needs"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "needs": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "credential",
+                      "spending",
+                      "other_work",
+                      "outside_party"
+                    ]
+                  }
+                }
+              }
+            },
+            "failed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "evidence",
+                  "kept_at"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "evidence_type",
+                        "ref",
+                        "observed_at"
+                      ],
+                      "properties": {
+                        "evidence_type": {
+                          "type": "string",
+                          "enum": [
+                            "receipt",
+                            "ci_run",
+                            "merged_commit",
+                            "deployed_version",
+                            "test_run",
+                            "link_check",
+                            "review",
+                            "log_excerpt"
+                          ]
+                        },
+                        "ref": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "observed_at": {
+                          "type": "string",
+                          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                          "maxLength": 30
+                        }
+                      }
+                    }
+                  },
+                  "kept_at": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "unknown": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "would_resolve"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "would_resolve": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "needs_person": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "next_steps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "step",
+                  "owner",
+                  "outcome"
+                ],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "owner": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "observed_at",
+                  "rechecked"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  },
+                  "rechecked": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "expected": {
+          "good-mixed": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-small": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-time": {
+            "verdict": "fail",
+            "failed_checks": [
+              "observed-at"
+            ]
+          },
+          "bad-no-counts": {
+            "verdict": "fail",
+            "failed_checks": [
+              "headline-counts"
+            ]
+          },
+          "bad-blanket-claim": {
+            "verdict": "fail",
+            "failed_checks": [
+              "headline-no-blanket-claim"
+            ]
+          },
+          "bad-verified-no-evidence": {
+            "verdict": "fail",
+            "failed_checks": [
+              "verified-has-evidence"
+            ]
+          },
+          "bad-reported-no-claimant": {
+            "verdict": "fail",
+            "failed_checks": [
+              "reported-has-claimant"
+            ]
+          },
+          "bad-blocked-no-question": {
+            "verdict": "fail",
+            "failed_checks": [
+              "blocked-has-question"
+            ]
+          },
+          "bad-failure-dropped": {
+            "verdict": "fail",
+            "failed_checks": [
+              "failed-kept"
+            ]
+          },
+          "bad-unknown-no-resolver": {
+            "verdict": "fail",
+            "failed_checks": [
+              "unknown-has-resolver"
+            ]
+          },
+          "bad-no-next-step": {
+            "verdict": "fail",
+            "failed_checks": [
+              "next-steps-owned"
+            ]
+          },
+          "bad-undated-source": {
+            "verdict": "fail",
+            "failed_checks": [
+              "sources-dated"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.status-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a status with every level, counts first",
+      "synthetic": true,
+      "category_reason": "A synthetic status in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.status-report"
+        },
+        "instance": {
+          "report_id": "S-7",
+          "scope": "the parts catalog site and its nightly jobs",
+          "observed_at": "2026-10-30T14:00Z",
+          "headline": "2 verified, 1 reported but not rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown",
+          "done_verified": [
+            {
+              "item": "Search page timeout fix",
+              "evidence": [
+                {
+                  "evidence_type": "ci_run",
+                  "ref": "run 4411 passed on head 9c1e2d7",
+                  "observed_at": "2026-10-30T14:00Z"
+                },
+                {
+                  "evidence_type": "deployed_version",
+                  "ref": "site version v-2026-10-29-2; live digest matched the build",
+                  "observed_at": "2026-10-30T14:00Z"
+                }
+              ],
+              "checked_by": "agent B"
+            },
+            {
+              "item": "Price list import",
+              "evidence": [
+                {
+                  "evidence_type": "test_run",
+                  "ref": "import tests: 48 passed, 0 failed at head 9c1e2d7",
+                  "observed_at": "2026-10-30T14:00Z"
+                }
+              ],
+              "checked_by": "agent B"
+            }
+          ],
+          "done_reported": [
+            {
+              "item": "Spanish translation of the hours page",
+              "claimed_by": "agent C",
+              "claimed_at": "2026-10-30T09:30Z",
+              "recheck": "Open the deployed hours page and compare it with the translation noun."
+            }
+          ],
+          "in_progress": [
+            {
+              "item": "Image upload size limit",
+              "owner": "agent A",
+              "since": "2026-10-30T11:00Z"
+            }
+          ],
+          "blocked": [
+            {
+              "item": "Nightly backup to object storage",
+              "question": "Which storage account may the backup job use?",
+              "needs": "credential"
+            }
+          ],
+          "failed": [
+            {
+              "item": "Weekly bulletin draft",
+              "evidence": [
+                {
+                  "evidence_type": "log_excerpt",
+                  "ref": "render step exited with code 1; log digest kept with finding F-12",
+                  "observed_at": "2026-10-30T14:00Z"
+                }
+              ],
+              "kept_at": "finding F-12"
+            }
+          ],
+          "unknown": [
+            {
+              "item": "Whether the sitemap lists every page",
+              "would_resolve": "Read the sitemap and compare it with the page list."
+            }
+          ],
+          "needs_person": [
+            "Choose the storage account the backup job may use."
+          ],
+          "next_steps": [
+            {
+              "step": "Recheck the Spanish hours page on the deployed site",
+              "owner": "agent B",
+              "outcome": "The translation moves to verified, or a finding is recorded."
+            },
+            {
+              "step": "Reproduce the bulletin render failure",
+              "owner": "agent A",
+              "outcome": "A reproduction noun for finding F-12."
+            }
+          ],
+          "sources": [
+            {
+              "source": "the code host's API",
+              "observed_at": "2026-10-30T14:00Z",
+              "rechecked": true
+            },
+            {
+              "source": "agent C's handoff H-3",
+              "observed_at": "2026-10-30T09:30Z",
+              "rechecked": false
+            }
+          ]
+        },
+        "shows": "Two items are verified with evidence, one translation is only reported, a backup is blocked on a credential, a failed draft stays on the record and an unknown says how to resolve it.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.handoff",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a handoff written when a usage limit stopped the session",
+      "synthetic": true,
+      "category_reason": "A synthetic handoff in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.handoff"
+        },
+        "instance": {
+          "handoff_id": "H-4",
+          "from_worker": "agent A",
+          "to": "the next session of agent A, or any worker on the team's surface",
+          "written_at": "2026-10-30T14:20Z",
+          "reason": "usage_limit",
+          "owned_scope": [
+            "branch upload-limit in the catalog repository",
+            "finding F-12"
+          ],
+          "do_not_touch": [
+            "branch translate-hours, owned by agent C"
+          ],
+          "status_report_ref": "status report S-7",
+          "next_steps": [
+            {
+              "step": "Rerun the upload tests on head 4b2a9e1",
+              "outcome": "Upload limit moves to verified or a finding is recorded.",
+              "first_check": "The branch head is still 4b2a9e1 and CI shows no newer run."
+            },
+            {
+              "step": "Reproduce the bulletin render failure",
+              "outcome": "A reproduction noun for finding F-12.",
+              "first_check": "The render log digest in F-12 matches the kept log."
+            }
+          ],
+          "claims_to_recheck": [
+            "Upload tests passed locally at 4b2a9e1; they were not rerun after the last rebase."
+          ],
+          "open_questions": [
+            "Is 10 MB the right upload limit for volunteers' photos?"
+          ],
+          "resume_check": "Read status report S-7, confirm the branch head and CI state, and check that nobody else changed the branch before any edit.",
+          "valid_until": "2026-10-31T14:20Z"
+        },
+        "shows": "The receiver knows what it owns, what to leave alone, which claim to recheck first and the first check before any edit.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "take-snapshot",
+      "kind": "verb.probe_source",
+      "title": "Take a snapshot of the current state",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Read the current heads, check runs, deployments and worker states for a named scope, without changing anything.",
+      "outcome": "A snapshot with every value read at one time, and the sources that could not be read.",
+      "ready_outcome": "snapshot_taken",
+      "pinned": [
+        "evidence-rules"
+      ],
+      "params": {
+        "scope": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "description": "Which repositories, deployments and workers to read.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "snapshot",
+          "template": "template.snapshot"
+        }
+      ],
+      "steps": [
+        "Read each value from its source at this time; never copy a value from an earlier status.",
+        "Record heads as full or short commit identifiers and check runs with the head they ran on.",
+        "List every source that could not be read in unread instead of guessing its state."
+      ],
+      "acceptance": [
+        {
+          "id": "snapshot-matches-template",
+          "check": "The snapshot validates against template.snapshot's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scope-covered",
+          "check": "Every repository, deployment and worker named in scope appears either with its values or in unread.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the code host's API and the named deployments' health and version pages; nothing is changed."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "read-only access to the named repositories and deployments",
+        "write candidate nouns in the requester's scope"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "write-status",
+      "kind": "verb.situate",
+      "title": "Write an evidence-backed status",
+      "claimant": "agent",
+      "summary": "Place every item in scope at one status level with the evidence that level needs, and lead with counts.",
+      "outcome": "A status report that passes the status checks.",
+      "ready_outcome": "status_written",
+      "pinned": [
+        "status-levels",
+        "evidence-rules",
+        "status-checks"
+      ],
+      "slots": [
+        {
+          "name": "snapshot",
+          "category": "noun.eval_run",
+          "description": "Pin of a fresh snapshot."
+        },
+        {
+          "name": "earlier_reports",
+          "category": "noun.eval_run",
+          "description": "Pins of earlier status reports, handoffs or receipts.",
+          "required": false,
+          "many": true,
+          "max": 16
+        }
+      ],
+      "produces": [
+        {
+          "name": "status_report",
+          "template": "template.status-report"
+        }
+      ],
+      "steps": [
+        "Start from the snapshot. Carry an earlier claim forward only as done_reported, with who made it and when.",
+        "Mark an item done_verified only with evidence of the type the evidence rules name, younger than its maximum age.",
+        "Keep failures and unknowns; give each failure its evidence and each unknown what would resolve it.",
+        "Write the headline as counts by level, verified first.",
+        "Put at most three decisions in needs_person, each answerable in one line."
+      ],
+      "acceptance": [
+        {
+          "id": "status-matches-template",
+          "check": "The report validates against template.status-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-checks-pass",
+          "check": "The report passes the pinned status checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-match",
+          "check": "The headline's counts equal the lengths of the level lists.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "recheck-claims",
+      "kind": "verb.verify_gate",
+      "title": "Recheck reported claims",
+      "claimant": "agent",
+      "review": "distinct_reviewer",
+      "summary": "A worker other than the claimant rechecks each done_reported claim, and samples verified ones, against fresh evidence.",
+      "outcome": "A claim check: each claim confirmed, contradicted or unverifiable, with evidence.",
+      "ready_outcome": "claims_rechecked",
+      "pinned": [
+        "evidence-rules"
+      ],
+      "slots": [
+        {
+          "name": "status_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the status report whose claims to recheck."
+        }
+      ],
+      "produces": [
+        {
+          "name": "claim_check",
+          "template": "template.claim-check"
+        }
+      ],
+      "steps": [
+        "Confirm you made none of the claims you check; otherwise end blocked.",
+        "Recheck each claim with the evidence type the rules name, read now.",
+        "Mark a claim contradicted only with evidence; mark it unverifiable when the evidence cannot be read.",
+        "Propose record-finding for every contradicted claim."
+      ],
+      "acceptance": [
+        {
+          "id": "check-matches-template",
+          "check": "The claim check validates against template.claim-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-checker",
+          "check": "checked_by differs from every claimant.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-reported-covered",
+          "check": "Every done_reported item in the report appears in claims.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the code host's API and the deployed pages named in the claims; nothing is changed."
+      ]
+    },
+    {
+      "slug": "rank-next-steps",
+      "kind": "verb.decompose_dag",
+      "title": "Rank the next steps",
+      "claimant": "agent",
+      "summary": "Turn a status into ranked next steps, each a verb with an outcome, authority, effort and what it unblocks.",
+      "outcome": "Ranked next steps, with at most three items for the person.",
+      "ready_outcome": "steps_ranked",
+      "pinned": [
+        "ranking-rules"
+      ],
+      "slots": [
+        {
+          "name": "status_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the status report."
+        }
+      ],
+      "produces": [
+        {
+          "name": "next_steps",
+          "template": "template.next-steps"
+        }
+      ],
+      "steps": [
+        "Apply the ranking rules in order and say which rule decided each tie.",
+        "Give every step a verb kind and an outcome another worker could check.",
+        "Mark steps that need spending, credentials or a public release as authority person; keep them to three."
+      ],
+      "acceptance": [
+        {
+          "id": "steps-match-template",
+          "check": "The ranking validates against template.next-steps's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "blocked-covered",
+          "check": "Every blocked item in the status appears as a step or in needs_person.",
+          "method": "deterministic"
+        },
+        {
+          "id": "useful-order",
+          "check": "A reviewer agrees the first step is the most valuable one available now.",
+          "method": "judgment"
+        }
+      ]
+    },
+    {
+      "slug": "write-handoff",
+      "kind": "verb.solve_draft",
+      "title": "Write a handoff",
+      "claimant": "agent",
+      "summary": "Before a session stops, record what the receiver owns, what to leave alone, the next steps with a first check each, open questions and unchecked claims.",
+      "outcome": "A handoff another worker can resume from without asking.",
+      "ready_outcome": "handoff_written",
+      "pinned": [
+        "resume-playbook"
+      ],
+      "slots": [
+        {
+          "name": "status_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the latest status report."
+        }
+      ],
+      "params": {
+        "reason": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "usage_limit",
+              "end_of_session",
+              "context_limit",
+              "reassignment",
+              "pause",
+              "other"
+            ]
+          },
+          "description": "Why the session stops.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "handoff",
+          "template": "template.handoff"
+        }
+      ],
+      "steps": [
+        "Write the handoff before the session stops; a handoff written late misses claims.",
+        "List what the receiver owns and what others own, by branch, file or noun.",
+        "Give each next step a first check that proves the state before any edit.",
+        "List every claim you did not recheck, plainly."
+      ],
+      "acceptance": [
+        {
+          "id": "handoff-matches-template",
+          "check": "The handoff validates against template.handoff's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "points-to-status",
+          "check": "status_report_ref names the pinned status report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "resumable",
+          "check": "A different worker could take the first step using only this handoff and its pins.",
+          "method": "judgment"
+        }
+      ]
+    },
+    {
+      "slug": "resume-from-handoff",
+      "kind": "verb.recover_fault",
+      "title": "Resume from a handoff",
+      "claimant": "agent",
+      "summary": "Pick up someone else's work by rechecking the handoff's claims, looking for concurrent work and deciding whether to continue.",
+      "outcome": "A resume check with the decision and the first step.",
+      "ready_outcome": "resume_checked",
+      "pinned": [
+        "resume-playbook",
+        "evidence-rules"
+      ],
+      "slots": [
+        {
+          "name": "handoff",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the handoff."
+        },
+        {
+          "name": "snapshot",
+          "category": "noun.eval_run",
+          "description": "Pin of a snapshot taken after the handoff was written."
+        }
+      ],
+      "produces": [
+        {
+          "name": "resume_check",
+          "template": "template.resume-check"
+        }
+      ],
+      "steps": [
+        "Compare the fresh snapshot with the handoff: heads, checks, deployments and workers.",
+        "Recheck every claim the handoff lists before building on it.",
+        "Leave anything in do_not_touch alone; a conflict with concurrent work means stop_and_ask.",
+        "Write the decision and the first step before making any change."
+      ],
+      "acceptance": [
+        {
+          "id": "resume-matches-template",
+          "check": "The resume check validates against template.resume-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-covered",
+          "check": "Every claim in claims_to_recheck appears in claims.",
+          "method": "deterministic"
+        },
+        {
+          "id": "decision-consistent",
+          "check": "decision is stop_and_ask whenever concurrent_work holds a conflict.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "status-and-handoff.write-handoff"
+      ]
+    }
+  ]
+}
