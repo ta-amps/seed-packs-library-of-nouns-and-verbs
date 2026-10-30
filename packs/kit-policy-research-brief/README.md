@@ -18,7 +18,7 @@ Number a new public rule's sections and clauses as the official text does, pull 
 | Checklist | 4 checks a person runs with the kit |
 | Sources | 3 dated public sources |
 | Test cases | 3 synthetic cases; 1 must go to a person |
-| Example request | What an organization might type when it asks for this kit, marked synthetic |
+| Need, in its own words | One or two plain sentences an organization might say about this work, marked synthetic |
 | Templates | an index of a rule's clauses, dates, definitions and duties, a plain-language rule brief with a citation for every point, a citation check of a brief against the official text, and a person's step record |
 
 ## Verbs
@@ -41,8 +41,8 @@ fill a template from [verbs.json](verbs.json) with
 `scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>` and enqueue
 the printed task yourself. Workers need keys on the same surface.
 
-The marketplace example `examples/kits/09-policy-research-brief.json` points at this pack's kit and example request
-nouns by their value digests, so the kit has one source.
+The marketplace example `examples/kits/09-policy-research-brief.json` points at this pack's kit and need nouns by
+their value digests, so the kit has one source.
 
 ## Limits
 

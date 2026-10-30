@@ -18,7 +18,7 @@ Compare a whole grant period's program results with the targets in the original 
 | Checklist | 4 checks a person runs with the kit |
 | Sources | 2 dated public sources |
 | Test cases | 2 synthetic cases; 1 must go to a person |
-| Example request | What an organization might type when it asks for this kit, marked synthetic |
+| Need, in its own words | One or two plain sentences an organization might say about this work, marked synthetic |
 | Templates | a grant period's results and spending against its targets, a funding impact summary draft with every number traced, and a person's step record |
 
 ## Verbs
@@ -41,8 +41,8 @@ fill a template from [verbs.json](verbs.json) with
 `scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>` and enqueue
 the printed task yourself. Workers need keys on the same surface.
 
-The marketplace example `examples/kits/10-funding-impact-summary.json` points at this pack's kit and example request
-nouns by their value digests, so the kit has one source.
+The marketplace example `examples/kits/10-funding-impact-summary.json` points at this pack's kit and need nouns by
+their value digests, so the kit has one source.
 
 ## Limits
 

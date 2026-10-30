@@ -20,7 +20,7 @@ Type each handwritten page in a drop folder exactly as written, keeping slang, s
 | Checklist | 5 checks a person runs with the kit |
 | Sources | 1 dated public sources |
 | Test cases | 4 synthetic cases; 2 must go to a person |
-| Example request | What an organization might type when it asks for this kit, marked synthetic |
+| Need, in its own words | One or two plain sentences an organization might say about this work, marked synthetic |
 | Templates | one page typed exactly as written, with every flag located, acronyms and local terms found in a transcription, and a person's step record |
 
 ## Verbs
@@ -44,8 +44,8 @@ fill a template from [verbs.json](verbs.json) with
 `scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>` and enqueue
 the printed task yourself. Workers need keys on the same surface.
 
-The marketplace example `examples/kits/07-handwritten-statements-to-text.json` points at this pack's kit and example request
-nouns by their value digests, so the kit has one source.
+The marketplace example `examples/kits/07-handwritten-statements-to-text.json` points at this pack's kit and need nouns by
+their value digests, so the kit has one source.
 
 ## Limits
 
