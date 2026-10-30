@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds fifty-nine proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds sixty-two proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -79,10 +79,13 @@ activated**, and no worker has run them yet.
 | [Social cut-downs](packs/social-cutdowns/README.md) | Deriving platform cut-downs from a longer video that keep its meaning: hooks, reframes, burned-in captions, length targets and copy, approved and posted by a person through the platform's own tools |
 | [Thumbnails and titles](packs/thumbnail-and-title/README.md) | Drafting thumbnail and title candidates from what a video shows, checking them at small sizes and for honesty, and planning an A/B test, with a person picking |
 | [Video audience acceptance](packs/video-uat/README.md) | Testing whether a video's intended viewers understand it, with tasks and pass criteria a person agrees to before any session and results that describe only the people asked |
+| [Living research dossier](packs/living-research-dossier/README.md) | Keeping a research dossier current: a numbered queue of questions worked in cycles with one sub-agent per question, every fact with an as-of date and a decay class, named triggers once the questions run out, decayed facts refreshed and a person deciding what is published |
+| [Wiring and conformance checks](packs/wiring-and-conformance-checks/README.md) | Proving a code project's capabilities are wired in: modules no live path imports, config fields that survive a reload, health probes that probe, a canary per rule and documented behaviors tested on their real path, with tested code |
+| [Persona panel and second opinion](packs/persona-panel-second-opinion/README.md) | Independent second opinions before a decision: reviewers with stated perspectives on other model families, takes given alone, a synthesis that leads with where they disagree and a person who decides |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1177
-nouns and 381 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1258
+nouns and 405 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

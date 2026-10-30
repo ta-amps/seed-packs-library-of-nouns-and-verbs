@@ -75,8 +75,11 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Social cut-downs](social-cutdowns/README.md) | Deriving platform cut-downs from a longer video that keep its meaning: hooks, reframes, burned-in captions, length targets and copy, approved and posted by a person through the platform's own tools | 25 | 5 |
 | [Thumbnails and titles](thumbnail-and-title/README.md) | Drafting thumbnail and title candidates from what a video shows, checking them at small sizes and for honesty, and planning an A/B test, with a person picking | 24 | 6 |
 | [Video audience acceptance](video-uat/README.md) | Testing whether a video's intended viewers understand it, with tasks and pass criteria a person agrees to before any session and results that describe only the people asked | 16 | 5 |
+| [Living research dossier](living-research-dossier/README.md) | Keeping a research dossier current: a numbered queue of questions worked in cycles with one sub-agent per question, every fact with an as-of date and a decay class, named triggers once the questions run out, decayed facts refreshed and a person deciding what is published | 24 | 10 |
+| [Wiring and conformance checks](wiring-and-conformance-checks/README.md) | Proving a code project's capabilities are wired in: modules no live path imports, config fields that survive a reload, health probes that probe, a canary per rule and documented behaviors tested on their real path, with tested code | 25 | 8 |
+| [Persona panel and second opinion](persona-panel-second-opinion/README.md) | Independent second opinions before a decision: reviewers with stated perspectives on other model families, takes given alone, a synthesis that leads with where they disagree and a person who decides | 32 | 6 |
 
-Together: 1177 nouns and 381 verb templates across fifty-nine packs. The
+Together: 1258 nouns and 405 verb templates across sixty-two packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -145,7 +148,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the thirty-seven worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the forty worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether
