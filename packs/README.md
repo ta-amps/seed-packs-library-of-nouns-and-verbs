@@ -37,8 +37,9 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
 | [Monthly program impact report kit](kit-monthly-impact-report/README.md) | A community nonprofit's monthly program impact report | 13 | 5 |
+| [Handwritten statements to text kit](kit-handwritten-statements/README.md) | Turning handwritten statements and forms dropped into a folder into text typed exactly as written, keeping the writer's slang, spelling, acronyms and words, flagging every uncertain reading for a person, and listing acronyms against a local glossary, while staff check every flag, follow up on safety, sign off and decide any use | 16 | 6 |
 
-Together: 424 nouns and 133 verb templates across twenty-one packs. The
+Together: 440 nouns and 139 verb templates across twenty-two packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
