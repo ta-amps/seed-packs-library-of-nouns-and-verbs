@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 19)
+        self.assertEqual(summary["worked_examples"], 24)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -1201,6 +1201,107 @@ class SecondRoundPackExamples(unittest.TestCase):
         description = self.instance(pack, "example.screenshot-description")
         self.assertIsNone(description["css_width"])
         self.assertEqual(set(description["proposed_cells"]), {c["id"] for c in self.instance(pack, "example.capture-plan")["cells"]})
+
+
+class CorpusPackExamples(unittest.TestCase):
+    """The five packs of October 30 drawn from recurring work across design notes, agent sessions and project
+    folders: their record checks, and the arithmetic their worked examples state."""
+
+    FIXTURES = (("atomic-step-contract", "step-checks"), ("unattended-run-record", "run-checks"),
+                ("retrieval-triggers-and-reuse", "reuse-checks"), ("file-triage-at-scale", "triage-checks"),
+                ("measured-claims", "claim-checks"))
+
+    @staticmethod
+    def instance(pack: str, slug: str):
+        return record(pack, slug)["value"]["instance"]
+
+    def test_record_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(value["finding_schema"], fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            template = record(pack, next(n["slug"] for n in IDX.lib.sources[pack]["nouns"]
+                                         if n["role"] == "template" and n["value"]["schema"] == value["finding_schema"]))
+            self.assertEqual(template["value"]["role"], "template", pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_break_even_hit_rates_recompute(self):
+        inst = self.instance("atomic-step-contract", "example.overhead-measurement")
+        content, k = inst["slicing"]["content_tokens"], inst["slicing"]["slices"]
+        rates = {}
+        for cfg in inst["configurations"]:
+            self.assertEqual(cfg["total_prefix_tokens"], cfg["message_tokens"] + cfg["tool_tokens"])
+            prefix = cfg["total_prefix_tokens"]
+            rates[f"{cfg['harness']}, {cfg['configuration']}"] = round((k - 1) * prefix / (k * prefix + content), 3)
+        self.assertEqual({row["harness"]: row["required_hit_rate"] for row in inst["break_even"]}, rates)
+        self.assertLess(min(rates.values()), 1 - 1 / k, "a small prefix lowers the threshold below 1 - 1/k")
+        self.assertGreater(min(rates.values()), 0.5, "but does not remove it at this content size")
+
+    def test_unattended_report_and_triage_agree(self):
+        value = record("unattended-run-record", "run-checks")["value"]
+        night = next(f["finding"] for f in value["golden_fixtures"] if f["id"] == "good-night")
+        rungs = [entry["rung"] for entry in night["entries"]]
+        self.assertTrue(night["headline"].startswith(f"{rungs.count('verified')} verified"))
+        self.assertIn(f"{len(night['declined'])} declined", night["headline"])
+        voided = {entry["candidate_ref"] for entry in night["entries"] if entry["rung"] == "void"}
+        self.assertEqual(set(night["integrity"]["void_entries"]), voided)
+        self.assertEqual(voided, {b.split("/", 1)[1] for b in night["delivery"]["discarded_kept_as_branches"]})
+        triage = self.instance("unattended-run-record", "example.triage-record")
+        self.assertEqual(triage["model_calls"], 0)
+        ranks = [item["rank"] for item in triage["items"] if item["decision"] == "attempt"]
+        self.assertEqual(ranks, list(range(1, len(ranks) + 1)))
+        for item in triage["items"]:
+            if item["decision"] == "decline":
+                self.assertIsNone(item["rank"], item["candidate_ref"])
+                self.assertNotEqual(item["reason"], "ranked", item["candidate_ref"])
+
+    def test_reuse_ledger_rates_and_rollbacks_recompute(self):
+        ledger = self.instance("retrieval-triggers-and-reuse", "example.reuse-ledger")
+        self.assertEqual(ledger["verified_per_1000_calls"], round(ledger["verified"] / ledger["cost"]["model_calls"] * 1000, 1))
+        base = ledger["baseline"]
+        self.assertEqual(base["verified_per_1000_calls"], round(base["verified"] / base["model_calls"] * 1000, 1))
+        self.assertEqual(ledger["rollbacks"], sum(hit["attempts"] - hit["verified"] for hit in ledger["hits"]))
+        self.assertEqual(ledger["verdict"] == "reuse_pays", ledger["verified_per_1000_calls"] > base["verified_per_1000_calls"])
+        lookup = self.instance("retrieval-triggers-and-reuse", "example.lookup-record")
+        fits = [c for c in lookup["candidates"] if c["fit"] != "no_fit"]
+        self.assertEqual(lookup["rung_answered"], "retrieved" if any(c["fit"] == "use_as_is" for c in fits) else lookup["rung_answered"])
+
+    def test_duplicate_reclaim_and_inventory_recompute(self):
+        dup = self.instance("file-triage-at-scale", "example.duplicate-set")
+        self.assertEqual(dup["evidence_level"], "full_sha256")
+        self.assertEqual(len({member["sha256"] for member in dup["members"]}), 1)
+        self.assertEqual(len({member["inode"] for member in dup["members"]}), len(dup["members"]))
+        self.assertTrue(all(member["hardlinks"] == 1 for member in dup["members"]))
+        self.assertEqual(dup["reclaimable_bytes"], sum(sorted(m["allocated_bytes"] for m in dup["members"])[1:]))
+        inventory = self.instance("file-triage-at-scale", "example.inventory")
+        self.assertEqual(inventory["files_changed_by_scan"], 0)
+        self.assertLessEqual(sum(group["allocated_bytes"] for group in inventory["groups"]), inventory["totals"]["allocated_bytes"])
+        for root in inventory["roots"]:
+            self.assertLessEqual(root["free_bytes"], root["total_bytes"], root["root_ref"])
+        used = sum(root["total_bytes"] - root["free_bytes"] for root in inventory["roots"])
+        self.assertLessEqual(inventory["totals"]["allocated_bytes"], used, "scanned files fit in the space used")
+
+    def test_reproduction_verdict_follows_its_tolerance(self):
+        rep = self.instance("measured-claims", "example.reproduction")
+        claimed = float(rep["claimed_value"].split()[0])
+        tolerance = float(rep["tolerance"].split()[1]) / 100
+        within = all(abs(float(run["value"]) - claimed) / claimed <= tolerance for run in rep["runs"])
+        self.assertEqual(rep["verdict"], "reproduced" if within else "not_reproduced")
+        self.assertEqual(rep["correction_needed"], not within)
+        correction = self.instance("measured-claims", "example.correction")
+        self.assertIn(rep["claimed_value"].split()[0], correction["claimed"])
 
 
 if __name__ == "__main__":

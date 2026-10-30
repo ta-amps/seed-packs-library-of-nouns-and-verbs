@@ -123,6 +123,34 @@ data analysis packs were added here, and the screenshot design review to section
 **Still needed here:** research intake from newsletters and feeds. The descriptive options chain
 review and checked analysis of a CSV file are now packs, added later on October 30.
 
+## 6. Steps, unattended runs, reuse, file triage and claims
+
+Added October 30, 2026, from patterns that recur across design notes, agent sessions and project
+folders: what one atomic step should receive, running work with nobody watching, looking up and
+reusing before generating, organizing very large collections of files, and notes whose claims say
+how they are known.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| A step kind and its grant | [Atomic step contract](../packs/atomic-step-contract/README.md): define-step-kind, audit-grant | Added now | seed_hypothesis (step kind), eval_run (grant audit), reflex_procedure (packet, grant, refusal and patch rules) | distill_reflex, verify_gate | assemble-step-packet |
+| One step's packet, its patch and its refusals | Atomic step contract: assemble-step-packet, check-patch, review-refusals, review-pull-log | Added now | seed_hypothesis (packet, revision), eval_run (patch check, refusal review), benchmark_suite (step checks) | situate, verify_gate, recheck_fragility, distill_reflex | record-finding per refusal that names no legal set |
+| What a step costs before any content | Atomic step contract: measure-step-overhead | Added now | eval_run (overhead measurement), reflex_procedure (overhead model) | benchmark_harness | define-step-kind for a cheaper configuration |
+| A plan approved before a window opens | [Unattended run record](../packs/unattended-run-record/README.md): plan-run, approve-run (a person's verb) | Added now | seed_hypothesis (run plan), eval_run (approval), reflex_procedure (run guards) | decompose_dag, verify_gate (human) | triage-candidates |
+| Triage, baselines and attempts in isolated copies | Unattended run record: triage-candidates, take-baseline, attempt-candidate | Added now | seed_hypothesis (candidate), eval_run (triage, baseline, attempt), reflex_procedure (fallback ladder) | problemize, benchmark_harness, solve_draft | grade-attempt |
+| Grading by the check, and a morning report | Unattended run record: grade-attempt, write-run-report | Added now | eval_run (grade, run report), reflex_procedure (outcome ladder, verification strength), benchmark_suite (run checks) | verify_gate, compile_dag | write-handoff for each shortfall |
+| Look up before generating | [Retrieval triggers and reuse](../packs/retrieval-triggers-and-reuse/README.md): look-up-first | Added now | eval_run (lookup), reflex_procedure (triggers, ladder, fingerprints, evidence types) | situate | try-reuse, record-saved-need, survey-existing |
+| Reuse only under the check | Retrieval triggers and reuse: try-reuse, qualify-solution, review-promotion (a different worker or a person) | Added now | code_node (qualified solution), eval_run (reuse attempt, promotion), benchmark_suite (reuse checks) | verify_gate, distill_reflex | record-finding for a wrongly verified solution |
+| Unmet needs met by later arrivals, and whether reuse pays | Retrieval triggers and reuse: record-saved-need, match-arrivals, measure-reuse | Added now | seed_hypothesis (saved need), eval_run (arrival match, reuse ledger) | generate_seed, probe_source, benchmark_harness | try-reuse per recommendation |
+| A read-only inventory, placements and proven duplicates | [File triage at scale](../packs/file-triage-at-scale/README.md): scope-scan, inventory-files, classify-items, find-duplicates | Added now | seed_hypothesis (scope, register), eval_run (inventory, duplicate set), reflex_procedure (placement, duplicates, filesystem fit, secret exclusions) | problemize, ingest, situate, verify_gate | plan-moves |
+| A move plan a person approves, and verified moves | File triage at scale: plan-moves, approve-plan (a person's verb), move-and-verify, retire-sources (a person's verb), reconcile-indexes | Added now | seed_hypothesis (move plan), eval_run (approval, journal, retirement, reconciliation), benchmark_suite (triage checks) | decompose_dag, verify_gate (human), compile_dag, recheck_fragility | record-finding for drift |
+| Claims that say how they are known | [Measured claims](../packs/measured-claims/README.md): label-claims, reproduce-claim, record-correction, audit-note (a different worker or a person) | Added now | seed_hypothesis (note), eval_run (reproduction, correction, audit), benchmark_suite (claim checks) | situate, benchmark_harness, recheck_fragility, verify_gate | reproduce-claim for each reported number a conclusion needs |
+
+**Still needed here:** a research dossier kept current by a queue of questions worked in cycles;
+a panel of stakeholder personas that review a plan independently before their disagreements are
+compared; turning one request into many varied questions, personas and situations for testing;
+lineage and budget-derived grants for one task split across many workers over days; and wiring
+checks that fail when a capability is reachable from no live path.
+
 ## Work that supports every goal
 
 [Repository review](../packs/repo-review/README.md), [Decomposition patterns](../packs/decomposition-patterns/README.md),

@@ -1,0 +1,3156 @@
+{
+  "pack_id": "retrieval-triggers-and-reuse",
+  "title": "Retrieval triggers and reuse",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for looking up existing nouns before generating new ones and reusing past solutions safely: trigger rules for when to look first, a cheapest-first ladder from what is at hand to new research, fingerprints loose on the task and strict on the environment, solutions stored only after they regenerate their result alone, matches tried under the check with rollback, unmet needs matched against new arrivals, and reuse judged by verified work per unit of cost.",
+  "dependencies": [
+    "prior-art-and-alternatives",
+    "findings-to-fixes"
+  ],
+  "boundaries": [
+    "A retrieved item is a prior, never proof. Only the check decides a reuse.",
+    "Lookups read the team's own nouns; nothing outside the team's scope is written.",
+    "Stored solutions are code nouns. The library never runs them; workers run them under their own permissions.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for looking up existing nouns before generating and reusing past solutions safely",
+      "value": {
+        "lets_workers": "Look up what already exists before generating anything new, and reuse earlier solutions without trusting them blindly: fire lookup triggers, climb a ladder from what is at hand to new research, treat a fingerprint match as permission to try under the check, store only solutions that regenerate their result alone, record unmet needs so later arrivals can meet them, and judge all of it by verified work per unit of cost.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.look-up-first"
+            },
+            "when": "Before any new noun or solution is generated."
+          },
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.try-reuse"
+            },
+            "when": "When a lookup finds a fingerprint match; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.qualify-solution"
+            },
+            "when": "After a run verifies, before anything is stored for reuse."
+          },
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.review-promotion"
+            },
+            "when": "When a stored solution is proposed for review or for procedural use; a different worker or a person."
+          },
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.record-saved-need"
+            },
+            "when": "When a lookup finds nothing suitable."
+          },
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.match-arrivals"
+            },
+            "when": "When new nouns, releases or indexed sources arrive."
+          },
+          {
+            "verb": {
+              "$verb": "retrieval-triggers-and-reuse.measure-reuse"
+            },
+            "when": "Over a window of runs; deterministic."
+          }
+        ],
+        "guardrails": [
+          "A retrieved item is a prior, never proof; only the check decides a reuse.",
+          "Loose on the task, strict on the environment.",
+          "Nothing promotes itself, and no run is credited with reusing its own output.",
+          "Reuse is judged by verified tasks per unit of total cost, not by how relevant results looked."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "reuse-checks"
+          },
+          {
+            "$pin": "example.lookup-record"
+          },
+          {
+            "$pin": "example.saved-need"
+          },
+          {
+            "$pin": "example.reuse-ledger"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "trigger-rules"
+        ],
+        [
+          "requires_noun",
+          "sufficiency-ladder"
+        ],
+        [
+          "requires_noun",
+          "fingerprint-rules"
+        ],
+        [
+          "requires_noun",
+          "qualification-rules"
+        ],
+        [
+          "requires_noun",
+          "evidence-types"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How lookups, reuse, qualification and saved needs fit together",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "look-up-first applies the triggers and searches cheapest first, recording where it looked and the rung that answered.",
+          "try-reuse materializes a matched solution in a copy, lets the check decide and rolls back on a miss.",
+          "When generation was needed and the run verified, qualify-solution stores a body only if it regenerates the result alone.",
+          "review-promotion, by a different worker or a person, moves a solution to reviewed or, with two verified instances, to procedural.",
+          "When nothing fit, record-saved-need keeps the unmet need; match-arrivals checks new arrivals against it.",
+          "measure-reuse counts verified work per unit of cost over a window, against a baseline."
+        ],
+        "rules": [
+          "Find the binding constraint first. Better search in front of a failing step improves nothing.",
+          "A saved need improves the system while it is idle, because the world changes underneath it.",
+          "Failures are stored too, under the same fingerprint, so refuted work is skipped instead of rediscovered.",
+          "Prefer a resolver for a class of failure that abstains when it does not apply over a cached answer for one task.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "survey": {
+            "$verb": "prior-art-and-alternatives.survey-existing"
+          },
+          "finding": {
+            "$verb": "findings-to-fixes.record-finding"
+          }
+        }
+      }
+    },
+    {
+      "slug": "trigger-rules",
+      "category": "noun.reflex_procedure",
+      "role": "trigger_rules",
+      "title": "When a worker must look up before generating",
+      "category_reason": "A zero-call deterministic rule set: the same request and records fire the same triggers.",
+      "value": {
+        "look_up_first_when": [
+          "A new noun would be written: search the team's nouns for the same role and terms first.",
+          "The task's fingerprint has earlier verified outcomes at any level.",
+          "The failure signature was seen before, including a recorded refutation or do-not-use tombstone.",
+          "The request names a tool, package, dataset or model that may already have a card.",
+          "The request is to build something reusable: survey what exists before building.",
+          "An open saved need has the same shape as the request."
+        ],
+        "skip_lookup_when": [
+          "The answer is already in the packet the step received.",
+          "Lookups for this kind of step did not pay over a measured window; record the skip and its evidence."
+        ],
+        "order": "Cheapest first: what is at hand, the team's nouns, qualified solutions and tombstones, this library, then outside catalogs.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "sufficiency-ladder",
+      "category": "noun.reflex_procedure",
+      "role": "sufficiency_ladder",
+      "title": "From what is at hand to new research, cheapest first",
+      "category_reason": "A deterministic escalation order with a derived threshold.",
+      "value": {
+        "rungs": [
+          {
+            "rung": "at_hand",
+            "means": "The packet and state already answer it."
+          },
+          {
+            "rung": "retrieved",
+            "means": "An existing noun answers as is."
+          },
+          {
+            "rung": "configured",
+            "means": "An existing noun answers with settings changed."
+          },
+          {
+            "rung": "composed",
+            "means": "Existing nouns combined answer it."
+          },
+          {
+            "rung": "modified",
+            "means": "An existing noun changed in place answers it."
+          },
+          {
+            "rung": "generated",
+            "means": "Nothing fits; new work is generated."
+          },
+          {
+            "rung": "research_needed",
+            "means": "Generating needs knowledge nobody holds; propose research."
+          },
+          {
+            "rung": "abstained",
+            "means": "Every route was tried on this fingerprint class with no verified outcome; say so and spend the allowance elsewhere."
+          }
+        ],
+        "ladder_rule": "Keep trying the cheaper rung while its success rate is at least its cost divided by the next rung's cost. Derive the threshold from measured costs; do not tune it by feel.",
+        "record": "Every lookup records the rung that answered, so the rates behind the rule exist."
+      }
+    },
+    {
+      "slug": "fingerprint-rules",
+      "category": "noun.reflex_procedure",
+      "role": "fingerprint_rules",
+      "title": "Fingerprints that are loose on the task and strict on the environment",
+      "category_reason": "Deterministic fingerprint construction and backoff rules.",
+      "value": {
+        "step_key": "The procedure digest, the state slice digest and the observation digest of a step.",
+        "levels": [
+          {
+            "level": "exact",
+            "keys": "step kind, check, failure class and files touched"
+          },
+          {
+            "level": "source_failure",
+            "keys": "source, check family and failure class"
+          },
+          {
+            "level": "family_failure",
+            "keys": "check family and failure class"
+          },
+          {
+            "level": "family",
+            "keys": "check family"
+          },
+          {
+            "level": "global",
+            "keys": "everything"
+          }
+        ],
+        "selection": "Use the most specific level with at least two verified outcomes, and record which level answered.",
+        "loose_and_strict": "Match the task loosely, because a wrong match costs one check run and a rollback. Match the environment exactly: runner version, model tier, interpreter and installed packages.",
+        "statistics": [
+          "Smooth small counts so one success in one try is not read as certainty.",
+          "Scope every rate to an environment fingerprint; when the environment changes, earlier rates describe another system.",
+          "A crashed or unrecorded run is not counted."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "qualification-rules",
+      "category": "noun.reflex_procedure",
+      "role": "qualification_rules",
+      "title": "What a solution must survive before it is stored for reuse",
+      "category_reason": "Deterministic qualification and promotion bars.",
+      "value": {
+        "steps": [
+          "Distill a script or resolver that regenerates the result, as its own step; asking the solving step to also write one does not work reliably.",
+          "Delete the deliverables.",
+          "Replay the body alone in a clean copy.",
+          "The check must pass again, or the body is refused.",
+          "Recitation guard: refuse a body whose literals hold three or more numbers that appear in the deliverable but in no input.",
+          "Store the body by digest with its constraints, its check, its fingerprint and the lookup that came before it."
+        ],
+        "memory_bars": {
+          "episodic": "a completed run",
+          "semantic": "review by someone other than the producer",
+          "procedural": "two or more verified instances"
+        },
+        "separation": "Producer, reviewer and promoter are different. A run never promotes its own lesson and is never credited with reusing what it produced itself.",
+        "resolvers": "A resolver abstains when it does not apply; one that guesses is refused."
+      }
+    },
+    {
+      "slug": "evidence-types",
+      "category": "noun.reflex_procedure",
+      "role": "evidence_types",
+      "title": "How each retrieved fact is known",
+      "category_reason": "A fixed vocabulary for the provenance of retrieved facts.",
+      "value": {
+        "methods": {
+          "parsed": "A syntactic read says the thing exists, such as a call in source text.",
+          "resolved": "A compiler, index or registry resolved the reference.",
+          "observed": "Seen happening at run time; valid only for the environment it ran in, so carry that environment's digest.",
+          "reported": "Someone else said so; not reproduced here.",
+          "designed": "Intent only; nothing built or measured."
+        },
+        "every_fact_carries": [
+          "source revision",
+          "identity",
+          "locator or range",
+          "method",
+          "environment digest when observed"
+        ],
+        "rule": "A fact without a method is treated as reported. Cheap to add at the start, impossible to retrofit honestly."
+      }
+    },
+    {
+      "slug": "template.lookup-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one lookup before generating: the triggers that fired, where it searched, the candidates and their fit, and the rung that answered",
+      "category_reason": "A lookup is a recorded search run.",
+      "value": {
+        "describes": "one lookup before generating: the triggers that fired, where it searched, the candidates and their fit, and the rung that answered",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lookup_id",
+            "request",
+            "triggers_fired",
+            "searched",
+            "candidates",
+            "evidence_types",
+            "rung_answered",
+            "decision_reason",
+            "looked_up_at"
+          ],
+          "properties": {
+            "lookup_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "request": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "triggers_fired": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "searched": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "where",
+                  "query",
+                  "results"
+                ],
+                "properties": {
+                  "where": {
+                    "type": "string",
+                    "enum": [
+                      "team_nouns",
+                      "qualified_solutions",
+                      "tombstones",
+                      "saved_needs",
+                      "library_packs",
+                      "outside_catalogs"
+                    ]
+                  },
+                  "query": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "results": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  }
+                }
+              }
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "ref",
+                  "level",
+                  "fit",
+                  "why"
+                ],
+                "properties": {
+                  "ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "exact",
+                      "source_failure",
+                      "family_failure",
+                      "family",
+                      "global",
+                      "not_fingerprinted"
+                    ]
+                  },
+                  "fit": {
+                    "type": "string",
+                    "enum": [
+                      "use_as_is",
+                      "configure",
+                      "compose",
+                      "modify",
+                      "no_fit"
+                    ]
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "evidence_types": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "ref",
+                  "method"
+                ],
+                "properties": {
+                  "ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "parsed",
+                      "resolved",
+                      "observed",
+                      "reported",
+                      "designed"
+                    ]
+                  }
+                }
+              }
+            },
+            "rung_answered": {
+              "type": "string",
+              "enum": [
+                "at_hand",
+                "retrieved",
+                "configured",
+                "composed",
+                "modified",
+                "generated",
+                "research_needed",
+                "abstained"
+              ]
+            },
+            "decision_reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "looked_up_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Every lookup records where it searched, even when nothing was found."
+        ]
+      }
+    },
+    {
+      "slug": "template.qualified-solution",
+      "category": "noun.code_node",
+      "role": "template",
+      "title": "Template: a stored solution that regenerated its result alone: body digest, check, fingerprint, constraints, qualification and review",
+      "category_reason": "A qualified solution is reusable code with its contract and evidence.",
+      "value": {
+        "describes": "a stored solution that regenerated its result alone: body digest, check, fingerprint, constraints, qualification and review",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "solution_id",
+            "kind",
+            "body_sha256",
+            "check",
+            "fingerprint",
+            "constraints",
+            "lookup_before",
+            "qualification",
+            "verified_instances",
+            "status",
+            "review",
+            "qualified_at"
+          ],
+          "properties": {
+            "solution_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "script",
+                "resolver",
+                "config_fragment",
+                "procedure"
+              ]
+            },
+            "body_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "check": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "command",
+                "exit_on_replay"
+              ],
+              "properties": {
+                "command": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "exit_on_replay": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                }
+              }
+            },
+            "fingerprint": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "levels",
+                "environment_sha256"
+              ],
+              "properties": {
+                "levels": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "level",
+                      "key_sha256"
+                    ],
+                    "properties": {
+                      "level": {
+                        "type": "string",
+                        "enum": [
+                          "exact",
+                          "source_failure",
+                          "family_failure",
+                          "family",
+                          "global"
+                        ]
+                      },
+                      "key_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                },
+                "environment_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "constraints": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "lookup_before": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "where",
+                  "query"
+                ],
+                "properties": {
+                  "where": {
+                    "type": "string",
+                    "enum": [
+                      "team_nouns",
+                      "qualified_solutions",
+                      "tombstones",
+                      "saved_needs",
+                      "library_packs",
+                      "outside_catalogs"
+                    ]
+                  },
+                  "query": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "qualification": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "deliverables_deleted",
+                "replayed_alone_in_clean_copy",
+                "replay_exit",
+                "recitation_guard"
+              ],
+              "properties": {
+                "deliverables_deleted": {
+                  "type": "boolean"
+                },
+                "replayed_alone_in_clean_copy": {
+                  "type": "boolean"
+                },
+                "replay_exit": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                },
+                "recitation_guard": {
+                  "type": "string",
+                  "enum": [
+                    "passed",
+                    "failed",
+                    "not_applicable"
+                  ]
+                }
+              }
+            },
+            "verified_instances": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "run_ref",
+                  "check_exit"
+                ],
+                "properties": {
+                  "run_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "check_exit": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255
+                  }
+                }
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "candidate",
+                "reviewed",
+                "procedural",
+                "tombstoned"
+              ]
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "producer",
+                "reviewer_kind"
+              ],
+              "properties": {
+                "producer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "reviewer_kind": {
+                  "type": "string",
+                  "enum": [
+                    "none_yet",
+                    "different_worker",
+                    "person"
+                  ]
+                }
+              }
+            },
+            "qualified_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Stored only after qualification; status changes only through review-promotion."
+        ]
+      }
+    },
+    {
+      "slug": "template.reuse-attempt",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one try of a stored solution on a new task: match level, environment match, the check's verdict and what was rolled back",
+      "category_reason": "A reuse attempt is a deterministic check run.",
+      "value": {
+        "describes": "one try of a stored solution on a new task: match level, environment match, the check's verdict and what was rolled back",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attempt_id",
+            "solution_ref",
+            "task_ref",
+            "match_level",
+            "environment_match",
+            "outcome",
+            "check_exit",
+            "files_rolled_back",
+            "model_calls",
+            "seconds",
+            "attempted_at"
+          ],
+          "properties": {
+            "attempt_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "solution_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "task_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "match_level": {
+              "type": "string",
+              "enum": [
+                "exact",
+                "source_failure",
+                "family_failure",
+                "family",
+                "global"
+              ]
+            },
+            "environment_match": {
+              "type": "boolean"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "verified_reuse",
+                "miss_rolled_back",
+                "refused_environment_drift",
+                "refused_tombstoned"
+              ]
+            },
+            "check_exit": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 255
+            },
+            "files_rolled_back": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "model_calls": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "seconds": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            "attempted_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "A match is permission to try; the outcome comes from the check."
+        ]
+      }
+    },
+    {
+      "slug": "template.saved-need",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: an unmet need kept open: what is wanted, its constraints, where it was searched, why nothing fit and how arrivals are matched",
+      "category_reason": "A saved need is a standing hypothesis that something suitable will appear.",
+      "value": {
+        "describes": "an unmet need kept open: what is wanted, its constraints, where it was searched, why nothing fit and how arrivals are matched",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "need_id",
+            "wanted",
+            "constraints",
+            "searched",
+            "why_nothing_fit",
+            "cheap_filter",
+            "fit_rule",
+            "status",
+            "valid_until",
+            "recorded_at"
+          ],
+          "properties": {
+            "need_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "wanted": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "constraints": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "searched": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "where",
+                  "on"
+                ],
+                "properties": {
+                  "where": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "on": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "why_nothing_fit": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "cheap_filter": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "terms",
+                "kinds"
+              ],
+              "properties": {
+                "terms": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                },
+                "kinds": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 10,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "fit_rule": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "open",
+                "met",
+                "withdrawn",
+                "expired"
+              ]
+            },
+            "valid_until": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "recorded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "A saved need is matched against arrivals; it never triggers generation by itself."
+        ]
+      }
+    },
+    {
+      "slug": "template.arrival-match",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: new arrivals matched against open saved needs, with the counts at each stage and the stage that rejected each candidate",
+      "category_reason": "A matching run over arrivals and needs.",
+      "value": {
+        "describes": "new arrivals matched against open saved needs, with the counts at each stage and the stage that rejected each candidate",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "match_id",
+            "arrivals",
+            "needs_checked",
+            "stages",
+            "rejected",
+            "recommendations",
+            "matched_at"
+          ],
+          "properties": {
+            "match_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "arrivals": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "ref",
+                  "kind",
+                  "seen_at"
+                ],
+                "properties": {
+                  "ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "new_noun",
+                      "release",
+                      "indexed_source",
+                      "qualified_solution"
+                    ]
+                  },
+                  "seen_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  }
+                }
+              }
+            },
+            "needs_checked": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            "stages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "stage",
+                  "in",
+                  "out"
+                ],
+                "properties": {
+                  "stage": {
+                    "type": "string",
+                    "enum": [
+                      "cheap_filter",
+                      "constraint_check",
+                      "fit_judgment"
+                    ]
+                  },
+                  "in": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "out": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  }
+                }
+              }
+            },
+            "rejected": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "arrival_ref",
+                  "need_ref",
+                  "stage",
+                  "why"
+                ],
+                "properties": {
+                  "arrival_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "need_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "stage": {
+                    "type": "string",
+                    "enum": [
+                      "cheap_filter",
+                      "constraint_check",
+                      "fit_judgment"
+                    ]
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "recommendations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "need_ref",
+                  "arrival_ref",
+                  "evidence"
+                ],
+                "properties": {
+                  "need_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "arrival_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "matched_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Rejections record their stage, because that log tunes the filter."
+        ]
+      }
+    },
+    {
+      "slug": "template.reuse-ledger",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: reuse over a window: verified tasks against total cost, hits by level, rollbacks, self-reuse excluded and a baseline",
+      "category_reason": "A ledger is a deterministic count over recorded runs.",
+      "value": {
+        "describes": "reuse over a window: verified tasks against total cost, hits by level, rollbacks, self-reuse excluded and a baseline",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ledger_id",
+            "window",
+            "environment_sha256",
+            "tasks",
+            "verified",
+            "cost",
+            "hits",
+            "rollbacks",
+            "self_reuse_excluded",
+            "reread_fraction",
+            "verified_per_1000_calls",
+            "baseline",
+            "verdict",
+            "counted_at"
+          ],
+          "properties": {
+            "ledger_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "window": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  "maxLength": 40
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  "maxLength": 40
+                }
+              }
+            },
+            "environment_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "tasks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "verified": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "cost": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model_calls",
+                "tokens",
+                "seconds",
+                "includes_retrieval_models"
+              ],
+              "properties": {
+                "model_calls": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000
+                },
+                "tokens": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 1000000000000
+                },
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1000000000
+                },
+                "includes_retrieval_models": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "hits": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "level",
+                  "attempts",
+                  "verified"
+                ],
+                "properties": {
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "exact",
+                      "source_failure",
+                      "family_failure",
+                      "family",
+                      "global"
+                    ]
+                  },
+                  "attempts": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  "verified": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  }
+                }
+              }
+            },
+            "rollbacks": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "self_reuse_excluded": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "reread_fraction": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "verified_per_1000_calls": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "baseline": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "window",
+                "verified",
+                "model_calls",
+                "verified_per_1000_calls"
+              ],
+              "properties": {
+                "window": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "verified": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "model_calls": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1000000000
+                },
+                "verified_per_1000_calls": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 1000000000
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "reuse_pays",
+                "no_difference",
+                "reuse_costs_more",
+                "unknown"
+              ]
+            },
+            "counted_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Costs count every model involved, including any used for retrieval."
+        ]
+      }
+    },
+    {
+      "slug": "template.promotion-decision",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a reviewer's decision on a stored solution: promote, keep as a candidate, reject or tombstone, with the evidence",
+      "category_reason": "A review decision with its evidence.",
+      "value": {
+        "describes": "a reviewer's decision on a stored solution: promote, keep as a candidate, reject or tombstone, with the evidence",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decision_id",
+            "solution_ref",
+            "reviewer_kind",
+            "decision",
+            "verified_instances",
+            "evidence",
+            "decided_at"
+          ],
+          "properties": {
+            "decision_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "solution_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "reviewer_kind": {
+              "type": "string",
+              "enum": [
+                "different_worker",
+                "person"
+              ]
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "promote_reviewed",
+                "promote_procedural",
+                "keep_candidate",
+                "reject",
+                "tombstone"
+              ]
+            },
+            "verified_instances": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "decided_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "The reviewer is never the producer."
+        ]
+      }
+    },
+    {
+      "slug": "reuse-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for qualified solutions, with synthetic golden solutions",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every stored solution must pass before any worker reuses it. The two synthetic good solutions pass all of them; each synthetic bad solution fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "deliverables-deleted",
+            "rule": {
+              "rule": "enum",
+              "path": "qualification.deliverables_deleted",
+              "values": [
+                true
+              ]
+            },
+            "why": "Qualification starts by deleting the deliverables, so the stored body must regenerate them."
+          },
+          {
+            "id": "replayed-alone",
+            "rule": {
+              "rule": "enum",
+              "path": "qualification.replayed_alone_in_clean_copy",
+              "values": [
+                true
+              ]
+            },
+            "why": "The body is replayed by itself in a clean copy, not inside the run that produced it."
+          },
+          {
+            "id": "replay-passed",
+            "rule": {
+              "rule": "enum",
+              "path": "qualification.replay_exit",
+              "values": [
+                0
+              ]
+            },
+            "why": "The check must pass again on the replay, or nothing is stored."
+          },
+          {
+            "id": "not-recited",
+            "rule": {
+              "rule": "enum",
+              "path": "qualification.recitation_guard",
+              "values": [
+                "passed",
+                "not_applicable"
+              ]
+            },
+            "why": "A body that pastes its answers instead of computing them is refused."
+          },
+          {
+            "id": "environment-strict",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "fingerprint.environment_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "The environment side of the fingerprint is exact; a replay elsewhere is a different claim."
+          },
+          {
+            "id": "check-named",
+            "rule": {
+              "rule": "present",
+              "path": "check.command"
+            },
+            "why": "Every stored solution names the check that decides each reuse."
+          },
+          {
+            "id": "lookup-recorded",
+            "rule": {
+              "rule": "min_items",
+              "path": "lookup_before",
+              "min": 1
+            },
+            "why": "The search that came first is kept, so later runs can learn which lookups pay."
+          },
+          {
+            "id": "procedural-needs-two",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "equals": "procedural"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "verified_instances",
+                "min": 2
+              }
+            },
+            "why": "One success is an anecdote; a procedure needs two verified instances."
+          },
+          {
+            "id": "reviewed-by-another",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "in": [
+                  "reviewed",
+                  "procedural"
+                ]
+              },
+              "then": {
+                "rule": "enum",
+                "path": "review.reviewer_kind",
+                "values": [
+                  "different_worker",
+                  "person"
+                ]
+              }
+            },
+            "why": "Nothing promotes itself: a reviewed or procedural solution was reviewed by someone other than its producer."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-reviewed-script",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "good-procedural-resolver",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "solution_id": "QS-9",
+              "kind": "resolver",
+              "body_sha256": "9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d",
+              "check": {
+                "command": "validate-config config/service.json",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "family_failure",
+                    "key_sha256": "5566778899aabbccddeeff00112233445566778899aabbccddeeff0011223344"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "applies_to",
+                  "value": "a numeric setting written as text"
+                },
+                {
+                  "name": "abstains",
+                  "value": "whenever the setting is not numeric"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "qualified_solutions",
+                  "query": "numeric setting quoted as text"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "not_applicable"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-201",
+                  "check_exit": 0
+                },
+                {
+                  "run_ref": "R-288",
+                  "check_exit": 0
+                }
+              ],
+              "status": "procedural",
+              "review": {
+                "producer": "agent B",
+                "reviewer_kind": "person"
+              },
+              "qualified_at": "2026-10-30T04:20Z"
+            }
+          },
+          {
+            "id": "bad-deliverables-kept",
+            "label": "known_bad",
+            "fails": "deliverables-deleted",
+            "why": "The deliverables were never deleted before the replay.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": false,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-replayed-in-place",
+            "label": "known_bad",
+            "fails": "replayed-alone",
+            "why": "The body was replayed inside the producing run.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": false,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-replay-failed",
+            "label": "known_bad",
+            "fails": "replay-passed",
+            "why": "The replay's check failed but the body was stored.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 1,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-recited",
+            "label": "known_bad",
+            "fails": "not-recited",
+            "why": "The body pastes the expected numbers.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "failed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-loose-environment",
+            "label": "known_bad",
+            "fails": "environment-strict",
+            "why": "No environment digest.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "any"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-no-check",
+            "label": "known_bad",
+            "fails": "check-named",
+            "why": "No check is named.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-no-lookup",
+            "label": "known_bad",
+            "fails": "lookup-recorded",
+            "why": "The lookup before generating was not kept.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-procedure-from-one",
+            "label": "known_bad",
+            "fails": "procedural-needs-two",
+            "why": "Promoted to procedural after one success.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "procedural",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "different_worker"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          },
+          {
+            "id": "bad-self-promoted",
+            "label": "known_bad",
+            "fails": "reviewed-by-another",
+            "why": "Marked reviewed with no reviewer.",
+            "finding": {
+              "solution_id": "QS-7",
+              "kind": "script",
+              "body_sha256": "1d2c3b4a59687766554433221100ffeeddccbbaa99887766554433221100ffee",
+              "check": {
+                "command": "check-totals reports/monthly.csv",
+                "exit_on_replay": 0
+              },
+              "fingerprint": {
+                "levels": [
+                  {
+                    "level": "exact",
+                    "key_sha256": "aa11bb22cc33dd44ee55ff6600778899aabbccddeeff00112233445566778899"
+                  },
+                  {
+                    "level": "family",
+                    "key_sha256": "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0"
+                  }
+                ],
+                "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5"
+              },
+              "constraints": [
+                {
+                  "name": "input",
+                  "value": "a CSV with date, site and amount columns"
+                }
+              ],
+              "lookup_before": [
+                {
+                  "where": "team_nouns",
+                  "query": "monthly totals by site"
+                }
+              ],
+              "qualification": {
+                "deliverables_deleted": true,
+                "replayed_alone_in_clean_copy": true,
+                "replay_exit": 0,
+                "recitation_guard": "passed"
+              },
+              "verified_instances": [
+                {
+                  "run_ref": "R-310",
+                  "check_exit": 0
+                }
+              ],
+              "status": "reviewed",
+              "review": {
+                "producer": "agent A",
+                "reviewer_kind": "none_yet"
+              },
+              "qualified_at": "2026-10-30T04:00Z"
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "solution_id",
+            "kind",
+            "body_sha256",
+            "check",
+            "fingerprint",
+            "constraints",
+            "lookup_before",
+            "qualification",
+            "verified_instances",
+            "status",
+            "review",
+            "qualified_at"
+          ],
+          "properties": {
+            "solution_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "script",
+                "resolver",
+                "config_fragment",
+                "procedure"
+              ]
+            },
+            "body_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "check": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "command",
+                "exit_on_replay"
+              ],
+              "properties": {
+                "command": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "exit_on_replay": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                }
+              }
+            },
+            "fingerprint": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "levels",
+                "environment_sha256"
+              ],
+              "properties": {
+                "levels": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "level",
+                      "key_sha256"
+                    ],
+                    "properties": {
+                      "level": {
+                        "type": "string",
+                        "enum": [
+                          "exact",
+                          "source_failure",
+                          "family_failure",
+                          "family",
+                          "global"
+                        ]
+                      },
+                      "key_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      }
+                    }
+                  }
+                },
+                "environment_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "constraints": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "lookup_before": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "where",
+                  "query"
+                ],
+                "properties": {
+                  "where": {
+                    "type": "string",
+                    "enum": [
+                      "team_nouns",
+                      "qualified_solutions",
+                      "tombstones",
+                      "saved_needs",
+                      "library_packs",
+                      "outside_catalogs"
+                    ]
+                  },
+                  "query": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "qualification": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "deliverables_deleted",
+                "replayed_alone_in_clean_copy",
+                "replay_exit",
+                "recitation_guard"
+              ],
+              "properties": {
+                "deliverables_deleted": {
+                  "type": "boolean"
+                },
+                "replayed_alone_in_clean_copy": {
+                  "type": "boolean"
+                },
+                "replay_exit": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                },
+                "recitation_guard": {
+                  "type": "string",
+                  "enum": [
+                    "passed",
+                    "failed",
+                    "not_applicable"
+                  ]
+                }
+              }
+            },
+            "verified_instances": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "run_ref",
+                  "check_exit"
+                ],
+                "properties": {
+                  "run_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "check_exit": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255
+                  }
+                }
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "candidate",
+                "reviewed",
+                "procedural",
+                "tombstoned"
+              ]
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "producer",
+                "reviewer_kind"
+              ],
+              "properties": {
+                "producer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "reviewer_kind": {
+                  "type": "string",
+                  "enum": [
+                    "none_yet",
+                    "different_worker",
+                    "person"
+                  ]
+                }
+              }
+            },
+            "qualified_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "expected": {
+          "good-reviewed-script": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-procedural-resolver": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-deliverables-kept": {
+            "verdict": "fail",
+            "failed_checks": [
+              "deliverables-deleted"
+            ]
+          },
+          "bad-replayed-in-place": {
+            "verdict": "fail",
+            "failed_checks": [
+              "replayed-alone"
+            ]
+          },
+          "bad-replay-failed": {
+            "verdict": "fail",
+            "failed_checks": [
+              "replay-passed"
+            ]
+          },
+          "bad-recited": {
+            "verdict": "fail",
+            "failed_checks": [
+              "not-recited"
+            ]
+          },
+          "bad-loose-environment": {
+            "verdict": "fail",
+            "failed_checks": [
+              "environment-strict"
+            ]
+          },
+          "bad-no-check": {
+            "verdict": "fail",
+            "failed_checks": [
+              "check-named"
+            ]
+          },
+          "bad-no-lookup": {
+            "verdict": "fail",
+            "failed_checks": [
+              "lookup-recorded"
+            ]
+          },
+          "bad-procedure-from-one": {
+            "verdict": "fail",
+            "failed_checks": [
+              "procedural-needs-two"
+            ]
+          },
+          "bad-self-promoted": {
+            "verdict": "fail",
+            "failed_checks": [
+              "reviewed-by-another"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.lookup-record",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a lookup that finds an exact match before generating",
+      "synthetic": true,
+      "category_reason": "A synthetic lookup in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.lookup-record"
+        },
+        "instance": {
+          "lookup_id": "L-52",
+          "request": "Produce monthly totals by site from the program's attendance CSV.",
+          "triggers_fired": [
+            "a new noun would be written",
+            "the task fingerprint has two verified outcomes at the exact level"
+          ],
+          "searched": [
+            {
+              "where": "team_nouns",
+              "query": "monthly totals by site",
+              "results": 3
+            },
+            {
+              "where": "qualified_solutions",
+              "query": "exact fingerprint of this task shape",
+              "results": 1
+            },
+            {
+              "where": "tombstones",
+              "query": "monthly totals by site",
+              "results": 0
+            }
+          ],
+          "candidates": [
+            {
+              "ref": "qualified solution QS-7",
+              "level": "exact",
+              "fit": "use_as_is",
+              "why": "Same columns and check; the environment digest matches."
+            },
+            {
+              "ref": "noun monthly-report-template v3",
+              "level": "not_fingerprinted",
+              "fit": "no_fit",
+              "why": "It formats a report; it does not compute totals."
+            }
+          ],
+          "evidence_types": [
+            {
+              "ref": "qualified solution QS-7",
+              "method": "observed"
+            }
+          ],
+          "rung_answered": "retrieved",
+          "decision_reason": "Try QS-7 under the check; on a miss, roll back and generate.",
+          "looked_up_at": "2026-10-30T05:00Z"
+        },
+        "shows": "Two triggers fire, three places are searched cheapest first, one exact match fits as is, and the decision is to try it under the check before generating anything.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.saved-need",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: an unmet need kept open for later arrivals",
+      "synthetic": true,
+      "category_reason": "A synthetic saved need in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.saved-need"
+        },
+        "instance": {
+          "need_id": "N-12",
+          "wanted": "A resumable file upload helper for the volunteer photo form.",
+          "constraints": [
+            {
+              "name": "language",
+              "value": "the form's server language"
+            },
+            {
+              "name": "license",
+              "value": "permissive"
+            },
+            {
+              "name": "storage",
+              "value": "the team's existing object store"
+            }
+          ],
+          "searched": [
+            {
+              "where": "team nouns",
+              "on": "2026-10-30"
+            },
+            {
+              "where": "this library",
+              "on": "2026-10-30"
+            },
+            {
+              "where": "two public package indexes",
+              "on": "2026-10-30"
+            }
+          ],
+          "why_nothing_fit": "Both candidates found need a hosted service the team does not use.",
+          "cheap_filter": {
+            "terms": [
+              "resumable",
+              "upload",
+              "chunked"
+            ],
+            "kinds": [
+              "release",
+              "new_noun",
+              "indexed_source"
+            ]
+          },
+          "fit_rule": "Shortlist with the filter, then check every constraint; one model call judges fit only for what passes both.",
+          "status": "open",
+          "valid_until": "2027-04-30",
+          "recorded_at": "2026-10-30T05:10Z"
+        },
+        "shows": "Nothing suitable existed, so the need is kept with its constraints, a cheap filter and a fit rule that spends one model call only on what passes both.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.reuse-ledger",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a month of reuse against the month before",
+      "synthetic": true,
+      "category_reason": "A synthetic ledger in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.reuse-ledger"
+        },
+        "instance": {
+          "ledger_id": "RL-4",
+          "window": {
+            "from": "2026-10-01",
+            "to": "2026-10-28"
+          },
+          "environment_sha256": "b4e1c7d2a9f30516c8e7d6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5",
+          "tasks": 120,
+          "verified": 51,
+          "cost": {
+            "model_calls": 340,
+            "tokens": null,
+            "seconds": 41800,
+            "includes_retrieval_models": true
+          },
+          "hits": [
+            {
+              "level": "exact",
+              "attempts": 18,
+              "verified": 15
+            },
+            {
+              "level": "source_failure",
+              "attempts": 9,
+              "verified": 5
+            },
+            {
+              "level": "family",
+              "attempts": 6,
+              "verified": 2
+            }
+          ],
+          "rollbacks": 11,
+          "self_reuse_excluded": 4,
+          "reread_fraction": 0.18,
+          "verified_per_1000_calls": 150.0,
+          "baseline": {
+            "window": "September, before reuse was switched on",
+            "verified": 44,
+            "model_calls": 510,
+            "verified_per_1000_calls": 86.3
+          },
+          "verdict": "reuse_pays",
+          "counted_at": "2026-10-29T06:00Z"
+        },
+        "shows": "51 verified tasks for 340 model calls is 150.0 per thousand calls, against 86.3 the month before; 11 misses were rolled back and 4 self-reuses were not counted.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "look-up-first",
+      "kind": "verb.situate",
+      "title": "Look up existing nouns before generating",
+      "claimant": "agent",
+      "summary": "Apply the trigger rules to a request, search cheapest first among what is at hand, the team's nouns, qualified solutions, tombstones and this library, and record the candidates, their fit and the rung that answered.",
+      "outcome": "A lookup record with a decision to reuse, adapt, generate, research or abstain.",
+      "ready_outcome": "lookup_recorded",
+      "pinned": [
+        "trigger-rules",
+        "sufficiency-ladder",
+        "evidence-types"
+      ],
+      "slots": [
+        {
+          "name": "request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the request or task."
+        }
+      ],
+      "produces": [
+        {
+          "name": "lookup",
+          "template": "template.lookup-record"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Fire the triggers before any generation; record which fired.",
+        "Search in the ladder's order and record every search, including those that found nothing.",
+        "Skip a candidate whose fingerprint has a refutation or tombstone, and say so.",
+        "Label each candidate's evidence by how it is known.",
+        "Propose try-reuse for a fitting match, record-saved-need when nothing fits, or the prior-art survey for something new and reusable."
+      ],
+      "acceptance": [
+        {
+          "id": "lookup-matches-template",
+          "check": "The lookup validates against template.lookup-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "searched-recorded",
+          "check": "searched lists at least one place, with its query and result count.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rung-follows-fit",
+          "check": "rung_answered is generated or later only when no candidate fit.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "assigned_tessera",
+        "Read-only searches of the team's own nouns on its assigned fabric; nothing is written there."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "try-reuse",
+      "kind": "verb.verify_gate",
+      "title": "Try a stored solution under the check",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Treat a fingerprint match as permission to try: confirm the environment fingerprint matches, materialize the stored solution in a copy, let the check decide, and roll back every touched file on a miss.",
+      "outcome": "A reuse attempt: verified reuse, a rolled-back miss, or a refusal for environment drift or a tombstone.",
+      "ready_outcome": "reuse_tried",
+      "pinned": [
+        "fingerprint-rules"
+      ],
+      "slots": [
+        {
+          "name": "solution",
+          "category": "noun.code_node",
+          "description": "Pin of the stored solution."
+        },
+        {
+          "name": "task",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the new task."
+        }
+      ],
+      "produces": [
+        {
+          "name": "attempt",
+          "template": "template.reuse-attempt"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Refuse before materializing when the environment fingerprint differs or a tombstone matches.",
+        "Materialize the body in a copy and run the named check yourself.",
+        "On a failed check, roll back every touched file, record the miss and propose generation."
+      ],
+      "acceptance": [
+        {
+          "id": "attempt-matches-template",
+          "check": "The attempt validates against template.reuse-attempt's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdict-from-check",
+          "check": "outcome is verified_reuse only when check_exit is 0.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rollback-listed",
+          "check": "A miss lists every touched file in files_rolled_back.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Local copies and the local check command only."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "qualify-solution",
+      "kind": "verb.distill_reflex",
+      "title": "Qualify a solution before storing it",
+      "claimant": "agent",
+      "summary": "From a verified run, distill a body that regenerates the result, delete the deliverables, replay the body alone in a clean copy, require the check to pass again, apply the recitation guard and record its fingerprint and the lookup that came first.",
+      "outcome": "A qualified solution with status candidate, or no_change when the replay fails.",
+      "ready_outcome": "solution_qualified",
+      "pinned": [
+        "qualification-rules",
+        "fingerprint-rules",
+        "reuse-checks"
+      ],
+      "slots": [
+        {
+          "name": "run",
+          "category": "noun.eval_run",
+          "description": "Pin of the verified run."
+        },
+        {
+          "name": "lookup",
+          "category": "noun.eval_run",
+          "description": "Pin of the lookup that came first."
+        }
+      ],
+      "produces": [
+        {
+          "name": "solution",
+          "template": "template.qualified-solution"
+        }
+      ],
+      "steps": [
+        "Verify the pins and the run's verified grade.",
+        "Distill the body as its own step; then delete the deliverables and replay the body alone in a clean copy.",
+        "Refuse when the check fails on replay or the recitation guard trips; keep the refusal as a finding.",
+        "Store the body by digest with status candidate; promotion is a separate verb."
+      ],
+      "acceptance": [
+        {
+          "id": "solution-matches-template",
+          "check": "The solution validates against template.qualified-solution's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reuse-checks-pass",
+          "check": "The solution passes every check in reuse-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-candidate",
+          "check": "status is candidate when this verb writes it.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Local clean copies and the local check command only."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "review-promotion",
+      "kind": "verb.verify_gate",
+      "title": "Review a stored solution for promotion",
+      "claimant": "agent_or_human",
+      "summary": "A worker or person other than the producer rechecks a stored solution's qualification and verified instances and decides whether it becomes reviewed, procedural with two verified instances, stays a candidate, is rejected or is tombstoned.",
+      "outcome": "A promotion decision with its evidence.",
+      "ready_outcome": "promotion_decided",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "qualification-rules"
+      ],
+      "slots": [
+        {
+          "name": "solution",
+          "category": "noun.code_node",
+          "description": "Pin of the stored solution."
+        }
+      ],
+      "produces": [
+        {
+          "name": "decision",
+          "template": "template.promotion-decision"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Confirm you are not the producer.",
+        "Recheck the qualification evidence and count verified instances; procedural needs at least two.",
+        "Tombstone a solution that verified wrongly, so lookups skip it."
+      ],
+      "acceptance": [
+        {
+          "id": "decision-matches-template",
+          "check": "The decision validates against template.promotion-decision's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "two-for-procedural",
+          "check": "promote_procedural only with verified_instances of at least 2.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-the-producer",
+          "check": "The reviewer is not the solution's producer.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "record-saved-need",
+      "kind": "verb.generate_seed",
+      "title": "Record an unmet need",
+      "claimant": "agent",
+      "summary": "When a lookup finds nothing suitable, record the need with its constraints, where it was searched, why nothing fit, a cheap filter and a fit rule, so later arrivals can be matched against it.",
+      "outcome": "A saved need, or no_change when an open need already covers it.",
+      "ready_outcome": "need_recorded",
+      "pinned": [
+        "trigger-rules"
+      ],
+      "slots": [
+        {
+          "name": "lookup",
+          "category": "noun.eval_run",
+          "description": "Pin of the lookup that found nothing."
+        }
+      ],
+      "produces": [
+        {
+          "name": "need",
+          "template": "template.saved-need"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Reuse an open need of the same shape instead of adding a duplicate.",
+        "Write constraints a candidate must meet, and a cheap filter that shortlists without a model call.",
+        "Set an expiry; an expired need is withdrawn, not kept forever."
+      ],
+      "acceptance": [
+        {
+          "id": "need-matches-template",
+          "check": "The need validates against template.saved-need's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "searched-dated",
+          "check": "Every searched place has a date.",
+          "method": "deterministic"
+        },
+        {
+          "id": "filter-cheap",
+          "check": "The cheap filter uses terms and kinds only, with no model call.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "match-arrivals",
+      "kind": "verb.probe_source",
+      "title": "Match new arrivals against open needs",
+      "claimant": "agent",
+      "summary": "Check newly arrived nouns, releases, indexed sources and qualified solutions against every open saved need: shortlist with the cheap filter, check the constraints, judge fit only for what passes, and record which stage rejected each candidate.",
+      "outcome": "An arrival match with recommendations, or no_change when nothing matched.",
+      "ready_outcome": "arrivals_matched",
+      "pinned": [
+        "trigger-rules",
+        "evidence-types"
+      ],
+      "slots": [
+        {
+          "name": "needs",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the open saved needs.",
+          "many": true,
+          "max": 200
+        },
+        {
+          "name": "arrivals",
+          "category": "noun.public_source",
+          "description": "Pins of the arrivals.",
+          "many": true,
+          "max": 100
+        }
+      ],
+      "produces": [
+        {
+          "name": "match",
+          "template": "template.arrival-match"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Apply the cheap filter to every pair before anything else.",
+        "Check constraints next; spend a model call on fit only for pairs that passed both.",
+        "Record the stage that rejected each pair, and propose a reuse or trial for each recommendation."
+      ],
+      "acceptance": [
+        {
+          "id": "match-matches-template",
+          "check": "The match validates against template.arrival-match's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "stages-narrow",
+          "check": "Each stage's out count is at most its in count.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fit-justified",
+          "check": "Each recommendation's evidence addresses every constraint of its need.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "assigned_tessera",
+        "Read-only access to the team's own nouns and arrival records on its assigned fabric."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "measure-reuse",
+      "kind": "verb.benchmark_harness",
+      "title": "Measure whether reuse pays",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Over a window of recorded runs in one environment, count verified tasks against total cost with every model counted, hits and rollbacks by fingerprint level, self-reuse excluded, how often retrieved results had to be read directly anyway, and compare with a baseline window.",
+      "outcome": "A reuse ledger with a verdict of reuse pays, no difference, reuse costs more or unknown.",
+      "ready_outcome": "reuse_measured",
+      "slots": [
+        {
+          "name": "runs",
+          "category": "noun.eval_run",
+          "description": "Pins of the recorded runs in the window.",
+          "many": true,
+          "max": 500
+        }
+      ],
+      "params": {
+        "baseline_window": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": "The earlier window to compare with.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "ledger",
+          "template": "template.reuse-ledger"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Count only runs recorded in the ledger's environment fingerprint.",
+        "Exclude any reuse of a run's own output, and count rollbacks as misses.",
+        "Compute verified tasks per thousand model calls for the window and the baseline; write unknown when either lacks counts."
+      ],
+      "acceptance": [
+        {
+          "id": "ledger-matches-template",
+          "check": "The ledger validates against template.reuse-ledger's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rates-recompute",
+          "check": "verified_per_1000_calls recomputes from verified and model_calls for the window and the baseline.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rollbacks-add-up",
+          "check": "rollbacks equals the sum of attempts minus verified across hits.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    }
+  ]
+}
