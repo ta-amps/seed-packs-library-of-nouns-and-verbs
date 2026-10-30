@@ -1,0 +1,3753 @@
+{
+  "pack_id": "launch-readiness",
+  "title": "Launch readiness",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for deciding whether a site or app is ready to launch: every link resolved, every status claim matched against a live check, the analytics statement compared with the requests the pages make, error pages, a rollback plan and the owner's go or no-go, while the release itself stays with a person.",
+  "dependencies": [
+    "release-and-verify",
+    "rename-and-relink",
+    "status-and-handoff"
+  ],
+  "boundaries": [
+    "Every check is read-only; nothing on the site or its host is changed, submitted or signed into.",
+    "The owner decides and grants waivers; the release itself is a person's separate act.",
+    "A failed item stays on the record; its fix gets its own check.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for deciding whether a site or app is ready to launch",
+      "value": {
+        "lets_workers": "Plan a readiness check for one launch, resolve every link on the rendered pages, check every status claim against a live read or a receipt, compare the analytics statement with the requests the pages make, check error pages, review the rollback plan, assemble one report whose recommendation follows a fixed rule, and keep the owner's go or no-go as a noun. The release itself stays with a person.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "launch-readiness.plan-readiness"
+            },
+            "when": "When a launch date or a public link is being decided."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.check-live-links"
+            },
+            "when": "On the rendered pages; deterministic and read-only."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.check-page-claims"
+            },
+            "when": "For every status claim on the pages."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.check-analytics"
+            },
+            "when": "On page loads; deterministic and read-only."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.check-error-pages"
+            },
+            "when": "With made-up addresses; deterministic and read-only."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.review-rollback"
+            },
+            "when": "Before the owner decides."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.assemble-readiness"
+            },
+            "when": "When the parts are in; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "launch-readiness.record-go-decision"
+            },
+            "when": "The owner decides; a person's verb."
+          }
+        ],
+        "checklist": {
+          "$pin": "readiness-checklist"
+        },
+        "guardrails": [
+          "Every check is read-only: no form is submitted, no account is created and nothing is changed on the site or its host.",
+          "A status claim is matched against a live read or a receipt, never against memory or another page's words.",
+          "No analytics is a claim like any other: the page-load requests must agree with it.",
+          "The recommendation follows from the items by a fixed rule; the owner decides, and the release itself is a separate act by a person."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "go-checks"
+          },
+          {
+            "$pin": "example.readiness-plan"
+          },
+          {
+            "$pin": "example.page-claims"
+          },
+          {
+            "$pin": "example.readiness-report"
+          },
+          {
+            "$pin": "example.go-decision"
+          }
+        ],
+        "complements": [
+          "The release and verify pack proves a release went live correctly; this pack decides whether to launch at all.",
+          "Link checks reuse the rename and relink pack's link rules and link check shape.",
+          "Claims reuse the status and handoff pack's evidence rules."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "readiness-checklist"
+        ],
+        [
+          "requires_noun",
+          "claim-rules"
+        ],
+        [
+          "requires_noun",
+          "analytics-hosts"
+        ],
+        [
+          "requires_noun",
+          "error-page-rules"
+        ],
+        [
+          "requires_noun",
+          "go-checks"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How a launch readiness check runs, up to the owner's decision",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "plan-readiness names the target, the pages, the claims to check, the rollback target and who decides.",
+          "The check verbs each cover one checklist item, read-only.",
+          "assemble-readiness puts the items in one report and derives the recommendation.",
+          "record-go-decision: the owner records go, no_go or go_with_waivers on that exact report.",
+          "The release is the release owner's act, recorded with the release and verify pack."
+        ],
+        "recommendation_rule": {
+          "not_ready": "Any required item fails or is not checked, other than owner-go.",
+          "ready_with_waivers": "No required item fails, and at least one is waived by the owner with a reason.",
+          "ready": "Every required item except owner-go passes."
+        },
+        "rules": [
+          "A waiver is the owner's, with a reason; a worker never waives an item.",
+          "A failed item stays on the record when it is fixed; the fix gets its own check.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "failure": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "release": {
+            "$verb": "release-and-verify.plan-release"
+          },
+          "acceptance": {
+            "$verb": "user-acceptance-testing.sign-off"
+          },
+          "accessibility": {
+            "$verb": "accessibility-audit.plan-audit"
+          }
+        }
+      }
+    },
+    {
+      "slug": "readiness-checklist",
+      "category": "noun.benchmark_suite",
+      "role": "readiness_checklist",
+      "title": "The launch readiness checklist",
+      "category_reason": "A fixed checklist every launch is checked against.",
+      "value": {
+        "items": [
+          {
+            "id": "links-resolve",
+            "required": true,
+            "what": "Every link on every page in scope resolves, and every in-page anchor exists.",
+            "evidence": "A link check in the rename and relink pack's shape, run on the rendered pages.",
+            "worker_verb": "check-live-links",
+            "pass": "No broken links; every redirect is recorded with its final address; links that need sign-in are labeled as such on the page."
+          },
+          {
+            "id": "status-claims-match",
+            "required": true,
+            "what": "Every status claim on the pages, such as a count, a date, a version, live, measured or synthetic only, matches a live read-only check or a receipt.",
+            "evidence": "A page claims check.",
+            "worker_verb": "check-page-claims",
+            "pass": "No claim is contradicted; unverifiable claims are reworded or waived by the owner."
+          },
+          {
+            "id": "analytics-stated",
+            "required": true,
+            "what": "The site says whether it uses analytics, and the network requests on page load match what it says.",
+            "evidence": "An analytics check.",
+            "worker_verb": "check-analytics",
+            "pass": "A statement exists and the observed requests agree with it; third parties are listed."
+          },
+          {
+            "id": "error-pages",
+            "required": true,
+            "what": "Unknown addresses return a 404 status with a helpful page and a way home; machine endpoints return errors with the right status.",
+            "evidence": "An error page check.",
+            "worker_verb": "check-error-pages",
+            "pass": "No soft 404s: a not-found page never answers 200."
+          },
+          {
+            "id": "rollback-ready",
+            "required": true,
+            "what": "The version to go back to, the steps, who can do it and how long it takes are written down before launch.",
+            "evidence": "A rollback review.",
+            "worker_verb": "review-rollback",
+            "pass": "All four are named and the target version exists."
+          },
+          {
+            "id": "acceptance-and-accessibility",
+            "required": true,
+            "what": "A person's acceptance sign-off and an accessibility audit report are pinned, or the owner waives the gap with a reason.",
+            "evidence": "Pins of a sign-off from the user acceptance testing pack and an audit report from the accessibility audit pack.",
+            "worker_verb": "assemble-readiness",
+            "pass": "The sign-off is go or go_with_conditions and the audit's P0 and P1 failures are fixed or waived."
+          },
+          {
+            "id": "owner-go",
+            "required": true,
+            "what": "The owner records go or no-go on this exact readiness report.",
+            "evidence": "A go decision.",
+            "worker_verb": "record-go-decision",
+            "pass": "A person's decision pinned to the report. The release itself is a separate act by a person."
+          },
+          {
+            "id": "page-metadata",
+            "required": false,
+            "what": "Each page has a title, a description and its language set.",
+            "evidence": "The structure lint from the accessibility audit pack.",
+            "worker_verb": "accessibility-audit.lint-structure",
+            "pass": "No page lacks a title or language."
+          },
+          {
+            "id": "help-path",
+            "required": false,
+            "what": "A way to get help or report a problem is visible on every page.",
+            "evidence": "A screenshot per page.",
+            "worker_verb": "check-page-claims",
+            "pass": "Help appears in the same place on every page."
+          }
+        ],
+        "rule": "Required items decide the recommendation; optional items are reported and can be waived without a reason."
+      }
+    },
+    {
+      "slug": "claim-rules",
+      "category": "noun.reflex_procedure",
+      "role": "claim_rules",
+      "title": "Finding and checking status claims on pages",
+      "category_reason": "A zero-call rule for which claims to check and how.",
+      "value": {
+        "claim_kinds": {
+          "count": "A number of things, such as packs, volunteers or tests. Check it against the source at a dated read.",
+          "state": "Words like live, deployed, measured, verified, reviewed or synthetic only. Check them with the evidence rules.",
+          "version_or_date": "A version, commit or as-of date. Check it is the current one, or that the page says as of when.",
+          "capability": "Something the product does, such as works with any agent. Check one real instance, or reword it as a goal.",
+          "absence": "Something the product does not do, such as no analytics or no AI calls. Check it with the matching read, such as page-load requests."
+        },
+        "results": {
+          "match": "A live read or receipt says the same.",
+          "mismatch": "A live read or receipt says otherwise; quote both.",
+          "unverifiable": "No permitted read can check it; propose rewording it as dated or as a goal."
+        },
+        "quote_exactly": "Copy the claim's words exactly with where they appear, so the fix finds them.",
+        "evidence_rules": {
+          "$pin": "status-and-handoff:evidence-rules"
+        }
+      }
+    },
+    {
+      "slug": "analytics-hosts",
+      "category": "noun.reflex_procedure",
+      "role": "analytics_hosts",
+      "title": "Telling analytics requests from other third-party requests",
+      "category_reason": "A zero-call classification rule with a starting list.",
+      "value": {
+        "known_analytics_hosts": [
+          "google-analytics.com",
+          "analytics.google.com",
+          "googletagmanager.com",
+          "stats.g.doubleclick.net",
+          "connect.facebook.net",
+          "static.cloudflareinsights.com",
+          "plausible.io",
+          "cdn.usefathom.com",
+          "cdn.segment.com",
+          "api.segment.io",
+          "cdn.mxpnl.com",
+          "api-js.mixpanel.com",
+          "cdn.amplitude.com",
+          "api2.amplitude.com",
+          "static.hotjar.com",
+          "script.hotjar.com",
+          "snap.licdn.com",
+          "bat.bing.com",
+          "js.hs-scripts.com",
+          "cdn.heapanalytics.com",
+          "us.i.posthog.com",
+          "eu.i.posthog.com",
+          "www.clarity.ms",
+          "cdn.matomo.cloud"
+        ],
+        "rule": "A request is analytics when its host is listed here or a subdomain of one, or when it sends a page view or event beacon. Every other host that is not the site's own is a third party to list, with what it serves.",
+        "third_party_examples": {
+          "fonts.googleapis.com": "web font style sheets",
+          "fonts.gstatic.com": "web font files",
+          "cdn.jsdelivr.net": "scripts or styles"
+        },
+        "note": "Font and script hosts are not analytics, but they still receive each visitor's address; list them so the privacy statement can mention them.",
+        "list_is_not_complete": "The list is a starting point; record unknown third-party hosts for a person to classify."
+      }
+    },
+    {
+      "slug": "error-page-rules",
+      "category": "noun.reflex_procedure",
+      "role": "error_page_rules",
+      "title": "What error pages must do",
+      "category_reason": "A zero-call rule for error responses.",
+      "value": {
+        "request": "A made-up address under each surface, such as /this-page-does-not-exist-checked plus the date, with GET only.",
+        "expect": [
+          "HTTP status 404 for a missing page; a not-found view that answers 200 is a soft 404 and fails",
+          "A helpful page in the site's own layout and language, with a link home",
+          "No stack trace, internal path or credential-shaped text",
+          "Machine endpoints answer a JSON error with the right status"
+        ],
+        "single_page_apps": "An app that renders every route in the browser still needs the server to answer 404 for unknown addresses; record both the status and the view.",
+        "server_errors": "A 5xx page is checked only on a test target the owner named; otherwise record not_checked."
+      }
+    },
+    {
+      "slug": "go-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for readiness reports, with synthetic golden reports",
+      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes them.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every readiness report must pass before an owner decides on it. The three synthetic good reports (not ready, ready with a waiver and ready) pass all of them; each synthetic bad report fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "links-resolve-listed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "items",
+              "pattern": "^links-resolve$"
+            },
+            "why": "The report lists the links-resolve item."
+          },
+          {
+            "id": "status-claims-match-listed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "items",
+              "pattern": "^status-claims-match$"
+            },
+            "why": "The report lists the status-claims-match item."
+          },
+          {
+            "id": "analytics-stated-listed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "items",
+              "pattern": "^analytics-stated$"
+            },
+            "why": "The report lists the analytics-stated item."
+          },
+          {
+            "id": "error-pages-listed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "items",
+              "pattern": "^error-pages$"
+            },
+            "why": "The report lists the error-pages item."
+          },
+          {
+            "id": "rollback-ready-listed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "items",
+              "pattern": "^rollback-ready$"
+            },
+            "why": "The report lists the rollback-ready item."
+          },
+          {
+            "id": "items-complete",
+            "rule": {
+              "rule": "each_has",
+              "path": "items",
+              "fields": [
+                "id",
+                "result"
+              ]
+            },
+            "why": "Every item has an id and a result."
+          },
+          {
+            "id": "dated",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "checked_at",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+            },
+            "why": "The report is dated in UTC."
+          },
+          {
+            "id": "recommendation-known",
+            "rule": {
+              "rule": "enum",
+              "path": "recommendation",
+              "values": [
+                "ready",
+                "not_ready",
+                "ready_with_waivers"
+              ]
+            },
+            "why": "The recommendation is one of three."
+          },
+          {
+            "id": "ready-means-no-blockers",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "recommendation",
+                "equals": "ready"
+              },
+              "then": {
+                "rule": "pattern_absent",
+                "path": "blockers",
+                "pattern": "."
+              }
+            },
+            "why": "Ready means nothing blocks."
+          },
+          {
+            "id": "not-ready-names-blockers",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "recommendation",
+                "equals": "not_ready"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "blockers",
+                "min": 1
+              }
+            },
+            "why": "Not ready names what blocks."
+          },
+          {
+            "id": "waivers-listed",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "recommendation",
+                "equals": "ready_with_waivers"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "waivers",
+                "min": 1
+              }
+            },
+            "why": "Ready with waivers lists the waivers."
+          },
+          {
+            "id": "waivers-explained",
+            "rule": {
+              "rule": "each_has",
+              "path": "waivers",
+              "fields": [
+                "item",
+                "by_role",
+                "reason"
+              ]
+            },
+            "why": "Every waiver names who granted it and why."
+          },
+          {
+            "id": "analytics-stated",
+            "rule": {
+              "rule": "enum",
+              "path": "analytics_statement",
+              "values": [
+                "no_analytics",
+                "analytics_disclosed"
+              ]
+            },
+            "why": "The site states its analytics."
+          },
+          {
+            "id": "no-analytics-is-true",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "analytics_statement",
+                "equals": "no_analytics"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "analytics_observed",
+                "values": [
+                  "none_seen"
+                ]
+              }
+            },
+            "why": "A no-analytics statement matches what the requests showed."
+          },
+          {
+            "id": "rollback-named",
+            "rule": {
+              "rule": "present",
+              "path": "rollback_target"
+            },
+            "why": "The version to go back to is named."
+          },
+          {
+            "id": "release-owner-named",
+            "rule": {
+              "rule": "present",
+              "path": "release_stays_with"
+            },
+            "why": "The report names who performs the release."
+          },
+          {
+            "id": "release-owner-is-person",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "release_stays_with",
+              "pattern": "(?i)\\b(agent|bot|model|worker|automated|pipeline)\\b"
+            },
+            "why": "The release stays with a person, never an agent or an automatic step."
+          },
+          {
+            "id": "no-contact-data",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b[0-9]{3}[-. )]{1,2}[0-9]{3}[-. ][0-9]{4}\\b"
+            },
+            "why": "The report holds no email addresses or phone numbers."
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "plan_ref",
+            "target",
+            "checked_at",
+            "items",
+            "blockers",
+            "waivers",
+            "analytics_statement",
+            "analytics_observed",
+            "rollback_target",
+            "release_stays_with",
+            "recommendation",
+            "recommendation_reason"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "plan_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "evidence_ref"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "waived",
+                      "not_checked"
+                    ]
+                  },
+                  "evidence_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "blockers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "waivers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "by_role",
+                  "reason"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "by_role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "analytics_statement": {
+              "type": "string",
+              "enum": [
+                "no_analytics",
+                "analytics_disclosed",
+                "not_stated"
+              ]
+            },
+            "analytics_observed": {
+              "type": "string",
+              "enum": [
+                "none_seen",
+                "analytics_seen",
+                "not_checked"
+              ]
+            },
+            "rollback_target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "release_stays_with": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "recommendation": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "not_ready",
+                "ready_with_waivers"
+              ]
+            },
+            "recommendation_reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        },
+        "golden_fixtures": [
+          {
+            "id": "good-not-ready",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "good-ready-with-waiver",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "LR-7",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "pass",
+                  "evidence_ref": "PC-6",
+                  "note": "Reworded."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "waived",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [],
+              "waivers": [
+                {
+                  "item": "error-pages",
+                  "by_role": "site owner",
+                  "reason": "Host fix due next month; the view links home."
+                }
+              ],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "ready_with_waivers",
+              "recommendation_reason": "Error pages waived by the owner."
+            }
+          },
+          {
+            "id": "good-ready",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "LR-8",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "pass",
+                  "evidence_ref": "PC-6",
+                  "note": ""
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "pass",
+                  "evidence_ref": "EP-6",
+                  "note": ""
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "ready",
+              "recommendation_reason": "Every required item passes."
+            }
+          },
+          {
+            "id": "bad-no-links-item",
+            "label": "known_bad",
+            "fails": "links-resolve-listed",
+            "why": "The link check is missing.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-no-claims-item",
+            "label": "known_bad",
+            "fails": "status-claims-match-listed",
+            "why": "Claims were never checked.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-no-analytics-item",
+            "label": "known_bad",
+            "fails": "analytics-stated-listed",
+            "why": "Analytics were never checked.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-no-errors-item",
+            "label": "known_bad",
+            "fails": "error-pages-listed",
+            "why": "Error pages were never checked.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-no-rollback-item",
+            "label": "known_bad",
+            "fails": "rollback-ready-listed",
+            "why": "Rollback was never reviewed.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-item-no-result",
+            "label": "known_bad",
+            "fails": "items-complete",
+            "why": "An item without a result.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                },
+                {
+                  "id": "help-path",
+                  "result": "",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-undated",
+            "label": "known_bad",
+            "fails": "dated",
+            "why": "No UTC time.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "this afternoon",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-recommendation",
+            "label": "known_bad",
+            "fails": "recommendation-known",
+            "why": "A recommendation outside the three.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "ship it",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-ready-with-blockers",
+            "label": "known_bad",
+            "fails": "ready-means-no-blockers",
+            "why": "Ready while two items block.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-not-ready-silent",
+            "label": "known_bad",
+            "fails": "not-ready-names-blockers",
+            "why": "Not ready, with no blockers named.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-waivers-missing",
+            "label": "known_bad",
+            "fails": "waivers-listed",
+            "why": "Ready with waivers, but none listed.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "ready_with_waivers",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-waiver-unexplained",
+            "label": "known_bad",
+            "fails": "waivers-explained",
+            "why": "A waiver with no reason.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [
+                {
+                  "item": "error-pages",
+                  "by_role": "site owner",
+                  "reason": ""
+                }
+              ],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-analytics-unstated",
+            "label": "known_bad",
+            "fails": "analytics-stated",
+            "why": "The site says nothing about analytics.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "not_stated",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-analytics-false",
+            "label": "known_bad",
+            "fails": "no-analytics-is-true",
+            "why": "No analytics claimed, but analytics requests were seen.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "analytics_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-no-rollback",
+            "label": "known_bad",
+            "fails": "rollback-named",
+            "why": "No rollback target.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-no-release-owner",
+            "label": "known_bad",
+            "fails": "release-owner-named",
+            "why": "Nobody performs the release.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-agent-releases",
+            "label": "known_bad",
+            "fails": "release-owner-is-person",
+            "why": "The release is left to an agent.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "the release agent",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Two items fail."
+            }
+          },
+          {
+            "id": "bad-contact-data",
+            "label": "known_bad",
+            "fails": "no-contact-data",
+            "why": "A phone number in a note.",
+            "finding": {
+              "report_id": "LR-6",
+              "plan_ref": {
+                "key": "launch-readiness.readiness_plan.t-21",
+                "version": 1,
+                "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+              },
+              "target": "pantry site",
+              "checked_at": "2026-10-30T17:40Z",
+              "items": [
+                {
+                  "id": "links-resolve",
+                  "result": "pass",
+                  "evidence_ref": "LC-6"
+                },
+                {
+                  "id": "status-claims-match",
+                  "result": "fail",
+                  "evidence_ref": "PC-6",
+                  "note": "Count is wrong."
+                },
+                {
+                  "id": "analytics-stated",
+                  "result": "pass",
+                  "evidence_ref": "AN-6"
+                },
+                {
+                  "id": "error-pages",
+                  "result": "fail",
+                  "evidence_ref": "EP-6",
+                  "note": "Soft 404s."
+                },
+                {
+                  "id": "rollback-ready",
+                  "result": "pass",
+                  "evidence_ref": "RB-6"
+                },
+                {
+                  "id": "acceptance-and-accessibility",
+                  "result": "pass",
+                  "evidence_ref": "SO-14"
+                },
+                {
+                  "id": "owner-go",
+                  "result": "not_checked",
+                  "evidence_ref": ""
+                }
+              ],
+              "blockers": [
+                "status-claims-match",
+                "error-pages"
+              ],
+              "waivers": [],
+              "analytics_statement": "no_analytics",
+              "analytics_observed": "none_seen",
+              "rollback_target": "2026-10-29.2",
+              "release_stays_with": "release owner",
+              "recommendation": "not_ready",
+              "recommendation_reason": "Call the owner at 555-010-0199 to approve."
+            }
+          }
+        ],
+        "expected": {
+          "good-not-ready": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-ready-with-waiver": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-ready": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-links-item": {
+            "verdict": "fail",
+            "failed_checks": [
+              "links-resolve-listed"
+            ]
+          },
+          "bad-no-claims-item": {
+            "verdict": "fail",
+            "failed_checks": [
+              "status-claims-match-listed"
+            ]
+          },
+          "bad-no-analytics-item": {
+            "verdict": "fail",
+            "failed_checks": [
+              "analytics-stated-listed"
+            ]
+          },
+          "bad-no-errors-item": {
+            "verdict": "fail",
+            "failed_checks": [
+              "error-pages-listed"
+            ]
+          },
+          "bad-no-rollback-item": {
+            "verdict": "fail",
+            "failed_checks": [
+              "rollback-ready-listed"
+            ]
+          },
+          "bad-item-no-result": {
+            "verdict": "fail",
+            "failed_checks": [
+              "items-complete"
+            ]
+          },
+          "bad-undated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "dated"
+            ]
+          },
+          "bad-recommendation": {
+            "verdict": "fail",
+            "failed_checks": [
+              "recommendation-known"
+            ]
+          },
+          "bad-ready-with-blockers": {
+            "verdict": "fail",
+            "failed_checks": [
+              "ready-means-no-blockers"
+            ]
+          },
+          "bad-not-ready-silent": {
+            "verdict": "fail",
+            "failed_checks": [
+              "not-ready-names-blockers"
+            ]
+          },
+          "bad-waivers-missing": {
+            "verdict": "fail",
+            "failed_checks": [
+              "waivers-listed"
+            ]
+          },
+          "bad-waiver-unexplained": {
+            "verdict": "fail",
+            "failed_checks": [
+              "waivers-explained"
+            ]
+          },
+          "bad-analytics-unstated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "analytics-stated"
+            ]
+          },
+          "bad-analytics-false": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-analytics-is-true"
+            ]
+          },
+          "bad-no-rollback": {
+            "verdict": "fail",
+            "failed_checks": [
+              "rollback-named"
+            ]
+          },
+          "bad-no-release-owner": {
+            "verdict": "fail",
+            "failed_checks": [
+              "release-owner-named"
+            ]
+          },
+          "bad-agent-releases": {
+            "verdict": "fail",
+            "failed_checks": [
+              "release-owner-is-person"
+            ]
+          },
+          "bad-contact-data": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-contact-data"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.readiness-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a readiness plan for one launch: target, pages, claims, rollback and who decides",
+      "category_reason": "A plan is a testable statement of what will be checked before launch.",
+      "value": {
+        "describes": "a readiness plan for one launch: target, pages, claims, rollback and who decides",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan_id",
+            "target",
+            "build",
+            "launch_window",
+            "pages",
+            "claims_to_check",
+            "items",
+            "rollback_target",
+            "release_owner_role",
+            "decides_role",
+            "out_of_scope"
+          ],
+          "properties": {
+            "plan_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "build": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "launch_window": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "pages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "string",
+                "pattern": "^https?://",
+                "minLength": 8,
+                "maxLength": 300
+              }
+            },
+            "claims_to_check": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claim",
+                  "page"
+                ],
+                "properties": {
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "page": {
+                    "type": "string",
+                    "pattern": "^https?://",
+                    "minLength": 8,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "rollback_target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "release_owner_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "decides_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "out_of_scope": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "items includes every required checklist item.",
+          "release_owner_role and decides_role are people's roles."
+        ]
+      }
+    },
+    {
+      "slug": "template.page-claims",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: every status claim on the pages, checked against a live read or a receipt",
+      "category_reason": "A recorded check of claims.",
+      "value": {
+        "describes": "every status claim on the pages, checked against a live read or a receipt",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "checked_at",
+            "claims",
+            "mismatches"
+          ],
+          "properties": {
+            "check_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "claims": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claim",
+                  "page",
+                  "claim_kind",
+                  "checked_against",
+                  "observed",
+                  "result"
+                ],
+                "properties": {
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "page": {
+                    "type": "string",
+                    "pattern": "^https?://",
+                    "minLength": 8,
+                    "maxLength": 300
+                  },
+                  "claim_kind": {
+                    "type": "string",
+                    "enum": [
+                      "count",
+                      "state",
+                      "version_or_date",
+                      "capability",
+                      "absence"
+                    ]
+                  },
+                  "checked_against": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "observed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "match",
+                      "mismatch",
+                      "unverifiable"
+                    ]
+                  }
+                }
+              }
+            },
+            "mismatches": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 60
+            }
+          }
+        },
+        "rules": [
+          "mismatches counts mismatch results.",
+          "Every claim quotes the page exactly."
+        ]
+      }
+    },
+    {
+      "slug": "template.analytics-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the analytics statement compared with the requests the pages made",
+      "category_reason": "A recorded check of page-load requests.",
+      "value": {
+        "describes": "the analytics statement compared with the requests the pages made",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "checked_at",
+            "statement",
+            "statement_where",
+            "pages_loaded",
+            "first_party_hosts",
+            "third_party_hosts",
+            "observed",
+            "consistent"
+          ],
+          "properties": {
+            "check_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "statement": {
+              "type": "string",
+              "enum": [
+                "no_analytics",
+                "analytics_disclosed",
+                "not_stated"
+              ]
+            },
+            "statement_where": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "pages_loaded": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "first_party_hosts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "third_party_hosts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "host",
+                  "serves",
+                  "analytics"
+                ],
+                "properties": {
+                  "host": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "serves": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "analytics": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "observed": {
+              "type": "string",
+              "enum": [
+                "none_seen",
+                "analytics_seen"
+              ]
+            },
+            "consistent": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "consistent is false when the statement is no_analytics and observed is analytics_seen.",
+          "Every host that is not first-party is listed."
+        ]
+      }
+    },
+    {
+      "slug": "template.error-page-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: error responses for made-up addresses",
+      "category_reason": "A recorded check of error responses.",
+      "value": {
+        "describes": "error responses for made-up addresses",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "check_id",
+            "checked_at",
+            "probes",
+            "soft_404s"
+          ],
+          "properties": {
+            "check_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "probes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "url",
+                  "status",
+                  "view",
+                  "links_home",
+                  "leaks",
+                  "result"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "pattern": "^https?://",
+                    "minLength": 8,
+                    "maxLength": 300
+                  },
+                  "status": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 999
+                  },
+                  "view": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "links_home": {
+                    "type": "boolean"
+                  },
+                  "leaks": {
+                    "type": "boolean"
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "not_checked"
+                    ]
+                  }
+                }
+              }
+            },
+            "soft_404s": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            }
+          }
+        },
+        "rules": [
+          "A probe with status 200 and a not-found view fails as a soft 404.",
+          "soft_404s counts them."
+        ]
+      }
+    },
+    {
+      "slug": "template.rollback-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the rollback plan checked before launch",
+      "category_reason": "A recorded review.",
+      "value": {
+        "describes": "the rollback plan checked before launch",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_id",
+            "target_version",
+            "target_exists",
+            "steps",
+            "who",
+            "estimated_minutes",
+            "result",
+            "missing"
+          ],
+          "properties": {
+            "review_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "target_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "target_exists": {
+              "type": "string",
+              "enum": [
+                "yes",
+                "no",
+                "could_not_check"
+              ]
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "who": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "estimated_minutes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "fail",
+                "not_checked"
+              ]
+            },
+            "missing": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "result is pass only when the target exists, steps and who are named and the time is estimated."
+        ]
+      }
+    },
+    {
+      "slug": "template.readiness-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one readiness report with every item, blockers, waivers and a derived recommendation",
+      "category_reason": "A deterministic evaluation of the checks.",
+      "value": {
+        "describes": "one readiness report with every item, blockers, waivers and a derived recommendation",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "plan_ref",
+            "target",
+            "checked_at",
+            "items",
+            "blockers",
+            "waivers",
+            "analytics_statement",
+            "analytics_observed",
+            "rollback_target",
+            "release_stays_with",
+            "recommendation",
+            "recommendation_reason"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "plan_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result",
+                  "evidence_ref"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "waived",
+                      "not_checked"
+                    ]
+                  },
+                  "evidence_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "blockers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "waivers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "by_role",
+                  "reason"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "by_role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "analytics_statement": {
+              "type": "string",
+              "enum": [
+                "no_analytics",
+                "analytics_disclosed",
+                "not_stated"
+              ]
+            },
+            "analytics_observed": {
+              "type": "string",
+              "enum": [
+                "none_seen",
+                "analytics_seen",
+                "not_checked"
+              ]
+            },
+            "rollback_target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "release_stays_with": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "recommendation": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "not_ready",
+                "ready_with_waivers"
+              ]
+            },
+            "recommendation_reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "It passes the go checks.",
+          "The recommendation follows the method's rule."
+        ]
+      }
+    },
+    {
+      "slug": "template.go-decision",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the owner's go, no-go or go with waivers on one readiness report",
+      "category_reason": "A go decision is a person's recorded decision.",
+      "value": {
+        "describes": "the owner's go, no-go or go with waivers on one readiness report",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decision_id",
+            "report_ref",
+            "decided_by_role",
+            "signer_is_person",
+            "decided_at",
+            "decision",
+            "reasons",
+            "waivers_accepted",
+            "release_owner_role",
+            "release_is_separate",
+            "next_step"
+          ],
+          "properties": {
+            "decision_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "report_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "decided_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "signer_is_person": {
+              "const": true
+            },
+            "decided_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "go",
+                "no_go",
+                "go_with_waivers"
+              ]
+            },
+            "reasons": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            "waivers_accepted": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "reason"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "release_owner_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "release_is_separate": {
+              "const": true
+            },
+            "next_step": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "A go with any failed required item lists it under waivers_accepted.",
+          "release_is_separate is always true: deciding is not releasing."
+        ]
+      }
+    },
+    {
+      "slug": "example.readiness-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a readiness plan for a small site",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.readiness-plan"
+        },
+        "instance": {
+          "plan_id": "RP-6",
+          "target": "The synthetic pantry volunteer site",
+          "build": "site build 2026-10-30.3",
+          "launch_window": "2026-11-02, morning",
+          "pages": [
+            "https://pantry.example.invalid/",
+            "https://pantry.example.invalid/shifts",
+            "https://pantry.example.invalid/about"
+          ],
+          "claims_to_check": [
+            {
+              "claim": "40 volunteers this month",
+              "page": "https://pantry.example.invalid/"
+            },
+            {
+              "claim": "No analytics, no cookies.",
+              "page": "https://pantry.example.invalid/about"
+            }
+          ],
+          "items": [
+            "links-resolve",
+            "status-claims-match",
+            "analytics-stated",
+            "error-pages",
+            "rollback-ready",
+            "acceptance-and-accessibility",
+            "owner-go"
+          ],
+          "rollback_target": "site version 2026-10-29.2",
+          "release_owner_role": "site maintainer",
+          "decides_role": "pantry program manager",
+          "out_of_scope": [
+            "Server error pages: no test target was named."
+          ]
+        },
+        "shows": "A plan that names every required item, the claims to check, the rollback target and the two people's roles.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.page-claims",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a contradicted count and a true absence claim",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.page-claims"
+        },
+        "instance": {
+          "check_id": "PC-6",
+          "checked_at": "2026-10-30T17:20Z",
+          "claims": [
+            {
+              "claim": "40 volunteers this month",
+              "page": "https://pantry.example.invalid/",
+              "claim_kind": "count",
+              "checked_against": "The roster export read at 17:15 UTC",
+              "observed": "38 volunteers",
+              "result": "mismatch"
+            },
+            {
+              "claim": "No analytics, no cookies.",
+              "page": "https://pantry.example.invalid/about",
+              "claim_kind": "absence",
+              "checked_against": "Page-load requests on three pages and the cookie store after each",
+              "observed": "No analytics hosts and no cookies",
+              "result": "match"
+            },
+            {
+              "claim": "Updated every day",
+              "page": "https://pantry.example.invalid/shifts",
+              "claim_kind": "state",
+              "checked_against": "No permitted read shows the update schedule",
+              "observed": "Unknown",
+              "result": "unverifiable"
+            }
+          ],
+          "mismatches": 1
+        },
+        "shows": "Each claim quoted exactly, checked against a live read, with a mismatch, a match and an unverifiable claim to reword.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.readiness-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a not-ready report with two blockers",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.readiness-report"
+        },
+        "instance": {
+          "report_id": "LR-6",
+          "plan_ref": {
+            "key": "launch-readiness.readiness_plan.t-21",
+            "version": 1,
+            "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
+          },
+          "target": "The synthetic pantry volunteer site, build 2026-10-30.3",
+          "checked_at": "2026-10-30T17:40Z",
+          "items": [
+            {
+              "id": "links-resolve",
+              "result": "pass",
+              "evidence_ref": "link check LC-6: 84 links, 0 broken, 2 redirects recorded"
+            },
+            {
+              "id": "status-claims-match",
+              "result": "fail",
+              "evidence_ref": "page claims PC-6",
+              "note": "The home page says 40 volunteers this month; the roster shows 38."
+            },
+            {
+              "id": "analytics-stated",
+              "result": "pass",
+              "evidence_ref": "analytics check AN-6: no analytics stated, none seen; one font host listed"
+            },
+            {
+              "id": "error-pages",
+              "result": "fail",
+              "evidence_ref": "error page check EP-6",
+              "note": "Unknown addresses answer 200 with a not-found view."
+            },
+            {
+              "id": "rollback-ready",
+              "result": "pass",
+              "evidence_ref": "rollback review RB-6: version 2026-10-29.2, three steps, about five minutes"
+            },
+            {
+              "id": "acceptance-and-accessibility",
+              "result": "pass",
+              "evidence_ref": "sign-off SO-14 and audit report AR-5"
+            },
+            {
+              "id": "owner-go",
+              "result": "not_checked",
+              "evidence_ref": ""
+            }
+          ],
+          "blockers": [
+            "status-claims-match",
+            "error-pages"
+          ],
+          "waivers": [],
+          "analytics_statement": "no_analytics",
+          "analytics_observed": "none_seen",
+          "rollback_target": "site version 2026-10-29.2",
+          "release_stays_with": "the release owner, a person",
+          "recommendation": "not_ready",
+          "recommendation_reason": "Two required items fail: a contradicted count and soft 404s."
+        },
+        "shows": "Every required item with its evidence, the blockers named and a recommendation that follows the rule.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.go-decision",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the owner's no-go",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.go-decision"
+        },
+        "instance": {
+          "decision_id": "GD-6",
+          "report_ref": {
+            "key": "launch-readiness.readiness_report.t-24",
+            "version": 1,
+            "value_sha256": "b4d3c2a1908f7e6d5c4b3a29180f7e6db4d3c2a1908f7e6d5c4b3a29180f7e6d"
+          },
+          "decided_by_role": "pantry program manager",
+          "signer_is_person": true,
+          "decided_at": "2026-10-30T18:05Z",
+          "decision": "no_go",
+          "reasons": "The volunteer count on the home page is wrong, and I want the missing-page answer fixed before we share the link.",
+          "waivers_accepted": [],
+          "release_owner_role": "site maintainer",
+          "release_is_separate": true,
+          "next_step": "Fix both blockers, rerun their checks and bring a new report."
+        },
+        "shows": "A person's decision pinned to the exact report, with deciding kept separate from releasing.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-readiness",
+      "kind": "verb.decompose_dag",
+      "title": "Plan the readiness check",
+      "claimant": "agent",
+      "summary": "Name the target and build, the pages, the status claims to check, the checklist items, the rollback target and the people who release and decide.",
+      "outcome": "A readiness plan with every required checklist item.",
+      "ready_outcome": "readiness_planned",
+      "pinned": [
+        "method",
+        "readiness-checklist"
+      ],
+      "slots": [
+        {
+          "name": "launch_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a brief naming what launches, where, when and who decides."
+        }
+      ],
+      "produces": [
+        {
+          "name": "readiness_plan",
+          "template": "template.readiness-plan"
+        }
+      ],
+      "steps": [
+        "List every page people will reach from the launch link, and every status claim on them, quoted exactly.",
+        "Include every required checklist item, and say which optional ones apply.",
+        "Name the rollback target, the person who performs the release and the person who decides; an agent is never either."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The plan validates against template.readiness-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "required-items",
+          "check": "items includes every required checklist item.",
+          "method": "deterministic"
+        },
+        {
+          "id": "people-named",
+          "check": "release_owner_role and decides_role name people's roles, not agents.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-found",
+          "check": "Every status claim on the pages is listed.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "check-live-links",
+      "kind": "verb.verify_gate",
+      "title": "Check every link on the rendered pages",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Render each page in the plan, collect every link and in-page anchor, and resolve each with read-only requests, recording redirects, failures and links that need sign-in.",
+      "outcome": "A link check in the rename and relink pack's shape.",
+      "ready_outcome": "links_checked",
+      "pinned": [
+        "rename-and-relink:link-rules"
+      ],
+      "slots": [
+        {
+          "name": "readiness_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the readiness plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "link_check",
+          "template": "rename-and-relink:template.link-check"
+        }
+      ],
+      "steps": [
+        "Collect links from the rendered pages, after scripts run, not only from the source files.",
+        "Request each absolute link read-only and record any redirect with its final address; check each in-page anchor against the ids on its page.",
+        "List links that land on a sign-in page under outside_control, so the page can say they need an account."
+      ],
+      "acceptance": [
+        {
+          "id": "check-matches-template",
+          "check": "The link check validates against the rename and relink pack's template.link-check schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-add-up",
+          "check": "ok plus redirected plus broken equals checked.",
+          "method": "deterministic"
+        },
+        {
+          "id": "anchors-checked",
+          "check": "Every in-page anchor is checked against its page's ids.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only page loads and GET requests to each link; no form is submitted and no sign-in is attempted."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "launch-readiness.plan-readiness"
+      ]
+    },
+    {
+      "slug": "check-page-claims",
+      "kind": "verb.verify_gate",
+      "title": "Check every status claim on the pages",
+      "claimant": "agent",
+      "summary": "Quote every status claim on the pages exactly and check each against a live read-only source or a pinned receipt, recording match, mismatch or unverifiable.",
+      "outcome": "A page claims check, with a finding proposed for every mismatch.",
+      "ready_outcome": "claims_checked",
+      "pinned": [
+        "claim-rules",
+        "status-and-handoff:evidence-rules"
+      ],
+      "slots": [
+        {
+          "name": "readiness_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the readiness plan."
+        },
+        {
+          "name": "receipts",
+          "category": "noun.eval_run",
+          "description": "Pins of receipts or check results the claims can be checked against, if any.",
+          "required": false,
+          "many": true,
+          "max": 16
+        }
+      ],
+      "produces": [
+        {
+          "name": "page_claims",
+          "template": "template.page-claims"
+        }
+      ],
+      "steps": [
+        "Quote each claim exactly with the page it is on, and give it a claim kind from the claim rules.",
+        "Check each claim with the evidence the rules name, read now; never check a claim against another page's words or memory.",
+        "Mark a claim unverifiable when no permitted read can check it, and propose rewording it as dated or as a goal.",
+        "Propose findings-to-fixes.record-finding for every mismatch, quoting both the claim and the observed value."
+      ],
+      "acceptance": [
+        {
+          "id": "claims-match-template",
+          "check": "The check validates against template.page-claims's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plan-claims-covered",
+          "check": "Every claim in the plan appears in the check.",
+          "method": "deterministic"
+        },
+        {
+          "id": "mismatches-counted",
+          "check": "mismatches equals the number of mismatch results.",
+          "method": "deterministic"
+        },
+        {
+          "id": "evidence-fits",
+          "check": "Each claim was checked with the kind of evidence the rules name for it.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only page loads and GET requests to the sources named in the claim rules; nothing is changed."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 2400
+      },
+      "follows": [
+        "launch-readiness.plan-readiness"
+      ]
+    },
+    {
+      "slug": "check-analytics",
+      "kind": "verb.verify_gate",
+      "title": "Compare the analytics statement with the requests",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Find the site's analytics statement, load the planned pages read-only while recording every request host, classify the hosts and say whether the statement holds.",
+      "outcome": "An analytics check listing every third-party host.",
+      "ready_outcome": "analytics_checked",
+      "pinned": [
+        "analytics-hosts"
+      ],
+      "slots": [
+        {
+          "name": "readiness_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the readiness plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "analytics_check",
+          "template": "template.analytics-check"
+        }
+      ],
+      "steps": [
+        "Find where the site states its analytics, such as a privacy or about page, and quote it; record not_stated when there is none.",
+        "Load each planned page with GET only and record the host of every request, without pressing any consent or sign-in control.",
+        "Classify hosts by the analytics list, list every other third party with what it serves, and set consistent by the template's rule."
+      ],
+      "acceptance": [
+        {
+          "id": "check-matches-template",
+          "check": "The check validates against template.analytics-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "hosts-complete",
+          "check": "Every request host that is not first-party appears in third_party_hosts.",
+          "method": "deterministic"
+        },
+        {
+          "id": "consistency-derived",
+          "check": "consistent follows from the statement and the observation.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only page loads of the planned pages; no consent, sign-in or form control is used."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "launch-readiness.plan-readiness"
+      ]
+    },
+    {
+      "slug": "check-error-pages",
+      "kind": "verb.verify_gate",
+      "title": "Check error pages",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Request made-up addresses under each surface with GET, and record each status, what the page shows, whether it links home and whether it leaks anything.",
+      "outcome": "An error page check counting soft 404s.",
+      "ready_outcome": "errors_checked",
+      "pinned": [
+        "error-page-rules"
+      ],
+      "slots": [
+        {
+          "name": "readiness_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the readiness plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "error_page_check",
+          "template": "template.error-page-check"
+        }
+      ],
+      "steps": [
+        "Request one made-up address per surface and one per machine endpoint prefix, with GET only.",
+        "Record the status and the view; a not-found view with status 200 fails as a soft 404.",
+        "Record a server error page as not_checked unless the owner named a test target for it."
+      ],
+      "acceptance": [
+        {
+          "id": "check-matches-template",
+          "check": "The check validates against template.error-page-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "soft-404s-counted",
+          "check": "soft_404s equals the probes with status 200 and a not-found view.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-leaks",
+          "check": "Every probe records whether the response leaked a stack trace, internal path or credential-shaped text.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "GET requests to made-up addresses on the planned surfaces; nothing is changed."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "launch-readiness.plan-readiness"
+      ]
+    },
+    {
+      "slug": "review-rollback",
+      "kind": "verb.verify_gate",
+      "title": "Review the rollback plan",
+      "claimant": "agent",
+      "summary": "Check that the rollback target version exists, the steps are written, the person who can do it is named and the time it takes is estimated, before launch.",
+      "outcome": "A rollback review, proposing a rollback brief when anything is missing.",
+      "ready_outcome": "rollback_reviewed",
+      "pinned": [
+        "release-and-verify:authority-boundaries"
+      ],
+      "slots": [
+        {
+          "name": "readiness_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the readiness plan."
+        },
+        {
+          "name": "release_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a release plan from the release and verify pack, if one exists.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "rollback_review",
+          "template": "template.rollback-review"
+        }
+      ],
+      "steps": [
+        "Confirm the target version exists with a read-only look at the host's version history the plan names; record could_not_check when that needs access you lack.",
+        "Check that the steps are written, a person who can carry them out is named and the time is estimated.",
+        "Propose release-and-verify.prepare-rollback when anything is missing; a worker never switches versions."
+      ],
+      "acceptance": [
+        {
+          "id": "review-matches-template",
+          "check": "The review validates against template.rollback-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "result-derived",
+          "check": "result is pass only when the target exists and steps, who and time are all filled.",
+          "method": "deterministic"
+        },
+        {
+          "id": "steps-usable",
+          "check": "The steps are specific enough for the named person to follow.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the host's version history the plan names; nothing is switched or changed."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "launch-readiness.plan-readiness"
+      ]
+    },
+    {
+      "slug": "assemble-readiness",
+      "kind": "verb.verify_gate",
+      "title": "Assemble the readiness report",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Put every checklist item's result and evidence into one report, list blockers and the owner's waivers, and derive the recommendation by the method's rule.",
+      "outcome": "A readiness report that passes the go checks.",
+      "ready_outcome": "readiness_assembled",
+      "pinned": [
+        "readiness-checklist",
+        "go-checks"
+      ],
+      "slots": [
+        {
+          "name": "readiness_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the readiness plan."
+        },
+        {
+          "name": "parts",
+          "category": "noun.eval_run",
+          "description": "Pins of the link check, claims check, analytics check, error page check and rollback review.",
+          "many": true,
+          "max": 12
+        },
+        {
+          "name": "sign_off",
+          "category": "noun.eval_run",
+          "description": "Pin of a user acceptance sign-off, if one exists.",
+          "required": false
+        },
+        {
+          "name": "audit_report",
+          "category": "noun.eval_run",
+          "description": "Pin of an accessibility audit report, if one exists.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "readiness_report",
+          "template": "template.readiness-report"
+        }
+      ],
+      "steps": [
+        "Copy each item's result and evidence from its pinned check; an item with no check is not_checked.",
+        "Treat the acceptance and accessibility item as pass only when a go or go_with_conditions sign-off and an audit report with no open P0 or P1 failures are pinned.",
+        "List required items that fail or are not checked as blockers, record only waivers the owner gave with a reason, and derive the recommendation by the rule."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.readiness-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "go-checks-pass",
+          "check": "The report passes every pinned go check.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recommendation-derived",
+          "check": "Recomputing the recommendation from the items gives the same value.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "launch-readiness.check-live-links",
+        "launch-readiness.check-page-claims",
+        "launch-readiness.check-analytics",
+        "launch-readiness.check-error-pages",
+        "launch-readiness.review-rollback"
+      ]
+    },
+    {
+      "slug": "record-go-decision",
+      "kind": "verb.verify_gate",
+      "title": "Record the owner's go or no-go",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "The owner reads the readiness report and records go, no_go or go_with_waivers with reasons. This template performs nothing itself, and deciding is not releasing.",
+      "outcome": "A go decision pinned to the exact report.",
+      "ready_outcome": "decision_recorded",
+      "pinned": [
+        "go-checks"
+      ],
+      "slots": [
+        {
+          "name": "readiness_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the readiness report."
+        }
+      ],
+      "produces": [
+        {
+          "name": "go_decision",
+          "template": "template.go-decision"
+        }
+      ],
+      "steps": [
+        "Read the report, its blockers and its waivers.",
+        "Record go, no_go or go_with_waivers with your reasons; list every failed required item you accept under waivers_accepted.",
+        "Name the person who performs the release; the release is their separate act, recorded with the release and verify pack."
+      ],
+      "acceptance": [
+        {
+          "id": "decision-matches-template",
+          "check": "The decision validates against template.go-decision's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "report-pinned",
+          "check": "report_ref names the exact report version with its value SHA-256.",
+          "method": "deterministic"
+        },
+        {
+          "id": "waivers-cover-failures",
+          "check": "A go or go_with_waivers lists every failed required item under waivers_accepted.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "launch-readiness.assemble-readiness"
+      ]
+    }
+  ]
+}
