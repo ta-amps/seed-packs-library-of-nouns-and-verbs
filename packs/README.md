@@ -30,7 +30,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Code composition](code-composition/README.md) | Composing verified code without rewriting it | 35 | 7 |
 | [Taste palettes](taste-palettes/README.md) | Comparing options side by side and keeping a person's choice | 8 | 5 |
 | [Public-good kits](public-good-kits/README.md) | Building agent kits that nonprofits can use | 15 | 8 |
-| [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 69 | 11 |
+| [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 70 | 11 |
 | [Harness onboarding](harness-onboarding-e2e/README.md) | Connecting an agent harness and proving its lifecycle | 9 | 5 |
 | [Security review](security-review/README.md) | Authorized, local-only security review of code | 11 | 6 |
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
