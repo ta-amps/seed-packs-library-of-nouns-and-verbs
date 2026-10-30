@@ -18,15 +18,15 @@ authorized requester decides whether to enqueue them.
 | Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
 | --- | --- | --- | --- | --- | --- |
 | Script and story | [Video showcase](../packs/video-showcase/README.md): draft-script | Exists | scene_recipe (script), eval_run (evidence links), seed_hypothesis (brief) | solve_draft | storyboard |
-| Storyboard and shot list | Video showcase: storyboard | Exists | scene_recipe (storyboard, shot list, capture plan) | solve_draft | capture-screen per capture, render-scenes |
-| Screen capture of real products | Video showcase: capture-screen | Exists | scene_recipe (media), code_node (Playwright, Chromium cards) | compile_dag | |
+| Storyboard and shot list | Video showcase: storyboard | Exists | scene_recipe (storyboard, shot list, capture plan) | solve_draft | capture-screen per capture, draft-scene |
+| Screen capture of real products | Video showcase: capture-screen | Exists | scene_recipe (media in the video and motion format), code_node (Playwright, Chromium cards from video and motion) | compile_dag | |
 | Narration, a person's verb | Video showcase: record-narration | Exists | scene_recipe (media) | solve_draft (human) | transcribe-captions |
 | Transcribed captions | Video showcase: transcribe-captions | Exists | scene_recipe (caption track) | ingest | |
-| Motion graphics as code | [Visual and 3D rendering](../packs/visual-rendering/README.md): plan-scene, render | Added now | motion_profile, scene_recipe (scene, asset) | solve_draft, compile_dag | prepare-assets |
+| Motion graphics as code | [Visual and 3D rendering](../packs/visual-rendering/README.md): plan-scene, render; Video and motion: seek-frame, fit-motion, draft-scene | Added now | motion_profile (formulas, traces, profiles), scene_recipe (scene, asset) | solve_draft, compile_dag, ingest | prepare-assets, compile-social-formats |
 | Audio layers, sound effects and music with license checks | Video showcase: prepare-audio, asset policy | Added now | skill_pack (asset policy), scene_recipe (audio cue sheet) | compile_dag | |
-| Video layers and styles | Video showcase: style presets, layered sequence | Added now | skill_pack (style presets), scene_recipe (sequence with layers) | compile_dag (assemble) | |
-| Render and encode | Video showcase: render-scenes, assemble; Visual and 3D rendering: render | Exists, extended | eval_run (render manifest), code_node (FFmpeg, Blender, three.js) | compile_dag | video-qa |
-| Every-frame and loudness QA | Video showcase: video-qa; Visual and 3D rendering: check-render | Exists, extended | benchmark_suite (thresholds, quality checks), eval_run (QA report) | verify_gate | fixes for failed checks |
+| Video layers and styles | Video showcase: style presets; [Video and motion](../packs/video-motion/README.md): plan-sequence | Added now | skill_pack (style presets, caption and audio rules), scene_recipe (sequence) | solve_draft | render-sequence |
+| Render and encode | Video and motion: draft-scene, compile-social-formats, render-sequence; Visual and 3D rendering: render | Exists, extended; the video and motion tools are tested | eval_run (render manifest), code_node (video and motion tools, FFmpeg, Playwright, Chromium, Blender, three.js) | compile_dag | check-video |
+| Every-frame and loudness QA | Video and motion: check-social-formats, check-video; Visual and 3D rendering: check-render; Video showcase: showcase checks in review-video | Exists, extended | benchmark_suite (thresholds, quality checks), eval_run (QA report) | verify_gate | fixes for failed checks |
 | Independent review | Video showcase: review-video | Exists | eval_run (review notes) | verify_gate (person or different agent) | |
 | Release, a person's verb | Video showcase: record-publication | Added now | eval_run (publication record) | verify_gate (human) | |
 | Tool and benchmark freshness for video and motion tools | [Tool discovery](../packs/tool-discovery/README.md), [Benchmark scores](../packs/benchmark-scores/README.md) | Exists, added now | code_node (candidates), eval_run (scores), benchmark_suite (trials) | probe_source, fetch_feed, recheck_fragility, benchmark_harness | run-trial, compare-on-profile |

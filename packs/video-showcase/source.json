@@ -2,8 +2,10 @@
   "pack_id": "video-showcase",
   "title": "Video showcase",
   "version": "0.1.0",
-  "summary": "A collection of nouns and verbs for making a truthful demo video: script, storyboard, shot list, capture plan, media, audio, layers and styles, sequence, captions, evidence links and tool cards, with verbs from script to QA, review and the owner's publication record.",
-  "dependencies": [],
+  "summary": "A collection of nouns and verbs for making a truthful demo video: script, storyboard, shot list, capture plan, audio cue sheet, styles, captions, evidence links and showcase checks, with verbs from script to review and the owner's publication record; scenes, assembly, rendering and encoded-video checks use the video and motion pack.",
+  "dependencies": [
+    "video-motion"
+  ],
   "boundaries": [
     "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
     "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision.",
@@ -17,7 +19,7 @@
       "role": "pack",
       "title": "A collection of nouns and verbs for making a truthful demo video",
       "value": {
-        "lets_workers": "Make a truthful demo video as ordinary claimed work: script, storyboard, screen capture, human narration, captions, rendering, assembly in 16:9 with an optional 9:16 cut, automatic QA and review, where every on-screen number links to its evidence.",
+        "lets_workers": "Make a truthful demo video as ordinary claimed work: script, storyboard, screen capture, human narration, captions and audio layers here; drawn scenes, assembly, rendering in 16:9 with an optional 9:16 cut and encoded-video checks with the video and motion pack's verbs; then review, where every on-screen number links to its evidence.",
         "flow": [
           {
             "verb": {
@@ -51,33 +53,39 @@
           },
           {
             "verb": {
-              "$verb": "video-showcase.render-scenes"
+              "$verb": "video-motion.draft-scene"
             },
-            "when": "For storyboard scenes that are rendered rather than captured."
+            "when": "For storyboard scenes that are drawn rather than captured: title cards and diagrams."
           },
           {
             "verb": {
               "$verb": "video-showcase.prepare-audio"
             },
-            "when": "After narration exists: music, sound effects and ambience under the license policy."
+            "when": "After narration exists: music, sound effects and ambience under the license policy, mixed into one bed."
           },
           {
             "verb": {
-              "$verb": "video-showcase.assemble"
+              "$verb": "video-motion.plan-sequence"
             },
-            "when": "After media, narration and captions exist."
+            "when": "After media, narration and captions exist: cuts, crossfades, layers and captions."
           },
           {
             "verb": {
-              "$verb": "video-showcase.video-qa"
+              "$verb": "video-motion.render-sequence"
             },
-            "when": "After each assembly."
+            "when": "After the sequence plans cleanly: 16:9 and the optional 9:16 cut."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.check-video"
+            },
+            "when": "After each render."
           },
           {
             "verb": {
               "$verb": "video-showcase.review-video"
             },
-            "when": "By a person or a different worker."
+            "when": "By a person or a different worker, with the showcase checks."
           },
           {
             "verb": {
@@ -87,27 +95,24 @@
           }
         ],
         "shared_words": {
-          "scene recipe": "A declarative scene; render-scenes hands pinned scene recipes to a qualified deterministic renderer.",
-          "media": "A hash-pinned recording, image or audio file.",
-          "sequence": "The ordered clips, layers, cuts and crossfades that assemble encodes.",
+          "scene recipe": "A declarative scene, drafted with video-motion.draft-scene.",
+          "media": "A hash-pinned recording, image or audio file, in the video and motion pack's media format.",
+          "sequence": "The ordered clips, layers, cuts and crossfades that video-motion.plan-sequence writes and video-motion.render-sequence renders.",
           "render": "Deterministic frame production with no model call per frame.",
-          "QA": "Post-encode checks: black and frozen frames, loudness, captions, format, licenses and frame spot checks."
+          "QA": "The video and motion pack's encoded-video checks, plus this pack's showcase checks for evidence, rights, labels, duration and caption style."
         },
         "aspects": {
           "16:9": "1920x1080, the primary output",
           "9:16": "1080x1920, the optional vertical cut"
         },
-        "provenance_notes": [
-          "These terms match the kinema repository's seed pack: media and sequence nouns are noun.scene_recipe, render is verb.compile_dag and post-encode QA is verb.verify_gate. Its aspect ids are landscape_16x9 (on an unmerged branch when this pack was written) and reels_9x16."
-        ],
         "style_guide": {
           "$pin": "style-guide"
         },
-        "qa_thresholds": {
-          "$pin": "qa-thresholds"
-        },
         "privacy": "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
-        "publication": "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
+        "publication": "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision.",
+        "showcase_checks": {
+          "$pin": "showcase-checks"
+        }
       },
       "relations": [
         [
@@ -116,7 +121,7 @@
         ],
         [
           "requires_noun",
-          "qa-thresholds"
+          "showcase-checks"
         ],
         [
           "requires_noun",
@@ -125,18 +130,6 @@
         [
           "requires_noun",
           "style-presets"
-        ],
-        [
-          "requires_noun",
-          "tool.ffmpeg"
-        ],
-        [
-          "requires_noun",
-          "tool.playwright"
-        ],
-        [
-          "requires_noun",
-          "tool.chromium"
         ],
         [
           "requires_noun",
@@ -168,10 +161,6 @@
         ],
         [
           "requires_noun",
-          "template.media"
-        ],
-        [
-          "requires_noun",
           "template.evidence-link"
         ],
         [
@@ -180,19 +169,27 @@
         ],
         [
           "requires_noun",
-          "template.render-manifest"
-        ],
-        [
-          "requires_noun",
-          "template.sequence"
-        ],
-        [
-          "requires_noun",
-          "template.qa-report"
-        ],
-        [
-          "requires_noun",
           "template.review-notes"
+        ],
+        [
+          "requires_noun",
+          "video-motion:tool.playwright"
+        ],
+        [
+          "requires_noun",
+          "video-motion:tool.chromium"
+        ],
+        [
+          "requires_noun",
+          "video-motion:tool.ffmpeg"
+        ],
+        [
+          "requires_noun",
+          "video-motion:template.media"
+        ],
+        [
+          "requires_noun",
+          "video-motion:checks.video"
         ]
       ]
     },
@@ -223,59 +220,29 @@
           "Keep captions inside the inner 90 percent of the frame."
         ],
         "audio_rules": [
-          "Integrated loudness about -16 LUFS with true peak at or below -1 dBTP for web playback.",
+          "Integrated loudness about -16 LUFS with true peak at or below -1 dBTP for web playback. Set it as the sequence's loudness target; the video and motion pack's render and check verbs apply and measure it.",
           "Music, if any, stays well under the narration."
         ],
         "privacy": "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture."
       }
     },
     {
-      "slug": "qa-thresholds",
+      "slug": "showcase-checks",
       "category": "noun.benchmark_suite",
-      "role": "qa_thresholds",
-      "title": "Video QA checks, thresholds and commands",
-      "category_reason": "A fixed set of deterministic checks with thresholds and reproducible commands, used to score every assembled output.",
+      "role": "showcase_checks",
+      "title": "Showcase checks: evidence, rights, labels, duration and caption style",
+      "category_reason": "A fixed set of deterministic checks that a truthful showcase adds on top of the encoded-video checks.",
       "value": {
         "checks": [
           {
-            "id": "black-frames",
-            "threshold": "No black segment of 0.5 s or longer except declared fades.",
-            "method": "ffmpeg -i <file> -vf blackdetect=d=0.5:pix_th=0.10 -an -f null -"
-          },
-          {
-            "id": "frozen-frames",
-            "threshold": "No frozen segment of 2 s or longer except declared holds.",
-            "method": "ffmpeg -i <file> -vf freezedetect=n=-60dB:d=2 -map 0:v:0 -f null -"
-          },
-          {
-            "id": "loudness",
-            "threshold": "Integrated loudness -16 LUFS plus or minus 1 LU; true peak at most -1 dBTP.",
-            "method": "ffmpeg -i <file> -af ebur128=peak=true -f null -"
-          },
-          {
-            "id": "format",
-            "threshold": "1920x1080 for 16:9 or 1080x1920 for 9:16, the declared frame rate, H.264 with yuv420p, AAC at 48 kHz.",
-            "method": "ffprobe -v error -show_streams -show_format -of json <file>"
-          },
-          {
             "id": "duration",
             "threshold": "Within 5 percent of the brief's target_seconds.",
-            "method": "ffprobe format.duration"
+            "method": "The measured duration in the video QA report from video-motion.check-video."
           },
           {
-            "id": "caption-coverage",
-            "threshold": "Cues cover at least 95 percent of narration speech time.",
-            "method": "Compare cue intervals with the narration take's speech segments from the transcript."
-          },
-          {
-            "id": "caption-layout",
+            "id": "caption-style",
             "threshold": "At most 2 lines, at most 42 characters per line, at most 17 characters per second.",
-            "method": "Deterministic check over the caption track."
-          },
-          {
-            "id": "frame-spot-checks",
-            "threshold": "Spot frames of the encoded output match the rendered source frames with SSIM of at least 0.97; exact SHA-256 digests are compared only between the lossless rendered files and the render manifest. not_applicable when nothing was rendered.",
-            "method": "ffmpeg -i <encoded> -i <rendered scene> -lavfi ssim -f null - at the scene's timestamps, and sha256 of the rendered files."
+            "method": "Deterministic check of the caption track against the style guide's caption rules, on top of the video and motion pack's caption checks."
           },
           {
             "id": "asset-licenses",
@@ -289,164 +256,30 @@
           },
           {
             "id": "generated-media-labeled",
-            "threshold": "Every media noun with generated true is labeled on screen or in the description.",
+            "threshold": "Every media noun marked synthetic is labeled on screen or in the description, not only in file metadata.",
             "method": "Deterministic join of sequence clips and media nouns, plus a visual check."
           }
         ],
         "rules": [
+          "Encoded-video checks (streams, frames, spot checks, black and frozen frames, loudness, caption timing and the disclosure in file metadata) are defined once in the video and motion pack and run by its check-video verb. These checks add only what a truthful showcase needs on top.",
           "Every check reports its measurement, not only pass or fail.",
           "A check that cannot run is not_run with the reason, never pass; one that does not apply is not_applicable with the reason.",
           "Thresholds come from the style guide unless the brief overrides them; record which applied."
         ],
-        "tool": {
-          "$pin": "tool.ffmpeg"
+        "video_checks": {
+          "$pin": "video-motion:checks.video"
         }
       },
       "relations": [
         [
           "requires_noun",
-          "tool.ffmpeg"
-        ],
-        [
-          "requires_noun",
           "style-guide"
-        ]
-      ]
-    },
-    {
-      "slug": "tool.ffmpeg",
-      "category": "noun.code_node",
-      "role": "tool_card",
-      "title": "Tool card: FFmpeg",
-      "category_reason": "A tool card pins an external executable's identity, license and required capabilities for verbs that invoke it.",
-      "value": {
-        "name": "FFmpeg",
-        "homepage": "https://ffmpeg.org",
-        "source": "https://git.ffmpeg.org/ffmpeg.git",
-        "tool_license": {
-          "spdx_by_build": [
-            {
-              "build": "default configuration",
-              "spdx": "LGPL-2.1-or-later"
-            },
-            {
-              "build": "configured with --enable-gpl (needed for libx264)",
-              "spdx": "GPL-2.0-or-later"
-            },
-            {
-              "build": "configured with --enable-gpl --enable-version3",
-              "spdx": "GPL-3.0-or-later"
-            },
-            {
-              "build": "configured with --enable-nonfree",
-              "spdx": "none: not redistributable"
-            }
-          ],
-          "how_to_determine": "Run ffmpeg -hide_banner -version and ffmpeg -hide_banner -L, and record the configuration line and the license text they print."
-        },
-        "pin": null,
-        "pin_reason": "Pin the exact build a worker uses: version string, configuration line and the binary's SHA-256. This card names no build.",
-        "required_capabilities": [
-          "libx264 encoder",
-          "aac encoder",
-          "ebur128, blackdetect and freezedetect filters",
-          "subtitles filter (needs libass) for burned-in captions",
-          "ffprobe JSON output"
         ],
-        "used_by": [
-          {
-            "$verb": "video-showcase.assemble"
-          },
-          {
-            "$verb": "video-showcase.video-qa"
-          },
-          {
-            "$verb": "video-showcase.render-scenes"
-          }
-        ],
-        "checks": [
-          "ffmpeg -hide_banner -encoders lists libx264 and aac.",
-          "ffprobe reports the expected streams for a 2-second synthetic test clip made by the same build."
-        ],
-        "install_policy": "This card installs nothing. A worker uses an already qualified build or prepares one in its own workspace under its task's execution policy.",
-        "docs": [
-          "https://ffmpeg.org/ffmpeg.html",
-          "https://ffmpeg.org/ffmpeg-filters.html",
-          "https://ffmpeg.org/legal.html"
-        ]
-      }
-    },
-    {
-      "slug": "tool.playwright",
-      "category": "noun.code_node",
-      "role": "tool_card",
-      "title": "Tool card: Playwright",
-      "category_reason": "A tool card pins a library's identity, license and use for verbs that invoke it.",
-      "value": {
-        "name": "Playwright",
-        "homepage": "https://playwright.dev",
-        "source": "https://github.com/microsoft/playwright",
-        "tool_license": {
-          "spdx": "Apache-2.0"
-        },
-        "pin": null,
-        "pin_reason": "Pin the exact Playwright version; it also fixes the browser build it downloads.",
-        "uses": [
-          "Scripted screen capture at a fixed viewport from a capture plan.",
-          "Rasterizing SVG scene frames to PNG for assembly."
-        ],
-        "cautions": [
-          "Built-in recording writes WebM at about 25 frames per second. Its size defaults to the viewport scaled down to fit within 800x800 and ignores the device scale factor, so set the recording size explicitly to the capture size.",
-          "Timed screenshots or a platform screen recorder may give crisper results than built-in recording.",
-          "Use a fresh browser profile with no signed-in accounts."
-        ],
-        "used_by": [
-          {
-            "$verb": "video-showcase.capture-screen"
-          },
-          {
-            "$verb": "video-showcase.render-scenes"
-          }
-        ],
-        "requires": {
-          "$pin": "tool.chromium"
-        },
-        "install_policy": "This card installs nothing; browser downloads happen only under the worker's own execution policy.",
-        "checks": [
-          "Capture a 2-second recording of a local static page with the recording size set to 1920x1080 and confirm its dimensions with ffprobe."
-        ]
-      },
-      "relations": [
         [
           "requires_noun",
-          "tool.chromium"
+          "video-motion:checks.video"
         ]
       ]
-    },
-    {
-      "slug": "tool.chromium",
-      "category": "noun.code_node",
-      "role": "tool_card",
-      "title": "Tool card: Chromium",
-      "category_reason": "A tool card pins a browser's identity and license for the capture and rasterization verbs.",
-      "value": {
-        "name": "Chromium",
-        "homepage": "https://www.chromium.org",
-        "tool_license": {
-          "spdx": "BSD-3-Clause",
-          "note": "BSD-3-Clause covers Chromium's own code. Bundled third-party components carry their own licenses, listed on the build's chrome://credits page; record that list for the exact build."
-        },
-        "pin": null,
-        "pin_reason": "Use the browser build fixed by the pinned Playwright version and record its version string.",
-        "used_by": [
-          {
-            "$verb": "video-showcase.capture-screen"
-          },
-          {
-            "$verb": "video-showcase.render-scenes"
-          }
-        ]
-      }
     },
     {
       "slug": "asset-policy",
@@ -1370,156 +1203,6 @@
       "category_reason": "A capture plan is a reproducible camera setup for screen recordings."
     },
     {
-      "slug": "template.media",
-      "category": "noun.scene_recipe",
-      "role": "template",
-      "title": "Template: one hash-pinned media file: recording, narration, still, music, rendered scene or encoded video",
-      "value": {
-        "describes": "one hash-pinned media file: recording, narration, still, music, rendered scene or encoded video",
-        "schema": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "kind",
-            "blob",
-            "seconds",
-            "source",
-            "generated",
-            "rights"
-          ],
-          "properties": {
-            "kind": {
-              "type": "string",
-              "enum": [
-                "screen_capture",
-                "narration",
-                "still",
-                "music",
-                "rendered_scene",
-                "encoded_video",
-                "captions_file"
-              ]
-            },
-            "blob": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "sha256",
-                "bytes",
-                "content_type"
-              ],
-              "properties": {
-                "sha256": {
-                  "type": "string",
-                  "pattern": "^[0-9a-f]{64}$"
-                },
-                "bytes": {
-                  "type": "integer",
-                  "minimum": 1
-                },
-                "content_type": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 80
-                }
-              }
-            },
-            "seconds": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 7200
-            },
-            "width": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 7680
-            },
-            "height": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 4320
-            },
-            "fps": {
-              "type": "number",
-              "minimum": 1,
-              "maximum": 240
-            },
-            "codec": {
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 60
-            },
-            "audio": {
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 120
-            },
-            "source": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 300
-            },
-            "generated": {
-              "type": "boolean"
-            },
-            "generator": {
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 200
-            },
-            "rights": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "license",
-                "owner"
-              ],
-              "properties": {
-                "license": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 100
-                },
-                "owner": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 200
-                },
-                "attribution": {
-                  "type": "string",
-                  "minLength": 0,
-                  "maxLength": 300
-                }
-              }
-            }
-          }
-        },
-        "rules": [
-          "The blob digest is the SHA-256 of the stored bytes.",
-          "generated is true for anything a model produced."
-        ],
-        "example": {
-          "kind": "screen_capture",
-          "blob": {
-            "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
-            "bytes": 1048576,
-            "content_type": "video/webm"
-          },
-          "seconds": 14,
-          "width": 1920,
-          "height": 1080,
-          "fps": 25,
-          "source": "SYNTHETIC: capture-screen run for capture result-page",
-          "generated": false,
-          "rights": {
-            "license": "owner-recorded",
-            "owner": "the requester"
-          }
-        }
-      },
-      "category_reason": "Scene recipes bind media assets into scenes; a media noun is that asset binding with digest, timing and rights."
-    },
-    {
       "slug": "template.evidence-link",
       "category": "noun.eval_run",
       "role": "template",
@@ -1751,446 +1434,6 @@
         ]
       },
       "category_reason": "Captions are timed text bound to the narration media."
-    },
-    {
-      "slug": "template.render-manifest",
-      "category": "noun.eval_run",
-      "role": "template",
-      "title": "Template: the record of one deterministic render: tool, scenes, frames and digests",
-      "value": {
-        "describes": "the record of one deterministic render: tool, scenes, frames and digests",
-        "schema": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "renderer",
-            "scenes",
-            "model_calls"
-          ],
-          "properties": {
-            "renderer": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "tool",
-                "version"
-              ],
-              "properties": {
-                "tool": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 100
-                },
-                "version": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 100
-                }
-              }
-            },
-            "scenes": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 80,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "scene_id",
-                  "recipe_ref",
-                  "frames",
-                  "fps",
-                  "width",
-                  "height",
-                  "output_sha256"
-                ],
-                "properties": {
-                  "scene_id": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40
-                  },
-                  "recipe_ref": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 300
-                  },
-                  "frames": {
-                    "type": "integer",
-                    "minimum": 1
-                  },
-                  "fps": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 240
-                  },
-                  "width": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 7680
-                  },
-                  "height": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 4320
-                  },
-                  "output_sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  },
-                  "qa_receipt_sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  },
-                  "spot_frame_sha256": {
-                    "type": "array",
-                    "minItems": 0,
-                    "maxItems": 10,
-                    "items": {
-                      "type": "string",
-                      "pattern": "^[0-9a-f]{64}$"
-                    }
-                  }
-                }
-              }
-            },
-            "model_calls": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 0
-            }
-          }
-        },
-        "rules": [
-          "model_calls is 0: rendering uses no model per frame.",
-          "Digests are of the produced files."
-        ]
-      },
-      "category_reason": "A render manifest is a fingerprinted run record with output digests."
-    },
-    {
-      "slug": "template.sequence",
-      "category": "noun.scene_recipe",
-      "role": "template",
-      "title": "Template: the assembled sequence: ordered clips, transitions, audio, captions and encoded outputs",
-      "value": {
-        "describes": "the assembled sequence: ordered clips, transitions, audio, captions and encoded outputs",
-        "schema": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "timeline",
-            "audio",
-            "captions",
-            "outputs"
-          ],
-          "properties": {
-            "timeline": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 200,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "clip_id",
-                  "media_ref",
-                  "in_s",
-                  "out_s",
-                  "transition"
-                ],
-                "properties": {
-                  "clip_id": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40
-                  },
-                  "media_ref": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 300
-                  },
-                  "in_s": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 7200
-                  },
-                  "out_s": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 7200
-                  },
-                  "transition": {
-                    "type": "string",
-                    "enum": [
-                      "cut",
-                      "crossfade"
-                    ]
-                  },
-                  "transition_s": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 5
-                  }
-                }
-              }
-            },
-            "audio": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "narration_ref",
-                "loudness_target_lufs"
-              ],
-              "properties": {
-                "narration_ref": {
-                  "type": "string",
-                  "minLength": 0,
-                  "maxLength": 300
-                },
-                "music_ref": {
-                  "type": "string",
-                  "minLength": 0,
-                  "maxLength": 300
-                },
-                "loudness_target_lufs": {
-                  "type": "number",
-                  "minimum": -40,
-                  "maximum": 0
-                }
-              }
-            },
-            "captions": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "track_ref",
-                "burn_in"
-              ],
-              "properties": {
-                "track_ref": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 300
-                },
-                "burn_in": {
-                  "type": "boolean"
-                }
-              }
-            },
-            "layers": {
-              "type": "array",
-              "minItems": 0,
-              "maxItems": 100,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "layer_id",
-                  "kind",
-                  "start_s",
-                  "end_s",
-                  "z"
-                ],
-                "properties": {
-                  "layer_id": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40
-                  },
-                  "kind": {
-                    "type": "string",
-                    "enum": [
-                      "background",
-                      "screen",
-                      "overlay",
-                      "title",
-                      "lower_third",
-                      "caption",
-                      "highlight",
-                      "logo",
-                      "end_card"
-                    ]
-                  },
-                  "media_ref": {
-                    "type": "string",
-                    "minLength": 0,
-                    "maxLength": 300
-                  },
-                  "style_preset": {
-                    "type": "string",
-                    "minLength": 0,
-                    "maxLength": 60
-                  },
-                  "text": {
-                    "type": "string",
-                    "minLength": 0,
-                    "maxLength": 200
-                  },
-                  "start_s": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 7200
-                  },
-                  "end_s": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 7200
-                  },
-                  "z": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 20
-                  },
-                  "opacity": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                  }
-                }
-              }
-            },
-            "audio_cue_sheet_ref": {
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 300
-            },
-            "outputs": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 2,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "aspect",
-                  "width",
-                  "height",
-                  "fps",
-                  "codec",
-                  "sha256"
-                ],
-                "properties": {
-                  "aspect": {
-                    "type": "string",
-                    "enum": [
-                      "16:9",
-                      "9:16"
-                    ]
-                  },
-                  "width": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 7680
-                  },
-                  "height": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 4320
-                  },
-                  "fps": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 240
-                  },
-                  "codec": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 80
-                  },
-                  "sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  },
-                  "media_ref": {
-                    "type": "string",
-                    "minLength": 0,
-                    "maxLength": 300
-                  }
-                }
-              }
-            }
-          }
-        },
-        "rules": [
-          "Clips reference media nouns by pin.",
-          "Each output records its digest and format."
-        ]
-      },
-      "category_reason": "A sequence is ordered clips and layers with cuts and crossfades, bound into an encoded deliverable."
-    },
-    {
-      "slug": "template.qa-report",
-      "category": "noun.eval_run",
-      "role": "template",
-      "title": "Template: automatic QA results for one encoded output",
-      "value": {
-        "describes": "automatic QA results for one encoded output",
-        "schema": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "output_sha256",
-            "checks",
-            "passed"
-          ],
-          "properties": {
-            "output_sha256": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{64}$"
-            },
-            "checks": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 30,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "id",
-                  "result",
-                  "measurement",
-                  "threshold"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 60
-                  },
-                  "result": {
-                    "type": "string",
-                    "enum": [
-                      "pass",
-                      "fail",
-                      "not_run",
-                      "not_applicable"
-                    ]
-                  },
-                  "measurement": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 300
-                  },
-                  "threshold": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 200
-                  }
-                }
-              }
-            },
-            "passed": {
-              "type": "boolean"
-            }
-          }
-        },
-        "rules": [
-          "Every threshold check from qa-thresholds appears with its measurement.",
-          "A check that does not apply is not_applicable with the reason; passed is true only if every check is pass or not_applicable."
-        ]
-      },
-      "category_reason": "A QA report is a scored run over one output with measurements."
     },
     {
       "slug": "template.review-notes",
@@ -2425,8 +1668,8 @@
       "ready_outcome": "media_ready",
       "model_use": "none",
       "pinned": [
-        "tool.playwright",
-        "tool.chromium",
+        "video-motion:tool.playwright",
+        "video-motion:tool.chromium",
         "style-guide"
       ],
       "slots": [
@@ -2457,7 +1700,7 @@
       "produces": [
         {
           "name": "media",
-          "template": "template.media",
+          "template": "video-motion:template.media",
           "max": 40
         }
       ],
@@ -2465,13 +1708,13 @@
         "Verify the pins and the pinned Playwright and Chromium builds before running anything.",
         "Use a fresh browser profile, signed out of every account, with notifications off.",
         "Run each capture's steps exactly, at its viewport, against its local or demo target only. Set the recording size to the viewport explicitly; the default is smaller.",
-        "Store each recording as a blob, compute its SHA-256, and write a media noun with generated false.",
+        "Store each recording as a blob, compute its SHA-256, and write a media noun in the video and motion pack's media format with provenance captured and synthetic false.",
         "Stop and return blocked if any frame would show a credential, real personal data or an unplanned site."
       ],
       "acceptance": [
         {
           "id": "media-matches-template",
-          "check": "Every media noun validates against template.media's schema.",
+          "check": "Every media noun validates against the video and motion pack's template.media schema.",
           "method": "deterministic"
         },
         {
@@ -2533,20 +1776,20 @@
       "produces": [
         {
           "name": "narration",
-          "template": "template.media"
+          "template": "video-motion:template.media"
         }
       ],
       "steps": [
         "Read the script aloud in a quiet room; small departures from the script are fine and will be captured by transcription.",
         "Record at 48 kHz, mono or stereo, without music.",
-        "Upload the take as a blob in your team's scope and write a media noun with kind narration and generated false.",
+        "Upload the take as a blob in your team's scope and write a media noun in the video and motion pack's media format with kind audio, provenance captured, synthetic false and the license the person grants. The renderer accepts CC0-1.0, CC-BY-4.0 or MIT for a person's recording.",
         "Nobody else's voice and no synthetic voice is used in this verb.",
         "When the take is stored, propose a transcribe-captions verb with it pinned."
       ],
       "acceptance": [
         {
           "id": "media-matches-template",
-          "check": "The narration noun validates against template.media's schema with kind narration.",
+          "check": "The narration noun validates against the video and motion pack's template.media schema with kind audio.",
           "method": "deterministic"
         },
         {
@@ -2556,7 +1799,7 @@
         },
         {
           "id": "not-generated",
-          "check": "generated is false.",
+          "check": "provenance is captured and synthetic is false.",
           "method": "deterministic"
         },
         {
@@ -2642,107 +1885,19 @@
       ]
     },
     {
-      "slug": "render-scenes",
-      "kind": "verb.compile_dag",
-      "title": "Render scenes",
-      "claimant": "agent",
-      "summary": "Render the storyboard's title cards, diagrams and transitions deterministically and record frame digests.",
-      "outcome": "Media nouns for each rendered scene and a render manifest with digests.",
-      "ready_outcome": "render_ready",
-      "model_use": "none",
-      "pinned": [
-        "tool.playwright",
-        "tool.chromium",
-        "tool.ffmpeg",
-        "style-guide"
-      ],
-      "slots": [
-        {
-          "name": "storyboard",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the storyboard."
-        },
-        {
-          "name": "shot_list",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the shot list."
-        },
-        {
-          "name": "scene_recipes",
-          "category": "noun.scene_recipe",
-          "description": "Optional pins of scene recipes for rendered shots.",
-          "many": true,
-          "max": 20,
-          "required": false
-        }
-      ],
-      "produces": [
-        {
-          "name": "rendered_media",
-          "template": "template.media",
-          "max": 40
-        },
-        {
-          "name": "render_manifest",
-          "template": "template.render-manifest"
-        }
-      ],
-      "steps": [
-        "Verify every pin and every tool build before rendering.",
-        "Render only rendered_scene and title_card shots. Use a qualified deterministic scene renderer for pinned scene recipes when one is installed.",
-        "Use no model per frame. Record frame counts, sizes and spot-frame digests in the render manifest.",
-        "Render the 9:16 variant only for shots that list it.",
-        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
-      ],
-      "acceptance": [
-        {
-          "id": "manifest-matches-template",
-          "check": "The render manifest validates against its template and model_calls is 0.",
-          "method": "deterministic"
-        },
-        {
-          "id": "repeatable",
-          "check": "Rendering one scene twice yields identical spot-frame digests.",
-          "method": "deterministic"
-        },
-        {
-          "id": "sizes-correct",
-          "check": "Each output matches its aspect's dimensions.",
-          "method": "deterministic"
-        },
-        {
-          "id": "looks-right",
-          "check": "Rendered scenes match the storyboard's intent.",
-          "method": "judgment"
-        }
-      ],
-      "bounds": {
-        "max_elapsed_seconds": 3600,
-        "max_scenes": 40
-      },
-      "capabilities": [
-        "read permitted noun versions",
-        "qualified rendering tools",
-        "store blobs in the requester's scope",
-        "write candidate nouns in the requester's scope"
-      ],
-      "follows": [
-        "video-showcase.storyboard"
-      ]
-    },
-    {
       "slug": "prepare-audio",
       "kind": "verb.compile_dag",
       "title": "Prepare the audio layers",
       "claimant": "agent",
-      "summary": "Lay out narration, music, sound effects and ambience on a cue sheet with licenses checked, duck music under the narration, and mix to the loudness target.",
-      "outcome": "An audio cue sheet and mixed audio media, or no_change when the video needs only narration.",
+      "summary": "Lay out music, sound effects and ambience on a cue sheet with licenses checked, and mix them into one music bed; the video and motion pack's render verb places the narration, ducks the bed under it and normalizes loudness.",
+      "outcome": "An audio cue sheet and the music bed as a media noun, or no_change when the video needs only narration.",
       "ready_outcome": "audio_ready",
       "model_use": "none",
       "pinned": [
         "asset-policy",
         "style-guide",
-        "tool.ffmpeg"
+        "video-motion:tool.ffmpeg",
+        "video-motion:rules.audio"
       ],
       "slots": [
         {
@@ -2770,15 +1925,15 @@
           "template": "template.audio-cue-sheet"
         },
         {
-          "name": "mixed_audio",
-          "template": "template.media"
+          "name": "music_bed",
+          "template": "video-motion:template.media"
         }
       ],
       "steps": [
         "Verify every pin and every audio blob digest.",
-        "Use only assets whose license the asset policy allows; leave any other asset out and list it in unknowns with the reason.",
-        "Place cues on the storyboard's timing, duck music under the narration, and mix to the style guide's loudness target with the pinned FFmpeg build.",
-        "Record each cue's license and attribution on the cue sheet."
+        "Use only assets whose license the asset policy allows and the renderer accepts; leave any other asset out and list it in unknowns with the reason.",
+        "Place cues on the storyboard's timing and mix music, effects and ambience into one bed with the pinned FFmpeg build; leave narration out of the bed.",
+        "Record each cue's license and attribution on the cue sheet, and write the bed as a media noun in the video and motion pack's media format."
       ],
       "acceptance": [
         {
@@ -2787,18 +1942,23 @@
           "method": "deterministic"
         },
         {
-          "id": "licenses-allowed",
-          "check": "Every cue's license is on the asset policy's allowed list.",
+          "id": "bed-matches-template",
+          "check": "The music bed validates against the video and motion pack's template.media schema.",
           "method": "deterministic"
         },
         {
-          "id": "loudness-measured",
-          "check": "The mixed audio's integrated loudness and true peak were measured with ebur128 and are within the targets.",
+          "id": "licenses-allowed",
+          "check": "Every cue's license is on the asset policy's allowed list and is one the renderer accepts.",
+          "method": "deterministic"
+        },
+        {
+          "id": "bed-peak",
+          "check": "The bed's true peak, measured with ebur128, is at or below -1 dBTP.",
           "method": "deterministic"
         },
         {
           "id": "mix-balanced",
-          "check": "Narration stays clearly audible over music and effects.",
+          "check": "Music and effects will sit clearly under the narration.",
           "method": "judgment"
         }
       ],
@@ -2816,247 +1976,6 @@
       ]
     },
     {
-      "slug": "assemble",
-      "kind": "verb.compile_dag",
-      "title": "Assemble and encode",
-      "claimant": "agent",
-      "summary": "Cut the media into the storyboard's sequence with crossfades, mix the narration, attach captions and encode 16:9 and the optional 9:16 output.",
-      "outcome": "A sequence noun and encoded output media with digests.",
-      "ready_outcome": "sequence_ready",
-      "model_use": "none",
-      "pinned": [
-        "tool.ffmpeg",
-        "style-guide",
-        "style-presets"
-      ],
-      "slots": [
-        {
-          "name": "storyboard",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the storyboard."
-        },
-        {
-          "name": "shot_list",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the shot list."
-        },
-        {
-          "name": "media",
-          "category": "noun.scene_recipe",
-          "description": "Pins of captured and rendered media.",
-          "many": true,
-          "max": 80
-        },
-        {
-          "name": "narration",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the narration media noun."
-        },
-        {
-          "name": "caption_track",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the caption track."
-        },
-        {
-          "name": "audio_cue_sheet",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the audio cue sheet, if music or effects were added.",
-          "required": false
-        }
-      ],
-      "params": {
-        "burn_in_captions": {
-          "schema": {
-            "type": "boolean"
-          },
-          "default": false,
-          "description": "Burn captions into the picture in addition to the sidecar file."
-        },
-        "aspects": {
-          "schema": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 2,
-            "items": {
-              "type": "string",
-              "enum": [
-                "16:9",
-                "9:16"
-              ]
-            }
-          },
-          "default": [
-            "16:9"
-          ],
-          "description": "Outputs to encode."
-        }
-      },
-      "produces": [
-        {
-          "name": "sequence",
-          "template": "template.sequence"
-        },
-        {
-          "name": "encoded_outputs",
-          "template": "template.media",
-          "max": 2
-        }
-      ],
-      "steps": [
-        "Verify every pin and every media blob digest before cutting.",
-        "Build the timeline from the storyboard: cuts and crossfades only, in storyboard order. Add title, lower-third, caption, highlight and end-card layers with the style presets.",
-        "Mix narration to the style guide's loudness target, attach the sidecar captions and burn them in only when asked.",
-        "Encode each requested aspect with the pinned FFmpeg build and record each output's digest and format.",
-        "Propose one video-qa verb per encoded output.",
-        "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
-      ],
-      "acceptance": [
-        {
-          "id": "sequence-matches-template",
-          "check": "The sequence validates against template.sequence's schema.",
-          "method": "deterministic"
-        },
-        {
-          "id": "clips-pinned",
-          "check": "Every clip references a pinned media noun whose digest was verified.",
-          "method": "deterministic"
-        },
-        {
-          "id": "outputs-recorded",
-          "check": "Every encoded output has a media noun with its digest, size, frame rate and codec.",
-          "method": "deterministic"
-        },
-        {
-          "id": "flows-well",
-          "check": "Cuts and crossfades land on beat boundaries.",
-          "method": "judgment"
-        }
-      ],
-      "bounds": {
-        "max_elapsed_seconds": 3600
-      },
-      "capabilities": [
-        "read permitted noun versions",
-        "a qualified FFmpeg build",
-        "store blobs in the requester's scope",
-        "write candidate nouns in the requester's scope"
-      ],
-      "follows": [
-        "video-showcase.transcribe-captions",
-        "video-showcase.render-scenes",
-        "video-showcase.capture-screen"
-      ]
-    },
-    {
-      "slug": "video-qa",
-      "kind": "verb.verify_gate",
-      "title": "Check the encoded video",
-      "claimant": "agent",
-      "summary": "Run every QA check on one encoded output: black and frozen frames, loudness, format, duration, captions, frame spot checks, evidence coverage and generated-media labels.",
-      "outcome": "A QA report with a measurement for every check.",
-      "ready_outcome": "qa_ready",
-      "model_use": "none",
-      "pinned": [
-        "qa-thresholds",
-        "tool.ffmpeg",
-        "style-guide",
-        "asset-policy"
-      ],
-      "slots": [
-        {
-          "name": "encoded_output",
-          "category": "noun.scene_recipe",
-          "description": "Pin of one encoded output media noun."
-        },
-        {
-          "name": "sequence",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the sequence."
-        },
-        {
-          "name": "video_brief",
-          "category": "noun.seed_hypothesis",
-          "description": "Pin of the video brief, for the target length."
-        },
-        {
-          "name": "narration",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the narration media noun, for caption coverage."
-        },
-        {
-          "name": "script",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the script, for claim ids."
-        },
-        {
-          "name": "evidence_links",
-          "category": "noun.eval_run",
-          "description": "Pins of the evidence links.",
-          "many": true,
-          "max": 30,
-          "required": false
-        },
-        {
-          "name": "caption_track",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the caption track."
-        },
-        {
-          "name": "render_manifest",
-          "category": "noun.eval_run",
-          "description": "Pin of the render manifest, if scenes were rendered.",
-          "required": false
-        },
-        {
-          "name": "audio_cue_sheet",
-          "category": "noun.scene_recipe",
-          "description": "Pin of the audio cue sheet, if music or effects were added.",
-          "required": false
-        }
-      ],
-      "produces": [
-        {
-          "name": "qa_report",
-          "template": "template.qa-report"
-        }
-      ],
-      "steps": [
-        "Verify the pins and the output blob's digest.",
-        "Run each check in qa-thresholds with the pinned FFmpeg build and record its measurement.",
-        "Mark a check not_run with its reason when it cannot run, or not_applicable when it does not apply; never mark either as pass.",
-        "Set passed to true only when every check is pass or not_applicable.",
-        "When a check fails, propose the assemble, render-scenes or prepare-audio verb that would fix it, naming the failed check."
-      ],
-      "acceptance": [
-        {
-          "id": "report-matches-template",
-          "check": "The QA report validates against template.qa-report's schema.",
-          "method": "deterministic"
-        },
-        {
-          "id": "all-checks-present",
-          "check": "Every check id in qa-thresholds appears exactly once.",
-          "method": "deterministic"
-        },
-        {
-          "id": "passed-consistent",
-          "check": "passed is true exactly when every check result is pass or not_applicable.",
-          "method": "deterministic"
-        }
-      ],
-      "bounds": {
-        "max_elapsed_seconds": 1200
-      },
-      "capabilities": [
-        "read permitted noun versions",
-        "a qualified FFmpeg build",
-        "write candidate nouns in the requester's scope"
-      ],
-      "follows": [
-        "video-showcase.assemble"
-      ]
-    },
-    {
       "slug": "review-video",
       "kind": "verb.verify_gate",
       "title": "Review the cut",
@@ -3066,7 +1985,8 @@
       "ready_outcome": "review_ready",
       "pinned": [
         "style-guide",
-        "qa-thresholds"
+        "showcase-checks",
+        "video-motion:checks.video"
       ],
       "slots": [
         {
@@ -3077,12 +1997,27 @@
         {
           "name": "qa_report",
           "category": "noun.eval_run",
-          "description": "Pin of its QA report."
+          "description": "Pin of its video QA report from video-motion.check-video."
+        },
+        {
+          "name": "sequence",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the sequence that was rendered."
+        },
+        {
+          "name": "video_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the video brief, for the target length."
         },
         {
           "name": "script",
           "category": "noun.scene_recipe",
           "description": "Pin of the script."
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption track."
         },
         {
           "name": "evidence_links",
@@ -3100,7 +2035,8 @@
         }
       ],
       "steps": [
-        "Confirm you did not assemble this cut; if you did, return blocked.",
+        "Confirm you did not plan or render this cut; if you did, return blocked.",
+        "Run every showcase check and record its measurement; not_run and not_applicable carry reasons.",
         "Watch the whole cut. Check each claim against its evidence link.",
         "Check rights and labels for every generated or third-party asset.",
         "Decide ready_for_owner_decision, revise or reject. Never publish."
@@ -3112,13 +2048,18 @@
           "method": "deterministic"
         },
         {
+          "id": "showcase-checks-present",
+          "check": "Every check in showcase-checks appears once with its measurement.",
+          "method": "deterministic"
+        },
+        {
           "id": "claims-covered",
           "check": "Every claim id in the script has a review result.",
           "method": "deterministic"
         },
         {
           "id": "qa-passed-or-explained",
-          "check": "A ready decision requires a QA report with passed true.",
+          "check": "A ready decision requires a video QA report with passed true.",
           "method": "deterministic"
         },
         {
@@ -3132,7 +2073,7 @@
       },
       "review": "distinct_reviewer",
       "follows": [
-        "video-showcase.video-qa"
+        "video-motion.check-video"
       ]
     },
     {

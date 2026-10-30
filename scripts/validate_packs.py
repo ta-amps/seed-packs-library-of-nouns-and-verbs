@@ -166,13 +166,34 @@ def outbound_instruction(texts: list[str]) -> str | None:
     return None
 
 
-SURFACE_NAMES = re.compile(r"(?i)\b(kinema|kothar|shamash|eranos|agora|herma)\b")
+# Surface and product names packs must not carry, stored only as SHA-256 hashes (as
+# check_public.py stores private names), so this library never spells them. A name matches as a
+# whole word or hyphenated word, in any case.
+SURFACE_NAMES_FILE = ROOT / "scripts" / "surface-names.sha256"
+NAME_WORD = re.compile(r"[a-z0-9]+")
+NAME_COMPOUND = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)+")
+
+
+def load_name_hashes(path: Path = SURFACE_NAMES_FILE) -> frozenset[str]:
+    """One SHA-256 hex digest per line; `#` starts a comment."""
+    found = {line.split("#", 1)[0].strip().lower() for line in path.read_text(encoding="utf-8").splitlines()}
+    return frozenset(item for item in found if re.fullmatch(r"[0-9a-f]{64}", item))
+
+
+SURFACE_NAME_HASHES = load_name_hashes()
+
+
+def surface_name_in(text: str) -> bool:
+    """True when the text names a listed surface or product as a word or hyphenated word."""
+    lowered = text.lower()
+    tokens = set(NAME_WORD.findall(lowered)) | set(NAME_COMPOUND.findall(lowered))
+    return any(hashlib.sha256(token.encode()).hexdigest() in SURFACE_NAME_HASHES for token in tokens)
 
 
 def branded_text(value: Any) -> str | None:
     """Seed packs are not branded: surface and product names appear only in provenance_notes."""
     if isinstance(value, str):
-        return value if SURFACE_NAMES.search(value) else None
+        return value if surface_name_in(value) else None
     if isinstance(value, dict):
         for name, item in value.items():
             if name == "provenance_notes":
@@ -665,7 +686,7 @@ def check_readme(text: str, title: str, where: str) -> None:
     require(len(lines) <= MAX_README_LINES, f"{where}: README is longer than {MAX_README_LINES} lines")
     first = text.split("## What this pack lets workers do", 1)[1].strip()
     require(first.startswith(bp.PACK_PHRASE), f"{where}: the first sentence says {bp.PACK_PHRASE!r}")
-    require(not SURFACE_NAMES.search(text), f"{where}: README names a surface or product")
+    require(not surface_name_in(text), f"{where}: README names a surface or product")
 
 
 def check_receipt(root: Path, built: dict[str, dict[str, bytes]]) -> dict[str, Any]:
