@@ -1,0 +1,3341 @@
+{
+  "pack_id": "deep-research-report",
+  "title": "Deep research report",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for answering a research question with a cited report: a framed question, a search plan that looks for evidence against the answer, sources collected through permitted access and screened with recorded reasons, claims with exact quotes and locators, a synthesis with every sentence labeled, an adversarial review by a different worker, and a report that states its limits and what was not searched; for understanding a question, not for choosing what to build.",
+  "dependencies": [
+    "policy-and-law-watch"
+  ],
+  "boundaries": [
+    "Permitted access only: official APIs and downloads, robots.txt and terms respected, no paywall bypass, and Facebook or Instagram content only through Meta's official research tools.",
+    "Exact quotes and a citation for every claim; no personal data.",
+    "A different worker reviews, and a person decides what is delivered.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for answering a research question with a cited report that states its limits",
+      "value": {
+        "lets_workers": "Answer one research question with a cited report: frame the question and what would change the answer, plan the search with queries against the likely answer, collect sources through permitted access, screen them with recorded reasons, extract claims with exact quotes and locators, synthesize with every sentence labeled, have a different worker try to break it, and write a report with its evidence against, its limits and what was not searched. A person decides what is delivered.",
+        "not_for": "Choosing what to build or adopt. The prior art and alternatives pack surveys existing options for a build decision; this pack informs understanding.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "deep-research-report.frame-question"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.plan-search"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.collect-sources"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.screen-sources"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.extract-claims"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.synthesize"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.adversarial-review"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.write-report"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "deep-research-report.decide-delivery"
+            }
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.quote-exactly"
+          },
+          {
+            "$pin": "guardrail.search-on-the-record"
+          },
+          {
+            "$pin": "guardrail.seek-counter-evidence"
+          },
+          {
+            "$pin": "guardrail.label-every-sentence"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.cite-every-claim"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.no-scraping-against-terms"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.no-personal-data"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.person-decides"
+          }
+        ],
+        "worked_example": "Synthetic: whether community fridges reduce household food waste, from three stand-in sources: five claims with exact quotes, a contradiction kept, a passing adversarial review that proposes one more counter search, and a report with low confidence and its limits."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.quote-exactly"
+        ],
+        [
+          "requires_noun",
+          "guardrail.search-on-the-record"
+        ],
+        [
+          "requires_noun",
+          "guardrail.seek-counter-evidence"
+        ],
+        [
+          "requires_noun",
+          "guardrail.label-every-sentence"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.cite-every-claim"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.no-scraping-against-terms"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.no-personal-data"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.person-decides"
+        ],
+        [
+          "requires_noun",
+          "rules.permitted-access"
+        ],
+        [
+          "requires_noun",
+          "rules.screening"
+        ],
+        [
+          "requires_noun",
+          "rules.evidence-strength"
+        ],
+        [
+          "requires_noun",
+          "template.research-question"
+        ],
+        [
+          "requires_noun",
+          "template.search-plan"
+        ],
+        [
+          "requires_noun",
+          "template.source-log"
+        ],
+        [
+          "requires_noun",
+          "template.screening-log"
+        ],
+        [
+          "requires_noun",
+          "template.claim-extract"
+        ],
+        [
+          "requires_noun",
+          "template.synthesis"
+        ],
+        [
+          "requires_noun",
+          "template.adversarial-review"
+        ],
+        [
+          "requires_noun",
+          "template.report"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.quote-exactly",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: quote exactly, with a locator",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every claim carries an exact quote from its source, character for character, with a locator a reader can follow: the page, section or paragraph, and the words just before and after the quote. A quote that does not appear in the source as written is removed and extracted again, never repaired in place.",
+        "how_it_is_checked": "Every quote appears in its source's retrieved text with its prefix and suffix, exactly once."
+      }
+    },
+    {
+      "slug": "guardrail.search-on-the-record",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the search is on the record",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Record every database and site searched, every query with its date and result count, every source found and every screening decision with its reason. List what was not searched, and why.",
+        "how_it_is_checked": "Every planned query appears in the source log with its date and count, the screening flow adds up, and the report names what was not searched."
+      }
+    },
+    {
+      "slug": "guardrail.seek-counter-evidence",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: look for evidence against the answer",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Plan searches meant to find evidence against the likely answer, report that evidence next to the evidence for it, and keep contradictions visible instead of averaging them away.",
+        "how_it_is_checked": "The search plan has at least one counter query, and the report lists the evidence against its answer or says plainly that none was found."
+      }
+    },
+    {
+      "slug": "guardrail.label-every-sentence",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: label every sentence: source, synthesis or open",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Label every sentence of a synthesis or report: source when quoted claims state it directly, synthesis when it infers across claims, and open when it is unknown. Source and synthesis sentences cite their claims.",
+        "how_it_is_checked": "Every report sentence has a label, and every source or synthesis sentence cites at least one claim that exists."
+      }
+    },
+    {
+      "slug": "rules.permitted-access",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Permitted access to research sources",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "rules": [
+          "Use a source's official API or download when it offers one, and read its terms first.",
+          "arXiv's APIs: no more than one request every three seconds, on a single connection, across every machine the requester runs; link to abstract pages instead of serving e-prints.",
+          "Crossref's REST API: use filters and select only the fields needed instead of one request per DOI, cache results, and back off on HTTP 429.",
+          "Retractions: check every cited DOI against Crossref's retraction data, through the update-type:retraction filter or the Retraction Watch data it publishes, before relying on it.",
+          "Web pages: read robots.txt and the site's terms, and stop when either forbids automated reading.",
+          "Facebook and Instagram content only through Meta's official research tools, such as the Meta Content Library and API, under their access terms, and never by scraping.",
+          "Paywalled full text only through access the requester already holds; never bypass a paywall or share the text.",
+          "No logins and no personal data, unless the requester grants a login explicitly for a source it licenses."
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.no-scraping-against-terms"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.screening",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Screening sources, with a flow that adds up",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "rules": [
+          "Write the inclusion and exclusion criteria into the search plan before screening, and screen against them only.",
+          "Remove duplicates by DOI, then by normalized title and year, and count them.",
+          "Screen in two passes, title and summary, then full text, and give every exclusion one reason from the fixed list.",
+          "Exclude retracted works from the evidence and list them in the report.",
+          "The flow adds up: identified equals duplicates plus screened; screened equals excluded at title plus assessed; assessed equals excluded at full text plus included."
+        ],
+        "exclusion_reasons": [
+          "off_topic",
+          "wrong_setting",
+          "wrong_kind_of_source",
+          "outside_dates",
+          "not_accessible",
+          "retracted",
+          "insufficient_detail"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.evidence-strength",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Grading how strongly the evidence supports a claim",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "levels": {
+          "strong": "Several independent primary sources agree and none credibly contradicts them.",
+          "moderate": "One good primary source, or several secondary sources that agree.",
+          "limited": "One secondary source, or primary sources that disagree.",
+          "insufficient": "No source states it."
+        },
+        "rules": [
+          "Grade claims, not sources alone, and say why in one line.",
+          "Self-reported, non-randomized or unmeasured results cannot make a claim strong by themselves.",
+          "A preprint, a press release or a news report cannot make a claim strong by itself.",
+          "The grade is a reading aid for the person who decides, not a certification."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.research-question",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one research question, its scope and what would change the answer",
+      "value": {
+        "describes": "a research question: the question, why it matters, its type, scope and definitions, what evidence would change the answer, and what is out of scope",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "question",
+            "why",
+            "question_type",
+            "scope",
+            "definitions",
+            "would_change_answer",
+            "out_of_scope"
+          ],
+          "properties": {
+            "question": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 400
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "question_type": {
+              "type": "string",
+              "enum": [
+                "descriptive",
+                "causal",
+                "comparative",
+                "trend"
+              ]
+            },
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "time",
+                "place",
+                "population"
+              ],
+              "properties": {
+                "time": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "place": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "population": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            },
+            "definitions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "term",
+                  "meaning"
+                ],
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "meaning": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "would_change_answer": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "out_of_scope": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "A question about what to build or adopt goes to the prior art and alternatives pack instead."
+        ]
+      }
+    },
+    {
+      "slug": "template.search-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: where and how to search, including for evidence against the answer",
+      "value": {
+        "describes": "a search plan: each source with its access and terms, each query with its purpose, the date range, the inclusion and exclusion criteria, the stop rules, and what will not be searched and why",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sources",
+            "queries",
+            "date_range",
+            "inclusion",
+            "exclusion",
+            "stop_rules",
+            "not_searched"
+          ],
+          "properties": {
+            "sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "access",
+                  "terms_url",
+                  "rate_rule"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "access": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "terms_url": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300,
+                    "pattern": "^https://"
+                  },
+                  "rate_rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "queries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "purpose"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "support",
+                      "counter",
+                      "definition",
+                      "background"
+                    ]
+                  }
+                }
+              }
+            },
+            "date_range": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                }
+              }
+            },
+            "inclusion": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "exclusion": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "stop_rules": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "max_sources",
+                "saturation_rounds"
+              ],
+              "properties": {
+                "max_sources": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2000
+                },
+                "saturation_rounds": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                }
+              }
+            },
+            "not_searched": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "why"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "At least one query has purpose counter.",
+          "Criteria are written before screening starts."
+        ]
+      }
+    },
+    {
+      "slug": "template.source-log",
+      "category": "noun.public_source",
+      "role": "template",
+      "title": "Template: every search run and every source found, with digests",
+      "value": {
+        "describes": "a source log: every query run with its source, date and result count, and every source found with its publisher, date, address, access, retrieval time, text digest, retraction check and license note",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "searched",
+            "sources"
+          ],
+          "properties": {
+            "searched": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "query_id",
+                  "source",
+                  "run_on",
+                  "results"
+                ],
+                "properties": {
+                  "query_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "run_on": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "results": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "title",
+                  "publisher",
+                  "published",
+                  "url",
+                  "access",
+                  "retrieved_on",
+                  "text_sha256",
+                  "retracted",
+                  "license_note"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "publisher": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "published": {
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 10
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400,
+                    "pattern": "^https://"
+                  },
+                  "access": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "retrieved_on": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "text_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "retracted": {
+                    "type": "boolean"
+                  },
+                  "license_note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "doi": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "text_sha256 is the digest of the retrieved text the quotes are checked against."
+        ]
+      }
+    },
+    {
+      "slug": "template.screening-log",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: every screening decision with its reason, and the flow counts",
+      "value": {
+        "describes": "a screening log: each source's decision at each stage with its reason, and flow counts that add up",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decisions",
+            "flow"
+          ],
+          "properties": {
+            "decisions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 4000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_id",
+                  "stage",
+                  "decision"
+                ],
+                "properties": {
+                  "source_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "stage": {
+                    "type": "string",
+                    "enum": [
+                      "title_summary",
+                      "full_text"
+                    ]
+                  },
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "include",
+                      "exclude"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "off_topic",
+                      "wrong_setting",
+                      "wrong_kind_of_source",
+                      "outside_dates",
+                      "not_accessible",
+                      "retracted",
+                      "insufficient_detail"
+                    ]
+                  }
+                }
+              }
+            },
+            "flow": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "identified",
+                "duplicates",
+                "screened",
+                "excluded_title",
+                "assessed",
+                "excluded_full_text",
+                "included"
+              ],
+              "properties": {
+                "identified": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "duplicates": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "screened": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "excluded_title": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "assessed": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "excluded_full_text": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "included": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every exclusion has a reason.",
+          "The flow adds up as the screening rules say."
+        ]
+      }
+    },
+    {
+      "slug": "template.claim-extract",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: claims with exact quotes, locators, direction and strength",
+      "value": {
+        "describes": "a claim extract: each claim's source, a plain statement, the exact quote with the words around it and a locator, its type, whether it supports or contradicts the likely answer, and a graded strength",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claims"
+          ],
+          "properties": {
+            "claims": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "source_id",
+                  "statement",
+                  "quote",
+                  "locator",
+                  "claim_type",
+                  "direction",
+                  "strength",
+                  "strength_why"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "source_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "quote": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "exact",
+                      "prefix",
+                      "suffix"
+                    ],
+                    "properties": {
+                      "exact": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 600
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 120
+                      },
+                      "suffix": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 120
+                      }
+                    }
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "claim_type": {
+                    "type": "string",
+                    "enum": [
+                      "finding",
+                      "number",
+                      "definition",
+                      "method",
+                      "opinion"
+                    ]
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "supports",
+                      "contradicts",
+                      "neutral"
+                    ]
+                  },
+                  "strength": {
+                    "type": "string",
+                    "enum": [
+                      "strong",
+                      "moderate",
+                      "limited",
+                      "insufficient"
+                    ]
+                  },
+                  "strength_why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Quotes are exact; statements are plain paraphrases.",
+          "Only included sources yield claims."
+        ]
+      }
+    },
+    {
+      "slug": "template.synthesis",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the answer so far, every sentence labeled, contradictions kept",
+      "value": {
+        "describes": "a synthesis: the answer so far and its confidence, every sentence labeled source, synthesis or open with the claims it rests on, and the agreements, contradictions and gaps",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "confidence",
+            "sentences",
+            "agreements",
+            "contradictions",
+            "gaps"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "high",
+                "moderate",
+                "low",
+                "very_low"
+              ]
+            },
+            "sentences": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "label",
+                  "claims"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "label": {
+                    "type": "string",
+                    "enum": [
+                      "source",
+                      "synthesis",
+                      "open"
+                    ]
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "pattern": "^[a-z][a-z0-9-]*$"
+                    }
+                  }
+                }
+              }
+            },
+            "agreements": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "contradictions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claims",
+                  "note"
+                ],
+                "properties": {
+                  "claims": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "pattern": "^[a-z][a-z0-9-]*$"
+                    }
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "gaps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Source and synthesis sentences cite claims.",
+          "Contradictions are listed, not averaged away."
+        ]
+      }
+    },
+    {
+      "slug": "template.adversarial-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a different worker's attempt to break the synthesis",
+      "value": {
+        "describes": "an adversarial review by a worker other than the author: quotes rechecked against the sources, unsupported or overreaching sentences, counter-evidence the search missed, and whether the synthesis passed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "quotes_checked",
+            "quotes_not_found",
+            "unsupported_sentences",
+            "overreach",
+            "missing_counter_evidence",
+            "passed"
+          ],
+          "properties": {
+            "quotes_checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "quotes_not_found": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20,
+                "pattern": "^[a-z][a-z0-9-]*$"
+              }
+            },
+            "unsupported_sentences": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 600
+              }
+            },
+            "overreach": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sentence",
+                  "why"
+                ],
+                "properties": {
+                  "sentence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "missing_counter_evidence": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "query",
+                  "why"
+                ],
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "passed is true only when every quote is found and no sentence is unsupported or overreaching.",
+          "Missed counter-evidence searches are proposed as follow-up verbs; they fail the review only when the plan had no counter query."
+        ]
+      }
+    },
+    {
+      "slug": "template.report",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the cited report, with the evidence against it and its limits",
+      "value": {
+        "describes": "a research report: the question, a short answer with its confidence, labeled findings with their claims, the evidence against the answer, the method and flow, the limits, what was not searched, and the sources",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "question",
+            "short_answer",
+            "confidence",
+            "findings",
+            "evidence_against",
+            "method",
+            "limits",
+            "not_searched",
+            "sources"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "question": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 400
+            },
+            "short_answer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "high",
+                "moderate",
+                "low",
+                "very_low"
+              ]
+            },
+            "findings": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "label",
+                  "claims"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "label": {
+                    "type": "string",
+                    "enum": [
+                      "source",
+                      "synthesis",
+                      "open"
+                    ]
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "pattern": "^[a-z][a-z0-9-]*$"
+                    }
+                  }
+                }
+              }
+            },
+            "evidence_against": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "method": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "searched_on",
+                "sources_searched",
+                "flow"
+              ],
+              "properties": {
+                "searched_on": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                },
+                "sources_searched": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 30,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                },
+                "flow": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "identified",
+                    "included"
+                  ],
+                  "properties": {
+                    "identified": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "included": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "not_searched": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "why"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "citation",
+                  "url"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "citation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400,
+                    "pattern": "^https://"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every finding is labeled; source and synthesis findings cite claims.",
+          "evidence_against says None found, with the counter queries, when none was found."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before a report is delivered",
+      "category_reason": "A short checklist a person runs is part of the report's guardrails.",
+      "value": {
+        "items": [
+          "The question is about understanding something, not about what to build or adopt.",
+          "Every quote matches its source, and a different worker checked them.",
+          "The evidence against the answer sits next to the evidence for it.",
+          "Every sentence is labeled, and synthesis sentences do not pose as facts.",
+          "The limits and what was not searched are plain enough for a reader to weigh.",
+          "No personal data, and every source was read as its terms permit."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for deep research reports",
+      "value": {
+        "sources": [
+          {
+            "title": "PRISMA 2020 statement",
+            "url": "https://www.prisma-statement.org/prisma-2020",
+            "used_for": "Reporting a search and screening flow",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Cochrane Handbook for Systematic Reviews of Interventions (current version)",
+            "url": "https://training.cochrane.org/handbook/current",
+            "used_for": "Searching, screening and judging certainty of evidence",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C: Web Annotation Data Model, Text Quote Selector",
+            "url": "https://www.w3.org/TR/annotation-model/",
+            "used_for": "Exact quotes with prefix and suffix",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "RFC 9309: Robots Exclusion Protocol",
+            "url": "https://www.rfc-editor.org/rfc/rfc9309",
+            "used_for": "Reading robots.txt before automated reading",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "arXiv: Terms of Use for arXiv APIs",
+            "url": "https://info.arxiv.org/help/api/tou.html",
+            "used_for": "One request every three seconds on one connection; linking instead of serving e-prints",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Crossref: Tips for using the Crossref REST API (updated 2025-10-24)",
+            "url": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/tips-for-using-the-crossref-rest-api/",
+            "used_for": "Filters, field selection, caching and backing off on 429",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Crossref: Retraction Watch data",
+            "url": "https://www.crossref.org/documentation/retrieve-metadata/retraction-watch/",
+            "used_for": "Checking cited DOIs for retractions",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Meta Transparency Center: Meta Content Library and API",
+            "url": "https://transparency.meta.com/researchtools/meta-content-library",
+            "used_for": "The official research route to Facebook and Instagram content",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for deep research reports",
+      "value": {
+        "cases": [
+          {
+            "id": "DRR-BUILD-QUESTION",
+            "scenario": "The question is really a build or adopt decision",
+            "sample_input": "SYNTHETIC: Which open-source tool should we adopt to remove names from our case notes?",
+            "expected_outcome": "no_change",
+            "expected_indicators": [
+              "pointer_to_prior_art_pack",
+              "no_research_report"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-PAYWALL",
+            "scenario": "The key study's full text is behind a paywall",
+            "sample_input": "SYNTHETIC: The measured study's full text needs a subscription the requester does not have.",
+            "expected_outcome": "report_written",
+            "expected_indicators": [
+              "claims_from_the_abstract_only",
+              "limit_stated",
+              "no_paywall_bypass"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-ROBOTS",
+            "scenario": "A portal's robots.txt disallows the report folder",
+            "sample_input": "SYNTHETIC: The city portal's robots.txt disallows /reports/, and the portal offers an open data API.",
+            "expected_outcome": "sources_collected",
+            "expected_indicators": [
+              "robots_respected",
+              "official_api_used",
+              "recorded_in_source_log"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-RETRACTED",
+            "scenario": "An included study was retracted",
+            "sample_input": "SYNTHETIC: The retraction data marks one included study as retracted in 2025.",
+            "expected_outcome": "sources_screened",
+            "expected_indicators": [
+              "excluded_as_retracted",
+              "listed_in_report"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-QUOTE-MISMATCH",
+            "scenario": "A quote does not match its source",
+            "sample_input": "SYNTHETIC: A claim quotes 11% less waste, but the source says 11 percent less food.",
+            "expected_outcome": "claims_extracted",
+            "expected_indicators": [
+              "quote_removed_and_extracted_again",
+              "never_repaired_in_place"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-NO-COUNTER",
+            "scenario": "The search plan has only supporting queries",
+            "sample_input": "SYNTHETIC: All six planned queries ask how fridges reduce waste.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "counter_queries_required",
+              "plan_revised"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-SOCIAL-POSTS",
+            "scenario": "The question needs public Facebook posts",
+            "sample_input": "SYNTHETIC: The requester wants public Facebook posts about a fridge network.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "official_research_tool_only",
+              "no_scraping"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "DRR-OVERREACH",
+            "scenario": "A synthesis sentence claims more than its claims support",
+            "sample_input": "SYNTHETIC: The synthesis says fridges cut household waste by 11 percent, citing only the self-reported pilot.",
+            "expected_outcome": "review_done",
+            "expected_indicators": [
+              "overreach_listed",
+              "review_failed",
+              "sentence_narrowed_or_relabeled"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "DRR-PERSONAL-DATA",
+            "scenario": "A source lists volunteers' names and phone numbers",
+            "sample_input": "SYNTHETIC: A fridge network's flyer lists three volunteers' names and mobile numbers.",
+            "expected_outcome": "claims_extracted",
+            "expected_indicators": [
+              "no_personal_data_extracted",
+              "claim_kept_without_names"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.sources",
+      "category": "noun.public_source",
+      "role": "example",
+      "title": "Worked example: three synthetic stand-in sources on community fridges",
+      "category_reason": "Synthetic stand-in sources whose texts the worked example quotes exactly.",
+      "value": {
+        "notice": "SYNTHETIC stand-ins made for offline worked examples. No real city, journal, newspaper or study.",
+        "sources": [
+          {
+            "id": "s1",
+            "kind_of_source": "report by an organization",
+            "text": "SYNTHETIC stand-in. Community Fridge Pilot Evaluation, City of Example Sustainability Office, 2025. Section 3, paragraph 2: Households within 400 meters of a pilot fridge reported discarding 11 percent less food over six months than matched households farther away. Section 4, paragraph 1: The comparison relies on self-reported food diaries and was not randomized.",
+            "text_sha256": "75ad04d0c9f00ecaf6642c33612f019c2ba47e214dada1ec0d18de918ca470e0"
+          },
+          {
+            "id": "s2",
+            "kind_of_source": "peer-reviewed study",
+            "text": "SYNTHETIC stand-in. Example Journal of Food Systems, 2024, Results, paragraph 3: Across 12 neighborhoods, measured household food waste did not change significantly after fridges opened (difference -2.1 percent, 95 percent interval -6.0 to 1.8). Discussion, paragraph 2: Most donated items came from grocery stores rather than households.",
+            "text_sha256": "de744c73a87d94801ea7632861910baf1c1c7540f505f8c35a39e887ae36ac63"
+          },
+          {
+            "id": "s3",
+            "kind_of_source": "news report",
+            "text": "SYNTHETIC stand-in. Example Daily Post, 2026-03-14, paragraph 5: Volunteers say the fridges are emptied within hours on most days.",
+            "text_sha256": "ee0933c00d57fc48b31419057e6ce75bffbb357ba94cc7cf377f08d35c91f00c"
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.research-question",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: do community fridges reduce household food waste?",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.research-question"
+        },
+        "instance": {
+          "question": "In mid-sized cities, do community fridges reduce household food waste?",
+          "why": "A city council is deciding whether to fund more fridges, partly to cut household waste.",
+          "question_type": "causal",
+          "scope": {
+            "time": "reports and studies from 2020 to 2026",
+            "place": "cities of 100,000 to 1,000,000 people",
+            "population": "households near a community fridge"
+          },
+          "definitions": [
+            {
+              "term": "community fridge",
+              "meaning": "a public refrigerator where anyone may leave or take food at no cost"
+            },
+            {
+              "term": "household food waste",
+              "meaning": "edible food a household throws away, measured or self-reported"
+            }
+          ],
+          "would_change_answer": [
+            "A study that weighs household waste before and after a fridge opens, with a comparison area.",
+            "Several independent evaluations that agree."
+          ],
+          "out_of_scope": [
+            "Food safety rules for fridges",
+            "Which fridge model to buy"
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.search-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: three sources and a counter query",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.search-plan"
+        },
+        "instance": {
+          "sources": [
+            {
+              "name": "stand-in city report archive (synthetic)",
+              "access": "official download",
+              "terms_url": "https://example.invalid/terms",
+              "rate_rule": "one request every three seconds"
+            },
+            {
+              "name": "stand-in journal index (synthetic)",
+              "access": "official API",
+              "terms_url": "https://example.invalid/journal/terms",
+              "rate_rule": "filters, cached results, back off on 429"
+            },
+            {
+              "name": "stand-in local news archive (synthetic)",
+              "access": "official site search",
+              "terms_url": "https://example.invalid/news/terms",
+              "rate_rule": "one request every three seconds"
+            }
+          ],
+          "queries": [
+            {
+              "id": "q1",
+              "text": "community fridge household food waste reduction",
+              "purpose": "support"
+            },
+            {
+              "id": "q2",
+              "text": "community fridge household waste measured no effect",
+              "purpose": "counter"
+            },
+            {
+              "id": "q3",
+              "text": "community fridge public refrigerator definition",
+              "purpose": "definition"
+            }
+          ],
+          "date_range": {
+            "from": "2020-01-01",
+            "to": "2026-10-30"
+          },
+          "inclusion": [
+            "Reports or studies of household food waste near community fridges"
+          ],
+          "exclusion": [
+            "Studies of commercial food waste only",
+            "Retracted works"
+          ],
+          "stop_rules": {
+            "max_sources": 50,
+            "saturation_rounds": 2
+          },
+          "not_searched": [
+            {
+              "source": "waste haulers' bin audit records",
+              "why": "Not public; a person could ask a city for them."
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.source-log",
+      "category": "noun.public_source",
+      "role": "example",
+      "title": "Worked example: five sources found, one retracted",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read. s4 and s5 have no text here; their digests are of the text 'synthetic stand-in: <id>'.",
+        "conforms_to": {
+          "$pin": "template.source-log"
+        },
+        "instance": {
+          "searched": [
+            {
+              "query_id": "q1",
+              "source": "stand-in journal index (synthetic)",
+              "run_on": "2026-10-30",
+              "results": 3
+            },
+            {
+              "query_id": "q2",
+              "source": "stand-in journal index (synthetic)",
+              "run_on": "2026-10-30",
+              "results": 2
+            },
+            {
+              "query_id": "q3",
+              "source": "stand-in city report archive (synthetic)",
+              "run_on": "2026-10-30",
+              "results": 1
+            }
+          ],
+          "sources": [
+            {
+              "id": "s1",
+              "title": "Community Fridge Pilot Evaluation (synthetic)",
+              "publisher": "City of Example Sustainability Office (synthetic)",
+              "published": "2025",
+              "url": "https://example.invalid/fridge-pilot",
+              "access": "official download",
+              "retrieved_on": "2026-10-30",
+              "text_sha256": "75ad04d0c9f00ecaf6642c33612f019c2ba47e214dada1ec0d18de918ca470e0",
+              "retracted": false,
+              "license_note": "A public report, quoted for research."
+            },
+            {
+              "id": "s2",
+              "title": "Community fridges and measured household waste (synthetic)",
+              "publisher": "Example Journal of Food Systems (synthetic)",
+              "published": "2024",
+              "url": "https://example.invalid/journal/fridges",
+              "doi": "10.5555/synthetic-fridges-2024",
+              "access": "official API",
+              "retrieved_on": "2026-10-30",
+              "text_sha256": "de744c73a87d94801ea7632861910baf1c1c7540f505f8c35a39e887ae36ac63",
+              "retracted": false,
+              "license_note": "Open access under its stated license; quoted for research."
+            },
+            {
+              "id": "s3",
+              "title": "Volunteers keep the fridges full (synthetic)",
+              "publisher": "Example Daily Post (synthetic)",
+              "published": "2026",
+              "url": "https://example.invalid/daily-post/fridges",
+              "access": "official site search",
+              "retrieved_on": "2026-10-30",
+              "text_sha256": "ee0933c00d57fc48b31419057e6ce75bffbb357ba94cc7cf377f08d35c91f00c",
+              "retracted": false,
+              "license_note": "A news report, quoted briefly."
+            },
+            {
+              "id": "s4",
+              "title": "Commercial food waste in grocery chains (synthetic)",
+              "publisher": "Example Retail Review (synthetic)",
+              "published": "2023",
+              "url": "https://example.invalid/retail-waste",
+              "access": "official API",
+              "retrieved_on": "2026-10-30",
+              "text_sha256": "3a1c522e760f60edeccc55f813d2486ed0b161340977b0dbf60e23d33af69375",
+              "retracted": false,
+              "license_note": "Summary only."
+            },
+            {
+              "id": "s5",
+              "title": "Fridge sharing and household waste (synthetic, retracted)",
+              "publisher": "Example Letters in Sustainability (synthetic)",
+              "published": "2022",
+              "url": "https://example.invalid/letters/fridge-sharing",
+              "doi": "10.5555/synthetic-retracted-2022",
+              "access": "official API",
+              "retrieved_on": "2026-10-30",
+              "text_sha256": "7d14a2d151460346535da47f1805c143ecdd28a1101f6f1ebccdd18c51dece42",
+              "retracted": true,
+              "license_note": "Retracted; listed, not used as evidence."
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.screening-log",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a flow that adds up, with a retracted source excluded",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.screening-log"
+        },
+        "instance": {
+          "decisions": [
+            {
+              "source_id": "s1",
+              "stage": "full_text",
+              "decision": "include"
+            },
+            {
+              "source_id": "s2",
+              "stage": "full_text",
+              "decision": "include"
+            },
+            {
+              "source_id": "s3",
+              "stage": "full_text",
+              "decision": "include"
+            },
+            {
+              "source_id": "s4",
+              "stage": "title_summary",
+              "decision": "exclude",
+              "reason": "off_topic"
+            },
+            {
+              "source_id": "s5",
+              "stage": "full_text",
+              "decision": "exclude",
+              "reason": "retracted"
+            }
+          ],
+          "flow": {
+            "identified": 6,
+            "duplicates": 1,
+            "screened": 5,
+            "excluded_title": 1,
+            "assessed": 4,
+            "excluded_full_text": 1,
+            "included": 3
+          }
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.claim-extract",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: five claims with exact quotes, one contradicting",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.claim-extract"
+        },
+        "instance": {
+          "claims": [
+            {
+              "id": "c1",
+              "source_id": "s1",
+              "statement": "Households near a pilot fridge reported throwing away 11 percent less food over six months.",
+              "quote": {
+                "exact": "reported discarding 11 percent less food over six months",
+                "prefix": " 400 meters of a pilot fridge ",
+                "suffix": " than matched households farth"
+              },
+              "locator": "s1, section 3, paragraph 2",
+              "claim_type": "number",
+              "direction": "supports",
+              "strength": "limited",
+              "strength_why": "One self-reported, non-randomized comparison."
+            },
+            {
+              "id": "c2",
+              "source_id": "s1",
+              "statement": "The pilot's comparison used self-reported diaries and was not randomized.",
+              "quote": {
+                "exact": "relies on self-reported food diaries and was not randomized",
+                "prefix": ", paragraph 1: The comparison ",
+                "suffix": "."
+              },
+              "locator": "s1, section 4, paragraph 1",
+              "claim_type": "method",
+              "direction": "neutral",
+              "strength": "moderate",
+              "strength_why": "The evaluation states its own method."
+            },
+            {
+              "id": "c3",
+              "source_id": "s2",
+              "statement": "Measured household food waste did not change significantly in 12 neighborhoods after fridges opened.",
+              "quote": {
+                "exact": "measured household food waste did not change significantly after fridges opened",
+                "prefix": "h 3: Across 12 neighborhoods, ",
+                "suffix": " (difference -2.1 percent, 95 "
+              },
+              "locator": "s2, Results, paragraph 3",
+              "claim_type": "finding",
+              "direction": "contradicts",
+              "strength": "moderate",
+              "strength_why": "One peer-reviewed study that measured waste."
+            },
+            {
+              "id": "c4",
+              "source_id": "s2",
+              "statement": "Most donated items came from grocery stores, not households.",
+              "quote": {
+                "exact": "Most donated items came from grocery stores rather than households.",
+                "prefix": ".8). Discussion, paragraph 2: ",
+                "suffix": ""
+              },
+              "locator": "s2, Discussion, paragraph 2",
+              "claim_type": "finding",
+              "direction": "neutral",
+              "strength": "limited",
+              "strength_why": "Reported in the discussion of one study."
+            },
+            {
+              "id": "c5",
+              "source_id": "s3",
+              "statement": "Volunteers say the fridges are emptied within hours on most days.",
+              "quote": {
+                "exact": "the fridges are emptied within hours on most days",
+                "prefix": ", paragraph 5: Volunteers say ",
+                "suffix": "."
+              },
+              "locator": "s3, paragraph 5",
+              "claim_type": "opinion",
+              "direction": "neutral",
+              "strength": "limited",
+              "strength_why": "Volunteers' accounts in one news report."
+            }
+          ]
+        },
+        "sources_noun": {
+          "$pin": "example.sources"
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.synthesis",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: every sentence labeled, the contradiction kept",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.synthesis"
+        },
+        "instance": {
+          "answer": "The evidence does not show that community fridges reduce household food waste: a self-reported pilot found 11 percent less, but a study that measured waste in 12 neighborhoods found no significant change.",
+          "confidence": "low",
+          "sentences": [
+            {
+              "text": "A city pilot found households near a fridge reported discarding 11 percent less food over six months.",
+              "label": "source",
+              "claims": [
+                "c1"
+              ]
+            },
+            {
+              "text": "That comparison relied on self-reported diaries and was not randomized.",
+              "label": "source",
+              "claims": [
+                "c2"
+              ]
+            },
+            {
+              "text": "A study that measured waste across 12 neighborhoods found no significant change.",
+              "label": "source",
+              "claims": [
+                "c3"
+              ]
+            },
+            {
+              "text": "Because most donations came from grocery stores, fridges may move store surplus more than household waste.",
+              "label": "synthesis",
+              "claims": [
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "text": "Whether fridges change what households throw away, measured by weight, remains unknown.",
+              "label": "open",
+              "claims": []
+            }
+          ],
+          "agreements": [
+            "Both sources describe fridges that are used heavily."
+          ],
+          "contradictions": [
+            {
+              "claims": [
+                "c1",
+                "c3"
+              ],
+              "note": "Self-reported reduction against no measured change; the methods differ."
+            }
+          ],
+          "gaps": [
+            "No source measured household waste by weight over more than a year."
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.adversarial-review",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a passing review that proposes one more counter search",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.adversarial-review"
+        },
+        "instance": {
+          "quotes_checked": 5,
+          "quotes_not_found": [],
+          "unsupported_sentences": [],
+          "overreach": [],
+          "missing_counter_evidence": [
+            {
+              "query": "household food waste measured by bin audits near community fridges",
+              "why": "Would test the self-reported result directly."
+            }
+          ],
+          "passed": true
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.report",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the report, with the evidence against and its limits",
+      "value": {
+        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "conforms_to": {
+          "$pin": "template.report"
+        },
+        "instance": {
+          "title": "Community fridges and household food waste (synthetic example)",
+          "question": "In mid-sized cities, do community fridges reduce household food waste?",
+          "short_answer": "The evidence does not show that community fridges reduce household food waste: a self-reported pilot found 11 percent less, but a study that measured waste in 12 neighborhoods found no significant change.",
+          "confidence": "low",
+          "findings": [
+            {
+              "text": "A city pilot found households near a fridge reported discarding 11 percent less food over six months.",
+              "label": "source",
+              "claims": [
+                "c1"
+              ]
+            },
+            {
+              "text": "That comparison relied on self-reported diaries and was not randomized.",
+              "label": "source",
+              "claims": [
+                "c2"
+              ]
+            },
+            {
+              "text": "A study that measured waste across 12 neighborhoods found no significant change.",
+              "label": "source",
+              "claims": [
+                "c3"
+              ]
+            },
+            {
+              "text": "Because most donations came from grocery stores, fridges may move store surplus more than household waste.",
+              "label": "synthesis",
+              "claims": [
+                "c3",
+                "c4"
+              ]
+            },
+            {
+              "text": "Whether fridges change what households throw away, measured by weight, remains unknown.",
+              "label": "open",
+              "claims": []
+            }
+          ],
+          "evidence_against": [
+            "A study that measured waste across 12 neighborhoods found no significant change (c3)."
+          ],
+          "method": {
+            "searched_on": "2026-10-30",
+            "sources_searched": [
+              "synthetic stand-in sources only"
+            ],
+            "flow": {
+              "identified": 6,
+              "included": 3
+            }
+          },
+          "limits": [
+            "Three synthetic stand-in sources; no real study was read.",
+            "The supporting result is self-reported and not randomized.",
+            "One retracted study was excluded from the evidence (s5)."
+          ],
+          "not_searched": [
+            {
+              "source": "waste haulers' bin audit records",
+              "why": "Not public; a person could ask a city for them."
+            }
+          ],
+          "sources": [
+            {
+              "id": "s1",
+              "citation": "Community Fridge Pilot Evaluation, City of Example (synthetic), 2025",
+              "url": "https://example.invalid/fridge-pilot"
+            },
+            {
+              "id": "s2",
+              "citation": "Example Journal of Food Systems (synthetic), 2024",
+              "url": "https://example.invalid/journal/fridges"
+            },
+            {
+              "id": "s3",
+              "citation": "Example Daily Post (synthetic), 2026-03-14",
+              "url": "https://example.invalid/daily-post/fridges"
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "report-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Report checks, with good and bad reports the validator recomputes",
+      "category_reason": "A golden fixture: fixed reports and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every report passes before a person decides on it, each shown failing on a bad report for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "short_answer",
+            "source_sentences",
+            "synthesis_sentences",
+            "open_sentences",
+            "evidence_against",
+            "limits",
+            "not_searched",
+            "searched_on"
+          ],
+          "properties": {
+            "short_answer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "source_sentences": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "claims"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "pattern": "^[a-z][a-z0-9-]*$"
+                    }
+                  }
+                }
+              }
+            },
+            "synthesis_sentences": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "claims"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20,
+                      "pattern": "^[a-z][a-z0-9-]*$"
+                    }
+                  }
+                }
+              }
+            },
+            "open_sentences": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 600
+              }
+            },
+            "evidence_against": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "not_searched": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "searched_on": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 10
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "source-sentences-cited",
+            "rule": {
+              "rule": "each_has",
+              "path": "source_sentences",
+              "fields": [
+                "text",
+                "claims"
+              ]
+            },
+            "why": "A sentence labeled source cites the claims that state it."
+          },
+          {
+            "id": "synthesis-sentences-cited",
+            "rule": {
+              "rule": "each_has",
+              "path": "synthesis_sentences",
+              "fields": [
+                "text",
+                "claims"
+              ]
+            },
+            "why": "A sentence labeled synthesis cites the claims it infers from."
+          },
+          {
+            "id": "evidence-against-reported",
+            "rule": {
+              "rule": "present",
+              "path": "evidence_against"
+            },
+            "why": "The evidence against the answer is reported, or None found is said plainly."
+          },
+          {
+            "id": "limits-stated",
+            "rule": {
+              "rule": "min_items",
+              "path": "limits",
+              "min": 1
+            },
+            "why": "Every report states its limits."
+          },
+          {
+            "id": "not-searched-listed",
+            "rule": {
+              "rule": "min_items",
+              "path": "not_searched",
+              "min": 1
+            },
+            "why": "What was not searched is on the record."
+          },
+          {
+            "id": "search-dated",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "searched_on",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "why": "A reader knows how current the search is."
+          },
+          {
+            "id": "no-overclaiming",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "short_answer",
+              "pattern": "(?i)\\b(proves?|proven|definitely|certainly|beyond doubt|conclusively)\\b"
+            },
+            "why": "The short answer claims no more than the evidence allows."
+          },
+          {
+            "id": "no-email-addresses",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\\.[A-Za-z0-9.-]+"
+            },
+            "why": "No personal contact details."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-balanced",
+            "label": "known_good",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-uncited-source-sentence",
+            "label": "known_bad",
+            "fails": "source-sentences-cited",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": []
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-uncited-synthesis",
+            "label": "known_bad",
+            "fails": "synthesis-sentences-cited",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges move store surplus.",
+                  "claims": []
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-one-sided",
+            "label": "known_bad",
+            "fails": "evidence-against-reported",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-no-limits",
+            "label": "known_bad",
+            "fails": "limits-stated",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-search-hidden",
+            "label": "known_bad",
+            "fails": "not-searched-listed",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-undated",
+            "label": "known_bad",
+            "fails": "search-dated",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": ""
+            }
+          },
+          {
+            "id": "bad-overclaim",
+            "label": "known_bad",
+            "fails": "no-overclaiming",
+            "finding": {
+              "short_answer": "The pilot proves fridges cut household food waste.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Effects measured by weight remain unknown."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          },
+          {
+            "id": "bad-personal-data",
+            "label": "known_bad",
+            "fails": "no-email-addresses",
+            "finding": {
+              "short_answer": "The evidence does not show a reduction; one self-reported pilot found one, one measured study did not.",
+              "source_sentences": [
+                {
+                  "text": "A pilot reported 11 percent less food discarded.",
+                  "claims": [
+                    "c1"
+                  ]
+                }
+              ],
+              "synthesis_sentences": [
+                {
+                  "text": "Fridges may move store surplus more than household waste.",
+                  "claims": [
+                    "c3",
+                    "c4"
+                  ]
+                }
+              ],
+              "open_sentences": [
+                "Ask the coordinator at fridge.volunteer@example.org for diaries."
+              ],
+              "evidence_against": [
+                "A measured study found no significant change (c3)."
+              ],
+              "limits": [
+                "Three sources."
+              ],
+              "not_searched": [
+                "waste haulers' bin audits: not public"
+              ],
+              "searched_on": "2026-10-30"
+            }
+          }
+        ],
+        "expected": {
+          "good-balanced": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-uncited-source-sentence": {
+            "verdict": "fail",
+            "failed_checks": [
+              "source-sentences-cited"
+            ]
+          },
+          "bad-uncited-synthesis": {
+            "verdict": "fail",
+            "failed_checks": [
+              "synthesis-sentences-cited"
+            ]
+          },
+          "bad-one-sided": {
+            "verdict": "fail",
+            "failed_checks": [
+              "evidence-against-reported"
+            ]
+          },
+          "bad-no-limits": {
+            "verdict": "fail",
+            "failed_checks": [
+              "limits-stated"
+            ]
+          },
+          "bad-search-hidden": {
+            "verdict": "fail",
+            "failed_checks": [
+              "not-searched-listed"
+            ]
+          },
+          "bad-undated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "search-dated"
+            ]
+          },
+          "bad-overclaim": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-overclaiming"
+            ]
+          },
+          "bad-personal-data": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-email-addresses"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.label-every-sentence"
+        ],
+        [
+          "requires_noun",
+          "guardrail.seek-counter-evidence"
+        ]
+      ],
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "frame-question",
+      "kind": "verb.problemize",
+      "title": "Frame the research question",
+      "claimant": "agent",
+      "summary": "Turn a request into one research question with its type, scope, definitions and the evidence that would change the answer, and route a build or adopt decision to the prior art and alternatives pack.",
+      "outcome": "A research question, or no_change with a pointer when it is a build decision.",
+      "ready_outcome": "question_framed",
+      "pinned": [
+        "guardrail.search-on-the-record",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the requester's question in their own words."
+        }
+      ],
+      "produces": [
+        {
+          "name": "research_question",
+          "template": "template.research-question"
+        }
+      ],
+      "steps": [
+        "Write one question a source could answer, with its scope and definitions.",
+        "List what evidence would change the answer.",
+        "End no_change when the request is a choice of what to build or adopt, and propose the prior art and alternatives pack's survey-existing verb."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.research-question's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "answer-can-change",
+          "check": "would_change_answer names at least one finding.",
+          "method": "deterministic"
+        },
+        {
+          "id": "one-question",
+          "check": "The question asks one thing.",
+          "method": "judgment"
+        }
+      ]
+    },
+    {
+      "slug": "plan-search",
+      "kind": "verb.expand_seed",
+      "title": "Plan the search, including against the answer",
+      "claimant": "agent",
+      "summary": "Plan where and how to search: each source with its access, terms and rate, each query with its purpose, the date range, the inclusion and exclusion criteria, the stop rules, and what will not be searched.",
+      "outcome": "A search plan with at least one counter query.",
+      "ready_outcome": "search_planned",
+      "pinned": [
+        "guardrail.seek-counter-evidence",
+        "guardrail.search-on-the-record",
+        "rules.permitted-access",
+        "rules.screening"
+      ],
+      "slots": [
+        {
+          "name": "research_question",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research question."
+        }
+      ],
+      "produces": [
+        {
+          "name": "search_plan",
+          "template": "template.search-plan"
+        }
+      ],
+      "steps": [
+        "Name each source with its official access, terms and rate rule.",
+        "Write queries for the answer, against it, for definitions and for background.",
+        "Fix the inclusion and exclusion criteria and the stop rules before any search runs.",
+        "List the sources that will not be searched, and why."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.search-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counter-queries",
+          "check": "At least one query has purpose counter.",
+          "method": "deterministic"
+        },
+        {
+          "id": "terms-noted",
+          "check": "Every source has a terms address and a rate rule.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "deep-research-report.frame-question"
+      ]
+    },
+    {
+      "slug": "collect-sources",
+      "kind": "verb.probe_source",
+      "title": "Run the searches and collect sources",
+      "claimant": "agent",
+      "summary": "Run every planned query through the permitted access of each source, record each run's date and result count, and log every source found with its retrieved text's digest and a retraction check.",
+      "outcome": "A source log.",
+      "ready_outcome": "sources_collected",
+      "model_use": "none",
+      "pinned": [
+        "rules.permitted-access",
+        "guardrail.search-on-the-record",
+        "policy-and-law-watch:guardrail.no-scraping-against-terms",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "search_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the search plan."
+        }
+      ],
+      "network": [
+        "read_only",
+        "Only the sources the search plan names, through their official APIs, downloads or pages as their terms and robots.txt permit, at each source's stated rate; no logins, paywall bypasses or personal data."
+      ],
+      "produces": [
+        {
+          "name": "source_log",
+          "template": "template.source-log"
+        }
+      ],
+      "steps": [
+        "Read each source's terms and robots.txt first, and skip any source that forbids the reading, recording why.",
+        "Run every query at the source's rate and record its date and result count.",
+        "Keep each retrieved text's SHA-256, and check every DOI against the retraction data.",
+        "Stop at the plan's stop rules."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.source-log's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "queries-run",
+          "check": "Every planned query appears in searched with a date and a result count.",
+          "method": "deterministic"
+        },
+        {
+          "id": "texts-pinned",
+          "check": "Every source has the SHA-256 of its retrieved text.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "deep-research-report.plan-search"
+      ]
+    },
+    {
+      "slug": "screen-sources",
+      "kind": "verb.verify_gate",
+      "title": "Screen the sources against the criteria",
+      "claimant": "agent",
+      "summary": "Screen every source against the plan's criteria in two passes, give every exclusion a reason from the fixed list, exclude retracted works, and keep flow counts that add up.",
+      "outcome": "A screening log.",
+      "ready_outcome": "sources_screened",
+      "pinned": [
+        "rules.screening"
+      ],
+      "slots": [
+        {
+          "name": "source_log",
+          "category": "noun.public_source",
+          "description": "Pin of the source log."
+        },
+        {
+          "name": "search_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the search plan, for its criteria."
+        }
+      ],
+      "produces": [
+        {
+          "name": "screening_log",
+          "template": "template.screening-log"
+        }
+      ],
+      "steps": [
+        "Remove duplicates and count them.",
+        "Screen titles and summaries, then full texts, against the written criteria only.",
+        "Record a reason for every exclusion, including every retraction."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.screening-log's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "flow-adds-up",
+          "check": "The flow counts add up as the screening rules say.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reasons",
+          "check": "Every exclusion has a reason from the fixed list.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "deep-research-report.collect-sources"
+      ]
+    },
+    {
+      "slug": "extract-claims",
+      "kind": "verb.ingest",
+      "title": "Extract claims with exact quotes",
+      "claimant": "agent",
+      "summary": "Extract each included source's claims with an exact quote, the words around it, a locator, the claim's type, its direction against the likely answer and a graded strength.",
+      "outcome": "A claim extract.",
+      "ready_outcome": "claims_extracted",
+      "pinned": [
+        "guardrail.quote-exactly",
+        "rules.evidence-strength",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "source_log",
+          "category": "noun.public_source",
+          "description": "Pin of the source log."
+        },
+        {
+          "name": "screening_log",
+          "category": "noun.eval_run",
+          "description": "Pin of the screening log."
+        }
+      ],
+      "produces": [
+        {
+          "name": "claim_extract",
+          "template": "template.claim-extract"
+        }
+      ],
+      "steps": [
+        "Quote exactly, with about 30 characters before and after, and a page, section or paragraph.",
+        "Paraphrase each statement plainly, and grade its strength with a one-line reason.",
+        "Keep contradicting claims; leave out personal data."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.claim-extract's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quotes-exact",
+          "check": "Every quote, with its prefix and suffix, appears exactly once in its source's retrieved text.",
+          "method": "deterministic"
+        },
+        {
+          "id": "included-only",
+          "check": "Every claim's source was included in screening.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "deep-research-report.screen-sources"
+      ]
+    },
+    {
+      "slug": "synthesize",
+      "kind": "verb.solve_draft",
+      "title": "Synthesize, labeling every sentence",
+      "claimant": "agent",
+      "summary": "Draft the answer so far from the claims, labeling every sentence source, synthesis or open, citing the claims behind each, and keeping agreements, contradictions and gaps visible.",
+      "outcome": "A synthesis.",
+      "ready_outcome": "synthesis_drafted",
+      "pinned": [
+        "guardrail.label-every-sentence",
+        "guardrail.seek-counter-evidence",
+        "rules.evidence-strength"
+      ],
+      "slots": [
+        {
+          "name": "claim_extract",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the claim extract."
+        },
+        {
+          "name": "research_question",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research question."
+        }
+      ],
+      "produces": [
+        {
+          "name": "synthesis",
+          "template": "template.synthesis"
+        }
+      ],
+      "steps": [
+        "Label every sentence, and cite claims for every source and synthesis sentence.",
+        "State contradictions with both claims instead of averaging them.",
+        "Set the confidence no higher than the strongest uncontradicted claims allow."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.synthesis's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "labeled-and-cited",
+          "check": "Every source or synthesis sentence cites at least one existing claim.",
+          "method": "deterministic"
+        },
+        {
+          "id": "contradictions-kept",
+          "check": "Every claim with direction contradicts appears in a sentence or a contradiction.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "deep-research-report.extract-claims"
+      ]
+    },
+    {
+      "slug": "adversarial-review",
+      "kind": "verb.verify_gate",
+      "title": "Try to break the synthesis (a different worker)",
+      "claimant": "agent_or_human",
+      "summary": "A worker other than the author rechecks every quote against its source, looks for unsupported or overreaching sentences, and runs counter searches the plan missed, listing every problem.",
+      "outcome": "An adversarial review that passes only with no problems.",
+      "ready_outcome": "review_done",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "guardrail.quote-exactly",
+        "guardrail.seek-counter-evidence",
+        "rules.permitted-access"
+      ],
+      "slots": [
+        {
+          "name": "synthesis",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the synthesis."
+        },
+        {
+          "name": "claim_extract",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the claim extract."
+        },
+        {
+          "name": "source_log",
+          "category": "noun.public_source",
+          "description": "Pin of the source log."
+        }
+      ],
+      "network": [
+        "read_only",
+        "Only the sources the search plan names, through their official APIs, downloads or pages as their terms and robots.txt permit, at each source's stated rate; no logins, paywall bypasses or personal data."
+      ],
+      "produces": [
+        {
+          "name": "adversarial_review",
+          "template": "template.adversarial-review"
+        }
+      ],
+      "steps": [
+        "Recheck every quote, with its prefix and suffix, against the retrieved text.",
+        "List every sentence that its claims do not support, or that claims more than they show.",
+        "Run counter searches the plan missed and propose any that matter as follow-up verbs."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.adversarial-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quotes-rechecked",
+          "check": "quotes_checked equals the number of claims.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The reviewing key differs from the synthesis author's key.",
+          "method": "deterministic"
+        },
+        {
+          "id": "overreach-judged",
+          "check": "Every overreach listed says what the claims do and do not show.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "deep-research-report.synthesize"
+      ]
+    },
+    {
+      "slug": "write-report",
+      "kind": "verb.solve_draft",
+      "title": "Write the report with its limits",
+      "claimant": "agent",
+      "summary": "Write the report from a synthesis whose review passed: the short answer and confidence, labeled findings, the evidence against, the method and flow, the limits, what was not searched, and the sources.",
+      "outcome": "A cited report that passes the report checks.",
+      "ready_outcome": "report_written",
+      "pinned": [
+        "guardrail.label-every-sentence",
+        "guardrail.seek-counter-evidence",
+        "report-checks",
+        "policy-and-law-watch:guardrail.cite-every-claim"
+      ],
+      "slots": [
+        {
+          "name": "synthesis",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the synthesis."
+        },
+        {
+          "name": "adversarial_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the passing review."
+        },
+        {
+          "name": "screening_log",
+          "category": "noun.eval_run",
+          "description": "Pin of the screening log, for the flow."
+        }
+      ],
+      "produces": [
+        {
+          "name": "report",
+          "template": "template.report"
+        }
+      ],
+      "steps": [
+        "Write only from a synthesis whose review passed.",
+        "Put the evidence against next to the answer, and state the limits and what was not searched.",
+        "Run the report checks and fix every failure before submitting."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "report-checks-pass",
+          "check": "Every check in report-checks passes on the report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-passed",
+          "check": "The pinned review has passed true.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plain",
+          "check": "A general reader can follow the short answer and the limits.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "deep-research-report.adversarial-review"
+      ]
+    },
+    {
+      "slug": "decide-delivery",
+      "kind": "verb.verify_gate",
+      "title": "Decide whether the report is delivered (a person)",
+      "claimant": "human",
+      "summary": "A person reads the report and its review and decides whether it is delivered to the requester inside the requester's scope.",
+      "outcome": "A delivery record: delivered or held, with the reason.",
+      "ready_outcome": "delivery_decided",
+      "model_use": "none",
+      "pinned": [
+        "policy-and-law-watch:guardrail.person-decides",
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "report",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the report."
+        },
+        {
+          "name": "adversarial_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the review."
+        }
+      ],
+      "produces": [
+        {
+          "name": "delivery_record",
+          "template": "policy-and-law-watch:template.delivery-record"
+        }
+      ],
+      "steps": [
+        "Run the checklist.",
+        "Deliver only a report whose review passed; holding is a valid decision, with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.delivery-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-passed",
+          "check": "A deliver decision has review_passed true.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-decides",
+          "check": "The submitting key belongs to a person who neither wrote nor reviewed the report.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "deep-research-report.write-report"
+      ]
+    }
+  ]
+}
