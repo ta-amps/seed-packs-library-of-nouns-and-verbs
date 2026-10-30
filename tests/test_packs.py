@@ -480,6 +480,19 @@ class NegativeChecks(unittest.TestCase):
             with self.assertRaises(bp.PackError):
                 vp.check_readme(bad, "Repository review", "repo-review")
 
+    def test_code_pins_must_match_the_files_they_name(self):
+        pack = "exploitation-evidence"
+        records = copy.deepcopy(IDX.docs[pack]["nouns.json"]["records"])
+        self.assertGreater(vp.check_code_pins(ROOT, pack, records), 0)
+        tool = next(r for r in records if r["value"]["role"] == "tool_card")
+        tool["value"]["code"]["files"][0]["sha256"] = "0" * 64
+        with self.assertRaises(bp.PackError):
+            vp.check_code_pins(ROOT, pack, records)
+        for path in (f"packs/{pack}/code/../README.md", "packs/repo-review/README.md", f"packs/{pack}/code/missing.py"):
+            tool["value"]["code"]["files"][0] = {"path": path, "sha256": "0" * 64}
+            with self.subTest(path=path), self.assertRaises(bp.PackError):
+                vp.check_code_pins(ROOT, pack, records)
+
     def test_template_examples_and_conforming_instances_must_match(self):
         item = record("repo-review", "template.finding")
         check_record(item)

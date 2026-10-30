@@ -28,13 +28,13 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Code composition](code-composition/README.md) | Composing verified code without rewriting it | 35 | 7 |
 | [Taste palettes](taste-palettes/README.md) | Comparing options side by side and keeping a person's choice | 8 | 5 |
 | [Public-good kits](public-good-kits/README.md) | Building agent kits that nonprofits can use | 15 | 8 |
-| [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 69 | 11 |
+| [Exploitation evidence](exploitation-evidence/README.md) | Spotting exploitation and scams in synthetic cases, never accusing anyone | 70 | 11 |
 | [Harness onboarding](harness-onboarding-e2e/README.md) | Connecting an agent harness and proving its lifecycle | 9 | 5 |
 | [Security review](security-review/README.md) | Authorized, local-only security review of code | 11 | 6 |
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 
-Together: 344 nouns and 106 verb templates across seventeen packs. The
+Together: 345 nouns and 106 verb templates across seventeen packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -47,6 +47,7 @@ building nonprofit kits and keeping knowledge fresh) and lists what is still mis
 | `nouns.json` | Generated. One Tessera `RecordWrite` body per line: create-only, `surface_only`, quarantined |
 | `verbs.json` | Generated. One Tessera `TaskSpec` template per line, with unfilled input slots |
 | `manifest.json` | Generated. File digests, each noun's value SHA-256 and each verb's identity |
+| `code/` | Optional. Tested code that the pack's tool cards pin by library path and sha256, with its own tests and CI job. The library runs it only in those tests |
 
 ## Workers create nouns and verbs
 

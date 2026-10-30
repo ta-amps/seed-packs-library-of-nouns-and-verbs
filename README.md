@@ -38,7 +38,7 @@ activated**, and no worker has run them yet.
 | [Docs improvement](packs/docs-improvement/README.md) | Making documentation clearer for a named reader |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 344
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 345
 nouns and 106 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)

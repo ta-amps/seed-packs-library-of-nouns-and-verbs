@@ -35,6 +35,7 @@ BRIEF_FIELDS = {
 BRIEF_OPTIONAL = {"follows_templates", "notes"}
 MAX_PAYLOAD_BYTES = 32768
 MAX_README_LINES = 90
+CODE_DIR = "code"  # optional: tested code a pack's tool cards pin by library path and sha256
 
 
 def require(ok: bool, message: str) -> None:
@@ -707,6 +708,35 @@ class Index:
         self.templates = {t["brief"]["template_id"] for d in self.docs.values() for t in d["verbs.json"]["tasks"]}
 
 
+def code_pins(value: Any) -> list[dict[str, Any]]:
+    """Every {path, sha256} pair in a noun value."""
+    if isinstance(value, dict):
+        found = [value] if set(value) == {"path", "sha256"} and isinstance(value["path"], str) else []
+        return found + [pin for item in value.values() for pin in code_pins(item)]
+    if isinstance(value, list):
+        return [pin for item in value for pin in code_pins(item)]
+    return []
+
+
+def check_code_pins(root: Path, pack_id: str, records: list[dict[str, Any]]) -> int:
+    """A pin into a pack's own code folder must name a file there whose sha256 matches the pin."""
+    prefix = f"packs/{pack_id}/{CODE_DIR}/"
+    base = (root / "packs" / pack_id / CODE_DIR).resolve()
+    count = 0
+    for record in records:
+        for pin in code_pins(record["value"]):
+            if not pin["path"].startswith("packs/"):
+                continue
+            where = f"{pack_id}/{record['key']}: {pin['path']}"
+            require(pin["path"].startswith(prefix), f"{where} points outside this pack's {CODE_DIR}/ folder")
+            path = (root / pin["path"]).resolve()
+            require(base in path.parents and path.is_file(), f"{where} is not a file in this pack's {CODE_DIR}/ folder")
+            actual = hashlib.sha256(path.read_bytes()).hexdigest()
+            require(actual == pin["sha256"], f"{where} has sha256 {actual}, not the pinned {pin['sha256']}")
+            count += 1
+    return count
+
+
 def check_manifest(manifest: dict[str, Any], pack_dir: Path, pack_id: str) -> None:
     require(manifest["format"] == bp.MANIFEST_FORMAT and manifest["status"] == "proposal_only", f"{pack_id}: manifest stays a proposal")
     require(manifest["pack_id"] == pack_id, f"{pack_id}: manifest names its pack")
@@ -737,11 +767,12 @@ def check_doc_counts(root: Path, idx: "Index") -> None:
 def validate_library(root: Path = ROOT) -> dict[str, Any]:
     idx = Index(root)
     packs_dir = root / "packs"
-    totals = {"packs": 0, "nouns": 0, "verbs": 0, "worked_examples": 0}
+    totals = {"packs": 0, "nouns": 0, "verbs": 0, "worked_examples": 0, "code_pins": 0}
     for pack_id, files in idx.docs.items():
         directory = packs_dir / pack_id
-        present = sorted(p.name for p in directory.iterdir())
-        require(present == sorted(bp.PACK_FILES), f"{pack_id}: pack directory holds exactly {sorted(bp.PACK_FILES)}")
+        present = sorted(p.name for p in directory.iterdir() if not (p.name == CODE_DIR and p.is_dir()))
+        require(present == sorted(bp.PACK_FILES),
+                f"{pack_id}: pack directory holds exactly {sorted(bp.PACK_FILES)} and optionally a {CODE_DIR}/ folder")
         for name, data in idx.built[pack_id].items():
             require((directory / name).read_bytes() == data, f"{pack_id}/{name} is stale; run python3 scripts/build_packs.py")
         check_manifest(files["manifest.json"], directory, pack_id)
@@ -756,6 +787,7 @@ def validate_library(root: Path = ROOT) -> dict[str, Any]:
         totals["nouns"] += len(records)
         totals["verbs"] += len(files["verbs.json"]["tasks"])
         totals["worked_examples"] += check_fixtures(records, idx.values)
+        totals["code_pins"] += check_code_pins(root, pack_id, records)
     check_doc_counts(root, idx)
     receipt = check_receipt(root, idx.built)
     return {
