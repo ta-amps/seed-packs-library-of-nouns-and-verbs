@@ -1,0 +1,275 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "voice-narration",
+  "title": "Voice narration",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for narration with a text-to-speech voice: a pronunciation lexicon applied before synthesis and confirmed by ear, seeded takes logged with the exact text the model received, loudness, peak, noise-floor and pace measurements with a round-trip transcript check, takes chosen by a rule fixed in advance, lines placed on the beats they must fit, a person's listening check, and an AI-voice label wherever the voice plays.",
+  "license": "MIT",
+  "store": "seedpack.voice-narration",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "9cef1ab4e7e543557fb27c4e7825c4322b20026067821da7e081150aef57742c"
+    },
+    {
+      "path": "source.json",
+      "sha256": "c2332f844594bc5b197766a9e6230cbf57fbe1c67b035e98161bc62b1bdca19d"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "8a62027b117ebc52dc5bc03638a79a7cf4a964b32c87027769b513b12bad6fcb"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "2003eb31149353e3621fbb3a63834b39ffef801aee64478ad43947b7444de5bb"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "voice-narration.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "a4d0dfd6c16d7b6eda040168fc417f524abbd26e940aaf4dc4a7e9233116f35f"
+    },
+    {
+      "key": "voice-narration.v0.1.0.guardrail.label-ai-voice",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "467fed85c133de6065756da8c69567be33d3a30473f3a20dca2117f12d0ec3ab"
+    },
+    {
+      "key": "voice-narration.v0.1.0.guardrail.no-voice-cloning",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "0db213b248324abcb25f4e3ce39445189b9d72c7e63e008d625dd02e714bb77b"
+    },
+    {
+      "key": "voice-narration.v0.1.0.guardrail.license-before-synthesis",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "c68fa5453a6c19ce5258c887e6223c1fcd543a514743d02d8496c74d46047a61"
+    },
+    {
+      "key": "voice-narration.v0.1.0.guardrail.script-words-unchanged",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "b7e44f832120852277c826bd33c8de85b01565689ee77891a5079c7ca88db234"
+    },
+    {
+      "key": "voice-narration.v0.1.0.rules.lexicon",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "f2e3fee2b2249f66e092bc6489ca41f46903b63a7882568b64bb74ee7bf4d477"
+    },
+    {
+      "key": "voice-narration.v0.1.0.rules.take-selection",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "1f677c6f2a91542ee66779adb5b3cd3d2296111a84cadbdeafcfaddb1ec963c1"
+    },
+    {
+      "key": "voice-narration.v0.1.0.rules.audio-measurements",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "19e3ee87b7878d305946fe08318d0e94124a9f4102b15dd5c7013df4ea3c5c29"
+    },
+    {
+      "key": "voice-narration.v0.1.0.rules.fit-to-beats",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "afe783eaeea6b9ce9be3563ebdf807a3553598b163aeb11727c414b93a3e77be"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.voice-model-card",
+      "category_id": "noun.model_spec",
+      "role": "template",
+      "value_sha256": "5b94d0899a65bd6abc5c70303c564dcd471fe2209de0d99b830a1924fbb183ef"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.narration-script",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "065e3cb8f76ca426cf6db4840039474509af6577c221b844488196962a169006"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.lexicon",
+      "category_id": "noun.skill_pack",
+      "role": "template",
+      "value_sha256": "d3eeb4b1f6a2689489c07e1f7b3abc72a0c58664956a1f8ea60001f289f38324"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.synthesis-log",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "789c737abfdbaf4a49524fae3858c37a0aa6d61198cfe91bf53faec92960c269"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.line-measurements",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "30b26630b72e634082be39ab2be2cc34d7b30bd76ddd88bea5dc112a0226e5ab"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.take-choice",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "4e50d96f268e569bd44468cba4478bccaded65ce9672d0842b4b12562d438999"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.narration-track",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "da7aed2c8edafd374776fa097261e3f22a0634ad01c5222b45d78b68fcbcfd8f"
+    },
+    {
+      "key": "voice-narration.v0.1.0.template.listening-record",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "6f5532cd94559b396f7a3f808d194db0e578548c50d9f1a67173483935760918"
+    },
+    {
+      "key": "voice-narration.v0.1.0.voice-model.open-82m",
+      "category_id": "noun.model_spec",
+      "role": "voice_model_card",
+      "value_sha256": "98439f80f64cade3790ca02640d8383b8d1d1b8add84bfb9b48340e152dd7cae"
+    },
+    {
+      "key": "voice-narration.v0.1.0.checklist",
+      "category_id": "noun.skill_pack",
+      "role": "checklist",
+      "value_sha256": "e5f32d4c821cfff18c07d1ccc260fcfb26f0a73cc865a7f07ca68e99fbd754df"
+    },
+    {
+      "key": "voice-narration.v0.1.0.sources",
+      "category_id": "noun.public_source",
+      "role": "sources",
+      "value_sha256": "be9dc8f2471ae6c1a12d89bb592ea49614bfe1a0f324d2a84e9e9188c298f518"
+    },
+    {
+      "key": "voice-narration.v0.1.0.test-cases",
+      "category_id": "noun.benchmark_suite",
+      "role": "test_cases",
+      "value_sha256": "f6f1195bbdac6a4a295a6faf9d9948c2b06929b4f19055415a3055685abbf445"
+    },
+    {
+      "key": "voice-narration.v0.1.0.example.narration-script",
+      "category_id": "noun.scene_recipe",
+      "role": "example",
+      "value_sha256": "9181db736585512eb4cfda4f4b8f7c65b3b17b3b7a77b819393f3ac02e7245fd"
+    },
+    {
+      "key": "voice-narration.v0.1.0.example.lexicon",
+      "category_id": "noun.skill_pack",
+      "role": "example",
+      "value_sha256": "f5eb1d53685b035ac20e3aaa214b6c53dce8606eab776d303c52b05ccae9ceb2"
+    },
+    {
+      "key": "voice-narration.v0.1.0.example.synthesis-log",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "50ea495afffb68839684ed91f9513e161925156bed39f17f57588cf4b1992e03"
+    },
+    {
+      "key": "voice-narration.v0.1.0.example.line-measurements",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "95c89d378cceb9174b55ac685b400cfec96bdcd42801d340a21cbd8e1d481488"
+    },
+    {
+      "key": "voice-narration.v0.1.0.example.take-choice",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "2b8ffa2dd25afa4ea6b2cbc0b337355a5a20677cd37c34d830b34f32e3cda29f"
+    },
+    {
+      "key": "voice-narration.v0.1.0.example.narration-track",
+      "category_id": "noun.scene_recipe",
+      "role": "example",
+      "value_sha256": "c2eafe70e213b515a0381c4376680448d8505f4f85ed61524a23c85192f9eb92"
+    },
+    {
+      "key": "voice-narration.v0.1.0.narration-checks",
+      "category_id": "noun.benchmark_suite",
+      "role": "worked_example",
+      "value_sha256": "d619c8ccc200c6d82466818b706befa50a23602b6838aa994adc9a47ecf4aefc"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "voice-narration.prepare-lexicon",
+      "kind": "verb.generate_seed",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:voice-narration:prepare-lexicon:e229c3774a0d5c24a73bc8da3175e387776e2b14e9c98950bf6428d8eb10fbf2",
+      "report_shape_sha256": "bfb55f0c30322b7c02fb7dd065b39259ec546ed3fbddb4f8c3fe42e85d95e9fd"
+    },
+    {
+      "template_id": "voice-narration.synthesize-lines",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:voice-narration:synthesize-lines:a95ac7ce4a88898aa618aee8987f6e290564f0006cdb16aec1c1a911eca29a36",
+      "report_shape_sha256": "1122f6941fcf573a325bafb947b2f37a40e408dd37eef526ad8513cb7f85246c"
+    },
+    {
+      "template_id": "voice-narration.measure-lines",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:voice-narration:measure-lines:e92813833606496f80c062e94a26bd4ff5873a6b39d3d181705ca5df7d23b560",
+      "report_shape_sha256": "5b42275af3c44bfd7e88d311170254642ebf64c41cd5a3ecd0d322676e3fe4b4"
+    },
+    {
+      "template_id": "voice-narration.select-takes",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:voice-narration:select-takes:9106521b50054a3719375a584f2dfa13f2fd46b5de9e163392f219bde0d4894c",
+      "report_shape_sha256": "e2cdd21c3011b67a5bdfbb09bf260a7cbf7fde623dc1b6c12fb7a2c98bccddcf"
+    },
+    {
+      "template_id": "voice-narration.place-on-beats",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:voice-narration:place-on-beats:9f3634179154445ace5da8ea89d07bc699c4f0e0e6246645e72b6919f394c358",
+      "report_shape_sha256": "f018219526966cdcecd6fccc007eab606f99c09b03e0b1644ba28d47415ebc54"
+    },
+    {
+      "template_id": "voice-narration.listen-and-approve",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:voice-narration:listen-and-approve:836d86e4524079d1a9b20e5e15cdc56edc6d5a6b555cafb76dfd1f2f4773d890",
+      "report_shape_sha256": "f28aab4b958dece947d37f24d2b8ba5ce8261b2a91a530f02f5836f24b20714b"
+    }
+  ],
+  "dependencies": [
+    {
+      "pack_id": "video-motion",
+      "keys": [
+        "video-motion.v0.1.0.tool.ffmpeg"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Stock voices of a licensed model only; never a clone or imitation of a real person's voice.",
+    "Every generated line is labeled as an AI voice and never presented as a person.",
+    "Synthesis and measurement run on the worker's own machine from pinned files; this pack grants no spending.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}
