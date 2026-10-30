@@ -38,8 +38,12 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
 | [Monthly program impact report kit](kit-monthly-impact-report/README.md) | A community nonprofit's monthly program impact report | 13 | 5 |
 | [Handwritten statements to text kit](kit-handwritten-statements/README.md) | Turning handwritten statements and forms dropped into a folder into text typed exactly as written, keeping the writer's slang, spelling, acronyms and words, flagging every uncertain reading for a person, and listing acronyms against a local glossary, while staff check every flag, follow up on safety, sign off and decide any use | 16 | 6 |
+| [Funding impact summary kit](kit-funding-impact-summary/README.md) | A funding impact summary in a grant renewal | 13 | 5 |
+| [Policy research brief kit](kit-policy-research-brief/README.md) | A small nonprofit's policy research brief | 14 | 5 |
+| [Victim support referral kit](kit-victim-support-referrals/README.md) | A victim services program's referral kit | 13 | 5 |
+| [Volunteer shift schedule kit](kit-volunteer-shift-schedule/README.md) | A disaster relief hub's volunteer shift schedule | 14 | 5 |
 
-Together: 440 nouns and 139 verb templates across twenty-two packs. The
+Together: 494 nouns and 159 verb templates across twenty-six packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 

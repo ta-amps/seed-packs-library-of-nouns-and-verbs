@@ -1,0 +1,1061 @@
+{
+  "pack_id": "kit-funding-impact-summary",
+  "title": "Funding impact summary kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a funding impact summary in a grant renewal: the grant period's results compared with the original targets, spending by budget line taken word for word from the finance lead's figures, missing numbers kept as unknown, and a traceable summary draft, while the finance lead checks the figures and the executive director approves and submits.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a grant renewal funding impact summary agent kit",
+      "value": {
+        "lets_workers": "Compare a whole grant period's program results with the targets in the original agreement, take spending by budget line only from the finance lead's figures, and draft the renewal application's impact summary with every number traced to its source. The finance lead checks every figure, and the executive director approves the summary and submits the renewal.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-funding-impact-summary.compare-period-to-targets"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-funding-impact-summary.draft-impact-summary"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-funding-impact-summary.check-figures"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-funding-impact-summary.approve-summary"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-funding-impact-summary.submit-renewal"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Check every figure against the books and program records.",
+          "Approve the summary and how shortfalls are explained.",
+          "Submit the renewal application to the funder."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.period-table"
+        ],
+        [
+          "requires_noun",
+          "template.impact-summary"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Funding Impact Summary for Grant Renewal Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Summarizes what a grant paid for and achieved over its whole period for a renewal application: results against the original targets, spending by budget line from the finance lead's figures, and lessons staff name. Missing numbers stay unknown, and staff approve and submit.",
+        "goal": "Help a small nonprofit summarize what a grant achieved over its whole period for a renewal application, with results against the original targets and spending from the finance lead's figures, while the finance lead checks the numbers and the executive director approves and submits.",
+        "target_org": "Small community nonprofit applying to renew a two-year foundation grant",
+        "step_map": [
+          {
+            "id": "compare-period-to-targets",
+            "title": "Compare the grant period's results with the original targets",
+            "step_kind": "arithmetic_check",
+            "boundary": "drafts",
+            "actor": "Report arithmetic agent",
+            "guidance": "Total each measure over the whole grant period, compare it with the original target, and take spending by budget line only from the finance lead's figures. A missing number stays unknown, never zero.",
+            "verb": {
+              "$verb": "kit-funding-impact-summary.compare-period-to-targets"
+            }
+          },
+          {
+            "id": "draft-impact-summary",
+            "title": "Draft the funding impact summary for the renewal",
+            "step_kind": "reporting_summary",
+            "boundary": "drafts",
+            "actor": "Summary drafting agent",
+            "guidance": "Draft the renewal's sections: what the grant paid for, results against targets, what it cost by line, what staff learned, and what comes next. Every number comes from the period table, and lessons come only from staff notes.",
+            "verb": {
+              "$verb": "kit-funding-impact-summary.draft-impact-summary"
+            }
+          },
+          {
+            "id": "check-figures",
+            "title": "Check every figure against the books and program records",
+            "step_kind": "grant_signoff",
+            "boundary": "human_only",
+            "actor": "Finance lead",
+            "guidance": "The finance lead traces every figure to the organization's books and program records and corrects or removes any that cannot be traced.",
+            "verb": {
+              "$verb": "kit-funding-impact-summary.check-figures"
+            }
+          },
+          {
+            "id": "approve-summary",
+            "title": "Approve the summary and how shortfalls are explained",
+            "step_kind": "individual_decision",
+            "boundary": "human_only",
+            "actor": "Executive director",
+            "guidance": "The executive director decides how shortfalls, changes and lessons are explained, and approves the summary.",
+            "verb": {
+              "$verb": "kit-funding-impact-summary.approve-summary"
+            }
+          },
+          {
+            "id": "submit-renewal",
+            "title": "Submit the renewal application to the funder",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Executive director",
+            "guidance": "The executive director submits the renewal through the funder's own portal. The agent never submits or sends anything.",
+            "verb": {
+              "$verb": "kit-funding-impact-summary.submit-renewal"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.impact-summary-drafter"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.compare-period-to-targets"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.period-results-table"
+          },
+          {
+            "$pin": "file.renewal-summary-outline"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.impact-summary-drafter"
+        ],
+        [
+          "requires_noun",
+          "tool.compare-period-to-targets"
+        ],
+        [
+          "requires_noun",
+          "file.period-results-table"
+        ],
+        [
+          "requires_noun",
+          "file.renewal-summary-outline"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.impact-summary-drafter",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: draft a funding impact summary from a period table",
+      "value": {
+        "name": "impact-summary-drafter",
+        "description": "Drafts a grant renewal's funding impact summary from a period results table, keeping every number traceable and every gap visible.",
+        "boundary": "drafts",
+        "instructions": "Use the funder's renewal sections and word limits. Take every number from the period results table and cite its measure or budget line; spending figures are the finance lead's, word for word. Write missing numbers as not yet counted. Describe what the grant paid for and what was done and counted, and never claim a result the table does not show. Take lessons and next steps only from staff notes. Keep participant stories out unless staff supply an approved, de-identified one.",
+        "refuses": [
+          "Inventing or estimating a missing number",
+          "Changing the finance lead's spending figures",
+          "Claiming results the records do not show",
+          "Submitting the renewal"
+        ]
+      }
+    },
+    {
+      "slug": "tool.compare-period-to-targets",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: total a grant period's results against its targets",
+      "value": {
+        "name": "compare_period_to_targets",
+        "description": "Totals each measure across a grant's reporting periods, compares it with the original target, and lists missing numbers as unknown.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "targets",
+            "periods"
+          ],
+          "properties": {
+            "targets": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "periods": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "finance_figures": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "output_fields": [
+          "totals_by_measure",
+          "percent_of_target",
+          "spending_by_line",
+          "missing"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.period-results-table",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Grant Period Results Table",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "period_results_table",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "One row per measure for the whole grant period, with its target, total and percent of target, plus spending by budget line from the finance lead. No participant details.",
+        "spec": {
+          "columns": [
+            "measure_id",
+            "measure",
+            "target",
+            "total",
+            "percent_of_target",
+            "budget_line",
+            "spent",
+            "source"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "file.renewal-summary-outline",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Funding Impact Summary Outline",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "renewal_summary_outline",
+        "artifact_format": "markdown_sop",
+        "boundary": "drafts",
+        "summary": "Five-section outline for a renewal's impact summary, with every number from the period table.",
+        "spec": [
+          "1. What the grant paid for, by budget line.",
+          "2. Results against the original targets.",
+          "3. What it cost, from the finance lead's figures.",
+          "4. What staff learned, from staff notes.",
+          "5. What the next grant period would do."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the funding impact summary kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "Every number traces to the period table, and every spending figure to the finance lead.",
+          "Missing numbers read as not yet counted, never as zero.",
+          "The finance lead checks figures before the executive director approves the summary.",
+          "Only the executive director submits the renewal."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the funding impact summary kit",
+      "value": {
+        "sources": [
+          {
+            "title": "eCFR: 2 CFR 200.329, Monitoring and reporting program performance",
+            "url": "https://www.ecfr.gov/current/title-2/section-200.329",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "National Council of Nonprofits: Administration and Financial Management",
+            "url": "https://www.councilofnonprofits.org/running-nonprofit/administration-and-financial-management",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the funding impact summary kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-RENEWAL-ROUTINE",
+            "scenario": "Two-year grant with every period reported and most targets met",
+            "sample_input": "SYNTHETIC: Grant period 2025-01-01 to 2026-12-31 with 8 quarterly results tables. Targets: 480 households served, 96 workshops. Totals: 512 households, 90 workshops. Finance lead's spending: staff USD 61,000, supplies USD 18,400.",
+            "expected_indicators": [
+              "period_table_complete",
+              "spending_copied_from_finance_lead",
+              "summary_drafted"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-RENEWAL-GAP",
+            "scenario": "One quarter's results are missing and one measure is well below target",
+            "sample_input": "SYNTHETIC: The results table for 2026 Q2 is missing; workshops total 61 of a 96 target over the reported quarters.",
+            "expected_indicators": [
+              "missing_period_reported_unknown",
+              "below_target_flagged"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "Example request: a small nonprofit asks for help with its grant renewal's impact summary",
+      "category_reason": "A request in an organization's own words frames the need the kit should meet.",
+      "value": {
+        "form": "request-a-kit",
+        "answers": [
+          {
+            "question": "Organization type",
+            "answer": "Small nonprofit back office, such as grants, finance or compliance"
+          },
+          {
+            "question": "The job to be done",
+            "answer": "SYNTHETIC: Our two-year foundation grant is up for renewal, and the application asks what the grant achieved. We have eight quarterly reports and the treasurer's spending figures. We'd like a first draft of the impact summary that compares our results with the original targets."
+          },
+          {
+            "question": "Steps that must stay with a person",
+            "answer": "Our finance lead checks every number, and our executive director approves the summary and submits the renewal."
+          },
+          {
+            "question": "Constraints",
+            "answer": "Works from our quarterly report spreadsheets. The funder's form has word limits. No participant names or stories unless we approve them."
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.period-table",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a grant period's results and spending against its targets",
+      "category_reason": "A period table is a scored comparison that keeps unknown values null.",
+      "value": {
+        "describes": "a whole grant period's results per measure against the original targets, with spending by budget line and missing numbers kept null",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "period_start",
+            "period_end",
+            "measures",
+            "spending",
+            "missing"
+          ],
+          "properties": {
+            "period_start": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "period_end": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "measures": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "measure_id",
+                  "measure",
+                  "target",
+                  "total",
+                  "percent_of_target"
+                ],
+                "properties": {
+                  "measure_id": {
+                    "type": "string",
+                    "pattern": "^M-[0-9]{1,3}$"
+                  },
+                  "measure": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "target": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "total": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "percent_of_target": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "spending": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "budget_line",
+                  "spent"
+                ],
+                "properties": {
+                  "budget_line": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "spent": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "missing": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          }
+        },
+        "example": {
+          "period_start": "2025-01-01",
+          "period_end": "2026-12-31",
+          "measures": [
+            {
+              "measure_id": "M-2",
+              "measure": "Workshops held",
+              "target": 96,
+              "total": null,
+              "percent_of_target": null
+            }
+          ],
+          "spending": [
+            {
+              "budget_line": "Supplies",
+              "spent": 18400
+            }
+          ],
+          "missing": [
+            "2026 Q2 results table"
+          ]
+        },
+        "rules": [
+          "Spending figures come from the finance lead unchanged.",
+          "A missing number is null."
+        ]
+      }
+    },
+    {
+      "slug": "template.impact-summary",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a funding impact summary draft with every number traced",
+      "category_reason": "An impact summary draft is a candidate the finance lead and executive director check and approve.",
+      "value": {
+        "describes": "a renewal's funding impact summary by section, with every number traced to the period table",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "renewal_form",
+            "sections",
+            "numbers_cited",
+            "open_questions"
+          ],
+          "properties": {
+            "renewal_form": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "sections": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "heading",
+                  "text",
+                  "word_limit"
+                ],
+                "properties": {
+                  "heading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 6000
+                  },
+                  "word_limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2000
+                  }
+                }
+              }
+            },
+            "numbers_cited": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "value"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "open_questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "example": {
+          "renewal_form": "Two-year renewal application",
+          "sections": [
+            {
+              "heading": "Results against targets",
+              "text": "We served 512 households against a target of 480 (M-1).",
+              "word_limit": 300
+            }
+          ],
+          "numbers_cited": [
+            {
+              "source": "M-1",
+              "value": 512
+            }
+          ],
+          "open_questions": [
+            "Explain the workshop shortfall (M-2) once 2026 Q2 is counted."
+          ]
+        },
+        "rules": [
+          "Every number in a section appears in numbers_cited."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "compare-period-to-targets",
+      "kind": "verb.verify_gate",
+      "title": "Compare the grant period's results with the original targets",
+      "claimant": "agent",
+      "summary": "Total each measure over the grant period with the read-only tool, compare it with the original target, and copy spending by budget line from the finance lead's figures, keeping every missing number unknown.",
+      "outcome": "A period results table with percent of target and spending by line, every missing number kept null.",
+      "ready_outcome": "period_compared",
+      "model_use": "none",
+      "pinned": [
+        "tool.compare-period-to-targets",
+        "file.period-results-table"
+      ],
+      "slots": [
+        {
+          "name": "targets",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the original grant agreement's measures and targets."
+        },
+        {
+          "name": "period_results",
+          "category": "noun.eval_run",
+          "description": "Pin of the program's results tables for every reporting period of the grant.",
+          "many": true,
+          "max": 12
+        },
+        {
+          "name": "finance_figures",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the finance lead's spending by budget line for the grant period."
+        }
+      ],
+      "produces": [
+        {
+          "name": "period_table",
+          "template": "template.period-table"
+        }
+      ],
+      "steps": [
+        "Total each measure across every reporting period with the pinned read-only tool.",
+        "Compute percent of target only when both the target and the total are known.",
+        "Copy spending by budget line from the finance lead's figures unchanged.",
+        "Keep every missing number null, and list the period it is missing from."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.period-table's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "totals",
+          "check": "Every total equals the sum of its measure across the pinned period results.",
+          "method": "deterministic"
+        },
+        {
+          "id": "spending-verbatim",
+          "check": "Every spending figure equals the finance lead's figure for that line.",
+          "method": "deterministic"
+        },
+        {
+          "id": "unknown-not-zero",
+          "check": "Every missing number is null and listed in missing.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "draft-impact-summary",
+      "kind": "verb.solve_draft",
+      "title": "Draft the funding impact summary for the renewal",
+      "claimant": "agent",
+      "summary": "Draft the renewal's funding impact summary from the period table and staff notes, citing a measure or budget line for every number and staying within each section's word limit.",
+      "outcome": "A funding impact summary draft for the finance lead and executive director.",
+      "ready_outcome": "summary_drafted",
+      "pinned": [
+        "skill.impact-summary-drafter",
+        "file.renewal-summary-outline"
+      ],
+      "slots": [
+        {
+          "name": "period_table",
+          "category": "noun.eval_run",
+          "description": "Pin of the period results table."
+        },
+        {
+          "name": "staff_notes",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding staff notes on lessons and next steps, with no participant details."
+        },
+        {
+          "name": "renewal_form",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the funder's renewal sections and word limits."
+        }
+      ],
+      "produces": [
+        {
+          "name": "impact_summary",
+          "template": "template.impact-summary"
+        }
+      ],
+      "steps": [
+        "Use the renewal form's sections and word limits.",
+        "Cite a measure_id or budget line for every number.",
+        "Take lessons and next steps only from staff notes.",
+        "Write missing numbers as not yet counted, and never claim results the table does not show."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.impact-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "numbers-traced",
+          "check": "Every number in the text appears in numbers_cited with a source from the period table and the same value.",
+          "method": "deterministic"
+        },
+        {
+          "id": "word-limits",
+          "check": "Every section is within its word_limit.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-within-table",
+          "check": "No sentence claims a result the period table does not show.",
+          "method": "judgment"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "kit-funding-impact-summary.compare-period-to-targets"
+      ]
+    },
+    {
+      "slug": "check-figures",
+      "kind": "verb.verify_gate",
+      "title": "Check every figure against the books and program records",
+      "claimant": "human",
+      "summary": "The finance lead traces every figure in the summary to the organization's books and program records and corrects or removes any figure that cannot be traced.",
+      "outcome": "A step record saying the figures were checked, changed or held.",
+      "ready_outcome": "figures_checked",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "impact_summary",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the summary draft."
+        },
+        {
+          "name": "period_table",
+          "category": "noun.eval_run",
+          "description": "Pin of the period results table."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Trace every figure to the books and program records.",
+        "Correct or remove any figure you cannot trace.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-funding-impact-summary.draft-impact-summary"
+      ]
+    },
+    {
+      "slug": "approve-summary",
+      "kind": "verb.verify_gate",
+      "title": "Approve the summary and how shortfalls are explained",
+      "claimant": "human",
+      "summary": "The executive director decides how shortfalls, changes and lessons are explained, and approves the summary or holds it.",
+      "outcome": "A step record saying the summary was approved, changed or held.",
+      "ready_outcome": "summary_approved",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "impact_summary",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the checked summary."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Write or approve the explanation for every measure below its target.",
+        "Approve the summary, or hold it with the reason.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-funding-impact-summary.check-figures"
+      ]
+    },
+    {
+      "slug": "submit-renewal",
+      "kind": "verb.verify_gate",
+      "title": "Submit the renewal application to the funder",
+      "claimant": "human",
+      "summary": "The executive director submits the approved renewal through the funder's own portal; the agent never submits or sends anything.",
+      "outcome": "A step record saying the renewal was submitted or held.",
+      "ready_outcome": "renewal_submitted",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "impact_summary",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the approved summary."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Submit the approved renewal yourself, through the funder's own portal.",
+        "Keep the funder's confirmation in the organization's own records.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "kit-funding-impact-summary.approve-summary"
+      ]
+    }
+  ]
+}
