@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds forty-three proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds forty-eight proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -63,10 +63,15 @@ activated**, and no worker has run them yet.
 | [Options chain review](packs/options-chain-review/README.md) | Reviewing an options chain descriptively from a licensed source the requester already has: greeks, implied volatility and its rank, liquidity screens and roll candidates, every number with its data timestamp and never as financial advice |
 | [Checked data analysis](packs/checked-data-analysis/README.md) | Analyzing a CSV file with a check at every step: profile, validation, flags that never drop rows, recorded queries, charts as data and findings traced to queries, while a person decides what they mean |
 | [Screenshot design review](packs/screenshot-design-review/README.md) | Reviewing a user interface screenshot against design rules: described first, captured at named widths and themes, measured, recorded as located findings and verified after a re-render |
+| [Atomic step contract](packs/atomic-step-contract/README.md) | Giving each atomic step exactly what it needs: a pinned procedure, a closed slice of state, the last observation and a grant that denies on the wire |
+| [Unattended run record](packs/unattended-run-record/README.md) | Running work overnight or on a schedule and leaving a record anyone can check, graded by the check and with every failure kept |
+| [Retrieval triggers and reuse](packs/retrieval-triggers-and-reuse/README.md) | Looking up existing nouns before generating new ones, and reusing past solutions only under the check |
+| [File triage at scale](packs/file-triage-at-scale/README.md) | Organizing very large collections of files without losing any, with every move approved by a person and verified by hash |
+| [Measured claims](packs/measured-claims/README.md) | Technical notes whose every claim says how it is known, with conclusions resting on evidence and corrections kept on the record |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 851
-nouns and 271 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 933
+nouns and 305 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

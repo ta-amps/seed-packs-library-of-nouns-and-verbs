@@ -1,0 +1,3826 @@
+{
+  "pack_id": "unattended-run-record",
+  "title": "Unattended run record",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for running work unattended, overnight or on a schedule, and leaving a record anyone can check: a plan a person approves, triage that declines work with no check before any model runs, an isolated copy and a hashed baseline per candidate, grading by the check on an outcome ladder, a fallback ladder that never downgrades silently, branches only, and a plain-language report that keeps every failure.",
+  "dependencies": [
+    "atomic-step-contract",
+    "status-and-handoff",
+    "findings-to-fixes"
+  ],
+  "boundaries": [
+    "Nothing runs unattended without a person's approval of its scope, window and allowance.",
+    "The run works in its own copies; the person's copy is never written.",
+    "No question is asked at run time; nothing is pushed, merged or released by the run.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing, enqueues nothing and schedules nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for running work unattended and leaving a record anyone can check",
+      "value": {
+        "lets_workers": "Run work overnight or on a schedule with nobody watching, and leave a morning record anyone can check: plan the window and its allowance, get a person's approval, decline what has no check before any model runs, work each candidate in its own copy, let the check grade every attempt on an outcome ladder, keep every failure and write a plain-language report.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "unattended-run-record.plan-run"
+            },
+            "when": "Before a window opens."
+          },
+          {
+            "verb": {
+              "$verb": "unattended-run-record.approve-run"
+            },
+            "when": "Before the first unattended run of a plan; a person's verb."
+          },
+          {
+            "verb": {
+              "$verb": "unattended-run-record.triage-candidates"
+            },
+            "when": "At the start of the window, before any model runs; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "unattended-run-record.take-baseline"
+            },
+            "when": "Once per candidate that is attempted; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "unattended-run-record.attempt-candidate"
+            },
+            "when": "Once per candidate, inside its own copy and allowance."
+          },
+          {
+            "verb": {
+              "$verb": "unattended-run-record.grade-attempt"
+            },
+            "when": "After every attempt; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "unattended-run-record.write-run-report"
+            },
+            "when": "When the window closes."
+          }
+        ],
+        "guardrails": [
+          "Nothing runs unattended without a person's approval of scope, window and allowance.",
+          "The person's own copy is read for its head and nothing else; every attempt works in its own copy.",
+          "The check grades; a worker's account of its own work is never the verdict.",
+          "No question can be asked at run time, and nothing is pushed, merged or released by the run.",
+          "An empty night is reported as empty, and every failure stays on the record."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "run-checks"
+          },
+          {
+            "$pin": "example.run-plan"
+          },
+          {
+            "$pin": "example.triage-record"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "run-guards"
+        ],
+        [
+          "requires_noun",
+          "outcome-ladder"
+        ],
+        [
+          "requires_noun",
+          "fallback-ladder"
+        ],
+        [
+          "requires_noun",
+          "verification-strength"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How an unattended run is planned, approved, triaged, worked, graded and reported",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "night_in_order": [
+          "Intake: candidates come from places people already trust, each with a check that already failed.",
+          "Triage, before any model runs: rank by value over effort, fold duplicates, skip recently refuted work and decline with a named reason anything with no runnable check, a check with effects outside the workspace, or a check already passing.",
+          "Isolation: each candidate gets its own copy; the person's copy is read only for its head and whether it is clean.",
+          "Baseline: run the target check and every other check first, record what was already failing, and hash the check folder and the environment.",
+          "Attempts: bounded steps under the step contract, each with its own allowance.",
+          "Grading: rerun the checks, rehash, inspect the diff's scope and place the attempt on the outcome ladder.",
+          "Delivery: commit on the candidate's branch in its copy. Discarded attempts keep their branches.",
+          "Report: every candidate on its rung with evidence, declines with reasons, and a next step for each shortfall."
+        ],
+        "rules": [
+          "A run that cannot decline invents work.",
+          "No question at run time: a candidate that needs an answer ends as blocked_named with the one question.",
+          "Grants and allowances come from the remaining budget, not fixed timeouts.",
+          "Unmeasured counters stay empty with a reason; they are never zero.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "handoff": {
+            "$verb": "status-and-handoff.write-handoff"
+          },
+          "finding": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "step": {
+            "$verb": "atomic-step-contract.assemble-step-packet"
+          }
+        }
+      }
+    },
+    {
+      "slug": "run-guards",
+      "category": "noun.reflex_procedure",
+      "role": "run_guards",
+      "title": "Guards every unattended run checks before and while it works",
+      "category_reason": "Deterministic guard rules checked by the runner.",
+      "value": {
+        "before_start": [
+          "A lock: a second run on the same workspace exits at once.",
+          "A stop file: when present, the window is skipped and the report says so.",
+          "Machine probes named in the plan, such as mains power, idle time and free disk; a failed probe skips the window.",
+          "An approval that covers this plan and has not expired."
+        ],
+        "while_working": [
+          "Each candidate's allowance comes from what remains of the window, so late candidates get smaller grants and a grant below the floor declines the candidate instead of starting it.",
+          "The run writes only to its own copies and its own record store, never to a shared store it does not own.",
+          "Resume only within the same window; a missed window is not caught up."
+        ],
+        "after": [
+          "Old copies and records are pruned only by the plan's retention rule.",
+          "A pipeline step's failure is not hidden by a later command's success: every step's own exit status is recorded."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "outcome-ladder",
+      "category": "noun.reflex_procedure",
+      "role": "outcome_ladder",
+      "title": "The rungs an attempt can end on, and who establishes each",
+      "category_reason": "A deterministic grading rule set: the same checks, digests and diff give the same rung.",
+      "value": {
+        "rungs": [
+          {
+            "rung": "already_green",
+            "meaning": "The check passed before any work.",
+            "established_by": "runner, at baseline"
+          },
+          {
+            "rung": "verified",
+            "meaning": "The check failed at baseline and passes now, and the diff is not confined to the check.",
+            "established_by": "runner, two check runs and a diff inspection"
+          },
+          {
+            "rung": "verified_by_test_change",
+            "meaning": "The check passes but only checks changed; a person reads the diff.",
+            "established_by": "runner, diff inspection"
+          },
+          {
+            "rung": "verified_narrow",
+            "meaning": "The target passes but a check that passed at baseline now fails.",
+            "established_by": "runner, baseline checks rerun"
+          },
+          {
+            "rung": "negative_result",
+            "meaning": "The task's premise is wrong; prevented work is the cheapest work.",
+            "established_by": "runner, with quoted evidence"
+          },
+          {
+            "rung": "cause_localised",
+            "meaning": "Still failing, but the cause is named in named files with quoted evidence.",
+            "established_by": "runner, from an observing step's quoted output"
+          },
+          {
+            "rung": "blocked_named",
+            "meaning": "One specific missing thing, stated as one question.",
+            "established_by": "step, from a closed refusal vocabulary"
+          },
+          {
+            "rung": "narrowed",
+            "meaning": "The failing surface is smaller than at baseline.",
+            "established_by": "runner, comparing failure sets"
+          },
+          {
+            "rung": "no_progress",
+            "meaning": "Attempts used, nothing learned; said plainly.",
+            "established_by": "runner"
+          },
+          {
+            "rung": "budget_exhausted",
+            "meaning": "The allowance ended.",
+            "established_by": "runner"
+          },
+          {
+            "rung": "skipped",
+            "meaning": "Declined at triage with a reason.",
+            "established_by": "runner, at intake"
+          },
+          {
+            "rung": "nothing_found",
+            "meaning": "Nothing unresolved was observed.",
+            "established_by": "runner, at intake"
+          },
+          {
+            "rung": "void",
+            "meaning": "The check folder or environment changed during the attempt.",
+            "established_by": "runner, digests before and after"
+          }
+        ],
+        "rule": "Grading reads the check's exit status, the digests and the diff. It never asks a step how well it did. verified_by_test_change and void are the rungs that catch a system fooling itself.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "fallback-ladder",
+      "category": "noun.reflex_procedure",
+      "role": "fallback_ladder",
+      "title": "Each layer degrades to a named result, never a silent downgrade",
+      "category_reason": "Deterministic degradation rules, each ending in a recorded result.",
+      "value": {
+        "layers": [
+          {
+            "layer": "model provider",
+            "when": "no endpoint answers",
+            "do": "Write a prompt-only result with a ready-to-use handoff and end blocked_named."
+          },
+          {
+            "layer": "model tier",
+            "when": "the stronger tier is unreachable",
+            "do": "Use the cheaper tier and record the substitution on the attempt."
+          },
+          {
+            "layer": "patch channel",
+            "when": "the schema-enforced channel is unavailable",
+            "do": "Use fenced structured text and record the weaker channel."
+          },
+          {
+            "layer": "patch content",
+            "when": "a patch is invalid",
+            "do": "Keep the prior state, put the reasons in the next observation, ask again once."
+          },
+          {
+            "layer": "containment",
+            "when": "the requested isolation is unavailable",
+            "do": "Refuse the step. Running uncontained is only ever an explicit, recorded choice."
+          },
+          {
+            "layer": "check",
+            "when": "no runnable check exists",
+            "do": "skipped, with the reason. Never invent a criterion."
+          },
+          {
+            "layer": "check",
+            "when": "the check has effects outside the workspace",
+            "do": "skipped, with no model call."
+          },
+          {
+            "layer": "check",
+            "when": "the check times out",
+            "do": "Stop its process group and record budget_exhausted for that attempt."
+          },
+          {
+            "layer": "reuse",
+            "when": "a stored solution fails on replay",
+            "do": "Roll back every touched file, fall through to the model and record the miss."
+          },
+          {
+            "layer": "memory",
+            "when": "recall is empty or unreachable",
+            "do": "Proceed without recall and record that it was empty."
+          },
+          {
+            "layer": "record store",
+            "when": "unreachable",
+            "do": "Keep the record locally and add it when the store returns."
+          }
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "verification-strength",
+      "category": "noun.reflex_procedure",
+      "role": "verification_strength",
+      "title": "Which checks ran beyond the task's own, cheapest first",
+      "category_reason": "A fixed ladder of verification rungs recorded per attempt.",
+      "value": {
+        "rungs": [
+          {
+            "n": 0,
+            "check": "The task's own check.",
+            "automatic": "given"
+          },
+          {
+            "n": 1,
+            "check": "Regression set: every check passing at baseline still passes.",
+            "automatic": "yes"
+          },
+          {
+            "n": 2,
+            "check": "Type and contract assertions from signatures.",
+            "automatic": "yes"
+          },
+          {
+            "n": 3,
+            "check": "Generic relations matched to the shape, such as order independence or idempotence.",
+            "automatic": "partly"
+          },
+          {
+            "n": 4,
+            "check": "Comparison with behaviour before the change on unchanged paths.",
+            "automatic": "yes"
+          },
+          {
+            "n": 5,
+            "check": "Property tests from a contract a person wrote.",
+            "automatic": "no"
+          },
+          {
+            "n": 6,
+            "check": "Mutation testing of the changed file, run before the fix, to measure how strong the check is.",
+            "automatic": "yes, with a person adjudicating"
+          },
+          {
+            "n": 7,
+            "check": "A model's judgment, as a triage signal only and never a gate.",
+            "automatic": "yes, unreliable"
+          }
+        ],
+        "rules": [
+          "Record each rung as its own result; never merge them into one pass or fail.",
+          "Mutation testing measures the check, not the change.",
+          "Property tests derived from the code under repair encode its bug; they need a person's contract.",
+          "A pass that survived rungs 0 to 4 is a different claim from one that survived rung 0 only."
+        ]
+      }
+    },
+    {
+      "slug": "template.run-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one unattended run: mode, window, allowance, guards, where candidates come from, how results are delivered and what it may write",
+      "category_reason": "A plan is a proposal that a person approves before it runs.",
+      "value": {
+        "describes": "one unattended run: mode, window, allowance, guards, where candidates come from, how results are delivered and what it may write",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "run_id",
+            "mode",
+            "window",
+            "allowance",
+            "guards",
+            "candidate_sources",
+            "workspace_rule",
+            "delivery",
+            "runtime_questions",
+            "retention",
+            "writes_only_to"
+          ],
+          "properties": {
+            "run_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "overnight_batch",
+                "scheduled",
+                "ci_triggered",
+                "continuous_queue"
+              ]
+            },
+            "window": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "start",
+                "end"
+              ],
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                }
+              }
+            },
+            "allowance": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "wall_seconds",
+                "per_candidate_seconds",
+                "max_model_calls"
+              ],
+              "properties": {
+                "wall_seconds": {
+                  "type": "integer",
+                  "minimum": 60,
+                  "maximum": 604800
+                },
+                "per_candidate_seconds": {
+                  "type": "integer",
+                  "minimum": 10,
+                  "maximum": 86400
+                },
+                "max_model_calls": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100000
+                }
+              }
+            },
+            "guards": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "lock",
+                "stop_file",
+                "probes",
+                "resume"
+              ],
+              "properties": {
+                "lock": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "stop_file": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "probes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 10,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                },
+                "resume": {
+                  "type": "string",
+                  "enum": [
+                    "same_window_only",
+                    "never"
+                  ]
+                }
+              }
+            },
+            "candidate_sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "workspace_rule": {
+              "type": "string",
+              "enum": [
+                "isolated_copy_per_candidate"
+              ]
+            },
+            "delivery": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "branch_prefix",
+                "commits",
+                "push",
+                "merge"
+              ],
+              "properties": {
+                "branch_prefix": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "commits": {
+                  "type": "string",
+                  "enum": [
+                    "on_candidate_branch_only"
+                  ]
+                },
+                "push": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "merge": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                }
+              }
+            },
+            "runtime_questions": {
+              "type": "string",
+              "enum": [
+                "refused"
+              ]
+            },
+            "retention": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "keep_runs",
+                "prune"
+              ],
+              "properties": {
+                "keep_runs": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000
+                },
+                "prune": {
+                  "type": "string",
+                  "enum": [
+                    "by_rule_only"
+                  ]
+                }
+              }
+            },
+            "writes_only_to": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "Questions at run time are refused when the run is composed.",
+          "Delivery never pushes or merges."
+        ]
+      }
+    },
+    {
+      "slug": "template.run-approval",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's decision on a run plan: approved, approved with changes or declined, with scope, allowance and expiry",
+      "category_reason": "An approval records a person's checked decision.",
+      "value": {
+        "describes": "a person's decision on a run plan: approved, approved with changes or declined, with scope, allowance and expiry",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "approval_id",
+            "plan_ref",
+            "decision",
+            "scope",
+            "allowance",
+            "changes",
+            "decided_by_role",
+            "decided_at",
+            "expires"
+          ],
+          "properties": {
+            "approval_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "plan_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "approved",
+                "approved_with_changes",
+                "declined"
+              ]
+            },
+            "scope": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "allowance": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "changes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "decided_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "decided_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "expires": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Recorded by the person who owns the workspace; workers never write it."
+        ]
+      }
+    },
+    {
+      "slug": "template.candidate",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one piece of work for an unattended run, with the check that already failed and what that check may touch",
+      "category_reason": "A candidate is a claim that this check fails and can be made to pass.",
+      "value": {
+        "describes": "one piece of work for an unattended run, with the check that already failed and what that check may touch",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "candidate_id",
+            "source",
+            "summary",
+            "check",
+            "fingerprint",
+            "expected_value",
+            "effort",
+            "seen_at"
+          ],
+          "properties": {
+            "candidate_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "ci_log",
+                "test_report",
+                "todo_list",
+                "lint_output",
+                "task_folder",
+                "agent_transcript"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "check": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "command",
+                "seen_exit",
+                "effects"
+              ],
+              "properties": {
+                "command": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "seen_exit": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                },
+                "effects": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "workspace_only",
+                    "external"
+                  ]
+                }
+              }
+            },
+            "fingerprint": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "expected_value": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "effort": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "seen_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "A candidate without a runnable check is declined at triage."
+        ]
+      }
+    },
+    {
+      "slug": "template.triage-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the triage of every candidate before any model runs: attempt or decline, with the reason and rank",
+      "category_reason": "A deterministic triage run.",
+      "value": {
+        "describes": "the triage of every candidate before any model runs: attempt or decline, with the reason and rank",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "triage_id",
+            "run_ref",
+            "as_of",
+            "items",
+            "model_calls"
+          ],
+          "properties": {
+            "triage_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "run_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "decision",
+                  "reason",
+                  "rank"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "attempt",
+                      "decline"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "ranked",
+                      "no_runnable_check",
+                      "effectful_check",
+                      "already_green",
+                      "duplicate",
+                      "refuted_recently",
+                      "out_of_scope",
+                      "over_allowance"
+                    ]
+                  },
+                  "rank": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 10000
+                  }
+                }
+              }
+            },
+            "model_calls": {
+              "type": "integer",
+              "enum": [
+                0
+              ]
+            }
+          }
+        },
+        "rules": [
+          "Triage makes no model calls.",
+          "Every candidate appears exactly once."
+        ]
+      }
+    },
+    {
+      "slug": "template.baseline",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a candidate's baseline: its isolated copy, the target and other checks run first, and the digests of the check folder and environment",
+      "category_reason": "A baseline is a measured check run.",
+      "value": {
+        "describes": "a candidate's baseline: its isolated copy, the target and other checks run first, and the digests of the check folder and environment",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "baseline_id",
+            "candidate_ref",
+            "copy",
+            "target_check",
+            "other_checks",
+            "already_red",
+            "check_dir_sha256",
+            "environment_sha256",
+            "taken_at"
+          ],
+          "properties": {
+            "baseline_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "candidate_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "copy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "head",
+                "person_copy_reads"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "worktree",
+                    "copy"
+                  ]
+                },
+                "head": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "person_copy_reads": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "target_check": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "command",
+                "exit",
+                "tail_sha256"
+              ],
+              "properties": {
+                "command": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "exit": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 255
+                },
+                "tail_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "other_checks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "exit"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "exit": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 255
+                  }
+                }
+              }
+            },
+            "already_red": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "check_dir_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "environment_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "taken_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "The person's copy is read only for its head and whether it is clean."
+        ]
+      }
+    },
+    {
+      "slug": "template.attempt-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one attempt on a candidate: its branch, steps, calls, counters, fallbacks used and why it stopped",
+      "category_reason": "An attempt record is worker reported; grading rechecks it.",
+      "value": {
+        "describes": "one attempt on a candidate: its branch, steps, calls, counters, fallbacks used and why it stopped",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "attempt_id",
+            "candidate_ref",
+            "branch",
+            "steps",
+            "model_calls",
+            "tokens_in",
+            "tokens_out",
+            "counter_note",
+            "seconds",
+            "fallbacks",
+            "stopped_because",
+            "blocked_question",
+            "committed",
+            "ended_at"
+          ],
+          "properties": {
+            "attempt_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "candidate_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "steps": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "model_calls": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            "tokens_in": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 10000000000
+            },
+            "tokens_out": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 10000000000
+            },
+            "counter_note": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "seconds": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "fallbacks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "layer",
+                  "substitution"
+                ],
+                "properties": {
+                  "layer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "substitution": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "stopped_because": {
+              "type": "string",
+              "enum": [
+                "check_passed",
+                "allowance_ended",
+                "no_progress",
+                "blocked_named",
+                "fallback_refused"
+              ]
+            },
+            "blocked_question": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "committed": {
+              "type": "boolean"
+            },
+            "ended_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "Counters the harness did not report stay null with counter_note."
+        ]
+      }
+    },
+    {
+      "slug": "template.grade",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the runner's grade of one attempt: the check after, the digests, the diff's scope, regressions, the rung and the verification strength",
+      "category_reason": "A deterministic grading run.",
+      "value": {
+        "describes": "the runner's grade of one attempt: the check after, the digests, the diff's scope, regressions, the rung and the verification strength",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "grade_id",
+            "attempt_ref",
+            "baseline_ref",
+            "check_exit_after",
+            "check_dir_unchanged",
+            "environment_unchanged",
+            "only_checks_changed",
+            "regressions",
+            "rung",
+            "verification_strength",
+            "graded_at"
+          ],
+          "properties": {
+            "grade_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "attempt_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "baseline_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "check_exit_after": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            },
+            "check_dir_unchanged": {
+              "type": "boolean"
+            },
+            "environment_unchanged": {
+              "type": "boolean"
+            },
+            "only_checks_changed": {
+              "type": "boolean"
+            },
+            "regressions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "rung": {
+              "type": "string",
+              "enum": [
+                "already_green",
+                "verified",
+                "verified_by_test_change",
+                "verified_narrow",
+                "negative_result",
+                "cause_localised",
+                "blocked_named",
+                "narrowed",
+                "no_progress",
+                "budget_exhausted",
+                "skipped",
+                "nothing_found",
+                "void"
+              ]
+            },
+            "verification_strength": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rungs_run",
+                "rungs_passed"
+              ],
+              "properties": {
+                "rungs_run": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 8,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                },
+                "rungs_passed": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 8,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "graded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "The rung follows the outcome ladder only."
+        ]
+      }
+    },
+    {
+      "slug": "template.run-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the morning record of one run: counts first, every candidate on its rung with evidence, declines, handoffs, fallbacks, integrity, delivery and cost",
+      "category_reason": "A run report assembles graded results.",
+      "value": {
+        "describes": "the morning record of one run: counts first, every candidate on its rung with evidence, declines, handoffs, fallbacks, integrity, delivery and cost",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "run_id",
+            "window",
+            "headline",
+            "morning_summary",
+            "entries",
+            "declined",
+            "handoffs",
+            "fallbacks",
+            "integrity",
+            "delivery",
+            "runtime_questions",
+            "cost",
+            "not_run"
+          ],
+          "properties": {
+            "run_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "window": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "start",
+                "end"
+              ],
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                }
+              }
+            },
+            "headline": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "morning_summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1200
+            },
+            "entries": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "rung",
+                  "evidence",
+                  "branch"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "rung": {
+                    "type": "string",
+                    "enum": [
+                      "already_green",
+                      "verified",
+                      "verified_by_test_change",
+                      "verified_narrow",
+                      "negative_result",
+                      "cause_localised",
+                      "blocked_named",
+                      "narrowed",
+                      "no_progress",
+                      "budget_exhausted",
+                      "skipped",
+                      "nothing_found",
+                      "void"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "branch": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 160
+                  }
+                }
+              }
+            },
+            "declined": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "reason"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "handoffs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "why_short",
+                  "next_step"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "why_short": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "next_step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "fallbacks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "layer",
+                  "substitution",
+                  "recorded_on"
+                ],
+                "properties": {
+                  "layer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "substitution": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "recorded_on": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "integrity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "any_check_dir_changed",
+                "void_entries"
+              ],
+              "properties": {
+                "any_check_dir_changed": {
+                  "type": "boolean"
+                },
+                "void_entries": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 100,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "delivery": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "pushed",
+                "merged",
+                "discarded_kept_as_branches"
+              ],
+              "properties": {
+                "pushed": {
+                  "type": "boolean"
+                },
+                "merged": {
+                  "type": "boolean"
+                },
+                "discarded_kept_as_branches": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 100,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                }
+              }
+            },
+            "runtime_questions": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "cost": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "wall_seconds",
+                "model_calls",
+                "tokens_in",
+                "tokens_out",
+                "unmeasured_reason"
+              ],
+              "properties": {
+                "wall_seconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "model_calls": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "tokens_in": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 10000000000
+                },
+                "tokens_out": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 10000000000
+                },
+                "unmeasured_reason": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "not_run": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "Written in plain language; raw output stays in the evidence."
+        ]
+      }
+    },
+    {
+      "slug": "run-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for unattended run reports, with synthetic golden reports",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every morning report must pass before anyone relies on it. The two synthetic good reports pass all of them; each synthetic bad report fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "headline-counts",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "headline",
+              "pattern": "\\b[0-9]+ verified\\b"
+            },
+            "why": "The headline states counts, starting from what is verified."
+          },
+          {
+            "id": "headline-no-blanket-claim",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "headline",
+              "pattern": "(?i)\\b(all|everything)\\b[^.]{0,24}\\b(fixed|done|passed|green|solved)\\b"
+            },
+            "why": "A morning headline never says everything was fixed; it says how many items reached each rung."
+          },
+          {
+            "id": "entries-have-evidence",
+            "rule": {
+              "rule": "each_has",
+              "path": "entries",
+              "fields": [
+                "candidate_ref",
+                "rung",
+                "evidence"
+              ]
+            },
+            "why": "Every candidate sits on one rung with the evidence that put it there."
+          },
+          {
+            "id": "declined-have-reasons",
+            "rule": {
+              "rule": "each_has",
+              "path": "declined",
+              "fields": [
+                "candidate_ref",
+                "reason"
+              ]
+            },
+            "why": "A declined candidate says why, so declining is a result, not silence."
+          },
+          {
+            "id": "shortfalls-handed-off",
+            "rule": {
+              "rule": "each_has",
+              "path": "handoffs",
+              "fields": [
+                "candidate_ref",
+                "why_short",
+                "next_step"
+              ]
+            },
+            "why": "Each candidate that fell short carries a next step another worker can start from."
+          },
+          {
+            "id": "fallbacks-named",
+            "rule": {
+              "rule": "each_has",
+              "path": "fallbacks",
+              "fields": [
+                "layer",
+                "substitution",
+                "recorded_on"
+              ]
+            },
+            "why": "A degraded layer is named and recorded on the work it affected, never hidden."
+          },
+          {
+            "id": "moved-check-voids",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "integrity.any_check_dir_changed",
+                "equals": true
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "integrity.void_entries",
+                "min": 1
+              }
+            },
+            "why": "When a check folder changed during an attempt, that attempt is void, however green it looks."
+          },
+          {
+            "id": "nothing-pushed",
+            "rule": {
+              "rule": "enum",
+              "path": "delivery.pushed",
+              "values": [
+                false
+              ]
+            },
+            "why": "The run commits on branches in its own copies; publishing changes stays a person's act."
+          },
+          {
+            "id": "no-runtime-questions",
+            "rule": {
+              "rule": "enum",
+              "path": "runtime_questions",
+              "values": [
+                0
+              ]
+            },
+            "why": "Nobody answers during an unattended run; a question means the run was composed wrong."
+          },
+          {
+            "id": "unmeasured-not-zero",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "cost.tokens_out",
+                "equals": null
+              },
+              "then": {
+                "rule": "present",
+                "path": "cost.unmeasured_reason"
+              }
+            },
+            "why": "A counter the harness did not report stays empty with a reason; it is never written as zero."
+          },
+          {
+            "id": "plain-language-summary",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "morning_summary",
+              "pattern": "(?i)(\\bexit (code )?[0-9]+\\b|\\brc=|\\bstderr\\b|\\bPASS\\b|\\bFAIL\\b)"
+            },
+            "why": "The morning summary says what happened in plain words; raw machine output stays in the evidence."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-night",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "good-empty-night",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "run_id": "N-42",
+              "window": {
+                "start": "2026-10-30T23:00Z",
+                "end": "2026-10-31T06:00Z"
+              },
+              "headline": "0 verified; nothing unresolved was found",
+              "morning_summary": "Nothing needed work tonight. Every candidate check passed at baseline, so no step ran and nothing was changed.",
+              "entries": [],
+              "declined": [],
+              "handoffs": [],
+              "fallbacks": [],
+              "integrity": {
+                "any_check_dir_changed": false,
+                "void_entries": []
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": []
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 310,
+                "model_calls": 0,
+                "tokens_in": 0,
+                "tokens_out": 0,
+                "unmeasured_reason": ""
+              },
+              "not_run": []
+            }
+          },
+          {
+            "id": "bad-no-counts",
+            "label": "known_bad",
+            "fails": "headline-counts",
+            "why": "The headline has no counts.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "The run finished overnight",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-blanket-claim",
+            "label": "known_bad",
+            "fails": "headline-no-blanket-claim",
+            "why": "The headline claims everything was fixed.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified; all candidates fixed",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-entry-no-evidence",
+            "label": "known_bad",
+            "fails": "entries-have-evidence",
+            "why": "Entries have rungs but no evidence.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-silent-decline",
+            "label": "known_bad",
+            "fails": "declined-have-reasons",
+            "why": "A declined candidate has no reason.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5"
+                },
+                {
+                  "candidate_ref": "C-6"
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-next-step",
+            "label": "known_bad",
+            "fails": "shortfalls-handed-off",
+            "why": "Shortfalls carry no next step.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-hidden-fallback",
+            "label": "known_bad",
+            "fails": "fallbacks-named",
+            "why": "A fallback is not tied to the work it affected.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2."
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-green-tampered",
+            "label": "known_bad",
+            "fails": "moved-check-voids",
+            "why": "A check folder changed but nothing was voided.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": []
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-pushed",
+            "label": "known_bad",
+            "fails": "nothing-pushed",
+            "why": "The run pushed its branches.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": true,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-asked",
+            "label": "known_bad",
+            "fails": "no-runtime-questions",
+            "why": "The run waited on a question.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 1,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-zero-for-unknown",
+            "label": "known_bad",
+            "fails": "unmeasured-not-zero",
+            "why": "An unreported counter has no reason.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "One fix is verified on its branch. One failure is explained, not fixed. One attempt changed its own check and was voided. One was already passing. Two were declined before any model ran.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": ""
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          },
+          {
+            "id": "bad-machine-summary",
+            "label": "known_bad",
+            "fails": "plain-language-summary",
+            "why": "The summary pastes raw machine output.",
+            "finding": {
+              "run_id": "N-41",
+              "window": {
+                "start": "2026-10-29T23:00Z",
+                "end": "2026-10-30T06:00Z"
+              },
+              "headline": "1 verified, 1 cause localised, 1 void, 1 already green; 2 declined",
+              "morning_summary": "C-1 PASS, C-2 exit code 1, C-3 void.",
+              "entries": [
+                {
+                  "candidate_ref": "C-1",
+                  "rung": "verified",
+                  "evidence": "Failed at baseline, passes now; source files only.",
+                  "branch": "night/C-1"
+                },
+                {
+                  "candidate_ref": "C-2",
+                  "rung": "cause_localised",
+                  "evidence": "The failing assertion is quoted; the rounding helper.",
+                  "branch": "night/C-2"
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "rung": "void",
+                  "evidence": "The check folder digest changed.",
+                  "branch": "night/C-3"
+                },
+                {
+                  "candidate_ref": "C-4",
+                  "rung": "already_green",
+                  "evidence": "Passed at baseline.",
+                  "branch": ""
+                }
+              ],
+              "declined": [
+                {
+                  "candidate_ref": "C-5",
+                  "reason": "Its check writes outside the workspace."
+                },
+                {
+                  "candidate_ref": "C-6",
+                  "reason": "No runnable check."
+                }
+              ],
+              "handoffs": [
+                {
+                  "candidate_ref": "C-2",
+                  "why_short": "Allowance ended.",
+                  "next_step": "Keep two decimals in the rounding helper; rerun the tests."
+                },
+                {
+                  "candidate_ref": "C-3",
+                  "why_short": "It edited its own check.",
+                  "next_step": "Restore the check and retry with it read-only."
+                }
+              ],
+              "fallbacks": [
+                {
+                  "layer": "model tier",
+                  "substitution": "Cheaper tier ran C-2.",
+                  "recorded_on": "attempt A-2"
+                }
+              ],
+              "integrity": {
+                "any_check_dir_changed": true,
+                "void_entries": [
+                  "C-3"
+                ]
+              },
+              "delivery": {
+                "pushed": false,
+                "merged": false,
+                "discarded_kept_as_branches": [
+                  "night/C-3"
+                ]
+              },
+              "runtime_questions": 0,
+              "cost": {
+                "wall_seconds": 14220,
+                "model_calls": 37,
+                "tokens_in": 182400,
+                "tokens_out": null,
+                "unmeasured_reason": "Only input counters were reported."
+              },
+              "not_run": [
+                "The held-out check for C-1."
+              ]
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "run_id",
+            "window",
+            "headline",
+            "morning_summary",
+            "entries",
+            "declined",
+            "handoffs",
+            "fallbacks",
+            "integrity",
+            "delivery",
+            "runtime_questions",
+            "cost",
+            "not_run"
+          ],
+          "properties": {
+            "run_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "window": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "start",
+                "end"
+              ],
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                  "maxLength": 30
+                }
+              }
+            },
+            "headline": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "morning_summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1200
+            },
+            "entries": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "rung",
+                  "evidence",
+                  "branch"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "rung": {
+                    "type": "string",
+                    "enum": [
+                      "already_green",
+                      "verified",
+                      "verified_by_test_change",
+                      "verified_narrow",
+                      "negative_result",
+                      "cause_localised",
+                      "blocked_named",
+                      "narrowed",
+                      "no_progress",
+                      "budget_exhausted",
+                      "skipped",
+                      "nothing_found",
+                      "void"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "branch": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 160
+                  }
+                }
+              }
+            },
+            "declined": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "reason"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "handoffs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_ref",
+                  "why_short",
+                  "next_step"
+                ],
+                "properties": {
+                  "candidate_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "why_short": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "next_step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "fallbacks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "layer",
+                  "substitution",
+                  "recorded_on"
+                ],
+                "properties": {
+                  "layer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "substitution": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "recorded_on": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "integrity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "any_check_dir_changed",
+                "void_entries"
+              ],
+              "properties": {
+                "any_check_dir_changed": {
+                  "type": "boolean"
+                },
+                "void_entries": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 100,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "delivery": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "pushed",
+                "merged",
+                "discarded_kept_as_branches"
+              ],
+              "properties": {
+                "pushed": {
+                  "type": "boolean"
+                },
+                "merged": {
+                  "type": "boolean"
+                },
+                "discarded_kept_as_branches": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 100,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                }
+              }
+            },
+            "runtime_questions": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "cost": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "wall_seconds",
+                "model_calls",
+                "tokens_in",
+                "tokens_out",
+                "unmeasured_reason"
+              ],
+              "properties": {
+                "wall_seconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "model_calls": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                },
+                "tokens_in": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 10000000000
+                },
+                "tokens_out": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 10000000000
+                },
+                "unmeasured_reason": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "not_run": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "expected": {
+          "good-night": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-empty-night": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-counts": {
+            "verdict": "fail",
+            "failed_checks": [
+              "headline-counts"
+            ]
+          },
+          "bad-blanket-claim": {
+            "verdict": "fail",
+            "failed_checks": [
+              "headline-no-blanket-claim"
+            ]
+          },
+          "bad-entry-no-evidence": {
+            "verdict": "fail",
+            "failed_checks": [
+              "entries-have-evidence"
+            ]
+          },
+          "bad-silent-decline": {
+            "verdict": "fail",
+            "failed_checks": [
+              "declined-have-reasons"
+            ]
+          },
+          "bad-no-next-step": {
+            "verdict": "fail",
+            "failed_checks": [
+              "shortfalls-handed-off"
+            ]
+          },
+          "bad-hidden-fallback": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fallbacks-named"
+            ]
+          },
+          "bad-green-tampered": {
+            "verdict": "fail",
+            "failed_checks": [
+              "moved-check-voids"
+            ]
+          },
+          "bad-pushed": {
+            "verdict": "fail",
+            "failed_checks": [
+              "nothing-pushed"
+            ]
+          },
+          "bad-asked": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-runtime-questions"
+            ]
+          },
+          "bad-zero-for-unknown": {
+            "verdict": "fail",
+            "failed_checks": [
+              "unmeasured-not-zero"
+            ]
+          },
+          "bad-machine-summary": {
+            "verdict": "fail",
+            "failed_checks": [
+              "plain-language-summary"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.run-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a seven-hour overnight run plan",
+      "synthetic": true,
+      "category_reason": "A synthetic plan in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.run-plan"
+        },
+        "instance": {
+          "run_id": "N-41",
+          "mode": "overnight_batch",
+          "window": {
+            "start": "2026-10-29T23:00Z",
+            "end": "2026-10-30T06:00Z"
+          },
+          "allowance": {
+            "wall_seconds": 25200,
+            "per_candidate_seconds": 3600,
+            "max_model_calls": 200
+          },
+          "guards": {
+            "lock": "one lock file per workspace; a second run exits at once",
+            "stop_file": "a STOP file skips this window",
+            "probes": [
+              "on mains power",
+              "machine idle for 10 minutes",
+              "at least 20 GiB free"
+            ],
+            "resume": "same_window_only"
+          },
+          "candidate_sources": [
+            "yesterday's failed test reports",
+            "the repository's open TODO list"
+          ],
+          "workspace_rule": "isolated_copy_per_candidate",
+          "delivery": {
+            "branch_prefix": "night/",
+            "commits": "on_candidate_branch_only",
+            "push": false,
+            "merge": false
+          },
+          "runtime_questions": "refused",
+          "retention": {
+            "keep_runs": 14,
+            "prune": "by_rule_only"
+          },
+          "writes_only_to": [
+            "the run's own copies",
+            "the run's own record store"
+          ]
+        },
+        "shows": "The plan holds a lock, a stop file and three machine probes, splits a seven-hour window into one-hour candidate allowances and refuses questions at run time.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.triage-record",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: triage before any model runs",
+      "synthetic": true,
+      "category_reason": "A synthetic triage in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.triage-record"
+        },
+        "instance": {
+          "triage_id": "T-41",
+          "run_ref": "N-41",
+          "as_of": "2026-10-29T23:05Z",
+          "items": [
+            {
+              "candidate_ref": "C-1",
+              "decision": "attempt",
+              "reason": "ranked",
+              "rank": 1
+            },
+            {
+              "candidate_ref": "C-2",
+              "decision": "attempt",
+              "reason": "ranked",
+              "rank": 2
+            },
+            {
+              "candidate_ref": "C-3",
+              "decision": "attempt",
+              "reason": "ranked",
+              "rank": 3
+            },
+            {
+              "candidate_ref": "C-4",
+              "decision": "attempt",
+              "reason": "ranked",
+              "rank": 4
+            },
+            {
+              "candidate_ref": "C-5",
+              "decision": "decline",
+              "reason": "effectful_check",
+              "rank": null
+            },
+            {
+              "candidate_ref": "C-6",
+              "decision": "decline",
+              "reason": "no_runnable_check",
+              "rank": null
+            },
+            {
+              "candidate_ref": "C-7",
+              "decision": "decline",
+              "reason": "duplicate",
+              "rank": null
+            }
+          ],
+          "model_calls": 0
+        },
+        "shows": "Four candidates are attempted in rank order; one is declined because its check has effects outside the workspace, one has no check and one is a duplicate. No model was called.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-run",
+      "kind": "verb.decompose_dag",
+      "title": "Plan an unattended run",
+      "claimant": "agent",
+      "summary": "Write the run plan: mode, window, allowance per candidate, guards, where candidates come from, how results are delivered and what the run may write, with questions at run time refused.",
+      "outcome": "A run plan for a person to approve.",
+      "ready_outcome": "plan_written",
+      "pinned": [
+        "method",
+        "run-guards"
+      ],
+      "params": {
+        "window_start": {
+          "schema": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 30,
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
+          },
+          "description": "When the window opens: an ISO date, or a date and time in UTC.",
+          "required": true
+        },
+        "window_end": {
+          "schema": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 30,
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
+          },
+          "description": "When the window closes: an ISO date, or a date and time in UTC.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "run_plan",
+          "template": "template.run-plan"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Name the candidate sources people already trust, such as failed test reports or TODO lists.",
+        "Split the window into per-candidate allowances; leave room for baselines and the report.",
+        "Name the lock, the stop file and the machine probes; delivery commits on candidate branches only and never pushes or merges.",
+        "List every store the run may write to; it owns each of them."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The plan validates against template.run-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "allowance-fits",
+          "check": "per_candidate_seconds is at most wall_seconds.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sources-trusted",
+          "check": "Every candidate source is something a person already relies on.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "approve-run",
+      "kind": "verb.verify_gate",
+      "title": "Approve an unattended run",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "The person who owns the workspace reads the plan and approves it, approves it with changes or declines it, with the scope, allowance and an expiry. This template performs nothing itself.",
+      "outcome": "A run approval.",
+      "ready_outcome": "run_decided",
+      "slots": [
+        {
+          "name": "run_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the run plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "approval",
+          "template": "template.run-approval"
+        }
+      ],
+      "steps": [
+        "Read the plan's scope, window, allowance, guards and delivery.",
+        "Approve only what you would accept finding done in the morning; set an expiry."
+      ],
+      "acceptance": [
+        {
+          "id": "approval-matches-template",
+          "check": "The approval validates against template.run-approval's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "expiry-set",
+          "check": "expires is filled.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      }
+    },
+    {
+      "slug": "triage-candidates",
+      "kind": "verb.problemize",
+      "title": "Triage candidates before any model runs",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Rank candidates by value over effort, fold duplicates by fingerprint, skip work refuted recently, and decline with a named reason anything with no runnable check, a check with effects outside the workspace, or a check already passing.",
+      "outcome": "A triage record, or nothing_found when no candidate needs work.",
+      "ready_outcome": "candidates_triaged",
+      "pinned": [
+        "method",
+        "run-guards"
+      ],
+      "slots": [
+        {
+          "name": "run_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the run plan."
+        },
+        {
+          "name": "approval",
+          "category": "noun.eval_run",
+          "description": "Pin of the person's approval."
+        },
+        {
+          "name": "candidates",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the candidates.",
+          "many": true,
+          "max": 200
+        }
+      ],
+      "produces": [
+        {
+          "name": "triage",
+          "template": "template.triage-record"
+        }
+      ],
+      "steps": [
+        "Verify the pins and the approval. Make no model calls.",
+        "Decline before ranking: no runnable check, a check with outside effects, a check already passing, a duplicate or recently refuted work.",
+        "Rank the rest by expected value over effort and stop at what the window's allowance can hold."
+      ],
+      "acceptance": [
+        {
+          "id": "triage-matches-template",
+          "check": "The triage validates against template.triage-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-candidate-once",
+          "check": "Every pinned candidate appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "declines-named",
+          "check": "Every decline has a reason other than ranked.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "take-baseline",
+      "kind": "verb.benchmark_harness",
+      "title": "Take a candidate's baseline",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Make an isolated copy for one candidate, read the person's copy only for its head and whether it is clean, run the target check and every other check, and hash the check folder and the environment.",
+      "outcome": "A baseline, or already_green recorded through no_change when the target check passes.",
+      "ready_outcome": "baseline_taken",
+      "pinned": [
+        "run-guards"
+      ],
+      "slots": [
+        {
+          "name": "candidate",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the candidate."
+        },
+        {
+          "name": "run_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the run plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "baseline",
+          "template": "template.baseline"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Create the copy outside the person's working copy; never write to the person's copy.",
+        "Run the target check and every other check before any step; list the ones already failing.",
+        "Hash the check folder and the environment, including the interpreter and installed packages."
+      ],
+      "acceptance": [
+        {
+          "id": "baseline-matches-template",
+          "check": "The baseline validates against template.baseline's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "two-reads-only",
+          "check": "person_copy_reads names at most the head and the clean-or-dirty state.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-recorded",
+          "check": "check_dir_sha256 and environment_sha256 are both filled.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Local copies and local check commands only; nothing outside the machine is contacted."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "attempt-candidate",
+      "kind": "verb.solve_draft",
+      "title": "Attempt one candidate in its own copy",
+      "claimant": "agent",
+      "summary": "Work one candidate in its isolated copy with bounded steps under the step contract until the check passes, its allowance ends or the fallback ladder says stop, and commit on the candidate's branch in that copy only.",
+      "outcome": "An attempt record, or blocked with one question when the candidate needs an answer nobody can give at run time.",
+      "ready_outcome": "attempt_recorded",
+      "pinned": [
+        "method",
+        "fallback-ladder",
+        "atomic-step-contract:packet-rules"
+      ],
+      "slots": [
+        {
+          "name": "candidate",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the candidate."
+        },
+        {
+          "name": "baseline",
+          "category": "noun.eval_run",
+          "description": "Pin of the candidate's baseline."
+        }
+      ],
+      "produces": [
+        {
+          "name": "attempt",
+          "template": "template.attempt-record"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Work only inside the candidate's copy and allowance.",
+        "Assemble every step's packet under the step contract; a failed step is followed by an observing step, not a reworded retry.",
+        "Apply the fallback ladder and record every substitution on the attempt.",
+        "Commit on the candidate's branch in its copy; never push, merge or release anything."
+      ],
+      "acceptance": [
+        {
+          "id": "attempt-matches-template",
+          "check": "The attempt validates against template.attempt-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fallbacks-recorded",
+          "check": "Every fallback used appears in fallbacks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counters-honest",
+          "check": "tokens_in and tokens_out are null with counter_note whenever the harness did not report them.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Local copies and local check commands only, plus the worker's own assigned model allowance."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 7200
+      }
+    },
+    {
+      "slug": "grade-attempt",
+      "kind": "verb.verify_gate",
+      "title": "Grade an attempt on the outcome ladder",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Rerun the target and baseline checks, rehash the check folder and the environment, inspect the diff's scope and place the attempt on the outcome ladder; the attempt's own report is never read for the verdict.",
+      "outcome": "A grade with the rung and the verification strength.",
+      "ready_outcome": "attempt_graded",
+      "pinned": [
+        "outcome-ladder",
+        "verification-strength"
+      ],
+      "slots": [
+        {
+          "name": "attempt",
+          "category": "noun.eval_run",
+          "description": "Pin of the attempt record."
+        },
+        {
+          "name": "baseline",
+          "category": "noun.eval_run",
+          "description": "Pin of the baseline."
+        }
+      ],
+      "produces": [
+        {
+          "name": "grade",
+          "template": "template.grade"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Rerun the checks yourself in the candidate's copy.",
+        "A changed check folder or environment makes the attempt void; a diff that touches only checks is verified_by_test_change.",
+        "Record which verification rungs ran and which passed."
+      ],
+      "acceptance": [
+        {
+          "id": "grade-matches-template",
+          "check": "The grade validates against template.grade's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "void-on-change",
+          "check": "rung is void whenever check_dir_unchanged or environment_unchanged is false.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tests-only-flagged",
+          "check": "rung is verified_by_test_change whenever the check passes and only_checks_changed is true.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Local check commands only; nothing outside the machine is contacted."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "write-run-report",
+      "kind": "verb.compile_dag",
+      "title": "Write the morning report",
+      "claimant": "agent",
+      "summary": "Write the run's report in plain language: counts by rung first, every candidate with the evidence for its rung, declines with reasons, fallbacks used, unmeasured counters left empty with the reason and a next step for each shortfall.",
+      "outcome": "A run report that passes the run checks.",
+      "ready_outcome": "report_written",
+      "pinned": [
+        "run-checks",
+        "outcome-ladder",
+        "fallback-ladder"
+      ],
+      "slots": [
+        {
+          "name": "run_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the run plan."
+        },
+        {
+          "name": "triage",
+          "category": "noun.eval_run",
+          "description": "Pin of the triage record."
+        },
+        {
+          "name": "grades",
+          "category": "noun.eval_run",
+          "description": "Pins of every grade.",
+          "many": true,
+          "max": 200
+        }
+      ],
+      "produces": [
+        {
+          "name": "report",
+          "template": "template.run-report"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Take every rung from the grades, never from attempt records.",
+        "Lead with counts; an empty night says nothing unresolved was found.",
+        "Give each shortfall a next step another worker can start from, and keep every voided or discarded attempt's branch listed.",
+        "Keep raw machine output in the evidence and write the summary in plain words."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.run-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "run-checks-pass",
+          "check": "The report passes every check in run-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-match",
+          "check": "The headline's counts equal the entries by rung.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    }
+  ]
+}

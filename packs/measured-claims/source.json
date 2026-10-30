@@ -1,0 +1,3039 @@
+{
+  "pack_id": "measured-claims",
+  "title": "Measured claims",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for technical notes whose every claim says how it is known: measured here with the command and a digest of its output, read from a cited source, verified against a primary source, reported by someone else, designed or unverified; conclusions resting only on measured, read or verified claims; reported numbers reproduced before anything rests on them; unmeasured values left empty with a reason instead of zero; corrections appended rather than edited away; and stated limits.",
+  "dependencies": [
+    "findings-to-fixes",
+    "evaluation-design"
+  ],
+  "boundaries": [
+    "Reproductions run local commands in a stated environment; nothing outside it is contacted.",
+    "Corrections are appended; no claim is deleted from the record.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for technical notes whose every claim says how it is known",
+      "value": {
+        "lets_workers": "Write and check technical notes, summaries and commit messages so every claim says how it is known: label each claim as measured here, read, verified, reported, designed or unverified with the evidence that label needs, rest conclusions only on measured, read or verified claims, reproduce reported numbers before relying on them, leave unmeasured values empty with a reason, append corrections instead of editing them away, and state the limits.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "measured-claims.label-claims"
+            },
+            "when": "When a note, summary or commit message states results."
+          },
+          {
+            "verb": {
+              "$verb": "measured-claims.reproduce-claim"
+            },
+            "when": "Before anything rests on a reported or old number."
+          },
+          {
+            "verb": {
+              "$verb": "measured-claims.record-correction"
+            },
+            "when": "When a claim does not reproduce or is found wrong."
+          },
+          {
+            "verb": {
+              "$verb": "measured-claims.audit-note"
+            },
+            "when": "Before a note is relied on; a different worker or a person."
+          }
+        ],
+        "guardrails": [
+          "A claim without a label is unverified.",
+          "Absent is not zero.",
+          "Corrections are appended; the original claim stays on the record.",
+          "A tie is reported as a tie when the sample cannot separate the options."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "claim-checks"
+          },
+          {
+            "$pin": "example.reproduction"
+          },
+          {
+            "$pin": "example.correction"
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "claim-labels"
+        ],
+        [
+          "requires_noun",
+          "reproduction-rules"
+        ],
+        [
+          "requires_noun",
+          "comparison-rules"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How claims are labeled, reproduced, corrected and audited",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "label-claims sorts every claim in a draft by how it is known and attaches the evidence each label needs.",
+          "reproduce-claim reruns the method behind a reported or old number before anything rests on it.",
+          "record-correction appends what was claimed, what was true and how the error was made.",
+          "audit-note, by a different worker or a person, checks labels, evidence, conclusions, absent values, corrections and limits."
+        ],
+        "rules": [
+          "A status reachable without evidence will be reached without evidence: make evidence part of every measured claim.",
+          "Commit messages, summaries and status lines are claims too and take the same labels.",
+          "A record that keeps only the surviving claims teaches nothing about how the wrong ones were made.",
+          "Say what measured means in this note; a request reaching a probe is a lower bar than a tool working.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "finding": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "comparison": {
+            "$verb": "evaluation-design.design-evaluation"
+          }
+        }
+      }
+    },
+    {
+      "slug": "claim-labels",
+      "category": "noun.reflex_procedure",
+      "role": "claim_labels",
+      "title": "Six ways a claim can be known, and the evidence each needs",
+      "category_reason": "A fixed labeling vocabulary applied claim by claim.",
+      "value": {
+        "labels": {
+          "measured_here": "Run in this work: the command, a digest of its output, the environment, the sample size and the time.",
+          "read": "Read from a source without running it: the source, the exact locator and the revision.",
+          "verified": "Checked against a primary source in this work: which source and when.",
+          "reported": "Measured or stated by someone else and not reproduced here: who, and whether a reproduction was tried.",
+          "designed": "Intent only; nothing built or measured.",
+          "unverified": "Tried and could not confirm: what was tried."
+        },
+        "rules": [
+          "A claim without a label is unverified.",
+          "Conclusions rest on measured, read or verified claims only.",
+          "A reported number is a hypothesis with a number attached until it is reproduced."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "reproduction-rules",
+      "category": "noun.reflex_procedure",
+      "role": "reproduction_rules",
+      "title": "Reproducing a number before anything rests on it",
+      "category_reason": "Deterministic reproduction rules.",
+      "value": {
+        "rules": [
+          "Rerun the stated method in a stated environment, and set the tolerance before rerunning.",
+          "State n. One run is one run.",
+          "Not reproduced means a correction, even when the new number looks better.",
+          "Could not run is unknown, never reproduced.",
+          "Hash the output so a later reader can tell the evidence did not change."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "comparison-rules",
+      "category": "noun.reflex_procedure",
+      "role": "comparison_rules",
+      "title": "Comparing options without fooling yourself",
+      "category_reason": "Deterministic rules for honest comparisons.",
+      "value": {
+        "rules": [
+          "State the sample size for every option. Separating success rates near 100 and 75 percent at the usual 5 percent significance and 80 percent power takes about 27 cases per option; with fewer, report a tie and the counts.",
+          "Isolate shared state: a shared library or cache lets one option replay another's work.",
+          "Freeze the runner and environment during a comparison; changing them midway mixes several systems.",
+          "Record each command's own exit status; a pipe into a filter reports the filter's status, not the command's.",
+          "Credit a reuse only when the reused item existed before the run began.",
+          "Report every cost field for every option, and leave unmeasured fields empty with a reason."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.note",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a technical note with every claim sorted by how it is known, conclusions with what they rest on, absent values, corrections and limits",
+      "category_reason": "A note is a set of claims, each a hypothesis with its evidence.",
+      "value": {
+        "describes": "a technical note with every claim sorted by how it is known, conclusions with what they rest on, absent values, corrections and limits",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "note_id",
+            "title",
+            "as_of",
+            "measured_here",
+            "read",
+            "verified",
+            "reported",
+            "designed",
+            "unverified",
+            "conclusions",
+            "absent_values",
+            "corrections",
+            "not_established",
+            "what_measured_means"
+          ],
+          "properties": {
+            "note_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "as_of": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "measured_here": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "command",
+                  "output_sha256",
+                  "environment",
+                  "n",
+                  "observed_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "output_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "n": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  }
+                }
+              }
+            },
+            "read": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "source",
+                  "locator",
+                  "revision"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "revision": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "verified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "primary_source",
+                  "checked_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "primary_source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "checked_at": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "reported": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "reported_by",
+                  "reproduced"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "reported_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "reproduced": {
+                    "type": "string",
+                    "enum": [
+                      "no",
+                      "not_attempted",
+                      "failed"
+                    ]
+                  }
+                }
+              }
+            },
+            "designed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "unverified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "tried"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "tried": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "conclusions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "rests_on"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "rests_on": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            },
+            "absent_values": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "reason"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "corrections": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claimed",
+                  "what_was_true",
+                  "how_it_was_wrong",
+                  "found_by",
+                  "recorded_at"
+                ],
+                "properties": {
+                  "claimed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "what_was_true": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "how_it_was_wrong": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "found_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "recorded_at": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "not_established": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "what_measured_means": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "Claims are grouped by label; each group carries the evidence its label needs.",
+          "rests_on entries take the form label:id."
+        ]
+      }
+    },
+    {
+      "slug": "template.reproduction",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one attempt to reproduce a claimed number: method, environment, tolerance set first, runs and verdict",
+      "category_reason": "A reproduction is a measured rerun.",
+      "value": {
+        "describes": "one attempt to reproduce a claimed number: method, environment, tolerance set first, runs and verdict",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reproduction_id",
+            "claim_ref",
+            "claimed_value",
+            "method",
+            "environment",
+            "tolerance",
+            "runs",
+            "verdict",
+            "correction_needed",
+            "reproduced_at"
+          ],
+          "properties": {
+            "reproduction_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "claim_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "claimed_value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "method": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "environment": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "tolerance": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "runs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "run",
+                  "value"
+                ],
+                "properties": {
+                  "run": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "reproduced",
+                "not_reproduced",
+                "could_not_run"
+              ]
+            },
+            "correction_needed": {
+              "type": "boolean"
+            },
+            "reproduced_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "The tolerance is fixed before the first run."
+        ]
+      }
+    },
+    {
+      "slug": "template.correction",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an appended correction: what was claimed, what was true, how the error was made and who found it",
+      "category_reason": "A correction records a checked contradiction.",
+      "value": {
+        "describes": "an appended correction: what was claimed, what was true, how the error was made and who found it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "correction_id",
+            "note_ref",
+            "claim_ref",
+            "claimed",
+            "what_was_true",
+            "how_it_was_wrong",
+            "found_by",
+            "recorded_at"
+          ],
+          "properties": {
+            "correction_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "note_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "claim_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "claimed": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "what_was_true": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "how_it_was_wrong": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "found_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "recorded_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "Corrections are appended; the original claim is never deleted."
+        ]
+      }
+    },
+    {
+      "slug": "template.note-audit",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an audit of a note by someone other than its author: unlabeled claims, missing evidence, weak conclusions, zeros, edits and limits",
+      "category_reason": "An audit is a review against fixed rules.",
+      "value": {
+        "describes": "an audit of a note by someone other than its author: unlabeled claims, missing evidence, weak conclusions, zeros, edits and limits",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "audit_id",
+            "note_ref",
+            "auditor_kind",
+            "unlabeled_claims",
+            "measured_without_command",
+            "conclusions_on_unmeasured",
+            "zeros_for_absent",
+            "edited_away",
+            "limits_missing",
+            "verdict",
+            "audited_at"
+          ],
+          "properties": {
+            "audit_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "note_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "auditor_kind": {
+              "type": "string",
+              "enum": [
+                "different_worker",
+                "person"
+              ]
+            },
+            "unlabeled_claims": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "measured_without_command": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "conclusions_on_unmeasured": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "zeros_for_absent": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "edited_away": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "limits_missing": {
+              "type": "boolean"
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "passes",
+                "needs_changes",
+                "unknown"
+              ]
+            },
+            "audited_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "The auditor is never the author."
+        ]
+      }
+    },
+    {
+      "slug": "claim-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for technical notes, with synthetic golden notes",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every note must pass before anyone relies on it. The two synthetic good notes pass all of them; each synthetic bad note fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "as-of-dated",
+            "rule": {
+              "rule": "present",
+              "path": "as_of"
+            },
+            "why": "A note is true only as of a date."
+          },
+          {
+            "id": "measured-has-evidence",
+            "rule": {
+              "rule": "each_has",
+              "path": "measured_here",
+              "fields": [
+                "text",
+                "command",
+                "output_sha256",
+                "environment",
+                "n",
+                "observed_at"
+              ]
+            },
+            "why": "A claim measured here carries the command, a digest of its output, the environment, the sample size and the time."
+          },
+          {
+            "id": "read-has-locator",
+            "rule": {
+              "rule": "each_has",
+              "path": "read",
+              "fields": [
+                "text",
+                "source",
+                "locator"
+              ]
+            },
+            "why": "A claim read from a source says exactly where."
+          },
+          {
+            "id": "verified-has-source",
+            "rule": {
+              "rule": "each_has",
+              "path": "verified",
+              "fields": [
+                "text",
+                "primary_source",
+                "checked_at"
+              ]
+            },
+            "why": "A verified claim names the primary source it was checked against and when."
+          },
+          {
+            "id": "reported-attributed",
+            "rule": {
+              "rule": "each_has",
+              "path": "reported",
+              "fields": [
+                "text",
+                "reported_by",
+                "reproduced"
+              ]
+            },
+            "why": "A reported claim says who reported it and whether it was reproduced."
+          },
+          {
+            "id": "unverified-says-tried",
+            "rule": {
+              "rule": "each_has",
+              "path": "unverified",
+              "fields": [
+                "text",
+                "tried"
+              ]
+            },
+            "why": "An unverified claim says what was tried."
+          },
+          {
+            "id": "conclusions-cite",
+            "rule": {
+              "rule": "each_has",
+              "path": "conclusions",
+              "min": 1,
+              "fields": [
+                "text",
+                "rests_on"
+              ]
+            },
+            "why": "Every conclusion names the claims it rests on."
+          },
+          {
+            "id": "conclusions-rest-on-evidence",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "conclusions",
+              "pattern": "^(reported|designed|unverified):"
+            },
+            "why": "A conclusion rests on claims measured here, read from a cited source or verified, never on reported, designed or unverified ones."
+          },
+          {
+            "id": "absent-has-reason",
+            "rule": {
+              "rule": "each_has",
+              "path": "absent_values",
+              "fields": [
+                "name",
+                "reason"
+              ]
+            },
+            "why": "An unmeasured value is listed with a reason instead of being written as zero."
+          },
+          {
+            "id": "corrections-kept",
+            "rule": {
+              "rule": "each_has",
+              "path": "corrections",
+              "fields": [
+                "claimed",
+                "what_was_true",
+                "how_it_was_wrong"
+              ]
+            },
+            "why": "A correction keeps what was claimed, what was true and how the error was made."
+          },
+          {
+            "id": "limits-stated",
+            "rule": {
+              "rule": "min_items",
+              "path": "not_established",
+              "min": 1
+            },
+            "why": "Every note says what it does not establish."
+          },
+          {
+            "id": "bar-stated",
+            "rule": {
+              "rule": "present",
+              "path": "what_measured_means"
+            },
+            "why": "The note says what its measurements actually show, which is often a lower bar than the tool working."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-prefix-note",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "good-backup-note",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "note_id": "MN-6",
+              "title": "Nightly backup duration",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "The nightly backup took 41 minutes on average.",
+                  "command": "read the backup job's own timing log for 7 nights",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "the office file server",
+                  "n": 7,
+                  "observed_at": "2026-10-30T07:00Z"
+                }
+              ],
+              "read": [],
+              "verified": [],
+              "reported": [],
+              "designed": [],
+              "unverified": [],
+              "conclusions": [
+                {
+                  "text": "The backup finishes well inside its two-hour window.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                }
+              ],
+              "absent_values": [],
+              "corrections": [],
+              "not_established": [
+                "Whether a restore from these backups works; no restore was run."
+              ],
+              "what_measured_means": "Durations come from the job's own log, not from watching it."
+            }
+          },
+          {
+            "id": "bad-undated",
+            "label": "known_bad",
+            "fails": "as-of-dated",
+            "why": "No date.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-measured-no-command",
+            "label": "known_bad",
+            "fails": "measured-has-evidence",
+            "why": "Measured claims give no command.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-read-no-locator",
+            "label": "known_bad",
+            "fails": "read-has-locator",
+            "why": "A read claim does not say where.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-verified-no-source",
+            "label": "known_bad",
+            "fails": "verified-has-source",
+            "why": "A verified claim names no primary source.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-reported-anonymous",
+            "label": "known_bad",
+            "fails": "reported-attributed",
+            "why": "A reported claim is not attributed.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-unverified-silent",
+            "label": "known_bad",
+            "fails": "unverified-says-tried",
+            "why": "An unverified claim does not say what was tried.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-conclusion-uncited",
+            "label": "known_bad",
+            "fails": "conclusions-cite",
+            "why": "Conclusions cite nothing.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content."
+                },
+                {
+                  "text": "Denied tools stay in each request."
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-conclusion-on-reported",
+            "label": "known_bad",
+            "fails": "conclusions-rest-on-evidence",
+            "why": "A conclusion rests on a number nobody reproduced.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "reported:P1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-absent-unexplained",
+            "label": "known_bad",
+            "fails": "absent-has-reason",
+            "why": "An absent value has no reason.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens"
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-correction-edited",
+            "label": "known_bad",
+            "fails": "corrections-kept",
+            "why": "A correction drops how the error was made.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-no-limits",
+            "label": "known_bad",
+            "fails": "limits-stated",
+            "why": "The note claims no limits.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [],
+              "what_measured_means": "A request reached the endpoint and was counted."
+            }
+          },
+          {
+            "id": "bad-no-bar",
+            "label": "known_bad",
+            "fails": "bar-stated",
+            "why": "The note never says what measured means.",
+            "finding": {
+              "note_id": "MN-5",
+              "title": "Prefix cost of two configurations",
+              "as_of": "2026-10-30",
+              "measured_here": [
+                {
+                  "id": "M1",
+                  "text": "A costs 3,940 prefix tokens per step; B costs 820.",
+                  "command": "drive A and B at a local recording endpoint; count with tokenizer T",
+                  "output_sha256": "a3f1e2d4c5b6a7980716253443526170a3f1e2d4c5b6a7980716253443526170",
+                  "environment": "one laptop",
+                  "n": 3,
+                  "observed_at": "2026-10-30T08:00Z"
+                }
+              ],
+              "read": [
+                {
+                  "id": "R1",
+                  "text": "Tool denial is checked at the point of use.",
+                  "source": "harness docs",
+                  "locator": "permissions section",
+                  "revision": "v1.4"
+                }
+              ],
+              "verified": [
+                {
+                  "id": "V1",
+                  "text": "T is the provider's tokenizer.",
+                  "primary_source": "provider model page",
+                  "checked_at": "2026-10-30"
+                }
+              ],
+              "reported": [
+                {
+                  "id": "P1",
+                  "text": "B costs 180 tokens.",
+                  "reported_by": "another team's note",
+                  "reproduced": "failed"
+                }
+              ],
+              "designed": [
+                {
+                  "id": "D1",
+                  "text": "A step cache keyed on three digests."
+                }
+              ],
+              "unverified": [
+                {
+                  "id": "U1",
+                  "text": "B solves as many tasks as A.",
+                  "tried": "No task corpus was run."
+                }
+              ],
+              "conclusions": [
+                {
+                  "text": "B costs about a fifth of A before content.",
+                  "rests_on": [
+                    "measured:M1"
+                  ]
+                },
+                {
+                  "text": "Denied tools stay in each request.",
+                  "rests_on": [
+                    "measured:M1",
+                    "read:R1"
+                  ]
+                }
+              ],
+              "absent_values": [
+                {
+                  "name": "cache-read tokens",
+                  "reason": "Not reported by the endpoint."
+                }
+              ],
+              "corrections": [
+                {
+                  "claimed": "B costs 180 tokens.",
+                  "what_was_true": "It costs 820 on the wire.",
+                  "how_it_was_wrong": "Copied from another note without a rerun.",
+                  "found_by": "rerun RP-2",
+                  "recorded_at": "2026-10-30"
+                }
+              ],
+              "not_established": [
+                "Answer quality.",
+                "Anything beyond one machine."
+              ],
+              "what_measured_means": ""
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "note_id",
+            "title",
+            "as_of",
+            "measured_here",
+            "read",
+            "verified",
+            "reported",
+            "designed",
+            "unverified",
+            "conclusions",
+            "absent_values",
+            "corrections",
+            "not_established",
+            "what_measured_means"
+          ],
+          "properties": {
+            "note_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "as_of": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "measured_here": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "command",
+                  "output_sha256",
+                  "environment",
+                  "n",
+                  "observed_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "output_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "n": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  }
+                }
+              }
+            },
+            "read": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "source",
+                  "locator",
+                  "revision"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "revision": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "verified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "primary_source",
+                  "checked_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "primary_source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "checked_at": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "reported": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "reported_by",
+                  "reproduced"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "reported_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "reproduced": {
+                    "type": "string",
+                    "enum": [
+                      "no",
+                      "not_attempted",
+                      "failed"
+                    ]
+                  }
+                }
+              }
+            },
+            "designed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "unverified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "text",
+                  "tried"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "tried": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "conclusions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "rests_on"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "rests_on": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            },
+            "absent_values": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "reason"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "corrections": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claimed",
+                  "what_was_true",
+                  "how_it_was_wrong",
+                  "found_by",
+                  "recorded_at"
+                ],
+                "properties": {
+                  "claimed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "what_was_true": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "how_it_was_wrong": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "found_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "recorded_at": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "not_established": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "what_measured_means": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "expected": {
+          "good-prefix-note": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-backup-note": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-undated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "as-of-dated"
+            ]
+          },
+          "bad-measured-no-command": {
+            "verdict": "fail",
+            "failed_checks": [
+              "measured-has-evidence"
+            ]
+          },
+          "bad-read-no-locator": {
+            "verdict": "fail",
+            "failed_checks": [
+              "read-has-locator"
+            ]
+          },
+          "bad-verified-no-source": {
+            "verdict": "fail",
+            "failed_checks": [
+              "verified-has-source"
+            ]
+          },
+          "bad-reported-anonymous": {
+            "verdict": "fail",
+            "failed_checks": [
+              "reported-attributed"
+            ]
+          },
+          "bad-unverified-silent": {
+            "verdict": "fail",
+            "failed_checks": [
+              "unverified-says-tried"
+            ]
+          },
+          "bad-conclusion-uncited": {
+            "verdict": "fail",
+            "failed_checks": [
+              "conclusions-cite"
+            ]
+          },
+          "bad-conclusion-on-reported": {
+            "verdict": "fail",
+            "failed_checks": [
+              "conclusions-rest-on-evidence"
+            ]
+          },
+          "bad-absent-unexplained": {
+            "verdict": "fail",
+            "failed_checks": [
+              "absent-has-reason"
+            ]
+          },
+          "bad-correction-edited": {
+            "verdict": "fail",
+            "failed_checks": [
+              "corrections-kept"
+            ]
+          },
+          "bad-no-limits": {
+            "verdict": "fail",
+            "failed_checks": [
+              "limits-stated"
+            ]
+          },
+          "bad-no-bar": {
+            "verdict": "fail",
+            "failed_checks": [
+              "bar-stated"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.reproduction",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a reported number that did not reproduce",
+      "synthetic": true,
+      "category_reason": "A synthetic reproduction in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.reproduction"
+        },
+        "instance": {
+          "reproduction_id": "RP-2",
+          "claim_ref": "MN-5 P1",
+          "claimed_value": "180 tokens per step for configuration B",
+          "method": "Drive configuration B at the local recording endpoint with the same one-line task and count with tokenizer T.",
+          "environment": "recording endpoint on one laptop",
+          "tolerance": "within 5 percent",
+          "runs": [
+            {
+              "run": 1,
+              "value": "820"
+            },
+            {
+              "run": 2,
+              "value": "820"
+            },
+            {
+              "run": 3,
+              "value": "821"
+            }
+          ],
+          "verdict": "not_reproduced",
+          "correction_needed": true,
+          "reproduced_at": "2026-10-30T08:10Z"
+        },
+        "shows": "A reported 180 tokens per step measured 820, 820 and 821 in three runs against a 5 percent tolerance set beforehand, so a correction is needed.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.correction",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a correction appended to a note",
+      "synthetic": true,
+      "category_reason": "A synthetic correction in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.correction"
+        },
+        "instance": {
+          "correction_id": "CR-1",
+          "note_ref": "MN-5",
+          "claim_ref": "P1",
+          "claimed": "Configuration B costs 180 tokens per step.",
+          "what_was_true": "It costs 820 when measured on the wire, three runs within one token.",
+          "how_it_was_wrong": "The figure was copied from another team's note without being reproduced, and their setup removed tools from the request.",
+          "found_by": "reproduction RP-2",
+          "recorded_at": "2026-10-30"
+        },
+        "shows": "The correction keeps the original claim, the measured value and how the error was made, so the next reader learns how it happened.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "label-claims",
+      "kind": "verb.situate",
+      "title": "Label every claim in a note",
+      "claimant": "agent",
+      "summary": "Read a draft note, summary or commit message, sort every claim by how it is known, attach the evidence each label needs, tie each conclusion to the claims it rests on, list unmeasured values with reasons and state the limits.",
+      "outcome": "A labeled note that passes the claim checks, with unlabeled claims marked unverified.",
+      "ready_outcome": "claims_labeled",
+      "pinned": [
+        "claim-labels",
+        "claim-checks"
+      ],
+      "slots": [
+        {
+          "name": "draft",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the draft note, summary or commit message."
+        },
+        {
+          "name": "evidence",
+          "category": "noun.eval_run",
+          "description": "Pins of run records the draft cites.",
+          "many": true,
+          "max": 50,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "note",
+          "template": "template.note"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Label each claim from its evidence, not from how confident it sounds.",
+        "A claim with no evidence is unverified; say what would confirm it.",
+        "Rest conclusions only on measured, read or verified claims; propose reproduce-claim for any reported number a conclusion needs.",
+        "List every value that was not measured, with the reason, instead of writing zero."
+      ],
+      "acceptance": [
+        {
+          "id": "note-matches-template",
+          "check": "The note validates against template.note's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claim-checks-pass",
+          "check": "The note passes every check in claim-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "labels-honest",
+          "check": "Every label matches the evidence attached to it.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "reproduce-claim",
+      "kind": "verb.benchmark_harness",
+      "title": "Reproduce a claimed number",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Rerun the method behind one reported or old number in a stated environment, with the tolerance fixed first and n stated, and record whether it reproduced.",
+      "outcome": "A reproduction: reproduced, not reproduced or could not run.",
+      "ready_outcome": "claim_rerun",
+      "pinned": [
+        "reproduction-rules",
+        "comparison-rules"
+      ],
+      "slots": [
+        {
+          "name": "note",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the note."
+        }
+      ],
+      "params": {
+        "claim_id": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "description": "The claim to reproduce.",
+          "required": true
+        },
+        "runs": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "description": "How many runs.",
+          "default": 3
+        }
+      },
+      "produces": [
+        {
+          "name": "reproduction",
+          "template": "template.reproduction"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Write the tolerance before the first run.",
+        "Run the method n times in the stated environment and hash the output.",
+        "Write could_not_run with the reason when the method needs anything outside the permitted environment; propose record-correction when it did not reproduce."
+      ],
+      "acceptance": [
+        {
+          "id": "reproduction-matches-template",
+          "check": "The reproduction validates against template.reproduction's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tolerance-first",
+          "check": "The tolerance is recorded and the verdict follows from it.",
+          "method": "deterministic"
+        },
+        {
+          "id": "correction-flagged",
+          "check": "correction_needed is true whenever the verdict is not_reproduced.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Local commands in the stated environment only; a claim that needs anything else ends as could_not_run."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      }
+    },
+    {
+      "slug": "record-correction",
+      "kind": "verb.recheck_fragility",
+      "title": "Append a correction",
+      "claimant": "agent",
+      "summary": "When a claim did not reproduce or is found wrong, append a correction with what was claimed, what was true, how the error was made and who found it, and propose a revised note that keeps the original claim on the record.",
+      "outcome": "A correction, or no_change when the evidence does not contradict the claim.",
+      "ready_outcome": "correction_recorded",
+      "pinned": [
+        "claim-labels"
+      ],
+      "slots": [
+        {
+          "name": "note",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the note."
+        },
+        {
+          "name": "reproduction",
+          "category": "noun.eval_run",
+          "description": "Pin of the reproduction or other contradicting evidence."
+        }
+      ],
+      "produces": [
+        {
+          "name": "correction",
+          "template": "template.correction"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Quote the original claim exactly as it appeared.",
+        "Explain how the error was made, such as a copied number or a different setup, not only what the right value is.",
+        "Never delete the original; propose a revised note that lists the correction."
+      ],
+      "acceptance": [
+        {
+          "id": "correction-matches-template",
+          "check": "The correction validates against template.correction's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "original-quoted",
+          "check": "claimed matches the original claim's text.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cause-explained",
+          "check": "how_it_was_wrong explains the cause, not only the new value.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "audit-note",
+      "kind": "verb.verify_gate",
+      "title": "Audit a note before it is relied on",
+      "claimant": "agent_or_human",
+      "summary": "A worker or person other than the author checks a note's labels and evidence, conclusions resting on unmeasured claims, zeros standing in for unmeasured values, corrections edited away and a missing limits section.",
+      "outcome": "A note audit that passes or lists the changes needed.",
+      "ready_outcome": "note_audited",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "claim-labels",
+        "comparison-rules"
+      ],
+      "slots": [
+        {
+          "name": "note",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the note."
+        }
+      ],
+      "produces": [
+        {
+          "name": "audit",
+          "template": "template.note-audit"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Confirm you are not the note's author.",
+        "Recheck a sample of measured claims against their output digests.",
+        "List every finding by claim id; propose record-correction or reproduce-claim where they apply."
+      ],
+      "acceptance": [
+        {
+          "id": "audit-matches-template",
+          "check": "The audit validates against template.note-audit's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdict-follows",
+          "check": "verdict is passes only when every finding list is empty and limits_missing is false.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sample-rechecked",
+          "check": "The rechecked measured claims match their digests.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    }
+  ]
+}

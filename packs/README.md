@@ -59,8 +59,13 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Options chain review](options-chain-review/README.md) | Reviewing an options chain descriptively from a licensed source the requester already has: greeks, implied volatility and its rank, liquidity screens and roll candidates, every number with its data timestamp and never as financial advice | 27 | 7 |
 | [Checked data analysis](checked-data-analysis/README.md) | Analyzing a CSV file with a check at every step: profile, validation, flags that never drop rows, recorded queries, charts as data and findings traced to queries, while a person decides what they mean | 32 | 8 |
 | [Screenshot design review](screenshot-design-review/README.md) | Reviewing a user interface screenshot against design rules: described first, captured at named widths and themes, measured, recorded as located findings and verified after a re-render | 28 | 6 |
+| [Atomic step contract](atomic-step-contract/README.md) | Giving each atomic step exactly what it needs: a pinned procedure, a closed slice of state, the last observation and a grant that denies on the wire | 17 | 7 |
+| [Unattended run record](unattended-run-record/README.md) | Running work overnight or on a schedule and leaving a record anyone can check, graded by the check and with every failure kept | 17 | 7 |
+| [Retrieval triggers and reuse](retrieval-triggers-and-reuse/README.md) | Looking up existing nouns before generating new ones, and reusing past solutions only under the check | 18 | 7 |
+| [File triage at scale](file-triage-at-scale/README.md) | Organizing very large collections of files without losing any, with every move approved by a person and verified by hash | 18 | 9 |
+| [Measured claims](measured-claims/README.md) | Technical notes whose every claim says how it is known, with conclusions resting on evidence and corrections kept on the record | 12 | 4 |
 
-Together: 851 nouns and 271 verb templates across forty-three packs. The
+Together: 933 nouns and 305 verb templates across forty-eight packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -129,7 +134,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the nineteen worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the twenty-four worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether
