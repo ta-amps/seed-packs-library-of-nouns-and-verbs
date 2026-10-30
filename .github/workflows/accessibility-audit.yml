@@ -1,0 +1,36 @@
+# Checks for the accessibility audit pack's code, run only when that pack or this workflow changes.
+# Standard library only: nothing is installed.
+name: accessibility-audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/accessibility-audit/**"
+      - ".github/workflows/accessibility-audit.yml"
+  pull_request:
+    paths:
+      - "packs/accessibility-audit/**"
+      - ".github/workflows/accessibility-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Compile with warnings as errors, then every test, including the worked examples' recomputation.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/accessibility-audit/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python
