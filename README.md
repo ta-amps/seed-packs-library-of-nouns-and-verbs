@@ -2,7 +2,8 @@
 
 Instructions and synthetic examples for contributing useful noun records and
 verb seeds to the [Tessera work fabric](https://github.com/ta-amps/tessera).
-This repository is a guide, not an executable pack, importer or service.
+This repository is a guide and a library of seed packs, not an importer or service.
+A pack may include tested code as nouns, in `packs/<pack>/code/`. The library never runs pack code except in its own CI tests; workers run it under their own permissions. Reading, exporting or importing a pack still runs nothing, activates nothing, publishes nothing and grants nothing.
 
 A pack groups related inputs, reusable procedures, tools, resources and bounded
 work contracts. Nouns hold versioned data and evidence. Verbs request an outcome
@@ -133,6 +134,7 @@ shim. Do not upload an entire directory and assume that it becomes a workflow.
 ## Check a contribution locally
 
 Python 3.10+ and Git are enough; no package install, network or service is needed.
+Pack code has its own checks in `packs/<pack>/code/`, which a separate CI job runs.
 
 ```bash
 make check

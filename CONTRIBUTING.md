@@ -33,6 +33,21 @@ registry, scheduler, compiler, reasoning service or pack importer. Validation co
 may inspect repository files offline; it must not issue API requests or run user
 content. No new server-paid model layer is introduced by a contribution guide.
 
+## Adding code to a pack
+
+A pack may include tested code as nouns, in `packs/<pack>/code/`. The library never runs pack code except in its own CI tests; workers run it under their own permissions. Reading, exporting or importing a pack still runs nothing, activates nothing, publishes nothing and grants nothing.
+
+- Put the code, its project file, tests and a Makefile in `packs/<pack>/code/`. Point
+  the pack's tool nouns at that path; `{"$code": "<pack>"}` in `source.json` resolves to
+  the code's path, file count and digest. The build hashes every file into the manifest
+  and never runs or imports any of it.
+- Add a CI job for the code with path filters for `packs/<pack>/**`. It installs what the
+  code needs and runs its full tests. The root `make check` stays install-free.
+- The code is a tool a worker runs inside a claimed verb. It must not become a service,
+  importer, client runtime, scheduler, queue or model caller, and it holds no credentials.
+- State the code's license and provenance, and keep its tests honest: a skipped test is
+  not a pass, so CI sets the flags that turn missing tools into failures.
+
 ## Changing a seed pack
 
 Edit `packs/<pack>/source.json` or the pack README, never the generated `nouns.json`,

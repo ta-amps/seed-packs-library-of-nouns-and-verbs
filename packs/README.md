@@ -2,7 +2,7 @@
 
 A seed pack is a collection of **nouns** (reusable knowledge, templates, tool cards and
 examples) and **verbs** (work an authorized worker can claim). That is all a pack
-contains. Packs are separate from surfaces: a website, app or chat client can show what a
+contains. A pack may include tested code as nouns, in `packs/<pack>/code/`. The library never runs pack code except in its own CI tests; workers run it under their own permissions. Reading, exporting or importing a pack still runs nothing, activates nothing, publishes nothing and grants nothing. Packs are separate from surfaces: a website, app or chat client can show what a
 pack produces, but no pack is part of a surface, and packs carry plain-English names, not
 product names. A pack adds no new kind of entity, runtime, agent authority or scheduler.
 Reading, exporting or importing a pack runs nothing, activates nothing, admits or
@@ -47,6 +47,7 @@ building nonprofit kits and keeping knowledge fresh) and lists what is still mis
 | `nouns.json` | Generated. One Tessera `RecordWrite` body per line: create-only, `surface_only`, quarantined |
 | `verbs.json` | Generated. One Tessera `TaskSpec` template per line, with unfilled input slots |
 | `manifest.json` | Generated. File digests, each noun's value SHA-256 and each verb's identity |
+| `code/` | Optional. Tested code the pack's tool nouns point at, with its own tests. The manifest pins every file by digest; the library runs it only in CI |
 
 ## Workers create nouns and verbs
 
