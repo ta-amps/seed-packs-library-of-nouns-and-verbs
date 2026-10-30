@@ -151,7 +151,7 @@ class Tessera:
                 "without Tessera installed. Regenerate with scripts/validate_against_tessera.py --write."
             ),
             "tessera": {
-                "repository": "https://github.com/ta-amps/tessera",
+                "repository": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine",
                 "commit": git_head(self.checkout),
                 "files": {
                     path: hashlib.sha256((self.checkout / path).read_bytes()).hexdigest()

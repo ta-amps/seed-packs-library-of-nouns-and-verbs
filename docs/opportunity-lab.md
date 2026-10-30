@@ -1,6 +1,6 @@
 # Opportunity Lab: seed alternative solutions
 
-The [Tessera Opportunity Lab](https://github.com/ta-amps/tessera/blob/main/docs/opportunity-lab.md)
+The [Tessera Opportunity Lab](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/opportunity-lab.md)
 provides a runnable seed-authoring example for eleven startup themes. It uses
 existing noun storage and verb queues; this contribution repository remains a
 guide. The initial pack creates two independent ideation attempts per theme.
