@@ -1,0 +1,851 @@
+{
+  "pack_id": "public-budget-report",
+  "title": "Public budget report",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for reporting on a public state or city budget: finding the official budget document through permitted access, extracting one program area's line items with their pages and lines, writing a report that cites every figure, having a different worker review it, and delivering it only when a person decides.",
+  "dependencies": [
+    "policy-and-law-watch"
+  ],
+  "boundaries": [
+    "Official public budget documents only, through access their publishers permit; never scraping against a platform's terms.",
+    "No personal data, and a page and line for every figure.",
+    "A person decides what is delivered; outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for reporting on a public state or city budget, one program area at a time",
+      "value": {
+        "lets_workers": "Find a jurisdiction's official budget document, extract the line items for one program area with their pages and lines, and write a plain report in which every figure is cited and every change is computed from cited figures. A different worker reviews every figure, and a person decides whether the report is delivered.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "public-budget-report.find-budget-document"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-budget-report.extract-line-items"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-budget-report.write-budget-report"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-budget-report.review-budget-report"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-budget-report.decide-delivery"
+            }
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "policy-and-law-watch:guardrail.public-sources-only"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.no-scraping-against-terms"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.no-personal-data"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.cite-every-claim"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.person-decides"
+          }
+        ],
+        "worked_examples": "Offline only: two pages of a synthetic stand-in city budget, its Library Services line items and a cited report, each checked against its template."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.public-sources-only"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.no-scraping-against-terms"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.no-personal-data"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.cite-every-claim"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.person-decides"
+        ],
+        [
+          "requires_noun",
+          "template.budget-source"
+        ],
+        [
+          "requires_noun",
+          "template.line-items"
+        ],
+        [
+          "requires_noun",
+          "template.budget-report"
+        ]
+      ]
+    },
+    {
+      "slug": "template.budget-source",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the official budget document found, and how it may be read",
+      "category_reason": "A located budget document is a lead that extraction and review confirm.",
+      "value": {
+        "describes": "the official budget document for a jurisdiction and fiscal year, with its publisher, access method and terms",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "jurisdiction",
+            "fiscal_year",
+            "publisher",
+            "source_url",
+            "access",
+            "terms_permit_automated_reading",
+            "terms_read_on"
+          ],
+          "properties": {
+            "jurisdiction": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "fiscal_year": {
+              "type": "string",
+              "pattern": "^FY[0-9]{4}$"
+            },
+            "publisher": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "source_url": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "access": {
+              "type": "string",
+              "enum": [
+                "official website",
+                "official feed",
+                "official api",
+                "official bulk download"
+              ]
+            },
+            "terms_permit_automated_reading": {
+              "type": "boolean",
+              "const": true
+            },
+            "terms_read_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            }
+          }
+        },
+        "example": {
+          "jurisdiction": "City of Example (synthetic)",
+          "fiscal_year": "FY2027",
+          "publisher": "City of Example Budget Office (synthetic)",
+          "source_url": "https://example.invalid/budget/fy2027-adopted.pdf",
+          "access": "official bulk download",
+          "terms_permit_automated_reading": true,
+          "terms_read_on": "2026-10-30"
+        }
+      }
+    },
+    {
+      "slug": "template.line-items",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a program area's line items, each with its page and line",
+      "category_reason": "Extracted line items are a structured reading of the budget that review confirms.",
+      "value": {
+        "describes": "the line items of one program area from an official budget document, each with its fund, fiscal year, amount, page and line",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_url",
+            "program_area",
+            "items"
+          ],
+          "properties": {
+            "source_url": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "program_area": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "program_area",
+                  "line_item",
+                  "fund",
+                  "fiscal_year",
+                  "amount",
+                  "page",
+                  "line"
+                ],
+                "properties": {
+                  "program_area": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "line_item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "fund": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "fiscal_year": {
+                    "type": "string",
+                    "pattern": "^FY[0-9]{4}$"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "line": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every amount is copied from its page and line unchanged."
+        ]
+      }
+    },
+    {
+      "slug": "template.budget-report",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a cited budget report for one program area",
+      "category_reason": "A budget report is a candidate that a different worker reviews and a person decides on.",
+      "value": {
+        "describes": "a plain-language report on one program area's budget in which every figure cites its page and line, with changes computed from cited figures",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_url",
+            "program_area",
+            "notice",
+            "figures",
+            "changes",
+            "points"
+          ],
+          "properties": {
+            "source_url": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "program_area": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "notice": {
+              "type": "string",
+              "const": "Figures come from the official budget document cited. This report is not financial or legal advice."
+            },
+            "figures": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "amount",
+                  "page",
+                  "line"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "line": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            },
+            "changes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "from_amount",
+                  "to_amount",
+                  "change",
+                  "percent_change"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "from_amount": {
+                    "type": "number"
+                  },
+                  "to_amount": {
+                    "type": "number"
+                  },
+                  "change": {
+                    "type": "number"
+                  },
+                  "percent_change": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "cites"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200
+                  },
+                  "cites": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every figure cites a page and line.",
+          "Every change is computed from two cited figures."
+        ]
+      }
+    },
+    {
+      "slug": "example.standin-budget",
+      "category": "noun.public_source",
+      "role": "example",
+      "synthetic": true,
+      "title": "Synthetic stand-in source: two pages of a city budget for offline worked examples",
+      "value": {
+        "notice": "SYNTHETIC stand-in for an official budget document, made for offline worked examples. Not a real budget.",
+        "publisher": "City of Example Budget Office (synthetic)",
+        "source_url": "https://example.invalid/budget/fy2027-adopted.pdf",
+        "access": "official bulk download",
+        "terms_permit_automated_reading": true,
+        "pages": [
+          {
+            "page": 41,
+            "lines": [
+              {
+                "line": 3,
+                "program_area": "Library Services",
+                "line_item": "Branch operations",
+                "fund": "General Fund",
+                "FY2026": 4200000,
+                "FY2027": 4410000
+              },
+              {
+                "line": 4,
+                "program_area": "Library Services",
+                "line_item": "Literacy programs",
+                "fund": "General Fund",
+                "FY2026": 310000,
+                "FY2027": 280000
+              }
+            ]
+          },
+          {
+            "page": 42,
+            "lines": [
+              {
+                "line": 7,
+                "program_area": "Library Services",
+                "line_item": "Digital access and devices",
+                "fund": "Technology Fund",
+                "FY2026": 150000,
+                "FY2027": 195000
+              },
+              {
+                "line": 8,
+                "program_area": "Parks and Recreation",
+                "line_item": "Youth programs",
+                "fund": "General Fund",
+                "FY2026": 820000,
+                "FY2027": 820000
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slug": "example.line-items",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: Library Services line items from the synthetic stand-in budget",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.line-items"
+        },
+        "instance": {
+          "source_url": "https://example.invalid/budget/fy2027-adopted.pdf",
+          "program_area": "Library Services",
+          "items": [
+            {
+              "program_area": "Library Services",
+              "line_item": "Branch operations",
+              "fund": "General Fund",
+              "fiscal_year": "FY2027",
+              "amount": 4410000,
+              "page": 41,
+              "line": 3
+            },
+            {
+              "program_area": "Library Services",
+              "line_item": "Literacy programs",
+              "fund": "General Fund",
+              "fiscal_year": "FY2027",
+              "amount": 280000,
+              "page": 41,
+              "line": 4
+            },
+            {
+              "program_area": "Library Services",
+              "line_item": "Digital access and devices",
+              "fund": "Technology Fund",
+              "fiscal_year": "FY2027",
+              "amount": 195000,
+              "page": 42,
+              "line": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slug": "example.budget-report",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: a cited Library Services budget report from the synthetic stand-in",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.budget-report"
+        },
+        "instance": {
+          "source_url": "https://example.invalid/budget/fy2027-adopted.pdf",
+          "program_area": "Library Services",
+          "notice": "Figures come from the official budget document cited. This report is not financial or legal advice.",
+          "figures": [
+            {
+              "label": "Literacy programs, FY2026",
+              "amount": 310000,
+              "page": 41,
+              "line": 4
+            },
+            {
+              "label": "Literacy programs, FY2027",
+              "amount": 280000,
+              "page": 41,
+              "line": 4
+            },
+            {
+              "label": "Digital access and devices, FY2027",
+              "amount": 195000,
+              "page": 42,
+              "line": 7
+            }
+          ],
+          "changes": [
+            {
+              "label": "Literacy programs, FY2026 to FY2027",
+              "from_amount": 310000,
+              "to_amount": 280000,
+              "change": -30000,
+              "percent_change": -9.7
+            }
+          ],
+          "points": [
+            {
+              "text": "The adopted budget gives literacy programs USD 280,000 in FY2027, USD 30,000 less than in FY2026.",
+              "cites": [
+                "p. 41, line 4"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "find-budget-document",
+      "kind": "verb.probe_source",
+      "title": "Find the official budget document and read its terms",
+      "claimant": "agent",
+      "summary": "Find the jurisdiction's official budget document for the fiscal year through its publisher's own site or download, and record its access method and terms.",
+      "outcome": "The official budget document located, or blocked when its terms forbid automated reading.",
+      "ready_outcome": "document_found",
+      "pinned": [
+        "policy-and-law-watch:guardrail.public-sources-only",
+        "policy-and-law-watch:guardrail.no-scraping-against-terms"
+      ],
+      "params": {
+        "jurisdiction": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "description": "The state or city."
+        },
+        "fiscal_year": {
+          "schema": {
+            "type": "string",
+            "pattern": "^FY[0-9]{4}$"
+          },
+          "description": "The fiscal year, such as FY2027.",
+          "default": "FY2027"
+        }
+      },
+      "network": [
+        "read_only",
+        "The jurisdiction's own official budget publications only, through their website or bulk download as their terms permit; no logins and no personal data."
+      ],
+      "produces": [
+        {
+          "name": "budget_source",
+          "template": "template.budget-source"
+        }
+      ],
+      "steps": [
+        "Find the budget on the publisher's own official site.",
+        "Read the terms first, and stop with blocked if they forbid automated reading.",
+        "Record the access method and the date the terms were read."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.budget-source's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "official-publisher",
+          "check": "The source is published by the jurisdiction's own budget office or legislature.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "extract-line-items",
+      "kind": "verb.ingest",
+      "title": "Extract one program area's line items with pages and lines",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Copy every line item of the program area from the official document, unchanged, with its fund, fiscal year, amount, page and line.",
+      "outcome": "The program area's line items, each with its page and line.",
+      "ready_outcome": "line_items_extracted",
+      "pinned": [
+        "policy-and-law-watch:guardrail.cite-every-claim"
+      ],
+      "slots": [
+        {
+          "name": "budget_document",
+          "category": "noun.public_source",
+          "description": "Pin of a noun holding the official budget document's pages."
+        }
+      ],
+      "params": {
+        "program_area": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": "The program area, as the budget names it."
+        }
+      },
+      "produces": [
+        {
+          "name": "line_items",
+          "template": "template.line-items"
+        }
+      ],
+      "steps": [
+        "Copy every line item of the program area unchanged.",
+        "Keep each item's fund, fiscal year, page and line."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.line-items's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "amounts-exact",
+          "check": "Every amount equals the document's figure at its page and line.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "public-budget-report.find-budget-document"
+      ]
+    },
+    {
+      "slug": "write-budget-report",
+      "kind": "verb.solve_draft",
+      "title": "Write a cited report on the program area's budget",
+      "claimant": "agent",
+      "summary": "Write a plain report from the line items in which every figure cites its page and line and every change is computed from two cited figures.",
+      "outcome": "A cited budget report with its notice.",
+      "ready_outcome": "report_written",
+      "pinned": [
+        "policy-and-law-watch:guardrail.cite-every-claim",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "line_items",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the extracted line items."
+        }
+      ],
+      "produces": [
+        {
+          "name": "budget_report",
+          "template": "template.budget-report"
+        }
+      ],
+      "steps": [
+        "Cite a page and line for every figure.",
+        "Compute every change from two cited figures, rounded to one decimal place in percent.",
+        "Describe the figures plainly, without advice."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.budget-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "changes-computed",
+          "check": "Every change equals to_amount minus from_amount, and percent_change equals change divided by from_amount times 100, rounded to one decimal place.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plain",
+          "check": "Points read plainly and make no recommendation.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "public-budget-report.extract-line-items"
+      ]
+    },
+    {
+      "slug": "review-budget-report",
+      "kind": "verb.verify_gate",
+      "title": "Review every figure in the report (a different worker)",
+      "claimant": "agent_or_human",
+      "review": "distinct_reviewer",
+      "summary": "A worker other than the drafter checks every figure against its cited page and line, recomputes every change, and lists every problem.",
+      "outcome": "A review that passes only with no problems.",
+      "ready_outcome": "report_reviewed",
+      "pinned": [
+        "policy-and-law-watch:guardrail.cite-every-claim",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "budget_report",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the budget report."
+        },
+        {
+          "name": "budget_document",
+          "category": "noun.public_source",
+          "description": "Pin of the official budget document."
+        }
+      ],
+      "produces": [
+        {
+          "name": "report_review",
+          "template": "policy-and-law-watch:template.citation-review"
+        }
+      ],
+      "steps": [
+        "Check every figure against its cited page and line.",
+        "Recompute every change.",
+        "Pass only when there are no problems."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against the citation review template's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-figure",
+          "check": "Every figure in the report is counted in citations_checked.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The reviewing key differs from the drafting key.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "public-budget-report.write-budget-report"
+      ]
+    },
+    {
+      "slug": "decide-delivery",
+      "kind": "verb.verify_gate",
+      "title": "Decide whether the reviewed report is delivered (a person)",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person reads the reviewed report and its review and decides whether it is delivered to the requester inside the requester's scope.",
+      "outcome": "A delivery record: delivered or held, with the reason.",
+      "ready_outcome": "delivery_decided",
+      "pinned": [
+        "policy-and-law-watch:guardrail.person-decides"
+      ],
+      "slots": [
+        {
+          "name": "budget_report",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the budget report."
+        },
+        {
+          "name": "report_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the review."
+        }
+      ],
+      "produces": [
+        {
+          "name": "delivery_record",
+          "template": "policy-and-law-watch:template.delivery-record"
+        }
+      ],
+      "steps": [
+        "Deliver only a report whose review passed.",
+        "Holding is a valid decision; give the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against the delivery record template's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-passed",
+          "check": "A deliver decision has review_passed true.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-decides",
+          "check": "The submitting key belongs to a person who neither drafted nor reviewed the report.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "public-budget-report.review-budget-report"
+      ]
+    }
+  ]
+}

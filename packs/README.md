@@ -42,8 +42,10 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Policy research brief kit](kit-policy-research-brief/README.md) | A small nonprofit's policy research brief | 14 | 5 |
 | [Victim support referral kit](kit-victim-support-referrals/README.md) | A victim services program's referral kit | 13 | 5 |
 | [Volunteer shift schedule kit](kit-volunteer-shift-schedule/README.md) | A disaster relief hub's volunteer shift schedule | 14 | 5 |
+| [Policy and law watch](policy-and-law-watch/README.md) | Watching official public sources for new laws and rules on a topic | 15 | 5 |
+| [Public budget report](public-budget-report/README.md) | Reporting on a public state or city budget | 7 | 5 |
 
-Together: 494 nouns and 159 verb templates across twenty-six packs. The
+Together: 516 nouns and 169 verb templates across twenty-eight packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 

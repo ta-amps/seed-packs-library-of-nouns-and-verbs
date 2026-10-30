@@ -1,0 +1,148 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "public-budget-report",
+  "title": "Public budget report",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for reporting on a public state or city budget: finding the official budget document through permitted access, extracting one program area's line items with their pages and lines, writing a report that cites every figure, having a different worker review it, and delivering it only when a person decides.",
+  "license": "MIT",
+  "store": "seedpack.public-budget-report",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "dbe789e6af546590845e020c43106b594d492e96ce93a75c2e4bc3b1fd943fc4"
+    },
+    {
+      "path": "source.json",
+      "sha256": "2bcd8d70ef45799152cb4457ec9929f556b664efcbe0bf680a1d7a2b10712c4b"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "abcca539d0be1a66220317bf2a7ed5e56158ec486d0cde8ad87e1798a40083e6"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "090dcd32c7c4fbc9edcd338f341496b915c61935b365f86571d19dc0c080f701"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "public-budget-report.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "d0910c0b59120e702250521e517cfe4fb11b0529409a45f6a382692491f9ffa4"
+    },
+    {
+      "key": "public-budget-report.v0.1.0.template.budget-source",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "efb3b645af975ebdb886a858c00611717df5710117d494f60b58bf3d367d655e"
+    },
+    {
+      "key": "public-budget-report.v0.1.0.template.line-items",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "5e98d135e3c2e80a7e7f5bb5fb42b44fb56e5fd48b511fb3fc50cfde7696e83f"
+    },
+    {
+      "key": "public-budget-report.v0.1.0.template.budget-report",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "a8b198318c391b4c280f746bbd00542bf52df43235e34a74d069818783ba1bb3"
+    },
+    {
+      "key": "public-budget-report.v0.1.0.example.standin-budget",
+      "category_id": "noun.public_source",
+      "role": "example",
+      "value_sha256": "4b8dc249096b7b4a723de4442c54278532892e4f1bd17f0beef8b6b66bd73df2"
+    },
+    {
+      "key": "public-budget-report.v0.1.0.example.line-items",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "88507276c1b71f34f5da5d00b268bc2eb4852c0aab57cfe8db53fed354d6929d"
+    },
+    {
+      "key": "public-budget-report.v0.1.0.example.budget-report",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "71f8c3dd01bf838d60be0cfd0b6e0ac23f18dad6c85025216e90d754f4e1f8fa"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "public-budget-report.find-budget-document",
+      "kind": "verb.probe_source",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:public-budget-report:find-budget-document:bd103cda0f899d7db23fb62fb26cf42e77d350b31d4f79661149367f2ccb0d4a",
+      "report_shape_sha256": "f5b0e657bf5a441bc252bd76cc0f7909abe285167b3afe64632527fbac3afe16"
+    },
+    {
+      "template_id": "public-budget-report.extract-line-items",
+      "kind": "verb.ingest",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:public-budget-report:extract-line-items:e0f8461e5fa2f6fb630c03cdb6a63fef15c4f290358d5f9b89a1b724872345c2",
+      "report_shape_sha256": "35e89e425da9d75e6fe1ae21aef1182eea628d2f071f8483d7bae93a59ebbbe9"
+    },
+    {
+      "template_id": "public-budget-report.write-budget-report",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:public-budget-report:write-budget-report:6cdc83f61279be9574342446ec24b72acf5a2323cfd18302624d08a56ee4ada2",
+      "report_shape_sha256": "7a62d871fc3074282d2a204e62202f1020be5b0323aee56e0e767d4d18172e0f"
+    },
+    {
+      "template_id": "public-budget-report.review-budget-report",
+      "kind": "verb.verify_gate",
+      "claimant": "agent_or_human",
+      "idempotency_key": "seedpack:public-budget-report:review-budget-report:edeea827c17904e27d46c0b6cbc2abbd79df3e353dafcbe0ec5d29c9abb032cc",
+      "report_shape_sha256": "d8d5123cf7abd614f0098fb45fc8234420bc3e75530d287eddf3b01759dacb6c"
+    },
+    {
+      "template_id": "public-budget-report.decide-delivery",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:public-budget-report:decide-delivery:fc35003ee81a59cefc85aa9cb7d9f7999287d171b50f1373520f1599ef440fc2",
+      "report_shape_sha256": "3ae11ecad3521fab31e7a61f7ed83991adaa510ef0b07819aa1d3ec79409432a"
+    }
+  ],
+  "dependencies": [
+    {
+      "pack_id": "policy-and-law-watch",
+      "keys": [
+        "policy-and-law-watch.v0.1.0.guardrail.cite-every-claim",
+        "policy-and-law-watch.v0.1.0.guardrail.no-personal-data",
+        "policy-and-law-watch.v0.1.0.guardrail.no-scraping-against-terms",
+        "policy-and-law-watch.v0.1.0.guardrail.person-decides",
+        "policy-and-law-watch.v0.1.0.guardrail.public-sources-only",
+        "policy-and-law-watch.v0.1.0.template.citation-review",
+        "policy-and-law-watch.v0.1.0.template.delivery-record"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Official public budget documents only, through access their publishers permit; never scraping against a platform's terms.",
+    "No personal data, and a page and line for every figure.",
+    "A person decides what is delivered; outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

@@ -2,7 +2,7 @@
 
 This repository is instructions, synthetic examples and a library of proposed seed
 packs, dated October 29, 2026. It does not deploy a service and contains no active
-pack. The [packs/](../packs/README.md) library holds twenty-six proposals that are validated
+pack. The [packs/](../packs/README.md) library holds twenty-eight proposals that are validated
 examples only: none is installed, imported, admitted or activated, and no worker has
 run their verbs. Read the target's live schemas before sending work.
 
@@ -20,7 +20,7 @@ run their verbs. Read the target's live schemas before sending work.
 | Automatic ongoing work | None; no scheduler, daemon or server inference is installed |
 | Capability research | Proposed source-to-decision seed workflow; no feed/inbox connector, automated comparison or adoption service is active |
 | Research seed authoring | Tessera owns a bounded task builder with synthetic requests for discovery, collector preparation, schedule proposals and one scan; this repository remains a guide |
-| Seed pack library | Twenty-six proposed packs, 494 nouns and 159 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
+| Seed pack library | Twenty-eight proposed packs, 516 nouns and 169 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
 | Pack code | The video and motion pack ships its tested code in `packs/video-motion/code`. Its own CI job runs every test with real renders and the pinned Tessera; the root `make check` pins the code by digest, never runs it, and stays install-free |
 | Pack scope probe | On a throwaway local Store, a key on the importing team's surface read every pack noun, claimed and submitted every instantiated template and updated a success record by compare-and-set; keys on other surfaces or none saw nothing. HTTP grants were not exercised |
 | Pack inventory | [Plain-English map](pack-inventory.md) of packs for making a video, building nonprofit kits and keeping knowledge fresh, with what is still missing |
