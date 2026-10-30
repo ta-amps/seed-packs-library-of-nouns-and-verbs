@@ -1,0 +1,292 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "codebase-health-review",
+  "title": "Codebase health review",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a periodic review of a codebase's health at one commit: aging TODO and FIXME comments dated by git blame, error paths no test reaches, swallowed exceptions, logging noise, dependency drift and unpinned or stale versions, flaky tests, oversized modules, duplicated code, docs that drift from the code and secrets hygiene reported by place and pattern only, with tested code for the TODO ager and the swallowed-exception finder, a report that gives every area its own status and no single score, and every item that needs action recorded as a finding.",
+  "license": "MIT",
+  "store": "seedpack.codebase-health-review",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "07d0ff5a990b9e521f1710ee93581e2513a8db9b131ad6b08333459ab27dcb98"
+    },
+    {
+      "path": "source.json",
+      "sha256": "04d664b9c53c50b731ee266bfa07757054d8f17903eb47e110d9ae121a5a958f"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "f41c0267434bc5ea097c50c2234ef39f74e1a12b7e60d59ebd7bf8cb6cf64004"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "066f54a70228641271f53be26b8be7cbde52d7533fbbcd96f969d8b3e8dade15"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "codebase-health-review.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "ac2ed972c42b5fb42690ab47751f65f6222c95d637b2e8b3178fb02a393c3d27"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "7656db9726b411d11093b31cb6c306e92661b1c3b9e0050896f9223c9e83711a"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.guardrail.report-where-not-what",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "b81d193f17aa77243020cce73c5633b0257c5c3576875faa62f8cb851fdfa708"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.guardrail.age-from-history",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "84be4224fb7d89b739b3bfa17066f3faa8a32ed9c059b195d41bc5ab2baf5f81"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.guardrail.no-single-score",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "78a4c622ed2a47b099e5a4a70f632f03217ac2edf6c95cab73c3c12c9f6d9c4d"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.health-areas",
+      "category_id": "noun.benchmark_suite",
+      "role": "health_areas",
+      "value_sha256": "0898c465037532e98db2536201c463d186d864a665a548a7ac8b44253784b67e"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.todo-rules",
+      "category_id": "noun.reflex_procedure",
+      "role": "todo_rules",
+      "value_sha256": "663660355d4bd1c20cb6849215f9de46deb2b47eec67c18e9bd42a9e4ace67d5"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.swallow-rules",
+      "category_id": "noun.reflex_procedure",
+      "role": "swallow_rules",
+      "value_sha256": "36212b4d19a92d6b2e5f411cb15247efab213066f5cccf303bef8ee5d351e888"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.secret-patterns",
+      "category_id": "noun.reflex_procedure",
+      "role": "secret_patterns",
+      "value_sha256": "ae11d57152b67bc4143639e50d90ef102e608ab45631f46e852785756f6fdf4e"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.tool.health-checks",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "5d8349f217c8e28189150e8a4540f560710457e8aa3ff75279f296c8efd0ab2a"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.health-checks",
+      "category_id": "noun.benchmark_suite",
+      "role": "worked_example",
+      "value_sha256": "84dda98a7608ad6f785bc2e9923e54c4b0a249836de88d91fd88919f37dacdd8"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.template.health-plan",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "c5317446ed0ab513563b1b093f4937df48daf13c1530e804c2dc82cd0be9035b"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.template.area-result",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "e402495bbb538f5a34558ff1139d77861dac033b5186477086db69bd68412249"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.template.health-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "df3a6d9e8adf44f7bda54ba0c1b5daf4fc90efdd4537f9efe6b6070430f38915"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.sources",
+      "category_id": "noun.public_source",
+      "role": "sources",
+      "value_sha256": "69bc38271f92106060e76c1f0e2e4fe692133bd5386002a96e5c4260bbb07e4d"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.test-cases",
+      "category_id": "noun.benchmark_suite",
+      "role": "test_cases",
+      "value_sha256": "f7c422c085819ef03e407371e036631440d5985768465b96615bddfa72a6211e"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.example.health-inputs",
+      "category_id": "noun.benchmark_suite",
+      "role": "fixture",
+      "value_sha256": "e72ccf817427f1f7fca81a7d8d9dc166b283ad3d72097cb88247b0917a2a5507"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.example.health-plan",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "35d6302cc453185acb7b244a54a10ac181bcfafe1909d7192c01965ce88b9c87"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.example.todo-scan",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "f4ca8d8c47fdaa9e683d882b42560bd116bcaea752f81571e099f78712db6564"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.example.swallow-scan",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "ba0526485b2fd72672a62aa3692f8453d4e582605f23b7f030798224af714d73"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.example.health-report",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "4b4da8ed801ac23674bd351ceab97e115813510aa20aba7473ca866c33193298"
+    },
+    {
+      "key": "codebase-health-review.v0.1.0.example.finding",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "84022f1e185cd6f6ecd4340f88e6be0cc960898ea7db9935cb1119022b545268"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "codebase-health-review.plan-health-review",
+      "kind": "verb.problemize",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:plan-health-review:21fc802395f1bb7d674f477d44e9ecbb39f0d3d2971ddb19f49ce4387e0a616b",
+      "report_shape_sha256": "94c7ea4a0e54770607fd1ea7ff03e206bb2beb594a44a92fb45e07063479358d"
+    },
+    {
+      "template_id": "codebase-health-review.age-todos",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:age-todos:c4b3a9536174a777828bb82fc6236361d378892192200bcbc351eaeed5d32cdd",
+      "report_shape_sha256": "5688f9e4693993f07524c7ad65586fa86f907a56a04b5c30c20a5d1944a0a3aa"
+    },
+    {
+      "template_id": "codebase-health-review.find-swallowed-exceptions",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:find-swallowed-exceptions:7d5393c8e9c35bf7e6a2848385a1ca43eca03d119757c436b5168e0f41e00647",
+      "report_shape_sha256": "8f89b69bc79e8a61056b4c6fa34ad7609b24bf251122d009068ac7963640f061"
+    },
+    {
+      "template_id": "codebase-health-review.check-dependencies",
+      "kind": "verb.recheck_fragility",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:check-dependencies:ded60da8b36f60cc3b72943f101996d7b302b126f91905a5b7674fde56859e0a",
+      "report_shape_sha256": "36e9d362f0d39c6bd618ec9ca984bff906b9f0665d38f42640cfe5fa2a97eb5a"
+    },
+    {
+      "template_id": "codebase-health-review.measure-code-structure",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:measure-code-structure:1e924355096d2f7a3098c1279e4743e6cc120642b19e5c54f59c3bbd0ab59104",
+      "report_shape_sha256": "b4bae4c1bfb284dcb25f01f12bdebd1471ee06890c5a6ba43398a74fdf108641"
+    },
+    {
+      "template_id": "codebase-health-review.review-tests-and-errors",
+      "kind": "verb.situate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:review-tests-and-errors:f7bfa4f2eea3bd5f59e23e3a85e31324038a8ff753066489e8828baf69c0bc68",
+      "report_shape_sha256": "53bb2500e5f3f65ad795e5255338da37d24533c34df05789f212313c62c96fc3"
+    },
+    {
+      "template_id": "codebase-health-review.scan-secret-patterns",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:scan-secret-patterns:1b0759fac058e062a4c642e268f88eb75de4ca848964d4396ac847f06d67e7a4",
+      "report_shape_sha256": "506f4dab27fb0a7258ab1ac09644c570be6f4625836b38babe02f7ea44aa2545"
+    },
+    {
+      "template_id": "codebase-health-review.write-health-report",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:codebase-health-review:write-health-report:88f1dae681cfd3d2e886d635ffe9a8ff846de65dd339a9550328c454c53926ff",
+      "report_shape_sha256": "b88b6a3182f11b0bc5cb215f56628d6a5e69f29519f273d763e0d435083a2664"
+    }
+  ],
+  "code": {
+    "path": "packs/codebase-health-review/code",
+    "files": 13,
+    "sha256": "335b2bf302dec3f55fd7e3792b59db9e3ced104fb75c5ec2b8bbd6c25e4385b4",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "findings-to-fixes",
+      "keys": [
+        "findings-to-fixes.v0.1.0.kind-definitions",
+        "findings-to-fixes.v0.1.0.record-checks",
+        "findings-to-fixes.v0.1.0.template.finding"
+      ]
+    },
+    {
+      "pack_id": "wiring-and-conformance-checks",
+      "keys": [
+        "wiring-and-conformance-checks.v0.1.0.guardrail.real-path-not-a-mock",
+        "wiring-and-conformance-checks.v0.1.0.rules.behavior-coverage"
+      ]
+    },
+    {
+      "pack_id": "security-review",
+      "keys": [
+        "security-review.v0.1.0.scope-rules"
+      ]
+    },
+    {
+      "pack_id": "freshness-checks",
+      "keys": [
+        "freshness-checks.v0.1.0.freshness-policy"
+      ]
+    },
+    {
+      "pack_id": "file-triage-at-scale",
+      "keys": [
+        "file-triage-at-scale.v0.1.0.secret-exclusions"
+      ]
+    },
+    {
+      "pack_id": "video-qa",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "One commit, read from a clean local copy; the code under review is never deployed, pushed or changed by these verbs.",
+    "Possible secrets are reported by file, line and pattern name only, as private findings for the security review pack.",
+    "Ages come from git history or are unknown; no author is named in a finding.",
+    "The pack's code reads files and runs read-only git commands; it opens no network connection, calls no model and writes no file.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

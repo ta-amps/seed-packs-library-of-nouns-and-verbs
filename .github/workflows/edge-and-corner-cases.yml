@@ -1,0 +1,39 @@
+# Checks for the edge and corner cases pack's code, run only when that pack or this workflow changes.
+# Standard library only: nothing is installed. A missing time zone database fails instead of skipping.
+name: edge-and-corner-cases
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/edge-and-corner-cases/**"
+      - ".github/workflows/edge-and-corner-cases.yml"
+  pull_request:
+    paths:
+      - "packs/edge-and-corner-cases/**"
+      - ".github/workflows/edge-and-corner-cases.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Compile with warnings as errors, then every test: each label's claim, daylight saving against the time zone
+    # database, determinism across processes, and the worked example's recomputation.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/edge-and-corner-cases/code
+    env:
+      EDGE_CASES_REQUIRE_TZDATA: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python

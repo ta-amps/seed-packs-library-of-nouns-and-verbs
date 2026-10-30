@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds sixty-two proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds sixty-seven proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -82,10 +82,15 @@ activated**, and no worker has run them yet.
 | [Living research dossier](packs/living-research-dossier/README.md) | Keeping a research dossier current: a numbered queue of questions worked in cycles with one sub-agent per question, every fact with an as-of date and a decay class, named triggers once the questions run out, decayed facts refreshed and a person deciding what is published |
 | [Wiring and conformance checks](packs/wiring-and-conformance-checks/README.md) | Proving a code project's capabilities are wired in: modules no live path imports, config fields that survive a reload, health probes that probe, a canary per rule and documented behaviors tested on their real path, with tested code |
 | [Persona panel and second opinion](packs/persona-panel-second-opinion/README.md) | Independent second opinions before a decision: reviewers with stated perspectives on other model families, takes given alone, a synthesis that leads with where they disagree and a person who decides |
+| [Continuous self-review](packs/continuous-self-review/README.md) | Reviewing a repository, site or video on a rotation: scopes with their checks, a schedule a person approves, the next scopes picked by a fixed rule, each run diffed against the last into new, still open, fixed, unverified, unexplained, unchecked and reopened findings, fixes verified by a different worker and a review log that shows coverage over time |
+| [Annoyance hunt](packs/annoyance-hunt/README.md) | Hunting friction and papercuts from the user's point of view: friction tours for websites, command lines, videos and docs, complaints in people's own words, and each annoyance counted for how often it happens and how much it hurts, ranked by frequency times pain and confirmed by a person |
+| [Edge and corner cases](packs/edge-and-corner-cases/README.md) | Finding edge and corner cases on purpose: input, interface, video and API catalogs, every expected result written before anything runs, a tested seeded generator of labelled cases, inputs stored escaped and every failure kept as its own regression test |
+| [Regression watch](packs/regression-watch/README.md) | Watching for regressions against baselines a person accepted: screenshots by hash, metrics with tolerances, API shapes and video QA numbers measured again on every change, every mismatch rerun twice so flaky checks are told apart from real regressions |
+| [Codebase health review](packs/codebase-health-review/README.md) | Reviewing a codebase's health at one commit: TODO ages from git blame, swallowed exceptions, untested error paths, flaky tests, dependency drift, unpinned versions, oversized modules, duplicated code, docs drift and secrets reported by place only, with tested code and no single score |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1258
-nouns and 405 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1380
+nouns and 440 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

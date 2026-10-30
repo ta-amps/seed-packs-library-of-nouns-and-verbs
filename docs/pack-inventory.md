@@ -173,8 +173,9 @@ review judges whole tasks.
 | Time-boxed exploration with charters, debriefs and coverage | [Exploratory testing charters](../packs/exploratory-testing-charters/README.md): draft-charters, run-session, debrief-session (a different worker), map-coverage | Added now | seed_hypothesis (charter), eval_run (notes, debrief, coverage), skill_pack (charter guide, test ideas), reflex_procedure (session rules, coverage model) | generate_seed, benchmark_harness, verify_gate | record-finding per bug, draft-charters per gap |
 
 **Still needed here:** moderated usability sessions with real participants, which need consent
-and human-sensitive handling; performance and load budgets; contract tests for public APIs; and
-testing translated surfaces with fluent reviewers.
+and human-sensitive handling; load testing; contract tests for public APIs against their published
+descriptions; and testing translated surfaces with fluent reviewers. Performance budgets kept against
+an accepted baseline, and API response shapes, are now in section 10's regression watch pack.
 
 ## 8. Editing, reviewing and improving a video
 
@@ -225,6 +226,36 @@ hands disagreements of taste to the taste palettes pack and factual ones to the 
 **Still needed here:** wiring checks for languages other than Python; dossier sources that sit behind a
 login the requester holds, which need their own access rules; and a panel of real stakeholders instead of
 perspective cards, which needs consent and human-sensitive handling.
+
+## 10. Self-review, continuous review, annoyances, edge cases, regressions and code health
+
+Added October 30, 2026, at the owner's request for nouns and verbs that help a project review itself
+again and again and find the annoying things, annoying edges and corner cases of its videos, sites,
+APIs and code. Every finding they produce is a findings to fixes finding, with reproduce, propose-fix,
+fix, verify-fix by a different worker and add-regression-guard proposed. They pin the checks of the
+packs that own them instead of redefining them: the codebase health review leaves unused modules,
+mock-only tests and hollow probes to the wiring and conformance checks pack, the regression watch
+compares the video QA pack's numbers and the release and verify pack's smoke results, and the review
+rotation's approval is the unattended run record pack's run approval.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| Scopes with their checks, and a rotation a person approves | [Continuous self-review](../packs/continuous-self-review/README.md): map-scopes, approve-schedule (a person's verb) | Added now | seed_hypothesis (scope catalog, schedule proposal), eval_run (run approval) | problemize, verify_gate (human) | pick-scope |
+| The next scopes by a fixed rule, each run diffed against the last and logged | Continuous self-review: pick-scope, diff-against-last-run, log-run | Added now | eval_run (scope pick, review run, review log), reflex_procedure (rotation and diff rules), benchmark_suite (loop checks) | recheck_fragility, verify_gate, compile_dag | the scope's checks, verify-fix, reproduce, triage |
+| A worker's own change reviewed before hand-off, and what the loop misses | Continuous self-review: review-own-change, review-coverage | Added now | eval_run (self-review, coverage review) | verify_gate, distill_reflex | record-finding, validate-checks, review-patterns |
+| Friction tours as charters, walked and counted, and complaints in people's words | [Annoyance hunt](../packs/annoyance-hunt/README.md): draft-friction-charters, hunt-annoyances, collect-complaints | Added now | seed_hypothesis (charters in the exploratory form), eval_run (friction session, complaint extract), benchmark_suite (friction catalog) | generate_seed, benchmark_harness, ingest | rank-annoyances |
+| Frequency times pain, a person's confirmation and a finding per annoyance | Annoyance hunt: rank-annoyances, confirm-ranking (a person's verb), record-annoyance-findings | Added now | eval_run (annoyance log, confirmation), seed_hypothesis (findings), reflex_procedure (pain scale, frequency rule) | situate, verify_gate (human), problemize | propose-fix, a palette brief for a taste call |
+| Expected results first, then seeded labelled cases | [Edge and corner cases](../packs/edge-and-corner-cases/README.md): plan-edges, generate-cases | Added now; the generator is tested | seed_hypothesis (edge plan), eval_run (case set), benchmark_suite (catalogs, labels), code_node (generator) | problemize, generate_seed | run-input-cases and the check verbs |
+| Inputs, interface states, video edges and API edges, each failure a finding | Edge and corner cases: run-input-cases, check-interface-edges, check-video-edges, check-api-edges, record-edge-findings | Added now | eval_run (case results), seed_hypothesis (findings) | benchmark_harness, verify_gate, problemize | add-regression-guard with the failing case as the test |
+| Baselines a person accepts, and every change measured again | [Regression watch](../packs/regression-watch/README.md): capture-baseline, accept-baseline (a person's verb), apply-acceptance, remeasure | Added now | eval_run (baseline set, acceptance, new baseline set, measurement), skill_pack (baseline kinds) | benchmark_harness, verify_gate (human) | compare-to-baseline |
+| Mismatches rerun before reporting, regressions and flaky checks as findings | Regression watch: compare-to-baseline, report-regressions, review-flaky-checks | Added now | eval_run (comparison, flake review), seed_hypothesis (findings), reflex_procedure (compare and flake rules) | verify_gate, problemize, distill_reflex | accept-baseline, validate-checks |
+| One commit, area by area, with a TODO ager and a swallowed-exception finder | [Codebase health review](../packs/codebase-health-review/README.md): plan-health-review, age-todos, find-swallowed-exceptions, check-dependencies, measure-code-structure, review-tests-and-errors, scan-secret-patterns | Added now; the ager and finder are tested | seed_hypothesis (plan), eval_run (area results), benchmark_suite (health areas), code_node (health checks) | problemize, verify_gate, recheck_fragility, situate | write-health-report |
+| A report with no single score, and a finding per item that needs action | Codebase health review: write-health-report | Added now | eval_run (health report), seed_hypothesis (findings) | compile_dag | propose-fix, check-deprecations, find-unused-modules |
+
+**Still needed here:** moderated sessions with real people for the annoyance hunt, which need consent and
+human-sensitive handling; health checks for languages other than Python and for coverage tools' own
+output formats; and pixel-level comparison of screenshots that differ only in antialiasing, which the
+regression watch leaves to a pinned capture setup and a person.
 
 ## Work that supports every goal
 
