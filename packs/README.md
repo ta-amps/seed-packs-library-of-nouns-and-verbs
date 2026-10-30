@@ -36,8 +36,9 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
+| [Monthly program impact report kit](kit-monthly-impact-report/README.md) | A community nonprofit's monthly program impact report | 13 | 5 |
 
-Together: 411 nouns and 128 verb templates across twenty packs. The
+Together: 424 nouns and 133 verb templates across twenty-one packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
