@@ -1,0 +1,1716 @@
+{
+  "pack_id": "video-uat",
+  "title": "Video audience acceptance",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for testing whether a video's intended viewers understand it: named audience segments, video-specific tasks such as saying what it does after one viewing, pass criteria fixed before any session, consented sessions a person runs, answers scored by two scorers, a decision that never generalizes beyond the people asked, and every miss turned into a finding about the cut.",
+  "dependencies": [
+    "video-review",
+    "user-acceptance-testing"
+  ],
+  "boundaries": [
+    "A person recruits viewers and runs every session; workers plan, score and decide by the fixed criteria.",
+    "Viewers are pseudonymous; nothing identifiable is recorded or stored.",
+    "Results describe the people asked and this cut only; a missed criterion stays on the record.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for testing whether a video's intended viewers understand it, with pass criteria fixed before any session",
+      "value": {
+        "lets_workers": "Plan and score an audience acceptance test of one video: named audience segments, video-specific tasks such as saying what it does after one viewing, recalling a number, naming the next step, reading the AI-voice label or getting the gist with the sound off, pass criteria fixed before the first session, consented sessions a person runs, answers scored against keys by two scorers, a decision that follows from the criteria, and every miss turned into a timestamped finding for the cut.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "video-uat.plan-acceptance"
+            },
+            "when": "Audiences, tasks, consent and pass criteria, fixed first."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.agree-criteria"
+            },
+            "when": "The accountable person agrees to the exact plan version before any session."
+          },
+          {
+            "verb": {
+              "$verb": "video-uat.run-session"
+            },
+            "when": "A person shows the video and asks, one viewer at a time."
+          },
+          {
+            "verb": {
+              "$verb": "video-uat.score-answers"
+            },
+            "when": "Two scorers mark answers against the keys."
+          },
+          {
+            "verb": {
+              "$verb": "video-uat.decide-acceptance"
+            },
+            "when": "The fixed criteria, applied to the scores."
+          },
+          {
+            "verb": {
+              "$verb": "video-uat.write-uat-findings"
+            },
+            "when": "Each miss and each confusing moment becomes a finding."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.sign-off"
+            },
+            "when": "The accountable person records go, no-go or go with conditions."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.re-review"
+            },
+            "when": "After the fixes, the cut is reviewed again; a new test needs a new plan."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.consent-and-privacy"
+          },
+          {
+            "$pin": "guardrail.criteria-before-sessions"
+          },
+          {
+            "$pin": "guardrail.test-the-video"
+          },
+          {
+            "$pin": "guardrail.no-generalizing"
+          }
+        ],
+        "worked_example": "Synthetic: ten people in two segments watch a fictional pantry's 2:30 film. The criteria were fixed a day before the first session; the decision meets the one-sentence task, misses the next-step and label tasks, leaves the who-is-it-for task unknown because nobody scored it, and proposes four findings: one per miss and one per moment viewers named.",
+        "complements": "The user acceptance testing pack owns criteria agreement and sign-off: this pack uses its agree-criteria and sign-off verbs rather than its own, and adds only what a video needs, one viewing, comprehension tasks with keys and the moments viewers point at. The video review pack judges the cut by rubric; the accessibility audit pack covers the page and player.",
+        "provenance_notes": [
+          "Written for ta-amps's own explainer film, whose review on October 30, 2026 could not say whether a first-time viewer understands what the marketplace does: a question only its intended viewers can answer."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.consent-and-privacy"
+        ],
+        [
+          "requires_noun",
+          "guardrail.criteria-before-sessions"
+        ],
+        [
+          "requires_noun",
+          "guardrail.test-the-video"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-generalizing"
+        ],
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "task-bank"
+        ],
+        [
+          "requires_noun",
+          "template.uat-plan"
+        ],
+        [
+          "requires_noun",
+          "template.session-notes"
+        ],
+        [
+          "requires_noun",
+          "template.scored-answers"
+        ],
+        [
+          "requires_noun",
+          "template.uat-decision"
+        ],
+        [
+          "requires_noun",
+          "user-acceptance-testing:method"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.consent-and-privacy",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: consent first, notes only, no one identifiable",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every viewer agrees before the session, from a script read aloud. Viewers are pseudonymous ids; notes paraphrase answers; no face, voice or screen is recorded unless the viewer agrees to that too. No personal data enters a noun.",
+        "how_it_is_checked": "Session notes carry a viewer id and consent true; the plan's consent line names what is and is not recorded."
+      }
+    },
+    {
+      "slug": "guardrail.criteria-before-sessions",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: pass criteria are fixed before the first session",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Tasks, keys, audiences and pass criteria are fixed and dated before anyone watches. A criterion changed after seeing answers is a new plan, and the old one's result stands.",
+        "how_it_is_checked": "criteria_fixed_on is earlier than first_session_on in the plan, and the user acceptance testing pack's criteria agreement names the plan's version."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "user-acceptance-testing:method"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.test-the-video",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the video is tested, not the viewer",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A miss is a fact about the video. No answer is called wrong to the viewer, nobody gets hints, and every miss becomes a finding about the cut at the moment it points to.",
+        "how_it_is_checked": "Every missed criterion leads to at least one proposed finding."
+      }
+    },
+    {
+      "slug": "guardrail.no-generalizing",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: results describe the people asked",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A handful of viewers says what those people understood from this cut, not what viewers in general do. Shares are reported with their counts, never as percentages of an audience.",
+        "how_it_is_checked": "The decision states the people and cut it applies to, and every share carries its answers and met counts."
+      }
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: one viewing, open questions first, no hints",
+      "category_reason": "A short ordered method every session follows, so sessions compare.",
+      "value": {
+        "steps": [
+          "Recruit people from each audience segment the video is for; a person does the recruiting.",
+          "Read the consent script; start only with a yes.",
+          "Show the video once, at normal speed, with sound, on the device the viewer usually watches on; a separate viewer watches muted.",
+          "Ask the open tasks first, then the closed ones, in the plan's order, with no hints and no follow-up that teaches the answer.",
+          "For confusing or boring moments, let the viewer scrub to the moment and record its time.",
+          "Write answers as close to the viewer's words as notes allow."
+        ]
+      }
+    },
+    {
+      "slug": "task-bank",
+      "category": "noun.benchmark_suite",
+      "role": "task_bank",
+      "title": "Task bank: what viewers are asked after one viewing",
+      "category_reason": "A fixed bank of video-specific tasks with their keys and how each is scored.",
+      "value": {
+        "tasks": [
+          {
+            "task_id": "T1",
+            "kind": "say_what_it_does",
+            "ask": "In one sentence, what does this do?",
+            "when": "after one viewing",
+            "key": "Mentions both: people donate spare AI capacity, and nonprofits get finished work or kits.",
+            "scoring": "key_match"
+          },
+          {
+            "task_id": "T2",
+            "kind": "say_who_it_is_for",
+            "ask": "Who is it for?",
+            "when": "after one viewing",
+            "key": "Names both sides: people with spare capacity and nonprofits.",
+            "scoring": "key_match"
+          },
+          {
+            "task_id": "T3",
+            "kind": "say_next_step",
+            "ask": "If you wanted to help, what would you do next?",
+            "when": "after one viewing",
+            "key": "Names the ending's one step, in any words.",
+            "scoring": "key_match"
+          },
+          {
+            "task_id": "T4",
+            "kind": "recall_number",
+            "ask": "Which number do you remember, and what was it about?",
+            "when": "after one viewing",
+            "key": "A number the claim trace upholds, with what it measured; a wrong number is a finding.",
+            "scoring": "trace_match"
+          },
+          {
+            "task_id": "T5",
+            "kind": "find_confusion",
+            "ask": "Was anything confusing? Where?",
+            "when": "after one viewing, then scrubbing to the moment",
+            "key": "Open: every answer becomes a timestamped note.",
+            "scoring": "open"
+          },
+          {
+            "task_id": "T6",
+            "kind": "say_when_bored",
+            "ask": "Was there a moment you wanted to stop watching?",
+            "when": "after one viewing, then scrubbing to the moment",
+            "key": "Open: every moment named is a timestamped note.",
+            "scoring": "open"
+          },
+          {
+            "task_id": "T7",
+            "kind": "muted_gist",
+            "ask": "Watched with the sound off: what is this about?",
+            "when": "a separate viewer, muted",
+            "key": "The same as T1's key.",
+            "scoring": "key_match"
+          },
+          {
+            "task_id": "T8",
+            "kind": "read_label",
+            "ask": "What did the small label in the corner say, and what does it mean?",
+            "when": "after one viewing",
+            "key": "Says the voice is AI-generated, or that the data is synthetic.",
+            "scoring": "key_match"
+          }
+        ],
+        "scoring": {
+          "key_match": "Two scorers mark met or not met against the key; disagreements are discussed and both marks kept.",
+          "trace_match": "Met when the number and what it measured match an upheld claim in the claim trace.",
+          "open": "Not scored; every answer becomes a timestamped note."
+        }
+      }
+    },
+    {
+      "slug": "template.uat-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: an audience acceptance plan",
+      "value": {
+        "describes": "the video and its digest, audience segments with viewer counts, the tasks, the muted viewers, the device, the consent line, pass criteria per task and segment, and the dates they were fixed and first used",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "video",
+            "video_sha256",
+            "audiences",
+            "tasks",
+            "muted_viewers",
+            "device",
+            "consent",
+            "pass_criteria",
+            "criteria_fixed_on",
+            "first_session_on"
+          ],
+          "properties": {
+            "video": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "video_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "audiences": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "segment",
+                  "viewers"
+                ],
+                "properties": {
+                  "segment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "viewers": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50
+                  }
+                }
+              }
+            },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10
+              }
+            },
+            "muted_viewers": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "device": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "consent": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "pass_criteria": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task_id",
+                  "segment",
+                  "min_share"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "segment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "min_share": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              }
+            },
+            "criteria_fixed_on": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 10,
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "first_session_on": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 10,
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.session-notes",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one session's notes",
+      "value": {
+        "describes": "one pseudonymous viewer's session: segment, consent, how they watched, and their answers per task in their own words, with times for any moment they pointed to",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "viewer",
+            "segment",
+            "consent",
+            "watched",
+            "answers",
+            "recorded_media"
+          ],
+          "properties": {
+            "viewer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10,
+              "pattern": "^V[0-9]{2,3}$"
+            },
+            "segment": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "consent": {
+              "type": "boolean"
+            },
+            "watched": {
+              "type": "string",
+              "enum": [
+                "with_sound",
+                "muted"
+              ]
+            },
+            "answers": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task_id",
+                  "answer",
+                  "time_s"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "answer": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 600
+                  },
+                  "time_s": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 86400
+                  }
+                }
+              }
+            },
+            "recorded_media": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.scored-answers",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: answers scored against the keys",
+      "value": {
+        "describes": "each viewer's keyed answers marked met or not by two scorers, their agreement, and the open notes with times",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan",
+            "scored_by",
+            "agreement",
+            "rows",
+            "notes"
+          ],
+          "properties": {
+            "plan": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "scored_by": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "agreement": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "rows": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 600,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "viewer",
+                  "segment",
+                  "task_id",
+                  "met_key"
+                ],
+                "properties": {
+                  "viewer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "segment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "met_key": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "viewer",
+                  "task_id",
+                  "time_s",
+                  "note"
+                ],
+                "properties": {
+                  "viewer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.uat-decision",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the acceptance decision",
+      "value": {
+        "describes": "each pass criterion with its answer count, met count, share and result, whether the cut is accepted, who it applies to, and how many findings were proposed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan",
+            "scores",
+            "results",
+            "accepted",
+            "applies_to",
+            "findings_proposed"
+          ],
+          "properties": {
+            "plan": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "scores": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "results": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task_id",
+                  "segment",
+                  "answers",
+                  "met",
+                  "share",
+                  "min_share",
+                  "result"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "segment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "answers": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 600
+                  },
+                  "met": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 600
+                  },
+                  "share": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "min_share": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "met",
+                      "missed",
+                      "unknown"
+                    ]
+                  }
+                }
+              }
+            },
+            "accepted": {
+              "type": "boolean"
+            },
+            "applies_to": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "findings_proposed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "uat-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Acceptance checks, with one good and five bad decisions the validator recomputes",
+      "category_reason": "A golden fixture: fixed decision summaries and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks an acceptance decision's summary passes, each shown failing on a bad summary for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "criteria_fixed_on",
+            "first_session_on",
+            "consent_all",
+            "recorded_media",
+            "results",
+            "accepted",
+            "applies_to",
+            "missed",
+            "findings_proposed"
+          ],
+          "properties": {
+            "criteria_fixed_on": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10
+            },
+            "first_session_on": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 10
+            },
+            "consent_all": {
+              "type": "boolean"
+            },
+            "recorded_media": {
+              "type": "boolean"
+            },
+            "results": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 10
+                  },
+                  "answers": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 600
+                  },
+                  "met": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 600
+                  },
+                  "share": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "result": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 10
+                  }
+                }
+              }
+            },
+            "accepted": {
+              "type": "boolean"
+            },
+            "applies_to": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 200
+            },
+            "missed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 12
+            },
+            "findings_proposed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "consented",
+            "rule": {
+              "rule": "enum",
+              "path": "consent_all",
+              "values": [
+                true
+              ]
+            },
+            "why": "Every viewer agreed first."
+          },
+          {
+            "id": "nothing-recorded",
+            "rule": {
+              "rule": "enum",
+              "path": "recorded_media",
+              "values": [
+                false
+              ]
+            },
+            "why": "Notes only, unless a viewer agreed to more."
+          },
+          {
+            "id": "counts-reported",
+            "rule": {
+              "rule": "each_has",
+              "path": "results",
+              "fields": [
+                "task_id",
+                "answers",
+                "met",
+                "result"
+              ],
+              "min": 1
+            },
+            "why": "Every share comes with its counts."
+          },
+          {
+            "id": "scope-stated",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "applies_to",
+              "pattern": "(?i)these .*(people|viewers)"
+            },
+            "why": "The decision says who it applies to."
+          },
+          {
+            "id": "misses-become-findings",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "accepted",
+                "equals": false
+              },
+              "then": {
+                "rule": "enum",
+                "path": "findings_proposed",
+                "values": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12
+                ]
+              }
+            },
+            "why": "A missed criterion becomes at least one finding."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-accepted",
+            "label": "known_good",
+            "finding": {
+              "criteria_fixed_on": "2026-10-28",
+              "first_session_on": "2026-10-29",
+              "consent_all": true,
+              "recorded_media": false,
+              "results": [
+                {
+                  "task_id": "T1",
+                  "answers": 10,
+                  "met": 8,
+                  "share": 0.8,
+                  "result": "met"
+                }
+              ],
+              "accepted": true,
+              "applies_to": "these ten people and this cut only",
+              "missed": 0,
+              "findings_proposed": 0
+            }
+          },
+          {
+            "id": "bad-no-consent",
+            "label": "known_bad",
+            "fails": "consented",
+            "finding": {
+              "criteria_fixed_on": "2026-10-28",
+              "first_session_on": "2026-10-29",
+              "consent_all": false,
+              "recorded_media": false,
+              "results": [
+                {
+                  "task_id": "T1",
+                  "answers": 10,
+                  "met": 8,
+                  "share": 0.8,
+                  "result": "met"
+                }
+              ],
+              "accepted": true,
+              "applies_to": "these ten people and this cut only",
+              "missed": 0,
+              "findings_proposed": 0
+            }
+          },
+          {
+            "id": "bad-recorded",
+            "label": "known_bad",
+            "fails": "nothing-recorded",
+            "finding": {
+              "criteria_fixed_on": "2026-10-28",
+              "first_session_on": "2026-10-29",
+              "consent_all": true,
+              "recorded_media": true,
+              "results": [
+                {
+                  "task_id": "T1",
+                  "answers": 10,
+                  "met": 8,
+                  "share": 0.8,
+                  "result": "met"
+                }
+              ],
+              "accepted": true,
+              "applies_to": "these ten people and this cut only",
+              "missed": 0,
+              "findings_proposed": 0
+            }
+          },
+          {
+            "id": "bad-share-without-counts",
+            "label": "known_bad",
+            "fails": "counts-reported",
+            "finding": {
+              "criteria_fixed_on": "2026-10-28",
+              "first_session_on": "2026-10-29",
+              "consent_all": true,
+              "recorded_media": false,
+              "results": [
+                {
+                  "task_id": "T1",
+                  "share": 0.8,
+                  "result": "met"
+                }
+              ],
+              "accepted": true,
+              "applies_to": "these ten people and this cut only",
+              "missed": 0,
+              "findings_proposed": 0
+            }
+          },
+          {
+            "id": "bad-generalized",
+            "label": "known_bad",
+            "fails": "scope-stated",
+            "finding": {
+              "criteria_fixed_on": "2026-10-28",
+              "first_session_on": "2026-10-29",
+              "consent_all": true,
+              "recorded_media": false,
+              "results": [
+                {
+                  "task_id": "T1",
+                  "answers": 10,
+                  "met": 8,
+                  "share": 0.8,
+                  "result": "met"
+                }
+              ],
+              "accepted": true,
+              "applies_to": "viewers in general",
+              "missed": 0,
+              "findings_proposed": 0
+            }
+          },
+          {
+            "id": "bad-misses-ignored",
+            "label": "known_bad",
+            "fails": "misses-become-findings",
+            "finding": {
+              "criteria_fixed_on": "2026-10-28",
+              "first_session_on": "2026-10-29",
+              "consent_all": true,
+              "recorded_media": false,
+              "results": [
+                {
+                  "task_id": "T1",
+                  "answers": 10,
+                  "met": 8,
+                  "share": 0.8,
+                  "result": "met"
+                }
+              ],
+              "accepted": false,
+              "applies_to": "these ten people and this cut only",
+              "missed": 2,
+              "findings_proposed": 0
+            }
+          }
+        ],
+        "expected": {
+          "good-accepted": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-consent": {
+            "verdict": "fail",
+            "failed_checks": [
+              "consented"
+            ]
+          },
+          "bad-recorded": {
+            "verdict": "fail",
+            "failed_checks": [
+              "nothing-recorded"
+            ]
+          },
+          "bad-share-without-counts": {
+            "verdict": "fail",
+            "failed_checks": [
+              "counts-reported"
+            ]
+          },
+          "bad-generalized": {
+            "verdict": "fail",
+            "failed_checks": [
+              "scope-stated"
+            ]
+          },
+          "bad-misses-ignored": {
+            "verdict": "fail",
+            "failed_checks": [
+              "misses-become-findings"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.uat-decision"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for audience acceptance",
+      "value": {
+        "cases": [
+          {
+            "id": "UAT-CRITERIA-AFTER",
+            "scenario": "A pass mark is lowered after the sessions",
+            "sample_input": "SYNTHETIC: T3's 0.6 becomes 0.4 after three of five missed.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "new_plan_required",
+              "old_result_stands"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "UAT-WRONG-NUMBER",
+            "scenario": "Viewers remember a number the film never showed",
+            "sample_input": "SYNTHETIC: two viewers recall '500 families'; the trace has 112 households.",
+            "expected_outcome": "answers_scored",
+            "expected_indicators": [
+              "trace_mismatch",
+              "finding_at_the_number"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "UAT-LABEL-UNSEEN",
+            "scenario": "Nobody can say what the corner label meant",
+            "sample_input": "SYNTHETIC: zero of five read the AI-voice label.",
+            "expected_outcome": "acceptance_decided",
+            "expected_indicators": [
+              "T8_missed",
+              "label_finding_proposed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "UAT-NO-CONSENT",
+            "scenario": "A session starts before consent is read",
+            "sample_input": "SYNTHETIC: the notes for V07 have consent false.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "session_excluded",
+              "nothing_kept"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "UAT-ASKED-TO-GENERALIZE",
+            "scenario": "A summary claims most viewers understand the film",
+            "sample_input": "SYNTHETIC: the draft says '80% of viewers get it' from ten sessions.",
+            "expected_outcome": "findings_written",
+            "expected_indicators": [
+              "scope_restated",
+              "counts_shown"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.uat-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a plan for ten viewers in two segments",
+      "value": {
+        "notice": "SYNTHETIC. No session took place.",
+        "conforms_to": {
+          "$pin": "template.uat-plan"
+        },
+        "instance": {
+          "video": "pantry-150s",
+          "video_sha256": "000000000000000000000000000000000000000000000000000000000000000e",
+          "audiences": [
+            {
+              "segment": "volunteers with spare AI capacity",
+              "viewers": 5
+            },
+            {
+              "segment": "nonprofit staff",
+              "viewers": 5
+            }
+          ],
+          "tasks": [
+            "T1",
+            "T2",
+            "T3",
+            "T4",
+            "T5",
+            "T6",
+            "T8"
+          ],
+          "muted_viewers": 2,
+          "device": "the viewer's own phone, held the way they usually watch",
+          "consent": "spoken consent read from the script before the video; notes only, no recording",
+          "pass_criteria": [
+            {
+              "task_id": "T1",
+              "segment": "all",
+              "min_share": 0.8
+            },
+            {
+              "task_id": "T2",
+              "segment": "all",
+              "min_share": 0.6
+            },
+            {
+              "task_id": "T3",
+              "segment": "volunteers with spare AI capacity",
+              "min_share": 0.6
+            },
+            {
+              "task_id": "T8",
+              "segment": "all",
+              "min_share": 0.6
+            }
+          ],
+          "criteria_fixed_on": "2026-10-28",
+          "first_session_on": "2026-10-29"
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.scored-answers",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: scored answers for three keyed tasks",
+      "value": {
+        "notice": "SYNTHETIC. Viewers are invented ids; no person was asked.",
+        "conforms_to": {
+          "$pin": "template.scored-answers"
+        },
+        "instance": {
+          "plan": "example.uat-plan",
+          "scored_by": [
+            "scorer-a",
+            "scorer-b"
+          ],
+          "agreement": 0.93,
+          "rows": [
+            {
+              "viewer": "V01",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V02",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V03",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V04",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T1",
+              "met_key": false
+            },
+            {
+              "viewer": "V05",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V06",
+              "segment": "nonprofit staff",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V07",
+              "segment": "nonprofit staff",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V08",
+              "segment": "nonprofit staff",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V09",
+              "segment": "nonprofit staff",
+              "task_id": "T1",
+              "met_key": true
+            },
+            {
+              "viewer": "V10",
+              "segment": "nonprofit staff",
+              "task_id": "T1",
+              "met_key": false
+            },
+            {
+              "viewer": "V01",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T3",
+              "met_key": true
+            },
+            {
+              "viewer": "V02",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T3",
+              "met_key": false
+            },
+            {
+              "viewer": "V03",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T3",
+              "met_key": true
+            },
+            {
+              "viewer": "V04",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T3",
+              "met_key": false
+            },
+            {
+              "viewer": "V05",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T3",
+              "met_key": false
+            },
+            {
+              "viewer": "V01",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T8",
+              "met_key": false
+            },
+            {
+              "viewer": "V02",
+              "segment": "volunteers with spare AI capacity",
+              "task_id": "T8",
+              "met_key": false
+            },
+            {
+              "viewer": "V06",
+              "segment": "nonprofit staff",
+              "task_id": "T8",
+              "met_key": true
+            },
+            {
+              "viewer": "V07",
+              "segment": "nonprofit staff",
+              "task_id": "T8",
+              "met_key": false
+            },
+            {
+              "viewer": "V08",
+              "segment": "nonprofit staff",
+              "task_id": "T8",
+              "met_key": false
+            }
+          ],
+          "notes": [
+            {
+              "viewer": "V04",
+              "task_id": "T5",
+              "time_s": 74.0,
+              "note": "Lost at 'AI is smart': thought it was a different video."
+            },
+            {
+              "viewer": "V09",
+              "task_id": "T6",
+              "time_s": 101.5,
+              "note": "Wanted to skip the long slide."
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.uat-decision",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the decision the fixed criteria give",
+      "value": {
+        "notice": "SYNTHETIC. Recomputed exactly by the library's tests from the plan and the scores.",
+        "conforms_to": {
+          "$pin": "template.uat-decision"
+        },
+        "instance": {
+          "plan": "example.uat-plan",
+          "scores": "example.scored-answers",
+          "results": [
+            {
+              "task_id": "T1",
+              "segment": "all",
+              "answers": 10,
+              "met": 8,
+              "share": 0.8,
+              "min_share": 0.8,
+              "result": "met"
+            },
+            {
+              "task_id": "T2",
+              "segment": "all",
+              "answers": 0,
+              "met": 0,
+              "share": null,
+              "min_share": 0.6,
+              "result": "unknown"
+            },
+            {
+              "task_id": "T3",
+              "segment": "volunteers with spare AI capacity",
+              "answers": 5,
+              "met": 2,
+              "share": 0.4,
+              "min_share": 0.6,
+              "result": "missed"
+            },
+            {
+              "task_id": "T8",
+              "segment": "all",
+              "answers": 5,
+              "met": 1,
+              "share": 0.2,
+              "min_share": 0.6,
+              "result": "missed"
+            }
+          ],
+          "accepted": false,
+          "applies_to": "these ten people and this cut only",
+          "findings_proposed": 4
+        }
+      },
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-acceptance",
+      "kind": "verb.problemize",
+      "title": "Plan an audience acceptance test",
+      "claimant": "agent",
+      "summary": "Write the plan for one video: audience segments with viewer counts, tasks from the task bank, a muted viewer, the device, a consent line saying what is and is not recorded, and pass criteria per task and segment, dated before any session.",
+      "outcome": "An acceptance plan.",
+      "ready_outcome": "acceptance_planned",
+      "pinned": [
+        "task-bank",
+        "method",
+        "guardrail.criteria-before-sessions",
+        "guardrail.consent-and-privacy"
+      ],
+      "slots": [
+        {
+          "name": "video",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the video's encoded file media noun."
+        },
+        {
+          "name": "video_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the video brief: its audience and point."
+        },
+        {
+          "name": "claim_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the video's claim trace, for number recall.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "uat_plan",
+          "template": "template.uat-plan"
+        }
+      ],
+      "steps": [
+        "Take the segments from the brief's audience; name each.",
+        "Choose tasks that test the brief's point; keep open tasks before closed ones.",
+        "Fix and date the pass criteria before any session is booked.",
+        "Propose the user acceptance testing pack's agree-criteria for this exact plan version; sessions start only from an agreed version."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.uat-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "criteria-first",
+          "check": "criteria_fixed_on is earlier than first_session_on.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tasks-known",
+          "check": "Every task id is in the task bank.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut"
+      ]
+    },
+    {
+      "slug": "run-session",
+      "kind": "verb.verify_gate",
+      "title": "Run one viewing session",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person reads the consent script, shows the video once on the viewer's own device, asks the plan's tasks in order without hints, and writes the answers as close to the viewer's words as notes allow.",
+      "outcome": "Session notes for one viewer.",
+      "ready_outcome": "session_run",
+      "pinned": [
+        "method",
+        "guardrail.consent-and-privacy",
+        "guardrail.test-the-video"
+      ],
+      "slots": [
+        {
+          "name": "uat_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the acceptance plan."
+        },
+        {
+          "name": "criteria_agreement",
+          "category": "noun.eval_run",
+          "description": "Pin of the accountable person's agreement to this plan version."
+        }
+      ],
+      "produces": [
+        {
+          "name": "session_notes",
+          "template": "template.session-notes"
+        }
+      ],
+      "steps": [
+        "Start only after a yes to the consent script.",
+        "Show the video once; ask; let the viewer scrub to any moment they name and note its time.",
+        "Keep no recording unless the viewer agreed to one."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.session-notes's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "consented",
+          "check": "consent is true.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "score-answers",
+      "kind": "verb.verify_gate",
+      "title": "Score the answers against the keys",
+      "claimant": "agent",
+      "review": "distinct_reviewer",
+      "summary": "Mark every keyed answer met or not against the task bank's keys, with a second scorer, record the scorers' agreement, and copy the open answers as timestamped notes.",
+      "outcome": "Scored answers.",
+      "ready_outcome": "answers_scored",
+      "pinned": [
+        "task-bank"
+      ],
+      "slots": [
+        {
+          "name": "uat_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the acceptance plan."
+        },
+        {
+          "name": "session_notes",
+          "category": "noun.eval_run",
+          "description": "Pins of every session's notes.",
+          "many": true,
+          "max": 60
+        },
+        {
+          "name": "claim_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the claim trace, for number recall.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "scored_answers",
+          "template": "template.scored-answers"
+        }
+      ],
+      "steps": [
+        "Score against the key only; a scorer never sees the pass criteria while scoring.",
+        "Discuss disagreements and keep both marks' agreement figure."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.scored-answers's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "two-scorers",
+          "check": "scored_by names at least two scorers, neither the session's runner.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-answer",
+          "check": "Every keyed answer in the notes has one row.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-uat.run-session"
+      ]
+    },
+    {
+      "slug": "decide-acceptance",
+      "kind": "verb.verify_gate",
+      "title": "Apply the fixed criteria",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Apply each pass criterion of the plan to the scored answers: answers, met and share per task and segment, met, missed or unknown, and accepted only when every criterion is met, for these viewers and this cut only.",
+      "outcome": "An acceptance decision.",
+      "ready_outcome": "acceptance_decided",
+      "pinned": [
+        "guardrail.no-generalizing",
+        "uat-checks"
+      ],
+      "slots": [
+        {
+          "name": "uat_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the acceptance plan."
+        },
+        {
+          "name": "scored_answers",
+          "category": "noun.eval_run",
+          "description": "Pin of the scored answers."
+        }
+      ],
+      "produces": [
+        {
+          "name": "decision",
+          "template": "template.uat-decision"
+        }
+      ],
+      "steps": [
+        "Compute every share from its counts, rounded to 3 places; a criterion with no answers is unknown.",
+        "State who and what the decision applies to.",
+        "Propose the user acceptance testing pack's sign-off for the accountable person; the decision itself signs nothing."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.uat-decision's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "Recomputing every result from the plan and the scores gives the same values.",
+          "method": "deterministic"
+        },
+        {
+          "id": "checks-pass",
+          "check": "The decision's summary passes every check in uat-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-uat.score-answers"
+      ]
+    },
+    {
+      "slug": "write-uat-findings",
+      "kind": "verb.decompose_dag",
+      "title": "Turn misses and confusing moments into findings",
+      "claimant": "agent",
+      "summary": "For each missed criterion and each timestamped confusing or boring moment, propose a finding about the cut at that moment with the fix verb the video review pack's routes give, grouped by cause, without enqueueing anything.",
+      "outcome": "Proposed findings and fix verbs.",
+      "ready_outcome": "findings_written",
+      "pinned": [
+        "guardrail.test-the-video",
+        "video-review:fix-routes"
+      ],
+      "slots": [
+        {
+          "name": "decision",
+          "category": "noun.eval_run",
+          "description": "Pin of the acceptance decision."
+        },
+        {
+          "name": "scored_answers",
+          "category": "noun.eval_run",
+          "description": "Pin of the scored answers."
+        }
+      ],
+      "produces": [
+        {
+          "name": "fix_routing",
+          "template": "video-review:template.fix-routing"
+        }
+      ],
+      "steps": [
+        "Point each miss at the moment of the cut it concerns; a miss with no moment points at the whole cut.",
+        "Propose findings-to-fixes record-finding per finding and one fix verb per cause."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against the video review pack's fix routing schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-miss-routed",
+          "check": "Every missed criterion and every timed note appears in a group.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-uat.decide-acceptance"
+      ]
+    }
+  ]
+}
