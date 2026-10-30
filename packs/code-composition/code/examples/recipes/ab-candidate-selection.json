@@ -1,0 +1,119 @@
+{
+  "recipe_id": "ab-candidate-selection",
+  "title": "Holdout A/B Candidate Model Selection with Shrinkage",
+  "goal": "Clean labeled records, hash-split a leak-free holdout partition, evaluate two competing linear risk parameterizations in parallel diamond branches, select the winner via empirical-Bayes shrinkage, and render a decision report.",
+  "steps": [
+    {
+      "step_id": "ingest_labeled",
+      "node_id": "ingest.csv_rows",
+      "params": { "delimiter": ",", "strip_values": true },
+      "description": "Parse labeled historical CSV records."
+    },
+    {
+      "step_id": "dedupe_rows",
+      "node_id": "clean.dedupe_by_key",
+      "params": { "key_field": "case_id", "keep": "first" },
+      "description": "Deduplicate historical cases by case_id."
+    },
+    {
+      "step_id": "impute_features",
+      "node_id": "clean.impute_numeric",
+      "params": {
+        "fields": ["errors", "requests", "latency_ms", "label"],
+        "strategy": "median",
+        "fill_value": 0.0
+      },
+      "description": "Impute missing numeric features prior to partitioning."
+    },
+    {
+      "step_id": "error_ratio",
+      "node_id": "feature.ratio_column",
+      "params": {
+        "numerator": "errors",
+        "denominator": "requests",
+        "output_field": "error_rate"
+      },
+      "description": "Compute normalized error_rate feature."
+    },
+    {
+      "step_id": "holdout_partition",
+      "node_id": "validate.holdout_split",
+      "params": { "key_field": "case_id", "holdout_fraction": 0.5, "salt": "ab-eval-v1" },
+      "description": "Split records deterministically into calibration and holdout sets."
+    },
+    {
+      "step_id": "score_arm_a",
+      "node_id": "model.linear_risk_score",
+      "params": {
+        "feature_fields": ["error_rate"],
+        "weights_csv": "3.0",
+        "bias": -0.8,
+        "output_field": "risk_score"
+      },
+      "description": "Score holdout rows with single-feature baseline arm A."
+    },
+    {
+      "step_id": "eval_arm_a",
+      "node_id": "eval.binary_metrics",
+      "params": { "score_field": "risk_score", "label_field": "label", "threshold": 0.5 },
+      "description": "Evaluate baseline arm A on the holdout split."
+    },
+    {
+      "step_id": "score_arm_b",
+      "node_id": "model.linear_risk_score",
+      "params": {
+        "feature_fields": ["error_rate", "latency_ms"],
+        "weights_csv": "9.0,0.008",
+        "bias": -2.2,
+        "output_field": "risk_score"
+      },
+      "description": "Score holdout rows with two-feature challenger arm B."
+    },
+    {
+      "step_id": "eval_arm_b",
+      "node_id": "eval.binary_metrics",
+      "params": { "score_field": "risk_score", "label_field": "label", "threshold": 0.5 },
+      "description": "Evaluate challenger arm B on the holdout split."
+    },
+    {
+      "step_id": "select_winner",
+      "node_id": "eval.shrinkage_select",
+      "params": {
+        "metric_key": "f1",
+        "count_key": "sample_count",
+        "prior_mean": 0.5,
+        "prior_strength": 4.0,
+        "min_margin": 0.02
+      },
+      "description": "Select between arm A and arm B using empirical-Bayes shrinkage."
+    },
+    {
+      "step_id": "cohort_summary",
+      "node_id": "agg.group_summary",
+      "params": { "group_field": "cohort", "value_field": "risk_score" },
+      "description": "Summarize challenger risk distribution across holdout cohorts."
+    },
+    {
+      "step_id": "decision_report",
+      "node_id": "format.markdown_report",
+      "params": { "title": "A/B Shrinkage Candidate Selection", "max_rows": 15 },
+      "description": "Render decision artifact with shrunk comparison context."
+    }
+  ],
+  "edges": [
+    { "src_step": "ingest_labeled", "src_port": "rows", "dst_step": "dedupe_rows", "dst_port": "rows" },
+    { "src_step": "dedupe_rows", "src_port": "rows", "dst_step": "impute_features", "dst_port": "rows" },
+    { "src_step": "impute_features", "src_port": "rows", "dst_step": "error_ratio", "dst_port": "rows" },
+    { "src_step": "error_ratio", "src_port": "rows", "dst_step": "holdout_partition", "dst_port": "rows" },
+    { "src_step": "holdout_partition", "src_port": "holdout_rows", "dst_step": "score_arm_a", "dst_port": "rows" },
+    { "src_step": "score_arm_a", "src_port": "rows", "dst_step": "eval_arm_a", "dst_port": "rows" },
+    { "src_step": "holdout_partition", "src_port": "holdout_rows", "dst_step": "score_arm_b", "dst_port": "rows" },
+    { "src_step": "score_arm_b", "src_port": "rows", "dst_step": "eval_arm_b", "dst_port": "rows" },
+    { "src_step": "eval_arm_a", "src_port": "eval_metrics", "dst_step": "select_winner", "dst_port": "candidate_a" },
+    { "src_step": "eval_arm_b", "src_port": "eval_metrics", "dst_step": "select_winner", "dst_port": "candidate_b" },
+    { "src_step": "score_arm_b", "src_port": "rows", "dst_step": "cohort_summary", "dst_port": "rows" },
+    { "src_step": "cohort_summary", "src_port": "summary_table", "dst_step": "decision_report", "dst_port": "summary_table" },
+    { "src_step": "select_winner", "src_port": "winner_metrics", "dst_step": "decision_report", "dst_port": "headline_metrics" },
+    { "src_step": "select_winner", "src_port": "selection", "dst_step": "decision_report", "dst_port": "extra_context" }
+  ]
+}

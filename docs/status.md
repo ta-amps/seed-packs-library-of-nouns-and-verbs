@@ -26,6 +26,7 @@ run their verbs. Read the target's live schemas before sending work.
 | Tessera model validation | Every pack noun and verb passed Tessera's own `RecordWrite`, `TaskSpec`, category, relation, `NounRef` and execution-report checks at the commit in [VALIDATION.json](../packs/VALIDATION.json); shape evidence only |
 | Pack worked examples | Six deterministic examples (repository and security finding checks, check validation, evaluation arithmetic, benchmark staleness, text contrast) are recomputed by `make check`; they are synthetic |
 | Prior-art surveys | The prior-art pack's two worked examples are real surveys, checked against their template's shape only: this library at `54c58c9` with Tessera's docs at `7e7433c`, and a hackathon directory of about 740 repositories for a PII redaction tool, which lists seven candidates unranked and runs none. Each records the sources it did not search |
+| Pack code | The code composition pack keeps its tested code as nouns in `packs/code-composition/code/`. A path-filtered CI job runs that code's checks and the pinned Tessera integration; the root `make check` only hashes it. No worker has run it |
 | Pack execution | None. No verb from the library has been claimed, run, measured or reviewed |
 | Recurring refresh | Daily schedule proposal nouns for tool discovery, benchmark scores and freshness checks only; they need Tessera's flag-gated schedule support, which is being designed, and no scheduler is activated |
 

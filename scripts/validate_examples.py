@@ -13,6 +13,9 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# Local tool state, not repository text: caches and environments that running pack code checks leaves.
+SKIP_PARTS = {".git", "__pycache__", ".ruff_cache", ".venv", "venv", ".pytest_cache", ".mypy_cache", ".tox",
+              ".hypothesis", "node_modules"}
 GOVERNANCE = {
     "producer_surface", "visibility_scope", "allowed_surfaces", "target_cohorts", "tags"
 }
@@ -186,7 +189,7 @@ def validate_repository(root: Path = ROOT) -> dict:
     meta_contract(parsed["meta/self-improvement.reference.json"])
     text_count = 0
     for path in root.rglob("*"):
-        if not path.is_file() or any(part in {".git", "__pycache__", ".ruff_cache"} for part in path.relative_to(root).parts):
+        if not path.is_file() or any(part in SKIP_PARTS or part.endswith(".egg-info") for part in path.relative_to(root).parts):
             continue
         text = path.read_text()
         require(chr(8212) not in text, "forbidden typography in " + path.relative_to(root).as_posix())
