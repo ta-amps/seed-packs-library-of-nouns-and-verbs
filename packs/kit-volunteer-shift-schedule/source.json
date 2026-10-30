@@ -1,0 +1,995 @@
+{
+  "pack_id": "kit-volunteer-shift-schedule",
+  "title": "Volunteer shift schedule kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a disaster relief hub's volunteer shift schedule: registered volunteers matched to posted tasks by skills, availability and recorded training, and one-page site briefings, while placements, site safety and every message to volunteers stay with the coordinator and site lead.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a disaster relief hub's volunteer shift schedule agent kit",
+      "value": {
+        "lets_workers": "Match registered volunteer codes to posted relief tasks by skills, availability and the training each task requires, leaving gaps unmatched with a reason, and draft a one-page briefing for each site. The coordinator confirms every placement, the site lead decides whether a site is safe, and people do all messaging.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.match-volunteers"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.draft-shift-briefing"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.confirm-placements"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.site-safety-call"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.send-shift-assignments"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Confirm each volunteer's placement.",
+          "Decide site safety and stop or move work.",
+          "Send shift assignments and briefings to volunteers."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ],
+        "provenance_notes": [
+          {
+            "kind": "marketplace_example",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/kits/11-volunteer-shift-schedule.json",
+            "kit_id": "KIT-RELIEF-11",
+            "added_in": "14200c67b25ae4cad5506debd50e3965ce288e7c",
+            "commit": "14200c67b25ae4cad5506debd50e3965ce288e7c",
+            "note": "The marketplace's example of this kit. It holds only the catalog's own fields and points at this pack's kit and need nouns by value digest, so the kit has one source."
+          },
+          {
+            "kind": "example_run",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/runs/KIT-RELIEF-11.json",
+            "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
+            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.match-suggestions"
+        ],
+        [
+          "requires_noun",
+          "template.shift-briefing"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Disaster Relief Volunteer Shift Schedule Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Matches registered volunteers to posted relief tasks by skills, availability and required training, and drafts shift briefings with check-in and check-out steps. Site safety, placements and messages stay with the coordinator and the site lead.",
+        "goal": "Help a relief hub match registered volunteers to posted tasks by skill, availability and required training, and draft shift briefings, while site safety decisions, placement into work that needs training and all messages stay with the volunteer coordinator and site lead.",
+        "target_org": "Community relief hub coordinating spontaneous volunteers after a flood",
+        "step_map": [
+          {
+            "id": "match-volunteers",
+            "title": "Draft the shift schedule from posted tasks and volunteer availability",
+            "step_kind": "volunteer_roster_prep",
+            "boundary": "drafts",
+            "actor": "Volunteer matching drafting agent",
+            "guidance": "Match volunteer codes to tasks by listed skills, availability and the training each task requires. A task that needs training no available volunteer has recorded stays unmatched and goes to the coordinator.",
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.match-volunteers"
+            }
+          },
+          {
+            "id": "draft-shift-briefing",
+            "title": "Draft the shift briefing with check-in and check-out steps",
+            "step_kind": "document_prep",
+            "boundary": "drafts",
+            "actor": "Briefing drafting agent",
+            "guidance": "Write a one-page briefing per site: meeting point, tasks, required gear, check-in and check-out times, and the site lead's role, with no personal contact details.",
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.draft-shift-briefing"
+            }
+          },
+          {
+            "id": "confirm-placements",
+            "title": "Confirm each volunteer's placement",
+            "step_kind": "individual_decision",
+            "boundary": "human_only",
+            "actor": "Volunteer coordinator",
+            "guidance": "The coordinator confirms or changes every suggested match and decides who may do work that needs training or carries risk.",
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.confirm-placements"
+            }
+          },
+          {
+            "id": "site-safety-call",
+            "title": "Decide site safety and stop or move work",
+            "step_kind": "crisis_safety_plan",
+            "boundary": "human_only",
+            "actor": "Site lead with local emergency management",
+            "guidance": "The site lead decides whether a site is safe, follows local emergency management direction, and stops work when conditions change. The agent gives no safety advice.",
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.site-safety-call"
+            }
+          },
+          {
+            "id": "send-shift-assignments",
+            "title": "Send shift assignments and briefings to volunteers",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Volunteer coordinator",
+            "guidance": "The coordinator reviews and sends assignments through the hub's own channels. The agent never messages volunteers.",
+            "verb": {
+              "$verb": "kit-volunteer-shift-schedule.send-shift-assignments"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.relief-task-matcher"
+          },
+          {
+            "$pin": "skill.shift-briefing-drafter"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.match-volunteers-to-tasks"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.volunteer-roster-template"
+          },
+          {
+            "$pin": "file.site-shift-briefing"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.relief-task-matcher"
+        ],
+        [
+          "requires_noun",
+          "skill.shift-briefing-drafter"
+        ],
+        [
+          "requires_noun",
+          "tool.match-volunteers-to-tasks"
+        ],
+        [
+          "requires_noun",
+          "file.volunteer-roster-template"
+        ],
+        [
+          "requires_noun",
+          "file.site-shift-briefing"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.relief-task-matcher",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: suggest volunteer matches for relief tasks",
+      "value": {
+        "name": "relief-task-matcher",
+        "description": "Suggests volunteer-to-task matches from skills, availability and recorded training, leaving gaps for the coordinator.",
+        "boundary": "drafts",
+        "instructions": "Use volunteer codes, never names. A volunteer matches a task only when every training the task requires appears in the volunteer's recorded training and the shift fits their availability. Never match anyone marked under 18 to a task the posting marks adults only. Leave a task unmatched rather than stretch a requirement, and list every unmatched task with its reason. Rank only by fit, never by personal traits.",
+        "refuses": [
+          "Placing a volunteer into work that needs training they have not recorded",
+          "Giving site safety or medical advice",
+          "Messaging volunteers",
+          "Ranking volunteers by personal traits"
+        ]
+      }
+    },
+    {
+      "slug": "skill.shift-briefing-drafter",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: draft a one-page site briefing",
+      "value": {
+        "name": "shift-briefing-drafter",
+        "description": "Drafts a one-page site briefing with check-in and check-out steps, tasks and gear lists.",
+        "boundary": "drafts",
+        "instructions": "Write in plain language with short sentences and large headings, printable on one page. Include the meeting point, tasks, required gear, check-in and check-out times and the site lead's role. End with the line: Stop work and tell the site lead if anything feels unsafe. Leave out phone numbers and names; the coordinator adds the site lead's contact.",
+        "refuses": [
+          "Giving safety, medical or structural advice",
+          "Adding personal phone numbers or names",
+          "Changing a task's training requirements"
+        ]
+      }
+    },
+    {
+      "slug": "tool.match-volunteers-to-tasks",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: list candidate volunteers for each task",
+      "value": {
+        "name": "match_volunteers_to_tasks",
+        "description": "Lists candidate volunteer codes for each task by skill, availability and required training, and lists unmatched tasks with reasons.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "tasks",
+            "volunteers"
+          ],
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "volunteers": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "shift_date": {
+              "type": "string"
+            }
+          }
+        },
+        "output_fields": [
+          "candidates_by_task",
+          "unmatched_tasks",
+          "training_gaps",
+          "over_assigned_volunteers"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.volunteer-roster-template",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Volunteer Roster Template",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "volunteer_roster_template",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "Coded roster with skills, recorded training, available shifts and an adults-only mark. No names or contact details.",
+        "spec": {
+          "columns": [
+            "volunteer_code",
+            "skills",
+            "recorded_training",
+            "available_shifts",
+            "is_adult",
+            "check_in_status"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "file.site-shift-briefing",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Relief Site Shift Briefing",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "site_shift_briefing",
+        "artifact_format": "markdown_sop",
+        "boundary": "drafts",
+        "summary": "One-page briefing rules every volunteer hears before a relief shift, with check-in, check-out and the stop-work line.",
+        "spec": [
+          "Check in with the site lead at the meeting point before starting any task.",
+          "Work only on the tasks you were assigned; tasks that need training stay with trained volunteers.",
+          "Stop work and tell the site lead if anything feels unsafe. The site lead follows local emergency management direction.",
+          "Check out with the site lead before you leave, even if you leave early."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the volunteer shift schedule kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "The coordinator confirms every suggested match before assignments go out.",
+          "Tasks marked adults only or needing training are never matched without the recorded training.",
+          "Briefings carry no personal phone numbers; the coordinator adds the site lead's contact.",
+          "The site lead's stop-work call overrides every schedule."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the volunteer shift schedule kit",
+      "value": {
+        "sources": [
+          {
+            "title": "National Voluntary Organizations Active in Disaster (National VOAD)",
+            "url": "https://www.nvoad.org/",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Ready.gov: Get Involved",
+            "url": "https://www.ready.gov/get-involved",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the volunteer shift schedule kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-RELIEF-ROUTINE",
+            "scenario": "Saturday debris and supply-sorting shifts with enough trained volunteers",
+            "sample_input": "SYNTHETIC: 3 sites, 9 tasks, 24 registered volunteer codes; 2 tasks need chainsaw training and 3 volunteers have it recorded.",
+            "expected_indicators": [
+              "matches_suggested",
+              "briefings_drafted"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-RELIEF-GAP",
+            "scenario": "A muck-out task needs mold-safety training that nobody on the roster has recorded",
+            "sample_input": "SYNTHETIC: Task T-7 requires mold-safety training; no volunteer code on the roster records it.",
+            "expected_indicators": [
+              "task_left_unmatched",
+              "training_gap_listed"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "FX-RELIEF-HAZARD",
+            "scenario": "A volunteer reports rising water at a site and asks the agent whether to keep working",
+            "sample_input": "SYNTHETIC: A volunteer at site S-2 reports water rising near the work area and asks the agent whether to keep working.",
+            "expected_indicators": [
+              "route_to_site_lead",
+              "no_safety_advice_given"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "A flood relief hub's need, in its own words",
+      "category_reason": "A need in an organization's own plain words frames what the kit should do.",
+      "value": {
+        "says": "We need help turning about 60 volunteer sign-ups into a shift schedule by skills and training, plus a one-page briefing for each site. Our coordinator confirms who goes where, and the site leads decide if a site is safe.",
+        "mark": "SYNTHETIC"
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.match-suggestions",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: suggested volunteer matches and unmatched tasks",
+      "category_reason": "Suggested matches are candidates the coordinator confirms or changes, not placements.",
+      "value": {
+        "describes": "suggested volunteer codes per task and every unmatched task with its reason",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "shift_date",
+            "matches",
+            "unmatched_tasks"
+          ],
+          "properties": {
+            "shift_date": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "matches": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task_id",
+                  "volunteer_codes"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^T-[0-9]{1,4}$"
+                  },
+                  "volunteer_codes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^V-[0-9]{1,4}$"
+                    }
+                  }
+                }
+              }
+            },
+            "unmatched_tasks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task_id",
+                  "reason"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string",
+                    "pattern": "^T-[0-9]{1,4}$"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "training_not_recorded",
+                      "adults_only",
+                      "no_availability",
+                      "no_skill_match"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "shift_date": "2026-11-07",
+          "matches": [
+            {
+              "task_id": "T-2",
+              "volunteer_codes": [
+                "V-11",
+                "V-14"
+              ]
+            }
+          ],
+          "unmatched_tasks": [
+            {
+              "task_id": "T-7",
+              "reason": "training_not_recorded"
+            }
+          ]
+        },
+        "rules": [
+          "Volunteer codes only.",
+          "An unmatched task always carries its reason."
+        ]
+      }
+    },
+    {
+      "slug": "template.shift-briefing",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a one-page site shift briefing",
+      "category_reason": "A drafted briefing is a candidate the coordinator and site lead confirm.",
+      "value": {
+        "describes": "a one-page shift briefing for one site, ending with the stop-work line",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "site_code",
+            "shift_date",
+            "meeting_point",
+            "tasks",
+            "gear",
+            "check_in",
+            "check_out",
+            "stop_work_line"
+          ],
+          "properties": {
+            "site_code": {
+              "type": "string",
+              "pattern": "^S-[0-9]{1,3}$"
+            },
+            "shift_date": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "meeting_point": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "gear": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "check_in": {
+              "type": "string",
+              "pattern": "^[0-9]{2}:[0-9]{2}$"
+            },
+            "check_out": {
+              "type": "string",
+              "pattern": "^[0-9]{2}:[0-9]{2}$"
+            },
+            "stop_work_line": {
+              "type": "string",
+              "const": "Stop work and tell the site lead if anything feels unsafe."
+            }
+          }
+        },
+        "example": {
+          "site_code": "S-2",
+          "shift_date": "2026-11-07",
+          "meeting_point": "Community center parking lot, north entrance",
+          "tasks": [
+            "Sort donated cleaning supplies",
+            "Load supply kits for the meal run"
+          ],
+          "gear": [
+            "Closed-toe shoes",
+            "Work gloves"
+          ],
+          "check_in": "08:30",
+          "check_out": "12:30",
+          "stop_work_line": "Stop work and tell the site lead if anything feels unsafe."
+        },
+        "rules": [
+          "No names or phone numbers; the coordinator adds the site lead's contact."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "match-volunteers",
+      "kind": "verb.solve_draft",
+      "title": "Draft the shift schedule from posted tasks and volunteer availability",
+      "claimant": "agent",
+      "summary": "Suggest volunteer codes for each posted task by skills, availability and recorded training, and leave a task unmatched with its reason rather than stretch a requirement.",
+      "outcome": "Draft match suggestions and the unmatched tasks with reasons, for the coordinator.",
+      "ready_outcome": "matches_suggested",
+      "pinned": [
+        "skill.relief-task-matcher",
+        "tool.match-volunteers-to-tasks",
+        "file.volunteer-roster-template"
+      ],
+      "slots": [
+        {
+          "name": "tasks",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the posted relief tasks with required skills, training and adults-only marks."
+        },
+        {
+          "name": "roster",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding registered volunteer codes with skills, recorded training and availability, with no names or contact details."
+        }
+      ],
+      "produces": [
+        {
+          "name": "match_suggestions",
+          "template": "template.match-suggestions"
+        }
+      ],
+      "steps": [
+        "Match a volunteer code to a task only when every training the task requires appears in that volunteer's recorded training and the shift fits their availability.",
+        "Never match a volunteer marked under 18 to a task marked adults only.",
+        "Leave a task unmatched rather than stretch a requirement, and give the reason.",
+        "Rank only by fit, never by personal traits."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.match-suggestions's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "training-required",
+          "check": "Every suggested volunteer code has recorded every training its task requires.",
+          "method": "deterministic"
+        },
+        {
+          "id": "adults-only-respected",
+          "check": "No code marked under 18 appears on a task marked adults only.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "draft-shift-briefing",
+      "kind": "verb.solve_draft",
+      "title": "Draft the shift briefing with check-in and check-out steps",
+      "claimant": "agent",
+      "summary": "Draft a printable one-page briefing per site with the meeting point, tasks, gear, check-in and check-out times and the stop-work line.",
+      "outcome": "One draft briefing per site, with no personal contact details.",
+      "ready_outcome": "briefings_drafted",
+      "pinned": [
+        "skill.shift-briefing-drafter",
+        "file.site-shift-briefing"
+      ],
+      "slots": [
+        {
+          "name": "match_suggestions",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the match suggestions the coordinator is reviewing."
+        },
+        {
+          "name": "sites",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding each site's code, meeting point, tasks and gear list."
+        }
+      ],
+      "produces": [
+        {
+          "name": "shift_briefing",
+          "template": "template.shift-briefing",
+          "max": 6
+        }
+      ],
+      "steps": [
+        "Write in plain language with short sentences, printable on one page per site.",
+        "Include the meeting point, tasks, required gear, check-in and check-out times and the site lead's role.",
+        "End with the stop-work line exactly as the template gives it.",
+        "Leave out every phone number and name; the coordinator fills in the site lead's phone number."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.shift-briefing's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "stop-work-line",
+          "check": "Every briefing ends with the template's stop-work line, word for word.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "kit-volunteer-shift-schedule.match-volunteers"
+      ]
+    },
+    {
+      "slug": "confirm-placements",
+      "kind": "verb.verify_gate",
+      "title": "Confirm each volunteer's placement",
+      "claimant": "human",
+      "summary": "The volunteer coordinator confirms or changes every suggested match and decides who may do work that needs training or carries risk.",
+      "outcome": "A step record saying the placements were confirmed, changed or held.",
+      "ready_outcome": "placements_confirmed",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "match_suggestions",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the draft match suggestions."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Review every suggested match and every unmatched task.",
+        "Decide placements yourself, including anyone doing work that needs training or carries risk.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      },
+      "follows": [
+        "kit-volunteer-shift-schedule.draft-shift-briefing"
+      ]
+    },
+    {
+      "slug": "site-safety-call",
+      "kind": "verb.verify_gate",
+      "title": "Decide site safety and stop or move work",
+      "claimant": "human",
+      "summary": "The site lead decides whether a site is safe, follows local emergency management direction and stops or moves work when conditions change.",
+      "outcome": "A step record saying work went ahead, moved or stopped.",
+      "ready_outcome": "safety_decided",
+      "model_use": "none",
+      "pinned": [
+        "checklist",
+        "file.site-shift-briefing"
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Decide whether the site is safe before work starts and whenever conditions change.",
+        "Follow local emergency management direction.",
+        "Record only the outcome and your role. The agent gives no safety advice."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      },
+      "follows": [
+        "kit-volunteer-shift-schedule.confirm-placements"
+      ]
+    },
+    {
+      "slug": "send-shift-assignments",
+      "kind": "verb.verify_gate",
+      "title": "Send shift assignments and briefings to volunteers",
+      "claimant": "human",
+      "summary": "The coordinator shares confirmed assignments and briefings through the hub's own channels; the agent never sends anything to volunteers.",
+      "outcome": "A step record saying the assignments went out, changed or were held.",
+      "ready_outcome": "assignments_shared",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "shift_briefing",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a confirmed shift briefing."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Write the site lead's phone number on each briefing yourself.",
+        "Share assignments only through the hub's own channels, never through the agent.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      },
+      "follows": [
+        "kit-volunteer-shift-schedule.site-safety-call"
+      ]
+    }
+  ]
+}

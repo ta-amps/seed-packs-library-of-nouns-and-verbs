@@ -1,0 +1,1262 @@
+{
+  "pack_id": "kit-handwritten-statements",
+  "title": "Handwritten statements to text kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for turning handwritten statements and forms dropped into a folder into text typed exactly as written, keeping the writer's slang, spelling, acronyms and words, flagging every uncertain reading for a person, and listing acronyms against a local glossary, while staff check every flag, follow up on safety, sign off and decide any use.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a handwritten statements to text agent kit",
+      "value": {
+        "lets_workers": "Type each handwritten page in a drop folder exactly as written, keeping slang, spelling, grammar, acronyms, crossings-out and the writer's own words, and flag every word the agent is unsure of. A local acronym glossary helps readers without ever changing the text. A person checks every flag against the page, trained staff follow up on anything about safety, and the program lead signs off and decides how a statement is used.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-handwritten-statements.transcribe-pages"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-handwritten-statements.list-acronyms"
+            },
+            "claimant": "agent",
+            "boundary": "assists"
+          },
+          {
+            "verb": {
+              "$verb": "kit-handwritten-statements.verify-readings"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-handwritten-statements.safety-follow-up"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-handwritten-statements.sign-off-statement"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-handwritten-statements.share-statement"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Check every flagged reading against the original page.",
+          "Follow up in person when a statement raises safety.",
+          "Sign off the transcription and decide how it is used.",
+          "Share a statement outside the organization."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ],
+        "provenance_notes": [
+          {
+            "kind": "marketplace_example",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/kits/07-handwritten-statements-to-text.json",
+            "kit_id": "KIT-TRANSCR-07",
+            "added_in": "6d3a8f784eed2913d95fcddfceb897ba497508e9",
+            "commit": "14200c67b25ae4cad5506debd50e3965ce288e7c",
+            "note": "The marketplace's example of this kit. It holds only the catalog's own fields and points at this pack's kit and need nouns by value digest, so the kit has one source."
+          },
+          {
+            "kind": "example_run",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/runs/KIT-TRANSCR-07.json",
+            "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
+            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.transcription"
+        ],
+        [
+          "requires_noun",
+          "template.acronym-list"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Handwritten Statements to Text Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Types handwritten statements and forms dropped into a folder exactly as written, keeping slang, spelling, acronyms and the writer's own words, and flags every uncertain reading for a person. A local acronym glossary helps readers but never changes the text, and a person checks every flag and signs off.",
+        "goal": "Help an organization turn handwritten statements and forms dropped into a folder into faithful typed text that keeps every word as written, flags every uncertain reading and lists acronyms against a local glossary, while a person checks every flag against the original, trained staff follow up on safety, and the program lead signs off and decides how a statement is used.",
+        "target_org": "Community center that collects handwritten statements and sign-up cards at community nights",
+        "step_map": [
+          {
+            "id": "transcribe-pages",
+            "title": "Type each page exactly as written",
+            "step_kind": "transcription",
+            "boundary": "drafts",
+            "actor": "Transcription drafting agent",
+            "guidance": "Type each line as written, keeping spelling, slang, grammar, acronyms, crossings-out and line breaks. Mark every unsure reading with [?], mark unreadable words [illegible], and never correct or tidy the writer's words.",
+            "verb": {
+              "$verb": "kit-handwritten-statements.transcribe-pages"
+            }
+          },
+          {
+            "id": "list-acronyms",
+            "title": "List acronyms and local terms against the glossary",
+            "step_kind": "glossary_check",
+            "boundary": "assists",
+            "actor": "Glossary assistant agent",
+            "guidance": "List every acronym or local term found, with its glossary meaning when the glossary has one; unknown ones go to the reviewer. The glossary never changes the transcription.",
+            "verb": {
+              "$verb": "kit-handwritten-statements.list-acronyms"
+            }
+          },
+          {
+            "id": "verify-readings",
+            "title": "Check every flagged reading against the original page",
+            "step_kind": "transcription_review",
+            "boundary": "human_only",
+            "actor": "Trained staff reviewer",
+            "guidance": "A person compares every flag and a sample of other lines with the original page, fixes misreadings only, and keeps the writer's own words, spelling and slang.",
+            "verb": {
+              "$verb": "kit-handwritten-statements.verify-readings"
+            }
+          },
+          {
+            "id": "safety-follow-up",
+            "title": "Follow up in person when a statement raises safety",
+            "step_kind": "crisis_safety_plan",
+            "boundary": "human_only",
+            "actor": "Trained staff member",
+            "guidance": "When a statement mentions danger or not feeling safe, trained staff follow up under the organization's own safety protocol. The agent gives no advice and takes no other step.",
+            "verb": {
+              "$verb": "kit-handwritten-statements.safety-follow-up"
+            }
+          },
+          {
+            "id": "sign-off-statement",
+            "title": "Sign off the transcription and decide how it is used",
+            "step_kind": "individual_decision",
+            "boundary": "human_only",
+            "actor": "Program lead (steward)",
+            "guidance": "The program lead signs off each transcription and decides how the statement is used, under the organization's consent and records rules.",
+            "verb": {
+              "$verb": "kit-handwritten-statements.sign-off-statement"
+            }
+          },
+          {
+            "id": "share-statement",
+            "title": "Share a statement outside the organization",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Program lead",
+            "guidance": "Only staff share a statement outside the organization, and only with the writer's consent. The agent never shares or sends anything.",
+            "verb": {
+              "$verb": "kit-handwritten-statements.share-statement"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.verbatim-transcriber"
+          },
+          {
+            "$pin": "skill.acronym-glossary-assistant"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.list-dropped-pages"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.transcription-rules"
+          },
+          {
+            "$pin": "file.transcription-sheet"
+          },
+          {
+            "$pin": "file.local-acronym-glossary"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.verbatim-transcriber"
+        ],
+        [
+          "requires_noun",
+          "skill.acronym-glossary-assistant"
+        ],
+        [
+          "requires_noun",
+          "tool.list-dropped-pages"
+        ],
+        [
+          "requires_noun",
+          "file.transcription-rules"
+        ],
+        [
+          "requires_noun",
+          "file.transcription-sheet"
+        ],
+        [
+          "requires_noun",
+          "file.local-acronym-glossary"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.verbatim-transcriber",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: type handwritten pages exactly as written",
+      "value": {
+        "name": "verbatim-transcriber",
+        "description": "Types handwritten pages exactly as written and flags every uncertain reading for a person.",
+        "boundary": "drafts",
+        "instructions": "Type what is on the page, line by line, exactly as written: keep the writer's spelling, slang, grammar, capital letters, abbreviations, acronyms and punctuation, and write a crossed-out word as [crossed out: word]. Never correct, tidy, translate, summarize or expand anything. When you are not sure of a word, write your best reading followed by [?] and list the alternatives; when you cannot read it at all, write [illegible]. Keep the page and line number for every flag. Never add a name, date or detail that is not on the page. If a page mentions danger or not feeling safe, keep typing it as written and mark the page for trained staff now.",
+        "refuses": [
+          "Correcting spelling, grammar or slang",
+          "Summarizing or rewording a statement",
+          "Expanding acronyms inside the transcription",
+          "Guessing a word without flagging it"
+        ]
+      }
+    },
+    {
+      "slug": "skill.acronym-glossary-assistant",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: list acronyms and local terms against the glossary",
+      "value": {
+        "name": "acronym-glossary-assistant",
+        "description": "Lists acronyms and local terms in a transcription with their glossary meanings, without changing the text.",
+        "boundary": "assists",
+        "instructions": "Find acronyms, abbreviations and local terms in the transcription. Give the glossary's meaning, word for word, when the glossary has the term, and list unknown terms for the reviewer to add or explain. Never replace, expand or translate a term inside the transcription; the glossary is a reading aid only.",
+        "refuses": [
+          "Changing the transcription",
+          "Guessing the meaning of an unknown local term"
+        ]
+      }
+    },
+    {
+      "slug": "tool.list-dropped-pages",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: list the page images in the drop folder",
+      "value": {
+        "name": "list_dropped_pages",
+        "description": "Lists the page images in the intake drop folder with page numbers, sizes and SHA-256 digests, without moving or changing them.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "folder"
+          ],
+          "properties": {
+            "folder": {
+              "type": "string"
+            },
+            "batch_label": {
+              "type": "string"
+            }
+          }
+        },
+        "output_fields": [
+          "pages",
+          "file_sha256",
+          "page_count",
+          "unreadable_files"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.transcription-rules",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Verbatim Transcription Rules",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "transcription_rules",
+        "artifact_format": "markdown_sop",
+        "boundary": "drafts",
+        "summary": "The rules every transcription follows: type exactly what is written, flag what is uncertain, and leave the writer's words alone.",
+        "spec": [
+          "Type exactly what is written: spelling, slang, grammar and acronyms stay as they are.",
+          "Write a crossed-out word as [crossed out: word].",
+          "Mark an unsure word with [?] and list alternatives; mark an unreadable word [illegible].",
+          "A person checks every flag against the original page before anyone uses the text."
+        ]
+      }
+    },
+    {
+      "slug": "file.transcription-sheet",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Transcription Sheet",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "transcription_sheet",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "One row per written line: the batch, page, line, the text as written, whether it holds a flag, the alternatives and whether a reviewer checked it.",
+        "spec": {
+          "columns": [
+            "batch_label",
+            "page",
+            "line",
+            "text_as_written",
+            "has_flag",
+            "alternatives",
+            "reviewer_checked"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "file.local-acronym-glossary",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Local Acronym Glossary",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "local_acronym_glossary",
+        "artifact_format": "csv_template",
+        "boundary": "assists",
+        "summary": "Acronyms, local terms and common writing abbreviations with their meanings, as a reading aid that never changes a transcription.",
+        "spec": {
+          "columns": [
+            "term",
+            "meaning",
+            "kind"
+          ],
+          "rows": [
+            [
+              "SNAP",
+              "Supplemental Nutrition Assistance Program",
+              "public program"
+            ],
+            [
+              "WIC",
+              "Special Supplemental Nutrition Program for Women, Infants, and Children",
+              "public program"
+            ],
+            [
+              "ESL",
+              "English as a second language",
+              "class"
+            ],
+            [
+              "GED",
+              "General Educational Development, a high school equivalency test",
+              "class"
+            ],
+            [
+              "TMC",
+              "Tuesday Market Center (a SYNTHETIC local term used only in this kit's examples)",
+              "local term"
+            ],
+            [
+              "NEC",
+              "Northside Elders Club (a SYNTHETIC local term used only in this kit's examples)",
+              "local term"
+            ],
+            [
+              "w/",
+              "with",
+              "writing abbreviation"
+            ],
+            [
+              "bc",
+              "because",
+              "writing abbreviation"
+            ],
+            [
+              "rn",
+              "right now",
+              "writing abbreviation"
+            ]
+          ],
+          "pii_allowed": false,
+          "rule": "The glossary helps readers. It never changes a transcription."
+        }
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the handwritten statements to text kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "Only synthetic or consented pages go in the drop folder; this kit's samples are synthetic, rendered from handwriting fonts and stamped SYNTHETIC.",
+          "A person checks every [?] and [illegible] flag against the original page.",
+          "Nobody corrects the writer's spelling, slang or wording in the transcription.",
+          "Trained staff follow up the same day on any statement about safety.",
+          "The program lead signs off before any statement is used or shared."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the handwritten statements to text kit",
+      "value": {
+        "sources": [
+          {
+            "title": "National Archives: Citizen Archivist resources for transcribing records",
+            "url": "https://www.archives.gov/citizen-archivist/resources",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the handwritten statements to text kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-TRANSCR-VERBATIM",
+            "scenario": "A handwritten statement with slang, acronyms, a crossed-out word and a smudged reading",
+            "sample_input": "SYNTHETIC: Page statement-01.png, rendered from the Patrick Hand font and stamped SYNTHETIC: a nine-line statement with slang (no cap, r, n, aint, tho), the acronyms TMC and SNAP, the crossed-out word mondays and one smudged reading.",
+            "expected_indicators": [
+              "slang_kept_as_written",
+              "crossed_out_word_marked",
+              "smudged_reading_flagged",
+              "acronyms_listed_not_expanded"
+            ],
+            "expected_human_escalation": false,
+            "page": {
+              "file": "statement-01.png",
+              "font": "patrick-hand",
+              "size": 36,
+              "lines": [
+                "Statement, Oct 28",
+                "I been going to the TMC on {x:mondays} tuesdays",
+                "since the summer. The staff r real good to",
+                "me n my kids. Last wk the van didnt come so",
+                "we walked, it was like {?:2 miles}, no cap.",
+                "They said my SNAP got cut but nobody told",
+                "me why. I aint mad at the front desk tho.",
+                "I want help w/ the forms bc I cant read",
+                "the small print. Thank u"
+              ],
+              "pixel_sha256": "390ab44a5691d82a5984e8c157914311b2116dfad362ff75d3f32ec99637fc0c"
+            },
+            "expected_transcription": [
+              "Statement, Oct 28",
+              "I been going to the TMC on [crossed out: mondays] tuesdays",
+              "since the summer. The staff r real good to",
+              "me n my kids. Last wk the van didnt come so",
+              "we walked, it was like 2 miles [?], no cap.",
+              "They said my SNAP got cut but nobody told",
+              "me why. I aint mad at the front desk tho.",
+              "I want help w/ the forms bc I cant read",
+              "the small print. Thank u"
+            ]
+          },
+          {
+            "id": "FX-TRANSCR-CARD",
+            "scenario": "A handwritten sign-up card with acronyms, a Spanish word and a smudged word",
+            "sample_input": "SYNTHETIC: Page signup-card-01.png, rendered from the Gochi Hand font and stamped SYNTHETIC: a sign-up card with the acronyms ESL, GED, WIC and NEC, the Spanish word abuela and one smudged word.",
+            "expected_indicators": [
+              "spanish_word_kept",
+              "acronyms_listed_not_expanded",
+              "smudged_reading_flagged"
+            ],
+            "expected_human_escalation": false,
+            "page": {
+              "file": "signup-card-01.png",
+              "font": "gochi-hand",
+              "size": 38,
+              "lines": [
+                "Sign-up card, Northside Center",
+                "Classes I want: ESL + GED prep",
+                "Kids: 2, the baby is on WIC",
+                "Heard about u from: NEC flyer",
+                "at the laundromat",
+                "Best time: after 3, not wed",
+                "Anything else: can my abuela come too?",
+                "she only speaks spanish n she's real {?:shy}"
+              ],
+              "pixel_sha256": "83906973fbe5a4898c627ca7b7de8aab4ed09ae4243cf58f641e946a0e9c0204"
+            },
+            "expected_transcription": [
+              "Sign-up card, Northside Center",
+              "Classes I want: ESL + GED prep",
+              "Kids: 2, the baby is on WIC",
+              "Heard about u from: NEC flyer",
+              "at the laundromat",
+              "Best time: after 3, not wed",
+              "Anything else: can my abuela come too?",
+              "she only speaks spanish n she's real shy [?]"
+            ]
+          },
+          {
+            "id": "FX-TRANSCR-SAFETY",
+            "scenario": "A statement that says the writer does not feel safe at home",
+            "sample_input": "SYNTHETIC: Page statement-02.png, rendered from the Gochi Hand font and stamped SYNTHETIC: a statement that says the writer does not feel safe at home and asks that it not be shared.",
+            "expected_indicators": [
+              "transcribed_as_written",
+              "route_to_trained_staff_now",
+              "sharing_held_for_consent"
+            ],
+            "expected_human_escalation": true,
+            "page": {
+              "file": "statement-02.png",
+              "font": "gochi-hand",
+              "size": 38,
+              "lines": [
+                "For the housing workshop, Nov 3",
+                "we was told the rent goin up again in Jan.",
+                "i cant keep up w/ it n the heat been out",
+                "since last thurs. they sez fix it urself.",
+                "honestly i dont feel safe at home rn and",
+                "i dont know who to call. pls dont share",
+                "this w/ {x:any} nobody."
+              ],
+              "pixel_sha256": "605f9130d712fc773ae3b99e38f3c3babb8ffbb9460d7c7070401989b5aa10c1"
+            },
+            "expected_transcription": [
+              "For the housing workshop, Nov 3",
+              "we was told the rent goin up again in Jan.",
+              "i cant keep up w/ it n the heat been out",
+              "since last thurs. they sez fix it urself.",
+              "honestly i dont feel safe at home rn and",
+              "i dont know who to call. pls dont share",
+              "this w/ [crossed out: any] nobody."
+            ]
+          },
+          {
+            "id": "FX-TRANSCR-CORRECT",
+            "scenario": "A volunteer asks the agent to fix the spelling and grammar before filing",
+            "sample_input": "SYNTHETIC: A volunteer asks the agent to fix the spelling and grammar of the statement-01.png transcription before it is filed.",
+            "expected_indicators": [
+              "refuse_to_correct_the_writer",
+              "route_to_reviewer"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ],
+        [
+          "derives_from",
+          "sample-renderer",
+          "pages rendered by this code"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "A community center's need, in its own words",
+      "category_reason": "A need in an organization's own plain words frames what the kit should do.",
+      "value": {
+        "says": "We need our handwritten intake statements typed up, keeping how people talk: their slang, spelling and acronyms exactly as written. Anything hard to read should be marked so our staff can check it, and nothing gets shared without the writer's OK.",
+        "mark": "SYNTHETIC"
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.transcription",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one page typed exactly as written, with every flag located",
+      "category_reason": "A transcription is a candidate reading that a person checks against the page.",
+      "value": {
+        "describes": "one page typed exactly as written, line by line, with every uncertain or unreadable word flagged by page and line",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "batch_label",
+            "page_file",
+            "page_sha256",
+            "lines",
+            "flags",
+            "needs_trained_staff_now"
+          ],
+          "properties": {
+            "batch_label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "page_file": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "page_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "lines": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 400
+              }
+            },
+            "flags": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "line",
+                  "reading",
+                  "kind"
+                ],
+                "properties": {
+                  "line": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "reading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "uncertain",
+                      "illegible"
+                    ]
+                  },
+                  "alternatives": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    }
+                  }
+                }
+              }
+            },
+            "needs_trained_staff_now": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "batch_label": "Community night 2026-10-28",
+          "page_file": "statement-01.png",
+          "page_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "lines": [
+            "Statement, Oct 28",
+            "we walked, it was like 2 miles [?], no cap."
+          ],
+          "flags": [
+            {
+              "line": 2,
+              "reading": "2 miles",
+              "kind": "uncertain",
+              "alternatives": [
+                "2 mile",
+                "3 miles"
+              ]
+            }
+          ],
+          "needs_trained_staff_now": false
+        },
+        "rules": [
+          "Lines keep the writer's words, spelling and slang.",
+          "Every [?] and [illegible] appears in flags."
+        ]
+      }
+    },
+    {
+      "slug": "template.acronym-list",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: acronyms and local terms found in a transcription",
+      "category_reason": "A glossary match is a deterministic check run with a result per term.",
+      "value": {
+        "describes": "acronyms and local terms found in a transcription, with glossary meanings and the unknown terms",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_file",
+            "known",
+            "unknown"
+          ],
+          "properties": {
+            "page_file": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "known": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "term",
+                  "meaning"
+                ],
+                "properties": {
+                  "term": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "meaning": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "unknown": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          }
+        },
+        "example": {
+          "page_file": "statement-01.png",
+          "known": [
+            {
+              "term": "SNAP",
+              "meaning": "Supplemental Nutrition Assistance Program"
+            }
+          ],
+          "unknown": []
+        },
+        "rules": [
+          "Meanings come word for word from the glossary.",
+          "The transcription itself never changes."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    },
+    {
+      "slug": "sample-renderer",
+      "category": "noun.code_node",
+      "role": "sample_renderer",
+      "title": "Code: render the kit's synthetic handwritten sample pages",
+      "category_reason": "A tested renderer that rebuilds the sample pages from the test-cases noun and checks their pixel digests.",
+      "value": {
+        "code": {
+          "$code": "kit-handwritten-statements"
+        },
+        "entry": "render_samples.py",
+        "run": "make render OUT=<folder outside the library>",
+        "fonts": {
+          "patrick-hand": {
+            "name": "Patrick Hand",
+            "file": "PatrickHand-Regular.ttf",
+            "license": "OFL-1.1",
+            "url": "https://raw.githubusercontent.com/google/fonts/6157dfaa640ca5738b4d1a7070fe389c3036d7fc/ofl/patrickhand/PatrickHand-Regular.ttf",
+            "license_url": "https://raw.githubusercontent.com/google/fonts/6157dfaa640ca5738b4d1a7070fe389c3036d7fc/ofl/patrickhand/OFL.txt",
+            "sha256": "0f173b3e6cb6d1af25babf7f0057c5ac4ee11f9992b0469bb817e967ef4ad0fc"
+          },
+          "gochi-hand": {
+            "name": "Gochi Hand",
+            "file": "GochiHand-Regular.ttf",
+            "license": "OFL-1.1",
+            "url": "https://raw.githubusercontent.com/google/fonts/6157dfaa640ca5738b4d1a7070fe389c3036d7fc/ofl/gochihand/GochiHand-Regular.ttf",
+            "license_url": "https://raw.githubusercontent.com/google/fonts/6157dfaa640ca5738b4d1a7070fe389c3036d7fc/ofl/gochihand/OFL.txt",
+            "sha256": "c46b029ab4846b2935e301af0b2cf85a1d74d2858e6a33636a3e64cf3cc4696b"
+          }
+        },
+        "writes": "PNG pages only into the folder given with OUT; never into the library tree.",
+        "checks": "The code's tests rebuild every page and compare its pixel SHA-256 with the test-cases noun."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "transcribe-pages",
+      "kind": "verb.ingest",
+      "title": "Type each page exactly as written",
+      "claimant": "agent",
+      "summary": "Type every page image in the drop folder line by line exactly as written, marking crossed-out words, flagging every uncertain reading and never correcting the writer.",
+      "outcome": "A transcription per page with every uncertain reading flagged, for a person to check.",
+      "ready_outcome": "pages_transcribed",
+      "pinned": [
+        "skill.verbatim-transcriber",
+        "tool.list-dropped-pages",
+        "file.transcription-rules",
+        "file.transcription-sheet"
+      ],
+      "slots": [
+        {
+          "name": "dropped_pages",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun listing the page images in the drop folder with their SHA-256 digests; synthetic or consented pages only."
+        }
+      ],
+      "produces": [
+        {
+          "name": "transcription",
+          "template": "template.transcription",
+          "max": 20
+        }
+      ],
+      "steps": [
+        "List the page images with the pinned read-only tool and check each file's digest.",
+        "Type each line exactly as written: keep spelling, slang, grammar, capitals, abbreviations, acronyms and punctuation.",
+        "Write a crossed-out word as [crossed out: word], an unsure word as your best reading followed by [?] with alternatives, and an unreadable word as [illegible].",
+        "Never correct, tidy, translate, summarize or expand anything, and never add a detail that is not on the page.",
+        "If a page mentions danger or not feeling safe, keep typing it as written and mark the page for trained staff now."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.transcription's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-line-kept",
+          "check": "Each page has one transcription line per written line, in order.",
+          "method": "deterministic"
+        },
+        {
+          "id": "flags-located",
+          "check": "Every [?] and [illegible] in the text appears in flags with its page and line.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verbatim-on-samples",
+          "check": "On the pack's synthetic sample pages, every line equals the test case's expected transcription.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "list-acronyms",
+      "kind": "verb.verify_gate",
+      "title": "List acronyms and local terms against the glossary",
+      "claimant": "agent",
+      "summary": "Match every acronym and local term in the transcription against the pinned local glossary, and list unknown terms for the reviewer, without changing the transcription.",
+      "outcome": "An acronym list with glossary meanings and unknown terms, for readers and the reviewer.",
+      "ready_outcome": "acronyms_listed",
+      "model_use": "none",
+      "pinned": [
+        "skill.acronym-glossary-assistant",
+        "file.local-acronym-glossary"
+      ],
+      "slots": [
+        {
+          "name": "transcription",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a page transcription."
+        }
+      ],
+      "produces": [
+        {
+          "name": "acronym_list",
+          "template": "template.acronym-list"
+        }
+      ],
+      "steps": [
+        "Find acronyms, abbreviations and local terms in the transcription.",
+        "Give the glossary meaning when the glossary has one, and list unknown terms for the reviewer.",
+        "Never replace or expand a term inside the transcription."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.acronym-list's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "transcription-unchanged",
+          "check": "The transcription's value SHA-256 is the same before and after this verb.",
+          "method": "deterministic"
+        },
+        {
+          "id": "known-terms-from-glossary",
+          "check": "Every meaning given comes word for word from the pinned glossary.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "kit-handwritten-statements.transcribe-pages"
+      ]
+    },
+    {
+      "slug": "verify-readings",
+      "kind": "verb.verify_gate",
+      "title": "Check every flagged reading against the original page",
+      "claimant": "human",
+      "summary": "A trained reviewer compares every flagged reading and a sample of other lines with the original page and fixes misreadings only.",
+      "outcome": "A step record saying the transcription was checked, changed or held.",
+      "ready_outcome": "readings_checked",
+      "model_use": "none",
+      "pinned": [
+        "checklist",
+        "file.transcription-rules"
+      ],
+      "slots": [
+        {
+          "name": "transcription",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a page transcription."
+        },
+        {
+          "name": "acronym_list",
+          "category": "noun.eval_run",
+          "description": "Pin of the acronym list."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Check every flag against the original page, and check a sample of unflagged lines too.",
+        "Fix misreadings only. Keep the writer's spelling, slang and words.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-handwritten-statements.list-acronyms"
+      ]
+    },
+    {
+      "slug": "safety-follow-up",
+      "kind": "verb.verify_gate",
+      "title": "Follow up in person when a statement raises safety",
+      "claimant": "human",
+      "summary": "Trained staff follow up under the organization's own safety protocol whenever a statement mentions danger or not feeling safe.",
+      "outcome": "A step record saying the follow-up was done or was not needed.",
+      "ready_outcome": "safety_followed_up",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "transcription",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the transcription marked for trained staff."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Follow the organization's own safety protocol, in person or by phone, the same day.",
+        "The agent gives no advice and takes no other step on this statement.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      }
+    },
+    {
+      "slug": "sign-off-statement",
+      "kind": "verb.verify_gate",
+      "title": "Sign off the transcription and decide how it is used",
+      "claimant": "human",
+      "summary": "The program lead signs off each checked transcription and decides how the statement is used, under the organization's consent and records rules.",
+      "outcome": "A step record saying the transcription was signed off, changed or held.",
+      "ready_outcome": "signed_off",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "transcription",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the checked transcription."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Sign off only a transcription a reviewer has checked against the page.",
+        "Decide how the statement is used under the organization's consent and records rules.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-handwritten-statements.verify-readings"
+      ]
+    },
+    {
+      "slug": "share-statement",
+      "kind": "verb.verify_gate",
+      "title": "Share a statement outside the organization",
+      "claimant": "human",
+      "summary": "Staff share a signed-off statement outside the organization only with the writer's consent; the agent never shares or sends anything.",
+      "outcome": "A step record saying the statement was shared or held.",
+      "ready_outcome": "statement_shared",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "transcription",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the signed-off transcription."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Share only with the writer's recorded consent, through the organization's own channels.",
+        "Hold any statement that asks not to be shared.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-handwritten-statements.sign-off-statement"
+      ]
+    }
+  ]
+}

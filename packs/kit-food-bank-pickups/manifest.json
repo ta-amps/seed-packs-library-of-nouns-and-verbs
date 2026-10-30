@@ -1,0 +1,164 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "kit-food-bank-pickups",
+  "title": "Food bank inventory and pickup kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a food bank's agent kit: weekly stock counts turned into a restock and use-first list, and booked pickup slots spread across volunteer shifts, while household exceptions and reminders stay with the coordinator.",
+  "license": "MIT",
+  "store": "seedpack.kit-food-bank-pickups",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "c16f2d22c398115860be7fb900bf8022bae4071ae82ee09733e79544c4c2f1ab"
+    },
+    {
+      "path": "source.json",
+      "sha256": "56c3ad48ff37b92f678adfb1e1661ce9893161d1a7a71488d1c2222b6685b67d"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "fb58cdaa7a4d1e2ad0b3f14c4927e5e5234c95d6d2d48ec3d2cddb95a92b3868"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "bf9a511ee3102b8eddc4e228df9f168ae6a2211aca2a99b4c19af554232a06d9"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "db9718476f1c6a8f410cafc558a4aa14bf868bd30fb1a9d487ca3a6466824c39"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.kit",
+      "category_id": "noun.skill_pack",
+      "role": "kit",
+      "value_sha256": "21c07cd04580223be8ad2c2d6d35810392cbe2eeef54cd37fb3cdaf9abe5e048"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.skill.pickup-plan-drafter",
+      "category_id": "noun.skill_pack",
+      "role": "skill",
+      "value_sha256": "c6f407c36a2ac44a9bafbc8eb0e6038723f3944ad3bf5bf625ba3804176a9f02"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.tool.summarize-stock-and-slots",
+      "category_id": "noun.mcp_server",
+      "role": "tool",
+      "value_sha256": "7bc5cb31f8cff3b7e080dbcddda4cf8bf65d85d98c44aa5d002b6b47ecdc86c6"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.file.stock-count-sheet",
+      "category_id": "noun.skill_pack",
+      "role": "file",
+      "value_sha256": "2b415fae379ceb647b86db1afb1ba3bb57372adc829b7c88e9451976eed3a36b"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.file.pickup-slot-sheet",
+      "category_id": "noun.skill_pack",
+      "role": "file",
+      "value_sha256": "a8a0ef7cb1ec868251fd7c317bae272f1fd33f68a9227e3aada969e862c6d469"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.checklist",
+      "category_id": "noun.skill_pack",
+      "role": "checklist",
+      "value_sha256": "175da99f4e80cdfcb54d660f05b427eaf3d3199326776060ed9dc0c14eb15a41"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.sources",
+      "category_id": "noun.public_source",
+      "role": "sources",
+      "value_sha256": "fb296b5818684ff3b422b7a1a1f4af241db399242cba5e04671ae15f70c0a4ac"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.test-cases",
+      "category_id": "noun.benchmark_suite",
+      "role": "test_cases",
+      "value_sha256": "e28bded9f1c7ba463dae01e8a391c7f5d313a140d2ec9b0b562084a58856d159"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.example.request",
+      "category_id": "noun.seed_hypothesis",
+      "role": "request",
+      "value_sha256": "1a8dda65eb64a9910843578281a2d2f33c237207a18c7148d4431a0473099d42"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.template.restock-list",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "0525560c50ea11beb3c0f28b56d7266b3f35832800e6143bcffbb6bc1aa4dc9a"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.template.pickup-plan",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "1083b0039c1f50dbfad86ca072db0afae715ddaa1ee81f3f5e21488503637a30"
+    },
+    {
+      "key": "kit-food-bank-pickups.v0.1.0.template.person-step-record",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "0782245fb913a92a187df7666327893978d008a48694caa21f09127c07ab535a"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "kit-food-bank-pickups.count-stock",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:kit-food-bank-pickups:count-stock:376ecf6ec972616bd33ad558f144c14e06ac01262eb606c1107a7e49af0eeafb",
+      "report_shape_sha256": "53667f7cfa0aa7692f2947d5667390519c06ba5d8dc9c22952e3c68ea5945d46"
+    },
+    {
+      "template_id": "kit-food-bank-pickups.plan-pickups",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:kit-food-bank-pickups:plan-pickups:cfad7668137b34837f27601b67a768269ee8d3d8bd7ce6a07b5af2467d311231",
+      "report_shape_sha256": "511a62192127ede09d3c1c0bbd9591bbda25c8c5258cee14b199922208e59c94"
+    },
+    {
+      "template_id": "kit-food-bank-pickups.decide-exceptions",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:kit-food-bank-pickups:decide-exceptions:90e7657b7424266928d73c3eec1a25e5ed69a6d4cd00866fd11e8755b3577f8b",
+      "report_shape_sha256": "1692a36cb6ad239455bcc43a11f9cf579eab7eee219277282102b4bbfefa5053"
+    },
+    {
+      "template_id": "kit-food-bank-pickups.send-reminders",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:kit-food-bank-pickups:send-reminders:9e537f29ad45e97fb6cdfeba1430c2966c07297b7f50a926477111bc93bcf5a4",
+      "report_shape_sha256": "bea9b67a4dba01bc8e036e8ec4e6c4491898ce86733de673ab32f59f364561ad"
+    }
+  ],
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

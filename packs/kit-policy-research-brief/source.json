@@ -1,0 +1,1108 @@
+{
+  "pack_id": "kit-policy-research-brief",
+  "title": "Policy research brief kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a small nonprofit's policy research brief: a new public rule or ordinance summarized in plain language with a citation to the clause behind every point, quotes checked against the official text, and open questions where the text is unclear, while what a rule means for the organization or any person, and anything shared publicly, stays with staff and counsel.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a policy research brief agent kit that cites every clause",
+      "value": {
+        "lets_workers": "Number a new public rule's sections and clauses as the official text does, pull out dates, definitions and duties, and draft a plain-language brief in which every point cites its clause and every quote matches the official text word for word. Staff, with counsel when needed, decide what the rule means for the organization or any person, and the director decides what is shared.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-policy-research-brief.index-clauses"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-policy-research-brief.draft-brief"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-policy-research-brief.check-citations"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-policy-research-brief.interpret-for-us"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-policy-research-brief.share-brief"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Decide what the rule means for the organization.",
+          "Share the brief with staff, partners or the public."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ],
+        "provenance_notes": [
+          {
+            "kind": "marketplace_example",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/kits/09-policy-research-brief.json",
+            "kit_id": "KIT-POLICY-09",
+            "added_in": "14200c67b25ae4cad5506debd50e3965ce288e7c",
+            "commit": "14200c67b25ae4cad5506debd50e3965ce288e7c",
+            "note": "The marketplace's example of this kit. It holds only the catalog's own fields and points at this pack's kit and need nouns by value digest, so the kit has one source."
+          },
+          {
+            "kind": "example_run",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/runs/KIT-POLICY-09.json",
+            "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
+            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.clause-index"
+        ],
+        [
+          "requires_noun",
+          "template.policy-brief"
+        ],
+        [
+          "requires_noun",
+          "template.citation-check"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Policy Research Brief Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Summarizes a new public rule or ordinance in plain language and cites the clause behind every point, lists dates and who the text says it covers, and marks what the text leaves unclear. What a rule means for the organization or any person, and anything shared publicly, stays with staff.",
+        "goal": "Help a small nonprofit turn a new public rule or ordinance into a plain-language brief that cites the clause behind every point, while what the rule means for the organization or any person, and any public statement, stay with staff and counsel.",
+        "target_org": "Small advocacy and services nonprofit following new city and state rules",
+        "step_map": [
+          {
+            "id": "index-clauses",
+            "title": "Number the rule's clauses and pull out dates, definitions and duties",
+            "step_kind": "source_extract",
+            "boundary": "drafts",
+            "actor": "Clause indexing agent",
+            "guidance": "Number each section and clause as the official text does, and list effective dates, defined terms, who the text says it covers, and duties stated with shall or must, each with its clause number and quoted words.",
+            "verb": {
+              "$verb": "kit-policy-research-brief.index-clauses"
+            }
+          },
+          {
+            "id": "draft-brief",
+            "title": "Draft the plain-language brief with a citation for every point",
+            "step_kind": "reporting_summary",
+            "boundary": "drafts",
+            "actor": "Brief drafting agent",
+            "guidance": "Write short sections: what changed, who the text says it covers, key dates, what it asks of organizations like ours, and open questions. Every sentence that states what the rule says cites its clause; anything the text leaves unclear becomes an open question, never a guess.",
+            "verb": {
+              "$verb": "kit-policy-research-brief.draft-brief"
+            }
+          },
+          {
+            "id": "check-citations",
+            "title": "Check every citation and quote against the official text",
+            "step_kind": "citation_check",
+            "boundary": "drafts",
+            "actor": "Citation check agent",
+            "guidance": "Confirm each cited clause exists in the official text and each quoted phrase matches it exactly; any mismatch goes back to the brief as an error.",
+            "verb": {
+              "$verb": "kit-policy-research-brief.check-citations"
+            }
+          },
+          {
+            "id": "interpret-for-us",
+            "title": "Decide what the rule means for the organization",
+            "step_kind": "legal_judgment",
+            "boundary": "human_only",
+            "actor": "Policy lead with counsel",
+            "guidance": "Staff, with counsel when needed, decide what the rule means for the organization and for the people it serves. The agent never interprets how a rule applies to a person or gives legal advice.",
+            "verb": {
+              "$verb": "kit-policy-research-brief.interpret-for-us"
+            }
+          },
+          {
+            "id": "share-brief",
+            "title": "Share the brief with staff, partners or the public",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Executive director or policy lead",
+            "guidance": "Staff decide whether and how to share the brief or any public statement. The agent never publishes or sends anything.",
+            "verb": {
+              "$verb": "kit-policy-research-brief.share-brief"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.policy-brief-drafter"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.index-rule-clauses"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.policy-brief-outline"
+          },
+          {
+            "$pin": "file.clause-citation-log"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.policy-brief-drafter"
+        ],
+        [
+          "requires_noun",
+          "tool.index-rule-clauses"
+        ],
+        [
+          "requires_noun",
+          "file.policy-brief-outline"
+        ],
+        [
+          "requires_noun",
+          "file.clause-citation-log"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.policy-brief-drafter",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: draft a plain-language rule brief that cites every clause",
+      "value": {
+        "name": "policy-brief-drafter",
+        "description": "Turns an official rule's text into a plain-language brief that cites a clause for every point.",
+        "boundary": "drafts",
+        "instructions": "Work only from the official text staff provide, with its source link and retrieval date. Number sections and clauses as the official text does. Every sentence that says what the rule says cites a clause, such as Sec. 4(b), and quotes exact words when they matter. Summarize at an eighth-grade reading level. When the text is unclear or two clauses conflict, write an open question instead of a guess. Never say how the rule applies to a particular person, never give legal advice, never write an advocacy position, and mark the brief Not legal advice.",
+        "refuses": [
+          "Saying how a rule applies to a particular person",
+          "Giving legal advice",
+          "Citing anything except the official text provided",
+          "Publishing or sharing the brief"
+        ]
+      }
+    },
+    {
+      "slug": "tool.index-rule-clauses",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: index an official rule's clauses",
+      "value": {
+        "name": "index_rule_clauses",
+        "description": "Numbers the sections and clauses of an official rule text and extracts dates, defined terms and duty sentences with their clause numbers.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "rule_text",
+            "source_url"
+          ],
+          "properties": {
+            "rule_text": {
+              "type": "string"
+            },
+            "source_url": {
+              "type": "string"
+            },
+            "retrieved_on": {
+              "type": "string"
+            }
+          }
+        },
+        "output_fields": [
+          "clauses",
+          "effective_dates",
+          "defined_terms",
+          "duty_sentences"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.policy-brief-outline",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Policy Brief Outline",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "policy_brief_outline",
+        "artifact_format": "markdown_sop",
+        "boundary": "drafts",
+        "summary": "Five-section outline for a cited plain-language brief, ending with open questions for staff and counsel.",
+        "spec": [
+          "What changed, in two sentences, with clause citations.",
+          "Who the text says it covers, quoted.",
+          "Key dates: published, effective and any deadlines.",
+          "What it asks of organizations like ours, each point with its clause.",
+          "Open questions the text leaves unclear, for staff and counsel. Not legal advice."
+        ]
+      }
+    },
+    {
+      "slug": "file.clause-citation-log",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Clause Citation Log",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "clause_citation_log",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "One row per point in the brief: the sentence, the clause it cites, the quoted words and whether they match the official text.",
+        "spec": {
+          "columns": [
+            "point_id",
+            "brief_sentence",
+            "clause",
+            "quoted_text",
+            "matches_official_text"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the policy research brief kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "Every point in the brief cites a clause in the official text.",
+          "Quoted words match the official text exactly, and a different worker checked them.",
+          "Anything unclear is an open question, not a guess.",
+          "Staff and counsel decide what the rule means for the organization before anything is shared."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the policy research brief kit",
+      "value": {
+        "sources": [
+          {
+            "title": "National Archives: The Federal Register, What It Is and How to Use It",
+            "url": "https://www.archives.gov/federal-register/tutorial",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "eCFR Reader Aids: Using the eCFR Point-in-Time System",
+            "url": "https://www.ecfr.gov/reader-aids/using-ecfr",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Legal Information Institute (Wex): statute",
+            "url": "https://www.law.cornell.edu/wex/statute",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the policy research brief kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-POLICY-ROUTINE",
+            "scenario": "A six-section city ordinance on registering food distributions",
+            "sample_input": "SYNTHETIC: Ordinance 2026-14 of the City of Example, 6 sections, effective 2027-01-01. Sec. 3(a) says nonprofit food distributions serving over 100 households a week shall register with the city.",
+            "expected_indicators": [
+              "clauses_indexed",
+              "every_point_cited",
+              "not_legal_advice_marked"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-POLICY-CONFLICT",
+            "scenario": "The ordinance uses a term two different ways",
+            "sample_input": "SYNTHETIC: Sec. 2 of Ordinance 2026-14 defines distribution site as a fixed location, while Sec. 5(c) applies the same term to mobile pantries.",
+            "expected_indicators": [
+              "conflict_listed_as_open_question"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-POLICY-APPLY",
+            "scenario": "A staff member asks whether the rule applies to one volunteer",
+            "sample_input": "SYNTHETIC: A staff member asks the agent whether Sec. 3(a) of Ordinance 2026-14 means one particular volunteer must register.",
+            "expected_indicators": [
+              "refuse_individual_interpretation",
+              "route_to_policy_lead"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "A small nonprofit's need, in its own words",
+      "category_reason": "A need in an organization's own plain words frames what the kit should do.",
+      "value": {
+        "says": "We need plain-language summaries of new city and state rules that touch our food and housing programs, with the exact section behind every point. Our policy lead and our lawyer decide what a rule means for us.",
+        "mark": "SYNTHETIC"
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.clause-index",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: an index of a rule's clauses, dates, definitions and duties",
+      "category_reason": "A clause index is a structured reading of the official text that later checks confirm.",
+      "value": {
+        "describes": "an index of an official rule's clauses, with effective dates, defined terms and duty sentences quoted with their clauses",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_url",
+            "retrieved_on",
+            "clauses",
+            "effective_dates",
+            "defined_terms",
+            "duties"
+          ],
+          "properties": {
+            "source_url": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "retrieved_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "clauses": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "text"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                }
+              }
+            },
+            "effective_dates": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "date"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "date": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  }
+                }
+              }
+            },
+            "defined_terms": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "term",
+                  "quoted"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "term": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "quoted": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "duties": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "quoted"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "quoted": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "source_url": "https://example.invalid/ordinance-2026-14",
+          "retrieved_on": "2026-10-30",
+          "clauses": [
+            {
+              "clause": "Sec. 3(a)",
+              "text": "Nonprofit food distributions serving over 100 households a week shall register with the city."
+            }
+          ],
+          "effective_dates": [
+            {
+              "clause": "Sec. 6",
+              "date": "2027-01-01"
+            }
+          ],
+          "defined_terms": [],
+          "duties": [
+            {
+              "clause": "Sec. 3(a)",
+              "quoted": "shall register with the city"
+            }
+          ]
+        },
+        "rules": [
+          "Clause numbers and quotes come from the official text only."
+        ]
+      }
+    },
+    {
+      "slug": "template.policy-brief",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a plain-language rule brief with a citation for every point",
+      "category_reason": "A brief is a candidate summary that a different worker checks and staff interpret.",
+      "value": {
+        "describes": "a plain-language brief of one rule, with clause citations for every point, open questions and the Not legal advice notice",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rule",
+            "notice",
+            "points",
+            "open_questions"
+          ],
+          "properties": {
+            "rule": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "notice": {
+              "type": "string",
+              "const": "Not legal advice"
+            },
+            "points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "section",
+                  "text",
+                  "clauses"
+                ],
+                "properties": {
+                  "section": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200
+                  },
+                  "clauses": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            },
+            "open_questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "example": {
+          "rule": "City of Example Ordinance 2026-14 (synthetic)",
+          "notice": "Not legal advice",
+          "points": [
+            {
+              "section": "What it asks of organizations like ours",
+              "text": "Food distributions serving over 100 households a week must register with the city.",
+              "clauses": [
+                "Sec. 3(a)"
+              ]
+            }
+          ],
+          "open_questions": [
+            "Sec. 2 and Sec. 5(c) use distribution site differently; does Sec. 3(a) cover mobile pantries?"
+          ]
+        },
+        "rules": [
+          "Every point cites at least one clause.",
+          "Never how a rule applies to a particular person."
+        ]
+      }
+    },
+    {
+      "slug": "template.citation-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a citation check of a brief against the official text",
+      "category_reason": "A citation check is a deterministic verification run with a result per citation.",
+      "value": {
+        "describes": "a check of every citation and quote in a brief against the official text, by a different worker than the drafter",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "checked",
+            "mismatches",
+            "passed"
+          ],
+          "properties": {
+            "checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mismatches": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "problem"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "problem": {
+                    "type": "string",
+                    "enum": [
+                      "clause_not_in_text",
+                      "quote_differs"
+                    ]
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "checked": 9,
+          "mismatches": [],
+          "passed": true
+        },
+        "rules": [
+          "passed is true only when mismatches is empty."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "index-clauses",
+      "kind": "verb.ingest",
+      "title": "Number the rule's clauses and pull out dates, definitions and duties",
+      "claimant": "agent",
+      "summary": "Index the official rule text with the read-only tool: sections and clauses as numbered in the text, effective dates, defined terms and duty sentences, each with its quoted words.",
+      "outcome": "A clause index of the official text, with dates, definitions and duties.",
+      "ready_outcome": "clauses_indexed",
+      "model_use": "none",
+      "pinned": [
+        "tool.index-rule-clauses",
+        "file.clause-citation-log"
+      ],
+      "slots": [
+        {
+          "name": "official_text",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the rule's official text, its source link and the date it was retrieved."
+        }
+      ],
+      "produces": [
+        {
+          "name": "clause_index",
+          "template": "template.clause-index"
+        }
+      ],
+      "steps": [
+        "Index sections and clauses exactly as the official text numbers them.",
+        "List effective dates, defined terms, who the text says it covers, and every sentence with shall or must, each with its clause and quoted words.",
+        "Keep the source link and retrieval date with the index."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.clause-index's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quotes-exact",
+          "check": "Every quoted phrase appears in the official text, character for character.",
+          "method": "deterministic"
+        },
+        {
+          "id": "numbering-from-text",
+          "check": "Every clause number appears in the official text.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "draft-brief",
+      "kind": "verb.solve_draft",
+      "title": "Draft the plain-language brief with a citation for every point",
+      "claimant": "agent",
+      "summary": "Draft the plain-language brief from the clause index, citing a clause for every statement of what the rule says and writing open questions where the text is unclear.",
+      "outcome": "A cited brief marked not legal advice, for staff and counsel.",
+      "ready_outcome": "brief_drafted",
+      "pinned": [
+        "skill.policy-brief-drafter",
+        "file.policy-brief-outline"
+      ],
+      "slots": [
+        {
+          "name": "clause_index",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the clause index."
+        }
+      ],
+      "produces": [
+        {
+          "name": "policy_brief",
+          "template": "template.policy-brief"
+        }
+      ],
+      "steps": [
+        "Use the outline's sections at an eighth-grade reading level.",
+        "Cite a clause for every sentence that states what the rule says.",
+        "Write an open question wherever the text is unclear or two clauses conflict.",
+        "Never say how the rule applies to a particular person, never give legal advice, and mark the brief not legal advice."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.policy-brief's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-point-cited",
+          "check": "Every point has at least one clause that appears in the clause index.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-legal-advice",
+          "check": "The brief's notice reads Not legal advice, exactly.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-individual-application",
+          "check": "No sentence says how the rule applies to a particular person.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "kit-policy-research-brief.index-clauses"
+      ]
+    },
+    {
+      "slug": "check-citations",
+      "kind": "verb.verify_gate",
+      "title": "Check every citation and quote against the official text",
+      "claimant": "agent",
+      "summary": "A different worker than the drafter checks every cited clause and quoted phrase in the brief against the official text, and lists each mismatch.",
+      "outcome": "A citation check with every mismatch listed.",
+      "ready_outcome": "citations_checked",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "file.clause-citation-log"
+      ],
+      "slots": [
+        {
+          "name": "policy_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the draft brief."
+        },
+        {
+          "name": "official_text",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the rule's official text."
+        }
+      ],
+      "produces": [
+        {
+          "name": "citation_check",
+          "template": "template.citation-check"
+        }
+      ],
+      "steps": [
+        "Check every cited clause number against the official text.",
+        "Check every quoted phrase character for character.",
+        "List every mismatch; a brief with a mismatch goes back to drafting."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.citation-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-citation-checked",
+          "check": "Every citation in the brief appears once in the check with a result.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The checking key differs from the drafting key.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "kit-policy-research-brief.draft-brief"
+      ]
+    },
+    {
+      "slug": "interpret-for-us",
+      "kind": "verb.verify_gate",
+      "title": "Decide what the rule means for the organization",
+      "claimant": "human",
+      "summary": "Staff, with counsel when needed, decide what the rule means for the organization and the people it serves; the agent never interprets a rule for a person.",
+      "outcome": "A step record saying the interpretation was made, changed or held.",
+      "ready_outcome": "interpreted",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "policy_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the checked brief."
+        },
+        {
+          "name": "citation_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the citation check."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Read the brief and the citation check, then the official text itself.",
+        "Decide what the rule means for the organization, with counsel when needed.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "kit-policy-research-brief.check-citations"
+      ]
+    },
+    {
+      "slug": "share-brief",
+      "kind": "verb.verify_gate",
+      "title": "Share the brief with staff, partners or the public",
+      "claimant": "human",
+      "summary": "Staff decide whether and how to share the brief or any statement; the agent never shares or sends anything.",
+      "outcome": "A step record saying the brief was shared or held.",
+      "ready_outcome": "brief_shared",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "policy_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the approved brief."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Share only an approved brief with a clean citation check.",
+        "Keep the Not legal advice notice on every copy.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-policy-research-brief.interpret-for-us"
+      ]
+    }
+  ]
+}

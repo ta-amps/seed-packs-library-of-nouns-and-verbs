@@ -1,0 +1,28 @@
+# Locked environment for the handwritten statements kit's sample renderer and its tests.
+[project]
+name = "kit-handwritten-statements-samples"
+version = "0.1.0"
+description = "Renders the handwritten statements kit's synthetic sample pages from its test-cases noun and checks their pixel digests."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "ta-amps" }]
+dependencies = [
+  "pillow==12.1.1",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.6",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,987 @@
+{
+  "pack_id": "kit-donor-thank-you-letters",
+  "title": "Donor thank-you letters kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a small nonprofit's agent kit that drafts donor thank-you letters from a coded gift list with the finance lead's acknowledgment wording and checks donors' privacy choices first, while staff decide special handling and sign every letter.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a donor thank-you letter agent kit with privacy checks",
+      "value": {
+        "lets_workers": "Check a coded gift list for each donor's anonymous, mail and listing choices, hold rows with a missing choice, and draft one thank-you letter per gift with merge fields for names and the finance lead's acknowledgment wording word for word. The development lead decides special handling, the finance lead confirms the wording, and staff sign every letter.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.check-privacy-choices"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.draft-letters"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.decide-special-handling"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.confirm-acknowledgment-wording"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.sign-and-send"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Decide special handling for donors.",
+          "Confirm the gift acknowledgment wording.",
+          "Sign and send each letter."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ],
+        "provenance_notes": [
+          {
+            "kind": "marketplace_example",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/kits/13-donor-thank-you-letters.json",
+            "kit_id": "KIT-THANKS-13",
+            "added_in": "2a45f43c15e7dba954cdf91efad8fc0e40ecf980",
+            "commit": "2a45f43c15e7dba954cdf91efad8fc0e40ecf980",
+            "note": "The marketplace's example of this kit. It holds only the catalog's own fields and points at this pack's kit and need nouns by value digest, so the kit has one source."
+          },
+          {
+            "kind": "example_run",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/runs/KIT-THANKS-13.json",
+            "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
+            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.privacy-check"
+        ],
+        [
+          "requires_noun",
+          "template.letter-drafts"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Donor Thank-You Letters with Privacy Checks Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Drafts thank-you letters from a coded gift list with the acknowledgment details the finance lead requires, and checks that no letter exposes another donor's details or ignores a privacy choice. Staff decide special handling and sign and send every letter.",
+        "goal": "Help a small nonprofit draft personal thank-you letters from a coded gift list, include the gift acknowledgment details its finance lead requires, and check that no letter or list exposes another donor's information or ignores a donor's privacy choices, while the development lead decides special handling and staff sign and send every letter.",
+        "target_org": "Small nonprofit thanking individual donors after a year-end appeal",
+        "step_map": [
+          {
+            "id": "check-privacy-choices",
+            "title": "Check the gift list against donors' privacy choices",
+            "step_kind": "privacy_check",
+            "boundary": "drafts",
+            "actor": "Privacy check agent",
+            "guidance": "Before drafting, check each coded gift row for its anonymous, mail and listing choices, and hold any row with a missing choice for the development lead.",
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.check-privacy-choices"
+            }
+          },
+          {
+            "id": "draft-letters",
+            "title": "Draft a thank-you letter for each gift",
+            "step_kind": "document_prep",
+            "boundary": "drafts",
+            "actor": "Letter drafting agent",
+            "guidance": "Draft one letter per cleared gift from the approved template with the gift date and amount, the finance lead's acknowledgment wording and a specific line about the program it supports. Names and addresses stay as merge fields.",
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.draft-letters"
+            }
+          },
+          {
+            "id": "decide-special-handling",
+            "title": "Decide special handling for donors",
+            "step_kind": "individual_decision",
+            "boundary": "human_only",
+            "actor": "Development lead",
+            "guidance": "The development lead decides personal calls, recognition, anonymity questions and any donor with a missing privacy choice. The agent only lists them.",
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.decide-special-handling"
+            }
+          },
+          {
+            "id": "confirm-acknowledgment-wording",
+            "title": "Confirm the gift acknowledgment wording",
+            "step_kind": "finance_signoff",
+            "boundary": "human_only",
+            "actor": "Finance lead",
+            "guidance": "The finance lead confirms the receipt wording, including any statement about goods or services given in return, against the organization's own rules and the IRS written acknowledgment requirements.",
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.confirm-acknowledgment-wording"
+            }
+          },
+          {
+            "id": "sign-and-send",
+            "title": "Sign and send each letter",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Executive director or development lead",
+            "guidance": "Staff sign and send letters from the organization's own mail or email. The agent never sends letters or messages donors.",
+            "verb": {
+              "$verb": "kit-donor-thank-you-letters.sign-and-send"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.donor-letter-drafter"
+          },
+          {
+            "$pin": "skill.gift-list-privacy-checker"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.check-gift-list-privacy"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.coded-gift-list"
+          },
+          {
+            "$pin": "file.thank-you-letter-template"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.donor-letter-drafter"
+        ],
+        [
+          "requires_noun",
+          "skill.gift-list-privacy-checker"
+        ],
+        [
+          "requires_noun",
+          "tool.check-gift-list-privacy"
+        ],
+        [
+          "requires_noun",
+          "file.coded-gift-list"
+        ],
+        [
+          "requires_noun",
+          "file.thank-you-letter-template"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.donor-letter-drafter",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: draft thank-you letters with merge fields",
+      "value": {
+        "name": "donor-letter-drafter",
+        "description": "Drafts personal thank-you letters from a coded gift list, keeping names and addresses as merge fields.",
+        "boundary": "drafts",
+        "instructions": "Draft one letter per cleared gift row from the approved template. Keep names and addresses as merge fields that the organization's own mail merge fills at signing time, so no letter can carry another donor's details. Include the gift date, the amount and the acknowledgment wording the finance lead supplied, word for word. Add one specific sentence about the program the gift supports from the program notes. Skip any row the privacy check held or that is marked no mail, and list its code. Do not add tax advice.",
+        "refuses": [
+          "Putting one donor's details in another donor's letter or in a shared list",
+          "Writing tax advice or changing the acknowledgment wording",
+          "Sending letters or messaging donors",
+          "Overriding a donor's privacy choice"
+        ]
+      }
+    },
+    {
+      "slug": "skill.gift-list-privacy-checker",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: check a coded gift list for privacy choices",
+      "value": {
+        "name": "gift-list-privacy-checker",
+        "description": "Checks a coded gift list for missing privacy choices and rows that must not get a letter or a public listing.",
+        "boundary": "drafts",
+        "instructions": "Check that every row has an anonymous choice, a mail choice and a listing choice. Hold rows with a missing choice for the development lead, and rows with goods or services given in return for the finance lead. Mark anonymous donors so their names stay out of any public list or annual report draft. Report gift codes and counts by choice, never names.",
+        "refuses": [
+          "Guessing a missing privacy choice",
+          "Listing an anonymous donor in any public list",
+          "Reading or storing names and addresses"
+        ]
+      }
+    },
+    {
+      "slug": "tool.check-gift-list-privacy",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: check a coded gift list's privacy choices",
+      "value": {
+        "name": "check_gift_list_privacy",
+        "description": "Lists gift rows with missing privacy choices, rows marked no mail or anonymous, and rows with goods or services given in return.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "gift_rows"
+          ],
+          "properties": {
+            "gift_rows": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "batch_label": {
+              "type": "string"
+            }
+          }
+        },
+        "output_fields": [
+          "missing_choices",
+          "no_mail_rows",
+          "anonymous_rows",
+          "goods_or_services_rows",
+          "rows_ready"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.coded-gift-list",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Coded Gift List",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "coded_gift_list",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "Gift rows by code with date, amount, program, privacy choices and the value of any goods given in return. Names and addresses stay in the donor system.",
+        "spec": {
+          "columns": [
+            "gift_code",
+            "gift_date",
+            "amount",
+            "currency",
+            "program",
+            "anonymous_choice",
+            "mail_choice",
+            "listing_choice",
+            "goods_or_services_value"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "file.thank-you-letter-template",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Thank-You Letter Template",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "thank_you_letter_template",
+        "artifact_format": "markdown_sop",
+        "boundary": "drafts",
+        "summary": "Letter template with merge fields for the donor's name and address, and a place for the finance lead's acknowledgment wording.",
+        "spec": [
+          "Dear {{greeting_name}},",
+          "Thank you for your gift of {{amount}} on {{gift_date}} to {{program}}.",
+          "One specific sentence about what the program did this year.",
+          "The acknowledgment wording supplied by the finance lead, word for word.",
+          "Signed by hand by staff."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the donor thank-you letters kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "Names and addresses stay in the organization's own donor system and enter letters only through its mail merge at signing time.",
+          "Every gift row has its anonymous, mail and listing choices before drafting.",
+          "The finance lead's acknowledgment wording appears word for word in every letter.",
+          "Staff sign and send every letter themselves."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the donor thank-you letters kit",
+      "value": {
+        "sources": [
+          {
+            "title": "IRS: Charitable contributions, written acknowledgments",
+            "url": "https://www.irs.gov/charities-non-profits/charitable-organizations/charitable-contributions-written-acknowledgments",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Association of Fundraising Professionals: The Donor Bill of Rights",
+            "url": "https://afpglobal.org/donor-bill-rights",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the donor thank-you letters kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-THANKS-ROUTINE",
+            "scenario": "Year-end gifts with every privacy choice recorded",
+            "sample_input": "SYNTHETIC: 48 gift rows dated 2026-12-01 to 2026-12-31, amounts from USD 25 to USD 1,000, every row with anonymous, mail and listing choices; 3 rows marked anonymous.",
+            "expected_indicators": [
+              "letters_drafted_with_merge_fields",
+              "anonymous_rows_kept_off_lists"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-THANKS-HOLD",
+            "scenario": "A gift row with a missing mail choice and a gift that included a dinner ticket",
+            "sample_input": "SYNTHETIC: Gift code G-31 has no mail choice recorded; gift code G-44 of USD 300 included a dinner ticket valued at USD 80.",
+            "expected_indicators": [
+              "row_held_for_development_lead",
+              "goods_or_services_wording_needed"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "A small nonprofit's need, in its own words",
+      "category_reason": "A need in an organization's own plain words frames what the kit should do.",
+      "value": {
+        "says": "We need thank-you letters drafted for about 300 year-end gifts that say what each gift supports and include our treasurer's receipt wording, without ever mixing up donors or naming anyone who asked to stay anonymous. Staff sign and mail every letter.",
+        "mark": "SYNTHETIC"
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.privacy-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: privacy check results for a coded gift list",
+      "category_reason": "A privacy check is a deterministic check run with a result per gift row.",
+      "value": {
+        "describes": "privacy check results for a coded gift list: held rows with reasons, anonymous rows and no-mail rows",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "batch_label",
+            "rows_checked",
+            "held_rows",
+            "anonymous_rows",
+            "no_mail_rows"
+          ],
+          "properties": {
+            "batch_label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "rows_checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "held_rows": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 1000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "gift_code",
+                  "reason"
+                ],
+                "properties": {
+                  "gift_code": {
+                    "type": "string",
+                    "pattern": "^G-[0-9]{1,5}$"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "missing_anonymous_choice",
+                      "missing_mail_choice",
+                      "missing_listing_choice",
+                      "goods_or_services_wording_needed"
+                    ]
+                  }
+                }
+              }
+            },
+            "anonymous_rows": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 1000,
+              "items": {
+                "type": "string",
+                "pattern": "^G-[0-9]{1,5}$"
+              }
+            },
+            "no_mail_rows": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 1000,
+              "items": {
+                "type": "string",
+                "pattern": "^G-[0-9]{1,5}$"
+              }
+            }
+          }
+        },
+        "example": {
+          "batch_label": "Year-end appeal 2026",
+          "rows_checked": 48,
+          "held_rows": [
+            {
+              "gift_code": "G-31",
+              "reason": "missing_mail_choice"
+            },
+            {
+              "gift_code": "G-44",
+              "reason": "goods_or_services_wording_needed"
+            }
+          ],
+          "anonymous_rows": [
+            "G-7",
+            "G-19",
+            "G-40"
+          ],
+          "no_mail_rows": []
+        },
+        "rules": [
+          "Gift codes and counts only; no names or addresses."
+        ]
+      }
+    },
+    {
+      "slug": "template.letter-drafts",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: thank-you letter drafts with merge fields",
+      "category_reason": "Letter drafts are candidates staff review, merge and sign.",
+      "value": {
+        "describes": "thank-you letter drafts, one per cleared gift, with merge fields for names and addresses",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "batch_label",
+            "letters"
+          ],
+          "properties": {
+            "batch_label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "letters": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 1000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "gift_code",
+                  "merge_fields",
+                  "body",
+                  "acknowledgment_verbatim"
+                ],
+                "properties": {
+                  "gift_code": {
+                    "type": "string",
+                    "pattern": "^G-[0-9]{1,5}$"
+                  },
+                  "merge_fields": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "greeting_name",
+                        "mailing_address"
+                      ]
+                    }
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 3000
+                  },
+                  "acknowledgment_verbatim": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "batch_label": "Year-end appeal 2026",
+          "letters": [
+            {
+              "gift_code": "G-2",
+              "merge_fields": [
+                "greeting_name",
+                "mailing_address"
+              ],
+              "body": "Dear {{greeting_name}}, thank you for your gift of USD 50 on 2026-12-03 to the after-school meals program.",
+              "acknowledgment_verbatim": true
+            }
+          ]
+        },
+        "rules": [
+          "Names and addresses appear only as merge fields.",
+          "The acknowledgment wording is copied word for word."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "check-privacy-choices",
+      "kind": "verb.verify_gate",
+      "title": "Check the gift list against donors' privacy choices",
+      "claimant": "agent",
+      "summary": "Check every coded gift row for its anonymous, mail and listing choices with the read-only tool, and hold rows with a missing choice or with goods given in return.",
+      "outcome": "A privacy check that lists held rows, anonymous rows and no-mail rows by gift code.",
+      "ready_outcome": "privacy_checked",
+      "model_use": "none",
+      "pinned": [
+        "tool.check-gift-list-privacy",
+        "file.coded-gift-list",
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "gift_list",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding coded gift rows: gift code, date, amount, program and privacy choices, with no names or addresses."
+        }
+      ],
+      "produces": [
+        {
+          "name": "privacy_check",
+          "template": "template.privacy-check"
+        }
+      ],
+      "steps": [
+        "Check every row for an anonymous choice, a mail choice and a listing choice.",
+        "Hold every row with a missing choice, and every row with goods or services given in return, for a person.",
+        "List anonymous rows so their names stay out of any public list or report draft.",
+        "Report gift codes and counts only."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.privacy-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "missing-choice-held",
+          "check": "Every row missing any choice appears in held_rows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "goods-held",
+          "check": "Every row with goods_or_services_value above zero appears in held_rows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "draft-letters",
+      "kind": "verb.solve_draft",
+      "title": "Draft a thank-you letter for each gift",
+      "claimant": "agent",
+      "summary": "Draft one thank-you letter per cleared gift row with placeholders for names and addresses, the finance lead's acknowledgment wording word for word, and one specific line about the program.",
+      "outcome": "Letter drafts with placeholders, for staff to review and sign.",
+      "ready_outcome": "letters_drafted",
+      "pinned": [
+        "skill.donor-letter-drafter",
+        "file.thank-you-letter-template"
+      ],
+      "slots": [
+        {
+          "name": "gift_list",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the coded gift list."
+        },
+        {
+          "name": "privacy_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the privacy check."
+        },
+        {
+          "name": "acknowledgment_wording",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the finance lead's acknowledgment wording and the program notes."
+        }
+      ],
+      "produces": [
+        {
+          "name": "letter_drafts",
+          "template": "template.letter-drafts"
+        }
+      ],
+      "steps": [
+        "Draft letters only for rows the privacy check did not hold and whose mail choice allows a letter.",
+        "Keep names and addresses as placeholders; the organization's own letter software fills them at signing time.",
+        "Copy the finance lead's acknowledgment wording word for word, and add no tax advice.",
+        "Add one specific sentence about the program the gift supports."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.letter-drafts's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "held-rows-skipped",
+          "check": "No letter exists for a held row or a no-mail row.",
+          "method": "deterministic"
+        },
+        {
+          "id": "wording-verbatim",
+          "check": "Every letter contains the acknowledgment wording exactly as pinned.",
+          "method": "deterministic"
+        },
+        {
+          "id": "merge-fields-only",
+          "check": "Every letter uses the greeting_name and mailing_address merge fields and contains no name or address.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "kit-donor-thank-you-letters.check-privacy-choices"
+      ]
+    },
+    {
+      "slug": "decide-special-handling",
+      "kind": "verb.verify_gate",
+      "title": "Decide special handling for donors",
+      "claimant": "human",
+      "summary": "The development lead decides personal calls, recognition, anonymity questions and every row held for a missing privacy choice.",
+      "outcome": "A step record saying the held rows were decided, changed or still held.",
+      "ready_outcome": "handling_decided",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "privacy_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the privacy check."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Decide every held row using the donor's recorded wishes in the organization's own donor system.",
+        "Never guess a privacy choice; ask the donor through the organization's usual channel if needed.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-donor-thank-you-letters.draft-letters"
+      ]
+    },
+    {
+      "slug": "confirm-acknowledgment-wording",
+      "kind": "verb.verify_gate",
+      "title": "Confirm the gift acknowledgment wording",
+      "claimant": "human",
+      "summary": "The finance lead confirms the acknowledgment wording, including any statement about goods or services given in return, against the organization's own rules.",
+      "outcome": "A step record saying the wording was confirmed, changed or held.",
+      "ready_outcome": "wording_confirmed",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "letter_drafts",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the letter drafts."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Check the acknowledgment wording in every letter against the organization's own rules.",
+        "Write the wording for any row with goods or services given in return.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-donor-thank-you-letters.decide-special-handling"
+      ]
+    },
+    {
+      "slug": "sign-and-send",
+      "kind": "verb.verify_gate",
+      "title": "Sign and send each letter",
+      "claimant": "human",
+      "summary": "Staff fill in names with the organization's own letter software, sign every letter and mail them themselves; the agent never sends letters or messages donors.",
+      "outcome": "A step record saying the letters went out, changed or were held.",
+      "ready_outcome": "letters_signed",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "letter_drafts",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the letter drafts with confirmed wording."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Fill in names and addresses only with the organization's own letter software.",
+        "Sign every letter yourself.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-donor-thank-you-letters.confirm-acknowledgment-wording"
+      ]
+    }
+  ]
+}

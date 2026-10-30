@@ -1,0 +1,1094 @@
+{
+  "pack_id": "kit-monthly-impact-report",
+  "title": "Monthly program impact report kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a community nonprofit's monthly program impact report: a month of program records totaled by measure and compared with targets and last month, missing numbers kept as unknown, and a report draft that traces every figure, while the program manager checks figures and the executive director approves and shares the report.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a community nonprofit's monthly program impact report agent kit",
+      "value": {
+        "lets_workers": "Turn a month of program records, such as sessions held, people served and outcome check-ins, into a results table that compares each measure with its target and with last month, and draft the monthly impact report with every figure traced to that table. The program manager checks every figure, and the executive director approves the report and shares it.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-monthly-impact-report.total-month"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-monthly-impact-report.draft-impact-report"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-monthly-impact-report.check-figures"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-monthly-impact-report.approve-report"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-monthly-impact-report.share-report"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Check every figure against the program records.",
+          "Approve the report and how shortfalls are explained.",
+          "Share the report with the board and partners."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ],
+        "provenance_notes": [
+          {
+            "kind": "marketplace_example",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/kits/06-monthly-program-impact-report.json",
+            "kit_id": "KIT-IMPACT-06",
+            "added_in": "e0a1faef44894683c13ff9a1c8ca15c71a529b34",
+            "commit": "14200c67b25ae4cad5506debd50e3965ce288e7c",
+            "note": "The marketplace's example of this kit. It holds only the catalog's own fields and points at this pack's kit and need nouns by value digest, so the kit has one source."
+          },
+          {
+            "kind": "example_run",
+            "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
+            "path": "examples/runs/KIT-IMPACT-06.json",
+            "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
+            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.monthly-results"
+        ],
+        [
+          "requires_noun",
+          "template.impact-report-draft"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Monthly Program Impact Report Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Turns a month of program records into an impact report: totals by measure, change from last month, results against targets, and missing numbers kept as unknown. The program manager checks every figure, and the executive director approves the report and shares it.",
+        "goal": "Help a community nonprofit turn a month of program records into an impact report that compares results with the month's targets and with last month, keeps every missing number visible and quotes no participant without approval, while the program manager checks the figures and the executive director approves and shares the report.",
+        "target_org": "Community nonprofit reporting monthly results to its board and partners",
+        "step_map": [
+          {
+            "id": "total-month",
+            "title": "Total the month's program records by measure",
+            "step_kind": "arithmetic_check",
+            "boundary": "drafts",
+            "actor": "Report arithmetic agent",
+            "guidance": "Total sessions, people served and outcome check-ins for the month by measure, compare each with the month's target and with last month, and keep any missing count as unknown, never zero.",
+            "verb": {
+              "$verb": "kit-monthly-impact-report.total-month"
+            }
+          },
+          {
+            "id": "draft-impact-report",
+            "title": "Draft the monthly impact report",
+            "step_kind": "reporting_summary",
+            "boundary": "drafts",
+            "actor": "Report drafting agent",
+            "guidance": "Draft the report's sections: highlights, results against targets, changes from last month, what staff are watching, and next month. Every number comes from the results table, and no participant is quoted without staff approval.",
+            "verb": {
+              "$verb": "kit-monthly-impact-report.draft-impact-report"
+            }
+          },
+          {
+            "id": "check-figures",
+            "title": "Check every figure against the program records",
+            "step_kind": "figure_check",
+            "boundary": "human_only",
+            "actor": "Program manager",
+            "guidance": "The program manager traces each figure to the program's own records and corrects or removes any figure that cannot be traced.",
+            "verb": {
+              "$verb": "kit-monthly-impact-report.check-figures"
+            }
+          },
+          {
+            "id": "approve-report",
+            "title": "Approve the report and how shortfalls are explained",
+            "step_kind": "individual_decision",
+            "boundary": "human_only",
+            "actor": "Executive director",
+            "guidance": "The executive director decides how shortfalls and changes are explained and approves the report.",
+            "verb": {
+              "$verb": "kit-monthly-impact-report.approve-report"
+            }
+          },
+          {
+            "id": "share-report",
+            "title": "Share the report with the board and partners",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Executive director",
+            "guidance": "The executive director shares the approved report with the board and partners. The agent never sends or publishes the report.",
+            "verb": {
+              "$verb": "kit-monthly-impact-report.share-report"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.impact-report-drafter"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.summarize-month-by-measure"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.monthly-results-table"
+          },
+          {
+            "$pin": "file.impact-report-outline"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.impact-report-drafter"
+        ],
+        [
+          "requires_noun",
+          "tool.summarize-month-by-measure"
+        ],
+        [
+          "requires_noun",
+          "file.monthly-results-table"
+        ],
+        [
+          "requires_noun",
+          "file.impact-report-outline"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.impact-report-drafter",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: draft a monthly impact report from a results table",
+      "value": {
+        "name": "impact-report-drafter",
+        "description": "Drafts a monthly impact report from a results table, keeping every number traced to a measure and every gap visible.",
+        "boundary": "drafts",
+        "instructions": "Use the outline's sections and word limits: highlights, results against targets, changes from last month, what staff are watching, and next month. Take every number from the results table and cite its measure. Write missing numbers as not yet counted, and name the site they are missing from. Describe what was done and counted in plain words at an eighth-grade reading level, and never claim an outcome the records do not show. Use a participant quote only when staff have marked it approved, never with a name or a detail that could identify the person. Flag every measure below 90 percent of its target for the executive director's explanation.",
+        "refuses": [
+          "Inventing or estimating a missing number",
+          "Claiming outcomes the records do not show",
+          "Quoting a participant without staff approval",
+          "Sharing the report outside the organization"
+        ]
+      }
+    },
+    {
+      "slug": "tool.summarize-month-by-measure",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: total a month's records by measure",
+      "value": {
+        "name": "summarize_month_by_measure",
+        "description": "Totals a month's program records by measure and compares each with its target and with last month, listing missing counts as unknown.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "month",
+            "records",
+            "targets"
+          ],
+          "properties": {
+            "month": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}$"
+            },
+            "records": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "targets": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "last_month": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "output_fields": [
+          "totals_by_measure",
+          "percent_of_target",
+          "change_from_last_month",
+          "missing_counts"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.monthly-results-table",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Monthly Results Table",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "monthly_results_table",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "One row per measure for the month: target, count, percent of target, last month, change and the record it came from. No participant details.",
+        "spec": {
+          "columns": [
+            "month",
+            "measure_id",
+            "measure",
+            "target",
+            "counted",
+            "percent_of_target",
+            "last_month",
+            "change",
+            "source_record"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "file.impact-report-outline",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Monthly Impact Report Outline",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "impact_report_outline",
+        "artifact_format": "markdown_sop",
+        "boundary": "drafts",
+        "summary": "Five-section outline for the monthly report, with every number drawn from the results table.",
+        "spec": [
+          "1. Highlights: three plain sentences, each with its measure.",
+          "2. Results against targets, from the results table only.",
+          "3. Changes from last month, from the results table only.",
+          "4. What staff are watching, written or approved by the program manager.",
+          "5. Next month's plans and targets."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the monthly program impact report kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "Every number in the report traces to a row in the results table.",
+          "Missing counts read as not yet counted, never as zero.",
+          "Participant quotes appear only with staff approval and never with a name.",
+          "The program manager checks figures before the executive director approves the report."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the monthly program impact report kit",
+      "value": {
+        "sources": [
+          {
+            "title": "eCFR: 2 CFR 200.329, Monitoring and reporting program performance",
+            "url": "https://www.ecfr.gov/current/title-2/section-200.329",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "National Council of Nonprofits: Administration and Financial Management",
+            "url": "https://www.councilofnonprofits.org/running-nonprofit/administration-and-financial-management",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the monthly program impact report kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-IMPACT-ROUTINE",
+            "scenario": "October with every record in and most targets met",
+            "sample_input": "SYNTHETIC: Month 2026-10. Targets: 40 homework sessions, 90 youth served, 70 outcome check-ins. Counted: 42 sessions, 96 youth, 71 check-ins. Last month: 38 sessions, 88 youth, 65 check-ins.",
+            "expected_indicators": [
+              "results_table_complete",
+              "change_from_last_month_computed",
+              "report_drafted"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-IMPACT-GAP",
+            "scenario": "Outcome check-ins missing for one site and sessions below target",
+            "sample_input": "SYNTHETIC: Month 2026-11. Site B outcome check-ins not yet entered; sessions counted 29 of a 40 target.",
+            "expected_indicators": [
+              "missing_count_reported_unknown",
+              "below_target_flagged"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "FX-IMPACT-QUOTE",
+            "scenario": "Staff notes include a participant quote with no approval mark",
+            "sample_input": "SYNTHETIC: The October program notes include a quote from a youth participant with their full name and no approval mark.",
+            "expected_indicators": [
+              "quote_left_out_pending_approval"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "A community nonprofit's need, in its own words",
+      "category_reason": "A need in an organization's own plain words frames what the kit should do.",
+      "value": {
+        "says": "We need our monthly program numbers pulled together into a report for our board, compared with our targets and last month, with anything missing left blank instead of guessed. Our program manager checks the numbers and our director shares the report.",
+        "mark": "SYNTHETIC"
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.monthly-results",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a month's program results by measure",
+      "category_reason": "A results table is a scored comparison that keeps unknown values null.",
+      "value": {
+        "describes": "a month's program results per measure, compared with the target and last month, with missing counts kept null",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "month",
+            "measures",
+            "missing"
+          ],
+          "properties": {
+            "month": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}$"
+            },
+            "measures": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "measure_id",
+                  "measure",
+                  "target",
+                  "counted",
+                  "percent_of_target",
+                  "last_month",
+                  "change",
+                  "below_90_percent"
+                ],
+                "properties": {
+                  "measure_id": {
+                    "type": "string",
+                    "pattern": "^M-[0-9]{1,3}$"
+                  },
+                  "measure": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "target": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "counted": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "percent_of_target": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "last_month": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "change": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "below_90_percent": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "missing": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "measure_id",
+                  "site"
+                ],
+                "properties": {
+                  "measure_id": {
+                    "type": "string",
+                    "pattern": "^M-[0-9]{1,3}$"
+                  },
+                  "site": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "month": "2026-11",
+          "measures": [
+            {
+              "measure_id": "M-1",
+              "measure": "Homework sessions held",
+              "target": 40,
+              "counted": 29,
+              "percent_of_target": 72.5,
+              "last_month": 42,
+              "change": -13,
+              "below_90_percent": true
+            },
+            {
+              "measure_id": "M-3",
+              "measure": "Outcome check-ins",
+              "target": 70,
+              "counted": null,
+              "percent_of_target": null,
+              "last_month": 71,
+              "change": null,
+              "below_90_percent": null
+            }
+          ],
+          "missing": [
+            {
+              "measure_id": "M-3",
+              "site": "Site B"
+            }
+          ]
+        },
+        "rules": [
+          "A missing count is null, and so are its percent, change and below_90_percent.",
+          "No participant details."
+        ]
+      }
+    },
+    {
+      "slug": "template.impact-report-draft",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a monthly impact report draft with every number traced",
+      "category_reason": "A report draft is a candidate the program manager and executive director check and approve.",
+      "value": {
+        "describes": "a monthly impact report draft by section, with every number traced to the results table and open questions for staff",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "month",
+            "sections",
+            "numbers_cited",
+            "open_questions"
+          ],
+          "properties": {
+            "month": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}$"
+            },
+            "sections": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "heading",
+                  "text",
+                  "word_limit"
+                ],
+                "properties": {
+                  "heading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  },
+                  "word_limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  }
+                }
+              }
+            },
+            "numbers_cited": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "measure_id",
+                  "value"
+                ],
+                "properties": {
+                  "measure_id": {
+                    "type": "string",
+                    "pattern": "^M-[0-9]{1,3}$"
+                  },
+                  "value": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "open_questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "example": {
+          "month": "2026-11",
+          "sections": [
+            {
+              "heading": "Results against targets",
+              "text": "We held 29 of 40 planned homework sessions (M-1). Outcome check-ins for Site B are not yet counted (M-3).",
+              "word_limit": 200
+            }
+          ],
+          "numbers_cited": [
+            {
+              "measure_id": "M-1",
+              "value": 29
+            }
+          ],
+          "open_questions": [
+            "Explain the drop in sessions from last month (M-1)."
+          ]
+        },
+        "rules": [
+          "Every number in a section appears in numbers_cited.",
+          "No participant names, and quotes only when staff approved them."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "total-month",
+      "kind": "verb.verify_gate",
+      "title": "Total the month's program records by measure",
+      "claimant": "agent",
+      "summary": "Total the month's program records by measure with the read-only tool, compare each measure with its target and with last month, and keep every missing count as unknown.",
+      "outcome": "A monthly results table with percent of target and change from last month, and every missing count kept null.",
+      "ready_outcome": "month_totaled",
+      "model_use": "none",
+      "pinned": [
+        "tool.summarize-month-by-measure",
+        "file.monthly-results-table"
+      ],
+      "slots": [
+        {
+          "name": "program_records",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the month's program records by measure and site, with no participant names or details."
+        },
+        {
+          "name": "targets",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the month's target for each measure."
+        },
+        {
+          "name": "last_month",
+          "category": "noun.eval_run",
+          "description": "Pin of last month's results table, when there is one.",
+          "required": false
+        }
+      ],
+      "params": {
+        "month_start": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "description": "First day of the month being reported, such as 2026-10-01."
+        }
+      },
+      "produces": [
+        {
+          "name": "monthly_results",
+          "template": "template.monthly-results"
+        }
+      ],
+      "steps": [
+        "Total the month's records per measure with the pinned read-only tool.",
+        "Compute percent of target only when both the target and the count are known, rounded to one decimal place.",
+        "Compute the change from last month only when both months have a count.",
+        "Keep a missing count as null, along with its percent and change, and name the site it is missing from.",
+        "Mark every measure below 90 percent of its target for the executive director."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.monthly-results's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "arithmetic",
+          "check": "Every percent_of_target equals counted divided by target times 100, rounded to one decimal place, and every change equals counted minus last_month.",
+          "method": "deterministic"
+        },
+        {
+          "id": "unknown-not-zero",
+          "check": "Every measure without a count has counted, percent_of_target and change null and appears in missing.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      }
+    },
+    {
+      "slug": "draft-impact-report",
+      "kind": "verb.solve_draft",
+      "title": "Draft the monthly impact report",
+      "claimant": "agent",
+      "summary": "Draft the monthly impact report from the results table, citing a measure for every number, writing missing numbers as not yet counted, and leaving out any participant quote staff have not approved.",
+      "outcome": "A monthly impact report draft for the program manager and executive director.",
+      "ready_outcome": "report_drafted",
+      "pinned": [
+        "skill.impact-report-drafter",
+        "file.impact-report-outline"
+      ],
+      "slots": [
+        {
+          "name": "monthly_results",
+          "category": "noun.eval_run",
+          "description": "Pin of the month's results table."
+        },
+        {
+          "name": "program_notes",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding staff notes for the month, including any approved, de-identified quotes.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "impact_report_draft",
+          "template": "template.impact-report-draft"
+        }
+      ],
+      "steps": [
+        "Use the outline's five sections, each within its word limit.",
+        "Take every number from the results table and cite its measure_id.",
+        "Write missing numbers as not yet counted.",
+        "Describe what was done and counted, and never claim outcomes the records do not show.",
+        "Use a participant quote only when program_notes marks it approved, and never with a name."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.impact-report-draft's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "numbers-traced",
+          "check": "Every number in the text appears in numbers_cited with a measure_id from the results table and the same value.",
+          "method": "deterministic"
+        },
+        {
+          "id": "approved-quotes-only",
+          "check": "Every quote in the draft appears in program_notes marked approved.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-within-records",
+          "check": "No sentence claims an outcome the results table does not count.",
+          "method": "judgment"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "kit-monthly-impact-report.total-month"
+      ]
+    },
+    {
+      "slug": "check-figures",
+      "kind": "verb.verify_gate",
+      "title": "Check every figure against the program records",
+      "claimant": "human",
+      "summary": "The program manager traces every figure in the draft to the program's own records and corrects or removes any figure that cannot be traced.",
+      "outcome": "A step record saying the figures were checked, changed or held.",
+      "ready_outcome": "figures_checked",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "impact_report_draft",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the report draft."
+        },
+        {
+          "name": "monthly_results",
+          "category": "noun.eval_run",
+          "description": "Pin of the month's results table."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Trace every figure to the program's own records.",
+        "Correct or remove any figure you cannot trace.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-monthly-impact-report.draft-impact-report"
+      ]
+    },
+    {
+      "slug": "approve-report",
+      "kind": "verb.verify_gate",
+      "title": "Approve the report and how shortfalls are explained",
+      "claimant": "human",
+      "summary": "The executive director decides how shortfalls and changes are explained, and approves the report or holds it.",
+      "outcome": "A step record saying the report was approved, changed or held.",
+      "ready_outcome": "report_approved",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "impact_report_draft",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the checked report draft."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Write or approve the explanation for every measure marked below 90 percent of target.",
+        "Approve the report, or hold it with the reason.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-monthly-impact-report.check-figures"
+      ]
+    },
+    {
+      "slug": "share-report",
+      "kind": "verb.verify_gate",
+      "title": "Share the report with the board and partners",
+      "claimant": "human",
+      "summary": "The executive director shares the approved report with the board and partners through the organization's own channels; the agent never sends or shares it.",
+      "outcome": "A step record saying the report was shared or held.",
+      "ready_outcome": "report_shared",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "impact_report_draft",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the approved report."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Share only the approved version, through the organization's own channels.",
+        "Keep the shared version in the organization's own records.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-monthly-impact-report.approve-report"
+      ]
+    }
+  ]
+}

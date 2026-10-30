@@ -1,0 +1,164 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "kit-flyer-translation-check",
+  "title": "Flyer translation check kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed.",
+  "license": "MIT",
+  "store": "seedpack.kit-flyer-translation-check",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "03a47c05986b82638f6f00a87e74f53b4a4659f2c32db2be35a1d17cf21577b4"
+    },
+    {
+      "path": "source.json",
+      "sha256": "698fa4b5acb6b3021067375c27bf5b81c3ac3e8892de605dd7bb32ef31ff6b8b"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "2578efbc21d7eb918c5bc885a4950d17fa8e65a08ed2e4da41497a027eaab300"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "c039e7fdc557ccf2cde249e2641bdbc0e8f3f2cfd43e11588ada52a46a79e113"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "451bfbaafeaa91eef6d7b7779ba55addff5d1b397a3e48aa725827ff359f1791"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.kit",
+      "category_id": "noun.skill_pack",
+      "role": "kit",
+      "value_sha256": "3fcf7700dc7666eefd861575e1bd1d795d054d0cab584fb7a46d186f9ab2b26b"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.skill.flyer-fact-checker",
+      "category_id": "noun.skill_pack",
+      "role": "skill",
+      "value_sha256": "4d4962a6c03bbe0e3a6299cb7ef9355bbe75e8748ed4b480d7cf03d76485233f"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.tool.compare-flyer-facts",
+      "category_id": "noun.mcp_server",
+      "role": "tool",
+      "value_sha256": "278193dbe17d85cf57b20b465a976872a86f214b2bc1c5bd2af5e3b9744da3f4"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.file.translation-review-sheet",
+      "category_id": "noun.skill_pack",
+      "role": "file",
+      "value_sha256": "42808102c16b4535f9d2e48bdf352c89f29ae93077ed6a9ed80f053f046882fa"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.file.flyer-fact-list",
+      "category_id": "noun.skill_pack",
+      "role": "file",
+      "value_sha256": "10ecc01e6540cb641749eea01275c3fa2cb00dc51fae2a54bb457426b323e430"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.checklist",
+      "category_id": "noun.skill_pack",
+      "role": "checklist",
+      "value_sha256": "f5519bfeea0ebb9edd2ed01a69f5b01ddff9eb3379cd0c8469bd84e1ac723f5c"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.sources",
+      "category_id": "noun.public_source",
+      "role": "sources",
+      "value_sha256": "a6491ad5eb123ceb8ffbed8e5581b0f09277e2e0ae890ed8af28f49069b87d90"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.test-cases",
+      "category_id": "noun.benchmark_suite",
+      "role": "test_cases",
+      "value_sha256": "8eddaa5c5b185b146300cc61af3aa8e48db37d3c3e0d16b03514ab89ba537738"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.example.request",
+      "category_id": "noun.seed_hypothesis",
+      "role": "request",
+      "value_sha256": "c653118eba30d76e9e0426783d9b9fdda07303163177f2d753259e8e7bc50308"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.template.fact-comparison",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "df7e87845b6c37691397b9e2cb43b2f6e5998123af023380c99c1977d85af2a5"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.template.reviewer-questions",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "6f1029c7cb70c6e0ad186944384c4cb9d4b2f33fe60bf7dbb6392915272c44d9"
+    },
+    {
+      "key": "kit-flyer-translation-check.v0.1.0.template.person-step-record",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "db17af2500134875c793b78bfbe320c70f125b339059451384d2fc42ab80cb18"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "kit-flyer-translation-check.compare-facts",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:kit-flyer-translation-check:compare-facts:839464e65db03dc768b391bc1edad0d0173bf9c2ba8d2721d0a0fc60cc68dd10",
+      "report_shape_sha256": "1cc809da87012e22ac3cb79fadf384aba5ea99a24f648dec0f184a97e7bb4de5"
+    },
+    {
+      "template_id": "kit-flyer-translation-check.draft-reviewer-questions",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:kit-flyer-translation-check:draft-reviewer-questions:6ed8d5bf40dec31a7f4bca69470e00b2d6c29dbe0bf398d6a77d527eb66bb816",
+      "report_shape_sha256": "e6d26dea54139f6f9ba1a63257f4f378d062896369291eea8b9951bb8bb16216"
+    },
+    {
+      "template_id": "kit-flyer-translation-check.fluent-review",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:kit-flyer-translation-check:fluent-review:bce11167fdc8a6e31e96fd11d8a7efc1d7f81cb53dd26103034578d37d119bda",
+      "report_shape_sha256": "0dece2efc86feec566ec94faa6f13046a897da55e0940155fb3833556bd0fa72"
+    },
+    {
+      "template_id": "kit-flyer-translation-check.print-and-post",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:kit-flyer-translation-check:print-and-post:bd982609f94aca71a17beab33ab495b283638303e6a57dfb9430fc9722d1e546",
+      "report_shape_sha256": "38df6119f9e78c1fe008f34c6b42c868d90a48f4dca2b3158d3f6600d881fee0"
+    }
+  ],
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

@@ -1,0 +1,1151 @@
+{
+  "pack_id": "policy-and-law-watch",
+  "title": "Policy and law watch",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for watching official public sources for new laws and rules on a topic: reading them only through permitted official access, extracting their clauses, writing a summary that cites a clause for every point and is marked not legal advice, having a different worker review every citation, and delivering it only when a person decides.",
+  "dependencies": [],
+  "boundaries": [
+    "Public sources only, through official access each source permits; never scraping against a platform's terms.",
+    "No personal data, and a citation for every claim.",
+    "A person decides what is delivered; outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for watching official public sources for new laws and rules on a topic",
+      "value": {
+        "lets_workers": "Check official public sources for new laws and rules on a topic, extract each new text's clauses, and write a plain-language summary that cites a clause for every point and is marked not legal advice. A different worker reviews every citation, and a person decides whether the summary is delivered.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "policy-and-law-watch.check-sources"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "policy-and-law-watch.extract-clauses"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "policy-and-law-watch.write-cited-summary"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "policy-and-law-watch.review-citations"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "policy-and-law-watch.decide-delivery"
+            }
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.public-sources-only"
+          },
+          {
+            "$pin": "guardrail.no-scraping-against-terms"
+          },
+          {
+            "$pin": "guardrail.no-personal-data"
+          },
+          {
+            "$pin": "guardrail.cite-every-claim"
+          },
+          {
+            "$pin": "guardrail.person-decides"
+          }
+        ],
+        "worked_examples": "Offline only: a synthetic stand-in ordinance, its clause extract and a cited summary, each checked against its template."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.public-sources-only"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-scraping-against-terms"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-personal-data"
+        ],
+        [
+          "requires_noun",
+          "guardrail.cite-every-claim"
+        ],
+        [
+          "requires_noun",
+          "guardrail.person-decides"
+        ],
+        [
+          "requires_noun",
+          "template.rule-candidates"
+        ],
+        [
+          "requires_noun",
+          "template.clause-extract"
+        ],
+        [
+          "requires_noun",
+          "template.cited-summary"
+        ],
+        [
+          "requires_noun",
+          "template.citation-review"
+        ],
+        [
+          "requires_noun",
+          "template.delivery-record"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.public-sources-only",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: public sources only, through official and permitted access",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Use only public sources, read through the access each source offers and permits: its own website, official feed, API or bulk download.",
+        "how_it_is_checked": "Every source in a source check names its publisher, its access method and the date its terms were read."
+      }
+    },
+    {
+      "slug": "guardrail.no-scraping-against-terms",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: no scraping a platform against its terms",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Never scrape a site or platform against its terms. Read each source's terms before use, and stop with the outcome blocked when the terms forbid automated reading.",
+        "how_it_is_checked": "Every source in a source check records terms_permit_automated_reading true, or the run ends blocked."
+      }
+    },
+    {
+      "slug": "guardrail.no-personal-data",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: no personal data",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Collect and keep no personal data. Leave out names, contact details and case details, even when a public source shows them.",
+        "how_it_is_checked": "No output holds a name of a private person, a phone number, an email address or a street address."
+      }
+    },
+    {
+      "slug": "guardrail.cite-every-claim",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a citation for every claim",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every claim carries a citation to the exact clause, page or line it comes from. A claim without a citation is removed, not softened.",
+        "how_it_is_checked": "Every point or figure in an output lists at least one citation that resolves in the cited source."
+      }
+    },
+    {
+      "slug": "guardrail.person-decides",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a person decides",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Workers find, extract, draft and review. A person decides what is delivered, and what anyone does with it.",
+        "how_it_is_checked": "Every delivery record is submitted by a person's key, never by a worker that drafted or reviewed the output."
+      }
+    },
+    {
+      "slug": "template.watch-profile",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: what to watch, where and how often",
+      "category_reason": "A watch profile states which rules matter to someone, which later checks confirm.",
+      "value": {
+        "describes": "a watch profile: the topic, the jurisdictions and the official sources to check",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "topic",
+            "jurisdictions",
+            "sources"
+          ],
+          "properties": {
+            "topic": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "jurisdictions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "publisher",
+                  "source_url"
+                ],
+                "properties": {
+                  "publisher": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "source_url": {
+                    "type": "string",
+                    "pattern": "^https://"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "topic": "food distribution rules",
+          "jurisdictions": [
+            "City of Example (synthetic)"
+          ],
+          "sources": [
+            {
+              "publisher": "City of Example Council (synthetic)",
+              "source_url": "https://example.invalid/council/ordinances"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slug": "template.rule-candidates",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: new laws and rules found on a topic, with the sources checked",
+      "category_reason": "Candidate rules are leads that later extraction and review confirm or drop.",
+      "value": {
+        "describes": "new laws and rules found on a topic since a date, with every official source checked and how it was read",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "topic",
+            "since",
+            "sources_checked",
+            "candidates"
+          ],
+          "properties": {
+            "topic": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "since": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "sources_checked": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "publisher",
+                  "source_url",
+                  "access",
+                  "terms_permit_automated_reading",
+                  "terms_read_on"
+                ],
+                "properties": {
+                  "publisher": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "source_url": {
+                    "type": "string",
+                    "pattern": "^https://"
+                  },
+                  "access": {
+                    "type": "string",
+                    "enum": [
+                      "official website",
+                      "official feed",
+                      "official api",
+                      "official bulk download",
+                      "official ordinance page"
+                    ]
+                  },
+                  "terms_permit_automated_reading": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "terms_read_on": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  }
+                }
+              }
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "source_url",
+                  "published_on"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "source_url": {
+                    "type": "string",
+                    "pattern": "^https://"
+                  },
+                  "published_on": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "topic": "food distribution rules",
+          "since": "2026-10-01",
+          "sources_checked": [
+            {
+              "publisher": "City of Example Council (synthetic)",
+              "source_url": "https://example.invalid/council/ordinances",
+              "access": "official ordinance page",
+              "terms_permit_automated_reading": true,
+              "terms_read_on": "2026-10-30"
+            }
+          ],
+          "candidates": [
+            {
+              "title": "Ordinance 2026-14, Neighborhood Food Distribution Registration",
+              "source_url": "https://example.invalid/council/ordinances/2026-14",
+              "published_on": "2026-10-20"
+            }
+          ]
+        },
+        "rules": [
+          "Only sources whose terms permit automated reading.",
+          "No personal data."
+        ]
+      }
+    },
+    {
+      "slug": "template.clause-extract",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: clauses, dates, definitions and duties extracted from one official text",
+      "category_reason": "A clause extract is a structured reading of the official text that review confirms.",
+      "value": {
+        "describes": "the clauses of one official text, numbered as the text numbers them, with dates, defined terms and duty sentences quoted",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_url",
+            "retrieved_on",
+            "clauses",
+            "effective_dates",
+            "defined_terms",
+            "duties"
+          ],
+          "properties": {
+            "source_url": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "retrieved_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "clauses": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "text"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                }
+              }
+            },
+            "effective_dates": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "date"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "date": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  }
+                }
+              }
+            },
+            "defined_terms": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "term",
+                  "quoted"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "term": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "quoted": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "duties": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clause",
+                  "quoted"
+                ],
+                "properties": {
+                  "clause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "quoted": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Clause numbers and quotes come from the official text only."
+        ]
+      }
+    },
+    {
+      "slug": "template.cited-summary",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a plain-language summary with a citation for every point, marked Not legal advice",
+      "category_reason": "A cited summary is a candidate that a different worker reviews and a person decides on.",
+      "value": {
+        "describes": "a plain-language summary of one official text in which every point cites its clause, with open questions and the Not legal advice notice",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_url",
+            "notice",
+            "points",
+            "open_questions"
+          ],
+          "properties": {
+            "source_url": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "notice": {
+              "type": "string",
+              "const": "Not legal advice"
+            },
+            "points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "clauses"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1200
+                  },
+                  "clauses": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  }
+                }
+              }
+            },
+            "open_questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every point cites at least one clause.",
+          "Never how a rule applies to a particular person."
+        ]
+      }
+    },
+    {
+      "slug": "template.citation-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a different worker's review of every citation in an output",
+      "category_reason": "A citation review is a verification run with a result per citation, by a different worker.",
+      "value": {
+        "describes": "a review of every citation in an output against its source, by a worker other than the drafter",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "output_ref",
+            "citations_checked",
+            "problems",
+            "passed"
+          ],
+          "properties": {
+            "output_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "citations_checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "problems": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "citation",
+                  "problem"
+                ],
+                "properties": {
+                  "citation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "problem": {
+                    "type": "string",
+                    "enum": [
+                      "not_in_source",
+                      "quote_differs",
+                      "figure_differs",
+                      "claim_without_citation",
+                      "personal_data"
+                    ]
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "output_ref": "seedpack.policy-and-law-watch.outputs/policy-and-law-watch.cited_summary.t-1",
+          "citations_checked": 4,
+          "problems": [],
+          "passed": true
+        },
+        "rules": [
+          "passed is true only when problems is empty.",
+          "The reviewing key differs from the drafting key."
+        ]
+      }
+    },
+    {
+      "slug": "template.delivery-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's decision to deliver a reviewed output, or hold it",
+      "category_reason": "A delivery decision is a person's attested outcome for a reviewed output.",
+      "value": {
+        "describes": "a person's decision to deliver a reviewed output to its requester inside the requester's scope, or to hold it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "output_ref",
+            "review_passed",
+            "decision",
+            "decided_by_role",
+            "decided_on"
+          ],
+          "properties": {
+            "output_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "review_passed": {
+              "type": "boolean"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "deliver",
+                "hold"
+              ]
+            },
+            "decided_by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "decided_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        },
+        "example": {
+          "output_ref": "seedpack.policy-and-law-watch.outputs/policy-and-law-watch.cited_summary.t-1",
+          "review_passed": true,
+          "decision": "deliver",
+          "decided_by_role": "policy lead",
+          "decided_on": "2026-10-30"
+        },
+        "rules": [
+          "deliver needs review_passed true.",
+          "decided_by_role names a role, never a person."
+        ]
+      }
+    },
+    {
+      "slug": "example.standin-ordinance",
+      "category": "noun.public_source",
+      "role": "example",
+      "synthetic": true,
+      "title": "Synthetic stand-in source: a short city ordinance for offline worked examples",
+      "value": {
+        "notice": "SYNTHETIC stand-in for an official source, made for offline worked examples. Not a real law.",
+        "publisher": "City of Example Council (synthetic)",
+        "source_url": "https://example.invalid/council/ordinances/2026-14",
+        "access": "official ordinance page",
+        "terms_permit_automated_reading": true,
+        "published_on": "2026-10-20",
+        "text": [
+          {
+            "clause": "Sec. 1",
+            "text": "This ordinance may be cited as the Neighborhood Food Distribution Registration Ordinance."
+          },
+          {
+            "clause": "Sec. 2",
+            "text": "Distribution site means a fixed location where food is given out at no cost."
+          },
+          {
+            "clause": "Sec. 3(a)",
+            "text": "A nonprofit organization that gives out food to more than 100 households in a week shall register each distribution site with the city."
+          },
+          {
+            "clause": "Sec. 3(b)",
+            "text": "Registration is free and shall be renewed every two years."
+          },
+          {
+            "clause": "Sec. 5(c)",
+            "text": "Sections 3(a) and 3(b) apply to mobile distribution sites operating more than four days a month."
+          },
+          {
+            "clause": "Sec. 6",
+            "text": "This ordinance takes effect on January 1, 2027."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "example.clause-extract",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: the clause extract of the synthetic stand-in ordinance",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.clause-extract"
+        },
+        "instance": {
+          "source_url": "https://example.invalid/council/ordinances/2026-14",
+          "retrieved_on": "2026-10-30",
+          "clauses": [
+            {
+              "clause": "Sec. 1",
+              "text": "This ordinance may be cited as the Neighborhood Food Distribution Registration Ordinance."
+            },
+            {
+              "clause": "Sec. 2",
+              "text": "Distribution site means a fixed location where food is given out at no cost."
+            },
+            {
+              "clause": "Sec. 3(a)",
+              "text": "A nonprofit organization that gives out food to more than 100 households in a week shall register each distribution site with the city."
+            },
+            {
+              "clause": "Sec. 3(b)",
+              "text": "Registration is free and shall be renewed every two years."
+            },
+            {
+              "clause": "Sec. 5(c)",
+              "text": "Sections 3(a) and 3(b) apply to mobile distribution sites operating more than four days a month."
+            },
+            {
+              "clause": "Sec. 6",
+              "text": "This ordinance takes effect on January 1, 2027."
+            }
+          ],
+          "effective_dates": [
+            {
+              "clause": "Sec. 6",
+              "date": "2027-01-01"
+            }
+          ],
+          "defined_terms": [
+            {
+              "clause": "Sec. 2",
+              "term": "distribution site",
+              "quoted": "Distribution site means a fixed location where food is given out at no cost."
+            }
+          ],
+          "duties": [
+            {
+              "clause": "Sec. 3(a)",
+              "quoted": "shall register each distribution site with the city"
+            },
+            {
+              "clause": "Sec. 3(b)",
+              "quoted": "shall be renewed every two years"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slug": "example.cited-summary",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: a cited summary of the synthetic stand-in ordinance",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.cited-summary"
+        },
+        "instance": {
+          "source_url": "https://example.invalid/council/ordinances/2026-14",
+          "notice": "Not legal advice",
+          "points": [
+            {
+              "text": "Nonprofits that give out food to more than 100 households in a week must register each distribution site with the city.",
+              "clauses": [
+                "Sec. 3(a)"
+              ]
+            },
+            {
+              "text": "Registration is free and is renewed every two years.",
+              "clauses": [
+                "Sec. 3(b)"
+              ]
+            },
+            {
+              "text": "The rule takes effect on January 1, 2027.",
+              "clauses": [
+                "Sec. 6"
+              ]
+            }
+          ],
+          "open_questions": [
+            "Sec. 2 defines a distribution site as a fixed location, but Sec. 5(c) applies Sec. 3 to mobile sites operating more than four days a month. Staff and counsel should confirm how this applies."
+          ]
+        }
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "check-sources",
+      "kind": "verb.probe_source",
+      "title": "Check official sources for new laws and rules on a topic",
+      "claimant": "agent",
+      "summary": "Read each official source in the watch profile through the access its terms permit, record how it was read, and list new laws and rules on the topic since the given date.",
+      "outcome": "Candidate rules with every source checked, or blocked when a source's terms forbid automated reading.",
+      "ready_outcome": "sources_checked",
+      "pinned": [
+        "guardrail.public-sources-only",
+        "guardrail.no-scraping-against-terms",
+        "guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "watch_profile",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the watch profile."
+        }
+      ],
+      "params": {
+        "since": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "description": "Find rules published on or after this date."
+        }
+      },
+      "network": [
+        "read_only",
+        "Official public sources named in the watch profile only, through their own website, feed, API or bulk download as their terms permit; no logins and no personal data."
+      ],
+      "produces": [
+        {
+          "name": "rule_candidates",
+          "template": "template.rule-candidates"
+        }
+      ],
+      "steps": [
+        "Read each source's terms before reading the source, and stop with blocked if they forbid automated reading.",
+        "Read only through the official access the source offers.",
+        "List each new law or rule with its official link and publication date.",
+        "Keep no personal data."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.rule-candidates's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "terms-recorded",
+          "check": "Every source checked records its access method and the date its terms were read.",
+          "method": "deterministic"
+        },
+        {
+          "id": "profile-sources-only",
+          "check": "Every source checked is named in the watch profile.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "extract-clauses",
+      "kind": "verb.ingest",
+      "title": "Extract each new rule's clauses, dates, definitions and duties",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Number each new text's clauses exactly as the official text does, and quote its effective dates, defined terms and duty sentences with their clauses.",
+      "outcome": "A clause extract of one official text.",
+      "ready_outcome": "clauses_extracted",
+      "pinned": [
+        "guardrail.cite-every-claim"
+      ],
+      "slots": [
+        {
+          "name": "official_text",
+          "category": "noun.public_source",
+          "description": "Pin of a noun holding one rule's official text, its link and retrieval date."
+        }
+      ],
+      "produces": [
+        {
+          "name": "clause_extract",
+          "template": "template.clause-extract"
+        }
+      ],
+      "steps": [
+        "Number clauses exactly as the official text does.",
+        "Quote dates, defined terms and every sentence with shall or must, each with its clause."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.clause-extract's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quotes-exact",
+          "check": "Every quoted phrase appears in the official text character for character.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "policy-and-law-watch.check-sources"
+      ]
+    },
+    {
+      "slug": "write-cited-summary",
+      "kind": "verb.solve_draft",
+      "title": "Write a plain-language summary that cites a clause for every point",
+      "claimant": "agent",
+      "summary": "Write a plain-language summary from the clause extract in which every point cites its clause, unclear parts become open questions, and the notice reads Not legal advice.",
+      "outcome": "A cited summary marked Not legal advice.",
+      "ready_outcome": "summary_written",
+      "pinned": [
+        "guardrail.cite-every-claim",
+        "guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "clause_extract",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the clause extract."
+        }
+      ],
+      "produces": [
+        {
+          "name": "cited_summary",
+          "template": "template.cited-summary"
+        }
+      ],
+      "steps": [
+        "Cite a clause for every point.",
+        "Turn anything unclear or conflicting into an open question.",
+        "Never say how the rule applies to a particular person, and never give legal advice."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.cited-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "clauses-exist",
+          "check": "Every cited clause appears in the clause extract.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plain-language",
+          "check": "Each point reads plainly at about an eighth-grade level.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "policy-and-law-watch.extract-clauses"
+      ]
+    },
+    {
+      "slug": "review-citations",
+      "kind": "verb.verify_gate",
+      "title": "Review every citation (a different worker)",
+      "claimant": "agent_or_human",
+      "review": "distinct_reviewer",
+      "summary": "A worker other than the drafter checks every citation and quote in the summary against the official text and lists every problem.",
+      "outcome": "A citation review that passes only with no problems.",
+      "ready_outcome": "citations_reviewed",
+      "pinned": [
+        "guardrail.cite-every-claim",
+        "guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "cited_summary",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cited summary."
+        },
+        {
+          "name": "official_text",
+          "category": "noun.public_source",
+          "description": "Pin of the official text."
+        }
+      ],
+      "produces": [
+        {
+          "name": "citation_review",
+          "template": "template.citation-review"
+        }
+      ],
+      "steps": [
+        "Check every citation and quote against the official text.",
+        "List every claim without a citation and any personal data.",
+        "Pass only when there are no problems."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.citation-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-citation",
+          "check": "Every citation in the summary is counted in citations_checked.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The reviewing key differs from the drafting key.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "policy-and-law-watch.write-cited-summary"
+      ]
+    },
+    {
+      "slug": "decide-delivery",
+      "kind": "verb.verify_gate",
+      "title": "Decide whether the reviewed summary is delivered (a person)",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person reads the reviewed summary and its citation review and decides whether it is delivered to the requester inside the requester's scope.",
+      "outcome": "A delivery record: delivered or held, with the reason.",
+      "ready_outcome": "delivery_decided",
+      "pinned": [
+        "guardrail.person-decides"
+      ],
+      "slots": [
+        {
+          "name": "cited_summary",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cited summary."
+        },
+        {
+          "name": "citation_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the citation review."
+        }
+      ],
+      "produces": [
+        {
+          "name": "delivery_record",
+          "template": "template.delivery-record"
+        }
+      ],
+      "steps": [
+        "Deliver only a summary whose citation review passed.",
+        "Holding is a valid decision; give the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.delivery-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-passed",
+          "check": "A deliver decision has review_passed true.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-decides",
+          "check": "The submitting key belongs to a person who neither drafted nor reviewed the summary.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "policy-and-law-watch.review-citations"
+      ]
+    }
+  ]
+}

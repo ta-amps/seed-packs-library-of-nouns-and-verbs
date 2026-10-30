@@ -36,8 +36,19 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
+| [Monthly program impact report kit](kit-monthly-impact-report/README.md) | A community nonprofit's monthly program impact report | 13 | 5 |
+| [Handwritten statements to text kit](kit-handwritten-statements/README.md) | Turning handwritten statements and forms dropped into a folder into text typed exactly as written, keeping the writer's slang, spelling, acronyms and words, flagging every uncertain reading for a person, and listing acronyms against a local glossary, while staff check every flag, follow up on safety, sign off and decide any use | 16 | 6 |
+| [Funding impact summary kit](kit-funding-impact-summary/README.md) | A funding impact summary in a grant renewal | 13 | 5 |
+| [Policy research brief kit](kit-policy-research-brief/README.md) | A small nonprofit's policy research brief | 14 | 5 |
+| [Victim support referral kit](kit-victim-support-referrals/README.md) | A victim services program's referral kit | 13 | 5 |
+| [Volunteer shift schedule kit](kit-volunteer-shift-schedule/README.md) | A disaster relief hub's volunteer shift schedule | 14 | 5 |
+| [Policy and law watch](policy-and-law-watch/README.md) | Watching official public sources for new laws and rules on a topic | 15 | 5 |
+| [Public budget report](public-budget-report/README.md) | Reporting on a public state or city budget | 7 | 5 |
+| [Donor thank-you letters kit](kit-donor-thank-you-letters/README.md) | A small nonprofit's agent kit that drafts donor thank-you letters from a coded gift list with the finance lead's acknowledgment wording and checks donors' privacy choices first, while staff decide special handling and sign every letter | 14 | 5 |
+| [Flyer translation check kit](kit-flyer-translation-check/README.md) | A community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed | 13 | 4 |
+| [Food bank inventory and pickup kit](kit-food-bank-pickups/README.md) | A food bank's agent kit | 13 | 4 |
 
-Together: 411 nouns and 128 verb templates across twenty packs. The
+Together: 556 nouns and 182 verb templates across thirty-one packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
