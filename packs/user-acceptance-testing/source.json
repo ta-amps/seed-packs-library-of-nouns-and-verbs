@@ -1,0 +1,3527 @@
+{
+  "pack_id": "user-acceptance-testing",
+  "title": "User acceptance testing",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for user acceptance testing: synthetic personas with goals, acceptance criteria a person agrees to before any test, scenario scripts, observed results recorded as they happen, every defect proposed as a finding, and a person's go or no-go kept as a noun.",
+  "dependencies": [
+    "accessibility-audit",
+    "findings-to-fixes"
+  ],
+  "boundaries": [
+    "A person agrees to the criteria before testing and signs off after it; an agent never records go or no-go.",
+    "Runs use synthetic data and read-only steps; a step that would submit, pay or create an account runs only on a test target a person named.",
+    "Failed, blocked and not-run steps stay on the record; a rerun is a new session.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for user acceptance testing with a person's sign-off",
+      "value": {
+        "lets_workers": "Write personas and acceptance criteria before testing, have a person agree to the criteria, turn them into scenario scripts, run each script and record what was observed as it happened, propose a finding for every defect, compile the results by a fixed rule, and keep a person's go or no-go as a noun.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.draft-personas"
+            },
+            "when": "When a surface, page or change needs acceptance testing."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.write-acceptance-criteria"
+            },
+            "when": "Before any testing, from the personas and the change."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.agree-criteria"
+            },
+            "when": "A person agrees to the exact criteria version; a person's verb."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.write-scenario-scripts"
+            },
+            "when": "After the criteria are agreed."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.run-scenario"
+            },
+            "when": "Once per script and build, by an agent or a person."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.compile-results"
+            },
+            "when": "When the planned sessions are in; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "user-acceptance-testing.sign-off"
+            },
+            "when": "A person records go, no_go or go_with_conditions; a person's verb."
+          }
+        ],
+        "guardrails": [
+          "Criteria come first and are agreed by a person; a criterion changed after testing starts is a new version, and its runs are repeated.",
+          "Record what was observed, as it happened. Never edit a result to match the expected one.",
+          "Every failed or blocked step becomes a proposed finding with its evidence.",
+          "Only a person signs off. A recommendation from the results is advice, not the decision.",
+          "Synthetic test data only. No real names, contact details or case details, ever."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "signoff-checks"
+          },
+          {
+            "$pin": "example.persona"
+          },
+          {
+            "$pin": "example.acceptance-criteria"
+          },
+          {
+            "$pin": "example.scenario-script"
+          },
+          {
+            "$pin": "example.session-record"
+          },
+          {
+            "$pin": "example.results-summary"
+          },
+          {
+            "$pin": "example.sign-off"
+          }
+        ],
+        "complements": [
+          "Accessibility findings go through the accessibility audit pack, which cites WCAG success criteria.",
+          "Each defect's fix, verification and guard go through the findings to fixes pack.",
+          "The launch readiness pack pins a sign-off as evidence before an owner decides on launch."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "persona-guide"
+        ],
+        [
+          "requires_noun",
+          "criteria-guide"
+        ],
+        [
+          "requires_noun",
+          "test-data-rules"
+        ],
+        [
+          "requires_noun",
+          "defect-rules"
+        ],
+        [
+          "requires_noun",
+          "verdict-rules"
+        ],
+        [
+          "requires_noun",
+          "signoff-checks"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How acceptance testing runs from personas to a person's sign-off",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "draft-personas writes who the surface is for, as assumptions.",
+          "write-acceptance-criteria writes what must be true for each persona, before anyone tests.",
+          "agree-criteria: a person agrees to an exact criteria version.",
+          "write-scenario-scripts turns the agreed criteria into steps a person or a browser-driving agent can follow.",
+          "run-scenario follows one script on one build and records each step's result as it happens.",
+          "compile-results derives each criterion's verdict and a recommendation by fixed rules.",
+          "sign-off: a person records go, no_go or go_with_conditions, with reasons."
+        ],
+        "rules": [
+          "Testing starts only from an agreed criteria version, pinned by digest.",
+          "A run on a different build or criteria version than its script ends blocked instead of guessing.",
+          "Observed results are recorded in plain words; expected results are never copied into them.",
+          "A failed, blocked or not-run step stays on the record; a rerun is a new session.",
+          "A no-go is a useful result, not a failure of the testing.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "roles": {
+          "accountable_person": "Agrees to the criteria and signs off. Usually the person who owns the outcome, such as a program manager.",
+          "runner": "An agent or a person who follows a script. A runner with assistive technology is a person unless an agent's tool truly is that technology.",
+          "compiler": "A deterministic worker that derives verdicts; it does not judge."
+        },
+        "follow_ups": {
+          "defect": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "accessibility": {
+            "$verb": "accessibility-audit.plan-audit"
+          },
+          "launch": {
+            "$verb": "launch-readiness.plan-readiness"
+          }
+        },
+        "sources": [
+          "Acceptance criteria in given, when and then form follow common behavior-driven practice; the wording here is original."
+        ]
+      }
+    },
+    {
+      "slug": "persona-guide",
+      "category": "noun.skill_pack",
+      "role": "persona_guide",
+      "title": "How to write a persona for acceptance testing",
+      "category_reason": "A reusable method for writing personas; the personas themselves are seed hypotheses.",
+      "value": {
+        "a_persona_holds": [
+          "One primary goal, in the persona's words",
+          "The context they work in and any time pressure",
+          "Device, screen width, input modes and any assistive technology",
+          "Connection quality and languages",
+          "How much they know about the domain",
+          "What success looks like to them",
+          "What they must never be asked to do, such as share a client's details"
+        ],
+        "rules": [
+          "Write goals and situations, not demographics or stereotypes.",
+          "Include at least one persona who uses only a keyboard or a screen reader, and one on a small screen, unless the brief says why not.",
+          "Personas are assumptions. Each says what evidence would confirm or contradict it, and later evidence can replace it.",
+          "Synthetic only: a role label, never a real person's name, story, photo or contact details."
+        ],
+        "good_label_examples": [
+          "Volunteer coordinator on a phone between shifts",
+          "Retired volunteer using a screen reader at home"
+        ]
+      }
+    },
+    {
+      "slug": "criteria-guide",
+      "category": "noun.skill_pack",
+      "role": "criteria_guide",
+      "title": "How to write acceptance criteria that can be checked",
+      "category_reason": "A reusable method for writing testable criteria.",
+      "value": {
+        "form": "Given a starting state, when the persona does one thing, then something a person or a deterministic check can observe happens.",
+        "rules": [
+          "One behavior per criterion, with a then that names what is seen, not how it is built.",
+          "Priority is must, should or could. Every persona gets at least one must criterion.",
+          "Accessibility criteria cite their WCAG 2.2 success criteria from the accessibility audit checklist.",
+          "A time-on-task criterion states its threshold and how the time is measured, such as from the first page load to the moment the field is focused.",
+          "Content criteria say who must understand the wording, such as a volunteer with no technical background.",
+          "Error criteria say what the persona sees after a mistake and how they recover."
+        ],
+        "checklist": {
+          "$pin": "accessibility-audit:wcag-checklist"
+        },
+        "anti_patterns": [
+          "The page works well.",
+          "It should be fast.",
+          "Users like the design."
+        ]
+      }
+    },
+    {
+      "slug": "test-data-rules",
+      "category": "noun.reflex_procedure",
+      "role": "test_data_rules",
+      "title": "Synthetic test data for acceptance testing",
+      "category_reason": "A zero-call rule for which data a test may use.",
+      "value": {
+        "use": [
+          "Names that are role labels or plainly invented, such as Test Volunteer A.",
+          "Email addresses only at reserved example domains (example.com, example.org, example.net), and only on a test target.",
+          "Phone numbers only from reserved fictional ranges, and only on a test target.",
+          "Organization names marked synthetic."
+        ],
+        "never": [
+          "Real people's names, stories, contact details, case notes or photos.",
+          "Anything pasted from a real inbox, case file or spreadsheet.",
+          "Credentials of any kind; a step that needs one is blocked until a person provides access outside the record."
+        ],
+        "on_live_targets": "On a live public target, a step that would submit, pay or create an account is recorded as not_run unless a person named a test target for it."
+      }
+    },
+    {
+      "slug": "defect-rules",
+      "category": "noun.reflex_procedure",
+      "role": "defect_rules",
+      "title": "How a failed step becomes a finding",
+      "category_reason": "A zero-call mapping from an observed failure to a finding's kind, severity and evidence.",
+      "value": {
+        "finding_kind": {
+          "error": "The surface does something other than its agreed criterion says, such as a button that does nothing.",
+          "design_flaw": "It works as built, but the persona cannot finish, is misled or needs help to go on.",
+          "annoyance": "The persona's own frustration, quoted exactly; record who said it and when.",
+          "issue": "The environment or process got in the way, such as a missing test target or a build that changed mid-session."
+        },
+        "provisional_severity": {
+          "P0": "The run exposed personal data or a credential; stop and route it to the security review pack.",
+          "P1": "A must criterion fails for a persona with no workaround they could find.",
+          "P2": "A must criterion needs a workaround, or a should criterion fails.",
+          "P3": "Cosmetic, or a could criterion fails."
+        },
+        "evidence": [
+          "The script and step number, the build and the criteria version",
+          "A screenshot digest and the region that shows the problem",
+          "The time and what was observed, in plain words",
+          "For an annoyance, the person's exact words"
+        ],
+        "severity_guide": {
+          "$pin": "findings-to-fixes:severity-guide"
+        },
+        "evidence_checklist": {
+          "$pin": "findings-to-fixes:evidence-checklist"
+        },
+        "record_with": {
+          "$verb": "findings-to-fixes.record-finding"
+        }
+      }
+    },
+    {
+      "slug": "verdict-rules",
+      "category": "noun.reflex_procedure",
+      "role": "verdict_rules",
+      "title": "How criterion verdicts and the recommendation are derived",
+      "category_reason": "A zero-call deterministic derivation: the same sessions always give the same verdicts.",
+      "value": {
+        "criterion": {
+          "met": "Every step that checks it passed, in the latest included session for each persona it names.",
+          "not_met": "At least one such step failed.",
+          "not_tested": "No step failed, but at least one was blocked or not run, or a named persona has no included session."
+        },
+        "included_sessions": "Only sessions run on the agreed criteria version; others are listed as excluded with the reason.",
+        "recommendation": {
+          "recommend_no_go": "Any must criterion is not_met, or any P0 or P1 finding linked to the sessions is open.",
+          "incomplete": "No must criterion is not_met and nothing blocking is open, but at least one must criterion is not_tested.",
+          "recommend_go": "Every must criterion is met and no P0 or P1 finding is open."
+        },
+        "rule": "The recommendation is advice for the person who signs off; it never decides.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "signoff-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for sign-offs, with synthetic golden sign-offs",
+      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes them.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every sign-off must pass before anyone relies on its decision. The three synthetic good sign-offs (a no-go, a conditional go and a clean go) pass all of them; each synthetic bad sign-off fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "decision-known",
+            "rule": {
+              "rule": "enum",
+              "path": "decision",
+              "values": [
+                "go",
+                "no_go",
+                "go_with_conditions"
+              ]
+            },
+            "why": "The decision is go, no_go or go_with_conditions."
+          },
+          {
+            "id": "signed-by-person",
+            "rule": {
+              "rule": "enum",
+              "path": "signer_is_person",
+              "values": [
+                true
+              ]
+            },
+            "why": "Only a person signs off."
+          },
+          {
+            "id": "signer-named",
+            "rule": {
+              "rule": "present",
+              "path": "signed_by_role"
+            },
+            "why": "The sign-off names the signer's role."
+          },
+          {
+            "id": "signer-not-agent",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "signed_by_role",
+              "pattern": "(?i)\\b(agent|bot|model|assistant|automated|worker)\\b"
+            },
+            "why": "An agent never signs off, under any role name."
+          },
+          {
+            "id": "dated",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "signed_at",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+            },
+            "why": "The sign-off is dated in UTC."
+          },
+          {
+            "id": "reasons-given",
+            "rule": {
+              "rule": "present",
+              "path": "reasons"
+            },
+            "why": "The signer says why, in their own words."
+          },
+          {
+            "id": "summary-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "results_summary_ref.value_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "The decision names the exact results summary it read."
+          },
+          {
+            "id": "criteria-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "criteria_ref.value_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "The decision names the exact agreed criteria."
+          },
+          {
+            "id": "risks-accepted-explicitly",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "risks_present",
+                "equals": true
+              },
+              "then": {
+                "rule": "when",
+                "if": {
+                  "path": "decision",
+                  "in": [
+                    "go",
+                    "go_with_conditions"
+                  ]
+                },
+                "then": {
+                  "rule": "min_items",
+                  "path": "accepted_risks",
+                  "min": 1
+                }
+              }
+            },
+            "why": "A go with an unmet must criterion or an open P0 or P1 finding lists each accepted risk."
+          },
+          {
+            "id": "risks-owned",
+            "rule": {
+              "rule": "each_has",
+              "path": "accepted_risks",
+              "fields": [
+                "item",
+                "why_acceptable",
+                "owner_role"
+              ]
+            },
+            "why": "Every accepted risk says why and who owns it."
+          },
+          {
+            "id": "conditions-listed",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "decision",
+                "equals": "go_with_conditions"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "conditions",
+                "min": 1
+              }
+            },
+            "why": "A conditional go lists its conditions."
+          },
+          {
+            "id": "conditions-owned",
+            "rule": {
+              "rule": "each_has",
+              "path": "conditions",
+              "fields": [
+                "condition",
+                "owner_role",
+                "due"
+              ]
+            },
+            "why": "Every condition has an owner and a date."
+          },
+          {
+            "id": "no-go-next-step",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "decision",
+                "equals": "no_go"
+              },
+              "then": {
+                "rule": "present",
+                "path": "next_step"
+              }
+            },
+            "why": "A no-go says what happens next."
+          },
+          {
+            "id": "no-contact-data",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b[0-9]{3}[-. )]{1,2}[0-9]{3}[-. ][0-9]{4}\\b"
+            },
+            "why": "A sign-off holds no email addresses or phone numbers."
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "signoff_id",
+            "results_summary_ref",
+            "criteria_ref",
+            "signed_by_role",
+            "signer_is_person",
+            "signed_at",
+            "decision",
+            "reasons",
+            "unmet_must",
+            "open_blocking_findings",
+            "risks_present",
+            "accepted_risks",
+            "conditions",
+            "next_step"
+          ],
+          "properties": {
+            "signoff_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "results_summary_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "criteria_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "signed_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "signer_is_person": {
+              "const": true
+            },
+            "signed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "go",
+                "no_go",
+                "go_with_conditions"
+              ]
+            },
+            "reasons": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            "unmet_must": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "pattern": "^AC-[0-9]{1,3}$"
+              }
+            },
+            "open_blocking_findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            },
+            "risks_present": {
+              "type": "boolean"
+            },
+            "accepted_risks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "why_acceptable",
+                  "owner_role"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "why_acceptable": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "owner_role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "conditions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "condition",
+                  "owner_role",
+                  "due"
+                ],
+                "properties": {
+                  "condition": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "owner_role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "due": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                    "maxLength": 10
+                  }
+                }
+              }
+            },
+            "next_step": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            }
+          }
+        },
+        "golden_fixtures": [
+          {
+            "id": "good-no-go",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "good-conditional-go",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "signoff_id": "SO-13",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-11-02T14:05Z",
+              "decision": "go_with_conditions",
+              "reasons": "Every must criterion passes now. The confirmation wording is still confusing, and we accept that for one week.",
+              "unmet_must": [],
+              "open_blocking_findings": [
+                "UAT-F-5"
+              ],
+              "risks_present": true,
+              "accepted_risks": [
+                {
+                  "item": "UAT-F-5",
+                  "why_acceptable": "Volunteers still get the right shift; only the wording confuses them.",
+                  "owner_role": "volunteer coordinator"
+                }
+              ],
+              "conditions": [
+                {
+                  "condition": "Reword the confirmation page and rerun AC-6.",
+                  "owner_role": "site maintainer",
+                  "due": "2026-11-09"
+                }
+              ],
+              "next_step": ""
+            }
+          },
+          {
+            "id": "good-clean-go",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "signoff_id": "SO-14",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-11-09T10:00Z",
+              "decision": "go",
+              "reasons": "All criteria are met and nothing blocking is open.",
+              "unmet_must": [],
+              "open_blocking_findings": [],
+              "risks_present": false,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": ""
+            }
+          },
+          {
+            "id": "bad-decision-maybe",
+            "label": "known_bad",
+            "fails": "decision-known",
+            "why": "A decision outside the three choices.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "probably fine",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-agent-flag",
+            "label": "known_bad",
+            "fails": "signed-by-person",
+            "why": "Recorded as not signed by a person.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": false,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-no-signer",
+            "label": "known_bad",
+            "fails": "signer-named",
+            "why": "Nobody is named.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-agent-signer",
+            "label": "known_bad",
+            "fails": "signer-not-agent",
+            "why": "An agent signed under a role name.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "review agent",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-undated",
+            "label": "known_bad",
+            "fails": "dated",
+            "why": "No UTC date and time.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "last Tuesday",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-no-reasons",
+            "label": "known_bad",
+            "fails": "reasons-given",
+            "why": "No reasons.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-summary-unpinned",
+            "label": "known_bad",
+            "fails": "summary-pinned",
+            "why": "The summary is not pinned to an exact version.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "latest"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-criteria-unpinned",
+            "label": "known_bad",
+            "fails": "criteria-pinned",
+            "why": "The criteria are not pinned.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": ""
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-silent-risk",
+            "label": "known_bad",
+            "fails": "risks-accepted-explicitly",
+            "why": "A go with a blocking finding and no accepted risk.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": ""
+            }
+          },
+          {
+            "id": "bad-unowned-risk",
+            "label": "known_bad",
+            "fails": "risks-owned",
+            "why": "An accepted risk with no owner.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [
+                {
+                  "item": "UAT-F-2",
+                  "why_acceptable": "Rare.",
+                  "owner_role": ""
+                }
+              ],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-conditions-missing",
+            "label": "known_bad",
+            "fails": "conditions-listed",
+            "why": "A conditional go with no conditions.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "go_with_conditions",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [
+                {
+                  "item": "UAT-F-2",
+                  "why_acceptable": "Short window.",
+                  "owner_role": "volunteer coordinator"
+                }
+              ],
+              "conditions": [],
+              "next_step": ""
+            }
+          },
+          {
+            "id": "bad-condition-undated",
+            "label": "known_bad",
+            "fails": "conditions-owned",
+            "why": "A condition with no date.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [
+                {
+                  "condition": "Fix the shift picker.",
+                  "owner_role": "site maintainer",
+                  "due": ""
+                }
+              ],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          },
+          {
+            "id": "bad-no-next-step",
+            "label": "known_bad",
+            "fails": "no-go-next-step",
+            "why": "A no-go that says nothing about what comes next.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": ""
+            }
+          },
+          {
+            "id": "bad-contact-data",
+            "label": "known_bad",
+            "fails": "no-contact-data",
+            "why": "A real-looking phone number in the reasons.",
+            "finding": {
+              "signoff_id": "SO-12",
+              "results_summary_ref": {
+                "key": "user-acceptance-testing.results_summary.t-41",
+                "version": 1,
+                "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+              },
+              "criteria_ref": {
+                "key": "user-acceptance-testing.acceptance_criteria.t-38",
+                "version": 2,
+                "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+              },
+              "signed_by_role": "pantry program manager",
+              "signer_is_person": true,
+              "signed_at": "2026-10-30T16:20Z",
+              "decision": "no_go",
+              "reasons": "Call the manager at 555-010-0123 before launch.",
+              "unmet_must": [
+                "AC-3"
+              ],
+              "open_blocking_findings": [
+                "UAT-F-2"
+              ],
+              "risks_present": true,
+              "accepted_risks": [],
+              "conditions": [],
+              "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+            }
+          }
+        ],
+        "expected": {
+          "good-no-go": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-conditional-go": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-clean-go": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-decision-maybe": {
+            "verdict": "fail",
+            "failed_checks": [
+              "decision-known"
+            ]
+          },
+          "bad-agent-flag": {
+            "verdict": "fail",
+            "failed_checks": [
+              "signed-by-person"
+            ]
+          },
+          "bad-no-signer": {
+            "verdict": "fail",
+            "failed_checks": [
+              "signer-named"
+            ]
+          },
+          "bad-agent-signer": {
+            "verdict": "fail",
+            "failed_checks": [
+              "signer-not-agent"
+            ]
+          },
+          "bad-undated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "dated"
+            ]
+          },
+          "bad-no-reasons": {
+            "verdict": "fail",
+            "failed_checks": [
+              "reasons-given"
+            ]
+          },
+          "bad-summary-unpinned": {
+            "verdict": "fail",
+            "failed_checks": [
+              "summary-pinned"
+            ]
+          },
+          "bad-criteria-unpinned": {
+            "verdict": "fail",
+            "failed_checks": [
+              "criteria-pinned"
+            ]
+          },
+          "bad-silent-risk": {
+            "verdict": "fail",
+            "failed_checks": [
+              "risks-accepted-explicitly"
+            ]
+          },
+          "bad-unowned-risk": {
+            "verdict": "fail",
+            "failed_checks": [
+              "risks-owned"
+            ]
+          },
+          "bad-conditions-missing": {
+            "verdict": "fail",
+            "failed_checks": [
+              "conditions-listed"
+            ]
+          },
+          "bad-condition-undated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "conditions-owned"
+            ]
+          },
+          "bad-no-next-step": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-go-next-step"
+            ]
+          },
+          "bad-contact-data": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-contact-data"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.persona",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a synthetic persona with a goal, context, access needs and what success means",
+      "category_reason": "A persona is an assumption about users that later evidence can confirm or contradict.",
+      "value": {
+        "describes": "a synthetic persona with a goal, context, access needs and what success means",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "persona_id",
+            "label",
+            "synthetic",
+            "goal",
+            "context",
+            "device",
+            "screen_width_px",
+            "input_modes",
+            "assistive_technology",
+            "connection",
+            "languages",
+            "domain_knowledge",
+            "constraints",
+            "success_looks_like",
+            "never_asked_to",
+            "assumption_evidence"
+          ],
+          "properties": {
+            "persona_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "synthetic": {
+              "const": true
+            },
+            "goal": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "context": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "device": {
+              "type": "string",
+              "enum": [
+                "phone",
+                "tablet",
+                "laptop",
+                "desktop"
+              ]
+            },
+            "screen_width_px": {
+              "type": "integer",
+              "minimum": 240,
+              "maximum": 4000
+            },
+            "input_modes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "touch",
+                  "mouse",
+                  "keyboard_only",
+                  "switch",
+                  "voice"
+                ]
+              }
+            },
+            "assistive_technology": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "connection": {
+              "type": "string",
+              "enum": [
+                "fast",
+                "slow",
+                "intermittent"
+              ]
+            },
+            "languages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            },
+            "domain_knowledge": {
+              "type": "string",
+              "enum": [
+                "none",
+                "some",
+                "expert"
+              ]
+            },
+            "constraints": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "success_looks_like": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "never_asked_to": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "assumption_evidence": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "synthetic is always true.",
+          "label is a role, never a real name.",
+          "assumption_evidence says what would confirm or contradict the persona."
+        ]
+      }
+    },
+    {
+      "slug": "template.acceptance-criteria",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: acceptance criteria in given, when and then form, with priority and personas",
+      "category_reason": "Criteria are a testable statement of what must hold, agreed before testing.",
+      "value": {
+        "describes": "acceptance criteria in given, when and then form, with priority and personas",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "criteria_set_id",
+            "subject",
+            "version_note",
+            "criteria"
+          ],
+          "properties": {
+            "criteria_set_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "subject": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "version_note": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "criteria": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "priority",
+                  "kind",
+                  "personas",
+                  "given",
+                  "when",
+                  "then"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^AC-[0-9]{1,3}$"
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": [
+                      "must",
+                      "should",
+                      "could"
+                    ]
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "functional",
+                      "content",
+                      "accessibility",
+                      "time_on_task",
+                      "error_handling"
+                    ]
+                  },
+                  "personas": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                    }
+                  },
+                  "given": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "when": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "then": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "wcag_sc": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[1-4]\\.[0-9]\\.[0-9]{1,2}$"
+                    }
+                  },
+                  "threshold": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 120
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Ids are unique.",
+          "Every accessibility criterion cites at least one WCAG success criterion.",
+          "A time_on_task criterion fills threshold."
+        ]
+      }
+    },
+    {
+      "slug": "template.criteria-agreement",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's agreement to one exact version of the acceptance criteria",
+      "category_reason": "An agreement is a recorded decision on one version.",
+      "value": {
+        "describes": "a person's agreement to one exact version of the acceptance criteria",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "agreement_id",
+            "criteria_ref",
+            "agreed_by_role",
+            "signer_is_person",
+            "agreed_at",
+            "decision",
+            "changes"
+          ],
+          "properties": {
+            "agreement_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "criteria_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "agreed_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "signer_is_person": {
+              "const": true
+            },
+            "agreed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "agreed",
+                "agreed_with_changes",
+                "not_agreed"
+              ]
+            },
+            "changes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "criterion",
+                  "change",
+                  "why"
+                ],
+                "properties": {
+                  "criterion": {
+                    "type": "string",
+                    "pattern": "^AC-[0-9]{1,3}$"
+                  },
+                  "change": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "note": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "The agreement pins the exact criteria version.",
+          "Only a person agrees."
+        ]
+      }
+    },
+    {
+      "slug": "template.scenario-script",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: a scenario script with numbered steps, expected observations and the criteria each step checks",
+      "category_reason": "A script is a reusable test that runs against a build.",
+      "value": {
+        "describes": "a scenario script with numbered steps, expected observations and the criteria each step checks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "script_id",
+            "persona_id",
+            "task",
+            "target",
+            "build",
+            "criteria_ref",
+            "preconditions",
+            "steps",
+            "test_data",
+            "time_limit_minutes"
+          ],
+          "properties": {
+            "script_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "persona_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "task": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "target": {
+              "type": "string",
+              "pattern": "^https?://",
+              "minLength": 8,
+              "maxLength": 300
+            },
+            "build": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "criteria_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "preconditions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "n",
+                  "action",
+                  "expected",
+                  "checks",
+                  "needs_test_target"
+                ],
+                "properties": {
+                  "n": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 200
+                  },
+                  "action": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "expected": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "checks": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^AC-[0-9]{1,3}$"
+                    }
+                  },
+                  "mode_note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "needs_test_target": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "test_data": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "time_limit_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 240
+            }
+          }
+        },
+        "rules": [
+          "Every must criterion is checked by at least one step.",
+          "A step that would submit, pay or create an account sets needs_test_target."
+        ]
+      }
+    },
+    {
+      "slug": "template.session-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the observed results of one scenario run on one build",
+      "category_reason": "A session record is a recorded run.",
+      "value": {
+        "describes": "the observed results of one scenario run on one build",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "session_id",
+            "script_id",
+            "persona_id",
+            "run_by",
+            "runner_role",
+            "build",
+            "target",
+            "criteria_ref",
+            "started_at",
+            "ended_at",
+            "environment",
+            "results",
+            "deviations",
+            "failed",
+            "not_run"
+          ],
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "script_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "persona_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "run_by": {
+              "type": "string",
+              "enum": [
+                "agent",
+                "person"
+              ]
+            },
+            "runner_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "build": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "target": {
+              "type": "string",
+              "pattern": "^https?://",
+              "minLength": 8,
+              "maxLength": 300
+            },
+            "criteria_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "started_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "ended_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "environment": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "browser",
+                "viewport_px",
+                "theme",
+                "input_mode"
+              ],
+              "properties": {
+                "browser": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "viewport_px": {
+                  "type": "integer",
+                  "minimum": 200,
+                  "maximum": 8000
+                },
+                "theme": {
+                  "type": "string",
+                  "enum": [
+                    "light",
+                    "dark",
+                    "high_contrast"
+                  ]
+                },
+                "input_mode": {
+                  "type": "string",
+                  "enum": [
+                    "touch",
+                    "mouse",
+                    "keyboard_only",
+                    "switch",
+                    "voice"
+                  ]
+                },
+                "assistive_technology": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 120
+                }
+              }
+            },
+            "results": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "n",
+                  "result",
+                  "observed",
+                  "at",
+                  "evidence"
+                ],
+                "properties": {
+                  "n": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 200
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "blocked",
+                      "not_run"
+                    ]
+                  },
+                  "observed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "kind",
+                        "detail"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "screenshot",
+                            "recording",
+                            "measurement",
+                            "log_excerpt",
+                            "quote"
+                          ]
+                        },
+                        "detail": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "region": {
+                          "type": "array",
+                          "minItems": 4,
+                          "maxItems": 4,
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 100000
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "finding_id": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  }
+                }
+              }
+            },
+            "deviations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200
+            },
+            "not_run": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 200
+            }
+          }
+        },
+        "rules": [
+          "failed equals the number of fail results; not_run the number of not_run results.",
+          "Every fail has evidence with a digest.",
+          "Every blocked or not_run result has a reason."
+        ]
+      }
+    },
+    {
+      "slug": "template.results-summary",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: criterion verdicts and a recommendation derived from included sessions",
+      "category_reason": "A summary is a deterministic evaluation of recorded runs.",
+      "value": {
+        "describes": "criterion verdicts and a recommendation derived from included sessions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "summary_id",
+            "criteria_ref",
+            "sessions",
+            "excluded",
+            "criteria",
+            "unlinked_failures",
+            "open_findings",
+            "recommendation",
+            "recommendation_reason"
+          ],
+          "properties": {
+            "summary_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "criteria_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "sessions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            },
+            "excluded": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "session_id",
+                  "reason"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "criteria": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "priority",
+                  "verdict",
+                  "steps",
+                  "findings"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^AC-[0-9]{1,3}$"
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": [
+                      "must",
+                      "should",
+                      "could"
+                    ]
+                  },
+                  "verdict": {
+                    "type": "string",
+                    "enum": [
+                      "met",
+                      "not_met",
+                      "not_tested"
+                    ]
+                  },
+                  "steps": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    }
+                  },
+                  "findings": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                    }
+                  }
+                }
+              }
+            },
+            "unlinked_failures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "open_findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "severity",
+                  "title"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "P0",
+                      "P1",
+                      "P2",
+                      "P3"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "recommendation": {
+              "type": "string",
+              "enum": [
+                "recommend_go",
+                "recommend_no_go",
+                "incomplete"
+              ]
+            },
+            "recommendation_reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "Verdicts follow the verdict rules.",
+          "Every failed step is linked to a finding or listed in unlinked_failures."
+        ]
+      }
+    },
+    {
+      "slug": "template.sign-off",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's go, no-go or conditional go on one results summary",
+      "category_reason": "A sign-off is a person's recorded decision.",
+      "value": {
+        "describes": "a person's go, no-go or conditional go on one results summary",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "signoff_id",
+            "results_summary_ref",
+            "criteria_ref",
+            "signed_by_role",
+            "signer_is_person",
+            "signed_at",
+            "decision",
+            "reasons",
+            "unmet_must",
+            "open_blocking_findings",
+            "risks_present",
+            "accepted_risks",
+            "conditions",
+            "next_step"
+          ],
+          "properties": {
+            "signoff_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "results_summary_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "criteria_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "signed_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "signer_is_person": {
+              "const": true
+            },
+            "signed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "go",
+                "no_go",
+                "go_with_conditions"
+              ]
+            },
+            "reasons": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            "unmet_must": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "pattern": "^AC-[0-9]{1,3}$"
+              }
+            },
+            "open_blocking_findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            },
+            "risks_present": {
+              "type": "boolean"
+            },
+            "accepted_risks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "item",
+                  "why_acceptable",
+                  "owner_role"
+                ],
+                "properties": {
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "why_acceptable": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "owner_role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "conditions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "condition",
+                  "owner_role",
+                  "due"
+                ],
+                "properties": {
+                  "condition": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "owner_role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "due": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                    "maxLength": 10
+                  }
+                }
+              }
+            },
+            "next_step": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "It passes the sign-off checks.",
+          "risks_present is true when unmet_must or open_blocking_findings lists anything."
+        ]
+      }
+    },
+    {
+      "slug": "example.persona",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a keyboard-only volunteer persona",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.persona"
+        },
+        "instance": {
+          "persona_id": "P-2",
+          "label": "Retired volunteer who uses only a keyboard",
+          "synthetic": true,
+          "goal": "Pick a Saturday morning shift at the pantry without phoning anyone.",
+          "context": "Volunteers twice a month. Uses a laptop at home with a screen magnifier, and never uses a mouse because of a hand tremor.",
+          "device": "laptop",
+          "screen_width_px": 1280,
+          "input_modes": [
+            "keyboard_only"
+          ],
+          "assistive_technology": [
+            "screen magnifier at 200%"
+          ],
+          "connection": "slow",
+          "languages": [
+            "en"
+          ],
+          "domain_knowledge": "some",
+          "constraints": [
+            "Loses their place when focus jumps",
+            "Small links are hard to see at 200%"
+          ],
+          "success_looks_like": "Sees the shift confirmed on screen and knows what to bring.",
+          "never_asked_to": [
+            "share other volunteers' details",
+            "create a password to pick one shift"
+          ],
+          "assumption_evidence": "Confirmed if volunteer coordinators report keyboard-only volunteers; contradicted if none sign up this way in a season."
+        },
+        "shows": "A persona built from a goal and real constraints, with an access need that changes what the site must do.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.acceptance-criteria",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: acceptance criteria for picking a shift",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.acceptance-criteria"
+        },
+        "instance": {
+          "criteria_set_id": "AC-SET-7",
+          "subject": "Picking a volunteer shift on the synthetic pantry site",
+          "version_note": "Version 2, after the program manager split AC-3 in two.",
+          "criteria": [
+            {
+              "id": "AC-1",
+              "priority": "must",
+              "kind": "functional",
+              "personas": [
+                "P-1",
+                "P-2"
+              ],
+              "given": "The shifts page is open",
+              "when": "the volunteer chooses a Saturday shift with free places",
+              "then": "the page shows the chosen shift and a Confirm button"
+            },
+            {
+              "id": "AC-3",
+              "priority": "must",
+              "kind": "accessibility",
+              "personas": [
+                "P-2"
+              ],
+              "given": "Only a keyboard is used",
+              "when": "the volunteer tabs through the shift list",
+              "then": "every shift can be reached and chosen, and focus is always visible",
+              "wcag_sc": [
+                "2.1.1",
+                "2.4.7"
+              ]
+            },
+            {
+              "id": "AC-4",
+              "priority": "should",
+              "kind": "time_on_task",
+              "personas": [
+                "P-1"
+              ],
+              "given": "The home page has loaded",
+              "when": "the volunteer looks for where to pick a shift",
+              "then": "the shift list is open",
+              "threshold": "within 60 seconds from first load"
+            },
+            {
+              "id": "AC-6",
+              "priority": "should",
+              "kind": "content",
+              "personas": [
+                "P-1",
+                "P-2"
+              ],
+              "given": "A shift was confirmed",
+              "when": "the confirmation page shows",
+              "then": "a volunteer with no technical background can say when to arrive and what to bring"
+            }
+          ]
+        },
+        "shows": "Testable criteria with priorities, personas, WCAG citations for the accessibility one and a stated time threshold.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.scenario-script",
+      "category": "noun.benchmark_suite",
+      "role": "example",
+      "title": "Worked example: a keyboard-only scenario script",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.scenario-script"
+        },
+        "instance": {
+          "script_id": "S-2",
+          "persona_id": "P-2",
+          "task": "Pick a Saturday morning shift using only the keyboard",
+          "target": "https://pantry.example.invalid/shifts",
+          "build": "site build 2026-10-30.3",
+          "criteria_ref": {
+            "key": "user-acceptance-testing.acceptance_criteria.t-38",
+            "version": 2,
+            "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+          },
+          "preconditions": [
+            "Browser zoom at 200%",
+            "No mouse or touch"
+          ],
+          "steps": [
+            {
+              "n": 1,
+              "action": "Load the shifts page and press Tab until focus reaches the first Saturday shift.",
+              "expected": "Focus is visible at every stop and reaches the shift list in under 15 presses.",
+              "checks": [
+                "AC-3"
+              ],
+              "needs_test_target": false
+            },
+            {
+              "n": 2,
+              "action": "Choose the 9:00 Saturday shift with Enter.",
+              "expected": "The chosen shift and a Confirm button appear.",
+              "checks": [
+                "AC-1",
+                "AC-3"
+              ],
+              "needs_test_target": false
+            },
+            {
+              "n": 3,
+              "action": "Press Confirm with Enter.",
+              "expected": "A confirmation page shows the time and what to bring.",
+              "checks": [
+                "AC-6"
+              ],
+              "mode_note": "Submits a booking.",
+              "needs_test_target": true
+            }
+          ],
+          "test_data": [
+            "Volunteer name: Test Volunteer B (synthetic)"
+          ],
+          "time_limit_minutes": 15
+        },
+        "shows": "A script whose steps name the criteria they check and mark the submitting step as needing a test target.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.session-record",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a session with a failed step, a not-run step and the finding proposed",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.session-record"
+        },
+        "instance": {
+          "session_id": "SES-31",
+          "script_id": "S-2",
+          "persona_id": "P-2",
+          "run_by": "agent",
+          "runner_role": "browser-driving test agent",
+          "build": "site build 2026-10-30.3",
+          "target": "https://pantry.example.invalid/shifts",
+          "criteria_ref": {
+            "key": "user-acceptance-testing.acceptance_criteria.t-38",
+            "version": 2,
+            "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+          },
+          "started_at": "2026-10-30T15:02Z",
+          "ended_at": "2026-10-30T15:09Z",
+          "environment": {
+            "browser": "Chromium 140, headless",
+            "viewport_px": 1280,
+            "theme": "light",
+            "input_mode": "keyboard_only"
+          },
+          "results": [
+            {
+              "n": 1,
+              "result": "fail",
+              "observed": "Focus reached the shift list after 9 presses, but the Saturday shift buttons showed no focus indicator.",
+              "at": "2026-10-30T15:04Z",
+              "evidence": [
+                {
+                  "kind": "screenshot",
+                  "detail": "Focused and unfocused crops of the 9:00 button are identical.",
+                  "sha256": "3b7e1f0d9c2a4b6e8f1a3c5e7b9d0f2a4c6e8b0d2f4a6c8e0b2d4f6a8c0e2b4d",
+                  "region": [
+                    312,
+                    488,
+                    220,
+                    44
+                  ]
+                }
+              ],
+              "finding_id": "UAT-F-2"
+            },
+            {
+              "n": 2,
+              "result": "pass",
+              "observed": "Enter chose the shift; the chosen shift and a Confirm button appeared.",
+              "at": "2026-10-30T15:06Z",
+              "evidence": []
+            },
+            {
+              "n": 3,
+              "result": "not_run",
+              "observed": "Not run: this step books a shift and no test target was named.",
+              "at": "2026-10-30T15:07Z",
+              "evidence": [],
+              "reason": "needs_test_target is true and the owner named no test target."
+            }
+          ],
+          "deviations": [],
+          "failed": 1,
+          "not_run": 1
+        },
+        "shows": "Results recorded as observed, with a digest and region for the failure, a reason for the step not run, and the finding id the run proposed.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.results-summary",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: verdicts and a no-go recommendation",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.results-summary"
+        },
+        "instance": {
+          "summary_id": "SUM-9",
+          "criteria_ref": {
+            "key": "user-acceptance-testing.acceptance_criteria.t-38",
+            "version": 2,
+            "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+          },
+          "sessions": [
+            "SES-30",
+            "SES-31"
+          ],
+          "excluded": [
+            {
+              "session_id": "SES-27",
+              "reason": "Run against criteria version 1, before AC-3 was split."
+            }
+          ],
+          "criteria": [
+            {
+              "id": "AC-1",
+              "priority": "must",
+              "verdict": "met",
+              "steps": [
+                "SES-30:2",
+                "SES-31:2"
+              ],
+              "findings": []
+            },
+            {
+              "id": "AC-3",
+              "priority": "must",
+              "verdict": "not_met",
+              "steps": [
+                "SES-31:1",
+                "SES-31:2"
+              ],
+              "findings": [
+                "UAT-F-2"
+              ]
+            },
+            {
+              "id": "AC-4",
+              "priority": "should",
+              "verdict": "met",
+              "steps": [
+                "SES-30:1"
+              ],
+              "findings": []
+            },
+            {
+              "id": "AC-6",
+              "priority": "should",
+              "verdict": "not_tested",
+              "steps": [
+                "SES-31:3"
+              ],
+              "findings": []
+            }
+          ],
+          "unlinked_failures": [],
+          "open_findings": [
+            {
+              "id": "UAT-F-2",
+              "severity": "P1",
+              "title": "Shift buttons show no keyboard focus indicator."
+            }
+          ],
+          "recommendation": "recommend_no_go",
+          "recommendation_reason": "Must criterion AC-3 is not met and P1 finding UAT-F-2 is open."
+        },
+        "shows": "Verdicts derived by the rules, an excluded session with its reason and a recommendation that is advice only.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.sign-off",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a person's no-go",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.sign-off"
+        },
+        "instance": {
+          "signoff_id": "SO-12",
+          "results_summary_ref": {
+            "key": "user-acceptance-testing.results_summary.t-41",
+            "version": 1,
+            "value_sha256": "5a1f0c3e7d9b2a4c6e8f0a1b3c5d7e9f1a2b3c4d5e6f708192a3b4c5d6e7f809"
+          },
+          "criteria_ref": {
+            "key": "user-acceptance-testing.acceptance_criteria.t-38",
+            "version": 2,
+            "value_sha256": "c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5c0ffee00d15ea5e5"
+          },
+          "signed_by_role": "pantry program manager",
+          "signer_is_person": true,
+          "signed_at": "2026-10-30T16:20Z",
+          "decision": "no_go",
+          "reasons": "A keyboard-only volunteer cannot pick a shift, and that is a must for us. Everything else can wait.",
+          "unmet_must": [
+            "AC-3"
+          ],
+          "open_blocking_findings": [
+            "UAT-F-2"
+          ],
+          "risks_present": true,
+          "accepted_risks": [],
+          "conditions": [],
+          "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
+        },
+        "shows": "The decision is a person's, pinned to the exact summary and criteria, with reasons and a next step.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "draft-personas",
+      "kind": "verb.solve_draft",
+      "title": "Draft personas",
+      "claimant": "agent",
+      "summary": "Write two to five synthetic personas for the surface or change under test: each with one goal, context, device, access needs and what success means.",
+      "outcome": "Persona nouns, each an assumption with the evidence that would test it.",
+      "ready_outcome": "personas_drafted",
+      "pinned": [
+        "method",
+        "persona-guide",
+        "test-data-rules"
+      ],
+      "slots": [
+        {
+          "name": "audience_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a brief naming the surface, its intended users and what they come to do."
+        }
+      ],
+      "params": {
+        "count": {
+          "schema": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 5
+          },
+          "description": "How many personas to write.",
+          "default": 3
+        }
+      },
+      "produces": [
+        {
+          "name": "persona",
+          "template": "template.persona",
+          "max": 5
+        }
+      ],
+      "steps": [
+        "Read the brief and write two to five personas with the fields the persona guide names.",
+        "Include at least one persona who uses only a keyboard or a screen reader and one on a small screen, unless the brief says why not.",
+        "Keep every persona synthetic: a role label, never a real person's name, story or contact details.",
+        "Say for each persona what evidence would confirm or contradict it."
+      ],
+      "acceptance": [
+        {
+          "id": "personas-match-template",
+          "check": "Every persona validates against template.persona's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "goal-and-success",
+          "check": "Every persona has a goal and success_looks_like.",
+          "method": "deterministic"
+        },
+        {
+          "id": "access-covered",
+          "check": "At least one persona has keyboard_only, switch or voice input or names assistive technology, and one has a screen width under 480 pixels, or the output says why not.",
+          "method": "deterministic"
+        },
+        {
+          "id": "synthetic-only",
+          "check": "No persona holds an email address or phone number.",
+          "method": "deterministic"
+        },
+        {
+          "id": "personas-differ",
+          "check": "The personas differ in ways that change what the surface must do.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "write-acceptance-criteria",
+      "kind": "verb.problemize",
+      "title": "Write acceptance criteria",
+      "claimant": "agent",
+      "summary": "Write the acceptance criteria for the change before any testing: given, when and then, a priority, the personas each serves and WCAG citations for accessibility criteria.",
+      "outcome": "An acceptance criteria noun ready for a person to agree to.",
+      "ready_outcome": "criteria_written",
+      "pinned": [
+        "method",
+        "criteria-guide"
+      ],
+      "slots": [
+        {
+          "name": "personas",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the personas.",
+          "many": true,
+          "max": 5
+        },
+        {
+          "name": "change",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the brief or change description for what is under test."
+        }
+      ],
+      "produces": [
+        {
+          "name": "acceptance_criteria",
+          "template": "template.acceptance-criteria"
+        }
+      ],
+      "steps": [
+        "Write each criterion as given, when and then, with a then that a person or a deterministic check can observe.",
+        "Give each criterion a priority of must, should or could and the personas it serves; every persona gets at least one must criterion.",
+        "Add accessibility criteria for the paths that matter and cite their success criteria from the pinned checklist.",
+        "State a threshold and how time is measured for every time-on-task criterion.",
+        "Leave out how the thing is built."
+      ],
+      "acceptance": [
+        {
+          "id": "criteria-match-template",
+          "check": "The criteria validate against template.acceptance-criteria's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "ids-unique",
+          "check": "Criterion ids are unique.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-persona-has-a-must",
+          "check": "Every pinned persona appears in at least one must criterion.",
+          "method": "deterministic"
+        },
+        {
+          "id": "accessibility-cited",
+          "check": "Every accessibility criterion cites at least one WCAG success criterion from the checklist.",
+          "method": "deterministic"
+        },
+        {
+          "id": "observable",
+          "check": "Each then can be observed without knowing how the thing is built.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "user-acceptance-testing.draft-personas"
+      ]
+    },
+    {
+      "slug": "agree-criteria",
+      "kind": "verb.verify_gate",
+      "title": "Agree to the acceptance criteria",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "The accountable person reads every criterion and agrees to an exact version, changes it or refuses it. This template performs nothing itself.",
+      "outcome": "A criteria agreement that pins the version testing will use.",
+      "ready_outcome": "criteria_agreed",
+      "slots": [
+        {
+          "name": "acceptance_criteria",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the criteria to agree to."
+        }
+      ],
+      "produces": [
+        {
+          "name": "criteria_agreement",
+          "template": "template.criteria-agreement"
+        }
+      ],
+      "steps": [
+        "Read every criterion; agree to it, change it or remove it, and say why for each change.",
+        "Record the exact version you agreed to; testing starts from that version only.",
+        "A criterion changed after testing starts gets a new version, and every run that checked it runs again."
+      ],
+      "acceptance": [
+        {
+          "id": "agreement-matches-template",
+          "check": "The agreement validates against template.criteria-agreement's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "version-pinned",
+          "check": "criteria_ref names one exact version with its value SHA-256.",
+          "method": "deterministic"
+        },
+        {
+          "id": "agreed-by-a-person",
+          "check": "signer_is_person is true and agreed_by_role is filled.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "user-acceptance-testing.write-acceptance-criteria"
+      ]
+    },
+    {
+      "slug": "write-scenario-scripts",
+      "kind": "verb.solve_draft",
+      "title": "Write scenario scripts",
+      "claimant": "agent",
+      "summary": "Turn the agreed criteria into scenario scripts: one per persona and task, with numbered steps, the observation expected at each and the criteria each step checks.",
+      "outcome": "Scenario script nouns that cover every must criterion.",
+      "ready_outcome": "scripts_written",
+      "pinned": [
+        "method",
+        "test-data-rules"
+      ],
+      "slots": [
+        {
+          "name": "acceptance_criteria",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the agreed criteria version."
+        },
+        {
+          "name": "criteria_agreement",
+          "category": "noun.eval_run",
+          "description": "Pin of the person's agreement."
+        },
+        {
+          "name": "personas",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the personas.",
+          "many": true,
+          "max": 5
+        }
+      ],
+      "params": {
+        "target": {
+          "schema": {
+            "type": "string",
+            "pattern": "^https?://",
+            "minLength": 8,
+            "maxLength": 300
+          },
+          "default": "https://build-under-test.example.invalid/",
+          "description": "The address of the build under test. The default is a placeholder that never resolves; replace it."
+        },
+        "build": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": "The exact build, version or commit under test."
+        }
+      },
+      "produces": [
+        {
+          "name": "scenario_script",
+          "template": "template.scenario-script",
+          "max": 8
+        }
+      ],
+      "steps": [
+        "Write one script per persona and task: preconditions, then numbered steps, each an action and the expected observation, naming the criteria it checks.",
+        "Cover every must criterion with at least one step, and note where a keyboard-only or screen-reader persona acts differently.",
+        "Use only synthetic data from the test-data rules.",
+        "Set needs_test_target on every step that would submit, pay or create an account, so a run without a named test target records it as not run."
+      ],
+      "acceptance": [
+        {
+          "id": "scripts-match-template",
+          "check": "Every script validates against template.scenario-script's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "musts-covered",
+          "check": "Every must criterion of the agreed version is checked by at least one step.",
+          "method": "deterministic"
+        },
+        {
+          "id": "expected-everywhere",
+          "check": "Every step has an expected observation.",
+          "method": "deterministic"
+        },
+        {
+          "id": "criteria-pinned",
+          "check": "Every script's criteria_ref equals the agreement's criteria_ref.",
+          "method": "deterministic"
+        },
+        {
+          "id": "followable",
+          "check": "A person new to the surface could follow each script without help.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "user-acceptance-testing.agree-criteria"
+      ]
+    },
+    {
+      "slug": "run-scenario",
+      "kind": "verb.benchmark_harness",
+      "title": "Run one scenario script",
+      "claimant": "agent_or_human",
+      "summary": "Follow one scenario script on the named build as its persona would, and record each step's result as it happens with evidence for every failure.",
+      "outcome": "A session record of observed results, with a finding proposed for every failed or blocked step.",
+      "ready_outcome": "session_recorded",
+      "pinned": [
+        "method",
+        "defect-rules",
+        "test-data-rules"
+      ],
+      "slots": [
+        {
+          "name": "scenario_script",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the script to follow."
+        },
+        {
+          "name": "criteria_agreement",
+          "category": "noun.eval_run",
+          "description": "Pin of the agreement naming the criteria version."
+        }
+      ],
+      "params": {
+        "test_target_named": {
+          "schema": {
+            "type": "boolean"
+          },
+          "description": "True only when a person named a test target for steps marked needs_test_target.",
+          "default": false
+        }
+      },
+      "produces": [
+        {
+          "name": "session_record",
+          "template": "template.session-record"
+        }
+      ],
+      "steps": [
+        "Confirm the build and the agreed criteria version match the script before the first step; if either differs, end blocked.",
+        "Follow the steps in order and record each result as it happens: pass, fail, blocked or not_run, with the time.",
+        "Write what was observed in plain words, never the expected text; attach a screenshot digest and region for every fail.",
+        "Record a step marked needs_test_target as not_run unless test_target_named is true; never type real personal data or paste anything from outside the test-data rules.",
+        "Propose findings-to-fixes.record-finding for every failed or blocked step with its evidence, and never fix anything during the run."
+      ],
+      "acceptance": [
+        {
+          "id": "session-matches-template",
+          "check": "The session record validates against template.session-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-step-recorded",
+          "check": "There is one result for every step of the script, in order.",
+          "method": "deterministic"
+        },
+        {
+          "id": "failures-evidenced",
+          "check": "Every fail has at least one evidence item with a SHA-256.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reasons-given",
+          "check": "Every blocked or not_run result has a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-match",
+          "check": "failed and not_run equal the number of such results.",
+          "method": "deterministic"
+        },
+        {
+          "id": "findings-proposed",
+          "check": "The output proposes one record-finding verb for each failed or blocked step.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests to the target the script names. A step marked needs_test_target runs only against a test target a person named; otherwise it is recorded as not_run."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "user-acceptance-testing.write-scenario-scripts"
+      ]
+    },
+    {
+      "slug": "compile-results",
+      "kind": "verb.verify_gate",
+      "title": "Compile the results",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Derive each criterion's verdict from the included sessions by the verdict rules, link failures to findings and derive a recommendation for the person who signs off.",
+      "outcome": "A results summary with verdicts, linked findings and a recommendation that is advice only.",
+      "ready_outcome": "results_compiled",
+      "pinned": [
+        "verdict-rules"
+      ],
+      "slots": [
+        {
+          "name": "criteria_agreement",
+          "category": "noun.eval_run",
+          "description": "Pin of the agreement."
+        },
+        {
+          "name": "session_records",
+          "category": "noun.eval_run",
+          "description": "Pins of the session records.",
+          "many": true,
+          "max": 16
+        },
+        {
+          "name": "findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of findings recorded for failed steps, if any.",
+          "required": false,
+          "many": true,
+          "max": 40
+        }
+      ],
+      "produces": [
+        {
+          "name": "results_summary",
+          "template": "template.results-summary"
+        }
+      ],
+      "steps": [
+        "Include only sessions run on the agreed criteria version, and list the others under excluded with the reason.",
+        "Derive each criterion's verdict by the verdict rules: met, not_met or not_tested.",
+        "Link every not_met criterion to its findings, and list failed steps that have no finding yet under unlinked_failures.",
+        "Derive the recommendation by the rules and say why; it is advice, not the decision."
+      ],
+      "acceptance": [
+        {
+          "id": "summary-matches-template",
+          "check": "The summary validates against template.results-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdicts-derived",
+          "check": "Recomputing the verdicts from the pinned sessions by the rules gives the same verdicts.",
+          "method": "deterministic"
+        },
+        {
+          "id": "failures-linked",
+          "check": "Every failed step appears under a criterion's findings or in unlinked_failures.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recommendation-derived",
+          "check": "Recomputing the recommendation gives the same value.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "user-acceptance-testing.run-scenario"
+      ]
+    },
+    {
+      "slug": "sign-off",
+      "kind": "verb.verify_gate",
+      "title": "Sign off with go or no-go",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "The accountable person reads the results summary and records go, no_go or go_with_conditions with reasons. This template performs nothing itself; releasing stays a separate act.",
+      "outcome": "A sign-off noun that passes the sign-off checks.",
+      "ready_outcome": "signed_off",
+      "pinned": [
+        "signoff-checks",
+        "verdict-rules"
+      ],
+      "slots": [
+        {
+          "name": "results_summary",
+          "category": "noun.eval_run",
+          "description": "Pin of the results summary."
+        },
+        {
+          "name": "criteria_agreement",
+          "category": "noun.eval_run",
+          "description": "Pin of the agreement."
+        }
+      ],
+      "produces": [
+        {
+          "name": "sign_off",
+          "template": "template.sign-off"
+        }
+      ],
+      "steps": [
+        "Read the results summary and the open findings it links.",
+        "Record go, no_go or go_with_conditions, with your reasons in your own words.",
+        "For a go with any unmet must criterion or open P0 or P1 finding, list each one under accepted_risks with why it is acceptable and who owns it.",
+        "Give every condition an owner and a date.",
+        "Signing off records a decision only; releasing is a separate act with its own record."
+      ],
+      "acceptance": [
+        {
+          "id": "signoff-matches-template",
+          "check": "The sign-off validates against template.sign-off's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "signoff-checks-pass",
+          "check": "The sign-off passes every pinned sign-off check.",
+          "method": "deterministic"
+        },
+        {
+          "id": "copied-not-recomputed",
+          "check": "unmet_must and open_blocking_findings equal the summary's lists.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "user-acceptance-testing.compile-results"
+      ]
+    }
+  ]
+}
