@@ -1,0 +1,3182 @@
+{
+  "pack_id": "codebase-health-review",
+  "title": "Codebase health review",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a periodic review of a codebase's health at one commit: aging TODO and FIXME comments dated by git blame, error paths no test reaches, swallowed exceptions, logging noise, dependency drift and unpinned or stale versions, flaky tests, oversized modules, duplicated code, docs that drift from the code and secrets hygiene reported by place and pattern only, with tested code for the TODO ager and the swallowed-exception finder, a report that gives every area its own status and no single score, and every item that needs action recorded as a finding.",
+  "dependencies": [
+    "findings-to-fixes",
+    "wiring-and-conformance-checks",
+    "security-review",
+    "freshness-checks",
+    "file-triage-at-scale",
+    "video-qa"
+  ],
+  "boundaries": [
+    "One commit, read from a clean local copy; the code under review is never deployed, pushed or changed by these verbs.",
+    "Possible secrets are reported by file, line and pattern name only, as private findings for the security review pack.",
+    "Ages come from git history or are unknown; no author is named in a finding.",
+    "The pack's code reads files and runs read-only git commands; it opens no network connection, calls no model and writes no file.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a periodic review of a codebase's health",
+      "value": {
+        "lets_workers": "Review a codebase's health at one commit, area by area: TODO and FIXME comments aged by git blame, error paths no test reaches, swallowed exceptions, logging noise, dependency drift, unpinned or stale versions, flaky tests, oversized modules, duplicated code, docs that drift from the code, and secrets hygiene reported by place and pattern only; report every area's own status with no single score; and record every item that needs action as a finding with its location, measurement, fix and regression guard.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "codebase-health-review.plan-health-review"
+            },
+            "when": "The commit, the areas and their thresholds, first."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.age-todos"
+            },
+            "when": "Markers in comments, aged by git blame."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.find-swallowed-exceptions"
+            },
+            "when": "Python handlers that hide errors."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.check-dependencies"
+            },
+            "when": "Drift, unpinned ranges, moving tags and end of life."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.measure-code-structure"
+            },
+            "when": "Oversized modules, duplicated blocks and log noise."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.review-tests-and-errors"
+            },
+            "when": "Untested error paths and flaky tests, in a sandbox."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.scan-secret-patterns"
+            },
+            "when": "Possible secrets, by place and pattern only."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.find-unused-modules"
+            },
+            "when": "Modules no live path imports, in that pack."
+          },
+          {
+            "verb": {
+              "$verb": "docs-improvement.check-examples"
+            },
+            "when": "Documentation examples and links, in that pack."
+          },
+          {
+            "verb": {
+              "$verb": "codebase-health-review.write-health-report"
+            },
+            "when": "Every area's status and a finding for every act item."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.report-where-not-what"
+          },
+          {
+            "$pin": "guardrail.age-from-history"
+          },
+          {
+            "$pin": "guardrail.no-single-score"
+          },
+          {
+            "$pin": "video-qa:guardrail.not-run-is-not-a-pass"
+          },
+          {
+            "$pin": "wiring-and-conformance-checks:guardrail.canary-for-every-rule"
+          }
+        ],
+        "worked_examples": [
+          {
+            "$pin": "health-checks"
+          },
+          {
+            "$pin": "example.health-plan"
+          },
+          {
+            "$pin": "example.todo-scan"
+          },
+          {
+            "$pin": "example.swallow-scan"
+          },
+          {
+            "$pin": "example.health-report"
+          },
+          {
+            "$pin": "example.finding"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.health-checks"
+        },
+        "complements": [
+          "The wiring and conformance checks pack owns unused modules, documented behaviors tested only through mocks and hollow health probes; this pack does not measure them again and links its conformance report from the health report.",
+          "The security review pack owns vulnerabilities and every possible secret this pack finds; the freshness checks pack owns deprecations and end of life.",
+          "The docs improvement pack runs documentation examples and links; its results are this pack's docs-drift area.",
+          "Findings, fixes, independent verification and regression guards come from the findings to fixes pack; a flaky test's check is judged by the checks of checks pack."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.report-where-not-what"
+        ],
+        [
+          "requires_noun",
+          "guardrail.age-from-history"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-single-score"
+        ],
+        [
+          "requires_noun",
+          "health-areas"
+        ],
+        [
+          "requires_noun",
+          "todo-rules"
+        ],
+        [
+          "requires_noun",
+          "swallow-rules"
+        ],
+        [
+          "requires_noun",
+          "secret-patterns"
+        ],
+        [
+          "requires_noun",
+          "tool.health-checks"
+        ],
+        [
+          "requires_noun",
+          "health-checks"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How a codebase health review is planned, measured, reported and followed up",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "plan-health-review fixes the commit, the areas, their thresholds and what is out of scope, in a clean local copy.",
+          "One verb per area measures it: age-todos, find-swallowed-exceptions, check-dependencies, measure-code-structure, review-tests-and-errors and scan-secret-patterns.",
+          "Unused modules, mock-only tests and hollow health probes are the wiring and conformance checks pack's verbs; documentation examples and links are the docs improvement pack's check-examples.",
+          "write-health-report gives every area its own status, counts and top items, compares with the previous report only where the thresholds match, and records a finding for every item at act level.",
+          "Findings go through the findings to fixes pack: reproduce, propose-fix, fix, verify-fix by a different worker and add-regression-guard, usually a lint rule or test that fails on the old code."
+        ],
+        "rules": [
+          "One commit, read from a clean local copy; numbers from different commits are never mixed.",
+          "Measure, then judge: every status follows from a measurement and a threshold the plan named.",
+          "An area that was not measured is not_run with its reason, never ok.",
+          "No single score: areas keep their own statuses, because one number hides which area moved.",
+          "Report where a possible secret is, never its value.",
+          "An age comes from git history or is unknown.",
+          "Name no author: findings are about the code, not who wrote it."
+        ],
+        "cadence": "Monthly, or after every fifty merges, is a reasonable start. This pack schedules nothing; the continuous self-review pack can propose a rotation that a person approves."
+      }
+    },
+    {
+      "slug": "guardrail.report-where-not-what",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: report where a possible secret is, never its value",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Secrets hygiene reports the file, the line, the pattern's name and the matched length of a possible secret, never its value or any part of it; a real secret is a private finding for the security review pack, and nobody tries it.",
+        "how_it_is_checked": "No area result or finding holds a key-shaped or credential-shaped value, and every secrets item gives a location and a pattern name only."
+      }
+    },
+    {
+      "slug": "guardrail.age-from-history",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: an age comes from history or is unknown",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A marker's age is the author date git blame reports for its line. Without git history the age is unknown, with the reason; a file's modification time, a guess or a copied date is never an age.",
+        "how_it_is_checked": "Every aged item says git blame and its authored date, and every other item says unknown with its reason."
+      }
+    },
+    {
+      "slug": "guardrail.no-single-score",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: no single health score",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A health report gives each area its own status, counts and top items, and never adds them into one score, grade or percentage, because a single number hides which area moved and invites gaming it.",
+        "how_it_is_checked": "The report template has a status per area and no overall score field."
+      }
+    },
+    {
+      "slug": "health-areas",
+      "category": "noun.benchmark_suite",
+      "role": "health_areas",
+      "title": "Eleven health areas, how each is measured and when it needs action",
+      "category_reason": "Deterministic thresholds per area, with the measurement each needs.",
+      "value": {
+        "areas": [
+          {
+            "area": "todo-age",
+            "signal": "TODO, FIXME, XXX and HACK comments left to age.",
+            "measure": "age-todos with the pack's code; ages from git blame.",
+            "watch": "Any marker 90 days old or more.",
+            "act": "Any marker 365 days old or more.",
+            "kind": "issue",
+            "severity": "P3",
+            "route": {
+              "$verb": "findings-to-fixes.propose-fix"
+            }
+          },
+          {
+            "area": "untested-error-paths",
+            "signal": "Raise sites and exception handlers no test reaches.",
+            "measure": "review-tests-and-errors: branch coverage from a test run in a sandbox, by line.",
+            "watch": "Any untested handler.",
+            "act": "An untested handler on a path that writes or deletes data.",
+            "kind": "design_flaw",
+            "severity": "P2",
+            "route": {
+              "$verb": "findings-to-fixes.add-regression-guard"
+            }
+          },
+          {
+            "area": "swallowed-exceptions",
+            "signal": "Handlers that hide errors.",
+            "measure": "find-swallowed-exceptions with the pack's code.",
+            "watch": "A logged-only or fallback handler.",
+            "act": "A swallowed handler or a broad suppress.",
+            "kind": "design_flaw",
+            "severity": "P2",
+            "route": {
+              "$verb": "findings-to-fixes.propose-fix"
+            }
+          },
+          {
+            "area": "logging-noise",
+            "signal": "Log output nobody reads: repeated lines, warnings in every run, secrets-shaped text.",
+            "measure": "measure-code-structure on a pinned test-run log: lines, repeats and warnings per run.",
+            "watch": "A warning repeated ten or more times in one run.",
+            "act": "A warning in every run, or more than a hundred lines per request.",
+            "kind": "issue",
+            "severity": "P3",
+            "route": {
+              "$verb": "findings-to-fixes.propose-fix"
+            }
+          },
+          {
+            "area": "dependency-drift",
+            "signal": "Versions behind upstream, deprecated or past end of life.",
+            "measure": "check-dependencies against the lockfile and public registry metadata; deprecations through the freshness checks pack.",
+            "watch": "A major version behind.",
+            "act": "A version past end of life or with a published advisory.",
+            "kind": "issue",
+            "severity": "P2",
+            "route": {
+              "$verb": "freshness-checks.check-deprecations"
+            }
+          },
+          {
+            "area": "unpinned-versions",
+            "signal": "Ranges without a lockfile, floating tags, actions and images on moving tags.",
+            "measure": "check-dependencies reading manifests, lockfiles, CI workflows and container files.",
+            "watch": "A range in a manifest that has a lockfile.",
+            "act": "No lockfile, a floating tag, or a CI action or image not pinned to a digest or commit.",
+            "kind": "issue",
+            "severity": "P2",
+            "route": {
+              "$verb": "findings-to-fixes.propose-fix"
+            }
+          },
+          {
+            "area": "flaky-tests",
+            "signal": "Tests that pass and fail on the same commit.",
+            "measure": "review-tests-and-errors from CI history or three reruns in a sandbox.",
+            "watch": "One flake in 30 days.",
+            "act": "Three flakes in 30 days, or a test retried by default.",
+            "kind": "issue",
+            "severity": "P2",
+            "route": {
+              "$verb": "checks-of-checks.validate-checks"
+            }
+          },
+          {
+            "area": "oversized-modules",
+            "signal": "Files and functions too long to review.",
+            "measure": "measure-code-structure: lines per file and per function.",
+            "watch": "A file over 800 lines or a function over 80.",
+            "act": "A file over 1500 lines or a function over 150.",
+            "kind": "design_flaw",
+            "severity": "P3",
+            "route": {
+              "$verb": "findings-to-fixes.propose-fix"
+            }
+          },
+          {
+            "area": "duplicated-code",
+            "signal": "The same block written twice.",
+            "measure": "measure-code-structure: identical runs of eight or more normalized lines.",
+            "watch": "Any repeated block.",
+            "act": "A block repeated three or more times, or across packages.",
+            "kind": "design_flaw",
+            "severity": "P3",
+            "route": {
+              "$verb": "prior-art-and-alternatives.survey-existing"
+            }
+          },
+          {
+            "area": "docs-drift",
+            "signal": "Documentation that no longer matches the code.",
+            "measure": "The docs improvement pack's check-examples: every code block run, every local link followed, flags compared with --help.",
+            "watch": "A broken link or an outdated flag.",
+            "act": "A documented command that fails.",
+            "kind": "error",
+            "severity": "P2",
+            "route": {
+              "$verb": "docs-improvement.draft-rewrite"
+            }
+          },
+          {
+            "area": "secrets-hygiene",
+            "signal": "Credentials committed, logged or left in fixtures.",
+            "measure": "scan-secret-patterns: file, line and pattern name only.",
+            "watch": "A key-shaped placeholder in an example file.",
+            "act": "A key-shaped value in any tracked file, or a tracked environment file.",
+            "kind": "issue",
+            "severity": "P1",
+            "route": {
+              "$verb": "security-review.check-scope"
+            }
+          }
+        ],
+        "elsewhere": [
+          {
+            "what": "Modules no live path imports, documented behaviors tested only through mocks, and health probes that probe nothing",
+            "verbs": [
+              {
+                "$verb": "wiring-and-conformance-checks.find-unused-modules"
+              },
+              {
+                "$verb": "wiring-and-conformance-checks.map-behaviors-to-tests"
+              },
+              {
+                "$verb": "wiring-and-conformance-checks.check-health-probes"
+              }
+            ]
+          },
+          {
+            "what": "Vulnerabilities in the code itself",
+            "verbs": [
+              {
+                "$verb": "security-review.review-code"
+              }
+            ]
+          }
+        ],
+        "statuses": {
+          "ok": "Measured, and nothing at watch or act level.",
+          "watch": "Measured, with an item at watch level.",
+          "act": "Measured, with an item at act level; each one becomes a finding.",
+          "not_run": "Not measured, with the reason; never ok."
+        },
+        "thresholds": "Defaults from small and medium Python and web codebases, not standards; the plan may change any of them, and the report records which applied."
+      }
+    },
+    {
+      "slug": "todo-rules",
+      "category": "noun.reflex_procedure",
+      "role": "todo_rules",
+      "title": "Finding and aging TODO and FIXME markers",
+      "category_reason": "A zero-call rule: the same commit and as-of date always give the same ages.",
+      "value": {
+        "markers": [
+          "TODO",
+          "FIXME",
+          "XXX",
+          "HACK"
+        ],
+        "comments_only": "A marker counts only inside a comment: Python is read with its tokenizer, other languages line by line with quote-aware comment detection, and HTML and Markdown inside comment blocks only.",
+        "age": "Days from the author date git blame reports for the marker's line, as a UTC date, to the plan's as-of date.",
+        "buckets": {
+          "fresh": [
+            0,
+            29
+          ],
+          "aging": [
+            30,
+            89
+          ],
+          "stale": [
+            90,
+            364
+          ],
+          "ancient": [
+            365,
+            null
+          ]
+        },
+        "unknown_when": [
+          "the folder is not a git work tree",
+          "the file or line is not committed",
+          "git is not installed",
+          "the as-of date is before the authored date"
+        ],
+        "reference": "A marker has a reference when it names an owner in parentheses, an issue number such as #41 or ABC-123, or a link.",
+        "never": "A modification time, a guess or a date copied from elsewhere is never an age.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "swallow-rules",
+      "category": "noun.reflex_procedure",
+      "role": "swallow_rules",
+      "title": "Telling a swallowed exception from a handled one",
+      "category_reason": "A zero-call rule: the same source always gives the same classes.",
+      "value": {
+        "classes": {
+          "swallowed": "A broad handler (a bare except, Exception or BaseException) whose body does nothing: pass, ..., continue, break or return None.",
+          "suppress_broad": "contextlib.suppress(Exception) or suppress(BaseException).",
+          "logged_only": "A broad handler that only logs or prints, then carries on.",
+          "fallback": "A broad handler that returns a value in place of the error.",
+          "narrow_ignored": "A specific exception whose body does nothing; often fine, listed for a reviewer."
+        },
+        "levels": {
+          "swallowed": "act",
+          "suppress_broad": "act",
+          "logged_only": "watch",
+          "fallback": "watch",
+          "narrow_ignored": "info"
+        },
+        "not_listed": "A handler that raises in its own body, or does other work, such as recording the error.",
+        "reading": "The source is read with Python's ast module and never imported or run; a file that does not parse is listed as unparsed.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "secret-patterns",
+      "category": "noun.reflex_procedure",
+      "role": "secret_patterns",
+      "title": "Where possible secrets hide and how they are reported",
+      "category_reason": "A zero-call rule for reporting possible secrets by place and pattern only.",
+      "value": {
+        "look_in": [
+          "tracked environment files and their examples",
+          "test fixtures and recorded responses",
+          "CI workflow files",
+          "log excerpts kept in the repository",
+          "notebooks and their saved outputs"
+        ],
+        "pattern_names": [
+          "cloud access key",
+          "platform token",
+          "private key block",
+          "connection string with a password",
+          "assigned secret: a name such as key, token or password followed by a long value"
+        ],
+        "report": "File, line, pattern name and the matched length, such as tests/fixtures/settings.json:7, assigned secret, 40 characters. Never the value or any part of it.",
+        "rules": [
+          "A possible secret is a private finding with sensitivity credential, routed to the security review pack; nobody tries it.",
+          "A placeholder that looks like a key is still reported, at watch level, so it is replaced by an obviously fake value.",
+          "This is stricter than scanners that mask a match but keep its first few characters: here none are kept."
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "derives_from",
+          "file-triage-at-scale:secret-exclusions"
+        ],
+        [
+          "requires_noun",
+          "security-review:scope-rules"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.health-checks",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: the TODO ager and the swallowed-exception finder",
+      "category_reason": "Tested code a worker runs inside a claimed verb, pinned by path, file count and digest.",
+      "value": {
+        "name": "health checks",
+        "code": {
+          "$code": "codebase-health-review"
+        },
+        "runtime": "Python 3.10 or later, standard library only; git for ages.",
+        "commands": [
+          "python -m health_checks todos ROOT [--as-of 2026-10-30] [--no-git] [--exclude GLOB] [--fail-on stale]",
+          "python -m health_checks swallowed ROOT [--exclude GLOB] [--strict]"
+        ],
+        "does": [
+          "Finds TODO, FIXME, XXX and HACK markers in comments of Python, shell, YAML, TOML, JavaScript, TypeScript, Go, Rust, C, SQL, HTML and Markdown files, and ages each by git blame.",
+          "Classifies Python exception handlers as swallowed, suppress_broad, logged_only, fallback or narrow_ignored with ast, with file, line and enclosing function."
+        ],
+        "does_not": [
+          "Import or run the code it reads; the only programs it starts are read-only git rev-parse and git blame.",
+          "Open a network connection, call a model or write any file; it prints JSON.",
+          "Decide a status: the health areas' thresholds do that."
+        ],
+        "code_license": "MIT",
+        "tests": "The code's tests check comment detection per language, ages from git blame in throwaway repositories with fixed author dates, every handler class, and recompute this pack's two scans from source.json, in the library's CI job for the pack."
+      },
+      "relations": [
+        [
+          "verifies",
+          "todo-rules"
+        ],
+        [
+          "verifies",
+          "swallow-rules"
+        ]
+      ]
+    },
+    {
+      "slug": "health-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Record checks for health findings, with synthetic golden findings",
+      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every finding this pack records passes on top of the findings to fixes record checks: its area, measurement and threshold, a file and line, the commit, a fingerprint naming the area, open when recorded, no guessed ages, no author named, and a fix verb and a regression guard proposed. The three good findings are the worked example's; each bad one fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "area-measured",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "^area (todo-age|untested-error-paths|swallowed-exceptions|logging-noise|dependency-drift|unpinned-versions|flaky-tests|oversized-modules|duplicated-code|docs-drift|secrets-hygiene): measured [^;]+; threshold [^;]+$"
+            },
+            "why": "The finding states its area, what was measured and the threshold."
+          },
+          {
+            "id": "located",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "^[A-Za-z0-9_./-]+:[0-9]+(-[0-9]+)?$"
+            },
+            "why": "The finding names a file and line."
+          },
+          {
+            "id": "commit-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "where",
+              "pattern": "\\bcommit [0-9a-f]{7,40}\\b"
+            },
+            "why": "The finding names the commit it was measured at."
+          },
+          {
+            "id": "fingerprint-names-the-area",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "fingerprint",
+              "pattern": "^(error|issue|design_flaw|annoyance)/[a-z0-9-]+/(todo-age|untested-error-paths|swallowed-exceptions|logging-noise|dependency-drift|unpinned-versions|flaky-tests|oversized-modules|duplicated-code|docs-drift|secrets-hygiene)-[a-z0-9-]+$"
+            },
+            "why": "Duplicates fold together by component, area and item."
+          },
+          {
+            "id": "open-when-recorded",
+            "rule": {
+              "rule": "enum",
+              "path": "status",
+              "values": [
+                "open"
+              ]
+            },
+            "why": "A newly recorded finding is open; only triage and close move it on."
+          },
+          {
+            "id": "no-guessed-ages",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "(?i)\\b(mtime|modification time|modified time|file date|probably|roughly|about [0-9]+ (days|months|years))\\b"
+            },
+            "why": "An age comes from history or is unknown, never guessed."
+          },
+          {
+            "id": "no-author-names",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "(?i)\\b(authored by|written by|committed by|author-mail|blamed? on)\\b"
+            },
+            "why": "A finding is about the code, not who wrote it."
+          },
+          {
+            "id": "fix-verbs-proposed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "work",
+              "pattern": "^propose-fix$"
+            },
+            "why": "Every finding carries its proposed fix verb."
+          },
+          {
+            "id": "regression-guard-proposed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "work",
+              "pattern": "^add-regression-guard$"
+            },
+            "why": "Every finding carries a guard that will fail on the old code."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-swallowed",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "CH-1",
+              "title": "A broad except in sync_roster discards every save error without a trace",
+              "kind": "design_flaw",
+              "severity": "P2",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "expected": "A failed save is retried, recorded or raised, so a lost volunteer row is noticed",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area swallowed-exceptions: measured except Exception: pass in sync_roster; threshold no swallowed handler",
+                  "location": "roster/sync.py:23-24",
+                  "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Call sync_roster with a store whose save raises: it returns normally, logs nothing and the row is gone.",
+                  "location": "a test double store in a local copy"
+                }
+              ],
+              "noticed_by": "find-swallowed-exceptions worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "design_flaw/roster-sync/swallowed-exceptions-save-errors-hidden",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "good-todo-age",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "good-unpinned",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "CH-3",
+              "title": "The CI workflow runs a setup action from a moving tag",
+              "kind": "issue",
+              "severity": "P2",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, the CI workflow",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area unpinned-versions: measured a setup action on tag v4; threshold actions pinned to a full commit",
+                  "location": ".github/workflows/ci.yml:14"
+                }
+              ],
+              "noticed_by": "check-dependencies worker",
+              "noticed_at": "2026-10-30T11:05Z",
+              "fingerprint": "issue/ci-workflow/unpinned-versions-setup-action",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-unmeasured",
+            "label": "known_bad",
+            "fails": "area-measured",
+            "why": "No area, measurement or threshold.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "old TODO",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-unlocated",
+            "label": "known_bad",
+            "fails": "located",
+            "why": "No file and line.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "somewhere in sync"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-commit",
+            "label": "known_bad",
+            "fails": "commit-pinned",
+            "why": "No commit.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-fingerprint",
+            "label": "known_bad",
+            "fails": "fingerprint-names-the-area",
+            "why": "The fingerprint does not name the area.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/old-comment",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-not-open",
+            "label": "known_bad",
+            "fails": "open-when-recorded",
+            "why": "Recorded as already fixed.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "in_progress",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-guessed-age",
+            "label": "known_bad",
+            "fails": "no-guessed-ages",
+            "why": "An age read from the file's modification time.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 900 days from the file mtime; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-author-named",
+            "label": "known_bad",
+            "fails": "no-author-names",
+            "why": "Blame turned into blaming a person.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO authored by Synthetic Dev in 2024 still waits",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-fix-verb",
+            "label": "known_bad",
+            "fails": "fix-verbs-proposed",
+            "why": "No fix proposed.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-guard",
+            "label": "known_bad",
+            "fails": "regression-guard-proposed",
+            "why": "No regression guard proposed.",
+            "finding": {
+              "id": "CH-2",
+              "title": "A TODO in sync_roster has waited 879 days with no owner or reference",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "area todo-age: measured 879 days by git blame, authored 2024-06-03; threshold act at 365 days",
+                  "location": "roster/sync.py:19"
+                }
+              ],
+              "noticed_by": "age-todos worker",
+              "noticed_at": "2026-10-30T11:00Z",
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                }
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "good-swallowed": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-todo-age": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-unpinned": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-unmeasured": {
+            "verdict": "fail",
+            "failed_checks": [
+              "area-measured"
+            ]
+          },
+          "bad-unlocated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "located"
+            ]
+          },
+          "bad-no-commit": {
+            "verdict": "fail",
+            "failed_checks": [
+              "commit-pinned"
+            ]
+          },
+          "bad-fingerprint": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fingerprint-names-the-area"
+            ]
+          },
+          "bad-not-open": {
+            "verdict": "fail",
+            "failed_checks": [
+              "open-when-recorded"
+            ]
+          },
+          "bad-guessed-age": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-guessed-ages"
+            ]
+          },
+          "bad-author-named": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-author-names"
+            ]
+          },
+          "bad-no-fix-verb": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fix-verbs-proposed"
+            ]
+          },
+          "bad-no-guard": {
+            "verdict": "fail",
+            "failed_checks": [
+              "regression-guard-proposed"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.health-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a health review plan: the repository and its exact commit in a clean copy, the as-of date, each area's thresholds and what is not measured",
+      "category_reason": "A plan states thresholds the measurements will confirm or contradict.",
+      "value": {
+        "describes": "a health review plan: the repository and its exact commit in a clean copy, the as-of date, each area's thresholds and what is not measured",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan_id",
+            "repository",
+            "commit",
+            "clean_copy",
+            "as_of",
+            "areas",
+            "not_measured",
+            "out_of_scope",
+            "previous_report"
+          ],
+          "properties": {
+            "plan_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "repository": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "commit": {
+              "type": "string",
+              "minLength": 7,
+              "maxLength": 40,
+              "pattern": "^[0-9a-f]{7,40}$"
+            },
+            "clean_copy": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "maxLength": 10
+            },
+            "areas": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 11,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "area",
+                  "watch",
+                  "act"
+                ],
+                "properties": {
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "todo-age",
+                      "untested-error-paths",
+                      "swallowed-exceptions",
+                      "logging-noise",
+                      "dependency-drift",
+                      "unpinned-versions",
+                      "flaky-tests",
+                      "oversized-modules",
+                      "duplicated-code",
+                      "docs-drift",
+                      "secrets-hygiene"
+                    ]
+                  },
+                  "watch": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "act": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "not_measured": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 11,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "area",
+                  "reason"
+                ],
+                "properties": {
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "todo-age",
+                      "untested-error-paths",
+                      "swallowed-exceptions",
+                      "logging-noise",
+                      "dependency-drift",
+                      "unpinned-versions",
+                      "flaky-tests",
+                      "oversized-modules",
+                      "duplicated-code",
+                      "docs-drift",
+                      "secrets-hygiene"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "out_of_scope": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "previous_report": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 200
+            }
+          }
+        },
+        "rules": [
+          "Every area named in health-areas is either in areas or in not_measured.",
+          "clean_copy is true."
+        ]
+      }
+    },
+    {
+      "slug": "template.area-result",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one area's measurement at one commit: the tool and command, the thresholds, every item with its level and the status that follows",
+      "category_reason": "An area result is a recorded measurement run.",
+      "value": {
+        "describes": "one area's measurement at one commit: the tool and command, the thresholds, every item with its level and the status that follows",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "area",
+            "commit",
+            "tool",
+            "command",
+            "status",
+            "not_run_reason",
+            "thresholds",
+            "counts",
+            "items",
+            "measured_at"
+          ],
+          "properties": {
+            "area": {
+              "type": "string",
+              "enum": [
+                "todo-age",
+                "untested-error-paths",
+                "swallowed-exceptions",
+                "logging-noise",
+                "dependency-drift",
+                "unpinned-versions",
+                "flaky-tests",
+                "oversized-modules",
+                "duplicated-code",
+                "docs-drift",
+                "secrets-hygiene"
+              ]
+            },
+            "commit": {
+              "type": "string",
+              "minLength": 7,
+              "maxLength": 40,
+              "pattern": "^[0-9a-f]{7,40}$"
+            },
+            "tool": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "version",
+                "code"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "code": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "required": [
+                    "path",
+                    "files",
+                    "sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "files": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              }
+            },
+            "command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ok",
+                "watch",
+                "act",
+                "not_run"
+              ]
+            },
+            "not_run_reason": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 300
+            },
+            "thresholds": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "watch",
+                "act"
+              ],
+              "properties": {
+                "watch": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "act": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "counts": {
+              "type": "object"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "location",
+                  "measure",
+                  "value",
+                  "level"
+                ],
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "measure": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "info",
+                      "watch",
+                      "act"
+                    ]
+                  }
+                }
+              }
+            },
+            "measured_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            }
+          }
+        },
+        "rules": [
+          "status is act when any item is act, watch when any is watch, ok otherwise, and not_run with a reason when nothing was measured.",
+          "Possible secrets appear by location and pattern name only."
+        ]
+      }
+    },
+    {
+      "slug": "template.health-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a health report: every area's own status, counts and top items at one commit, areas not run with reasons, a trend only where thresholds match, and the findings proposed",
+      "category_reason": "A report is the recorded result of one review.",
+      "value": {
+        "describes": "a health report: every area's own status, counts and top items at one commit, areas not run with reasons, a trend only where thresholds match, and the findings proposed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "repository",
+            "commit",
+            "plan_ref",
+            "areas",
+            "not_run",
+            "trend",
+            "elsewhere",
+            "findings_proposed"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "repository": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "commit": {
+              "type": "string",
+              "minLength": 7,
+              "maxLength": 40,
+              "pattern": "^[0-9a-f]{7,40}$"
+            },
+            "plan_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "store",
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "store": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "areas": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 11,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "area",
+                  "status",
+                  "counts",
+                  "top_items",
+                  "measured_by"
+                ],
+                "properties": {
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "todo-age",
+                      "untested-error-paths",
+                      "swallowed-exceptions",
+                      "logging-noise",
+                      "dependency-drift",
+                      "unpinned-versions",
+                      "flaky-tests",
+                      "oversized-modules",
+                      "duplicated-code",
+                      "docs-drift",
+                      "secrets-hygiene"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "watch",
+                      "act",
+                      "not_run"
+                    ]
+                  },
+                  "counts": {
+                    "type": "object"
+                  },
+                  "top_items": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    }
+                  },
+                  "measured_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "not_run": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 11,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "area",
+                  "reason"
+                ],
+                "properties": {
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "todo-age",
+                      "untested-error-paths",
+                      "swallowed-exceptions",
+                      "logging-noise",
+                      "dependency-drift",
+                      "unpinned-versions",
+                      "flaky-tests",
+                      "oversized-modules",
+                      "duplicated-code",
+                      "docs-drift",
+                      "secrets-hygiene"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "trend": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 11,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "area",
+                  "previous",
+                  "now",
+                  "comparable",
+                  "note"
+                ],
+                "properties": {
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "todo-age",
+                      "untested-error-paths",
+                      "swallowed-exceptions",
+                      "logging-noise",
+                      "dependency-drift",
+                      "unpinned-versions",
+                      "flaky-tests",
+                      "oversized-modules",
+                      "duplicated-code",
+                      "docs-drift",
+                      "secrets-hygiene"
+                    ]
+                  },
+                  "previous": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "watch",
+                      "act",
+                      "not_run"
+                    ]
+                  },
+                  "now": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "watch",
+                      "act",
+                      "not_run"
+                    ]
+                  },
+                  "comparable": {
+                    "type": "boolean"
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "elsewhere": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "what",
+                  "ref"
+                ],
+                "properties": {
+                  "what": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "findings_proposed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fingerprint",
+                  "area",
+                  "location",
+                  "kind",
+                  "severity"
+                ],
+                "properties": {
+                  "fingerprint": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "todo-age",
+                      "untested-error-paths",
+                      "swallowed-exceptions",
+                      "logging-noise",
+                      "dependency-drift",
+                      "unpinned-versions",
+                      "flaky-tests",
+                      "oversized-modules",
+                      "duplicated-code",
+                      "docs-drift",
+                      "secrets-hygiene"
+                    ]
+                  },
+                  "location": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "error",
+                      "issue",
+                      "design_flaw",
+                      "annoyance"
+                    ]
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "P0",
+                      "P1",
+                      "P2",
+                      "P3"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "No overall score, grade or percentage.",
+          "Every area at act level has at least one finding proposed.",
+          "A trend row is comparable only when the previous report used the same thresholds."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for codebase health reviews",
+      "value": {
+        "sources": [
+          {
+            "title": "Git documentation: git-blame",
+            "url": "https://git-scm.com/docs/git-blame",
+            "used_for": "The porcelain format and its author-time field",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: ast, Abstract Syntax Trees",
+            "url": "https://docs.python.org/3/library/ast.html",
+            "used_for": "Reading handlers without importing code",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: tokenize",
+            "url": "https://docs.python.org/3/library/tokenize.html",
+            "used_for": "Telling comments from strings",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: contextlib.suppress",
+            "url": "https://docs.python.org/3/library/contextlib.html",
+            "used_for": "Broad suppression as a swallowed error",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "PEP 8: Style Guide for Python Code, programming recommendations",
+            "url": "https://peps.python.org/pep-0008/",
+            "used_for": "Name specific exceptions instead of a bare except",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; formats and recommendations change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for codebase health reviews",
+      "synthetic": true,
+      "value": {
+        "cases": [
+          {
+            "id": "CH-NO-GIT",
+            "scenario": "The folder is an export with no git history",
+            "sample_input": "SYNTHETIC: a zip of the repository.",
+            "expected_outcome": "todos_aged",
+            "expected_indicators": [
+              "ages_unknown",
+              "reason_given",
+              "no_mtime_used"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CH-MARKER-IN-STRING",
+            "scenario": "A help string contains the word TODO",
+            "sample_input": "SYNTHETIC: HELP = \"TODO lists live in notes\".",
+            "expected_outcome": "todos_aged",
+            "expected_indicators": [
+              "not_listed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CH-RERAISE",
+            "scenario": "A broad handler logs and raises again",
+            "sample_input": "SYNTHETIC: except Exception: log.exception(...); raise",
+            "expected_outcome": "handlers_found",
+            "expected_indicators": [
+              "not_listed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CH-SECRET-FOUND",
+            "scenario": "A fixture holds a key-shaped value",
+            "sample_input": "SYNTHETIC: tests/fixtures/settings.json line 7, assigned secret, 40 characters.",
+            "expected_outcome": "secrets_scanned",
+            "expected_indicators": [
+              "location_and_pattern_only",
+              "private_finding",
+              "security_review_route"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "CH-ONE-SCORE",
+            "scenario": "A requester asks for a single health grade",
+            "sample_input": "SYNTHETIC: give the repository a score out of 100.",
+            "expected_outcome": "report_written",
+            "expected_indicators": [
+              "status_per_area",
+              "no_overall_score"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CH-AREA-NOT-RUN",
+            "scenario": "Coverage cannot run in the sandbox",
+            "sample_input": "SYNTHETIC: test extras fail to install.",
+            "expected_outcome": "report_written",
+            "expected_indicators": [
+              "not_run_with_reason",
+              "never_ok"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      }
+    },
+    {
+      "slug": "example.health-inputs",
+      "category": "noun.benchmark_suite",
+      "role": "fixture",
+      "title": "Worked example inputs: a synthetic repository history with dated commits",
+      "synthetic": true,
+      "category_reason": "A golden fixture: inputs a test rebuilds and measures again.",
+      "value": {
+        "purpose": "The code's tests build a throwaway git repository from these commits, at these author dates, and recompute the two scans exactly.",
+        "repository": "SYNTHETIC volunteer roster tools",
+        "as_of": "2026-10-30",
+        "commits": [
+          {
+            "date": "2024-06-03T10:00:00Z",
+            "message": "Start the roster sync",
+            "files": {
+              "roster/__init__.py": "",
+              "roster/sync.py": "\"\"\"Sync the volunteer roster from the shared sheet export.\"\"\"\n\nimport json\nimport logging\nfrom contextlib import suppress\n\nlog = logging.getLogger(__name__)\n\n\ndef load_cache(path):\n    try:\n        with open(path, encoding=\"utf-8\") as handle:\n            return json.load(handle)\n    except:\n        return None\n\n\ndef sync_roster(rows, store):\n    # TODO: retry with backoff when the store is busy\n    for row in rows:\n        try:\n            store.save(row)\n        except Exception:\n            pass\n"
+            }
+          },
+          {
+            "date": "2025-08-20T10:00:00Z",
+            "message": "Export shifts for the printed rota",
+            "files": {
+              "roster/export.py": "\"\"\"Export shifts for the printed rota.\"\"\"\n\nimport logging\n\nlog = logging.getLogger(__name__)\n\n\ndef export_shifts(shifts, out):\n    # FIXME: empty shifts print a blank page\n    for shift in shifts:\n        try:\n            out.write(format_shift(shift))\n        except Exception as exc:\n            log.warning(\"could not export %s: %s\", shift, exc)\n\n\ndef shift_label(shift):\n    try:\n        return shift[\"label\"]\n    except KeyError:\n        pass\n    return \"Unnamed shift\"\n\n\ndef parse_spots(text):\n    try:\n        return int(text)\n    except ValueError as exc:\n        raise ValueError(f\"spots must be a whole number: {text!r}\") from exc\n\n\ndef format_shift(shift):\n    return f\"{shift_label(shift)}: {shift.get('start', '?')}\"\n"
+            }
+          },
+          {
+            "date": "2026-09-28T10:00:00Z",
+            "message": "Cache the roster",
+            "files": {
+              "roster/sync.py": "\"\"\"Sync the volunteer roster from the shared sheet export.\"\"\"\n\nimport json\nimport logging\nfrom contextlib import suppress\n\nlog = logging.getLogger(__name__)\n\n\ndef load_cache(path):\n    try:\n        with open(path, encoding=\"utf-8\") as handle:\n            return json.load(handle)\n    except:\n        return None\n\n\ndef sync_roster(rows, store):\n    # TODO: retry with backoff when the store is busy\n    for row in rows:\n        try:\n            store.save(row)\n        except Exception:\n            pass\n\n\ndef cached_count(path):\n    # TODO(ops): drop this once the cache has a size field, see #41\n    with suppress(Exception):\n        return len(load_cache(path))\n    return 0\n\n\ndef remote_rows(client):\n    try:\n        return client.fetch()\n    except Exception:\n        return []\n"
+            }
+          },
+          {
+            "date": "2026-10-26T10:00:00Z",
+            "message": "Add search and the command line",
+            "files": {
+              "web/search.js": "// TODO: debounce search while typing\nexport function search(list, text) {\n  const hint = \"TODO lists are not markers inside strings\";\n  const needle = text.trim().toLowerCase();\n  return list.filter((item) => item.name.toLowerCase().includes(needle) || hint === needle);\n}\n",
+              "roster/cli.py": "\"\"\"Command line for the roster tools.\"\"\"\n\nHELP = \"Run with --dry-run first. TODO lists live in the notes folder.\"\n\n# XXX temporary flag until the new export ships\nDRY_RUN_DEFAULT = True\n",
+              "README.md": "# Volunteer roster tools\n\nSynthetic. Sync, export and search the roster.\n\n<!-- TODO: add a screenshot of the printed rota -->\n"
+            }
+          }
+        ],
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.health-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a health review plan at one commit",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.health-plan"
+        },
+        "instance": {
+          "plan_id": "HP-1",
+          "repository": "SYNTHETIC volunteer roster tools",
+          "commit": "3f2a9c1",
+          "clean_copy": true,
+          "as_of": "2026-10-30",
+          "areas": [
+            {
+              "area": "todo-age",
+              "watch": "Any marker 90 days old or more.",
+              "act": "Any marker 365 days old or more."
+            },
+            {
+              "area": "swallowed-exceptions",
+              "watch": "A logged-only or fallback handler.",
+              "act": "A swallowed handler or a broad suppress."
+            },
+            {
+              "area": "logging-noise",
+              "watch": "A warning repeated ten or more times in one run.",
+              "act": "A warning in every run, or more than a hundred lines per request."
+            },
+            {
+              "area": "dependency-drift",
+              "watch": "A major version behind.",
+              "act": "A version past end of life or with a published advisory."
+            },
+            {
+              "area": "unpinned-versions",
+              "watch": "A range in a manifest that has a lockfile.",
+              "act": "No lockfile, a floating tag, or a CI action or image not pinned to a digest or commit."
+            },
+            {
+              "area": "flaky-tests",
+              "watch": "One flake in 30 days.",
+              "act": "Three flakes in 30 days, or a test retried by default."
+            },
+            {
+              "area": "oversized-modules",
+              "watch": "A file over 800 lines or a function over 80.",
+              "act": "A file over 1500 lines or a function over 150."
+            },
+            {
+              "area": "duplicated-code",
+              "watch": "Any repeated block.",
+              "act": "A block repeated three or more times, or across packages."
+            },
+            {
+              "area": "docs-drift",
+              "watch": "A broken link or an outdated flag.",
+              "act": "A documented command that fails."
+            },
+            {
+              "area": "secrets-hygiene",
+              "watch": "A key-shaped placeholder in an example file.",
+              "act": "A key-shaped value in any tracked file, or a tracked environment file."
+            }
+          ],
+          "not_measured": [
+            {
+              "area": "untested-error-paths",
+              "reason": "The sandbox could not install the test extras, so no coverage run exists yet."
+            }
+          ],
+          "out_of_scope": [
+            "Vulnerabilities: the security review pack",
+            "Unused modules, mock-only tests and probes: the wiring and conformance checks pack"
+          ],
+          "previous_report": null
+        },
+        "shows": "Ten areas with their thresholds, one not measured with the reason, and the wiring and security checks left to their own packs.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.todo-scan",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: TODO ages from git blame",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.area-result"
+        },
+        "instance": {
+          "area": "todo-age",
+          "commit": "3f2a9c1",
+          "tool": {
+            "name": "health checks",
+            "version": "0.1.0",
+            "code": {
+              "$code": "codebase-health-review"
+            }
+          },
+          "command": "python -m health_checks todos . --as-of 2026-10-30",
+          "status": "act",
+          "not_run_reason": null,
+          "thresholds": {
+            "watch": "Any marker 90 days old or more.",
+            "act": "Any marker 365 days old or more."
+          },
+          "counts": {
+            "fresh": 3,
+            "aging": 1,
+            "stale": 0,
+            "ancient": 2,
+            "unknown": 0,
+            "without_ref": 5
+          },
+          "items": [
+            {
+              "location": "roster/sync.py:19",
+              "measure": "TODO age",
+              "value": "879 days by git blame, authored 2024-06-03, ancient, no owner or reference",
+              "level": "act"
+            },
+            {
+              "location": "roster/export.py:9",
+              "measure": "FIXME age",
+              "value": "436 days by git blame, authored 2025-08-20, ancient, no owner or reference",
+              "level": "act"
+            },
+            {
+              "location": "roster/sync.py:28",
+              "measure": "TODO age",
+              "value": "32 days by git blame, authored 2026-09-28, aging",
+              "level": "info"
+            },
+            {
+              "location": "README.md:5",
+              "measure": "TODO age",
+              "value": "4 days by git blame, authored 2026-10-26, fresh, no owner or reference",
+              "level": "info"
+            },
+            {
+              "location": "roster/cli.py:5",
+              "measure": "XXX age",
+              "value": "4 days by git blame, authored 2026-10-26, fresh, no owner or reference",
+              "level": "info"
+            },
+            {
+              "location": "web/search.js:1",
+              "measure": "TODO age",
+              "value": "4 days by git blame, authored 2026-10-26, fresh, no owner or reference",
+              "level": "info"
+            }
+          ],
+          "measured_at": "2026-10-30T10:50Z"
+        },
+        "shows": "Six markers in comments, none from strings: two ancient, one aging and three fresh, each dated by git blame, and the status that follows.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up. The code computes this scan from example.health-inputs; its tests rebuild the repository and compare."
+      }
+    },
+    {
+      "slug": "example.swallow-scan",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: handlers that swallow errors",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.area-result"
+        },
+        "instance": {
+          "area": "swallowed-exceptions",
+          "commit": "3f2a9c1",
+          "tool": {
+            "name": "health checks",
+            "version": "0.1.0",
+            "code": {
+              "$code": "codebase-health-review"
+            }
+          },
+          "command": "python -m health_checks swallowed .",
+          "status": "act",
+          "not_run_reason": null,
+          "thresholds": {
+            "watch": "A logged-only or fallback handler.",
+            "act": "A swallowed handler or a broad suppress."
+          },
+          "counts": {
+            "swallowed": 2,
+            "suppress_broad": 1,
+            "logged_only": 1,
+            "fallback": 1,
+            "narrow_ignored": 1,
+            "files": 4,
+            "unparsed": 0
+          },
+          "items": [
+            {
+              "location": "roster/export.py:13",
+              "measure": "logged_only",
+              "value": "except Exception as exc: log in export_shifts",
+              "level": "watch"
+            },
+            {
+              "location": "roster/export.py:20",
+              "measure": "narrow_ignored",
+              "value": "except KeyError: pass in shift_label",
+              "level": "info"
+            },
+            {
+              "location": "roster/sync.py:14",
+              "measure": "swallowed",
+              "value": "except: return None in load_cache",
+              "level": "act"
+            },
+            {
+              "location": "roster/sync.py:23",
+              "measure": "swallowed",
+              "value": "except Exception: pass in sync_roster",
+              "level": "act"
+            },
+            {
+              "location": "roster/sync.py:29",
+              "measure": "suppress_broad",
+              "value": "with suppress(Exception): suppressed block in cached_count",
+              "level": "act"
+            },
+            {
+              "location": "roster/sync.py:37",
+              "measure": "fallback",
+              "value": "except Exception: return value in remote_rows",
+              "level": "watch"
+            }
+          ],
+          "measured_at": "2026-10-30T10:52Z"
+        },
+        "shows": "Two swallowed handlers and a broad suppress at act level, a logged-only and a fallback handler to watch, a narrow ignore listed, and a re-raise left alone.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up. The code computes this scan from example.health-inputs; its tests rebuild the repository and compare."
+      }
+    },
+    {
+      "slug": "example.health-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a health report with no single score",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.health-report"
+        },
+        "instance": {
+          "report_id": "HR-1",
+          "repository": "SYNTHETIC volunteer roster tools",
+          "commit": "3f2a9c1",
+          "plan_ref": {
+            "$pin": "example.health-plan"
+          },
+          "areas": [
+            {
+              "area": "todo-age",
+              "status": "act",
+              "counts": {
+                "fresh": 3,
+                "aging": 1,
+                "stale": 0,
+                "ancient": 2,
+                "unknown": 0,
+                "without_ref": 5
+              },
+              "top_items": [
+                "roster/sync.py:19: 879 days by git blame, authored 2024-06-03, ancient, no owner or reference",
+                "roster/export.py:9: 436 days by git blame, authored 2025-08-20, ancient, no owner or reference"
+              ],
+              "measured_by": "example.todo-scan"
+            },
+            {
+              "area": "swallowed-exceptions",
+              "status": "act",
+              "counts": {
+                "swallowed": 2,
+                "suppress_broad": 1,
+                "logged_only": 1,
+                "fallback": 1,
+                "narrow_ignored": 1
+              },
+              "top_items": [
+                "roster/sync.py:14: swallowed",
+                "roster/sync.py:23: swallowed",
+                "roster/sync.py:29: suppress_broad"
+              ],
+              "measured_by": "example.swallow-scan"
+            },
+            {
+              "area": "logging-noise",
+              "status": "ok",
+              "counts": {
+                "lines_per_run": 42,
+                "repeated_warnings": 0
+              },
+              "top_items": [],
+              "measured_by": "measure-code-structure on the pinned test log"
+            },
+            {
+              "area": "dependency-drift",
+              "status": "watch",
+              "counts": {
+                "packages": 3,
+                "major_behind": 1,
+                "end_of_life": 0
+              },
+              "top_items": [
+                "one package a major version behind its latest release"
+              ],
+              "measured_by": "check-dependencies"
+            },
+            {
+              "area": "unpinned-versions",
+              "status": "act",
+              "counts": {
+                "ranges_with_lockfile": 0,
+                "moving_tags": 1
+              },
+              "top_items": [
+                ".github/workflows/ci.yml:14: a setup action on tag v4"
+              ],
+              "measured_by": "check-dependencies"
+            },
+            {
+              "area": "flaky-tests",
+              "status": "ok",
+              "counts": {
+                "flakes_30_days": 0
+              },
+              "top_items": [],
+              "measured_by": "review-tests-and-errors, three reruns"
+            },
+            {
+              "area": "oversized-modules",
+              "status": "ok",
+              "counts": {
+                "largest_file_lines": 37,
+                "longest_function_lines": 7
+              },
+              "top_items": [],
+              "measured_by": "measure-code-structure"
+            },
+            {
+              "area": "duplicated-code",
+              "status": "ok",
+              "counts": {
+                "repeated_blocks": 0
+              },
+              "top_items": [],
+              "measured_by": "measure-code-structure"
+            },
+            {
+              "area": "docs-drift",
+              "status": "watch",
+              "counts": {
+                "links_broken": 0,
+                "commands_failed": 0,
+                "outdated_flags": 1
+              },
+              "top_items": [
+                "README.md names a --dry-run flag the command line also defaults to"
+              ],
+              "measured_by": "docs-improvement.check-examples"
+            },
+            {
+              "area": "secrets-hygiene",
+              "status": "ok",
+              "counts": {
+                "possible_secrets": 0,
+                "tracked_environment_files": 0
+              },
+              "top_items": [],
+              "measured_by": "scan-secret-patterns"
+            }
+          ],
+          "not_run": [
+            {
+              "area": "untested-error-paths",
+              "reason": "The sandbox could not install the test extras, so no coverage run exists yet."
+            }
+          ],
+          "trend": [],
+          "elsewhere": [
+            {
+              "what": "Unused modules, mock-only tests and probes",
+              "ref": "the wiring and conformance checks pack's conformance report, not yet run"
+            }
+          ],
+          "findings_proposed": [
+            {
+              "fingerprint": "issue/roster-sync/todo-age-retry-with-backoff",
+              "area": "todo-age",
+              "location": "roster/sync.py:19",
+              "kind": "issue",
+              "severity": "P3"
+            },
+            {
+              "fingerprint": "issue/roster-export/todo-age-empty-shifts-blank-page",
+              "area": "todo-age",
+              "location": "roster/export.py:9",
+              "kind": "issue",
+              "severity": "P3"
+            },
+            {
+              "fingerprint": "design_flaw/roster-sync/swallowed-exceptions-load-cache",
+              "area": "swallowed-exceptions",
+              "location": "roster/sync.py:14",
+              "kind": "design_flaw",
+              "severity": "P2"
+            },
+            {
+              "fingerprint": "design_flaw/roster-sync/swallowed-exceptions-save-errors-hidden",
+              "area": "swallowed-exceptions",
+              "location": "roster/sync.py:23",
+              "kind": "design_flaw",
+              "severity": "P2"
+            },
+            {
+              "fingerprint": "design_flaw/roster-sync/swallowed-exceptions-cached-count",
+              "area": "swallowed-exceptions",
+              "location": "roster/sync.py:29",
+              "kind": "design_flaw",
+              "severity": "P2"
+            },
+            {
+              "fingerprint": "issue/ci-workflow/unpinned-versions-setup-action",
+              "area": "unpinned-versions",
+              "location": ".github/workflows/ci.yml:14",
+              "kind": "issue",
+              "severity": "P2"
+            }
+          ]
+        },
+        "shows": "Every area with its own status, one not run with its reason, no trend because there is no earlier report, and a finding proposed for every item at act level.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.finding",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the swallowed save error, in the findings to fixes shape",
+      "synthetic": true,
+      "category_reason": "A synthetic finding in the findings to fixes template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "findings-to-fixes:template.finding"
+        },
+        "instance": {
+          "id": "CH-1",
+          "title": "A broad except in sync_roster discards every save error without a trace",
+          "kind": "design_flaw",
+          "severity": "P2",
+          "where": "SYNTHETIC volunteer roster repository at commit 3f2a9c1, roster/sync.py",
+          "expected": "A failed save is retried, recorded or raised, so a lost volunteer row is noticed",
+          "evidence": [
+            {
+              "kind": "measurement",
+              "detail": "area swallowed-exceptions: measured except Exception: pass in sync_roster; threshold no swallowed handler",
+              "location": "roster/sync.py:23-24",
+              "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            {
+              "kind": "reproduction",
+              "detail": "Call sync_roster with a store whose save raises: it returns normally, logs nothing and the row is gone.",
+              "location": "a test double store in a local copy"
+            }
+          ],
+          "noticed_by": "find-swallowed-exceptions worker",
+          "noticed_at": "2026-10-30T11:00Z",
+          "fingerprint": "design_flaw/roster-sync/swallowed-exceptions-save-errors-hidden",
+          "status": "open",
+          "sensitivity": "none",
+          "public": false,
+          "work": [
+            {
+              "verb": "reproduce",
+              "state": "pending"
+            },
+            {
+              "verb": "propose-fix",
+              "state": "pending"
+            },
+            {
+              "verb": "fix",
+              "state": "pending"
+            },
+            {
+              "verb": "verify-fix",
+              "state": "pending"
+            },
+            {
+              "verb": "add-regression-guard",
+              "state": "pending"
+            }
+          ]
+        },
+        "shows": "A located, measured finding with a reproduction, and reproduce, propose-fix, fix, verify-fix and add-regression-guard proposed.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-health-review",
+      "kind": "verb.problemize",
+      "title": "Plan the health review at one commit",
+      "claimant": "agent",
+      "summary": "Fix the repository's exact commit in a clean local copy, the as-of date, the areas to measure with their thresholds and those not measured with reasons, and what other packs cover.",
+      "outcome": "A health review plan.",
+      "ready_outcome": "review_planned",
+      "pinned": [
+        "method",
+        "health-areas",
+        "guardrail.no-single-score"
+      ],
+      "slots": [
+        {
+          "name": "repository_snapshot",
+          "category": "noun.code_node",
+          "description": "Pin of the repository snapshot: its address, the commit and the local copy's digest."
+        },
+        {
+          "name": "previous_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the previous health report, if any.",
+          "required": false
+        }
+      ],
+      "params": {
+        "as_of": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "maxLength": 10
+          },
+          "description": "The date ages are counted to."
+        }
+      },
+      "produces": [
+        {
+          "name": "health_plan",
+          "template": "template.health-plan"
+        }
+      ],
+      "steps": [
+        "Check out the exact commit in a clean local copy and record it; a dirty copy ends blocked.",
+        "Start from the health areas' thresholds and change only those the requester's rules change, saying which.",
+        "List every area not measured with its reason, and leave unused modules, mocks and probes to the wiring and conformance checks pack.",
+        "Name the previous report, if any, so the trend compares only like with like."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The plan validates against template.health-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-area-placed",
+          "check": "Every health area is in areas or in not_measured.",
+          "method": "deterministic"
+        },
+        {
+          "id": "thresholds-fit",
+          "check": "Changed thresholds match the requester's stated rules.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "age-todos",
+      "kind": "verb.verify_gate",
+      "title": "Age the TODO and FIXME markers",
+      "claimant": "agent",
+      "summary": "Run the TODO ager on the plan's commit with the plan's as-of date, and record every marker's age from git blame, or unknown with the reason, with its level by the plan's thresholds.",
+      "outcome": "The todo-age area result.",
+      "ready_outcome": "todos_aged",
+      "model_use": "none",
+      "pinned": [
+        "todo-rules",
+        "tool.health-checks",
+        "guardrail.age-from-history"
+      ],
+      "slots": [
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "area_result",
+          "template": "template.area-result",
+          "max": 1
+        }
+      ],
+      "steps": [
+        "Run python -m health_checks todos on the local copy with --as-of from the plan; never pass --no-git when history exists.",
+        "Give each marker its level by the plan's thresholds; an unknown age is watch, never fresh.",
+        "Record markers by file and line; name no author."
+      ],
+      "acceptance": [
+        {
+          "id": "result-matches-template",
+          "check": "The area result validates against template.area-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-follows",
+          "check": "status follows from the items' levels, or is not_run with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "ages-from-blame",
+          "check": "Every known age says git blame, and every other one says unknown with a reason.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "local_only",
+        "Only the worker's own machine: git rev-parse and git blame read the local copy; nothing is fetched."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "codebase-health-review.plan-health-review"
+      ]
+    },
+    {
+      "slug": "find-swallowed-exceptions",
+      "kind": "verb.verify_gate",
+      "title": "Find exception handlers that swallow errors",
+      "claimant": "agent",
+      "summary": "Run the swallowed-exception finder on the plan's commit and record every listed handler by file and line, with its class and level, and every file that did not parse.",
+      "outcome": "The swallowed-exceptions area result.",
+      "ready_outcome": "handlers_found",
+      "model_use": "none",
+      "pinned": [
+        "swallow-rules",
+        "tool.health-checks"
+      ],
+      "slots": [
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "area_result",
+          "template": "template.area-result",
+          "max": 1
+        }
+      ],
+      "steps": [
+        "Run python -m health_checks swallowed on the local copy; the code is read, never imported or run.",
+        "Give each handler its level: swallowed and suppress_broad act, logged_only and fallback watch, narrow_ignored info.",
+        "List unparsed files as items at watch level; never drop them."
+      ],
+      "acceptance": [
+        {
+          "id": "result-matches-template",
+          "check": "The area result validates against template.area-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-follows",
+          "check": "status follows from the items' levels, or is not_run with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-handler-located",
+          "check": "Every item names a file and line range and its enclosing function.",
+          "method": "deterministic"
+        }
+      ],
+      "network": "none",
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "codebase-health-review.plan-health-review"
+      ]
+    },
+    {
+      "slug": "check-dependencies",
+      "kind": "verb.recheck_fragility",
+      "title": "Check dependency drift and unpinned versions",
+      "claimant": "agent",
+      "summary": "Read manifests, lockfiles, CI workflows and container files at the plan's commit, and compare pinned versions with public registry metadata for drift, deprecation and end of life.",
+      "outcome": "The dependency-drift and unpinned-versions area results.",
+      "ready_outcome": "dependencies_checked",
+      "model_use": "worker_allowance",
+      "pinned": [
+        "health-areas",
+        "freshness-checks:freshness-policy"
+      ],
+      "slots": [
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "area_result",
+          "template": "template.area-result",
+          "max": 2
+        }
+      ],
+      "steps": [
+        "List every dependency with its declared range, its locked version and where each is declared.",
+        "Flag ranges without a lockfile, floating tags, and CI actions or images not pinned to a commit or digest.",
+        "Look up only public registry metadata for the pinned names; propose freshness-checks.check-deprecations for anything that looks deprecated.",
+        "Never install, upgrade or change a dependency in this verb."
+      ],
+      "acceptance": [
+        {
+          "id": "result-matches-template",
+          "check": "The area result validates against template.area-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-follows",
+          "check": "status follows from the items' levels, or is not_run with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "both-areas",
+          "check": "One result for dependency-drift and one for unpinned-versions.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only requests for public registry metadata of the pinned package names and versions; nothing is installed or changed."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "codebase-health-review.plan-health-review"
+      ]
+    },
+    {
+      "slug": "measure-code-structure",
+      "kind": "verb.verify_gate",
+      "title": "Measure oversized modules, duplicated code and log noise",
+      "claimant": "agent",
+      "summary": "Count lines per file and per function, find identical runs of eight or more normalized lines, and count log lines, repeats and warnings in a pinned test-run log.",
+      "outcome": "The oversized-modules, duplicated-code and logging-noise area results.",
+      "ready_outcome": "structure_measured",
+      "model_use": "none",
+      "pinned": [
+        "health-areas"
+      ],
+      "slots": [
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "area_result",
+          "template": "template.area-result",
+          "max": 3
+        }
+      ],
+      "steps": [
+        "Count lines per file and the longest function per file at the plan's commit.",
+        "Normalize whitespace and comments, hash every run of eight lines, and list runs that appear twice or more.",
+        "Read the pinned test-run log only; count lines, identical repeats and warnings per run."
+      ],
+      "acceptance": [
+        {
+          "id": "result-matches-template",
+          "check": "The area result validates against template.area-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-follows",
+          "check": "status follows from the items' levels, or is not_run with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "three-areas",
+          "check": "One result each for oversized-modules, duplicated-code and logging-noise.",
+          "method": "deterministic"
+        }
+      ],
+      "network": "none",
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "codebase-health-review.plan-health-review"
+      ]
+    },
+    {
+      "slug": "review-tests-and-errors",
+      "kind": "verb.situate",
+      "title": "Find untested error paths and flaky tests",
+      "claimant": "agent",
+      "summary": "In a sandbox, run the test suite with branch coverage at the plan's commit to find raise sites and handlers no test reaches, and find flaky tests from CI history or three reruns.",
+      "outcome": "The untested-error-paths and flaky-tests area results.",
+      "ready_outcome": "tests_reviewed",
+      "model_use": "worker_allowance",
+      "pinned": [
+        "health-areas",
+        "wiring-and-conformance-checks:rules.behavior-coverage",
+        "wiring-and-conformance-checks:guardrail.real-path-not-a-mock"
+      ],
+      "slots": [
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "area_result",
+          "template": "template.area-result",
+          "max": 2
+        }
+      ],
+      "steps": [
+        "Run the suite in a sandbox with branch coverage; list every raise site and handler line no test reaches, writes and deletes first.",
+        "Find tests that passed and failed on the same commit in the pinned CI history, or rerun the suite three times.",
+        "Read the behavior coverage rules: a handler covered only by tests that mock its path is still untested."
+      ],
+      "acceptance": [
+        {
+          "id": "result-matches-template",
+          "check": "The area result validates against template.area-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-follows",
+          "check": "status follows from the items' levels, or is not_run with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "two-areas",
+          "check": "One result each for untested-error-paths and flaky-tests.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reruns-recorded",
+          "check": "Every flaky test lists its passing and failing runs.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Package installs inside the sandbox to run the test suite; no requests to any deployed system."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "codebase-health-review.plan-health-review"
+      ]
+    },
+    {
+      "slug": "scan-secret-patterns",
+      "kind": "verb.verify_gate",
+      "title": "Scan for possible secrets by pattern",
+      "claimant": "agent",
+      "summary": "Scan the plan's commit for key-shaped and credential-shaped values and tracked environment files, and record each by file, line, pattern name and matched length, never its value.",
+      "outcome": "The secrets-hygiene area result.",
+      "ready_outcome": "secrets_scanned",
+      "model_use": "none",
+      "pinned": [
+        "secret-patterns",
+        "guardrail.report-where-not-what",
+        "file-triage-at-scale:secret-exclusions"
+      ],
+      "slots": [
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "area_result",
+          "template": "template.area-result",
+          "max": 1
+        }
+      ],
+      "steps": [
+        "Scan tracked files only, with the pack's pattern names; list environment files by name without opening them.",
+        "Record file, line, pattern name and matched length; never copy any part of a value.",
+        "Mark every hit act, private and for the security review pack; a placeholder that looks like a key is watch."
+      ],
+      "acceptance": [
+        {
+          "id": "result-matches-template",
+          "check": "The area result validates against template.area-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-follows",
+          "check": "status follows from the items' levels, or is not_run with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-values",
+          "check": "No item holds any part of a matched value.",
+          "method": "deterministic"
+        }
+      ],
+      "network": "none",
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "codebase-health-review.plan-health-review"
+      ]
+    },
+    {
+      "slug": "write-health-report",
+      "kind": "verb.compile_dag",
+      "title": "Write the health report and its findings",
+      "claimant": "agent",
+      "summary": "Combine every area result into a report that gives each area its own status, counts and top items, lists areas not run, compares with the previous report only where thresholds match, links the wiring conformance report, and records a finding for every item at act level.",
+      "outcome": "A health report and its findings.",
+      "ready_outcome": "report_written",
+      "pinned": [
+        "method",
+        "health-checks",
+        "guardrail.no-single-score",
+        "findings-to-fixes:record-checks",
+        "findings-to-fixes:kind-definitions"
+      ],
+      "slots": [
+        {
+          "name": "area_results",
+          "category": "noun.eval_run",
+          "description": "Pins of the area results.",
+          "many": true,
+          "max": 11
+        },
+        {
+          "name": "health_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the health review plan."
+        },
+        {
+          "name": "previous_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the previous health report, if any.",
+          "required": false
+        },
+        {
+          "name": "conformance_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the wiring and conformance checks pack's report, if any.",
+          "required": false
+        },
+        {
+          "name": "docs_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the docs improvement pack's example run, if any.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "health_report",
+          "template": "template.health-report"
+        },
+        {
+          "name": "finding",
+          "template": "findings-to-fixes:template.finding",
+          "max": 30
+        }
+      ],
+      "steps": [
+        "Copy each area's status and counts from its result; never invent a status for an area with no result.",
+        "List every area with no result under not_run with the plan's reason; never write an overall score.",
+        "Mark a trend row comparable only when the previous report used the same thresholds.",
+        "Record one finding per act item in the findings to fixes shape, located and measured, with reproduce, propose-fix, fix, verify-fix and add-regression-guard in its work.",
+        "Keep possible secrets as private findings with sensitivity credential, routed to the security review pack."
+      ],
+      "acceptance": [
+        {
+          "id": "report-matches-template",
+          "check": "The report validates against template.health-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "Every finding passes the findings to fixes record checks and the health checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-act-item-recorded",
+          "check": "Every act item in the area results belongs to exactly one finding.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-overall-score",
+          "check": "The report has no overall score, grade or percentage.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "ready_requires": [
+        "proposed_verbs"
+      ],
+      "follows": [
+        "codebase-health-review.age-todos",
+        "codebase-health-review.find-swallowed-exceptions",
+        "codebase-health-review.check-dependencies",
+        "codebase-health-review.measure-code-structure",
+        "codebase-health-review.review-tests-and-errors",
+        "codebase-health-review.scan-secret-patterns"
+      ]
+    }
+  ]
+}
