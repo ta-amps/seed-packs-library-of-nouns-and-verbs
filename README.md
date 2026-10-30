@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds fifty-three proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds fifty-nine proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -73,10 +73,16 @@ activated**, and no worker has run them yet.
 | [Usability heuristics review](packs/usability-heuristics-review/README.md) | Reviewing a page or app against ten usability heuristics, with independent evaluators, severities, screenshot regions and a fix verb per finding |
 | [Launch readiness](packs/launch-readiness/README.md) | Deciding whether a site or app is ready to launch: links, status claims, analytics, error pages, rollback and the owner's go, with the release left to a person |
 | [Exploratory testing charters](packs/exploratory-testing-charters/README.md) | Exploratory testing in time-boxed sessions: charters, notes taken as it happens, bugs as findings, debriefs and coverage notes |
+| [Video QA checks](packs/video-qa/README.md) | Checking an encoded video beyond the eight post-encode checks: blank and frozen frames, cut cadence, loudness range and true peak, clipping and silence, caption lint and timing against speech, the delivery spec read from the file's own boxes and a legibility proxy, with tested code |
+| [Video editing](packs/video-editing/README.md) | Editing a video from its script: an edit decision list paced to the words, J and L cuts, b-roll, transitions, colour, the mix, reframes and an export spec, with every revision kept and a person locking the cut |
+| [Video review](packs/video-review/README.md) | Reviewing a video with a fixed rubric, by a person or a worker that did not make it: timestamped findings with a severity, evidence and a fix verb, every number traced, and a re-review after fixes |
+| [Social cut-downs](packs/social-cutdowns/README.md) | Deriving platform cut-downs from a longer video that keep its meaning: hooks, reframes, burned-in captions, length targets and copy, approved and posted by a person through the platform's own tools |
+| [Thumbnails and titles](packs/thumbnail-and-title/README.md) | Drafting thumbnail and title candidates from what a video shows, checking them at small sizes and for honesty, and planning an A/B test, with a person picking |
+| [Video audience acceptance](packs/video-uat/README.md) | Testing whether a video's intended viewers understand it, with tasks and pass criteria a person agrees to before any session and results that describe only the people asked |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1035
-nouns and 342 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1177
+nouns and 381 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

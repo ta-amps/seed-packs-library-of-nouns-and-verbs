@@ -1,0 +1,3323 @@
+{
+  "pack_id": "video-editing",
+  "title": "Video editing",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for editing a video from its script: an edit decision list, a cut paced against the words spoken over it, J and L cuts, b-roll placement, transitions, colour and contrast consistency, an audio mix with ducking and loudness targets, reframing for other aspect ratios, and a conform and export spec, with every revision kept and a person locking the cut.",
+  "dependencies": [
+    "video-motion",
+    "video-showcase"
+  ],
+  "boundaries": [
+    "Workers draft, measure and revise edit decision lists; a person locks the cut, and nothing here releases a video.",
+    "Every revision is a new version that names the issue it answers; earlier versions are never overwritten or deleted.",
+    "Fixes are made at the cause, in the list, the scene or the template, never on one rendered frame.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for editing a video from its script, with every revision kept and a person locking the cut",
+      "value": {
+        "lets_workers": "Edit a video from its script and narration as an edit decision list: shots paced against the words spoken over them, J and L cuts that let the voice carry across picture changes, b-roll placed on the words it illustrates, transitions chosen on purpose, colour and contrast kept consistent, an audio mix with ducking and loudness targets, per-shot reframes for other aspect ratios, a conform check and an export spec, with every revision a new version that names the issue it answers and a person locking the cut.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "video-showcase.draft-script"
+            },
+            "when": "The script: timed beats and claims."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.plan-cut"
+            },
+            "when": "One frame clock for picture, voice and captions."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.draft-edit-list"
+            },
+            "when": "Shots, cuts, b-roll and transitions as an edit decision list."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.check-pacing"
+            },
+            "when": "Words per second, reading time, beat gaps and density per shot."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.plan-mix"
+            },
+            "when": "Stems, ducking, the bed and loudness targets."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.plan-reframes"
+            },
+            "when": "A crop window per shot for each other aspect."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.write-export-spec"
+            },
+            "when": "Delivery profiles with budgets."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.conform-edit"
+            },
+            "when": "Every event resolves and the totals add up before rendering."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.render-sequence"
+            },
+            "when": "Render each profile."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.check-color"
+            },
+            "when": "Shot-to-shot luma jumps and text contrast on the render."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.review-cut"
+            },
+            "when": "A person or a different worker reviews it."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.revise-edit"
+            },
+            "when": "Each finding answered in a new version."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.lock-cut"
+            },
+            "when": "A person watches and locks the cut, or sends it back."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.keep-every-version"
+          },
+          {
+            "$pin": "guardrail.fix-the-cause"
+          },
+          {
+            "$pin": "guardrail.picture-follows-the-words"
+          },
+          {
+            "$pin": "guardrail.no-padding"
+          }
+        ],
+        "worked_example": "Synthetic: a 30-second explainer for a fictional tool library as an edit decision list of six shots with a J cut, an L cut, a b-roll insert, a dissolve and a punch-in; its pacing report flags a dense, unreadable shot and a rushed one, and a revision note answers three findings without overwriting the first version.",
+        "complements": "The narrated explainer video pack lays out one frame clock and composes cuts; the video and motion pack renders them. This pack adds the editorial layer between: the edit decision list, pacing against the words, audio and colour plans, reframes and the export spec.",
+        "provenance_notes": [
+          "Generalizes the editing rules of a working short-form video studio: a hook in the first 1.5 s, a beat every 1.5 to 3 s, length from beats rather than freezes or loops, no ghost dissolves, one bed under a joined piece, music 12 to 16 dB under the voice, every revision recording the issue seen and the change made, and fixes made in the template rather than on a frame.",
+          "Checked against ta-amps's own 3:00 explainer film on October 30, 2026, whose longest shot carried 54 words over 23 seconds of a building slide."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.keep-every-version"
+        ],
+        [
+          "requires_noun",
+          "guardrail.fix-the-cause"
+        ],
+        [
+          "requires_noun",
+          "guardrail.picture-follows-the-words"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-padding"
+        ],
+        [
+          "requires_noun",
+          "rules.pacing"
+        ],
+        [
+          "requires_noun",
+          "rules.j-and-l-cuts"
+        ],
+        [
+          "requires_noun",
+          "rules.b-roll"
+        ],
+        [
+          "requires_noun",
+          "rules.transitions"
+        ],
+        [
+          "requires_noun",
+          "rules.color"
+        ],
+        [
+          "requires_noun",
+          "rules.audio-mix"
+        ],
+        [
+          "requires_noun",
+          "rules.reframing"
+        ],
+        [
+          "requires_noun",
+          "rules.conform-and-export"
+        ],
+        [
+          "requires_noun",
+          "template.edit-list"
+        ],
+        [
+          "requires_noun",
+          "template.pacing-report"
+        ],
+        [
+          "requires_noun",
+          "template.mix-plan"
+        ],
+        [
+          "requires_noun",
+          "template.color-report"
+        ],
+        [
+          "requires_noun",
+          "template.reframe-plan"
+        ],
+        [
+          "requires_noun",
+          "template.export-spec"
+        ],
+        [
+          "requires_noun",
+          "template.conform-record"
+        ],
+        [
+          "requires_noun",
+          "template.revision-note"
+        ],
+        [
+          "requires_noun",
+          "template.lock-record"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.keep-every-version",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: keep every version of the cut",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every revision is a new edit decision list version with a revision note that names each issue seen and the change made. No version is overwritten or deleted, so any cut can be rebuilt and compared.",
+        "how_it_is_checked": "A revised edit list names the version it revises, and its revision note has overwrites_previous false."
+      }
+    },
+    {
+      "slug": "guardrail.fix-the-cause",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: fix the cause, not the frame",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A problem is fixed where it is made: in the edit decision list, the scene, the recipe or the template. A patch on one rendered frame hides the cause and comes back in the next render.",
+        "how_it_is_checked": "Every change in a revision note names the events, scenes or templates it changes."
+      }
+    },
+    {
+      "slug": "guardrail.picture-follows-the-words",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the picture supports the words over it",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every shot shows what its words are about, and no text, picture or caption gives away a payoff, an answer or a number before the narration reaches it.",
+        "how_it_is_checked": "Each event names the lines it carries; a reviewer checks the frames at each line's start."
+      }
+    },
+    {
+      "slug": "guardrail.no-padding",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: length comes from beats, not padding",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A cut is never lengthened with freezes, slowed motion or repeated loops. A still hold is declared in the plan, with its reason, before anything is measured.",
+        "how_it_is_checked": "The pacing report shows a beat at least every 3 s outside declared holds."
+      }
+    },
+    {
+      "slug": "rules.pacing",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Pacing rules: shots measured against the words spoken over them",
+      "category_reason": "A zero-call deterministic procedure: the same edit list and lines always give the same report.",
+      "value": {
+        "limits": {
+          "rushed_above_wps": 3.2,
+          "slack_below_wps": 1.2,
+          "max_gap_between_beats_s": 3.0,
+          "long_shot_s": 6.0,
+          "dense_new_words": 12,
+          "reading_rule": "0.5 s plus on-screen words divided by 3"
+        },
+        "steps": [
+          "For each shot on the main video track: its length from its record frames, the words of the lines it carries, and words per second.",
+          "Reading need: 0.5 s plus the shot's new on-screen words divided by 3.",
+          "Beats are the shot's start, every listed visual event inside it, and its end; the longest gap between them is the shot's longest gap.",
+          "Verdicts: rushed above 3.2 words per second; slack below 1.2 with no beats; unreadable when shorter than its reading need; dense when it adds more than 12 new on-screen words while a line is spoken; long when over 6 s with a gap between beats over 3 s.",
+          "A flagged shot is fixed in a new version or accepted by a person with a written reason."
+        ],
+        "hook": "Something visibly changes from frame 0, and the hook line is on screen, as well as spoken, by 1.5 s.",
+        "note": "Defaults from one production, not standards: narration between about 1.8 and 3.0 words per second read as calm to brisk.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.j-and-l-cuts",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "J and L cuts: the voice carries across picture changes",
+      "category_reason": "A zero-call procedure for placing split edits from measured pauses.",
+      "value": {
+        "rules": [
+          "A J cut starts the next shot's sound before its picture: audio_offset_frames is negative, typically 4 to 12 frames.",
+          "An L cut lets the current shot's sound run under the next picture: audio_offset_frames is positive, typically 4 to 12 frames.",
+          "Audio edit points sit in a measured pause, never inside a word.",
+          "Cut the picture on a pause, a sentence end or an action, not mid-word.",
+          "Every audio edit gets a crossfade of 5 to 20 ms so no click is heard.",
+          "The event's reason names the line the cut carries."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.b-roll",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "B-roll placement rules",
+      "category_reason": "A zero-call procedure: inserts are placed from word timings and the media's own records.",
+      "value": {
+        "rules": [
+          "Insert b-roll on the word it illustrates, within 6 frames of that word's start, or on the cut it hides.",
+          "Hold an insert at least 1.5 s, or longer than the reading time of any text in it.",
+          "Frame a screen capture so the element the line names fills enough of the frame to read; a whole page shown small is texture, not evidence.",
+          "Never cover a person speaking their own words with an insert unless the insert is the point.",
+          "Label generated or synthetic inserts where they appear.",
+          "Each insert names its source noun, its licence and its digest."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.transitions",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Transition rules",
+      "category_reason": "A zero-call procedure for choosing and checking transitions.",
+      "value": {
+        "rules": [
+          "A hard cut is the default.",
+          "A dissolve marks time passing or a change of place; never dissolve between two frames full of text, because both show at once.",
+          "Hide a swap behind a cut on action, a punch-in or an occluding move instead of a dissolve.",
+          "A dissolve lasts at most 12 frames unless the plan says why.",
+          "A camera move ends before text that must be read, and never pushes text past the safe area or the frame edge.",
+          "Fade to black only at the end of an act or of the film.",
+          "Check every transition in a full-frame-rate strip from 0.5 s before to 0.5 s after it."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.color",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Colour and contrast consistency rules",
+      "category_reason": "A zero-call procedure: per-shot measurements against fixed limits.",
+      "value": {
+        "rules": [
+          "One palette per video; text colours come from it.",
+          "Text meets WCAG contrast against what is behind it: 4.5 to 1, or 3 to 1 for large text, compared unrounded.",
+          "Adjacent shots keep average luma within 25 code values unless the plan marks a deliberate change, such as an act break.",
+          "A bright shot between two dark ones, or the reverse, inside one second can read as a flash; separate or soften it.",
+          "Captures keep their own colours unless a grade is declared, and a declared grade records its values.",
+          "HD masters are tagged BT.709 and the tags match the pixels.",
+          "Measure each shot's average and range of luma and chroma with FFmpeg's signalstats on the rendered file."
+        ],
+        "max_luma_jump": 25,
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.audio-mix",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Audio mix rules",
+      "category_reason": "A zero-call procedure for planning and measuring a mix.",
+      "value": {
+        "rules": [
+          "The voice comes first. Music sits 12 to 16 dB under narration while it speaks and returns between lines; the video and motion pack's renderer ducks 9 dB unless the plan sets its depth.",
+          "Gaps over about 1 s are carried by music or action, never left near-silent: the quietest 3 s short-term window stays above -28 LUFS.",
+          "One bed runs under a piece made of joined sections, with equal-power crossfades, rather than a separately mastered bed per section, which jumps in level at every join.",
+          "Targets: about -14 LUFS integrated within 1 LU for short social cuts, about -16 LUFS for web players, true peak at or below -1 dBTP; broadcast uses -23 LUFS.",
+          "Each sound effect lands within 2 frames of its visual event.",
+          "Generated beds keep their seed with the plan, so the same plan rebuilds the same audio; every stem carries its licence.",
+          "Measure the encoded file, not the stems; then a person listens on headphones and a phone speaker."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.reframing",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Reframing rules for other aspect ratios",
+      "category_reason": "A zero-call procedure using the video and motion pack's aspect rules.",
+      "value": {
+        "rules": [
+          "Reframe per shot, not per video: each shot gets a crop window around its centre of interest for each target aspect.",
+          "Restack diagrams and slides for a tall frame instead of shrinking them.",
+          "Text keeps its size in the new aspect: re-render text layers rather than scaling baked-in text down.",
+          "Text and labels stay inside the target aspect's safe canvas and clear of its keep-out boxes.",
+          "A wider or taller crop can reveal what the original hid; look at every reframed shot on its own.",
+          "Labels for AI voice and synthetic data survive every reframe."
+        ],
+        "aspects": {
+          "$pin": "video-motion:rules.aspects"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-motion:rules.aspects"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.conform-and-export",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Conform and export rules",
+      "category_reason": "A zero-call procedure checked before and after rendering.",
+      "value": {
+        "rules": [
+          "Conform: every event resolves to a pinned media noun at the plan's frame rate; nothing is offline; the main video track has no gap or overlap; the total equals the planned frames.",
+          "Each export profile names its aspect, size, frame rate, codec and profile, chroma, colour tags, audio codec, rate and channels, fast start, edit lists, size and bitrate budgets, loudness target and sidecars.",
+          "A web master is H.264 High, 4:2:0, BT.709, constant frame rate, AAC-LC at 48 kHz in stereo, with the moov box first.",
+          "A host with a size limit sets the budget; one production capped a 3-minute 1080p cut at 40 MB and raised the encoder's quality factor to fit.",
+          "Every delivered file is hashed; the export spec, the conformed list and the render manifests are kept so the cut can be rebuilt.",
+          "File names carry the cut, the aspect and the version, never a person's name or a local path."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.edit-list",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: an edit decision list",
+      "value": {
+        "describes": "one version of a cut as events on video and audio tracks: source and record frames, the transition into each, the audio offset of a J or L cut, the lines each shot carries, its new on-screen words, its visual beats and the reason for it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "fps",
+            "version",
+            "revises",
+            "total_frames",
+            "events"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 240
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "revises": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "total_frames": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000000
+            },
+            "events": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 400,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "event_id",
+                  "track",
+                  "source",
+                  "source_in_frame",
+                  "source_out_frame",
+                  "record_in_frame",
+                  "record_out_frame",
+                  "transition",
+                  "transition_frames",
+                  "audio_offset_frames",
+                  "carries_lines",
+                  "new_text_words",
+                  "beats_s",
+                  "reason"
+                ],
+                "properties": {
+                  "event_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "track": {
+                    "type": "string",
+                    "enum": [
+                      "V1",
+                      "V2",
+                      "A1",
+                      "A2",
+                      "A3"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "pattern": "^[a-z0-9][a-z0-9._-]*$"
+                  },
+                  "source_in_frame": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  "source_out_frame": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  "record_in_frame": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000000
+                  },
+                  "record_out_frame": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000000
+                  },
+                  "transition": {
+                    "type": "string",
+                    "enum": [
+                      "cut",
+                      "dissolve",
+                      "fade_in",
+                      "fade_out",
+                      "punch_in",
+                      "whip",
+                      "wipe"
+                    ]
+                  },
+                  "transition_frames": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 120
+                  },
+                  "audio_offset_frames": {
+                    "type": "integer",
+                    "minimum": -120,
+                    "maximum": 120
+                  },
+                  "carries_lines": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 12,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    }
+                  },
+                  "new_text_words": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 400
+                  },
+                  "beats_s": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 60,
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 86400
+                    }
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Frames are whole numbers at the list's fps.",
+          "A revised list names the version it revises."
+        ]
+      }
+    },
+    {
+      "slug": "template.pacing-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a pacing report",
+      "value": {
+        "describes": "per shot on the main video track: length, words spoken and their rate, new on-screen words and their reading need, the longest gap between beats, and the pacing rules' verdicts",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "fps",
+            "edit_list",
+            "limits",
+            "shots",
+            "flagged"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 240
+            },
+            "edit_list": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "limits": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rushed_above_wps",
+                "slack_below_wps",
+                "max_gap_between_beats_s",
+                "long_shot_s",
+                "dense_new_words",
+                "reading_rule"
+              ],
+              "properties": {
+                "rushed_above_wps": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                "slack_below_wps": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                "max_gap_between_beats_s": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 60
+                },
+                "long_shot_s": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 600
+                },
+                "dense_new_words": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 400
+                },
+                "reading_rule": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            },
+            "shots": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 400,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "shot_id",
+                  "start_s",
+                  "end_s",
+                  "length_s",
+                  "spoken_words",
+                  "words_per_second",
+                  "new_text_words",
+                  "reading_need_s",
+                  "longest_gap_s",
+                  "verdicts"
+                ],
+                "properties": {
+                  "shot_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "length_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "spoken_words": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000
+                  },
+                  "words_per_second": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "new_text_words": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 400
+                  },
+                  "reading_need_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 600
+                  },
+                  "longest_gap_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "verdicts": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "rushed",
+                        "slack",
+                        "unreadable",
+                        "dense",
+                        "long"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "flagged": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.mix-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: an audio mix plan",
+      "value": {
+        "describes": "the stems with their sources, licences and gains, the ducking under the voice, the bed and its seed, effects on visual events, and the loudness targets measured on the encoded file",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "target_lufs",
+            "tolerance_lu",
+            "true_peak_max_dbtp",
+            "duck_db",
+            "gap_floor_lufs",
+            "measure_on",
+            "stems",
+            "ducking",
+            "bed",
+            "effects_on_events"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "target_lufs": {
+              "type": "number",
+              "minimum": -40,
+              "maximum": -5
+            },
+            "tolerance_lu": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "true_peak_max_dbtp": {
+              "type": "number",
+              "minimum": -10,
+              "maximum": 0
+            },
+            "duck_db": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 40
+            },
+            "gap_floor_lufs": {
+              "type": "number",
+              "minimum": -70,
+              "maximum": -5
+            },
+            "measure_on": {
+              "type": "string",
+              "enum": [
+                "encoded_file"
+              ]
+            },
+            "stems": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "stem_id",
+                  "kind",
+                  "source",
+                  "license",
+                  "gain_db"
+                ],
+                "properties": {
+                  "stem_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "voice",
+                      "music",
+                      "effects",
+                      "ambience"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "license": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "gain_db": {
+                    "type": "number",
+                    "minimum": -60,
+                    "maximum": 12
+                  }
+                }
+              }
+            },
+            "ducking": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start_s",
+                  "end_s",
+                  "depth_db"
+                ],
+                "properties": {
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "depth_db": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 40
+                  }
+                }
+              }
+            },
+            "bed": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "one_bed",
+                "crossfades",
+                "seed"
+              ],
+              "properties": {
+                "one_bed": {
+                  "type": "boolean"
+                },
+                "crossfades": {
+                  "type": "string",
+                  "enum": [
+                    "equal_power",
+                    "linear",
+                    "none"
+                  ]
+                },
+                "seed": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 2147483647
+                }
+              }
+            },
+            "effects_on_events": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 400,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "time_s",
+                  "effect"
+                ],
+                "properties": {
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "effect": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.color-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a colour and contrast report",
+      "value": {
+        "describes": "per shot luma and chroma measured on the render, jumps between adjacent shots with whether the plan declared them, and text contrast pairs with their unrounded results",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "media_sha256",
+            "shots",
+            "jumps",
+            "contrast_pairs",
+            "problems"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "shots": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 400,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "shot_id",
+                  "yavg",
+                  "uavg",
+                  "vavg",
+                  "ymin",
+                  "ymax"
+                ],
+                "properties": {
+                  "shot_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "yavg": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1023
+                  },
+                  "uavg": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1023
+                  },
+                  "vavg": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1023
+                  },
+                  "ymin": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1023
+                  },
+                  "ymax": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1023
+                  }
+                }
+              }
+            },
+            "jumps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 400,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "from",
+                  "to",
+                  "delta_yavg",
+                  "declared"
+                ],
+                "properties": {
+                  "from": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "to": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "delta_yavg": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1023
+                  },
+                  "declared": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "contrast_pairs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "pair_id",
+                  "foreground",
+                  "background",
+                  "px",
+                  "ratio",
+                  "passes"
+                ],
+                "properties": {
+                  "pair_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "foreground": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 7,
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "background": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 7,
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "px": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2000
+                  },
+                  "ratio": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 21
+                  },
+                  "passes": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "problems": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.reframe-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: a reframe plan for other aspect ratios",
+      "value": {
+        "describes": "for each target aspect, every shot's crop window in source pixels, whether it is restacked, whether its text is re-rendered at full size, and a note of anything the crop reveals or hides",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "source_aspect",
+            "labels_kept",
+            "targets"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "source_aspect": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "labels_kept": {
+              "type": "boolean"
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "aspect",
+                  "shots"
+                ],
+                "properties": {
+                  "aspect": {
+                    "type": "string",
+                    "enum": [
+                      "reels_9x16",
+                      "feed_4x5",
+                      "square_1x1",
+                      "landscape_16x9"
+                    ]
+                  },
+                  "shots": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 400,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "shot_id",
+                        "crop",
+                        "restack",
+                        "text_rerendered",
+                        "note"
+                      ],
+                      "properties": {
+                        "shot_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20
+                        },
+                        "crop": {
+                          "type": "array",
+                          "minItems": 4,
+                          "maxItems": 4,
+                          "items": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 16384
+                          }
+                        },
+                        "restack": {
+                          "type": "boolean"
+                        },
+                        "text_rerendered": {
+                          "type": "boolean"
+                        },
+                        "note": {
+                          "type": "string",
+                          "minLength": 0,
+                          "maxLength": 300
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.export-spec",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: an export spec with delivery profiles",
+      "value": {
+        "describes": "one delivery profile per output: aspect, size, frame rate, codec and profile, chroma, colour primaries, audio, fast start, edit lists, size and bitrate budgets, loudness target, sidecars and open captions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "profiles"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "profiles": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "profile_id",
+                  "aspect",
+                  "width",
+                  "height",
+                  "frame_rate",
+                  "codec",
+                  "h264_profile",
+                  "chroma",
+                  "color_primaries",
+                  "audio_codec",
+                  "sample_rate",
+                  "channels",
+                  "faststart",
+                  "edit_lists",
+                  "max_bytes",
+                  "max_bitrate_kbps",
+                  "target_lufs",
+                  "sidecars",
+                  "open_captions"
+                ],
+                "properties": {
+                  "profile_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "aspect": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "width": {
+                    "type": "integer",
+                    "minimum": 16,
+                    "maximum": 8192
+                  },
+                  "height": {
+                    "type": "integer",
+                    "minimum": 16,
+                    "maximum": 8192
+                  },
+                  "frame_rate": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 240
+                  },
+                  "codec": {
+                    "type": "string",
+                    "enum": [
+                      "avc1",
+                      "hvc1",
+                      "av01",
+                      "vp09"
+                    ]
+                  },
+                  "h264_profile": {
+                    "type": "string",
+                    "enum": [
+                      "Baseline",
+                      "Main",
+                      "High"
+                    ]
+                  },
+                  "chroma": {
+                    "type": "string",
+                    "enum": [
+                      "4:2:0",
+                      "4:2:2",
+                      "4:4:4"
+                    ]
+                  },
+                  "color_primaries": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 22
+                  },
+                  "audio_codec": {
+                    "type": "string",
+                    "enum": [
+                      "mp4a",
+                      "opus"
+                    ]
+                  },
+                  "sample_rate": {
+                    "type": "integer",
+                    "minimum": 8000,
+                    "maximum": 192000
+                  },
+                  "channels": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 8
+                  },
+                  "faststart": {
+                    "type": "boolean"
+                  },
+                  "edit_lists": {
+                    "type": "boolean"
+                  },
+                  "max_bytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000000000
+                  },
+                  "max_bitrate_kbps": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                  },
+                  "target_lufs": {
+                    "type": "number",
+                    "minimum": -40,
+                    "maximum": -5
+                  },
+                  "sidecars": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "webvtt",
+                        "srt"
+                      ]
+                    }
+                  },
+                  "open_captions": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Each profile maps to the video QA pack's file spec: faststart, codec, profile, chroma, size, frame rate, colour, audio and budgets."
+        ]
+      }
+    },
+    {
+      "slug": "template.conform-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a conform check before rendering",
+      "value": {
+        "describes": "whether every event resolved to a pinned media noun at the plan's frame rate, with offline events, gaps, overlaps and the frame totals",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "version",
+            "events_checked",
+            "offline",
+            "gaps",
+            "overlaps",
+            "frame_rate_mismatches",
+            "total_frames",
+            "planned_frames",
+            "conformed"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "events_checked": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "offline": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 400,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            },
+            "gaps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 400,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000000
+                }
+              }
+            },
+            "overlaps": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 400,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+                }
+              }
+            },
+            "frame_rate_mismatches": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 400,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              }
+            },
+            "total_frames": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "planned_frames": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000000
+            },
+            "conformed": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.revision-note",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: what one revision changed and why",
+      "category_reason": "A record of what one revision changed and why, kept beside both versions.",
+      "value": {
+        "describes": "the changes from one edit list version to the next, each naming the finding it answers, the issue seen, the change made and the events it touched",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "from_version",
+            "to_version",
+            "changes",
+            "overwrites_previous"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "from_version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "to_version": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 1001
+            },
+            "changes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "finding",
+                  "issue_seen",
+                  "change_made",
+                  "events"
+                ],
+                "properties": {
+                  "finding": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "issue_seen": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "change_made": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "events": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 40,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20
+                    }
+                  }
+                }
+              }
+            },
+            "overwrites_previous": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.lock-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's lock of the cut",
+      "value": {
+        "describes": "a person's decision, after watching the whole cut with sound on the screens named, to lock it or send it back with notes",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "version",
+            "media_sha256",
+            "person_role",
+            "watched_on",
+            "decision",
+            "notes"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "person_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "watched_on": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "headphones",
+                  "phone_speaker",
+                  "desktop_speakers",
+                  "phone_screen",
+                  "desktop_screen"
+                ]
+              }
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "locked",
+                "revise"
+              ]
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "edit-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Edit checks, with one good and six bad edit summaries the validator recomputes",
+      "category_reason": "A golden fixture: fixed edit summaries and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks an edit summary passes before a cut is rendered or locked, each shown failing on a bad summary for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "events_without_source",
+            "events_without_reason",
+            "local_paths",
+            "is_revision",
+            "changes",
+            "overwrites_previous",
+            "locked",
+            "locked_by",
+            "dissolves_over_text"
+          ],
+          "properties": {
+            "events_without_source": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 400
+            },
+            "events_without_reason": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 400
+            },
+            "local_paths": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "is_revision": {
+              "type": "boolean"
+            },
+            "changes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [],
+                "properties": {
+                  "finding": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  },
+                  "issue_seen": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  },
+                  "change_made": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "overwrites_previous": {
+              "type": "boolean"
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "locked_by": {
+              "type": "string",
+              "enum": [
+                "person",
+                "agent",
+                "none"
+              ]
+            },
+            "dissolves_over_text": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 400
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "events-sourced",
+            "rule": {
+              "rule": "enum",
+              "path": "events_without_source",
+              "values": [
+                0
+              ]
+            },
+            "why": "Every event resolves to a media noun."
+          },
+          {
+            "id": "events-reasoned",
+            "rule": {
+              "rule": "enum",
+              "path": "events_without_reason",
+              "values": [
+                0
+              ]
+            },
+            "why": "Every event says why it is there."
+          },
+          {
+            "id": "no-local-paths",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "local_paths",
+              "pattern": "^(/|~|[A-Za-z]:[\\\\/])"
+            },
+            "why": "Sources are noun keys, never a person's local paths."
+          },
+          {
+            "id": "revision-explained",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "is_revision",
+                "equals": true
+              },
+              "then": {
+                "rule": "each_has",
+                "path": "changes",
+                "fields": [
+                  "finding",
+                  "issue_seen",
+                  "change_made"
+                ],
+                "min": 1
+              }
+            },
+            "why": "A revision names each issue seen and each change made."
+          },
+          {
+            "id": "versions-kept",
+            "rule": {
+              "rule": "enum",
+              "path": "overwrites_previous",
+              "values": [
+                false
+              ]
+            },
+            "why": "No version is overwritten."
+          },
+          {
+            "id": "locked-by-a-person",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "locked",
+                "equals": true
+              },
+              "then": {
+                "rule": "enum",
+                "path": "locked_by",
+                "values": [
+                  "person"
+                ]
+              }
+            },
+            "why": "Only a person locks a cut."
+          },
+          {
+            "id": "no-dissolve-over-text",
+            "rule": {
+              "rule": "enum",
+              "path": "dissolves_over_text",
+              "values": [
+                0
+              ]
+            },
+            "why": "No dissolve joins two frames full of text."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-locked-revision",
+            "label": "known_good",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 0,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-offline-event",
+            "label": "known_bad",
+            "fails": "events-sourced",
+            "finding": {
+              "events_without_source": 1,
+              "events_without_reason": 0,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-unexplained-event",
+            "label": "known_bad",
+            "fails": "events-reasoned",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 2,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-local-path",
+            "label": "known_bad",
+            "fails": "no-local-paths",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 0,
+              "local_paths": [
+                "/home/someone/footage/shelves.mov"
+              ],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-silent-revision",
+            "label": "known_bad",
+            "fails": "revision-explained",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 0,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "",
+                  "change_made": "tightened"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-overwrite",
+            "label": "known_bad",
+            "fails": "versions-kept",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 0,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": true,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-agent-locked",
+            "label": "known_bad",
+            "fails": "locked-by-a-person",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 0,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "agent",
+              "dissolves_over_text": 0
+            }
+          },
+          {
+            "id": "bad-dissolve",
+            "label": "known_bad",
+            "fails": "no-dissolve-over-text",
+            "finding": {
+              "events_without_source": 0,
+              "events_without_reason": 0,
+              "local_paths": [],
+              "is_revision": true,
+              "changes": [
+                {
+                  "finding": "F-3",
+                  "issue_seen": "22 new words in 4 s",
+                  "change_made": "5 items, 6 s"
+                }
+              ],
+              "overwrites_previous": false,
+              "locked": true,
+              "locked_by": "person",
+              "dissolves_over_text": 1
+            }
+          }
+        ],
+        "expected": {
+          "good-locked-revision": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-offline-event": {
+            "verdict": "fail",
+            "failed_checks": [
+              "events-sourced"
+            ]
+          },
+          "bad-unexplained-event": {
+            "verdict": "fail",
+            "failed_checks": [
+              "events-reasoned"
+            ]
+          },
+          "bad-local-path": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-local-paths"
+            ]
+          },
+          "bad-silent-revision": {
+            "verdict": "fail",
+            "failed_checks": [
+              "revision-explained"
+            ]
+          },
+          "bad-overwrite": {
+            "verdict": "fail",
+            "failed_checks": [
+              "versions-kept"
+            ]
+          },
+          "bad-agent-locked": {
+            "verdict": "fail",
+            "failed_checks": [
+              "locked-by-a-person"
+            ]
+          },
+          "bad-dissolve": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-dissolve-over-text"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.edit-list"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before locking a cut",
+      "category_reason": "A short checklist a person runs is part of the edit's guardrails.",
+      "value": {
+        "items": [
+          "Watch the whole cut at normal speed with sound, once on headphones and once on a phone speaker.",
+          "Every shot supports its words, and nothing shows a payoff or a number before the voice reaches it.",
+          "No text sits past the frame edge, under a label or inside a dissolve.",
+          "Every flagged shot in the pacing report is fixed or accepted with a reason in your own words.",
+          "Labels for AI voice and synthetic data are on screen wherever they apply, in every aspect.",
+          "Each revision note says what was seen and what changed; earlier versions are still there."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for editing",
+      "value": {
+        "sources": [
+          {
+            "title": "EBU R 128 v5.0 (November 2023): Loudness normalisation and permitted maximum level of audio signals",
+            "url": "https://tech.ebu.ch/publications/r128",
+            "used_for": "The broadcast loudness target of -23 LUFS",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "ITU-R BS.1770-5 (11/2023): Algorithms to measure audio programme loudness and true-peak audio level",
+            "url": "https://www.itu.int/rec/R-REC-BS.1770",
+            "used_for": "How integrated loudness and true peak are measured",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.4.3, Contrast (Minimum)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+            "used_for": "Text contrast in every shot",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "FFmpeg Filters Documentation",
+            "url": "https://ffmpeg.org/ffmpeg-filters.html",
+            "used_for": "signalstats for colour, ebur128 for loudness, crop and scale for reframes",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "YouTube Help: Recommended upload encoding settings",
+            "url": "https://support.google.com/youtube/answer/1722171",
+            "used_for": "An upload profile: MP4 with the moov atom first, no edit lists, H.264 High, AAC-LC at 48 kHz",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for editing",
+      "value": {
+        "cases": [
+          {
+            "id": "VE-RUSHED",
+            "scenario": "A 3-second shot carries an 18-word line",
+            "sample_input": "SYNTHETIC: shot E5 is 90 frames at 30 fps and carries line l5.",
+            "expected_outcome": "pacing_checked",
+            "expected_indicators": [
+              "rushed_verdict",
+              "split_line_proposed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VE-DENSE-LIST",
+            "scenario": "A list of 22 words builds in 4 s while the voice speaks",
+            "sample_input": "SYNTHETIC: shot E3 adds 22 new on-screen words in 120 frames.",
+            "expected_outcome": "pacing_checked",
+            "expected_indicators": [
+              "unreadable_verdict",
+              "dense_verdict"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VE-DISSOLVE-OVER-TEXT",
+            "scenario": "An 18-frame dissolve joins two text-heavy frames",
+            "sample_input": "SYNTHETIC: E3 to E4 is a dissolve; both frames hold body text.",
+            "expected_outcome": "edit_revised",
+            "expected_indicators": [
+              "hard_cut_on_action",
+              "revision_note_names_finding"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VE-WORD-SPLIT",
+            "scenario": "A J cut would start the next line mid-word",
+            "sample_input": "SYNTHETIC: the requested 8-frame lead lands 3 frames into the word 'Tuesday'.",
+            "expected_outcome": "edit_list_drafted",
+            "expected_indicators": [
+              "edit_point_moved_to_pause"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VE-REFRAME-REVEALS",
+            "scenario": "A taller crop reveals a person's screen notification",
+            "sample_input": "SYNTHETIC: the 9:16 crop of a capture shows a notification the 16:9 crop hid.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "recapture_needed",
+              "nothing_private"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "VE-OFFLINE-MEDIA",
+            "scenario": "An event points at media that has no pinned noun",
+            "sample_input": "SYNTHETIC: event B1 names broll.tools-on-wall, which was never written.",
+            "expected_outcome": "conform_checked",
+            "expected_indicators": [
+              "offline_event_named",
+              "render_not_proposed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VE-LOCK-BY-AGENT",
+            "scenario": "A worker is asked to lock the cut",
+            "sample_input": "SYNTHETIC: a lock task is enqueued for an agent.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "person_verb_named"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.edit-list",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: a 30-second edit decision list",
+      "value": {
+        "notice": "SYNTHETIC. A fictional tool library's explainer; the sources name nouns that do not exist.",
+        "conforms_to": {
+          "$pin": "template.edit-list"
+        },
+        "instance": {
+          "cut_id": "30s",
+          "fps": 30,
+          "version": 1,
+          "revises": null,
+          "total_frames": 900,
+          "events": [
+            {
+              "event_id": "E1",
+              "track": "V1",
+              "source": "scene.hook",
+              "source_in_frame": 0,
+              "source_out_frame": 90,
+              "record_in_frame": 0,
+              "record_out_frame": 90,
+              "transition": "cut",
+              "transition_frames": 0,
+              "audio_offset_frames": 0,
+              "carries_lines": [
+                "l1"
+              ],
+              "new_text_words": 5,
+              "beats_s": [
+                0.0,
+                1.5
+              ],
+              "reason": "The question on screen from frame 0, words popping on the beat."
+            },
+            {
+              "event_id": "E2",
+              "track": "V1",
+              "source": "capture.shelves",
+              "source_in_frame": 0,
+              "source_out_frame": 210,
+              "record_in_frame": 90,
+              "record_out_frame": 300,
+              "transition": "cut",
+              "transition_frames": 0,
+              "audio_offset_frames": -8,
+              "carries_lines": [
+                "l2"
+              ],
+              "new_text_words": 4,
+              "beats_s": [
+                4.5,
+                7.0
+              ],
+              "reason": "J cut: the count line starts 8 frames before the shelves appear, so the voice leads the picture."
+            },
+            {
+              "event_id": "E3",
+              "track": "V1",
+              "source": "scene.restock-list",
+              "source_in_frame": 0,
+              "source_out_frame": 120,
+              "record_in_frame": 300,
+              "record_out_frame": 420,
+              "transition": "dissolve",
+              "transition_frames": 18,
+              "audio_offset_frames": 0,
+              "carries_lines": [
+                "l3"
+              ],
+              "new_text_words": 22,
+              "beats_s": [
+                11.0
+              ],
+              "reason": "The drafted list builds item by item."
+            },
+            {
+              "event_id": "E4",
+              "track": "V1",
+              "source": "capture.review",
+              "source_in_frame": 0,
+              "source_out_frame": 150,
+              "record_in_frame": 420,
+              "record_out_frame": 570,
+              "transition": "cut",
+              "transition_frames": 0,
+              "audio_offset_frames": 6,
+              "carries_lines": [
+                "l4"
+              ],
+              "new_text_words": 6,
+              "beats_s": [
+                15.5,
+                17.0
+              ],
+              "reason": "L cut: the review line runs 6 frames under the receipt shot."
+            },
+            {
+              "event_id": "E5",
+              "track": "V1",
+              "source": "scene.receipt",
+              "source_in_frame": 0,
+              "source_out_frame": 90,
+              "record_in_frame": 570,
+              "record_out_frame": 660,
+              "transition": "punch_in",
+              "transition_frames": 6,
+              "audio_offset_frames": 0,
+              "carries_lines": [
+                "l5"
+              ],
+              "new_text_words": 3,
+              "beats_s": [
+                20.0
+              ],
+              "reason": "Punch in on the receipt as it is stamped."
+            },
+            {
+              "event_id": "E6",
+              "track": "V1",
+              "source": "scene.end-card",
+              "source_in_frame": 0,
+              "source_out_frame": 240,
+              "record_in_frame": 660,
+              "record_out_frame": 900,
+              "transition": "cut",
+              "transition_frames": 0,
+              "audio_offset_frames": 0,
+              "carries_lines": [
+                "l6"
+              ],
+              "new_text_words": 9,
+              "beats_s": [
+                22.5,
+                25.0,
+                27.5
+              ],
+              "reason": "End card: the line, then the address types on and holds."
+            },
+            {
+              "event_id": "B1",
+              "track": "V2",
+              "source": "broll.tools-on-wall",
+              "source_in_frame": 40,
+              "source_out_frame": 130,
+              "record_in_frame": 120,
+              "record_out_frame": 210,
+              "transition": "cut",
+              "transition_frames": 0,
+              "audio_offset_frames": 0,
+              "carries_lines": [],
+              "new_text_words": 0,
+              "beats_s": [],
+              "reason": "B-roll on 'what came back', within 6 frames of the word."
+            },
+            {
+              "event_id": "A1",
+              "track": "A1",
+              "source": "narration.track-30s",
+              "source_in_frame": 0,
+              "source_out_frame": 900,
+              "record_in_frame": 0,
+              "record_out_frame": 900,
+              "transition": "cut",
+              "transition_frames": 0,
+              "audio_offset_frames": 0,
+              "carries_lines": [],
+              "new_text_words": 0,
+              "beats_s": [],
+              "reason": "The placed narration track for the whole cut."
+            },
+            {
+              "event_id": "A2",
+              "track": "A2",
+              "source": "music.bed-30s",
+              "source_in_frame": 0,
+              "source_out_frame": 900,
+              "record_in_frame": 0,
+              "record_out_frame": 900,
+              "transition": "fade_in",
+              "transition_frames": 15,
+              "audio_offset_frames": 0,
+              "carries_lines": [],
+              "new_text_words": 0,
+              "beats_s": [],
+              "reason": "One bed under the whole cut, ducked under the voice."
+            }
+          ]
+        },
+        "lines": {
+          "l1": "Who keeps the tool library stocked?",
+          "l2": "Every Tuesday, two volunteers count what came back and what is missing.",
+          "l3": "An agent drafts the restock list overnight, from the counts.",
+          "l4": "In the morning, a person checks every change before anything is ordered.",
+          "l5": "Each step leaves a receipt, so anyone can see what happened, when it happened and who did it.",
+          "l6": "Borrow a drill, not a mystery."
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.pacing-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the pacing report of that edit list",
+      "value": {
+        "notice": "SYNTHETIC. Recomputed exactly by the library's tests from example.edit-list and its lines.",
+        "conforms_to": {
+          "$pin": "template.pacing-report"
+        },
+        "instance": {
+          "cut_id": "30s",
+          "fps": 30,
+          "edit_list": "example.edit-list",
+          "limits": {
+            "rushed_above_wps": 3.2,
+            "slack_below_wps": 1.2,
+            "max_gap_between_beats_s": 3.0,
+            "long_shot_s": 6.0,
+            "dense_new_words": 12,
+            "reading_rule": "0.5 s plus on-screen words divided by 3"
+          },
+          "shots": [
+            {
+              "shot_id": "E1",
+              "start_s": 0.0,
+              "end_s": 3.0,
+              "length_s": 3.0,
+              "spoken_words": 6,
+              "words_per_second": 2.0,
+              "new_text_words": 5,
+              "reading_need_s": 2.17,
+              "longest_gap_s": 1.5,
+              "verdicts": []
+            },
+            {
+              "shot_id": "E2",
+              "start_s": 3.0,
+              "end_s": 10.0,
+              "length_s": 7.0,
+              "spoken_words": 12,
+              "words_per_second": 1.71,
+              "new_text_words": 4,
+              "reading_need_s": 1.83,
+              "longest_gap_s": 3.0,
+              "verdicts": []
+            },
+            {
+              "shot_id": "E3",
+              "start_s": 10.0,
+              "end_s": 14.0,
+              "length_s": 4.0,
+              "spoken_words": 10,
+              "words_per_second": 2.5,
+              "new_text_words": 22,
+              "reading_need_s": 7.83,
+              "longest_gap_s": 3.0,
+              "verdicts": [
+                "unreadable",
+                "dense"
+              ]
+            },
+            {
+              "shot_id": "E4",
+              "start_s": 14.0,
+              "end_s": 19.0,
+              "length_s": 5.0,
+              "spoken_words": 12,
+              "words_per_second": 2.4,
+              "new_text_words": 6,
+              "reading_need_s": 2.5,
+              "longest_gap_s": 2.0,
+              "verdicts": []
+            },
+            {
+              "shot_id": "E5",
+              "start_s": 19.0,
+              "end_s": 22.0,
+              "length_s": 3.0,
+              "spoken_words": 18,
+              "words_per_second": 6.0,
+              "new_text_words": 3,
+              "reading_need_s": 1.5,
+              "longest_gap_s": 2.0,
+              "verdicts": [
+                "rushed"
+              ]
+            },
+            {
+              "shot_id": "E6",
+              "start_s": 22.0,
+              "end_s": 30.0,
+              "length_s": 8.0,
+              "spoken_words": 6,
+              "words_per_second": 0.75,
+              "new_text_words": 9,
+              "reading_need_s": 3.5,
+              "longest_gap_s": 2.5,
+              "verdicts": []
+            }
+          ],
+          "flagged": 2
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.mix-plan",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: the mix plan for the 30-second cut",
+      "value": {
+        "notice": "SYNTHETIC. No audio exists.",
+        "conforms_to": {
+          "$pin": "template.mix-plan"
+        },
+        "instance": {
+          "cut_id": "30s",
+          "target_lufs": -14.0,
+          "tolerance_lu": 1.0,
+          "true_peak_max_dbtp": -1.0,
+          "duck_db": 14.0,
+          "gap_floor_lufs": -28.0,
+          "measure_on": "encoded_file",
+          "stems": [
+            {
+              "stem_id": "voice",
+              "kind": "voice",
+              "source": "narration.track-30s",
+              "license": "generated in-house, AI-generated voice, labeled",
+              "gain_db": 0.0
+            },
+            {
+              "stem_id": "bed",
+              "kind": "music",
+              "source": "music.bed-30s",
+              "license": "generated in-house from a recorded seed",
+              "gain_db": -18.0
+            },
+            {
+              "stem_id": "pops",
+              "kind": "effects",
+              "source": "sfx.text-pop",
+              "license": "CC0-1.0",
+              "gain_db": -12.0
+            }
+          ],
+          "ducking": [
+            {
+              "start_s": 0.2,
+              "end_s": 28.0,
+              "depth_db": 14.0
+            }
+          ],
+          "bed": {
+            "one_bed": true,
+            "crossfades": "equal_power",
+            "seed": 7731
+          },
+          "effects_on_events": [
+            {
+              "time_s": 0.0,
+              "effect": "pops"
+            },
+            {
+              "time_s": 1.5,
+              "effect": "pops"
+            },
+            {
+              "time_s": 20.0,
+              "effect": "pops"
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.export-spec",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: two delivery profiles",
+      "value": {
+        "notice": "SYNTHETIC. A web master and a vertical cut with open captions.",
+        "conforms_to": {
+          "$pin": "template.export-spec"
+        },
+        "instance": {
+          "cut_id": "30s",
+          "profiles": [
+            {
+              "profile_id": "web-16x9",
+              "aspect": "landscape_16x9",
+              "width": 1920,
+              "height": 1080,
+              "frame_rate": 30,
+              "codec": "avc1",
+              "h264_profile": "High",
+              "chroma": "4:2:0",
+              "color_primaries": 1,
+              "audio_codec": "mp4a",
+              "sample_rate": 48000,
+              "channels": 2,
+              "faststart": true,
+              "edit_lists": true,
+              "max_bytes": 20000000,
+              "max_bitrate_kbps": 6000,
+              "target_lufs": -16.0,
+              "sidecars": [
+                "webvtt",
+                "srt"
+              ],
+              "open_captions": false
+            },
+            {
+              "profile_id": "reels-9x16",
+              "aspect": "reels_9x16",
+              "width": 1080,
+              "height": 1920,
+              "frame_rate": 30,
+              "codec": "avc1",
+              "h264_profile": "High",
+              "chroma": "4:2:0",
+              "color_primaries": 1,
+              "audio_codec": "mp4a",
+              "sample_rate": 48000,
+              "channels": 2,
+              "faststart": true,
+              "edit_lists": false,
+              "max_bytes": 20000000,
+              "max_bitrate_kbps": 8000,
+              "target_lufs": -14.0,
+              "sidecars": [
+                "srt"
+              ],
+              "open_captions": true
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.revision-note",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a revision that answers three findings",
+      "value": {
+        "notice": "SYNTHETIC. The finding ids stand for a review's findings.",
+        "conforms_to": {
+          "$pin": "template.revision-note"
+        },
+        "instance": {
+          "cut_id": "30s",
+          "from_version": 1,
+          "to_version": 2,
+          "changes": [
+            {
+              "finding": "F-3",
+              "issue_seen": "The restock list adds 22 words in 4 s while the voice speaks: unreadable and dense in the pacing report.",
+              "change_made": "Show 5 list items, not 12, and hold the shot 6 s, taking 2 s from the end card's hold.",
+              "events": [
+                "E3",
+                "E6"
+              ]
+            },
+            {
+              "finding": "F-4",
+              "issue_seen": "An 18-frame dissolve joins the list and the review page, so both texts show at once.",
+              "change_made": "A hard cut on the last list item's pop.",
+              "events": [
+                "E3",
+                "E4"
+              ]
+            },
+            {
+              "finding": "F-5",
+              "issue_seen": "The receipt line packs 18 words into 3 s: rushed.",
+              "change_made": "Split the line; the second half moves under the end card.",
+              "events": [
+                "E5",
+                "E6"
+              ]
+            }
+          ],
+          "overwrites_previous": false
+        }
+      },
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "draft-edit-list",
+      "kind": "verb.solve_draft",
+      "title": "Draft the edit decision list from the script and narration",
+      "claimant": "agent",
+      "summary": "Lay the cut out as an edit decision list: one event per shot on the main track with the lines it carries, J and L cuts placed in measured pauses, b-roll on the words it illustrates, transitions chosen on purpose, beats inside each shot, and a reason for every event.",
+      "outcome": "An edit decision list.",
+      "ready_outcome": "edit_list_drafted",
+      "pinned": [
+        "rules.pacing",
+        "rules.j-and-l-cuts",
+        "rules.b-roll",
+        "rules.transitions",
+        "guardrail.picture-follows-the-words",
+        "guardrail.no-padding"
+      ],
+      "slots": [
+        {
+          "name": "script",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the script."
+        },
+        {
+          "name": "narration_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the placed narration track."
+        },
+        {
+          "name": "cut_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut plan on one frame clock.",
+          "required": false
+        },
+        {
+          "name": "media",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the media nouns the cut may use.",
+          "many": true,
+          "max": 60
+        }
+      ],
+      "produces": [
+        {
+          "name": "edit_list",
+          "template": "template.edit-list"
+        }
+      ],
+      "steps": [
+        "Place one event per shot so every line lands on the shot that shows what it says.",
+        "Put each split edit in a measured pause and say which line it carries.",
+        "List each shot's visual beats; a shot with a gap over 3 s gets another beat or a shorter length.",
+        "Give every event a source noun and a reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.edit-list's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "totals-agree",
+          "check": "The main track's events end at total_frames without gaps or overlaps.",
+          "method": "deterministic"
+        },
+        {
+          "id": "all-sourced",
+          "check": "Every event's source names one of the pinned media nouns.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cuts-on-pauses",
+          "check": "Picture and audio edits land on pauses or actions.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.plan-cut"
+      ]
+    },
+    {
+      "slug": "check-pacing",
+      "kind": "verb.verify_gate",
+      "title": "Check the pacing of every shot against its words",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "For each shot on the main track, measure length, words spoken and their rate, new on-screen words against their reading need, and the longest gap between beats, and flag rushed, slack, unreadable, dense and long shots without changing the list.",
+      "outcome": "A pacing report.",
+      "ready_outcome": "pacing_checked",
+      "pinned": [
+        "rules.pacing"
+      ],
+      "slots": [
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        },
+        {
+          "name": "script",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the script with each line's text."
+        }
+      ],
+      "produces": [
+        {
+          "name": "pacing_report",
+          "template": "template.pacing-report"
+        }
+      ],
+      "steps": [
+        "Compute every row with the pacing rules' formulas; round as the template does.",
+        "List each flagged shot in the summary; never write a new version of the edit list."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.pacing-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "Recomputing every row from the edit list and the script gives the same values and verdicts.",
+          "method": "deterministic"
+        },
+        {
+          "id": "flag-count",
+          "check": "flagged equals the number of shots with at least one verdict.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-editing.draft-edit-list"
+      ]
+    },
+    {
+      "slug": "plan-mix",
+      "kind": "verb.solve_draft",
+      "title": "Plan the audio mix",
+      "claimant": "agent",
+      "summary": "Write the mix plan: each stem's source, licence and gain, ducking under the voice, one bed with its seed and crossfades, sound effects on visual events, and loudness targets to be measured on the encoded file.",
+      "outcome": "A mix plan.",
+      "ready_outcome": "mix_planned",
+      "pinned": [
+        "rules.audio-mix",
+        "video-showcase:asset-policy"
+      ],
+      "slots": [
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        },
+        {
+          "name": "narration_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the placed narration track."
+        },
+        {
+          "name": "audio_assets",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the music, effects and ambience nouns.",
+          "required": false,
+          "many": true,
+          "max": 30
+        }
+      ],
+      "params": {
+        "target_lufs": {
+          "schema": {
+            "type": "number",
+            "minimum": -31,
+            "maximum": -5
+          },
+          "description": "Integrated loudness target for this cut.",
+          "default": -16
+        }
+      },
+      "produces": [
+        {
+          "name": "mix_plan",
+          "template": "template.mix-plan"
+        }
+      ],
+      "steps": [
+        "Duck the bed 12 to 16 dB under every narration line unless the brief says otherwise.",
+        "Keep one bed under joined sections; record its seed.",
+        "Name each stem's licence from the asset policy; a stem without an allowed licence is left out and named."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.mix-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "licensed",
+          "check": "Every stem's licence is on the asset policy's allowed list.",
+          "method": "deterministic"
+        },
+        {
+          "id": "measured-on-file",
+          "check": "measure_on is encoded_file.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-editing.draft-edit-list"
+      ]
+    },
+    {
+      "slug": "check-color",
+      "kind": "verb.verify_gate",
+      "title": "Check colour and contrast consistency on the render",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Measure each shot's luma and chroma on the rendered file, list jumps between adjacent shots and whether the plan declared them, and compute text contrast pairs unrounded, proposing grade or colour changes for the problems.",
+      "outcome": "A colour and contrast report.",
+      "ready_outcome": "color_checked",
+      "pinned": [
+        "rules.color",
+        "video-motion:tool.ffmpeg"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the rendered file's media noun."
+        },
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Only the worker's own machine: FFmpeg reads a local copy of the render."
+      ],
+      "produces": [
+        {
+          "name": "color_report",
+          "template": "template.color-report"
+        }
+      ],
+      "steps": [
+        "Run signalstats over each shot's frames and record the averages and ranges.",
+        "Flag undeclared jumps over the rule's luma limit and every contrast pair that fails unrounded."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.color-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-shot",
+          "check": "Every main-track event has one shot row.",
+          "method": "deterministic"
+        },
+        {
+          "id": "contrast-unrounded",
+          "check": "Each pair's passes field follows from the unrounded ratio.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-motion.render-sequence"
+      ]
+    },
+    {
+      "slug": "plan-reframes",
+      "kind": "verb.solve_draft",
+      "title": "Plan a reframe for each other aspect ratio",
+      "claimant": "agent",
+      "summary": "For each target aspect, give every shot a crop window around its centre of interest, restack slides that need it, re-render text at full size, keep labels visible, and note anything a crop reveals or hides.",
+      "outcome": "A reframe plan.",
+      "ready_outcome": "reframes_planned",
+      "pinned": [
+        "rules.reframing",
+        "video-motion:rules.aspects"
+      ],
+      "slots": [
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        },
+        {
+          "name": "storyboard",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the storyboard, for each shot's centre of interest.",
+          "required": false
+        }
+      ],
+      "params": {
+        "targets": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "feed_4x5",
+                "square_1x1",
+                "landscape_16x9"
+              ]
+            }
+          },
+          "description": "Aspects to reframe for.",
+          "default": [
+            "reels_9x16"
+          ]
+        }
+      },
+      "produces": [
+        {
+          "name": "reframe_plan",
+          "template": "template.reframe-plan"
+        }
+      ],
+      "steps": [
+        "Look at every shot in every target aspect on its own; a crop that reveals something private is a blocked question.",
+        "Keep text and labels inside the safe canvas and clear of keep-out boxes."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.reframe-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-shot-every-target",
+          "check": "Each target lists every main-track shot.",
+          "method": "deterministic"
+        },
+        {
+          "id": "labels-kept",
+          "check": "labels_kept is true.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-editing.draft-edit-list"
+      ]
+    },
+    {
+      "slug": "write-export-spec",
+      "kind": "verb.solve_draft",
+      "title": "Write the export spec",
+      "claimant": "agent",
+      "summary": "Write one delivery profile per output the brief asks for, with codec, size, frame rate, colour, audio, fast start, edit lists, size and bitrate budgets, loudness target and sidecars, so the video QA pack can check each file against it.",
+      "outcome": "An export spec.",
+      "ready_outcome": "export_spec_written",
+      "pinned": [
+        "rules.conform-and-export"
+      ],
+      "slots": [
+        {
+          "name": "video_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the video brief."
+        },
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        }
+      ],
+      "produces": [
+        {
+          "name": "export_spec",
+          "template": "template.export-spec"
+        }
+      ],
+      "steps": [
+        "Take the outputs, hosts and size limits from the brief; ask once when a host's limit is unknown.",
+        "Set the loudness target per profile: about -16 LUFS for web players and -14 for short social cuts."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.export-spec's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "budgets-set",
+          "check": "Every profile has a size and a bitrate budget.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-editing.draft-edit-list"
+      ]
+    },
+    {
+      "slug": "conform-edit",
+      "kind": "verb.verify_gate",
+      "title": "Conform the edit before rendering",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Check that every event resolves to a pinned media noun at the plan's frame rate, that the main track has no gap or overlap, and that the totals match the plan, then propose a render for each export profile only when it conforms.",
+      "outcome": "A conform record.",
+      "ready_outcome": "conform_checked",
+      "pinned": [
+        "rules.conform-and-export",
+        "edit-checks"
+      ],
+      "slots": [
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        },
+        {
+          "name": "media",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the media nouns the list names.",
+          "many": true,
+          "max": 60
+        },
+        {
+          "name": "export_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the export spec."
+        }
+      ],
+      "produces": [
+        {
+          "name": "conform_record",
+          "template": "template.conform-record"
+        }
+      ],
+      "steps": [
+        "Resolve every event's source; list offline events, gaps, overlaps and frame rate mismatches.",
+        "Propose video-motion render-sequence per profile only when conformed is true."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.conform-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "conformed-means-clean",
+          "check": "conformed is true only when offline, gaps, overlaps and mismatches are empty and the totals agree.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-editing.write-export-spec"
+      ]
+    },
+    {
+      "slug": "revise-edit",
+      "kind": "verb.solve_draft",
+      "title": "Revise the edit to answer findings",
+      "claimant": "agent",
+      "summary": "Write a new version of the edit decision list that answers the given findings at their causes, and a revision note that names each finding, the issue seen, the change made and the events touched, leaving every earlier version in place.",
+      "outcome": "A new edit list version and its revision note.",
+      "ready_outcome": "edit_revised",
+      "pinned": [
+        "guardrail.keep-every-version",
+        "guardrail.fix-the-cause",
+        "rules.pacing",
+        "rules.transitions",
+        "edit-checks"
+      ],
+      "slots": [
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        },
+        {
+          "name": "review",
+          "category": "noun.eval_run",
+          "description": "Pin of the review whose findings this answers."
+        },
+        {
+          "name": "findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of findings-to-fixes records for the same findings.",
+          "required": false,
+          "many": true,
+          "max": 40
+        }
+      ],
+      "produces": [
+        {
+          "name": "edit_list",
+          "template": "template.edit-list"
+        },
+        {
+          "name": "revision_note",
+          "template": "template.revision-note"
+        }
+      ],
+      "steps": [
+        "Answer each finding where it is caused: the event, the scene or the template.",
+        "Write the new version with revises set to the old one, and a revision note entry per finding.",
+        "A finding you cannot answer in the edit is listed in unknowns with the verb that can."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-templates",
+          "check": "Both outputs validate against their templates' schemas.",
+          "method": "deterministic"
+        },
+        {
+          "id": "versions-kept",
+          "check": "The new list names the version it revises and the note has overwrites_previous false.",
+          "method": "deterministic"
+        },
+        {
+          "id": "findings-answered",
+          "check": "Every finding pinned is named in the note or in unknowns.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut"
+      ]
+    },
+    {
+      "slug": "lock-cut",
+      "kind": "verb.verify_gate",
+      "title": "Lock the cut, or send it back",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person watches the whole cut with sound on the screens named, then locks this version or returns it with notes; a lock is not a release.",
+      "outcome": "A lock record.",
+      "ready_outcome": "cut_decided",
+      "pinned": [
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the rendered file's media noun."
+        },
+        {
+          "name": "edit_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the edit decision list."
+        },
+        {
+          "name": "review",
+          "category": "noun.eval_run",
+          "description": "Pin of the latest review or re-review.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "lock_record",
+          "template": "template.lock-record"
+        }
+      ],
+      "steps": [
+        "Watch start to finish before reading the review.",
+        "Lock the version, or write what must change; releasing stays the owner's separate act."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.lock-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "watched",
+          "check": "watched_on names at least one screen and one speaker.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut",
+        "video-review.re-review"
+      ]
+    }
+  ]
+}

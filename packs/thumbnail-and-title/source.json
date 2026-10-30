@@ -1,0 +1,1918 @@
+{
+  "pack_id": "thumbnail-and-title",
+  "title": "Thumbnails and titles",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for thumbnail and title candidates: drafted from what the video shows, checked for legibility at small sizes, contrast and honesty with no claim the video does not support, compared side by side, tested by a plan fixed before any result, and picked by a person.",
+  "dependencies": [
+    "taste-palettes",
+    "video-qa",
+    "video-review",
+    "screenshot-design-review"
+  ],
+  "boundaries": [
+    "Workers draft and check candidates; only a person picks, and only a person runs a test, in the platform's own tool.",
+    "No candidate promises what the video does not deliver.",
+    "Rejected candidates stay on the record with the check that rejected them.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for thumbnail and title candidates, checked for small sizes and honesty, tested by plan and picked by a person",
+      "value": {
+        "lets_workers": "Draft title and thumbnail candidates for a video from what it actually shows, check every candidate's text at the small sizes people see it, its contrast and its honesty, with no claim or promise the video does not deliver, set candidates side by side for a person to pick, and write an A/B plan with its decision rule fixed in advance for a person to run in the platform's own test tool.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.draft-titles"
+            },
+            "when": "Three to six titles from what the video shows."
+          },
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.draft-thumbnails"
+            },
+            "when": "Frame and designed cover candidates."
+          },
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.check-thumbnails"
+            },
+            "when": "Text size at each display size, word count and contrast."
+          },
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.check-honesty"
+            },
+            "when": "Every claim traced; no banned pattern; every promise kept."
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.assemble-comparison"
+            },
+            "when": "The candidates that pass, side by side in a recorded shuffle."
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.record-choice"
+            },
+            "when": "A person picks one, or none."
+          },
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.plan-ab-test"
+            },
+            "when": "An A/B plan fixed before any result."
+          },
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.record-ab-result"
+            },
+            "when": "The person records what the platform's test reported and the decision."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.promise-what-it-delivers"
+          },
+          {
+            "$pin": "guardrail.a-person-picks"
+          },
+          {
+            "$pin": "guardrail.spoiler-free-when-asked"
+          },
+          {
+            "$pin": "guardrail.tests-run-by-a-person"
+          }
+        ],
+        "worked_example": "Synthetic: three thumbnails and three titles for a fictional pantry's film. The size check finds one cover's text under 12 CSS px on both small displays, the contrast fixture shows its grey text fails the normal-text ratio that applies once it is that small, the title checks reject a clickbait title, and the A/B plan compares the two good covers by the platform's own measure.",
+        "complements": "The taste palettes pack shows options side by side and keeps a person's choice; this pack makes the candidates, checks them and plans the test. The video review pack's claim trace is what the honesty check reads.",
+        "provenance_notes": [
+          "Generalizes the cover and title practice of a working short-form video studio: a designed cover with the hook line rather than a random mid-video frame, covers that never give away a reveal, alt text for people who read rather than watch, honest hook words over keyword scores, and A/B tests of hook wording and covers run by a person."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.promise-what-it-delivers"
+        ],
+        [
+          "requires_noun",
+          "guardrail.a-person-picks"
+        ],
+        [
+          "requires_noun",
+          "guardrail.spoiler-free-when-asked"
+        ],
+        [
+          "requires_noun",
+          "guardrail.tests-run-by-a-person"
+        ],
+        [
+          "requires_noun",
+          "rules.small-sizes"
+        ],
+        [
+          "requires_noun",
+          "rules.honesty"
+        ],
+        [
+          "requires_noun",
+          "rules.ab-plan"
+        ],
+        [
+          "requires_noun",
+          "template.title-candidates"
+        ],
+        [
+          "requires_noun",
+          "template.thumbnail-candidates"
+        ],
+        [
+          "requires_noun",
+          "template.size-check"
+        ],
+        [
+          "requires_noun",
+          "template.honesty-check"
+        ],
+        [
+          "requires_noun",
+          "template.ab-plan"
+        ],
+        [
+          "requires_noun",
+          "template.ab-result"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.promise-what-it-delivers",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: promise only what the video delivers",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A title or thumbnail promises nothing the video does not show: no number it does not trace, no event it does not contain, no fake urgency, no face reacting to something that never happens, and none of the banned clickbait patterns.",
+        "how_it_is_checked": "The honesty check traces every claim to the video's claim trace and finds no banned pattern."
+      }
+    },
+    {
+      "slug": "guardrail.a-person-picks",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a person picks",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Workers draft and check candidates; only a person picks one, or none, and silence is never a choice.",
+        "how_it_is_checked": "The choice is a taste palettes record-choice by a person."
+      }
+    },
+    {
+      "slug": "guardrail.spoiler-free-when-asked",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: no spoilers when the format needs a reveal",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "For a reveal, a puzzle or a surprise, the cover comes from the hook, never the answer, and neither the title nor the cover names it; the alt text may, for people who read rather than watch.",
+        "how_it_is_checked": "Each thumbnail candidate states spoiler_free, and the check fails a reveal format's candidate that is not."
+      }
+    },
+    {
+      "slug": "guardrail.tests-run-by-a-person",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a person runs every test in the platform's own tool",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "An A/B test runs only in the platform's official test feature, started and read by a person. No worker changes a published video, buys or fakes traffic, or reads results outside what the platform reports.",
+        "how_it_is_checked": "The A/B plan has run_by person and fixed_before_results true; the result is a person's verb."
+      }
+    },
+    {
+      "slug": "rules.small-sizes",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Small-size rules for thumbnails",
+      "category_reason": "A zero-call procedure using the video QA pack's legibility and contrast code.",
+      "value": {
+        "rules": [
+          "List the display widths the platform shows the thumbnail at; a card, a list row and a small row are typical.",
+          "Text's size at each width is its pixel size in the master times the display width over the master width; it must reach 12 CSS px at the smallest.",
+          "Five words or fewer on a thumbnail; one focal subject; nothing important under the platform's own overlays, such as a duration badge.",
+          "Text and its panel meet WCAG contrast, 4.5 to 1, or 3 to 1 for large text, unrounded.",
+          "A frame candidate is a designed frame, never a half-shown caption or a mid-transition frame."
+        ],
+        "min_css_px": 12.0,
+        "legibility_tool": {
+          "$pin": "video-qa:tool.video-qa-checks"
+        },
+        "layout_review": {
+          "$verb": "screenshot-design-review.check-design-rules"
+        },
+        "layout_note": "A designed cover rendered from a layout can also go through the screenshot design review pack, which measures text size, contrast and cropping from its layout facts with the same 12 px floor.",
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-qa:tool.video-qa-checks"
+        ],
+        [
+          "derives_from",
+          "screenshot-design-review:design-rules"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.honesty",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Honesty rules for titles and thumbnails",
+      "category_reason": "A zero-call procedure: a fixed pattern and a trace lookup.",
+      "value": {
+        "rules": [
+          "Every claim in a title or on a thumbnail is a claim the video's claim trace upholds, with its qualifier where the trace has one.",
+          "No banned pattern: the regular expression below, which a requester may extend but never shorten.",
+          "The title is a question the video answers or a plain statement of what it shows; the promise names the moment that keeps it.",
+          "No all-capital titles, and no superlative without evidence.",
+          "Generated imagery on a cover is labeled as generated."
+        ],
+        "banned_pattern": "(?i)(you won't believe|shocking|insane|nobody (knows|tells)|everyone is|doctors hate|this one trick|gone wrong|\\b(must|need to) see\\b)",
+        "claim_trace": {
+          "$pin": "video-review:guardrail.trace-every-number"
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.ab-plan",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "A/B plan rules",
+      "category_reason": "A zero-call procedure for planning a test whose decision is fixed in advance.",
+      "value": {
+        "rules": [
+          "Change one thing: the thumbnail, the title, or both as one pair, never several at once.",
+          "Two or three variants, the most one platform's built-in test accepts at the time of writing.",
+          "Fix the metric, the minimum duration, the decision rule and what counts as no difference before any result exists.",
+          "Use the measure the platform's own test reports; one platform picks by watch time, not by clicks.",
+          "A person starts the test, reads its result and records the decision; nothing else touches the published video."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.title-candidates",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: title candidates",
+      "value": {
+        "describes": "three to six titles for one video, each with its length, the claims it makes and the moment that keeps its promise",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "video_sha256",
+            "candidates"
+          ],
+          "properties": {
+            "video_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_id",
+                  "text",
+                  "chars",
+                  "claims",
+                  "promise"
+                ],
+                "properties": {
+                  "candidate_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "chars": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "promise": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.thumbnail-candidates",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: thumbnail candidates",
+      "value": {
+        "describes": "frame or designed cover candidates for one video: the frame time or design, the text overlay, its word count and pixel size in the master, colours, spoiler status, labels and the promise",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "video_sha256",
+            "master",
+            "candidates"
+          ],
+          "properties": {
+            "video_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "master": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "width_px",
+                "height_px"
+              ],
+              "properties": {
+                "width_px": {
+                  "type": "integer",
+                  "minimum": 64,
+                  "maximum": 8192
+                },
+                "height_px": {
+                  "type": "integer",
+                  "minimum": 64,
+                  "maximum": 8192
+                }
+              }
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_id",
+                  "kind",
+                  "frame_time_s",
+                  "text_overlay",
+                  "words",
+                  "text_px",
+                  "spoiler_free",
+                  "labels",
+                  "source_digest",
+                  "promise",
+                  "text_color",
+                  "panel_color"
+                ],
+                "properties": {
+                  "candidate_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "frame",
+                      "designed"
+                    ]
+                  },
+                  "frame_time_s": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "text_overlay": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "words": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 30
+                  },
+                  "text_px": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2000
+                  },
+                  "spoiler_free": {
+                    "type": "boolean"
+                  },
+                  "labels": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    }
+                  },
+                  "source_digest": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "promise": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "text_color": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 7,
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "panel_color": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 7,
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.size-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: thumbnail text at each display size",
+      "value": {
+        "describes": "for each candidate, its text's CSS pixels at each display width, whether it reads there, and its word count",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sizes",
+            "min_css_px",
+            "candidates"
+          ],
+          "properties": {
+            "sizes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "width_px"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "width_px": {
+                    "type": "integer",
+                    "minimum": 32,
+                    "maximum": 4096
+                  }
+                }
+              }
+            },
+            "min_css_px": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_id",
+                  "rows",
+                  "words_ok",
+                  "readable_everywhere"
+                ],
+                "properties": {
+                  "candidate_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "rows": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "display",
+                        "width_px",
+                        "text_css_px",
+                        "readable"
+                      ],
+                      "properties": {
+                        "display": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        },
+                        "width_px": {
+                          "type": "integer",
+                          "minimum": 32,
+                          "maximum": 4096
+                        },
+                        "text_css_px": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 2000
+                        },
+                        "readable": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  },
+                  "words_ok": {
+                    "type": "boolean"
+                  },
+                  "readable_everywhere": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.honesty-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the honesty check of each candidate",
+      "value": {
+        "describes": "for each title and thumbnail, its claims with whether the claim trace upholds them, any banned pattern found, and where the video keeps its promise",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "candidates"
+          ],
+          "properties": {
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "candidate_id",
+                  "claims",
+                  "banned_patterns",
+                  "promise_kept_at_s",
+                  "passes"
+                ],
+                "properties": {
+                  "candidate_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "text",
+                        "traced"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "traced": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  },
+                  "banned_patterns": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    }
+                  },
+                  "promise_kept_at_s": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "passes": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.ab-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: an A/B plan fixed before any result",
+      "value": {
+        "describes": "the variants, the one thing that changes, the metric, the platform's own tool, who runs it, the minimum duration and the decision and no-difference rules",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "video_ref",
+            "variants",
+            "one_variable",
+            "metric",
+            "platform_tool",
+            "run_by",
+            "minimum_days",
+            "decision_rule",
+            "no_difference_rule",
+            "fixed_before_results"
+          ],
+          "properties": {
+            "video_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "variants": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 10
+              }
+            },
+            "one_variable": {
+              "type": "string",
+              "enum": [
+                "thumbnail",
+                "title",
+                "pair"
+              ]
+            },
+            "metric": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "platform_tool": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "run_by": {
+              "type": "string",
+              "enum": [
+                "person"
+              ]
+            },
+            "minimum_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60
+            },
+            "decision_rule": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "no_difference_rule": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "fixed_before_results": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.ab-result",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of an A/B result",
+      "value": {
+        "describes": "what the platform's own test reported, the decision under the plan's rule, and who recorded it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ab_plan",
+            "reported",
+            "winner",
+            "decision",
+            "recorded_by"
+          ],
+          "properties": {
+            "ab_plan": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "reported": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "winner": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 10
+            },
+            "decision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "recorded_by": {
+              "type": "string",
+              "enum": [
+                "person"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "title-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Title checks, with one good and four bad titles the validator recomputes",
+      "category_reason": "A golden fixture: fixed title and cover pairs and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks a title and cover pair passes before a person is shown it, each shown failing on a bad pair for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "claims_untraced",
+            "spoiler_free",
+            "reveal_format",
+            "generated_imagery",
+            "labels"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "claims_untraced": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            "spoiler_free": {
+              "type": "boolean"
+            },
+            "reveal_format": {
+              "type": "boolean"
+            },
+            "generated_imagery": {
+              "type": "boolean"
+            },
+            "labels": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "no-clickbait",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "title",
+              "pattern": "(?i)(you won't believe|shocking|insane|nobody (knows|tells)|everyone is|doctors hate|this one trick|gone wrong|\\b(must|need to) see\\b)"
+            },
+            "why": "No banned clickbait pattern."
+          },
+          {
+            "id": "not-all-caps",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "title",
+              "pattern": "[a-z]"
+            },
+            "why": "No all-capital title."
+          },
+          {
+            "id": "claims-traced",
+            "rule": {
+              "rule": "enum",
+              "path": "claims_untraced",
+              "values": [
+                0
+              ]
+            },
+            "why": "Every claim is upheld by the claim trace."
+          },
+          {
+            "id": "no-spoiler",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "reveal_format",
+                "equals": true
+              },
+              "then": {
+                "rule": "enum",
+                "path": "spoiler_free",
+                "values": [
+                  true
+                ]
+              }
+            },
+            "why": "A reveal's cover never gives the answer away."
+          },
+          {
+            "id": "generated-labeled",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "generated_imagery",
+                "equals": true
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "labels",
+                "pattern": "(?i)generated"
+              }
+            },
+            "why": "Generated imagery is labeled."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-question",
+            "label": "known_good",
+            "finding": {
+              "title": "Who restocks the pantry overnight?",
+              "claims_untraced": 0,
+              "spoiler_free": true,
+              "reveal_format": false,
+              "generated_imagery": false,
+              "labels": []
+            }
+          },
+          {
+            "id": "bad-clickbait",
+            "label": "known_bad",
+            "fails": "no-clickbait",
+            "finding": {
+              "title": "You won't believe who restocks the pantry",
+              "claims_untraced": 0,
+              "spoiler_free": true,
+              "reveal_format": false,
+              "generated_imagery": false,
+              "labels": []
+            }
+          },
+          {
+            "id": "bad-shouting",
+            "label": "known_bad",
+            "fails": "not-all-caps",
+            "finding": {
+              "title": "WHO RESTOCKS THE PANTRY?",
+              "claims_untraced": 0,
+              "spoiler_free": true,
+              "reveal_format": false,
+              "generated_imagery": false,
+              "labels": []
+            }
+          },
+          {
+            "id": "bad-untraced",
+            "label": "known_bad",
+            "fails": "claims-traced",
+            "finding": {
+              "title": "The pantry that feeds 500 families",
+              "claims_untraced": 1,
+              "spoiler_free": true,
+              "reveal_format": false,
+              "generated_imagery": false,
+              "labels": []
+            }
+          },
+          {
+            "id": "bad-spoiler",
+            "label": "known_bad",
+            "fails": "no-spoiler",
+            "finding": {
+              "title": "Who restocks the pantry overnight?",
+              "claims_untraced": 0,
+              "spoiler_free": false,
+              "reveal_format": true,
+              "generated_imagery": false,
+              "labels": []
+            }
+          },
+          {
+            "id": "bad-unlabeled-image",
+            "label": "known_bad",
+            "fails": "generated-labeled",
+            "finding": {
+              "title": "Who restocks the pantry overnight?",
+              "claims_untraced": 0,
+              "spoiler_free": true,
+              "reveal_format": false,
+              "generated_imagery": true,
+              "labels": []
+            }
+          }
+        ],
+        "expected": {
+          "good-question": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-clickbait": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-clickbait"
+            ]
+          },
+          "bad-shouting": {
+            "verdict": "fail",
+            "failed_checks": [
+              "not-all-caps"
+            ]
+          },
+          "bad-untraced": {
+            "verdict": "fail",
+            "failed_checks": [
+              "claims-traced"
+            ]
+          },
+          "bad-spoiler": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-spoiler"
+            ]
+          },
+          "bad-unlabeled-image": {
+            "verdict": "fail",
+            "failed_checks": [
+              "generated-labeled"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.title-candidates"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "contrast-example",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Worked example: thumbnail text colours and their contrast ratios",
+      "category_reason": "A deterministic example the library's validator recomputes.",
+      "value": {
+        "fixture_kind": "contrast_ratio",
+        "purpose": "The three candidates' text and panel colours, with WCAG ratios the validator recomputes from relative luminance.",
+        "thresholds": {
+          "normal_text": 4.5,
+          "large_text": 3.0
+        },
+        "pairs": [
+          {
+            "id": "T1",
+            "foreground": "#FFFDF8",
+            "background": "#11161F"
+          },
+          {
+            "id": "T2",
+            "foreground": "#11161F",
+            "background": "#F5F2EA"
+          },
+          {
+            "id": "T3",
+            "foreground": "#777777",
+            "background": "#FFFFFF"
+          }
+        ],
+        "expected": {
+          "T1": {
+            "ratio": 17.83,
+            "normal_text": true,
+            "large_text": true
+          },
+          "T2": {
+            "ratio": 16.2,
+            "normal_text": true,
+            "large_text": true
+          },
+          "T3": {
+            "ratio": 4.48,
+            "normal_text": false,
+            "large_text": true
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.small-sizes"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before picking a cover and title",
+      "category_reason": "A short checklist a person runs is part of the choice's guardrails.",
+      "value": {
+        "items": [
+          "Look at every candidate at the smallest size the platform shows it, on a phone.",
+          "Read each title aloud and ask: does the video show exactly this?",
+          "Check every number against the claim trace.",
+          "For a reveal, confirm no cover or title gives the answer away.",
+          "Pick one, or none, and say why in your own words."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for thumbnails and titles",
+      "value": {
+        "sources": [
+          {
+            "title": "YouTube Help: Add video thumbnails",
+            "url": "https://support.google.com/youtube/answer/72431",
+            "used_for": "16:9 thumbnails for videos and 9:16 for Shorts, a 640 px minimum, file size limits",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "YouTube Help: test titles and thumbnails",
+            "url": "https://support.google.com/youtube/answer/13861714",
+            "used_for": "Up to three titles and thumbnails, the winner by watch time, tests finished within two weeks",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.4.3, Contrast (Minimum)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+            "used_for": "4.5 to 1 and 3 to 1 for large text, unrounded",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Chrome for Developers: Lighthouse, Document doesn't use legible font sizes",
+            "url": "https://developer.chrome.com/docs/lighthouse/seo/font-size",
+            "used_for": "The 12 px floor, from an audit since removed in Lighthouse 13",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for thumbnails and titles",
+      "value": {
+        "cases": [
+          {
+            "id": "TT-TINY-TEXT",
+            "scenario": "A cover's 40 px text in a 1280 px master",
+            "sample_input": "SYNTHETIC: shown 246 px wide, the text is 7.69 CSS px.",
+            "expected_outcome": "thumbnails_checked",
+            "expected_indicators": [
+              "unreadable_at_small_size",
+              "fewer_bigger_words"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "TT-GREY-ON-WHITE",
+            "scenario": "Grey text on a white panel at 40 px",
+            "sample_input": "SYNTHETIC: #777777 on #FFFFFF, a ratio of 4.48 to 1.",
+            "expected_outcome": "thumbnails_checked",
+            "expected_indicators": [
+              "contrast_fails_unrounded"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "TT-CLICKBAIT",
+            "scenario": "A drafted title uses a banned pattern",
+            "sample_input": "SYNTHETIC: 'You won't believe who feeds this town'.",
+            "expected_outcome": "honesty_checked",
+            "expected_indicators": [
+              "banned_pattern_named",
+              "promise_not_kept"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "TT-SPOILER",
+            "scenario": "A puzzle video's best frame shows the answer",
+            "sample_input": "SYNTHETIC: the highest-ranked frame is the reveal at 0:41.",
+            "expected_outcome": "thumbnails_drafted",
+            "expected_indicators": [
+              "hook_frame_used",
+              "alt_text_names_answer"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "TT-AUTO-TEST",
+            "scenario": "A worker is asked to start the platform's test itself",
+            "sample_input": "SYNTHETIC: the brief asks the worker to switch thumbnails on the live video.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "person_runs_test"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.title-candidates",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: three titles, one of them clickbait",
+      "value": {
+        "notice": "SYNTHETIC. A fictional pantry's film.",
+        "conforms_to": {
+          "$pin": "template.title-candidates"
+        },
+        "instance": {
+          "video_sha256": "000000000000000000000000000000000000000000000000000000000000000e",
+          "candidates": [
+            {
+              "candidate_id": "H1",
+              "text": "Who restocks the pantry overnight?",
+              "chars": 34,
+              "claims": [],
+              "promise": "Answered at 1:44."
+            },
+            {
+              "candidate_id": "H2",
+              "text": "112 households, one restock list, a person checks it",
+              "chars": 52,
+              "claims": [
+                "112 households in one week"
+              ],
+              "promise": "Shown at 0:48 with its week."
+            },
+            {
+              "candidate_id": "H3",
+              "text": "You won't believe who feeds this town",
+              "chars": 37,
+              "claims": [
+                "feeds this town"
+              ],
+              "promise": "Not shown: the film is about one pantry."
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.thumbnail-candidates",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: three cover candidates",
+      "value": {
+        "notice": "SYNTHETIC. The digests stand for frames that do not exist.",
+        "conforms_to": {
+          "$pin": "template.thumbnail-candidates"
+        },
+        "instance": {
+          "video_sha256": "000000000000000000000000000000000000000000000000000000000000000e",
+          "master": {
+            "width_px": 1280,
+            "height_px": 720
+          },
+          "candidates": [
+            {
+              "candidate_id": "T1",
+              "kind": "frame",
+              "frame_time_s": 104.2,
+              "text_overlay": "A person checks every change",
+              "words": 5,
+              "text_px": 72,
+              "spoiler_free": true,
+              "labels": [],
+              "source_digest": "000000000000000000000000000000000000000000000000000000000000000f",
+              "promise": "The film shows a person checking the list.",
+              "text_color": "#FFFDF8",
+              "panel_color": "#11161F"
+            },
+            {
+              "candidate_id": "T2",
+              "kind": "designed",
+              "frame_time_s": null,
+              "text_overlay": "Who restocks the pantry?",
+              "words": 4,
+              "text_px": 96,
+              "spoiler_free": true,
+              "labels": [],
+              "source_digest": "000000000000000000000000000000000000000000000000000000000000001f",
+              "promise": "The film answers who restocks it.",
+              "text_color": "#11161F",
+              "panel_color": "#F5F2EA"
+            },
+            {
+              "candidate_id": "T3",
+              "kind": "frame",
+              "frame_time_s": 52.0,
+              "text_overlay": "112 households in one week, from the intake log",
+              "words": 9,
+              "text_px": 40,
+              "spoiler_free": true,
+              "labels": [],
+              "source_digest": "000000000000000000000000000000000000000000000000000000000000002f",
+              "promise": "The film shows the week's count.",
+              "text_color": "#777777",
+              "panel_color": "#FFFFFF"
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.size-check",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the size check of those covers",
+      "value": {
+        "notice": "SYNTHETIC. Recomputed exactly by the library's tests from example.thumbnail-candidates.",
+        "conforms_to": {
+          "$pin": "template.size-check"
+        },
+        "instance": {
+          "sizes": [
+            {
+              "name": "large card",
+              "width_px": 640
+            },
+            {
+              "name": "list row",
+              "width_px": 360
+            },
+            {
+              "name": "small row",
+              "width_px": 246
+            }
+          ],
+          "min_css_px": 12.0,
+          "candidates": [
+            {
+              "candidate_id": "T1",
+              "rows": [
+                {
+                  "display": "large card",
+                  "width_px": 640,
+                  "text_css_px": 36.0,
+                  "readable": true
+                },
+                {
+                  "display": "list row",
+                  "width_px": 360,
+                  "text_css_px": 20.25,
+                  "readable": true
+                },
+                {
+                  "display": "small row",
+                  "width_px": 246,
+                  "text_css_px": 13.84,
+                  "readable": true
+                }
+              ],
+              "words_ok": true,
+              "readable_everywhere": true
+            },
+            {
+              "candidate_id": "T2",
+              "rows": [
+                {
+                  "display": "large card",
+                  "width_px": 640,
+                  "text_css_px": 48.0,
+                  "readable": true
+                },
+                {
+                  "display": "list row",
+                  "width_px": 360,
+                  "text_css_px": 27.0,
+                  "readable": true
+                },
+                {
+                  "display": "small row",
+                  "width_px": 246,
+                  "text_css_px": 18.45,
+                  "readable": true
+                }
+              ],
+              "words_ok": true,
+              "readable_everywhere": true
+            },
+            {
+              "candidate_id": "T3",
+              "rows": [
+                {
+                  "display": "large card",
+                  "width_px": 640,
+                  "text_css_px": 20.0,
+                  "readable": true
+                },
+                {
+                  "display": "list row",
+                  "width_px": 360,
+                  "text_css_px": 11.25,
+                  "readable": false
+                },
+                {
+                  "display": "small row",
+                  "width_px": 246,
+                  "text_css_px": 7.69,
+                  "readable": false
+                }
+              ],
+              "words_ok": false,
+              "readable_everywhere": false
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.honesty-check",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the honesty check of every candidate",
+      "value": {
+        "notice": "SYNTHETIC.",
+        "conforms_to": {
+          "$pin": "template.honesty-check"
+        },
+        "instance": {
+          "candidates": [
+            {
+              "candidate_id": "H1",
+              "claims": [],
+              "banned_patterns": [],
+              "promise_kept_at_s": 104.0,
+              "passes": true
+            },
+            {
+              "candidate_id": "H2",
+              "claims": [
+                {
+                  "text": "112 households in one week",
+                  "traced": true
+                }
+              ],
+              "banned_patterns": [],
+              "promise_kept_at_s": 48.0,
+              "passes": true
+            },
+            {
+              "candidate_id": "H3",
+              "claims": [
+                {
+                  "text": "feeds this town",
+                  "traced": false
+                }
+              ],
+              "banned_patterns": [
+                "you won't believe"
+              ],
+              "promise_kept_at_s": null,
+              "passes": false
+            },
+            {
+              "candidate_id": "T1",
+              "claims": [],
+              "banned_patterns": [],
+              "promise_kept_at_s": 104.2,
+              "passes": true
+            },
+            {
+              "candidate_id": "T2",
+              "claims": [],
+              "banned_patterns": [],
+              "promise_kept_at_s": 104.0,
+              "passes": true
+            },
+            {
+              "candidate_id": "T3",
+              "claims": [
+                {
+                  "text": "112 households in one week, from the intake log",
+                  "traced": true
+                }
+              ],
+              "banned_patterns": [],
+              "promise_kept_at_s": 52.0,
+              "passes": true
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.ab-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: an A/B plan for the two good covers",
+      "value": {
+        "notice": "SYNTHETIC. No test has run.",
+        "conforms_to": {
+          "$pin": "template.ab-plan"
+        },
+        "instance": {
+          "video_ref": "the long cut's published copy",
+          "variants": [
+            "T1",
+            "T2"
+          ],
+          "one_variable": "thumbnail",
+          "metric": "the watch-time share the platform's own test reports",
+          "platform_tool": "the platform's built-in thumbnail test",
+          "run_by": "person",
+          "minimum_days": 7,
+          "decision_rule": "Keep the variant the platform's test names; with no clear winner, keep T2, the designed cover.",
+          "no_difference_rule": "No clear winner after the platform's test ends means keep the default and record no difference.",
+          "fixed_before_results": true
+        }
+      },
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "draft-titles",
+      "kind": "verb.solve_draft",
+      "title": "Draft title candidates",
+      "claimant": "agent",
+      "summary": "Draft three to six titles from what the video shows, each a question it answers or a plain statement, with the claims it makes and the moment that keeps its promise.",
+      "outcome": "Title candidates.",
+      "ready_outcome": "titles_drafted",
+      "pinned": [
+        "rules.honesty",
+        "guardrail.promise-what-it-delivers"
+      ],
+      "slots": [
+        {
+          "name": "video",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the video's encoded file media noun."
+        },
+        {
+          "name": "claim_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the video's claim trace from the video review pack."
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption track."
+        }
+      ],
+      "produces": [
+        {
+          "name": "title_candidates",
+          "template": "template.title-candidates"
+        }
+      ],
+      "steps": [
+        "Write each title from a line or a moment the video shows; name that moment.",
+        "List every claim a title makes; use only claims the trace upholds, with their qualifiers."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.title-candidates's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "lengths",
+          "check": "Each chars equals the length of its text.",
+          "method": "deterministic"
+        },
+        {
+          "id": "promises-named",
+          "check": "Every candidate names where the video keeps its promise.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "video-review.trace-claims"
+      ]
+    },
+    {
+      "slug": "draft-thumbnails",
+      "kind": "verb.solve_draft",
+      "title": "Draft thumbnail candidates",
+      "claimant": "agent",
+      "summary": "Draft frame and designed cover candidates: frames chosen at designed moments, never mid-transition or half-captioned, and covers with five words or fewer, each with its colours, text size, spoiler status, labels and promise.",
+      "outcome": "Thumbnail candidates.",
+      "ready_outcome": "thumbnails_drafted",
+      "pinned": [
+        "rules.small-sizes",
+        "guardrail.spoiler-free-when-asked",
+        "guardrail.promise-what-it-delivers"
+      ],
+      "slots": [
+        {
+          "name": "video",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the video's encoded file media noun."
+        },
+        {
+          "name": "panel_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the video's panels, for frame choices.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "thumbnail_candidates",
+          "template": "template.thumbnail-candidates"
+        }
+      ],
+      "steps": [
+        "Pick frames only where nothing is moving between shots and no caption is half shown.",
+        "For a reveal format, take covers from the hook, never the answer.",
+        "Record each candidate's text size in the master and its colours."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.thumbnail-candidates's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "words-counted",
+          "check": "Each words value equals the word count of its text overlay.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.make-panels"
+      ]
+    },
+    {
+      "slug": "check-thumbnails",
+      "kind": "verb.verify_gate",
+      "title": "Check thumbnails at small sizes and for contrast",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "For each candidate, compute its text's CSS pixels at every display width, check the word count, and compute its text contrast unrounded, without changing any candidate.",
+      "outcome": "A size check, with each candidate's contrast.",
+      "ready_outcome": "thumbnails_checked",
+      "pinned": [
+        "rules.small-sizes",
+        "video-qa:tool.video-qa-checks"
+      ],
+      "slots": [
+        {
+          "name": "thumbnail_candidates",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the thumbnail candidates."
+        }
+      ],
+      "params": {
+        "sizes": {
+          "schema": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "width_px"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "width_px": {
+                  "type": "integer",
+                  "minimum": 32,
+                  "maximum": 4096
+                }
+              }
+            }
+          },
+          "description": "Display widths to check, smallest included.",
+          "default": [
+            {
+              "name": "large card",
+              "width_px": 640
+            },
+            {
+              "name": "list row",
+              "width_px": 360
+            },
+            {
+              "name": "small row",
+              "width_px": 246
+            }
+          ]
+        }
+      },
+      "produces": [
+        {
+          "name": "size_check",
+          "template": "template.size-check"
+        }
+      ],
+      "steps": [
+        "Scale each candidate's text size by each display width over the master width.",
+        "Use the video QA code's contrast ratio, compared unrounded."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.size-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "Every text_css_px equals text_px times width_px over the master width, rounded to 2 places.",
+          "method": "deterministic"
+        },
+        {
+          "id": "readable-follows",
+          "check": "readable_everywhere is true only when every row reads.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "thumbnail-and-title.draft-thumbnails"
+      ]
+    },
+    {
+      "slug": "check-honesty",
+      "kind": "verb.verify_gate",
+      "title": "Check every candidate's honesty",
+      "claimant": "agent",
+      "review": "distinct_reviewer",
+      "summary": "Trace every claim in every title and thumbnail to the claim trace, search for banned patterns, and find the moment that keeps each promise; a candidate passes only when all three hold.",
+      "outcome": "An honesty check.",
+      "ready_outcome": "honesty_checked",
+      "pinned": [
+        "rules.honesty",
+        "title-checks"
+      ],
+      "slots": [
+        {
+          "name": "title_candidates",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the title candidates."
+        },
+        {
+          "name": "thumbnail_candidates",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the thumbnail candidates."
+        },
+        {
+          "name": "claim_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the video's claim trace from the video review pack."
+        }
+      ],
+      "produces": [
+        {
+          "name": "honesty_check",
+          "template": "template.honesty-check"
+        }
+      ],
+      "steps": [
+        "Mark each claim traced only when the claim trace upholds it with the same qualifier.",
+        "Search each text with the banned pattern; list what it finds."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.honesty-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "passes-follows",
+          "check": "passes is true only with every claim traced, no banned pattern and a kept promise.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The checking key differs from the drafting key.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "thumbnail-and-title.draft-titles",
+        "thumbnail-and-title.check-thumbnails"
+      ]
+    },
+    {
+      "slug": "plan-ab-test",
+      "kind": "verb.solve_draft",
+      "title": "Plan an A/B test fixed before any result",
+      "claimant": "agent",
+      "summary": "Write an A/B plan for two or three candidates a person has picked: the one thing that changes, the metric the platform's own test reports, the minimum duration, and the decision and no-difference rules, all fixed before any result.",
+      "outcome": "An A/B plan for a person to run.",
+      "ready_outcome": "ab_planned",
+      "pinned": [
+        "rules.ab-plan",
+        "guardrail.tests-run-by-a-person"
+      ],
+      "slots": [
+        {
+          "name": "choice",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the person's choice from the taste palettes pack."
+        },
+        {
+          "name": "honesty_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the honesty check."
+        }
+      ],
+      "produces": [
+        {
+          "name": "ab_plan",
+          "template": "template.ab-plan"
+        }
+      ],
+      "steps": [
+        "Include only candidates that passed both checks.",
+        "Name the platform's own test tool and its measure; a person runs it."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.ab-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fixed-first",
+          "check": "fixed_before_results is true and run_by is person.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "taste-palettes.record-choice"
+      ]
+    },
+    {
+      "slug": "record-ab-result",
+      "kind": "verb.verify_gate",
+      "title": "Record an A/B result",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person records what the platform's own test reported and applies the plan's decision rule, or its no-difference rule, exactly as written.",
+      "outcome": "An A/B result.",
+      "ready_outcome": "ab_recorded",
+      "pinned": [
+        "rules.ab-plan"
+      ],
+      "slots": [
+        {
+          "name": "ab_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the A/B plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "ab_result",
+          "template": "template.ab-result"
+        }
+      ],
+      "steps": [
+        "Copy what the platform reported, in its own terms.",
+        "Apply the plan's rule; a change of rule after the result is a new plan, not this record."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.ab-result's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-recorded",
+          "check": "recorded_by is person.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "thumbnail-and-title.plan-ab-test"
+      ]
+    }
+  ]
+}
