@@ -1,0 +1,3209 @@
+{
+  "pack_id": "usability-heuristics-review",
+  "title": "Usability heuristics review",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for reviewing a page or app against ten usability heuristics kept as nouns: independent evaluators record findings with a severity and a screenshot region, a fixed rule combines them, a different worker confirms each one and every confirmed finding gets a proposed fix verb.",
+  "boundaries": [
+    "Evaluators work independently; their sheets are combined only by the fixed rule, and no finding is dropped.",
+    "A heuristic review is expert inspection; it does not replace testing with the people who use the surface.",
+    "Reviews are read-only: nothing is submitted, booked, bought or created.",
+    "Findings describe the design, never people.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for reviewing a page or app against ten usability heuristics",
+      "value": {
+        "lets_workers": "Scope a review to pages, tasks, widths and themes; have several evaluators walk the tasks independently against ten heuristics kept as nouns; combine their findings by a fixed rule; have a different worker confirm each one; and propose one fix verb per confirmed finding, ranked by severity.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "usability-heuristics-review.scope-review"
+            },
+            "when": "Before evaluating."
+          },
+          {
+            "verb": {
+              "$verb": "usability-heuristics-review.evaluate-against-heuristics"
+            },
+            "when": "Once per evaluator, as separate attempts that do not see each other's sheets."
+          },
+          {
+            "verb": {
+              "$verb": "usability-heuristics-review.combine-findings"
+            },
+            "when": "When at least two sheets are in; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "usability-heuristics-review.review-findings"
+            },
+            "when": "A different worker or a person confirms, changes or rejects each finding."
+          },
+          {
+            "verb": {
+              "$verb": "usability-heuristics-review.propose-fixes"
+            },
+            "when": "For the confirmed findings."
+          }
+        ],
+        "heuristics": [
+          {
+            "$pin": "heuristic.visibility-of-status"
+          },
+          {
+            "$pin": "heuristic.match-real-world"
+          },
+          {
+            "$pin": "heuristic.user-control"
+          },
+          {
+            "$pin": "heuristic.consistency"
+          },
+          {
+            "$pin": "heuristic.error-prevention"
+          },
+          {
+            "$pin": "heuristic.recognition-over-recall"
+          },
+          {
+            "$pin": "heuristic.flexibility-efficiency"
+          },
+          {
+            "$pin": "heuristic.minimalist-design"
+          },
+          {
+            "$pin": "heuristic.error-recovery"
+          },
+          {
+            "$pin": "heuristic.help-documentation"
+          }
+        ],
+        "guardrails": [
+          "Evaluators work independently and only then are combined; one evaluator finds fewer problems than several.",
+          "Each finding names one primary heuristic, a severity from 1 to 4 with its reasons, and a screenshot region as evidence.",
+          "A heuristic review is expert inspection, not testing with real users; it complements acceptance testing, never replaces it.",
+          "Findings describe the design, never the people who use or build it.",
+          "Each confirmed finding proposes a fix verb; workers never fix during a review."
+        ],
+        "worked_examples": [
+          {
+            "$pin": "heuristic-checks"
+          },
+          {
+            "$pin": "example.review-scope"
+          },
+          {
+            "$pin": "example.evaluation-sheet"
+          },
+          {
+            "$pin": "example.combined-findings"
+          },
+          {
+            "$pin": "example.fix-plan"
+          }
+        ],
+        "complements": [
+          "Accessibility problems found here cite their WCAG criterion and go to the accessibility audit pack for a full check.",
+          "Wording and layout choices with no single right answer go to the taste palettes pack.",
+          "Personas and tasks can come from the user acceptance testing pack."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "severity-scale"
+        ],
+        [
+          "requires_noun",
+          "combine-rules"
+        ],
+        [
+          "requires_noun",
+          "evidence-rules"
+        ],
+        [
+          "requires_noun",
+          "heuristic-checks"
+        ],
+        [
+          "requires_noun",
+          "heuristic.visibility-of-status"
+        ],
+        [
+          "requires_noun",
+          "heuristic.match-real-world"
+        ],
+        [
+          "requires_noun",
+          "heuristic.user-control"
+        ],
+        [
+          "requires_noun",
+          "heuristic.consistency"
+        ],
+        [
+          "requires_noun",
+          "heuristic.error-prevention"
+        ],
+        [
+          "requires_noun",
+          "heuristic.recognition-over-recall"
+        ],
+        [
+          "requires_noun",
+          "heuristic.flexibility-efficiency"
+        ],
+        [
+          "requires_noun",
+          "heuristic.minimalist-design"
+        ],
+        [
+          "requires_noun",
+          "heuristic.error-recovery"
+        ],
+        [
+          "requires_noun",
+          "heuristic.help-documentation"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How a heuristic review runs from scope to fix verbs",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "scope-review names the pages, tasks, personas, widths, themes and heuristics.",
+          "evaluate-against-heuristics: each evaluator walks the tasks alone and records findings with evidence.",
+          "combine-findings groups the same problem across sheets and takes the median severity; disagreements stay visible.",
+          "review-findings: a worker who evaluated nothing confirms, changes or rejects each combined finding.",
+          "propose-fixes picks one fix verb per confirmed finding and ranks them."
+        ],
+        "rules": [
+          "Two to five independent evaluators; more evaluators find more problems, with diminishing returns.",
+          "Walk real tasks, not screens: every finding names the task step it interrupts.",
+          "One primary heuristic per finding; related WCAG criteria are listed when the problem is also an accessibility issue.",
+          "Severity combines frequency, impact and persistence by the severity scale.",
+          "Failures stay on the record: a rejected finding keeps its reason."
+        ],
+        "follow_ups": {
+          "accessibility": {
+            "$verb": "accessibility-audit.plan-audit"
+          },
+          "taste": {
+            "$verb": "taste-palettes.draft-embodiments"
+          },
+          "record": {
+            "$verb": "findings-to-fixes.record-finding"
+          }
+        },
+        "sources": [
+          "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+        ]
+      }
+    },
+    {
+      "slug": "heuristic.visibility-of-status",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H1: Visibility of system status",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H1",
+        "name": "Visibility of system status",
+        "asks": "People can always tell what is happening and what just happened, soon enough to act on it.",
+        "questions": [
+          "After each action, is there a visible change that confirms it?",
+          "Does a slow step say it is working and how long it may take?",
+          "Can people tell where they are in a multi-step task?"
+        ],
+        "common_violations": [
+          "A button that gives no sign it was pressed",
+          "A long load with no indicator",
+          "A copy action with no confirmation"
+        ],
+        "fix_patterns": [
+          "Confirm each action in place, and announce it to assistive technology as a status message",
+          "Show progress for anything slower than a second"
+        ],
+        "related_wcag": [
+          "4.1.3"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.match-real-world",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H2: Match between the system and the real world",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H2",
+        "name": "Match between the system and the real world",
+        "asks": "The words, order and ideas are the ones the people using it already use, not the builders' own terms.",
+        "questions": [
+          "Would the intended reader use these words for this?",
+          "Are internal or technical terms explained where they first appear?",
+          "Does information appear in the order the task happens?"
+        ],
+        "common_violations": [
+          "Internal product or architecture terms shown to newcomers",
+          "Jargon in a button label",
+          "Dates or numbers in an unfamiliar format"
+        ],
+        "fix_patterns": [
+          "Use the reader's words and explain any term that must stay",
+          "Order the page the way the task unfolds"
+        ],
+        "related_wcag": [
+          "3.1.3"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.user-control",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H3: User control and freedom",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H3",
+        "name": "User control and freedom",
+        "asks": "People can undo, go back, cancel or leave any state they entered by mistake, without losing their work.",
+        "questions": [
+          "Is there a clear way out of every dialog, mode and step?",
+          "Does going back keep what was typed?",
+          "Can a mistaken action be undone?"
+        ],
+        "common_violations": [
+          "A modal with no close control",
+          "A form that clears on back",
+          "An action with no undo or confirmation"
+        ],
+        "fix_patterns": [
+          "Give every state an exit and keep entered data",
+          "Offer undo for reversible actions and confirmation for irreversible ones"
+        ],
+        "related_wcag": [
+          "2.1.2",
+          "3.3.4"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.consistency",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H4: Consistency and standards",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H4",
+        "name": "Consistency and standards",
+        "asks": "The same thing looks, is named and behaves the same everywhere, and follows the conventions people know from elsewhere.",
+        "questions": [
+          "Is one destination or action named the same in every place?",
+          "Do links look like links and buttons like buttons?",
+          "Do pages of the same kind share one layout?"
+        ],
+        "common_violations": [
+          "Two labels for the same page",
+          "A page that drops the site's navigation and styles",
+          "A brand name spelled two ways"
+        ],
+        "fix_patterns": [
+          "Pick one name per thing and use it everywhere",
+          "Keep shared navigation and layout on every page"
+        ],
+        "related_wcag": [
+          "3.2.3",
+          "3.2.4"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.error-prevention",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H5: Error prevention",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H5",
+        "name": "Error prevention",
+        "asks": "The design prevents mistakes before they happen, especially costly or irreversible ones.",
+        "questions": [
+          "Are risky actions confirmed and explained?",
+          "Do inputs prevent invalid values instead of rejecting them later?",
+          "Is it clear what will happen before an action is taken?"
+        ],
+        "common_violations": [
+          "A public submission with no warning that it is public",
+          "A free-text field where a choice list would prevent errors",
+          "Destructive actions next to common ones"
+        ],
+        "fix_patterns": [
+          "State consequences before the action",
+          "Constrain inputs and separate risky actions"
+        ],
+        "related_wcag": [
+          "3.3.4"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.recognition-over-recall",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H6: Recognition rather than recall",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H6",
+        "name": "Recognition rather than recall",
+        "asks": "People see their options and the information they need, instead of having to remember it from somewhere else.",
+        "questions": [
+          "Must people remember something from an earlier page to continue?",
+          "Are the available actions visible where they are needed?",
+          "Are examples shown next to inputs that need them?"
+        ],
+        "common_violations": [
+          "Instructions only on a previous page",
+          "A command people must retype from memory",
+          "Hidden actions with no hint"
+        ],
+        "fix_patterns": [
+          "Show the needed information in place",
+          "Provide examples and copyable values next to the input"
+        ],
+        "related_wcag": [
+          "3.3.2"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.flexibility-efficiency",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H7: Flexibility and efficiency of use",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H7",
+        "name": "Flexibility and efficiency of use",
+        "asks": "Newcomers can get through slowly and safely, and frequent users have faster paths.",
+        "questions": [
+          "Is there a short path for people who know what they want?",
+          "Do shortcuts stay out of the way of newcomers?",
+          "Can people skip what they do not need?"
+        ],
+        "common_violations": [
+          "Every visit forces the full tour",
+          "Shortcuts that fire by accident",
+          "No way to jump to the part that matters"
+        ],
+        "fix_patterns": [
+          "Offer a direct link for the common task",
+          "Make shortcuts discoverable and easy to turn off"
+        ],
+        "related_wcag": [
+          "2.1.4",
+          "2.4.1"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.minimalist-design",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H8: Aesthetic and minimalist design",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H8",
+        "name": "Aesthetic and minimalist design",
+        "asks": "Each screen holds what this task needs; everything else competes with it and makes it harder to find.",
+        "questions": [
+          "Does the most important thing stand out first?",
+          "Is anything here that this reader does not need for this task?",
+          "Is text short enough to scan?"
+        ],
+        "common_violations": [
+          "Several banners competing above the main content",
+          "Long paragraphs before the call to action",
+          "Tiny text to fit more in"
+        ],
+        "fix_patterns": [
+          "Lead with the one thing this page is for",
+          "Move secondary detail behind a link or disclosure"
+        ],
+        "related_wcag": [
+          "1.4.4",
+          "1.4.8"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.error-recovery",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H9: Help people recognize, diagnose and recover from errors",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H9",
+        "name": "Help people recognize, diagnose and recover from errors",
+        "asks": "Error messages say in plain words what went wrong and how to fix it, next to where it happened.",
+        "questions": [
+          "Does each error say what happened and what to do next?",
+          "Is the error shown next to the field and announced?",
+          "Does a missing page offer a way back?"
+        ],
+        "common_violations": [
+          "An error code with no explanation",
+          "A not-found page that returns success to machines",
+          "An error only shown by color"
+        ],
+        "fix_patterns": [
+          "Write errors as a cause and a next step",
+          "Return the right status and offer a way home"
+        ],
+        "related_wcag": [
+          "3.3.1",
+          "3.3.3"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "heuristic.help-documentation",
+      "category": "noun.skill_pack",
+      "role": "heuristic",
+      "title": "H10: Help and documentation",
+      "category_reason": "A reusable inspection rule: its questions, typical violations and fix patterns. Applying it takes judgment.",
+      "value": {
+        "id": "H10",
+        "name": "Help and documentation",
+        "asks": "Help is easy to find, focused on the task and lists concrete steps; the best design needs little of it.",
+        "questions": [
+          "Can people find help from where they are stuck?",
+          "Does help list steps instead of concepts?",
+          "Is help in the same place on every page?"
+        ],
+        "common_violations": [
+          "Help only in a separate repository",
+          "Concept explanations where steps are needed",
+          "Contact or help links that move around"
+        ],
+        "fix_patterns": [
+          "Put task help next to the task",
+          "Keep help in one consistent place"
+        ],
+        "related_wcag": [
+          "3.2.6"
+        ],
+        "evidence_hint": "A screenshot region at the width and theme where the problem shows, with the task step it interrupts.",
+        "source": "Paraphrased from the ten usability heuristics Jakob Nielsen published in 1994 and revised in 2020 (https://www.nngroup.com/articles/ten-usability-heuristics/); the questions, examples and fixes here are original."
+      }
+    },
+    {
+      "slug": "severity-scale",
+      "category": "noun.reflex_procedure",
+      "role": "severity_scale",
+      "title": "Rating a usability problem from 1 to 4",
+      "category_reason": "A zero-call rating rule applied the same way by every evaluator.",
+      "value": {
+        "levels": {
+          "1": "Cosmetic: fix if time allows.",
+          "2": "Minor: low priority, people get past it.",
+          "3": "Major: important to fix, many people are slowed or misled.",
+          "4": "Catastrophe: people cannot finish the task; fix before release."
+        },
+        "factors": {
+          "frequency": [
+            "rare",
+            "sometimes",
+            "often"
+          ],
+          "impact": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "persistence": [
+            "once",
+            "repeated"
+          ]
+        },
+        "rule": "Start from impact (low 1, medium 2, high 3); add one when frequency is often and persistence is repeated; 4 needs high impact.",
+        "zero": "0 means not a usability problem; it is not recorded as a finding.",
+        "mapping_to_findings": {
+          "4": "P1",
+          "3": "P2",
+          "2": "P3",
+          "1": "P3"
+        },
+        "note": "A problem that exposes data or spends money is not a usability rating; route it to the security review pack."
+      }
+    },
+    {
+      "slug": "combine-rules",
+      "category": "noun.reflex_procedure",
+      "role": "combine_rules",
+      "title": "Combining evaluators' findings into one list",
+      "category_reason": "A zero-call deterministic rule: the same sheets always combine the same way.",
+      "value": {
+        "same_problem": "Two findings are the same problem when they name the same page and heuristic and their screenshot regions overlap by at least half of the smaller region, at the same width.",
+        "severity": "The combined severity is the median of the evaluators' ratings, rounded up; spread is the highest minus the lowest.",
+        "disagreement": "A spread of 2 or more marks disagreement for the reviewer to settle.",
+        "kept_separate": "Findings that look alike but fail the same-problem test stay separate, with the reason recorded.",
+        "never": "Never drop a finding because only one evaluator saw it.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "evidence-rules",
+      "category": "noun.reflex_procedure",
+      "role": "evidence_rules",
+      "title": "Screenshot regions as evidence",
+      "category_reason": "A zero-call rule for the evidence every finding carries.",
+      "value": {
+        "screenshot": "Full-page or viewport PNG at a named width and theme, stored by SHA-256 with its image size.",
+        "region": "[x, y, width, height] in image pixels; it lies inside the image and shows only the problem and enough context to see it.",
+        "what_it_shows": "One sentence naming what the region shows, readable without the image.",
+        "never": [
+          "Screenshots with personal data or someone else's private information",
+          "A region covering the whole screenshot"
+        ]
+      }
+    },
+    {
+      "slug": "heuristic-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for heuristic findings, with synthetic golden findings",
+      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes them.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every heuristic finding must pass before it is combined with other evaluators' findings: one heuristic, a rating with its reasons, a screenshot region, the page and width, and a fix verb. The two synthetic good findings pass; each synthetic bad finding fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "heuristic-named",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "heuristic",
+              "pattern": "^H(10|[1-9])$"
+            },
+            "why": "Every finding names one primary heuristic, H1 to H10."
+          },
+          {
+            "id": "severity-on-scale",
+            "rule": {
+              "rule": "enum",
+              "path": "severity",
+              "values": [
+                1,
+                2,
+                3,
+                4
+              ]
+            },
+            "why": "Severity is 1 to 4; 0 means not a problem and is not recorded."
+          },
+          {
+            "id": "severity-explained",
+            "rule": {
+              "rule": "present",
+              "path": "severity_reason"
+            },
+            "why": "The rating says why, from frequency, impact and persistence."
+          },
+          {
+            "id": "frequency-known",
+            "rule": {
+              "rule": "enum",
+              "path": "frequency",
+              "values": [
+                "rare",
+                "sometimes",
+                "often"
+              ]
+            },
+            "why": "Frequency is rated."
+          },
+          {
+            "id": "impact-known",
+            "rule": {
+              "rule": "enum",
+              "path": "impact",
+              "values": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "why": "Impact is rated."
+          },
+          {
+            "id": "screenshot-hashed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence.screenshot_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "The screenshot is stored by SHA-256."
+          },
+          {
+            "id": "region-given",
+            "rule": {
+              "rule": "min_items",
+              "path": "evidence.region",
+              "min": 4
+            },
+            "why": "The region is x, y, width and height in the screenshot."
+          },
+          {
+            "id": "region-described",
+            "rule": {
+              "rule": "present",
+              "path": "evidence.what_it_shows"
+            },
+            "why": "The evidence says what the region shows."
+          },
+          {
+            "id": "page-recorded",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "page_url",
+              "pattern": "^https?://"
+            },
+            "why": "The page address is recorded."
+          },
+          {
+            "id": "width-recorded",
+            "rule": {
+              "rule": "present",
+              "path": "width_px"
+            },
+            "why": "The viewport width is recorded."
+          },
+          {
+            "id": "observed-stated",
+            "rule": {
+              "rule": "present",
+              "path": "observed"
+            },
+            "why": "What was seen is written down."
+          },
+          {
+            "id": "fix-verb-named",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "fix_verb.template_id",
+              "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$"
+            },
+            "why": "Each finding proposes a fix verb by template id."
+          },
+          {
+            "id": "fix-outcome-stated",
+            "rule": {
+              "rule": "present",
+              "path": "fix_verb.outcome"
+            },
+            "why": "The fix verb says what it should produce."
+          },
+          {
+            "id": "catastrophe-is-high-impact",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "severity",
+                "equals": 4
+              },
+              "then": {
+                "rule": "enum",
+                "path": "impact",
+                "values": [
+                  "high"
+                ]
+              }
+            },
+            "why": "A severity 4 finding has high impact."
+          },
+          {
+            "id": "design-not-people",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "(?i)\\b(stupid|dumb users?|idiots?|lazy|incompetent|careless users?)\\b"
+            },
+            "why": "Findings describe the design, never the people using it or building it."
+          },
+          {
+            "id": "no-contact-data",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b[0-9]{3}[-. )]{1,2}[0-9]{3}[-. ][0-9]{4}\\b"
+            },
+            "why": "Findings hold no email addresses or phone numbers."
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "heuristic",
+            "title",
+            "page_url",
+            "task",
+            "width_px",
+            "theme",
+            "severity",
+            "severity_reason",
+            "frequency",
+            "impact",
+            "persistence",
+            "evidence",
+            "observed",
+            "why_it_matters",
+            "fix_verb",
+            "wcag_sc"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "heuristic": {
+              "type": "string",
+              "pattern": "^H(10|[1-9])$"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "page_url": {
+              "type": "string",
+              "pattern": "^https?://",
+              "minLength": 8,
+              "maxLength": 300
+            },
+            "task": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "width_px": {
+              "type": "integer",
+              "minimum": 200,
+              "maximum": 8000
+            },
+            "theme": {
+              "type": "string",
+              "enum": [
+                "light",
+                "dark",
+                "high_contrast"
+              ]
+            },
+            "severity": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            "severity_reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "frequency": {
+              "type": "string",
+              "enum": [
+                "rare",
+                "sometimes",
+                "often"
+              ]
+            },
+            "impact": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "persistence": {
+              "type": "string",
+              "enum": [
+                "once",
+                "repeated"
+              ]
+            },
+            "evidence": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "screenshot_sha256",
+                "image_size",
+                "region",
+                "what_it_shows"
+              ],
+              "properties": {
+                "screenshot_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "image_size": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  }
+                },
+                "region": {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  }
+                },
+                "what_it_shows": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "observed": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "why_it_matters": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "fix_verb": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "template_id",
+                "outcome"
+              ],
+              "properties": {
+                "template_id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$",
+                  "maxLength": 120
+                },
+                "outcome": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "wcag_sc": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "pattern": "^[1-4]\\.[0-9]\\.[0-9]{1,2}$"
+              }
+            }
+          }
+        },
+        "golden_fixtures": [
+          {
+            "id": "good-jargon",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "good-cosmetic",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "UH-7",
+              "heuristic": "H1",
+              "title": "Copying the address gives no confirmation.",
+              "page_url": "https://pantry.example.invalid/visit",
+              "task": "Copy the pantry's address",
+              "width_px": 1440,
+              "theme": "dark",
+              "severity": 1,
+              "severity_reason": "Cosmetic: the copy works, people just cannot tell; seen by one evaluator once.",
+              "frequency": "rare",
+              "impact": "low",
+              "persistence": "once",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  1440,
+                  900
+                ],
+                "region": [
+                  980,
+                  300,
+                  160,
+                  40
+                ],
+                "what_it_shows": "The Copy button looks the same before and after."
+              },
+              "observed": "Pressing Copy changes nothing on screen and announces nothing.",
+              "why_it_matters": "People copy again or paste to check, which wastes a step.",
+              "fix_verb": {
+                "template_id": "findings-to-fixes.propose-fix",
+                "outcome": "A fix proposal that shows Copied in place and announces it as a status message."
+              },
+              "wcag_sc": [
+                "4.1.3"
+              ]
+            }
+          },
+          {
+            "id": "bad-no-heuristic",
+            "label": "known_bad",
+            "fails": "heuristic-named",
+            "why": "No heuristic.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "general",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-severity-zero",
+            "label": "known_bad",
+            "fails": "severity-on-scale",
+            "why": "A zero rating is not a finding.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 0,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-reason",
+            "label": "known_bad",
+            "fails": "severity-explained",
+            "why": "No reason for the rating.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-frequency",
+            "label": "known_bad",
+            "fails": "frequency-known",
+            "why": "Frequency off the scale.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "always",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-impact",
+            "label": "known_bad",
+            "fails": "impact-known",
+            "why": "Impact off the scale.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-hash",
+            "label": "known_bad",
+            "fails": "screenshot-hashed",
+            "why": "The screenshot is a path, not a digest.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "shots/home.png",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-region",
+            "label": "known_bad",
+            "fails": "region-given",
+            "why": "The whole screenshot instead of a region.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-region-undescribed",
+            "label": "known_bad",
+            "fails": "region-described",
+            "why": "The region is not described.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": ""
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-page",
+            "label": "known_bad",
+            "fails": "page-recorded",
+            "why": "No address.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "home",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-width",
+            "label": "known_bad",
+            "fails": "width-recorded",
+            "why": "No width.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-observation",
+            "label": "known_bad",
+            "fails": "observed-stated",
+            "why": "Nothing observed.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-fix-verb",
+            "label": "known_bad",
+            "fails": "fix-verb-named",
+            "why": "A fix written as advice, not a verb.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "make it clearer",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-no-fix-outcome",
+            "label": "known_bad",
+            "fails": "fix-outcome-stated",
+            "why": "A verb with no outcome.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": ""
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-catastrophe-low",
+            "label": "known_bad",
+            "fails": "catastrophe-is-high-impact",
+            "why": "Severity 4 with medium impact.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 4,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-blame",
+            "label": "known_bad",
+            "fails": "design-not-people",
+            "why": "A finding that blames people.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "Lazy users never read the button, so they miss it.",
+              "why_it_matters": "People who do not recognize the action leave before finding the shift list.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          },
+          {
+            "id": "bad-contact-data",
+            "label": "known_bad",
+            "fails": "no-contact-data",
+            "why": "A personal email address in the observation.",
+            "finding": {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Seen by both evaluators on the first screen; most new volunteers would hesitate, and it repeats on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action on the home page is labeled Engage capacity; both personas looked for words like volunteer or sign up.",
+              "why_it_matters": "A volunteer, sam.real@mailbox.net, said they nearly gave up.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the button, compared side by side for the coordinator to choose."
+              },
+              "wcag_sc": []
+            }
+          }
+        ],
+        "expected": {
+          "good-jargon": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-cosmetic": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-heuristic": {
+            "verdict": "fail",
+            "failed_checks": [
+              "heuristic-named"
+            ]
+          },
+          "bad-severity-zero": {
+            "verdict": "fail",
+            "failed_checks": [
+              "severity-on-scale"
+            ]
+          },
+          "bad-no-reason": {
+            "verdict": "fail",
+            "failed_checks": [
+              "severity-explained"
+            ]
+          },
+          "bad-frequency": {
+            "verdict": "fail",
+            "failed_checks": [
+              "frequency-known"
+            ]
+          },
+          "bad-impact": {
+            "verdict": "fail",
+            "failed_checks": [
+              "impact-known"
+            ]
+          },
+          "bad-no-hash": {
+            "verdict": "fail",
+            "failed_checks": [
+              "screenshot-hashed"
+            ]
+          },
+          "bad-no-region": {
+            "verdict": "fail",
+            "failed_checks": [
+              "region-given"
+            ]
+          },
+          "bad-region-undescribed": {
+            "verdict": "fail",
+            "failed_checks": [
+              "region-described"
+            ]
+          },
+          "bad-no-page": {
+            "verdict": "fail",
+            "failed_checks": [
+              "page-recorded"
+            ]
+          },
+          "bad-no-width": {
+            "verdict": "fail",
+            "failed_checks": [
+              "width-recorded"
+            ]
+          },
+          "bad-no-observation": {
+            "verdict": "fail",
+            "failed_checks": [
+              "observed-stated"
+            ]
+          },
+          "bad-no-fix-verb": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fix-verb-named"
+            ]
+          },
+          "bad-no-fix-outcome": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fix-outcome-stated"
+            ]
+          },
+          "bad-catastrophe-low": {
+            "verdict": "fail",
+            "failed_checks": [
+              "catastrophe-is-high-impact"
+            ]
+          },
+          "bad-blame": {
+            "verdict": "fail",
+            "failed_checks": [
+              "design-not-people"
+            ]
+          },
+          "bad-contact-data": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-contact-data"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.review-scope",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the scope of a heuristic review: pages, tasks, widths, themes and heuristics",
+      "category_reason": "A scope is a testable statement of what will be reviewed.",
+      "value": {
+        "describes": "the scope of a heuristic review: pages, tasks, widths, themes and heuristics",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scope_id",
+            "surface",
+            "build",
+            "pages",
+            "tasks",
+            "personas",
+            "widths_px",
+            "themes",
+            "heuristics",
+            "evaluators",
+            "out_of_scope"
+          ],
+          "properties": {
+            "scope_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "surface": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "build": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "pages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "page_id",
+                  "url"
+                ],
+                "properties": {
+                  "page_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "url": {
+                    "type": "string",
+                    "pattern": "^https?://",
+                    "minLength": 8,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "personas": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "widths_px": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "integer",
+                "minimum": 200,
+                "maximum": 8000
+              }
+            },
+            "themes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "light",
+                  "dark",
+                  "high_contrast"
+                ]
+              }
+            },
+            "heuristics": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "pattern": "^H(10|[1-9])$"
+              }
+            },
+            "evaluators": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "out_of_scope": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "evaluators is at least 2.",
+          "Every task is something the intended people come to do."
+        ]
+      }
+    },
+    {
+      "slug": "template.evaluation-sheet",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one evaluator's independent findings against the heuristics",
+      "category_reason": "A sheet is one evaluator's recorded run.",
+      "value": {
+        "describes": "one evaluator's independent findings against the heuristics",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sheet_id",
+            "scope_ref",
+            "evaluator_role",
+            "evaluated_at",
+            "independent",
+            "findings",
+            "tasks_walked",
+            "not_reviewed"
+          ],
+          "properties": {
+            "sheet_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "scope_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "evaluator_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "evaluated_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "independent": {
+              "type": "boolean"
+            },
+            "findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "heuristic",
+                  "title",
+                  "page_url",
+                  "task",
+                  "width_px",
+                  "theme",
+                  "severity",
+                  "severity_reason",
+                  "frequency",
+                  "impact",
+                  "persistence",
+                  "evidence",
+                  "observed",
+                  "why_it_matters",
+                  "fix_verb",
+                  "wcag_sc"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "heuristic": {
+                    "type": "string",
+                    "pattern": "^H(10|[1-9])$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "page_url": {
+                    "type": "string",
+                    "pattern": "^https?://",
+                    "minLength": 8,
+                    "maxLength": 300
+                  },
+                  "task": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "width_px": {
+                    "type": "integer",
+                    "minimum": 200,
+                    "maximum": 8000
+                  },
+                  "theme": {
+                    "type": "string",
+                    "enum": [
+                      "light",
+                      "dark",
+                      "high_contrast"
+                    ]
+                  },
+                  "severity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  },
+                  "severity_reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "frequency": {
+                    "type": "string",
+                    "enum": [
+                      "rare",
+                      "sometimes",
+                      "often"
+                    ]
+                  },
+                  "impact": {
+                    "type": "string",
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high"
+                    ]
+                  },
+                  "persistence": {
+                    "type": "string",
+                    "enum": [
+                      "once",
+                      "repeated"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "screenshot_sha256",
+                      "image_size",
+                      "region",
+                      "what_it_shows"
+                    ],
+                    "properties": {
+                      "screenshot_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "image_size": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 100000
+                        }
+                      },
+                      "region": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 100000
+                        }
+                      },
+                      "what_it_shows": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      }
+                    }
+                  },
+                  "observed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "why_it_matters": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "fix_verb": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "template_id",
+                      "outcome"
+                    ],
+                    "properties": {
+                      "template_id": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$",
+                        "maxLength": 120
+                      },
+                      "outcome": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      }
+                    }
+                  },
+                  "wcag_sc": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[1-4]\\.[0-9]\\.[0-9]{1,2}$"
+                    }
+                  }
+                }
+              }
+            },
+            "tasks_walked": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "not_reviewed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "independent is true: the evaluator saw no other sheet.",
+          "Every finding passes the heuristic checks."
+        ]
+      }
+    },
+    {
+      "slug": "template.combined-findings",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: findings from several sheets combined by the fixed rule",
+      "category_reason": "A deterministic evaluation of recorded sheets.",
+      "value": {
+        "describes": "findings from several sheets combined by the fixed rule",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "merged_id",
+            "sheets",
+            "findings",
+            "kept_separate"
+          ],
+          "properties": {
+            "merged_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "sheets": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            },
+            "findings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "heuristic",
+                  "title",
+                  "from",
+                  "severities",
+                  "severity",
+                  "spread",
+                  "disagreement",
+                  "evidence",
+                  "page_url"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "heuristic": {
+                    "type": "string",
+                    "pattern": "^H(10|[1-9])$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "from": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                    }
+                  },
+                  "severities": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4
+                    }
+                  },
+                  "severity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  },
+                  "spread": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "disagreement": {
+                    "type": "boolean"
+                  },
+                  "evidence": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "screenshot_sha256",
+                      "region"
+                    ],
+                    "properties": {
+                      "screenshot_sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "region": {
+                        "type": "array",
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 100000
+                        }
+                      }
+                    }
+                  },
+                  "page_url": {
+                    "type": "string",
+                    "pattern": "^https?://",
+                    "minLength": 8,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "kept_separate": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "a",
+                  "b",
+                  "why"
+                ],
+                "properties": {
+                  "a": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "b": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "severity is the median of severities rounded up; spread is the range.",
+          "disagreement is true when spread is 2 or more."
+        ]
+      }
+    },
+    {
+      "slug": "template.finding-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a different worker's confirmation, change or rejection of each combined finding",
+      "category_reason": "A review is a recorded verification.",
+      "value": {
+        "describes": "a different worker's confirmation, change or rejection of each combined finding",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "review_id",
+            "merged_ref",
+            "reviewer_role",
+            "distinct_from_evaluators",
+            "decisions"
+          ],
+          "properties": {
+            "review_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "merged_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "reviewer_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "distinct_from_evaluators": {
+              "type": "boolean"
+            },
+            "decisions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "finding_id",
+                  "decision",
+                  "reason",
+                  "severity"
+                ],
+                "properties": {
+                  "finding_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "confirmed",
+                      "changed",
+                      "rejected"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "severity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "distinct_from_evaluators is true.",
+          "Every combined finding has one decision with a reason."
+        ]
+      }
+    },
+    {
+      "slug": "template.fix-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one proposed fix verb per confirmed finding, ranked",
+      "category_reason": "A plan of proposed work, for a requester to decide on.",
+      "value": {
+        "describes": "one proposed fix verb per confirmed finding, ranked",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "plan_id",
+            "review_ref",
+            "fixes",
+            "taste_calls"
+          ],
+          "properties": {
+            "plan_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "review_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "fixes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 80,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "finding_id",
+                  "severity",
+                  "fix_verb",
+                  "why_this_verb",
+                  "priority"
+                ],
+                "properties": {
+                  "finding_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  },
+                  "severity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  },
+                  "fix_verb": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "template_id",
+                      "outcome"
+                    ],
+                    "properties": {
+                      "template_id": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$",
+                        "maxLength": 120
+                      },
+                      "outcome": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      }
+                    }
+                  },
+                  "why_this_verb": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "priority": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3
+                  }
+                }
+              }
+            },
+            "taste_calls": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every confirmed finding has one fix.",
+          "Severity 4 findings have priority 1."
+        ]
+      }
+    },
+    {
+      "slug": "example.review-scope",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: scope for a volunteer site review",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.review-scope"
+        },
+        "instance": {
+          "scope_id": "RS-2",
+          "surface": "The synthetic pantry volunteer site",
+          "build": "site build 2026-10-30.3",
+          "pages": [
+            {
+              "page_id": "home",
+              "url": "https://pantry.example.invalid/"
+            },
+            {
+              "page_id": "shifts",
+              "url": "https://pantry.example.invalid/shifts"
+            },
+            {
+              "page_id": "visit",
+              "url": "https://pantry.example.invalid/visit"
+            }
+          ],
+          "tasks": [
+            "Find where to offer a weekend shift",
+            "Pick a shift and see what to bring",
+            "Copy the pantry's address"
+          ],
+          "personas": [
+            "Volunteer coordinator on a phone between shifts",
+            "Retired volunteer who uses only a keyboard"
+          ],
+          "widths_px": [
+            1440,
+            390
+          ],
+          "themes": [
+            "light",
+            "dark"
+          ],
+          "heuristics": [
+            "H1",
+            "H2",
+            "H3",
+            "H4",
+            "H5",
+            "H6",
+            "H7",
+            "H8",
+            "H9",
+            "H10"
+          ],
+          "evaluators": 2,
+          "out_of_scope": [
+            "Confirming a shift, which books a real place"
+          ]
+        },
+        "shows": "Three pages, three real tasks, two personas, both widths and themes, all ten heuristics and two evaluators.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.evaluation-sheet",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: one evaluator's sheet",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.evaluation-sheet"
+        },
+        "instance": {
+          "sheet_id": "ES-2a",
+          "scope_ref": {
+            "key": "usability-heuristics-review.review_scope.t-3",
+            "version": 1,
+            "value_sha256": "1f2e3d4c5b6a79881f2e3d4c5b6a79881f2e3d4c5b6a79881f2e3d4c5b6a7988"
+          },
+          "evaluator_role": "evaluator A, an agent",
+          "evaluated_at": "2026-10-30T16:00Z",
+          "independent": true,
+          "findings": [
+            {
+              "id": "UH-4",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "page_url": "https://pantry.example.invalid/",
+              "task": "Find where to offer a weekend shift",
+              "width_px": 390,
+              "theme": "light",
+              "severity": 3,
+              "severity_reason": "Medium impact, seen often, repeated on every visit.",
+              "frequency": "often",
+              "impact": "medium",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  390,
+                  844
+                ],
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ],
+                "what_it_shows": "The main button reads Engage capacity."
+              },
+              "observed": "The only call to action is labeled Engage capacity.",
+              "why_it_matters": "People who do not recognize the action leave.",
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three labeled options for the coordinator to choose from."
+              },
+              "wcag_sc": []
+            },
+            {
+              "id": "UH-5",
+              "heuristic": "H4",
+              "title": "The visit page drops the site's navigation and styles.",
+              "page_url": "https://pantry.example.invalid/visit",
+              "task": "Copy the pantry's address",
+              "width_px": 1440,
+              "theme": "dark",
+              "severity": 2,
+              "severity_reason": "Low impact, but it happens on every visit to the page.",
+              "frequency": "often",
+              "impact": "low",
+              "persistence": "repeated",
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "image_size": [
+                  1440,
+                  900
+                ],
+                "region": [
+                  0,
+                  0,
+                  1440,
+                  320
+                ],
+                "what_it_shows": "An unstyled page with default fonts and no menu."
+              },
+              "observed": "The page shows plain default styles in a white page, even in the dark theme, with no way back but a Home link.",
+              "why_it_matters": "People think they left the site and stop trusting the address.",
+              "fix_verb": {
+                "template_id": "findings-to-fixes.propose-fix",
+                "outcome": "A fix proposal that renders the page in the shared layout."
+              },
+              "wcag_sc": [
+                "3.2.3"
+              ]
+            }
+          ],
+          "tasks_walked": [
+            "Find where to offer a weekend shift",
+            "Copy the pantry's address"
+          ],
+          "not_reviewed": [
+            "Pick a shift and see what to bring: the shift list was empty in this build."
+          ]
+        },
+        "shows": "Independent findings with one heuristic each, rated with reasons, a region per screenshot and a fix verb.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.combined-findings",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: two sheets combined, with one disagreement",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.combined-findings"
+        },
+        "instance": {
+          "merged_id": "CF-2",
+          "sheets": [
+            "ES-2a",
+            "ES-2b"
+          ],
+          "findings": [
+            {
+              "id": "CUH-1",
+              "heuristic": "H2",
+              "title": "The request button uses a term volunteers do not use.",
+              "from": [
+                "UH-4",
+                "UH-12"
+              ],
+              "severities": [
+                3,
+                3
+              ],
+              "severity": 3,
+              "spread": 0,
+              "disagreement": false,
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "region": [
+                  16,
+                  412,
+                  358,
+                  64
+                ]
+              },
+              "page_url": "https://pantry.example.invalid/"
+            },
+            {
+              "id": "CUH-2",
+              "heuristic": "H4",
+              "title": "The visit page drops the site's navigation and styles.",
+              "from": [
+                "UH-5",
+                "UH-14"
+              ],
+              "severities": [
+                2,
+                4
+              ],
+              "severity": 3,
+              "spread": 2,
+              "disagreement": true,
+              "evidence": {
+                "screenshot_sha256": "6c2d8e1f0a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d",
+                "region": [
+                  0,
+                  0,
+                  1440,
+                  320
+                ]
+              },
+              "page_url": "https://pantry.example.invalid/visit"
+            }
+          ],
+          "kept_separate": [
+            {
+              "a": "UH-7",
+              "b": "UH-15",
+              "why": "Same heuristic and page, but the regions do not overlap: one is the Copy button, the other the map link."
+            }
+          ]
+        },
+        "shows": "Median severity rounded up, the spread, a disagreement left for the reviewer and two look-alikes kept apart with the reason.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.fix-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: fix verbs for the confirmed findings",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.fix-plan"
+        },
+        "instance": {
+          "plan_id": "FP-2",
+          "review_ref": {
+            "key": "usability-heuristics-review.finding_review.t-5",
+            "version": 1,
+            "value_sha256": "aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55aa55"
+          },
+          "fixes": [
+            {
+              "finding_id": "CUH-1",
+              "severity": 3,
+              "fix_verb": {
+                "template_id": "taste-palettes.draft-embodiments",
+                "outcome": "Three button labels in the volunteers' words, compared side by side."
+              },
+              "why_this_verb": "Wording has no single right answer; the coordinator chooses.",
+              "priority": 1
+            },
+            {
+              "finding_id": "CUH-2",
+              "severity": 3,
+              "fix_verb": {
+                "template_id": "findings-to-fixes.propose-fix",
+                "outcome": "A fix proposal that renders the visit page in the shared layout, with its guard."
+              },
+              "why_this_verb": "A repair to the site's own layout contract.",
+              "priority": 2
+            }
+          ],
+          "taste_calls": [
+            "CUH-1"
+          ]
+        },
+        "shows": "One fix verb per confirmed finding, a taste call routed to the palette pack and a repair routed to findings to fixes.",
+        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "scope-review",
+      "kind": "verb.problemize",
+      "title": "Scope the heuristic review",
+      "claimant": "agent",
+      "summary": "Name the pages, the tasks people come to do, the personas, widths, themes and heuristics, and how many independent evaluators will review.",
+      "outcome": "A review scope every evaluator follows.",
+      "ready_outcome": "review_scoped",
+      "pinned": [
+        "method"
+      ],
+      "slots": [
+        {
+          "name": "surface_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a brief naming the surface, its build and who uses it."
+        }
+      ],
+      "produces": [
+        {
+          "name": "review_scope",
+          "template": "template.review-scope"
+        }
+      ],
+      "steps": [
+        "List the pages and the real tasks people come to do on them, in their words.",
+        "Name the personas, widths and themes; include a small-screen width and every theme the surface offers.",
+        "Plan at least two evaluators who will work independently, and list what is out of scope with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "scope-matches-template",
+          "check": "The scope validates against template.review-scope's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "two-evaluators",
+          "check": "evaluators is at least 2.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tasks-real",
+          "check": "Every task is something the intended people actually come to do.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "evaluate-against-heuristics",
+      "kind": "verb.verify_gate",
+      "title": "Evaluate against the heuristics",
+      "claimant": "agent",
+      "summary": "Walk each task in scope alone, as its persona would, and record every problem against one primary heuristic with a severity, a screenshot region and a proposed fix verb.",
+      "outcome": "One evaluator's sheet of findings. Run once per evaluator, as separate attempts.",
+      "ready_outcome": "sheet_recorded",
+      "pinned": [
+        "method",
+        "severity-scale",
+        "evidence-rules",
+        "heuristic-checks",
+        "heuristic.visibility-of-status",
+        "heuristic.match-real-world",
+        "heuristic.user-control",
+        "heuristic.consistency",
+        "heuristic.error-prevention",
+        "heuristic.recognition-over-recall",
+        "heuristic.flexibility-efficiency",
+        "heuristic.minimalist-design",
+        "heuristic.error-recovery",
+        "heuristic.help-documentation"
+      ],
+      "slots": [
+        {
+          "name": "review_scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the review scope."
+        }
+      ],
+      "produces": [
+        {
+          "name": "evaluation_sheet",
+          "template": "template.evaluation-sheet"
+        }
+      ],
+      "steps": [
+        "Confirm you have seen no other evaluator's sheet for this scope; otherwise end blocked.",
+        "Walk each task at each width and theme in scope with read-only steps, and never book, buy or create an account.",
+        "Record each problem against the one heuristic it most violates, rated by the severity scale with its reasons.",
+        "Attach a screenshot digest, its image size and the region that shows the problem, and propose one fix verb by template id.",
+        "List the tasks you could not walk under not_reviewed, with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "sheet-matches-template",
+          "check": "The sheet validates against template.evaluation-sheet's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "heuristic-checks-pass",
+          "check": "Every finding passes the pinned heuristic checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "regions-inside",
+          "check": "Every region lies inside its screenshot's image size.",
+          "method": "deterministic"
+        },
+        {
+          "id": "findings-specific",
+          "check": "Each finding names what was seen, not a general impression.",
+          "method": "judgment"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only page loads of the addresses in the scope with ordinary navigation; no form is submitted and no account is created."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "usability-heuristics-review.scope-review"
+      ]
+    },
+    {
+      "slug": "combine-findings",
+      "kind": "verb.verify_gate",
+      "title": "Combine the evaluators' findings",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Group findings that are the same problem across the sheets by the combine rules, take the median severity rounded up and mark disagreements, keeping every finding.",
+      "outcome": "One combined list with each finding's sources, severities and spread.",
+      "ready_outcome": "findings_combined",
+      "pinned": [
+        "combine-rules"
+      ],
+      "slots": [
+        {
+          "name": "evaluation_sheets",
+          "category": "noun.eval_run",
+          "description": "Pins of at least two independent evaluation sheets.",
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "combined_findings",
+          "template": "template.combined-findings"
+        }
+      ],
+      "steps": [
+        "Group findings by the same-problem test: same page, heuristic and width, with regions overlapping by at least half of the smaller one.",
+        "Set each group's severity to the median rounded up and its spread to the range, and mark disagreement at a spread of 2 or more.",
+        "Keep look-alikes that fail the test separate and record why; never drop a finding seen by only one evaluator."
+      ],
+      "acceptance": [
+        {
+          "id": "combined-matches-template",
+          "check": "The combined list validates against template.combined-findings's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-finding-kept",
+          "check": "Every finding from every sheet appears in exactly one group.",
+          "method": "deterministic"
+        },
+        {
+          "id": "severity-recomputes",
+          "check": "Recomputing median and spread from the sheets gives the recorded values.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "usability-heuristics-review.evaluate-against-heuristics"
+      ]
+    },
+    {
+      "slug": "review-findings",
+      "kind": "verb.verify_gate",
+      "title": "Review the combined findings",
+      "claimant": "agent_or_human",
+      "summary": "A worker who evaluated nothing in this review confirms, changes or rejects each combined finding from its evidence, and settles every disagreement with a reason.",
+      "outcome": "A finding review with one decision per combined finding.",
+      "ready_outcome": "findings_reviewed",
+      "pinned": [
+        "severity-scale",
+        "evidence-rules"
+      ],
+      "slots": [
+        {
+          "name": "combined_findings",
+          "category": "noun.eval_run",
+          "description": "Pin of the combined findings."
+        },
+        {
+          "name": "evaluation_sheets",
+          "category": "noun.eval_run",
+          "description": "Pins of the sheets, for their evidence.",
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "finding_review",
+          "template": "template.finding-review"
+        }
+      ],
+      "steps": [
+        "Confirm you wrote none of the sheets; otherwise end blocked.",
+        "Look at each finding's region and decide confirmed, changed or rejected, with a reason; a change says what changed.",
+        "Settle each disagreement by the severity scale and say which factor decided it."
+      ],
+      "acceptance": [
+        {
+          "id": "review-matches-template",
+          "check": "The review validates against template.finding-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-finding-decided",
+          "check": "Every combined finding has exactly one decision with a reason.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-reviewer",
+          "check": "distinct_from_evaluators is true.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 2400
+      },
+      "review": "distinct_reviewer",
+      "follows": [
+        "usability-heuristics-review.combine-findings"
+      ]
+    },
+    {
+      "slug": "propose-fixes",
+      "kind": "verb.decompose_dag",
+      "title": "Propose a fix verb for each confirmed finding",
+      "claimant": "agent",
+      "summary": "For each confirmed finding choose one fix verb by template id with the outcome it should produce, route taste calls to the palette pack and rank the fixes by severity.",
+      "outcome": "A fix plan; each fix is also returned as a proposed verb for a requester to decide on.",
+      "ready_outcome": "fixes_proposed",
+      "pinned": [
+        "method",
+        "severity-scale"
+      ],
+      "slots": [
+        {
+          "name": "finding_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the finding review."
+        },
+        {
+          "name": "combined_findings",
+          "category": "noun.eval_run",
+          "description": "Pin of the combined findings."
+        }
+      ],
+      "produces": [
+        {
+          "name": "fix_plan",
+          "template": "template.fix-plan"
+        }
+      ],
+      "steps": [
+        "Choose one fix verb per confirmed finding: findings-to-fixes.propose-fix for a repair, taste-palettes.draft-embodiments for a choice with no single right answer, docs-improvement.draft-rewrite for wording in documentation, accessibility-audit.plan-audit when a WCAG criterion is involved.",
+        "Rank severity 4 findings first, then 3, then the rest, and say why each verb fits.",
+        "Return every fix as a proposed verb and propose findings-to-fixes.record-finding for each confirmed finding not yet recorded."
+      ],
+      "acceptance": [
+        {
+          "id": "plan-matches-template",
+          "check": "The plan validates against template.fix-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "one-fix-each",
+          "check": "Every confirmed finding has exactly one fix and every fix names a template that exists.",
+          "method": "deterministic"
+        },
+        {
+          "id": "severe-first",
+          "check": "Severity 4 findings have priority 1.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verbs-fit",
+          "check": "Each chosen verb can produce the outcome it is given.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "usability-heuristics-review.review-findings"
+      ]
+    }
+  ]
+}
