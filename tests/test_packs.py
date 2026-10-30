@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 40)
+        self.assertEqual(summary["worked_examples"], 45)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -1760,6 +1760,454 @@ class GapPackExamples(unittest.TestCase):
                             "persona-panel-second-opinion.synthesize-disagreements",
                             "persona-panel-second-opinion.audit-synthesis"):
             self.assertEqual(task(template_id)["brief"]["review"]["required"], "distinct_reviewer", template_id)
+
+
+
+class ReviewPackExamples(unittest.TestCase):
+    """The continuous self-review, annoyance hunt, edge and corner cases, regression watch and codebase health review
+    packs of October 30: their record checks against their own templates or the findings to fixes template, every
+    finding they produce fitting findings to fixes with reproduce, fix, verify and regression guard verbs, and the picks,
+    diffs, coverage, ranks, outcomes and statuses their worked examples state. The edge case and health check code
+    recompute their own worked examples in their CI jobs."""
+
+    F2F = None
+    FIXTURES = (("continuous-self-review", "loop-checks", "template.review-run", "example.review-run"),
+                ("annoyance-hunt", "annoyance-checks", F2F, "example.finding"),
+                ("edge-and-corner-cases", "edge-checks", "template.case-results", "example.case-results"),
+                ("regression-watch", "watch-checks", "template.comparison", "example.comparison"),
+                ("codebase-health-review", "health-checks", F2F, "example.finding"))
+    FOLLOW_UPS = {"reproduce", "propose-fix", "fix", "verify-fix", "add-regression-guard"}
+    PACKS = ("continuous-self-review", "annoyance-hunt", "edge-and-corner-cases", "regression-watch", "codebase-health-review")
+
+    @staticmethod
+    def instance(pack: str, slug: str):
+        return record(pack, slug)["value"]["instance"]
+
+    def schema(self, pack: str, template_slug):
+        if template_slug is None:
+            return record("findings-to-fixes", "template.finding")["value"]["schema"]
+        return record(pack, template_slug)["value"]["schema"]
+
+    def test_record_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug, template_slug, example_slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            schema = self.schema(pack, template_slug)
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(schema, fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            self.assertEqual(vp.failing_checks(value["deterministic_checks"], self.instance(pack, example_slug)), [], pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_every_finding_fits_findings_to_fixes_with_its_follow_ups(self):
+        checks = record("findings-to-fixes", "record-checks")["value"]["deterministic_checks"]
+        schema = record("findings-to-fixes", "template.finding")["value"]["schema"]
+        findings = []
+        for pack, slug in (("annoyance-hunt", "annoyance-checks"), ("codebase-health-review", "health-checks")):
+            findings += [f["finding"] for f in record(pack, slug)["value"]["golden_fixtures"] if f["label"] == "known_good"]
+        for pack, slug in (("annoyance-hunt", "example.finding"), ("codebase-health-review", "example.finding"),
+                           ("edge-and-corner-cases", "example.finding"), ("regression-watch", "example.regression-finding"),
+                           ("regression-watch", "example.flake-finding")):
+            findings.append(self.instance(pack, slug))
+        self.assertEqual(len(findings), 11)
+        import re
+
+        for finding in findings:
+            self.assertEqual(vp.failing_checks(checks, finding), [], finding["id"])
+            self.assertEqual(vp.schema_errors(schema, finding), [], finding["id"])
+            self.assertEqual({w["verb"] for w in finding["work"]}, self.FOLLOW_UPS, finding["id"])
+            self.assertEqual((finding["status"], finding["public"]), ("open", False), finding["id"])
+            self.assertIsNone(re.search(r"(line-?[0-9]|-py\b|\.py|[0-9]{3,})", finding["fingerprint"]), finding["fingerprint"])
+        for pack, producer in (("annoyance-hunt", "record-annoyance-findings"), ("edge-and-corner-cases", "record-edge-findings"),
+                               ("regression-watch", "report-regressions"), ("codebase-health-review", "write-health-report")):
+            produced = {p["template"]["key"] for p in task(f"{pack}.{producer}")["brief"]["output_contract"]["produces"]}
+            self.assertIn(key("findings-to-fixes", "template.finding"), produced, pack)
+
+    def test_rotation_pick_recomputes_from_the_catalog_and_log(self):
+        from datetime import date
+
+        pack = "continuous-self-review"
+        catalog = {s["scope_id"]: s for s in self.instance(pack, "example.scope-catalog")["scopes"]}
+        log = self.instance(pack, "example.review-log")
+        pick = self.instance(pack, "example.scope-pick")
+        as_of = date.fromisoformat(pick["as_of"][:10])
+        last = {}
+        for entry in log["entries"]:
+            if entry["reviewed_at"] < pick["as_of"]:
+                last[entry["scope_id"]] = max(last.get(entry["scope_id"], entry["reviewed_at"]), entry["reviewed_at"])
+        rows = {r["scope_id"]: r for r in pick["candidates"]}
+        self.assertEqual(set(rows), set(catalog))
+        for sid, scope in catalog.items():
+            row = rows[sid]
+            self.assertEqual(row["last_reviewed"], last.get(sid), sid)
+            days = (as_of - date.fromisoformat(last[sid][:10])).days if sid in last else None
+            self.assertEqual(row["days_since"], days, sid)
+            self.assertEqual(row["overdue"], days is not None and days > scope["max_interval_days"], sid)
+            self.assertEqual(row["urgent"], days is not None and days > 2 * scope["max_interval_days"], sid)
+            expected = None if days is None else round(days / scope["max_interval_days"] + min(row["churn"] / scope["churn"]["cap"], 1)
+                                                       + 0.5 * min(row["open_high"], 2), 3)
+            self.assertEqual(row["score"], expected, sid)
+        never = [sid for sid in catalog if rows[sid]["score"] is None]
+        urgent = sorted((r for r in pick["candidates"] if r["urgent"]),
+                        key=lambda r: (-r["days_since"] / catalog[r["scope_id"]]["max_interval_days"], r["scope_id"]))
+        rest = sorted((r for r in pick["candidates"] if r["score"] is not None and not r["urgent"]), key=lambda r: (-r["score"], r["scope_id"]))
+        order = never + [r["scope_id"] for r in urgent + rest]
+        self.assertEqual([r["scope_id"] for r in sorted(pick["candidates"], key=lambda r: r["rank"])], order)
+        self.assertEqual(pick["picked"], order[:pick["scopes_per_window"]])
+        schedule = self.instance(pack, "example.review-schedule")
+        self.assertEqual(pick["scopes_per_window"], schedule["scopes_per_window"])
+        approval = self.instance(pack, "example.schedule-approval")
+        self.assertLessEqual(set(pick["picked"]), set(approval["scope"]))
+        self.assertLess(approval["decided_at"], pick["as_of"])
+        self.assertLess(pick["as_of"], approval["expires"])
+        from datetime import datetime
+
+        scheduled = [e for e in log["entries"] if e["trigger"] == "schedule"]
+        self.assertTrue(scheduled)
+        for entry in log["entries"]:
+            if entry["reviewed_at"] < approval["decided_at"]:
+                self.assertEqual(entry["trigger"], "manual", entry["run_id"])
+        days = {datetime.fromisoformat(e["reviewed_at"][:10]).strftime("%A") for e in scheduled}
+        self.assertEqual(len(days), 1, "scheduled runs fall on one weekday")
+        self.assertTrue(any(f"Start on {next(iter(days))}" in change for change in approval["changes"]), days)
+        self.assertEqual(datetime.fromisoformat(pick["as_of"][:10]).strftime("%A"), next(iter(days)))
+
+    def test_review_diff_and_coverage_recompute(self):
+        from datetime import date
+
+        pack = "continuous-self-review"
+        inputs = record(pack, "example.diff-inputs")["value"]
+        run = self.instance(pack, "example.review-run")
+        ran, changed = set(inputs["checks_run"]), set(inputs["checks_changed"])
+        seen = {fp for check, fps in inputs["seen_now"].items() if check in ran for fp in fps}
+        previous = {f["fingerprint"]: f["check"] for f in inputs["previous_open"]}
+        resolved = {f["fingerprint"] for f in inputs["closed_before"] if f["reason"] == "resolved"}
+        decided = {f["fingerprint"] for f in inputs["closed_before"] if f["reason"] != "resolved"}
+        fixes = {f["fingerprint"] for f in inputs["fixes"]}
+        verified = {v["fingerprint"] for v in inputs["verifications"] if v["verified_by"] != "fixer"}
+        gone = {fp: c for fp, c in previous.items() if fp not in seen}
+        expected = {"new": sorted(seen - set(previous) - resolved - decided),
+                    "still_open": sorted(fp for fp in seen & set(previous) if not (fp in fixes and fp in verified)),
+                    "reopened": sorted((seen & resolved) | {fp for fp in seen & set(previous) if fp in fixes and fp in verified}),
+                    "not_checked": sorted(fp for fp, c in gone.items() if c not in ran or c in changed),
+                    "fixed": sorted(fp for fp, c in gone.items() if c in ran and c not in changed and fp in fixes and fp in verified),
+                    "gone_unverified": sorted(fp for fp, c in gone.items() if c in ran and c not in changed and fp in fixes and fp not in verified),
+                    "gone_unexplained": sorted(fp for fp, c in gone.items() if c in ran and c not in changed and fp not in fixes)}
+        self.assertEqual({name: sorted(row["fingerprint"] for row in rows) for name, rows in run["diff"].items()}, expected)
+        self.assertEqual(sorted(d["fingerprint"] for d in run["decided_seen"]), sorted(seen & decided))
+        self.assertEqual(run["carried"], sum(len(rows) for name, rows in run["diff"].items() if name != "new"))
+        self.assertTrue(all(len(rows) == 1 for rows in expected.values()), "the example shows one finding in each class")
+        self.assertEqual(len(run["decided_seen"]), 1, "and one a person decided, left alone")
+        follow = record(pack, "diff-rules")["value"]["follow_ups"]
+        for name, key_ in (("gone_unverified", "gone_unverified"), ("gone_unexplained", "gone_unexplained"), ("reopened", "reopened")):
+            for row in run["diff"][name]:
+                self.assertEqual(row["proposed_verb"], follow[key_], name)
+        self.assertEqual({c["check"] for c in run["checks_run"]}, ran)
+        self.assertEqual(run["checks_not_run"], inputs["checks_not_run"])
+        log = self.instance(pack, "example.review-log")
+        catalog = {s["scope_id"]: s for s in self.instance(pack, "example.scope-catalog")["scopes"]}
+        self.assertEqual([e["reviewed_at"] for e in log["entries"]], sorted(e["reviewed_at"] for e in log["entries"]), "append-only, in order")
+        self.assertIn(run["run_id"], {e["run_id"] for e in log["entries"]})
+        self.assertEqual(next(e for e in log["entries"] if e["run_id"] == run["run_id"])["counts"], {n: len(r) for n, r in run["diff"].items()})
+        last = {}
+        for entry in log["entries"]:
+            last[entry["scope_id"]] = max(last.get(entry["scope_id"], entry["reviewed_at"]), entry["reviewed_at"])
+        today = date.fromisoformat(log["as_of"][:10])
+        age = {sid: (today - date.fromisoformat(at[:10])).days for sid, at in last.items()}
+        coverage = log["coverage"]
+        self.assertEqual(coverage["scopes_total"], len(catalog))
+        self.assertEqual(coverage["never_reviewed"], [sid for sid in catalog if sid not in last])
+        self.assertEqual(coverage["overdue"], [sid for sid in catalog if sid in age and age[sid] > catalog[sid]["max_interval_days"]])
+        self.assertEqual(coverage["reviewed_within_interval"], sum(1 for sid in catalog if sid in age and age[sid] <= catalog[sid]["max_interval_days"]))
+        latest = {}
+        for entry in log["entries"]:
+            latest[entry["scope_id"]] = entry
+        self.assertEqual(log["open_findings"], sum(v for e in latest.values() for c, v in e["counts"].items() if c != "fixed"))
+
+    def test_schedules_wait_for_a_person_and_nothing_self_approves(self):
+        pack = "continuous-self-review"
+        schedule = self.instance(pack, "example.review-schedule")
+        self.assertEqual((schedule["activation"], schedule["start"], schedule["stop"]), ("not_activated", None, None))
+        self.assertEqual(schedule["enqueues"], [f"{pack}.pick-scope"])
+        self.assertIn("No scheduler is activated", schedule["activation_path"])
+        for p in self.PACKS:
+            for item in IDX.docs[p]["nouns.json"]["records"]:
+                self.assertNotEqual(item["value"]["role"], "schedule_proposal", item["key"])
+        approve = task(f"{pack}.approve-schedule")["brief"]
+        self.assertEqual({p["template"]["key"] for p in approve["output_contract"]["produces"]}, {key("unattended-run-record", "template.run-approval")})
+        for template_id in (f"{pack}.approve-schedule", "annoyance-hunt.confirm-ranking", "regression-watch.accept-baseline"):
+            brief = task(template_id)["brief"]
+            self.assertEqual((brief["claimant"], brief["execution"]["model_use"]), ("human", "none"), template_id)
+        self.assertIs(self.instance(pack, "example.self-review")["self_approval"], False)
+        log = task(f"{pack}.log-run")["brief"]["output_contract"]
+        self.assertEqual((log["write_mode"], log["target_slot"]), ("compare_and_set", "review_log"))
+        acceptance = self.instance("regression-watch", "example.acceptance")
+        self.assertEqual(acceptance["decided_by_kind"], "person")
+        self.assertIs(self.instance("regression-watch", "example.comparison")["baseline_updated"], False)
+
+    def test_annoyance_scores_ranks_and_findings_recompute(self):
+        pack = "annoyance-hunt"
+        log = self.instance(pack, "example.annoyance-log")
+
+        def level(occurrences, opportunities):
+            share = occurrences / opportunities
+            return 4 if share >= 0.75 else 3 if share >= 0.35 else 2 if share >= 0.10 else 1
+
+        for entry in log["entries"]:
+            lv = level(entry["occurrences"], entry["opportunities"])
+            self.assertEqual(entry["frequency_level"], lv, entry["id"])
+            self.assertEqual(entry["score"], lv * entry["pain"], entry["id"])
+            self.assertEqual(entry["low_confidence"], entry["opportunities"] < 3, entry["id"])
+            self.assertEqual(entry["severity"], "P2" if entry["score"] >= 8 and not entry["low_confidence"] else "P3", entry["id"])
+            self.assertTrue(entry["fingerprint"].startswith(f"annoyance/{entry['surface']}/"), entry["id"])
+            self.assertNotIn(entry["category"], entry["fingerprint"], "a person may change the category without splitting duplicates")
+
+        def ranked(entries, pain):
+            return [e["id"] for e in sorted(entries, key=lambda e: (-level(e["occurrences"], e["opportunities"]) * pain(e), -len(e["groups"]),
+                                                                    -pain(e), int(e["id"].split("-")[1])))]
+
+        self.assertEqual([e["id"] for e in sorted(log["entries"], key=lambda e: e["rank"])], ranked(log["entries"], lambda e: e["pain"]))
+        confirmation = self.instance(pack, "example.ranking-confirmation")
+        changed = {c["id"]: int(c["to"]) for c in confirmation["changes"] if c["field"] == "pain"}
+        self.assertEqual(confirmation["ranking_after"], ranked(log["entries"], lambda e: changed.get(e["id"], e["pain"])))
+        self.assertEqual(confirmation["confirmed_by_kind"], "person")
+        by_fp = {e["fingerprint"]: e for e in log["entries"]}
+        goods = [f["finding"] for f in record(pack, "annoyance-checks")["value"]["golden_fixtures"] if f["label"] == "known_good"]
+        self.assertEqual(self.instance(pack, "example.finding"), goods[0])
+        for finding in goods:
+            entry = by_fp[finding["fingerprint"]]
+            measurement = next(e["detail"] for e in finding["evidence"] if e["kind"] == "measurement")
+            self.assertEqual(measurement, f"category {entry['category']}: frequency {entry['occurrences']} of {entry['opportunities']} {entry['unit']}; "
+                                          f"pain {entry['pain']} of 4; score {entry['score']} (frequency level {entry['frequency_level']} x pain {entry['pain']}); "
+                                          f"affects {', '.join(entry['groups'])}")
+            quote = next(e for e in finding["evidence"] if e["kind"] == "quote")
+            self.assertEqual((quote["detail"], quote["location"]), (entry["quotes"][0]["quote"], entry["quotes"][0]["from"]))
+            self.assertEqual(finding["severity"], entry["severity"])
+        session = self.instance(pack, "example.friction-session")
+        from_session = {q["quote"] for e in log["entries"] for q in e["quotes"] if q["from"].startswith("session FS-1,")}
+        self.assertEqual(from_session, {o["quote"] for o in session["observations"]}, "every observation of the session is kept in the log")
+        extract = self.instance(pack, "example.complaint-extract")
+        self.assertEqual(extract["messages_with_complaint"], sum(c["count"] for c in extract["complaints"]))
+        self.assertEqual(extract["messages_read"], extract["messages_with_complaint"] + sum(x["count"] for x in extract["excluded"])
+                         + extract["messages_without_complaint"])
+        for category in record(pack, "friction-catalog")["value"]["categories"]:
+            self.assertEqual(IDX.values[f"{category['heuristic']['store']}/{category['heuristic']['key']}"]["role"], "heuristic", category["category"])
+        for slug in ("example.charter-website", "example.charter-cli", "example.charter-video", "example.charter-docs"):
+            self.assertEqual(record(pack, slug)["value"]["conforms_to"]["key"], key("exploratory-testing-charters", "template.charter"))
+
+    def test_edge_results_follow_their_plan_and_case_set(self):
+        pack = "edge-and-corner-cases"
+        plan = self.instance(pack, "example.edge-plan")
+        case_set = self.instance(pack, "example.case-set")
+        picked = {p["id"]: p for p in case_set["picked"]}
+        self.assertEqual((case_set["seed"], case_set["kinds"], case_set["limits"]), (plan["seed"], plan["kinds"], plan["limits"]))
+        self.assertEqual(case_set["count"], sum(sum(groups.values()) for groups in case_set["by_group"].values()))
+        catalog_labels = {s["label"] for s in record(pack, "catalog.interface")["value"]["states"]}
+        catalog_labels |= {s["label"] for s in record(pack, "catalog.video")["value"]["edges"]}
+        generated = {label for kind in ("strings", "numbers", "dates", "lists", "bodies") for label in record(pack, f"labels.{kind}")["value"]["labels"]}
+        classes = [c["class"] for c in record(pack, "catalog.inputs")["value"]["classes"]] + sorted(catalog_labels)
+        classes += [e["label"] for e in record(pack, "catalog.api")["value"]["edges"]]
+        placed = [c["class"] for c in plan["chosen"]] + [c["class"] for c in plan["skipped"]]
+        self.assertEqual(sorted(placed), sorted(classes), "every catalog class is chosen or skipped, once")
+        self.assertEqual(len(placed), 43)
+
+        def expected(label):
+            matches = [x for x in plan["expectations"] if x["labels"] == label or (x["labels"].endswith(".") and label.startswith(x["labels"]))]
+            return max(matches, key=lambda x: len(x["labels"]))["expected"]
+
+        runs = {label for c in plan["chosen"] for label in c["run"]}
+        for slug, source in (("example.case-results", "generator"), ("example.interface-and-video-results", "catalog")):
+            results = self.instance(pack, slug)
+            self.assertEqual(results["cases_from"], source, slug)
+            self.assertLess(plan["pinned_at"], results["run_at"], "expectations were pinned before the run")
+            rows = results["rows"]
+            self.assertEqual(results["counts"], {"pass": sum(r["verdict"] == "pass" for r in rows), "fail": sum(r["verdict"] == "fail" for r in rows),
+                                                 "not_run": len(results["not_run"])}, slug)
+            self.assertEqual(results["any_failed"], any(r["verdict"] == "fail" for r in rows), slug)
+            self.assertEqual({f["case_id"] for f in results["findings_proposed"]}, {r["case_id"] for r in rows if r["verdict"] == "fail"}, slug)
+            for proposal in results["findings_proposed"]:
+                self.assertIn(proposal["case_id"], proposal["guard"], slug)
+            for row in rows:
+                self.assertTrue(row["input_escaped"].isascii(), row["case_id"])
+                self.assertEqual(row["expected"].split(":")[0], expected(row["label"]), row["case_id"])
+                self.assertIn(row["label"], runs, row["case_id"])
+                if source == "generator":
+                    self.assertEqual((row["label"], row["input_escaped"]), (picked[row["case_id"]]["label"], picked[row["case_id"]]["escaped"]))
+                    self.assertIn(row["label"], generated)
+                else:
+                    self.assertIn(row["label"], catalog_labels)
+        labels_run = {r["label"] for slug in ("example.case-results", "example.interface-and-video-results") for r in self.instance(pack, slug)["rows"]}
+        labels_run |= {n["label"] for slug in ("example.case-results", "example.interface-and-video-results") for n in self.instance(pack, slug)["not_run"]}
+        self.assertEqual(labels_run, runs, "every label the plan runs is a row or listed as not run")
+        for template_id in (f"{pack}.run-input-cases", f"{pack}.check-interface-edges", f"{pack}.check-api-edges", f"{pack}.check-video-edges"):
+            self.assertIn(task(template_id)["brief"]["execution"]["network"]["mode"], ("none", "local_only"), template_id)
+        finding = self.instance(pack, "example.finding")
+        reproduction = next(e for e in finding["evidence"] if e["kind"] == "reproduction")
+        dst = next(p for p in picked.values() if p["label"] == "dates.dst.gap-us")
+        self.assertIn(str(plan["seed"]), reproduction["detail"])
+        self.assertIn(dst["id"], reproduction["detail"])
+        self.assertIn(dst["escaped"], reproduction["location"])
+        self.assertEqual(sum(record(pack, f"labels.{k}")["value"]["count"] for k in ("strings", "numbers", "dates", "lists", "bodies")), len(generated))
+
+    def test_regression_outcomes_recompute_from_baseline_measurement_and_reruns(self):
+        pack = "regression-watch"
+        baseline = {item["item"]: item for item in self.instance(pack, "example.baseline-set")["items"]}
+        measurement = self.instance(pack, "example.measurement")
+        comparison = self.instance(pack, "example.comparison")
+        first = {item["item"]: item["value"] for item in measurement["items"]}
+
+        def text(item, value):
+            if item["kind"] == "screenshot":
+                return f"sha256 {value[:12]}"
+            if item["kind"] == "api_shape":
+                return "shifts[].ends_at:string present" if "ends_at" in value else "shifts[].ends_at removed"
+            return f"{value:g} {item['unit']}".strip()
+
+        def judge(item, shown):
+            """within, or the direction it moved: better, neutral or worse."""
+            rule, base = item["tolerance"], item["value"]
+            if item["kind"] in ("screenshot", "api_shape"):
+                same = shown == text(item, base)
+                return "within" if same else ("neutral" if item["kind"] == "screenshot" else "worse")
+            value = float(shown.split()[0])
+            if rule["rule"] == "relative":
+                inside = abs(value - base) <= rule["amount"] * base
+            elif rule["rule"] == "absolute":
+                inside = abs(value - base) <= rule["amount"]
+            elif rule["rule"] == "at_most":
+                inside = value <= rule["amount"]
+            else:
+                inside = value == base
+            if inside:
+                return "within"
+            if rule["better"] == "none":
+                return "worse"
+            return "better" if (value < base) == (rule["better"] == "lower") else "worse"
+
+        outcome = {}
+        for name, rows in (("regressions", comparison["regressions"]), ("flaky", comparison["flaky"]), ("changed", comparison["changed"])):
+            for row in rows:
+                item = baseline[row["item"]]
+                runs = [judge(item, row[k]) for k in ("first_run", "rerun_1", "rerun_2")]
+                self.assertEqual(row["first_run"], text(item, first[row["item"]]), row["item"])
+                self.assertNotEqual(runs[0], "within", row["item"])
+                verdict = ("flaky" if "within" in runs else "regressions" if set(runs) == {"worse"} else "changed" if "worse" not in runs else "flaky")
+                outcome[row["item"]] = verdict
+                self.assertEqual(verdict, name, row["item"])
+                if name == "changed":
+                    self.assertEqual(row["direction"], runs[0], row["item"])
+        for row in comparison["matches"]:
+            item = baseline[row["item"]]
+            self.assertEqual(row["value"], text(item, first[row["item"]]))
+            self.assertEqual(judge(item, row["value"]), "within", row["item"])
+            outcome[row["item"]] = "matches"
+        self.assertEqual({m["item"] for m in comparison["missing"]}, {m["item"] for m in measurement["not_measured"]})
+        for row in comparison["missing"]:
+            outcome[row["item"]] = "missing"
+        self.assertEqual(sorted(outcome), sorted(baseline), "every baseline item has exactly one outcome")
+        self.assertEqual(comparison["counts"], {"match": len(comparison["matches"]), "regression": len(comparison["regressions"]),
+                                                "flaky": len(comparison["flaky"]), "changed": len(comparison["changed"]),
+                                                "missing": len(comparison["missing"]), "not_comparable": len(comparison["not_comparable"])})
+        acceptance = self.instance(pack, "example.acceptance")
+        decided = [d["item"] for d in acceptance["decisions"]]
+        self.assertEqual(sorted(decided), sorted(row["item"] for name in ("regressions", "flaky", "changed") for row in comparison[name]),
+                         "one decision for every item that moved, none for matches or missing items")
+        accepted = {d["item"] for d in acceptance["decisions"] if d["decision"] == "accept_new"}
+        self.assertEqual(accepted, {row["item"] for row in comparison["changed"]})
+        self.assertFalse(accepted & {row["item"] for row in comparison["regressions"] + comparison["flaky"]})
+        tolerances = {d["item"]: d["tolerance"] for d in acceptance["decisions"] if d["decision"] == "change_tolerance"}
+        old = self.instance(pack, "example.baseline-set")
+        new = self.instance(pack, "example.new-baseline-set")
+        applied = [{**item, "value": first[item["item"]] if item["item"] in accepted else item["value"],
+                    "tolerance": tolerances.get(item["item"], item["tolerance"])} for item in old["items"]]
+        self.assertEqual(new["items"], applied, "the new set is the old one with only the person's decisions applied")
+        self.assertEqual((new["status"], new["supersedes"], new["change"], new["settings"], new["subject"]),
+                         ("accepted", old["baseline_set_id"], measurement["change"], old["settings"], old["subject"]))
+        self.assertIn(acceptance["acceptance_id"], new["acceptance_ref"])
+        self.assertTrue(acceptance["new_baseline_set"].startswith(f"{new['baseline_set_id']}:"))
+        self.assertLess(acceptance["decided_at"], new["captured_at"])
+        apply = task(f"{pack}.apply-acceptance")["brief"]
+        self.assertEqual((apply["claimant"] != "human", apply["execution"]["model_use"]), (True, "none"))
+        self.assertEqual({p["template"]["key"] for p in apply["output_contract"]["produces"]}, {key(pack, "template.baseline")})
+        fingerprints = {r["finding_fingerprint"] for r in comparison["regressions"]} | {r["check_finding_fingerprint"] for r in comparison["flaky"]}
+        self.assertLessEqual({self.instance(pack, s)["fingerprint"] for s in ("example.regression-finding", "example.flake-finding")}, fingerprints)
+        self.assertEqual(self.instance(pack, "example.flake-finding")["kind"], "issue", "a flaky check is a finding about the check")
+
+    def test_health_report_follows_its_scans_and_has_no_single_score(self):
+        pack = "codebase-health-review"
+        areas = [a["area"] for a in record(pack, "health-areas")["value"]["areas"]]
+        plan = self.instance(pack, "example.health-plan")
+        report = self.instance(pack, "example.health-report")
+        self.assertEqual(sorted([a["area"] for a in plan["areas"]] + [a["area"] for a in plan["not_measured"]]), sorted(areas))
+        self.assertEqual(sorted([a["area"] for a in report["areas"]] + [a["area"] for a in report["not_run"]]), sorted(areas))
+        self.assertEqual(report["not_run"], plan["not_measured"])
+        for slug in ("example.todo-scan", "example.swallow-scan"):
+            scan = self.instance(pack, slug)
+            levels = {i["level"] for i in scan["items"]}
+            self.assertEqual(scan["status"], "act" if "act" in levels else "watch" if "watch" in levels else "ok", slug)
+            row = next(a for a in report["areas"] if a["area"] == scan["area"])
+            self.assertEqual(row["status"], scan["status"], slug)
+            proposed = [f for f in report["findings_proposed"] if f["area"] == scan["area"]]
+            self.assertEqual(len(proposed), sum(1 for i in scan["items"] if i["level"] == "act"), slug)
+            self.assertEqual(sorted(f["location"] for f in proposed), sorted(i["location"] for i in scan["items"] if i["level"] == "act"), slug)
+        import re
+
+        rows = {row["area"]: row for row in report["areas"]}
+        for row in report["areas"]:
+            if row["status"] == "act":
+                self.assertTrue(any(f["area"] == row["area"] for f in report["findings_proposed"]), row["area"])
+        for proposal in report["findings_proposed"]:
+            self.assertEqual(rows[proposal["area"]]["status"], "act", proposal["fingerprint"])
+            self.assertTrue(any(t.startswith(f"{proposal['location']}: ") for t in rows[proposal["area"]]["top_items"]), proposal["location"])
+            self.assertTrue(proposal["fingerprint"].startswith(f"{proposal['kind']}/"), proposal["fingerprint"])
+            self.assertIsNone(re.search(r"(line-?[0-9]|\.py|\.ya?ml|[0-9]{3,})", proposal["fingerprint"]), proposal["fingerprint"])
+        self.assertEqual(len({f["fingerprint"] for f in report["findings_proposed"]}), len(report["findings_proposed"]))
+        props = set(record(pack, "template.health-report")["value"]["schema"]["properties"])
+        self.assertFalse({p for p in props if any(w in p for w in ("score", "grade", "percent", "overall"))})
+        swallow = self.instance(pack, "example.swallow-scan")
+        finding = self.instance(pack, "example.finding")
+        location = next(e["location"] for e in finding["evidence"] if e["kind"] == "measurement")
+        self.assertIn(location.split("-")[0], {i["location"] for i in swallow["items"]})
+        self.assertIn((finding["fingerprint"], location.split("-")[0]), {(f["fingerprint"], f["location"]) for f in report["findings_proposed"]})
+
+    def test_health_review_leaves_wiring_to_its_own_pack(self):
+        pack = "codebase-health-review"
+        value = record(pack, "health-areas")["value"]
+        names = {a["area"] for a in value["areas"]}
+        self.assertFalse({n for n in names if any(w in n for w in ("unused", "dark", "mock", "probe", "wiring"))})
+        elsewhere = {v for row in value["elsewhere"] for v in row["verbs"]}
+        self.assertLessEqual({"wiring-and-conformance-checks.find-unused-modules", "wiring-and-conformance-checks.map-behaviors-to-tests",
+                              "wiring-and-conformance-checks.check-health-probes"}, elsewhere)
+        pinned = {p["key"] for p in task(f"{pack}.review-tests-and-errors")["brief"]["inputs"]["pinned"]}
+        self.assertIn(key("wiring-and-conformance-checks", "rules.behavior-coverage"), pinned)
+        self.assertIn("conformance_report", task(f"{pack}.write-health-report")["brief"]["slot_specs"])
+
+    def test_test_cases_expect_outcomes_their_verbs_can_return(self):
+        for pack in self.PACKS:
+            own = {item["brief"]["template_id"] for item in IDX.docs[pack]["verbs.json"]["tasks"]}
+            flow = {step["verb"] for step in record(pack, "pack")["value"]["flow"]}
+            self.assertLessEqual(own, flow, f"{pack}: every verb of the pack is in its flow")
+            allowed = {o for template_id in flow for o in task(template_id)["brief"]["permitted_outcomes"]}
+            for case in record(pack, "test-cases")["value"]["cases"]:
+                self.assertIn(case["expected_outcome"], allowed, f"{pack} {case['id']}")
+
+    def test_live_effects_stay_read_only_local_or_sandboxed(self):
+        for pack in self.PACKS:
+            for item in IDX.docs[pack]["verbs.json"]["tasks"]:
+                execution = item["brief"]["execution"]
+                self.assertIn(execution["network"]["mode"], ("none", "read_only", "local_only", "sandbox_packages"), item["brief"]["template_id"])
+                self.assertEqual(execution["external_effects"], "none")
+                self.assertFalse(item["brief"]["review"]["publication_permitted"])
 
 
 if __name__ == "__main__":
