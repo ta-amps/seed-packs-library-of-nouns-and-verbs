@@ -1,0 +1,42 @@
+# Checks for the video QA pack's code, run only when that pack, the sources its worked example and
+# tests read, or this workflow changes. Standard library only: nothing is installed.
+name: video-qa
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/video-qa/**"
+      - "packs/video-showcase/source.json"
+      - "packs/video-motion/source.json"
+      - "packs/accessibility-audit/source.json"
+      - ".github/workflows/video-qa.yml"
+  pull_request:
+    paths:
+      - "packs/video-qa/**"
+      - "packs/video-showcase/source.json"
+      - "packs/video-motion/source.json"
+      - "packs/accessibility-audit/source.json"
+      - ".github/workflows/video-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Compile with warnings as errors, then every test, including the worked example's recomputation.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/video-qa/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python

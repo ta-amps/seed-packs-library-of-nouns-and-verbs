@@ -1,0 +1,3190 @@
+{
+  "pack_id": "video-qa",
+  "title": "Video QA checks",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for automated checks on an encoded video beyond the eight post-encode checks: blank and frozen frames, cut cadence, loudness range and true peak, clipping and silence gaps, caption timing against speech, caption line length and reading speed, safe areas, the file's delivery spec read from its own boxes, and a legibility proxy for rendered text, each measured on the exact bytes with tested standard-library code.",
+  "dependencies": [
+    "video-motion",
+    "accessibility-audit"
+  ],
+  "boundaries": [
+    "Every check measures the exact bytes it names; a person decides what a finding means.",
+    "The code parses logs and boxes; it runs no FFmpeg, decodes nothing and calls no model.",
+    "A failed or not-run check stays on the record; the next attempt gets its own report.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for automated checks on an encoded video beyond the eight post-encode checks",
+      "value": {
+        "lets_workers": "Run measured checks on the exact bytes of an encoded video that the video and motion pack's eight post-encode checks do not cover: blank and frozen frames against declared holds, cut cadence and stretches with almost no visual change, loudness range, true peak and the quietest window, silence gaps and clipping, caption sidecars linted for line length, reading speed, gaps and parity and timed against measured speech, the delivery spec read from the MP4's own boxes, and a legibility proxy for text whose size is known. Every check reports its measurement, limit and findings with times, and one report binds them to the file's SHA-256.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "video-motion.check-video"
+            },
+            "when": "The eight post-encode checks come first, preferably by a different worker."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.collect-measurements"
+            },
+            "when": "Run the pinned FFmpeg analyses on the exact file and keep every log."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.lint-captions"
+            },
+            "when": "Lint the WebVTT and SRT sidecars and time them against speech."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.check-picture"
+            },
+            "when": "Blank, frozen and cadence rows from the logs and the plan."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.check-sound"
+            },
+            "when": "Loudness, silence and clipping rows."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.check-file-spec"
+            },
+            "when": "The MP4's boxes against the export spec."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.check-legibility"
+            },
+            "when": "Text sizes, reading time and safe areas for text whose size is known."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.compile-qa-report"
+            },
+            "when": "One report per file, with a verdict that follows from its rows."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.review-cut"
+            },
+            "when": "A person or a different worker reviews the cut with the report."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.measure-the-exact-bytes"
+          },
+          {
+            "$pin": "guardrail.declare-before-measuring"
+          },
+          {
+            "$pin": "guardrail.not-run-is-not-a-pass"
+          },
+          {
+            "$pin": "guardrail.checks-are-not-approval"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.video-qa-checks"
+        },
+        "worked_example": "Synthetic, recomputed by the code's tests: a 12-second vertical cut with a declared end-card hold, pause and fade. The report finds a fast first caption and a 67 ms blink gap, a short black flash and a white frame, a 1.7 s freeze, a 4 s stretch with almost no visual change, a quiet window and a silence outside the declared pause, a file whose moov box comes after its media data, and an AI-voice label under the platform's caption overlay. Its verdict is fail.",
+        "complements": "The video and motion pack's check-video runs eight checks every cut must pass. This pack adds the checks a reviewer otherwise does by eye or by hand, with tested standard-library code, and leaves the judgment to the video review pack.",
+        "provenance_notes": [
+          "Generalizes the automated gates of a working short-form video studio, which separates checks that block (frozen, silent, hookless, near-silent) from warnings a person weighs, and the every-frame, typography and audio checks of its audit question bank.",
+          "Shaped by ta-amps's own 3:00 explainer film on October 30, 2026, whose sidecar captions, loudness, freezes and MP4 boxes these checks were run on while this pack was written."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.measure-the-exact-bytes"
+        ],
+        [
+          "requires_noun",
+          "guardrail.declare-before-measuring"
+        ],
+        [
+          "requires_noun",
+          "guardrail.not-run-is-not-a-pass"
+        ],
+        [
+          "requires_noun",
+          "guardrail.checks-are-not-approval"
+        ],
+        [
+          "requires_noun",
+          "checks.extended"
+        ],
+        [
+          "requires_noun",
+          "rules.measurement-commands"
+        ],
+        [
+          "requires_noun",
+          "tool.video-qa-checks"
+        ],
+        [
+          "requires_noun",
+          "template.qa-plan"
+        ],
+        [
+          "requires_noun",
+          "template.measurement-set"
+        ],
+        [
+          "requires_noun",
+          "template.text-items"
+        ],
+        [
+          "requires_noun",
+          "template.check-rows"
+        ],
+        [
+          "requires_noun",
+          "template.extended-qa-report"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.measure-the-exact-bytes",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: measure the exact bytes that will be delivered",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every measurement names the SHA-256 of the file it read. A report about other bytes, such as an earlier render or the caption-free master when the open-captions variant ships, is stale and says so.",
+        "how_it_is_checked": "The extended QA report's media sha256 equals the digest of the delivered file, and every log in the measurement set names that digest."
+      }
+    },
+    {
+      "slug": "guardrail.declare-before-measuring",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: holds, pauses and black are declared before anything is measured",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A still hold, a pause or a black frame is acceptable only inside a span the plan declared before the checks ran. A span added after a finding, to make it pass, is a reasoned override that a person records, never a quiet edit to the plan.",
+        "how_it_is_checked": "The QA plan's digest is pinned in the measurement set before any check row is written."
+      }
+    },
+    {
+      "slug": "guardrail.not-run-is-not-a-pass",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a check that did not run is never a pass",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A check that could not run reports not_run with the reason, and a report with a required check missing or not run is incomplete, not passed. Thresholds are stated with every measurement.",
+        "how_it_is_checked": "compile_report() sets the verdict to incomplete when a required check is missing or not_run."
+      }
+    },
+    {
+      "slug": "guardrail.checks-are-not-approval",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: passing checks is not approval",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Automated checks find candidates; a person decides. A pass means no measured problem, not a good video: a meter cannot hear a muddy voice, and a size rule cannot see text over a busy picture. Only a person approves publishing.",
+        "how_it_is_checked": "Every report carries the not_approval statement, and no verb in this pack has a publishing step."
+      }
+    },
+    {
+      "slug": "checks.extended",
+      "category": "noun.benchmark_suite",
+      "role": "qa_checks",
+      "title": "Nine extended checks on an encoded video, with thresholds",
+      "category_reason": "A suite of checks with thresholds and methods that every encoded file is measured against.",
+      "value": {
+        "summary": "Checks the eight post-encode checks leave to a person's eye or ear, each measured from the delivered bytes and reported with its limit. Thresholds are defaults from one production, not standards; a requester can override any of them and the report records which applied.",
+        "checks": [
+          {
+            "id": "blank_frames",
+            "threshold": "No black run (blackdetect) or flat frame of any brightness (signalstats luma range of 16 or less) outside declared black; a run of 0.5 s or more fails, a shorter one warns.",
+            "tool": "check_blank"
+          },
+          {
+            "id": "frozen_stretches",
+            "threshold": "No freeze (freezedetect, noise 0.001) outside declared holds plus a 0.75 s easing tail; 1.5 s warns, 2.0 s fails.",
+            "tool": "check_frozen"
+          },
+          {
+            "id": "cut_cadence",
+            "threshold": "Cuts where the scene score reaches 0.12; any stretch of 4 s or more with a scene score under 0.002, outside holds, warns. Reports cuts per minute and the longest and median shot.",
+            "tool": "check_cadence"
+          },
+          {
+            "id": "loudness",
+            "threshold": "Integrated loudness within 1 LU of the target (-16 LUFS for web players, -14 for short social cuts) and true peak at or below -1 dBTP fail; a loudness range over 10 LU or a 3 s short-term window under -28 LUFS outside declared pauses warns.",
+            "tool": "check_loudness"
+          },
+          {
+            "id": "silence_gaps",
+            "threshold": "Silence under -45 dB (silencedetect) outside declared pauses: 0.5 s warns, 2.0 s fails.",
+            "tool": "check_silence"
+          },
+          {
+            "id": "clipping",
+            "threshold": "A sample peak at or above -0.1 dBFS with flat tops or 3 or more peak samples (astats) fails.",
+            "tool": "check_clipping"
+          },
+          {
+            "id": "captions",
+            "threshold": "At most 2 lines of 42 characters, 1 to 7 s, at most 17 characters per second, no overlap, no 1 or 2 frame gap, cues in order and inside the media, WebVTT and SRT equal; at least 0.95 of speech covered, no cue without speech, cues starting no more than 0.5 s before or 0.3 s after their words (warn).",
+            "tool": "lint, parity, speech_sync"
+          },
+          {
+            "id": "file_spec",
+            "threshold": "Every item of the export spec read from the MP4's boxes: fast start, fragments, codec, profile, chroma, size, frame rate and constancy, colour primaries, even dimensions, audio codec, object type, rate and channels, duration, size and bitrate budgets, and edit lists when the spec forbids them.",
+            "tool": "probe, check_spec"
+          },
+          {
+            "id": "legibility",
+            "threshold": "Text the viewer must read is at least its role's share of frame height (title 4.5%, caption 2.6%, body 2.2%, label 1.7%, fine print 1.2%) and at least 12 CSS px on the smallest planned display; it stays on screen for 0.5 s plus 3 words per second; boxes stay inside the safe area (warn) and clear of keep-out boxes (fail).",
+            "tool": "legibility, check_reading, check_boxes"
+          }
+        ],
+        "required": [
+          "blank_frames",
+          "frozen_stretches",
+          "cut_cadence",
+          "loudness",
+          "silence_gaps",
+          "clipping",
+          "captions",
+          "file_spec",
+          "legibility"
+        ],
+        "rules": [
+          "Every row reports its measurement and limit, not only a result.",
+          "fail blocks the report's verdict; warn is recorded for a person to weigh; not_run carries its reason and makes the report incomplete.",
+          "A dissolve or a camera move rarely scores as a cut, so shot lengths are upper bounds and still stretches are warnings.",
+          "The legibility proxy runs only on text whose size is known from the stage, the layout or a measurement; it says nothing about weight, stroke, motion or a busy background.",
+          "The post-encode checks are defined once in the video and motion pack and are not repeated here.",
+          "Contrast follows the accessibility audit pack's contrast method: unrounded thresholds, large text from 24 px or 18.66 px bold. The page and player around a video, with its captions track, controls and audio description, are audited by that pack's check-media, not here.",
+          "A single frame with known layout, such as an end card or a cover, can also go through the screenshot design review pack, which uses the same 12 px text floor as its team default."
+        ],
+        "video_checks": {
+          "$pin": "video-motion:checks.video"
+        },
+        "hand_offs": {
+          "page_and_player": {
+            "$verb": "accessibility-audit.check-media"
+          },
+          "single_frames": {
+            "$verb": "screenshot-design-review.check-design-rules"
+          }
+        },
+        "contrast_method": {
+          "$pin": "accessibility-audit:contrast-method"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-motion:checks.video"
+        ],
+        [
+          "derives_from",
+          "accessibility-audit:contrast-method"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.measurement-commands",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Measurement rules: the FFmpeg runs whose logs the checks read",
+      "category_reason": "A zero-call deterministic procedure: the same file always gives the same logs and rows.",
+      "value": {
+        "steps": [
+          "Hash the file first; every log names that digest.",
+          "Picture: ffmpeg -nostats -i FILE -an -vf \"blackdetect=d=0.1:pix_th=0.10,freezedetect=n=0.001:d=1.0\" -f null - 2> picture.log",
+          "Luma range: ffmpeg -i FILE -an -vf \"signalstats,metadata=mode=print:key=lavfi.signalstats.YMIN:file=ymin.txt,metadata=mode=print:key=lavfi.signalstats.YMAX:file=ymax.txt\" -f null -",
+          "Scene scores, on a small copy for speed: ffmpeg -i FILE -an -vf \"scale=480:-2,select='gte(scene,0)',metadata=mode=print:key=lavfi.scene_score:file=scenes.txt\" -f null -",
+          "Loudness with true peak and the per-frame log, which FFmpeg writes only at the verbose level: ffmpeg -nostats -v verbose -i FILE -vn -af \"ebur128=peak=true:framelog=verbose\" -f null - 2> ebur128.log",
+          "Silence: ffmpeg -nostats -i FILE -vn -af \"silencedetect=noise=-45dB:d=0.5\" -f null - 2> silence.log",
+          "Clipping: ffmpeg -nostats -i FILE -vn -af \"astats=measure_overall=Peak_level+Peak_count+RMS_level+Number_of_samples+Flat_factor:measure_perchannel=none\" -f null - 2> astats.log",
+          "Keep every log as a noun with its digest, beside the QA plan it was measured against."
+        ],
+        "gotchas": [
+          "The scdet filter prints only the frames it calls cuts; the per-frame scene score from select and metadata gives the whole series.",
+          "Some static FFmpeg builds have no drawtext filter; label contact sheets outside FFmpeg.",
+          "A freeze detector counts a black run as frozen too; read both rows together.",
+          "Logs carry FFmpeg's memory addresses, which differ between runs; compare parsed values, not log bytes."
+        ],
+        "tool": {
+          "$pin": "tool.video-qa-checks"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "tool.video-qa-checks"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.video-qa-checks",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: the video QA checks",
+      "category_reason": "Tested code a worker runs inside a claimed verb, pinned by path, file count and digest.",
+      "value": {
+        "name": "video QA checks",
+        "code": {
+          "$code": "video-qa"
+        },
+        "runtime": "Python 3.10 or later, standard library only; nothing to install.",
+        "commands": [
+          "python -m video_qa_checks captions --vtt FILE [--srt FILE] [--speech FILE] [--fps 30] [--duration-s S]",
+          "python -m video_qa_checks picture --plan PLAN --black LOG --freeze LOG [--ymin FILE --ymax FILE] [--scenes FILE]",
+          "python -m video_qa_checks sound --plan PLAN --ebur128 LOG [--silence LOG] [--astats LOG] [--target-lufs -16]",
+          "python -m video_qa_checks filespec --mp4 FILE --spec SPEC",
+          "python -m video_qa_checks legibility --items ITEMS",
+          "python -m video_qa_checks report --media FILE --plan PLAN --part FILE [--part FILE] --out FILE"
+        ],
+        "does": [
+          "Parses WebVTT and SRT, lints every cue, compares sidecars and times cues against speech intervals.",
+          "Parses FFmpeg 7's blackdetect, freezedetect, silencedetect, ebur128, astats and metadata print output.",
+          "Reads an MP4's boxes without decoding: fast start, fragments, edit lists, codecs, H.264 profile and level, colour, frame rate, AAC object type, rate and channels.",
+          "Computes a legibility proxy, WCAG contrast ratios with unrounded thresholds, reading time and safe-area overlaps.",
+          "Compiles one report per file with a verdict that follows from its rows."
+        ],
+        "does_not": [
+          "Run FFmpeg, decode media, render, call a model or open a network connection.",
+          "Judge whether a video is good, true or ready; a person decides.",
+          "Write inside the seed-pack library; it refuses an output path there."
+        ],
+        "code_license": "MIT",
+        "tests": "The code's tests recompute this pack's worked example from source.json and run in the library's CI job for the pack, on Python 3.10 and 3.12."
+      },
+      "relations": [
+        [
+          "verifies",
+          "checks.extended"
+        ]
+      ]
+    },
+    {
+      "slug": "template.qa-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: the QA plan, declared before measuring",
+      "value": {
+        "describes": "the cut's length, frame rate and every span where a still hold, a pause or a black frame is meant to be, written before any check runs",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "duration_s",
+            "fps"
+          ],
+          "properties": {
+            "duration_s": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 86400
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 240
+            },
+            "holds": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 3,
+                "items": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                }
+              }
+            },
+            "pauses": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 3,
+                "items": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                }
+              }
+            },
+            "black": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 3,
+                "items": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Each span is [start_s, end_s, why].",
+          "Pin the plan's digest in the measurement set before writing a row."
+        ]
+      }
+    },
+    {
+      "slug": "template.measurement-set",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the logs measured from one file",
+      "value": {
+        "describes": "the FFmpeg runs made on one exact file, each with its command, log path and log digest",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_file",
+            "media_sha256",
+            "ffmpeg_version",
+            "qa_plan",
+            "runs"
+          ],
+          "properties": {
+            "media_file": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "ffmpeg_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "qa_plan": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "runs": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "command",
+                  "log",
+                  "log_sha256"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": [
+                      "picture",
+                      "luma",
+                      "scenes",
+                      "loudness",
+                      "silence",
+                      "astats"
+                    ]
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "log": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "log_sha256": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.text-items",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: text items with known sizes, for the legibility proxy",
+      "value": {
+        "describes": "each piece of text whose size is known from the stage, the layout or a measurement, with its role, time on screen and box, and the displays the cut is planned for",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "frame",
+            "displays",
+            "items"
+          ],
+          "properties": {
+            "frame": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "width",
+                "height"
+              ],
+              "properties": {
+                "width": {
+                  "type": "integer",
+                  "minimum": 16,
+                  "maximum": 8192
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 16,
+                  "maximum": 8192
+                }
+              }
+            },
+            "displays": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "width_px"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "width_px": {
+                    "type": "number",
+                    "minimum": 100,
+                    "maximum": 8192
+                  }
+                }
+              }
+            },
+            "min_css_px": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "safe": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "x",
+                "y",
+                "width",
+                "height"
+              ],
+              "properties": {
+                "x": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 8192
+                },
+                "y": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 8192
+                },
+                "width": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 8192
+                },
+                "height": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 8192
+                }
+              }
+            },
+            "keep_outs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height",
+                  "label"
+                ],
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 8192
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 8192
+                  },
+                  "width": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 8192
+                  },
+                  "height": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 8192
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "role"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "title",
+                      "caption",
+                      "body",
+                      "label",
+                      "fine_print"
+                    ]
+                  },
+                  "px": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2000
+                  },
+                  "source_px": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2000
+                  },
+                  "scale": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "maximum": 100
+                  },
+                  "measure": {
+                    "type": "string",
+                    "enum": [
+                      "font_px",
+                      "cap_px"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "must_read": {
+                    "type": "boolean"
+                  },
+                  "box": {
+                    "type": "array",
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "items": {
+                      "type": "number",
+                      "minimum": -8192,
+                      "maximum": 16384
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.check-rows",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: check rows for one file",
+      "value": {
+        "describes": "one or more check rows, each with its result, measurement, limit and timed findings, for the file whose digest it names",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "rows"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "rows": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check",
+                  "result",
+                  "measured",
+                  "limit",
+                  "findings"
+                ],
+                "properties": {
+                  "check": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "warn",
+                      "fail",
+                      "not_run"
+                    ]
+                  },
+                  "measured": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "limit": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "findings": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 200,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "what",
+                        "severity"
+                      ],
+                      "properties": {
+                        "start_s": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 86400
+                        },
+                        "end_s": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 86400
+                        },
+                        "what": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        },
+                        "severity": {
+                          "type": "string",
+                          "enum": [
+                            "warn",
+                            "fail"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.extended-qa-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the extended QA report for one file",
+      "value": {
+        "describes": "every extended check's row for one encoded file, bound to its SHA-256, with counts, missing checks and a verdict that follows from the rows",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media",
+            "plan",
+            "inputs",
+            "checks",
+            "missing_checks",
+            "counts",
+            "verdict",
+            "not_approval"
+          ],
+          "properties": {
+            "media": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "file",
+                "bytes",
+                "sha256"
+              ],
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000000
+                },
+                "sha256": {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64,
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "plan": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "duration_s",
+                "fps",
+                "holds",
+                "pauses",
+                "black"
+              ],
+              "properties": {
+                "duration_s": {
+                  "type": "number",
+                  "minimum": 0.1,
+                  "maximum": 86400
+                },
+                "fps": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 240
+                },
+                "holds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 200
+                },
+                "pauses": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 200
+                },
+                "black": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 50
+                }
+              }
+            },
+            "inputs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "sha256"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check",
+                  "result",
+                  "measured",
+                  "limit",
+                  "findings"
+                ],
+                "properties": {
+                  "check": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "warn",
+                      "fail",
+                      "not_run"
+                    ]
+                  },
+                  "measured": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "limit": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "findings": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 200,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "what",
+                        "severity"
+                      ],
+                      "properties": {
+                        "start_s": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 86400
+                        },
+                        "end_s": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 86400
+                        },
+                        "what": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        },
+                        "severity": {
+                          "type": "string",
+                          "enum": [
+                            "warn",
+                            "fail"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "missing_checks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "pass",
+                "warn",
+                "fail",
+                "not_run"
+              ],
+              "properties": {
+                "pass": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                "warn": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                "fail": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                "not_run": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "pass_with_warnings",
+                "incomplete",
+                "fail"
+              ]
+            },
+            "not_approval": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        },
+        "rules": [
+          "The verdict is fail when a row fails, incomplete when a required check is missing or not run, then pass_with_warnings or pass.",
+          "A report never approves, publishes or releases anything."
+        ]
+      }
+    },
+    {
+      "slug": "report-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Report checks, with one good and five bad reports the validator recomputes",
+      "category_reason": "A golden fixture: fixed report summaries and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks an extended QA report summary passes before a reviewer relies on it, each shown failing on a bad summary for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "verdict",
+            "failed_rows",
+            "required_missing",
+            "not_run_reasons",
+            "rows",
+            "not_approval",
+            "approved_by_worker"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "pass_with_warnings",
+                "incomplete",
+                "fail"
+              ]
+            },
+            "failed_rows": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "required_missing": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "not_run_reasons": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "rows": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check",
+                  "result",
+                  "limit"
+                ],
+                "properties": {
+                  "check": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "result": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "limit": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  }
+                }
+              }
+            },
+            "not_approval": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 200
+            },
+            "approved_by_worker": {
+              "type": "boolean"
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "bound-to-bytes",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "media_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "The report names the digest of the file it measured."
+          },
+          {
+            "id": "failure-fails",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "in": [
+                  "pass",
+                  "pass_with_warnings"
+                ]
+              },
+              "then": {
+                "rule": "enum",
+                "path": "failed_rows",
+                "values": [
+                  0
+                ]
+              }
+            },
+            "why": "A report with a failed row is never a pass."
+          },
+          {
+            "id": "nothing-missing-in-a-pass",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "in": [
+                  "pass",
+                  "pass_with_warnings"
+                ]
+              },
+              "then": {
+                "rule": "pattern_absent",
+                "path": "required_missing",
+                "pattern": "."
+              }
+            },
+            "why": "A report missing a required check is incomplete."
+          },
+          {
+            "id": "limits-stated",
+            "rule": {
+              "rule": "each_has",
+              "path": "rows",
+              "fields": [
+                "check",
+                "result",
+                "limit"
+              ],
+              "min": 1
+            },
+            "why": "Every row states its limit beside its result."
+          },
+          {
+            "id": "says-it-is-not-approval",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "not_approval",
+              "pattern": "(?i)not approval"
+            },
+            "why": "Passing checks is not approval."
+          },
+          {
+            "id": "never-approved-by-worker",
+            "rule": {
+              "rule": "enum",
+              "path": "approved_by_worker",
+              "values": [
+                false
+              ]
+            },
+            "why": "Only a person approves publishing."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-failing-report",
+            "label": "known_good",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+              "verdict": "fail",
+              "failed_rows": 4,
+              "required_missing": [],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "fail",
+                  "limit": "stated"
+                }
+              ],
+              "not_approval": "Passing these checks is not approval: a person still watches every frame and listens.",
+              "approved_by_worker": false
+            }
+          },
+          {
+            "id": "bad-no-digest",
+            "label": "known_bad",
+            "fails": "bound-to-bytes",
+            "finding": {
+              "media_sha256": "latest render",
+              "verdict": "fail",
+              "failed_rows": 4,
+              "required_missing": [],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "fail",
+                  "limit": "stated"
+                }
+              ],
+              "not_approval": "Passing these checks is not approval: a person still watches every frame and listens.",
+              "approved_by_worker": false
+            }
+          },
+          {
+            "id": "bad-pass-with-a-failure",
+            "label": "known_bad",
+            "fails": "failure-fails",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+              "verdict": "pass_with_warnings",
+              "failed_rows": 4,
+              "required_missing": [],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "fail",
+                  "limit": "stated"
+                }
+              ],
+              "not_approval": "Passing these checks is not approval: a person still watches every frame and listens.",
+              "approved_by_worker": false
+            }
+          },
+          {
+            "id": "bad-pass-missing-a-check",
+            "label": "known_bad",
+            "fails": "nothing-missing-in-a-pass",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+              "verdict": "pass",
+              "failed_rows": 0,
+              "required_missing": [
+                "legibility"
+              ],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "pass",
+                  "limit": "stated"
+                }
+              ],
+              "not_approval": "Passing these checks is not approval: a person still watches every frame and listens.",
+              "approved_by_worker": false
+            }
+          },
+          {
+            "id": "bad-row-without-limit",
+            "label": "known_bad",
+            "fails": "limits-stated",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+              "verdict": "fail",
+              "failed_rows": 4,
+              "required_missing": [],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "fail",
+                  "limit": ""
+                }
+              ],
+              "not_approval": "Passing these checks is not approval: a person still watches every frame and listens.",
+              "approved_by_worker": false
+            }
+          },
+          {
+            "id": "bad-no-statement",
+            "label": "known_bad",
+            "fails": "says-it-is-not-approval",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+              "verdict": "fail",
+              "failed_rows": 4,
+              "required_missing": [],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "fail",
+                  "limit": "stated"
+                }
+              ],
+              "not_approval": "All good.",
+              "approved_by_worker": false
+            }
+          },
+          {
+            "id": "bad-approved",
+            "label": "known_bad",
+            "fails": "never-approved-by-worker",
+            "finding": {
+              "media_sha256": "000000000000000000000000000000000000000000000000000000000000000a",
+              "verdict": "fail",
+              "failed_rows": 4,
+              "required_missing": [],
+              "not_run_reasons": [],
+              "rows": [
+                {
+                  "check": "captions",
+                  "result": "fail",
+                  "limit": "stated"
+                }
+              ],
+              "not_approval": "Passing these checks is not approval: a person still watches every frame and listens.",
+              "approved_by_worker": true
+            }
+          }
+        ],
+        "expected": {
+          "good-failing-report": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-digest": {
+            "verdict": "fail",
+            "failed_checks": [
+              "bound-to-bytes"
+            ]
+          },
+          "bad-pass-with-a-failure": {
+            "verdict": "fail",
+            "failed_checks": [
+              "failure-fails"
+            ]
+          },
+          "bad-pass-missing-a-check": {
+            "verdict": "fail",
+            "failed_checks": [
+              "nothing-missing-in-a-pass"
+            ]
+          },
+          "bad-row-without-limit": {
+            "verdict": "fail",
+            "failed_checks": [
+              "limits-stated"
+            ]
+          },
+          "bad-no-statement": {
+            "verdict": "fail",
+            "failed_checks": [
+              "says-it-is-not-approval"
+            ]
+          },
+          "bad-approved": {
+            "verdict": "fail",
+            "failed_checks": [
+              "never-approved-by-worker"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.extended-qa-report"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs on an extended QA report",
+      "category_reason": "A short checklist a person runs is part of the report's guardrails.",
+      "value": {
+        "items": [
+          "The report's digest is the digest of the file that will be delivered.",
+          "Every fail is fixed at its cause, or the cut does not ship.",
+          "Every warn has a decision: fixed, or accepted with a reason in your own words.",
+          "Every not_run has a reason, and the missing measurement is run or its absence is accepted in writing.",
+          "Open the frames at each finding's time and look; a check finds candidates, you decide.",
+          "Listen once on headphones and once on a phone speaker; the loudness rows cannot hear."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for extended video checks",
+      "value": {
+        "sources": [
+          {
+            "title": "FFmpeg Filters Documentation (blackdetect, freezedetect, signalstats, scdet, silencedetect, astats, ebur128)",
+            "url": "https://ffmpeg.org/ffmpeg-filters.html",
+            "used_for": "The analysis filters whose logs the checks read",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "ITU-R BS.1770-5 (11/2023): Algorithms to measure audio programme loudness and true-peak audio level",
+            "url": "https://www.itu.int/rec/R-REC-BS.1770",
+            "used_for": "Integrated loudness, short-term loudness and true peak",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "EBU R 128 v5.0 (November 2023): Loudness normalisation and permitted maximum level of audio signals",
+            "url": "https://tech.ebu.ch/publications/r128",
+            "used_for": "The broadcast target of -23 LUFS and the loudness range descriptor",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Netflix Partner Help Center: English (USA) Timed Text Style Guide",
+            "url": "https://partnerhelp.netflixstudios.com/hc/en-us/articles/217350977-English-USA-Timed-Text-Style-Guide",
+            "used_for": "42 characters per line, two lines, up to 20 characters per second for adult programs and 17 for children's",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C: WebVTT, the Web Video Text Tracks Format",
+            "url": "https://www.w3.org/TR/webvtt1/",
+            "used_for": "The caption sidecar format, cue timings and settings",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.4.3, Contrast (Minimum)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+            "used_for": "4.5 to 1 and 3 to 1 for large text, thresholds never rounded",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 2.3.1, Three Flashes or Below Threshold",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html",
+            "used_for": "Why black and white flashes are reported",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Chrome for Developers: Lighthouse, Document doesn't use legible font sizes",
+            "url": "https://developer.chrome.com/docs/lighthouse/seo/font-size",
+            "used_for": "The 12 px floor the legibility proxy uses; the audit was removed in Lighthouse 13",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "YouTube Help: Recommended upload encoding settings",
+            "url": "https://support.google.com/youtube/answer/1722171",
+            "used_for": "MP4 with the moov atom at the front, no edit lists, H.264 High, 4:2:0, AAC-LC, 48 kHz",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for extended video checks",
+      "value": {
+        "cases": [
+          {
+            "id": "VQA-HOLD-UNDECLARED",
+            "scenario": "An end card holds still for 2.4 s and the plan declares no hold",
+            "sample_input": "SYNTHETIC: freezedetect reports 57.6 to 60.0 s; the QA plan has no holds.",
+            "expected_outcome": "rows_checked",
+            "expected_indicators": [
+              "frozen_stretches_fail",
+              "plan_not_edited_after_the_fact"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "VQA-WHITE-FRAME",
+            "scenario": "One white frame flashes between two slides",
+            "sample_input": "SYNTHETIC: signalstats luma range 3 at 41.2 s for one frame; blackdetect is silent.",
+            "expected_outcome": "rows_checked",
+            "expected_indicators": [
+              "blank_frames_warn",
+              "flat_frame_named"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VQA-FRAMELOG-MISSING",
+            "scenario": "The loudness log has a summary but no per-frame lines",
+            "sample_input": "SYNTHETIC: ebur128 ran at the default log level, so no t: lines were written.",
+            "expected_outcome": "rows_checked",
+            "expected_indicators": [
+              "quietest_window_none",
+              "rerun_at_verbose_proposed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VQA-SIDECARS-DIFFER",
+            "scenario": "The SRT was edited by hand after the WebVTT was written",
+            "sample_input": "SYNTHETIC: cue 12 reads 'twelve' in the WebVTT and '12' in the SRT.",
+            "expected_outcome": "rows_checked",
+            "expected_indicators": [
+              "captions_fail",
+              "sidecars_differ_named"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VQA-NOT-FAST-START",
+            "scenario": "The master's moov box comes after its media data",
+            "sample_input": "SYNTHETIC: top-level boxes ftyp, free, mdat, moov; the export spec asks for fast start.",
+            "expected_outcome": "rows_checked",
+            "expected_indicators": [
+              "file_spec_fail",
+              "remux_with_faststart_proposed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "VQA-SIZE-UNKNOWN",
+            "scenario": "A captured page's text size is not known",
+            "sample_input": "SYNTHETIC: a full-page capture is scaled into the frame and nobody recorded its scale.",
+            "expected_outcome": "unknown",
+            "expected_indicators": [
+              "legibility_not_run_for_item",
+              "measure_or_record_scale"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "VQA-WRONG-BYTES",
+            "scenario": "The logs were measured on the caption-free master but the open-captions file ships",
+            "sample_input": "SYNTHETIC: the measurement set names digest a1..., the delivery manifest names c3....",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "stale_measurements_named",
+              "measure_the_delivered_file"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.qa-plan",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: the QA plan for a 12-second cut",
+      "value": {
+        "notice": "SYNTHETIC. A fictional pantry's 12-second vertical cut; no video exists.",
+        "conforms_to": {
+          "$pin": "template.qa-plan"
+        },
+        "instance": {
+          "duration_s": 12.0,
+          "fps": 30,
+          "holds": [
+            [
+              9.0,
+              10.5,
+              "end card"
+            ]
+          ],
+          "pauses": [
+            [
+              6.0,
+              6.8,
+              "breath before the payoff"
+            ]
+          ],
+          "black": [
+            [
+              11.8,
+              12.0,
+              "fade out"
+            ]
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.qa-inputs",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the logs, sidecars and facts the checks read",
+      "value": {
+        "notice": "SYNTHETIC. Logs are written in FFmpeg 7's own formats; scene scores and luma ranges are sampled twice per second for brevity, where a real run samples every frame. No video exists.",
+        "vtt": "WEBVTT\n\nc1\n00:00:00.300 --> 00:00:02.900 line:70%\nEvery evening, volunteers check\nthe pantry shelves.\n\nc2\n00:00:02.967 --> 00:00:05.600 line:70%\nThey log what is running low.\n\nc3\n00:00:06.900 --> 00:00:08.900 line:70%\nBy morning, the list is ready.\n\nc4\n00:00:09.100 --> 00:00:11.600 line:70%\nA person checks it\nbefore anyone shops.\n",
+        "srt": "1\n00:00:00,300 --> 00:00:02,900\nEvery evening, volunteers check\nthe pantry shelves.\n\n2\n00:00:02,967 --> 00:00:05,600\nThey log what is running low.\n\n3\n00:00:06,900 --> 00:00:08,900\nBy morning, the list is ready.\n\n4\n00:00:09,100 --> 00:00:11,600\nA person checks it\nbefore anyone shops.\n",
+        "speech_ms": [
+          [
+            280,
+            2880
+          ],
+          [
+            2990,
+            5550
+          ],
+          [
+            6950,
+            8850
+          ],
+          [
+            9150,
+            11500
+          ]
+        ],
+        "picture_log": "[blackdetect @ 0x55d0c1a2b3c0] black_start:4 black_end:4.2 black_duration:0.2\n[blackdetect @ 0x55d0c1a2b3c0] black_start:11.8 black_end:12 black_duration:0.2\n[freezedetect @ 0x55d0c1a2b7e0] lavfi.freezedetect.freeze_start: 1\n[freezedetect @ 0x55d0c1a2b7e0] lavfi.freezedetect.freeze_duration: 1.7\n[freezedetect @ 0x55d0c1a2b7e0] lavfi.freezedetect.freeze_end: 2.7\n[freezedetect @ 0x55d0c1a2b7e0] lavfi.freezedetect.freeze_start: 9.1\n[freezedetect @ 0x55d0c1a2b7e0] lavfi.freezedetect.freeze_duration: 1.8\n[freezedetect @ 0x55d0c1a2b7e0] lavfi.freezedetect.freeze_end: 10.9\n",
+        "scene_scores": [
+          [
+            0.0,
+            0.01
+          ],
+          [
+            0.5,
+            0.01
+          ],
+          [
+            1.0,
+            0.01
+          ],
+          [
+            1.5,
+            0.01
+          ],
+          [
+            2.0,
+            0.01
+          ],
+          [
+            2.5,
+            0.01
+          ],
+          [
+            3.0,
+            0.4
+          ],
+          [
+            3.5,
+            0.01
+          ],
+          [
+            4.0,
+            0.01
+          ],
+          [
+            4.5,
+            0.01
+          ],
+          [
+            5.0,
+            0.001
+          ],
+          [
+            5.5,
+            0.001
+          ],
+          [
+            6.0,
+            0.001
+          ],
+          [
+            6.5,
+            0.001
+          ],
+          [
+            7.0,
+            0.001
+          ],
+          [
+            7.5,
+            0.001
+          ],
+          [
+            8.0,
+            0.001
+          ],
+          [
+            8.5,
+            0.001
+          ],
+          [
+            9.0,
+            0.35
+          ],
+          [
+            9.5,
+            0.01
+          ],
+          [
+            10.0,
+            0.01
+          ],
+          [
+            10.5,
+            0.01
+          ],
+          [
+            11.0,
+            0.01
+          ],
+          [
+            11.5,
+            0.01
+          ]
+        ],
+        "luma_range": [
+          [
+            0.0,
+            20,
+            230
+          ],
+          [
+            0.5,
+            20,
+            230
+          ],
+          [
+            1.0,
+            20,
+            230
+          ],
+          [
+            1.5,
+            20,
+            230
+          ],
+          [
+            2.0,
+            20,
+            230
+          ],
+          [
+            2.5,
+            20,
+            230
+          ],
+          [
+            3.0,
+            20,
+            230
+          ],
+          [
+            3.5,
+            20,
+            230
+          ],
+          [
+            4.0,
+            16,
+            18
+          ],
+          [
+            4.5,
+            20,
+            230
+          ],
+          [
+            5.0,
+            20,
+            230
+          ],
+          [
+            5.5,
+            20,
+            230
+          ],
+          [
+            6.0,
+            20,
+            230
+          ],
+          [
+            6.5,
+            20,
+            230
+          ],
+          [
+            7.0,
+            20,
+            230
+          ],
+          [
+            7.5,
+            233,
+            236
+          ],
+          [
+            8.0,
+            20,
+            230
+          ],
+          [
+            8.5,
+            20,
+            230
+          ],
+          [
+            9.0,
+            20,
+            230
+          ],
+          [
+            9.5,
+            20,
+            230
+          ],
+          [
+            10.0,
+            20,
+            230
+          ],
+          [
+            10.5,
+            20,
+            230
+          ],
+          [
+            11.0,
+            20,
+            230
+          ],
+          [
+            11.5,
+            20,
+            230
+          ]
+        ],
+        "sound_log": "[Parsed_ebur128_0 @ 0x7f2a1c003240] t: 3.49998    TARGET:-23 LUFS    M: -17.9 S: -19.0     I: -16.1 LUFS       LRA:   3.0 LU  FTPK:  -2.1 dBFS  TPK:  -1.9 dBFS\n[Parsed_ebur128_0 @ 0x7f2a1c003240] t: 6.59998    TARGET:-23 LUFS    M: -33.0 S: -29.5     I: -16.4 LUFS       LRA:   4.0 LU  FTPK: -30.2 dBFS  TPK:  -1.9 dBFS\n[Parsed_ebur128_0 @ 0x7f2a1c003240] t: 8.99998    TARGET:-23 LUFS    M: -16.2 S: -17.2     I: -15.7 LUFS       LRA:   4.2 LU  FTPK:  -1.6 dBFS  TPK:  -1.4 dBFS\n[Parsed_ebur128_0 @ 0x7f2a1c003240] Summary:\n\n  Integrated loudness:\n    I:         -15.6 LUFS\n    Threshold: -25.9 LUFS\n\n  Loudness range:\n    LRA:         4.2 LU\n    Threshold: -35.9 LUFS\n    LRA low:   -18.8 LUFS\n    LRA high:  -14.6 LUFS\n\n  True peak:\n    Peak:       -1.4 dBFS\n",
+        "silence_log": "[silencedetect @ 0x7f2a1c004100] silence_start: 6.05\n[silencedetect @ 0x7f2a1c004100] silence_end: 6.75 | silence_duration: 0.7\n[silencedetect @ 0x7f2a1c004100] silence_start: 10.6\n[silencedetect @ 0x7f2a1c004100] silence_end: 11.3 | silence_duration: 0.7\n",
+        "astats_log": "[Parsed_astats_0 @ 0x7f2a1c005200] Overall\n[Parsed_astats_0 @ 0x7f2a1c005200] Peak level dB: -1.600000\n[Parsed_astats_0 @ 0x7f2a1c005200] RMS level dB: -19.400000\n[Parsed_astats_0 @ 0x7f2a1c005200] Flat factor: 0.000000\n[Parsed_astats_0 @ 0x7f2a1c005200] Peak count: 2.000000\n[Parsed_astats_0 @ 0x7f2a1c005200] Number of samples: 576000\n",
+        "mp4_facts": {
+          "file": "pantry-12s-reels.mp4",
+          "size_bytes": 4812204,
+          "top_level": [
+            [
+              "ftyp",
+              32
+            ],
+            [
+              "free",
+              8
+            ],
+            [
+              "mdat",
+              4798801
+            ],
+            [
+              "moov",
+              13363
+            ]
+          ],
+          "brands": {
+            "major": "isom",
+            "minor": 512,
+            "compatible": [
+              "isom",
+              "iso2",
+              "avc1",
+              "mp41"
+            ]
+          },
+          "faststart": false,
+          "fragmented": false,
+          "duration_s": 12.0,
+          "bitrate_kbps": 3208.1,
+          "tracks": [
+            {
+              "edit_list": true,
+              "width": 1080.0,
+              "height": 1920.0,
+              "timescale": 15360,
+              "media_duration": 184320,
+              "handler": "vide",
+              "codec": "avc1",
+              "coded_width": 1080,
+              "coded_height": 1920,
+              "profile_idc": 100,
+              "profile": "High",
+              "level": 4.0,
+              "chroma": "4:2:0",
+              "bit_depth": 8,
+              "color": {
+                "primaries": 1,
+                "transfer": 1,
+                "matrix": 1,
+                "full_range": false
+              },
+              "samples": 360,
+              "constant_rate": true,
+              "sample_delta": 512,
+              "duration_s": 12.0,
+              "frame_rate": 30.0
+            },
+            {
+              "edit_list": true,
+              "width": 0.0,
+              "height": 0.0,
+              "timescale": 48000,
+              "media_duration": 577024,
+              "handler": "soun",
+              "codec": "mp4a",
+              "channels": 2,
+              "sample_rate": 48000,
+              "audio_object_type": 2,
+              "profile": "AAC-LC",
+              "samples": 564,
+              "constant_rate": false,
+              "sample_delta": null,
+              "duration_s": 12.021333
+            }
+          ]
+        },
+        "export_spec": {
+          "container": {
+            "faststart": true,
+            "fragmented": false
+          },
+          "video": {
+            "codec": "avc1",
+            "profiles": [
+              "High",
+              "Main"
+            ],
+            "chroma": "4:2:0",
+            "width": 1080,
+            "height": 1920,
+            "frame_rate": 30.0,
+            "constant_rate": true,
+            "color_primaries": 1,
+            "even_dimensions": true
+          },
+          "audio": {
+            "codec": "mp4a",
+            "audio_object_type": 2,
+            "sample_rate": 48000,
+            "channels": 2
+          },
+          "duration_s": 12.0,
+          "duration_tolerance_s": 0.05,
+          "max_bytes": 20000000,
+          "max_bitrate_kbps": 8000
+        },
+        "text_items": {
+          "frame": {
+            "width": 1080,
+            "height": 1920
+          },
+          "displays": [
+            {
+              "name": "phone held upright",
+              "width_px": 390
+            }
+          ],
+          "safe": {
+            "x": 64,
+            "y": 180,
+            "width": 820,
+            "height": 1360
+          },
+          "keep_outs": [
+            {
+              "x": 0,
+              "y": 0,
+              "width": 1080,
+              "height": 160,
+              "label": "reels_top_chrome"
+            },
+            {
+              "x": 900,
+              "y": 920,
+              "width": 180,
+              "height": 760,
+              "label": "reels_right_rail_buttons"
+            },
+            {
+              "x": 0,
+              "y": 1560,
+              "width": 1080,
+              "height": 360,
+              "label": "reels_bottom_caption_overlay"
+            }
+          ],
+          "items": [
+            {
+              "id": "hook",
+              "role": "title",
+              "px": 96,
+              "text": "Who restocks the pantry?",
+              "start_s": 0.0,
+              "end_s": 2.9,
+              "box": [
+                80,
+                260,
+                800,
+                230
+              ]
+            },
+            {
+              "id": "caption-c3",
+              "role": "caption",
+              "px": 52,
+              "text": "By morning, the list is ready.",
+              "start_s": 6.9,
+              "end_s": 8.9,
+              "box": [
+                80,
+                1300,
+                800,
+                140
+              ]
+            },
+            {
+              "id": "ai-voice-label",
+              "role": "label",
+              "px": 30,
+              "text": "AI-generated voice",
+              "must_read": false,
+              "box": [
+                64,
+                1700,
+                400,
+                40
+              ]
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.extended-qa-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the extended QA report the code computes",
+      "value": {
+        "notice": "SYNTHETIC. Recomputed exactly by the pack code's tests from example.qa-inputs and example.qa-plan.",
+        "conforms_to": {
+          "$pin": "template.extended-qa-report"
+        },
+        "instance": {
+          "media": {
+            "file": "pantry-12s-reels.mp4",
+            "bytes": 4812204,
+            "sha256": "000000000000000000000000000000000000000000000000000000000000000a"
+          },
+          "plan": {
+            "duration_s": 12.0,
+            "fps": 30,
+            "holds": 1,
+            "pauses": 1,
+            "black": 1
+          },
+          "inputs": [
+            {
+              "name": "example.qa-inputs",
+              "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+            }
+          ],
+          "checks": [
+            {
+              "check": "captions",
+              "result": "fail",
+              "measured": {
+                "vtt": {
+                  "cues": 4,
+                  "max_cps": 19.62,
+                  "max_cps_cue": "c1",
+                  "longest_line": 31,
+                  "longest_gap_ms": 1300,
+                  "longest_gap_before": "c3",
+                  "on_screen_ms": 9733
+                },
+                "srt_differences": 0,
+                "sync": {
+                  "coverage": 0.9979,
+                  "cues_without_speech": [],
+                  "unmeasured": [],
+                  "median_offset_ms": -23
+                }
+              },
+              "limit": {
+                "max_lines": 2,
+                "max_chars_per_line": 42,
+                "max_cps": 17.0,
+                "min_cue_ms": 1000,
+                "max_cue_ms": 7000,
+                "blink_gap_frames": 3,
+                "fps": 30,
+                "line_percent_range": [
+                  5.0,
+                  90.0
+                ],
+                "sync": {
+                  "min_coverage": 0.95,
+                  "max_early_ms": 500,
+                  "max_late_ms": 300,
+                  "min_cue_speech_share": 0.1,
+                  "split_window_ms": 1000
+                }
+              },
+              "findings": [
+                {
+                  "start_s": 0.3,
+                  "what": "c1: reading_speed 19.62 (limit 17.0)",
+                  "severity": "fail"
+                },
+                {
+                  "start_s": 2.967,
+                  "what": "c2: blink_gap 67 (limit 100.0)",
+                  "severity": "fail"
+                }
+              ]
+            },
+            {
+              "check": "blank_frames",
+              "result": "fail",
+              "measured": {
+                "black_runs": 2,
+                "flat_runs": 2,
+                "frames_measured": 24,
+                "smallest_luma_range": 2
+              },
+              "limit": {
+                "black_min_s": 0.5,
+                "uniform_max_range": 16
+              },
+              "findings": [
+                {
+                  "start_s": 4.0,
+                  "end_s": 4.2,
+                  "what": "black",
+                  "severity": "warn"
+                },
+                {
+                  "start_s": 7.5,
+                  "end_s": 8.0,
+                  "what": "flat frame",
+                  "severity": "fail"
+                }
+              ]
+            },
+            {
+              "check": "frozen_stretches",
+              "result": "warn",
+              "measured": {
+                "freezes": 2,
+                "longest_s": 1.8
+              },
+              "limit": {
+                "warn_s": 1.5,
+                "fail_s": 2.0,
+                "hold_tail_s": 0.75
+              },
+              "findings": [
+                {
+                  "start_s": 1.0,
+                  "end_s": 2.7,
+                  "what": "frozen 1.7 s",
+                  "severity": "warn"
+                }
+              ]
+            },
+            {
+              "check": "cut_cadence",
+              "result": "warn",
+              "measured": {
+                "cuts": [
+                  3.0,
+                  9.0
+                ],
+                "shots": 3,
+                "longest_shot_s": 6.0,
+                "median_shot_s": 3.0,
+                "cuts_per_minute": 10.0
+              },
+              "limit": {
+                "cut_score": 0.12,
+                "still_score": 0.002,
+                "still_warn_s": 4.0
+              },
+              "findings": [
+                {
+                  "start_s": 5.0,
+                  "end_s": 9.0,
+                  "what": "almost no visual change for 4.0 s",
+                  "severity": "warn"
+                }
+              ]
+            },
+            {
+              "check": "loudness",
+              "result": "warn",
+              "measured": {
+                "integrated_lufs": -15.6,
+                "true_peak_dbtp": -1.4,
+                "lra_lu": 4.2,
+                "quietest_short_term_lufs": -29.5,
+                "quietest_at_s": 6.59998
+              },
+              "limit": {
+                "target_lufs": -16.0,
+                "tolerance_lu": 1.0,
+                "true_peak_max_dbtp": -1.0,
+                "lra_max_lu": 10.0,
+                "short_term_floor_lufs": -28.0
+              },
+              "findings": [
+                {
+                  "start_s": 3.6,
+                  "end_s": 6.59998,
+                  "what": "short-term loudness falls to -29.5 LUFS",
+                  "severity": "warn"
+                }
+              ]
+            },
+            {
+              "check": "silence_gaps",
+              "result": "warn",
+              "measured": {
+                "silences": 2
+              },
+              "limit": {
+                "warn_s": 0.5,
+                "fail_s": 2.0
+              },
+              "findings": [
+                {
+                  "start_s": 10.6,
+                  "end_s": 11.3,
+                  "what": "silence 0.7 s",
+                  "severity": "warn"
+                }
+              ]
+            },
+            {
+              "check": "clipping",
+              "result": "pass",
+              "measured": {
+                "peak_level_db": -1.6,
+                "peak_count": 2.0,
+                "flat_factor": 0
+              },
+              "limit": {
+                "clip_peak_dbfs": -0.1,
+                "clip_peak_count": 3
+              },
+              "findings": []
+            },
+            {
+              "check": "file_spec",
+              "result": "fail",
+              "measured": {
+                "probe": {
+                  "file": "pantry-12s-reels.mp4",
+                  "size_bytes": 4812204,
+                  "top_level": [
+                    [
+                      "ftyp",
+                      32
+                    ],
+                    [
+                      "free",
+                      8
+                    ],
+                    [
+                      "mdat",
+                      4798801
+                    ],
+                    [
+                      "moov",
+                      13363
+                    ]
+                  ],
+                  "brands": {
+                    "major": "isom",
+                    "minor": 512,
+                    "compatible": [
+                      "isom",
+                      "iso2",
+                      "avc1",
+                      "mp41"
+                    ]
+                  },
+                  "faststart": false,
+                  "fragmented": false,
+                  "duration_s": 12.0,
+                  "bitrate_kbps": 3208.1,
+                  "tracks": [
+                    {
+                      "edit_list": true,
+                      "width": 1080.0,
+                      "height": 1920.0,
+                      "timescale": 15360,
+                      "media_duration": 184320,
+                      "handler": "vide",
+                      "codec": "avc1",
+                      "coded_width": 1080,
+                      "coded_height": 1920,
+                      "profile_idc": 100,
+                      "profile": "High",
+                      "level": 4.0,
+                      "chroma": "4:2:0",
+                      "bit_depth": 8,
+                      "color": {
+                        "primaries": 1,
+                        "transfer": 1,
+                        "matrix": 1,
+                        "full_range": false
+                      },
+                      "samples": 360,
+                      "constant_rate": true,
+                      "sample_delta": 512,
+                      "duration_s": 12.0,
+                      "frame_rate": 30.0
+                    },
+                    {
+                      "edit_list": true,
+                      "width": 0.0,
+                      "height": 0.0,
+                      "timescale": 48000,
+                      "media_duration": 577024,
+                      "handler": "soun",
+                      "codec": "mp4a",
+                      "channels": 2,
+                      "sample_rate": 48000,
+                      "audio_object_type": 2,
+                      "profile": "AAC-LC",
+                      "samples": 564,
+                      "constant_rate": false,
+                      "sample_delta": null,
+                      "duration_s": 12.021333
+                    }
+                  ]
+                },
+                "items": [
+                  {
+                    "check": "faststart",
+                    "result": "fail",
+                    "measured": false,
+                    "limit": true
+                  },
+                  {
+                    "check": "fragmented",
+                    "result": "pass",
+                    "measured": false,
+                    "limit": false
+                  },
+                  {
+                    "check": "video.codec",
+                    "result": "pass",
+                    "measured": "avc1",
+                    "limit": "avc1"
+                  },
+                  {
+                    "check": "video.profiles",
+                    "result": "pass",
+                    "measured": "High",
+                    "limit": [
+                      "High",
+                      "Main"
+                    ]
+                  },
+                  {
+                    "check": "video.chroma",
+                    "result": "pass",
+                    "measured": "4:2:0",
+                    "limit": "4:2:0"
+                  },
+                  {
+                    "check": "video.width",
+                    "result": "pass",
+                    "measured": 1080.0,
+                    "limit": 1080
+                  },
+                  {
+                    "check": "video.height",
+                    "result": "pass",
+                    "measured": 1920.0,
+                    "limit": 1920
+                  },
+                  {
+                    "check": "video.frame_rate",
+                    "result": "pass",
+                    "measured": 30.0,
+                    "limit": 30.0
+                  },
+                  {
+                    "check": "video.constant_rate",
+                    "result": "pass",
+                    "measured": true,
+                    "limit": true
+                  },
+                  {
+                    "check": "video.color_primaries",
+                    "result": "pass",
+                    "measured": 1,
+                    "limit": 1
+                  },
+                  {
+                    "check": "video.even_dimensions",
+                    "result": "pass",
+                    "measured": true,
+                    "limit": true
+                  },
+                  {
+                    "check": "audio.codec",
+                    "result": "pass",
+                    "measured": "mp4a",
+                    "limit": "mp4a"
+                  },
+                  {
+                    "check": "audio.audio_object_type",
+                    "result": "pass",
+                    "measured": 2,
+                    "limit": 2
+                  },
+                  {
+                    "check": "audio.sample_rate",
+                    "result": "pass",
+                    "measured": 48000,
+                    "limit": 48000
+                  },
+                  {
+                    "check": "audio.channels",
+                    "result": "pass",
+                    "measured": 2,
+                    "limit": 2
+                  },
+                  {
+                    "check": "duration_s",
+                    "result": "pass",
+                    "measured": 12.0,
+                    "limit": [
+                      12.0,
+                      0.05
+                    ]
+                  },
+                  {
+                    "check": "size_bytes",
+                    "result": "pass",
+                    "measured": 4812204,
+                    "limit": 20000000
+                  },
+                  {
+                    "check": "bitrate_kbps",
+                    "result": "pass",
+                    "measured": 3208.1,
+                    "limit": 8000
+                  }
+                ]
+              },
+              "limit": {
+                "container": {
+                  "faststart": true,
+                  "fragmented": false
+                },
+                "video": {
+                  "codec": "avc1",
+                  "profiles": [
+                    "High",
+                    "Main"
+                  ],
+                  "chroma": "4:2:0",
+                  "width": 1080,
+                  "height": 1920,
+                  "frame_rate": 30.0,
+                  "constant_rate": true,
+                  "color_primaries": 1,
+                  "even_dimensions": true
+                },
+                "audio": {
+                  "codec": "mp4a",
+                  "audio_object_type": 2,
+                  "sample_rate": 48000,
+                  "channels": 2
+                },
+                "duration_s": 12.0,
+                "duration_tolerance_s": 0.05,
+                "max_bytes": 20000000,
+                "max_bitrate_kbps": 8000
+              },
+              "findings": [
+                {
+                  "what": "faststart: False (limit True)",
+                  "severity": "fail"
+                }
+              ]
+            },
+            {
+              "check": "legibility",
+              "result": "fail",
+              "measured": {
+                "frame": {
+                  "width": 1080,
+                  "height": 1920
+                },
+                "smallest_display": "phone held upright",
+                "min_css_px": 12.0,
+                "items": [
+                  {
+                    "id": "hook",
+                    "role": "title",
+                    "font_px": 96.0,
+                    "frame_share": 0.05,
+                    "role_floor": 0.045,
+                    "css_px": {
+                      "phone held upright": 34.67
+                    },
+                    "needs_px_for_smallest_display": 33.3,
+                    "problems": []
+                  },
+                  {
+                    "id": "caption-c3",
+                    "role": "caption",
+                    "font_px": 52.0,
+                    "frame_share": 0.0271,
+                    "role_floor": 0.026,
+                    "css_px": {
+                      "phone held upright": 18.78
+                    },
+                    "needs_px_for_smallest_display": 33.3,
+                    "problems": []
+                  },
+                  {
+                    "id": "ai-voice-label",
+                    "role": "label",
+                    "font_px": 30.0,
+                    "frame_share": 0.0156,
+                    "role_floor": 0.017,
+                    "css_px": {
+                      "phone held upright": 10.83
+                    },
+                    "needs_px_for_smallest_display": 33.3,
+                    "problems": [
+                      "below_role_floor",
+                      "too_small_on_smallest_display"
+                    ]
+                  }
+                ],
+                "problems": [
+                  "ai-voice-label: below_role_floor",
+                  "ai-voice-label: too_small_on_smallest_display"
+                ]
+              },
+              "limit": {
+                "min_css_px": 12.0,
+                "smallest_display": "phone held upright"
+              },
+              "findings": [
+                {
+                  "what": "ai-voice-label: below_role_floor",
+                  "severity": "warn"
+                },
+                {
+                  "what": "ai-voice-label: too_small_on_smallest_display",
+                  "severity": "warn"
+                },
+                {
+                  "what": "caption-c3: on screen 2.0 s, needs 2.5 s to read",
+                  "severity": "warn"
+                },
+                {
+                  "what": "ai-voice-label: outside the safe area",
+                  "severity": "warn"
+                },
+                {
+                  "what": "ai-voice-label: overlaps reels_bottom_caption_overlay",
+                  "severity": "fail"
+                }
+              ]
+            }
+          ],
+          "missing_checks": [],
+          "counts": {
+            "pass": 1,
+            "warn": 4,
+            "fail": 4,
+            "not_run": 0
+          },
+          "verdict": "fail",
+          "not_approval": "Passing these checks is not approval: a person still watches every frame and listens."
+        }
+      },
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "collect-measurements",
+      "kind": "verb.compile_dag",
+      "title": "Collect the FFmpeg measurements of one file",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Hash the exact file, then run the pinned FFmpeg analyses on it and keep every log as a noun with its digest, beside the QA plan.",
+      "outcome": "A measurement set: every log, its command and digest, for one file.",
+      "ready_outcome": "measured",
+      "pinned": [
+        "rules.measurement-commands",
+        "guardrail.measure-the-exact-bytes",
+        "guardrail.declare-before-measuring"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "qa_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the QA plan, declared before measuring."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Only the worker's own machine: FFmpeg reads a local copy of the file and writes local logs."
+      ],
+      "produces": [
+        {
+          "name": "measurement_set",
+          "template": "template.measurement-set"
+        }
+      ],
+      "steps": [
+        "Hash the file and confirm the digest matches the media noun.",
+        "Run each pinned FFmpeg analysis on that file and keep the logs unedited.",
+        "Write the measurement set with every command, log path and log digest, and the QA plan's pin."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.measurement-set's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-bytes",
+          "check": "The media sha256 equals the digest of the pinned media noun's file.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plan-first",
+          "check": "The QA plan's version predates every log in the set.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-motion.check-video"
+      ]
+    },
+    {
+      "slug": "lint-captions",
+      "kind": "verb.verify_gate",
+      "title": "Lint the caption sidecars and time them against speech",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Parse the WebVTT and SRT sidecars, lint every cue for lines, length, reading speed, duration, gaps, overlaps and order, compare the two sidecars, and time each cue against measured speech intervals, listing problems without fixing them.",
+      "outcome": "A captions row with every problem and the timing measurements.",
+      "ready_outcome": "captions_linted",
+      "pinned": [
+        "checks.extended",
+        "tool.video-qa-checks"
+      ],
+      "slots": [
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption track with its WebVTT and SRT sidecars."
+        },
+        {
+          "name": "narration_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the narration track whose measured speech the cues are timed against.",
+          "required": false
+        }
+      ],
+      "params": {
+        "max_cps": {
+          "schema": {
+            "type": "number",
+            "minimum": 5,
+            "maximum": 30
+          },
+          "description": "Most characters per second a cue may read at.",
+          "default": 17
+        }
+      },
+      "produces": [
+        {
+          "name": "check_rows",
+          "template": "template.check-rows"
+        }
+      ],
+      "steps": [
+        "Run the captions command of the pinned code on both sidecars, with speech intervals when a narration track is pinned.",
+        "List every problem with its cue and time; never edit the cues to make them pass.",
+        "Without speech intervals, report the sync part as not measured, with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.check-rows's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "Running lint, parity and speech_sync on the pinned sidecars gives exactly the listed problems.",
+          "method": "deterministic"
+        },
+        {
+          "id": "unchanged",
+          "check": "No new version of the caption track is written.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.check-captions"
+      ]
+    },
+    {
+      "slug": "check-picture",
+      "kind": "verb.verify_gate",
+      "title": "Check blank and frozen frames and the cut cadence",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "From the measurement set and the QA plan, report black and flat frames, frozen stretches and the cut cadence, with every finding's times, honoring only the spans the plan declared.",
+      "outcome": "Three rows: blank_frames, frozen_stretches and cut_cadence.",
+      "ready_outcome": "picture_checked",
+      "pinned": [
+        "checks.extended",
+        "tool.video-qa-checks",
+        "guardrail.declare-before-measuring"
+      ],
+      "slots": [
+        {
+          "name": "measurement_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the measurement set."
+        },
+        {
+          "name": "qa_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the QA plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "check_rows",
+          "template": "template.check-rows"
+        }
+      ],
+      "steps": [
+        "Run the picture command of the pinned code on the logs and the plan.",
+        "Report each finding with its start and end; a missing log makes its row not_run with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.check-rows's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "check_blank, check_frozen and check_cadence on the pinned logs give exactly these rows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plan-unchanged",
+          "check": "The QA plan pinned here is the version the measurement set names.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-qa.collect-measurements"
+      ]
+    },
+    {
+      "slug": "check-sound",
+      "kind": "verb.verify_gate",
+      "title": "Check loudness, silence and clipping",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "From the measurement set and the QA plan, report integrated loudness against the target, true peak, loudness range, the quietest short-term window, silence gaps outside declared pauses, and clipping.",
+      "outcome": "Three rows: loudness, silence_gaps and clipping.",
+      "ready_outcome": "sound_checked",
+      "pinned": [
+        "checks.extended",
+        "tool.video-qa-checks",
+        "guardrail.checks-are-not-approval"
+      ],
+      "slots": [
+        {
+          "name": "measurement_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the measurement set."
+        },
+        {
+          "name": "qa_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the QA plan."
+        }
+      ],
+      "params": {
+        "target_lufs": {
+          "schema": {
+            "type": "number",
+            "minimum": -31,
+            "maximum": -5
+          },
+          "description": "Integrated loudness target: -16 for web players, -14 for short social cuts.",
+          "default": -16
+        }
+      },
+      "produces": [
+        {
+          "name": "check_rows",
+          "template": "template.check-rows"
+        }
+      ],
+      "steps": [
+        "Run the sound command of the pinned code with the target the export spec names.",
+        "Say in the summary that a person still listens: the rows measure levels, not how the mix sounds."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.check-rows's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "check_loudness, check_silence and check_clipping on the pinned logs give exactly these rows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "target-stated",
+          "check": "The loudness row's limit names the target that applied.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-qa.collect-measurements"
+      ]
+    },
+    {
+      "slug": "check-file-spec",
+      "kind": "verb.verify_gate",
+      "title": "Check the file against its export spec",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Read the MP4's boxes with the pinned code and compare every item of the export spec, from fast start to the size budget, reporting what the file says and what it does not say.",
+      "outcome": "A file_spec row with one item per spec entry.",
+      "ready_outcome": "file_spec_checked",
+      "pinned": [
+        "checks.extended",
+        "tool.video-qa-checks"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "export_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the export spec from the video editing pack."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Only the worker's own machine: the code reads a local copy of the file."
+      ],
+      "produces": [
+        {
+          "name": "check_rows",
+          "template": "template.check-rows"
+        }
+      ],
+      "steps": [
+        "Run the filespec command on the file and the export spec's profile for this cut.",
+        "An item the file does not record is not_run with the reason, never a pass."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.check-rows's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "probe and check_spec on the same file and spec give exactly these items.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-bytes",
+          "check": "The row names the digest of the file it read.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-editing.write-export-spec"
+      ]
+    },
+    {
+      "slug": "check-legibility",
+      "kind": "verb.verify_gate",
+      "title": "Check text size, reading time and safe areas",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "For every piece of text whose size is known, compute its share of frame height and its CSS pixels on the smallest planned display, check its time on screen against its reading time, and check its box against the safe area and keep-out boxes.",
+      "outcome": "A legibility row with each item's sizes and problems.",
+      "ready_outcome": "legibility_checked",
+      "pinned": [
+        "checks.extended",
+        "tool.video-qa-checks",
+        "video-motion:rules.aspects"
+      ],
+      "slots": [
+        {
+          "name": "text_items",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the text items: sizes, roles, times and boxes."
+        }
+      ],
+      "produces": [
+        {
+          "name": "check_rows",
+          "template": "template.check-rows"
+        }
+      ],
+      "steps": [
+        "Take keep-out boxes and safe canvases from the aspect rules for the cut's aspect.",
+        "Run the legibility command; list items whose size is unknown as not measured rather than guessing.",
+        "Name the smallest display and the pixel size text needs there."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.check-rows's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "legibility, check_reading and check_boxes on the pinned items give exactly these findings.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sizes-sourced",
+          "check": "Every item's size comes from the stage, the layout or a recorded measurement.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "video-qa.collect-measurements"
+      ]
+    },
+    {
+      "slug": "compile-qa-report",
+      "kind": "verb.verify_gate",
+      "title": "Compile the extended QA report for one file",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Combine the check rows for one file into one report bound to its SHA-256, with counts, missing checks and a verdict that follows from the rows; propose a fix for each failure and never approve anything.",
+      "outcome": "The extended QA report, and fix proposals for failures.",
+      "ready_outcome": "report_compiled",
+      "pinned": [
+        "checks.extended",
+        "tool.video-qa-checks",
+        "report-checks",
+        "guardrail.not-run-is-not-a-pass",
+        "guardrail.checks-are-not-approval"
+      ],
+      "slots": [
+        {
+          "name": "encoded_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded file's media noun."
+        },
+        {
+          "name": "qa_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the QA plan."
+        },
+        {
+          "name": "check_rows",
+          "category": "noun.eval_run",
+          "description": "Pins of every check-rows noun for this file.",
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "report",
+          "template": "template.extended-qa-report"
+        }
+      ],
+      "steps": [
+        "Confirm every check-rows noun names the same file digest; a row for other bytes is left out and named.",
+        "Run the report command and keep the verdict it computes.",
+        "Propose findings-to-fixes record-finding for every fail and every warn a person must decide."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.extended-qa-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdict-recomputed",
+          "check": "compile_report on the pinned rows gives the same counts, missing checks and verdict.",
+          "method": "deterministic"
+        },
+        {
+          "id": "report-checks-pass",
+          "check": "The report's summary passes every check in report-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-qa.lint-captions",
+        "video-qa.check-picture",
+        "video-qa.check-sound",
+        "video-qa.check-file-spec",
+        "video-qa.check-legibility"
+      ]
+    }
+  ]
+}
