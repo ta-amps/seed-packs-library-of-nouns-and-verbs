@@ -1,0 +1,62 @@
+# Checks for the code-composition pack's tested code, run only when that pack changes.
+name: code-composition
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/code-composition/**"
+      - ".github/workflows/code-composition.yml"
+  pull_request:
+    paths:
+      - "packs/code-composition/**"
+      - ".github/workflows/code-composition.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Lint, format, strict types, tests (the pack pin tests included) and the end-to-end demo.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: packs/code-composition/code
+    env:
+      CODE_COMPOSITION_REQUIRE_PACK: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install the locked environment
+        run: make setup
+      - name: Lint, format check, strict types and tests
+        run: make check
+      - name: End-to-end recipe demo
+        run: make demo
+
+  tessera-integration:
+    # Seed export lifecycle against Tessera's real models, CAS, claims and fenced submits.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TESSERA_COMMIT: 55458514e84eaf1e524637c3bd04916ebb4b3c35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: pack-contributions
+      - uses: actions/checkout@v4
+        with:
+          repository: ta-amps/tessera
+          ref: ${{ env.TESSERA_COMMIT }}
+          path: tessera
+          persist-credentials: false
+      - name: Confirm the pinned Tessera commit
+        run: test "$(git -C tessera rev-parse HEAD)" = "$TESSERA_COMMIT"
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Tessera's locked environment
+        working-directory: tessera
+        run: uv sync --locked --all-extras
+      - name: Seed export against the pinned Tessera (fails instead of skipping)
+        working-directory: pack-contributions/packs/code-composition/code
+        run: make tessera-integration TESSERA_DIR="$GITHUB_WORKSPACE/tessera"

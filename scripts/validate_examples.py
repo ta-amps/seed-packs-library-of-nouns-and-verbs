@@ -13,15 +13,12 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# Local tool state, not repository text: caches and environments that running pack code checks leaves.
+SKIP_PARTS = {".git", "__pycache__", ".ruff_cache", ".venv", "venv", ".pytest_cache", ".mypy_cache", ".tox",
+              ".hypothesis", "node_modules"}
 GOVERNANCE = {
     "producer_surface", "visibility_scope", "allowed_surfaces", "target_cohorts", "tags"
 }
-
-
-# Caches, environments and build output, which pack code folders accumulate locally; the same set
-# check_public.py skips.
-SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__", ".mypy_cache",
-             ".ruff_cache", ".pytest_cache", ".tox", ".hypothesis", "private", "test-results"}
 
 
 def require(ok: bool, message: str) -> None:
@@ -192,8 +189,7 @@ def validate_repository(root: Path = ROOT) -> dict:
     meta_contract(parsed["meta/self-improvement.reference.json"])
     text_count = 0
     for path in root.rglob("*"):
-        parts = path.relative_to(root).parts
-        if not path.is_file() or any(part in SKIP_DIRS or part.endswith(".egg-info") for part in parts):
+        if not path.is_file() or any(part in SKIP_PARTS or part.endswith(".egg-info") for part in path.relative_to(root).parts):
             continue
         text = path.read_text()
         require(chr(8212) not in text, "forbidden typography in " + path.relative_to(root).as_posix())

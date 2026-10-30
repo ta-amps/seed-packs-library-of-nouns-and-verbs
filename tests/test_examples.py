@@ -2,6 +2,7 @@
 
 import copy
 import importlib.util
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -18,6 +19,19 @@ class ExampleChecks(unittest.TestCase):
 
     def test_repository_examples(self):
         self.assertTrue(validate.validate_repository(ROOT)["offline_only"])
+
+    def test_tool_caches_are_not_repository_text(self):
+        """Running a pack's code checks leaves binary caches; the text checks skip them, never real files."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "repo"
+            shutil.copytree(ROOT, root, ignore=shutil.ignore_patterns(*validate.SKIP_PARTS, "*.egg-info"))
+            cache = root / "packs" / "code-composition" / "code" / ".pytest_cache" / "v" / "lastfailed"
+            cache.parent.mkdir(parents=True)
+            cache.write_bytes(b"\x8a\x00 binary cache")
+            self.assertTrue(validate.validate_repository(root)["offline_only"])
+            (root / "docs" / "stray.md").write_text("A forbidden \u2014 dash.\n")
+            with self.assertRaises(ValueError):
+                validate.validate_repository(root)
 
     def test_json_duplicate_keys_and_nonfinite_numbers(self):
         with tempfile.TemporaryDirectory() as directory:
