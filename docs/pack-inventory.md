@@ -156,7 +156,9 @@ checks that fail when a capability is reachable from no live path.
 Added October 30, 2026, so a surface can be tested the way the people using it would, audited
 against WCAG 2.2 AA, explored for what no script asked about and checked before anyone shares its
 link. Every pack keeps the decision with a person: a sign-off, an assistive-technology session or a
-go decision is a person's verb.
+go decision is a person's verb. They sit beside section 4's screenshot design review, which measures
+visual design rules from captures: the accessibility audit cites WCAG criteria and the heuristics
+review judges whole tasks.
 
 | Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
 | --- | --- | --- | --- | --- | --- |

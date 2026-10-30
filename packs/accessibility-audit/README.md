@@ -47,6 +47,8 @@ ratios and for landmark, heading-order and page-language lint.
 Each verb can also end with `no_change`, `unknown` or `blocked`, and proposes follow-up verbs instead
 of enqueueing them. Failures go to [findings to fixes](../findings-to-fixes/README.md). Kit documents
 are checked by [public-good kits](../public-good-kits/README.md); this pack covers pages and apps.
+Measured design rules such as cropping, alignment and spacing belong to
+[screenshot design review](../screenshot-design-review/README.md).
 
 ## Worked examples
 

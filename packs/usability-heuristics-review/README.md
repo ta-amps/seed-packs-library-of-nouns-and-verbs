@@ -36,7 +36,8 @@ is expert inspection: it complements testing with real people, never replaces it
 Each verb can also end with `no_change`, `unknown` or `blocked`, and proposes follow-up verbs instead
 of enqueueing them. Fixes go to [findings to fixes](../findings-to-fixes/README.md), choices with no
 single right answer to [taste palettes](../taste-palettes/README.md), and accessibility problems to
-the [accessibility audit](../accessibility-audit/README.md).
+the [accessibility audit](../accessibility-audit/README.md). A screenshot sent with little or no text,
+or a measured layout rule, goes to [screenshot design review](../screenshot-design-review/README.md).
 
 ## Worked examples
 
