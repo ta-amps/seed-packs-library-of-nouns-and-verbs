@@ -74,6 +74,9 @@ intake; and a person-led verb for resolving contradictions between sources.
 [Cost optimization](../packs/cost-optimization/README.md) and [Docs improvement](../packs/docs-improvement/README.md)
 exist in this library. Decomposition patterns is where verbs most clearly create verbs:
 a breakdown becomes child task previews, and the requester enqueues them.
+[Findings to fixes](../packs/findings-to-fixes/README.md), added later on October 29, turns every
+error, issue, design flaw or annoyance noticed in any of this work into recorded, fixed and
+verified work.
 
 ## Not packs
 

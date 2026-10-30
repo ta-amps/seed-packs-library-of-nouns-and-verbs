@@ -1,0 +1,5343 @@
+{
+  "pack_id": "findings-to-fixes",
+  "title": "Findings to fixes",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work: findings with evidence and a duplicate fingerprint, kind and severity guides, an evidence checklist, disclosure rules, a regression-guard template, ten verbs from recording to a periodic pattern review, and eight real public findings as worked examples.",
+  "dependencies": [
+    "checks-of-checks",
+    "decomposition-patterns",
+    "security-review",
+    "taste-palettes"
+  ],
+  "boundaries": [
+    "Every noticed problem is recorded, and failures stay on the record: nothing is deleted or rewritten to hide a mistake.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "No verb publishes, pushes, merges or deploys anything; the owner releases public summaries and lands fixes.",
+    "Security findings follow the security review pack and stay private until their fix is in effect everywhere they were seen.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work",
+      "value": {
+        "lets_workers": "Record every error, issue, design flaw or annoyance anyone notices as a finding with evidence, at once, then reproduce it, fold duplicates together, fix it, have a different worker verify the fix, add a guard shown to fail without the fix, close it through a gate and, when the disclosure rules allow it, prepare a public summary for the owner. Failures stay on the record.",
+        "notice_rule": "Whoever notices a problem records it. A worker that notices one during any other verb, in any pack, returns a proposed record-finding verb with its evidence in proposed_verbs, and an authorized requester enqueues it; a person can claim record-finding directly. Workers create nouns and propose verbs; they never enqueue.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.record-finding"
+            },
+            "when": "As soon as anyone notices a problem, even one that will be fixed a minute later."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.reproduce"
+            },
+            "when": "When the problem needs to be seen again before a fix; security findings go to the security review pack instead."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.triage"
+            },
+            "when": "After recording: fold duplicates together by fingerprint, then set kind, severity and sensitivity. Rerun it when a reproduction, fix, verification or guard points at the finding."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.propose-fix"
+            },
+            "when": "For a triaged finding; an annoyance or other matter of taste gets two or three options for a person."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.fix"
+            },
+            "when": "For the chosen option: a test fails first, then passes."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.verify-fix"
+            },
+            "when": "By a different worker than the fixer, where the problem was seen."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.add-regression-guard"
+            },
+            "when": "When the fix has no guard yet, or its guard has not been shown to fail without the fix."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.close"
+            },
+            "when": "When the close gate can pass; deterministic."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.publish-finding"
+            },
+            "when": "Only when the disclosure rules allow it; the owner decides whether and where it appears."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.review-patterns"
+            },
+            "when": "Periodically, across closed findings, for causes that keep coming back."
+          }
+        ],
+        "rules": [
+          "Record first. Recording never waits for a fix, a reproduction or a decision.",
+          "Failures stay on the record. Nothing is deleted or rewritten to hide a mistake; later steps write new versions or new nouns.",
+          "An annoyance is a real finding. When its fix is a matter of taste, a person chooses, never an agent.",
+          "The worker who made a fix does not verify it.",
+          "A guard counts only after it is shown to fail without the fix and pass with it.",
+          "Never publish details of an unfixed security finding."
+        ],
+        "shape": {
+          "pattern": {
+            "$pin": "decomposition-patterns:pattern.reproduce-then-repair"
+          },
+          "taste_checkpoint": {
+            "$pin": "decomposition-patterns:pattern.human-checkpoint"
+          },
+          "note": "The flow follows the reproduce-then-repair breakdown pattern, with a person's checkpoint for taste calls."
+        },
+        "related_packs": [
+          {
+            "pack_id": "checks-of-checks",
+            "use": "add-regression-guard proves a guard with its trust rule, and review-checks confirms the verdict.",
+            "verbs": [
+              {
+                "$verb": "checks-of-checks.validate-checks"
+              },
+              {
+                "$verb": "checks-of-checks.review-checks"
+              }
+            ]
+          },
+          {
+            "pack_id": "taste-palettes",
+            "use": "propose-fix writes a palette brief for an annoyance or other taste call, and the person's choice decides the fix.",
+            "verbs": [
+              {
+                "$verb": "taste-palettes.draft-embodiments"
+              },
+              {
+                "$verb": "taste-palettes.record-choice"
+              }
+            ]
+          },
+          {
+            "pack_id": "security-review",
+            "use": "A security finding is scoped, reproduced in a local sandbox and fixed through it, and stays private until fixed everywhere.",
+            "verbs": [
+              {
+                "$verb": "security-review.check-scope"
+              },
+              {
+                "$verb": "security-review.reproduce-locally"
+              }
+            ]
+          },
+          {
+            "pack_id": "docs-improvement",
+            "use": "A documentation finding can be audited and rewritten through it.",
+            "verbs": [
+              {
+                "$verb": "docs-improvement.audit-docs"
+              },
+              {
+                "$verb": "docs-improvement.draft-rewrite"
+              }
+            ]
+          },
+          {
+            "pack_id": "decomposition-patterns",
+            "use": "A fix too large for one verb becomes a proposed breakdown.",
+            "verbs": [
+              {
+                "$verb": "decomposition-patterns.propose-breakdown"
+              }
+            ]
+          },
+          {
+            "pack_id": "prior-art-and-alternatives",
+            "use": "A fix that would build something new, such as a shared tool or check, first surveys what already exists and lays out the alternatives; a repair that restores something to its own tested contract does not need to.",
+            "verbs": [
+              {
+                "$verb": "prior-art-and-alternatives.survey-existing"
+              },
+              {
+                "$verb": "prior-art-and-alternatives.research-alternatives"
+              }
+            ]
+          }
+        ],
+        "worked_examples": {
+          "findings": [
+            {
+              "$pin": "example.f-001"
+            },
+            {
+              "$pin": "example.f-002"
+            },
+            {
+              "$pin": "example.f-003"
+            },
+            {
+              "$pin": "example.f-004"
+            },
+            {
+              "$pin": "example.f-006"
+            },
+            {
+              "$pin": "example.f-009"
+            },
+            {
+              "$pin": "example.f-011"
+            },
+            {
+              "$pin": "example.f-014"
+            }
+          ],
+          "pattern_review": {
+            "$pin": "example.pattern-review"
+          },
+          "record_checks": {
+            "$pin": "record-checks"
+          }
+        },
+        "provenance_notes": [
+          {
+            "kind": "owner_direction",
+            "date": "2026-10-29",
+            "quote": "everytime we notice some error, issue, design flaw, design annnoyance, etc we should create nouns and verbs for them",
+            "note": "Quoted as written."
+          },
+          {
+            "kind": "worked_examples",
+            "date": "2026-10-29",
+            "note": "The eight finding examples copy public entries F-001, F-002, F-003, F-004, F-006, F-009, F-011 and F-014 of a findings ledger kept that day; F-005 and F-019 appear only in the pattern review. Entries marked not public were left out. Agent A and agent B are two different coding agents; the video pack's code repo, the archived exploitation repo, the home portal and the public noticeboard site are ta-amps repositories and surfaces, named generically because packs carry no product names."
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "kind-definitions"
+        ],
+        [
+          "requires_noun",
+          "severity-guide"
+        ],
+        [
+          "requires_noun",
+          "evidence-checklist"
+        ],
+        [
+          "requires_noun",
+          "disclosure-rules"
+        ],
+        [
+          "requires_noun",
+          "record-checks"
+        ],
+        [
+          "requires_noun",
+          "template.finding"
+        ],
+        [
+          "requires_noun",
+          "template.reproduction"
+        ],
+        [
+          "requires_noun",
+          "template.fix-proposal"
+        ],
+        [
+          "requires_noun",
+          "template.fix"
+        ],
+        [
+          "requires_noun",
+          "template.verification"
+        ],
+        [
+          "requires_noun",
+          "template.regression-guard"
+        ],
+        [
+          "requires_noun",
+          "template.public-summary"
+        ],
+        [
+          "requires_noun",
+          "template.pattern-review"
+        ],
+        [
+          "requires_noun",
+          "example.f-001"
+        ],
+        [
+          "requires_noun",
+          "example.f-002"
+        ],
+        [
+          "requires_noun",
+          "example.f-003"
+        ],
+        [
+          "requires_noun",
+          "example.f-004"
+        ],
+        [
+          "requires_noun",
+          "example.f-006"
+        ],
+        [
+          "requires_noun",
+          "example.f-009"
+        ],
+        [
+          "requires_noun",
+          "example.f-011"
+        ],
+        [
+          "requires_noun",
+          "example.f-014"
+        ],
+        [
+          "requires_noun",
+          "example.pattern-review"
+        ],
+        [
+          "derives_from",
+          "decomposition-patterns:pattern.reproduce-then-repair",
+          "the flow follows this breakdown pattern"
+        ],
+        [
+          "requires_noun",
+          "decomposition-patterns:pattern.human-checkpoint"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How every noticed problem becomes nouns and verbs",
+      "category_reason": "A reusable procedure with its guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "record-finding writes the finding the moment the problem is noticed.",
+          "reproduce shows it happening again, in the smallest way that still fails.",
+          "triage folds duplicates together by fingerprint and sets kind, severity and sensitivity.",
+          "propose-fix names the cause and one to three options, each with the guard that would show it works.",
+          "fix makes the chosen option with a test that fails first.",
+          "verify-fix, by a different worker, reruns the reproduction on the unfixed and fixed versions.",
+          "add-regression-guard shows a guard failing without the fix and passing with it.",
+          "close applies the gate and writes the closing version of the finding.",
+          "publish-finding prepares a public summary when the disclosure rules allow it.",
+          "review-patterns looks across findings for causes that keep coming back."
+        ],
+        "rules": [
+          "Record every noticed error, issue, design flaw or annoyance, even one fixed a minute later. Recording never waits.",
+          "Failures stay on the record. Never delete or rewrite a finding to hide a mistake; Tessera keeps every version.",
+          "One finding per problem: triage folds duplicates into the oldest finding with the same fingerprint, which keeps all their evidence.",
+          "Workers create nouns and propose verbs. They never enqueue; an authorized requester decides which proposals run.",
+          "The fixer never verifies their own fix.",
+          "A guard is trusted only after it fails without the fix and passes with it, twice, by the checks of checks trust rule.",
+          "A matter of taste is decided by a person through a taste palette; silence is never a choice.",
+          "Merged is not deployed: a fix merged but not running where the problem was seen leaves the finding fixed_not_deployed.",
+          "When a fix needs an authority nobody has given, such as a new spending allowance or a changed limit, record blocked with one question and never work around it."
+        ],
+        "statuses": {
+          "open": "Recorded; nobody is making a fix yet.",
+          "in_progress": "A fix is being proposed or made.",
+          "fixed": "A fix is in place where the problem lives.",
+          "fixed_not_deployed": "The fix is merged but not running where the problem was seen.",
+          "verified": "A different worker confirmed the fix where the problem was seen.",
+          "closed": "The close gate passed: verified independently, with a guard shown to fail without the fix or a written waiver.",
+          "duplicate": "Folded into an older finding with the same fingerprint, which keeps its evidence.",
+          "wont_fix": "A person decided not to fix it, with a reason; it stays on the record."
+        },
+        "close_gate": {
+          "resolved": [
+            "A verification by a different worker than the fixer says fix_verified where the problem was seen.",
+            "A guard is shown to fail without the fix and pass with it, or a waiver gives the written reason no guard can run.",
+            "The closing version passes every record check."
+          ],
+          "duplicate": [
+            "The pinned canonical finding lists this finding among its duplicates."
+          ],
+          "wont_fix": [
+            "A person's recorded decision is pinned; an agent alone never decides not to fix."
+          ]
+        },
+        "follow_ups": [
+          "New problems found while fixing or verifying become proposed record-finding verbs, never silent extra changes.",
+          "A fixed finding without a trusted guard gets a proposed add-regression-guard verb.",
+          "A cause seen in several places gets a proposed review-patterns run.",
+          "An option that would build something new, rather than repair something to its own tested contract, gets the prior art and alternatives pack's survey-existing and research-alternatives verbs proposed first."
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "decomposition-patterns:pattern.reproduce-then-repair",
+          "the lifecycle follows this breakdown pattern"
+        ]
+      ]
+    },
+    {
+      "slug": "kind-definitions",
+      "category": "noun.skill_pack",
+      "role": "kind_definitions",
+      "title": "The four kinds of finding, how to tell them apart and the fingerprint rule",
+      "category_reason": "A reusable classification guide that every recording and triage verb applies.",
+      "value": {
+        "kinds": {
+          "error": {
+            "means": "Something gives a wrong result, crashes, leaks or accepts what it should refuse.",
+            "evidence": "A minimal reproduction, a log excerpt or a measurement.",
+            "usual_fix": "A code or configuration change with a test that fails without it.",
+            "usual_guard": "An automated test.",
+            "worked_examples": [
+              "F-001",
+              "F-002",
+              "F-003"
+            ]
+          },
+          "issue": {
+            "means": "Something is missing, stale, misconfigured or waiting on a person, or a step in a process went wrong, without wrong behavior in the code itself.",
+            "evidence": "A link, receipt, status code or timestamp; for a process issue, the direction that applied and the action that broke it, with times.",
+            "usual_fix": "Content, configuration, a person's action or a change to the process.",
+            "usual_guard": "A link or contract check, or a process rule.",
+            "worked_examples": [
+              "F-004",
+              "F-014"
+            ]
+          },
+          "design_flaw": {
+            "means": "It works as built, but the design fails a person or another part: a layout that breaks at one width, text too faint to read, a generator that writes its clone folder's name into shared files.",
+            "evidence": "Screenshots at named widths and themes for anything visual; otherwise the input that shows the flaw.",
+            "usual_fix": "A design change.",
+            "usual_guard": "A page check at the named widths and themes, or a test of the property.",
+            "worked_examples": [
+              "F-006",
+              "F-009"
+            ]
+          },
+          "annoyance": {
+            "means": "Nothing is broken, but it bothers a person who uses or owns it: vague wording, an old name that keeps coming back, a format they did not want. An annoyance is a real finding.",
+            "evidence": "The person's words, verbatim, with who said them, when, and where the annoying thing appears.",
+            "usual_fix": "Often a matter of taste: two or three options, and the person chooses through the taste palettes pack.",
+            "usual_guard": "A check that the old wording or format does not return, once the person has chosen.",
+            "worked_examples": [
+              "F-011"
+            ]
+          }
+        },
+        "telling_them_apart": [
+          "Wrong behavior against a spec, a test or a promise: error.",
+          "Behavior as built, but the design fails someone or something: design_flaw.",
+          "Nothing wrong, but a person is bothered: annoyance.",
+          "Missing, stale, misconfigured, blocked or a mistake in a process: issue.",
+          "When two fit, pick the one whose fix you expect and say why; triage can change it."
+        ],
+        "security": "Any kind can also be a security finding: set sensitivity to security when it could expose data, grant access or spend beyond a grant. It stays private and goes through the security review pack until its fix is in effect everywhere it was seen.",
+        "fingerprint_rule": {
+          "format": "<kind>/<component>/<symptom>",
+          "component": "The smallest named part where it was seen, in lowercase words joined by hyphens, without paths, line numbers, versions or dates.",
+          "symptom": "Two to six lowercase words joined by hyphens for what goes wrong, without names, ids or numbers that change.",
+          "duplicates": "Equal fingerprints are duplicates. The same kind and component with a different symptom is a judgment call, so triage says why it folded them together or kept them apart.",
+          "examples": [
+            "error/learner-runtime/brief-widens-output-visibility",
+            "design_flaw/index-generator/clone-folder-name-in-output"
+          ]
+        },
+        "routes": {
+          "security_findings": [
+            {
+              "$verb": "security-review.check-scope"
+            },
+            {
+              "$verb": "security-review.reproduce-locally"
+            }
+          ],
+          "documentation_findings": [
+            {
+              "$verb": "docs-improvement.audit-docs"
+            },
+            {
+              "$verb": "docs-improvement.draft-rewrite"
+            }
+          ],
+          "taste_calls": [
+            {
+              "$verb": "taste-palettes.draft-embodiments"
+            },
+            {
+              "$verb": "taste-palettes.record-choice"
+            }
+          ],
+          "page_guards": [
+            {
+              "$verb": "visual-rendering.check-render"
+            }
+          ],
+          "fixes_that_build_something_new": [
+            {
+              "$verb": "prior-art-and-alternatives.survey-existing"
+            },
+            {
+              "$verb": "prior-art-and-alternatives.research-alternatives"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slug": "severity-guide",
+      "category": "noun.benchmark_suite",
+      "role": "severity_guide",
+      "title": "Severity guide: P0 to P3",
+      "category_reason": "A scoring rubric that every finding is rated against.",
+      "value": {
+        "levels": {
+          "P0": {
+            "means": "Harm is happening now: credentials or personal data exposed, money spent without authority, or a surface down for everyone.",
+            "respond": "Contain it first and stop other work."
+          },
+          "P1": {
+            "means": "Wrong or missing results that people would rely on, or a path by which someone without the grant can read, write or spend.",
+            "respond": "Fix before building on the affected work.",
+            "worked_examples": [
+              "F-002",
+              "F-003"
+            ]
+          },
+          "P2": {
+            "means": "A real problem with a narrow trigger or a known workaround, a scope mistake only an already authorized caller can trigger, a process mistake that was caught and undone, or an annoyance the owner made a rule about.",
+            "respond": "Fix within the current work.",
+            "worked_examples": [
+              "F-001",
+              "F-004",
+              "F-011"
+            ]
+          },
+          "P3": {
+            "means": "Cosmetic, stale or minor, with no wrong results: a layout problem at one width, a count out of date, a portability trap with a workaround.",
+            "respond": "Fix when nearby, or batch similar ones.",
+            "worked_examples": [
+              "F-006",
+              "F-009",
+              "F-014"
+            ]
+          }
+        },
+        "rules": [
+          "Rate the impact on people and work, not the effort to fix.",
+          "The noticer sets a provisional level; triage confirms or changes it with a reason.",
+          "Never lower a level to make a finding look smaller. A tested workaround can lower it by one level, and the workaround is named.",
+          "A cause that keeps coming back can be raised by one level in a pattern review."
+        ],
+        "security_mapping": {
+          "rubric": {
+            "$pin": "security-review:severity-rubric"
+          },
+          "critical": "P0",
+          "high": "P1",
+          "medium": "P2",
+          "low": "P3",
+          "informational": "P3"
+        },
+        "worked_examples_note": "The worked examples are listed at the levels their noticers gave them."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "security-review:severity-rubric",
+          "security severities map onto these levels"
+        ]
+      ]
+    },
+    {
+      "slug": "evidence-checklist",
+      "category": "noun.benchmark_suite",
+      "role": "evidence_checklist",
+      "title": "Evidence checklist for each kind of finding",
+      "category_reason": "Acceptance criteria that recording, reproduction and verification are checked against.",
+      "value": {
+        "every_finding": [
+          "What was seen, in one sentence; where; who noticed it; when, as a UTC date and time.",
+          "At least one piece of evidence a different worker could use to see the same problem.",
+          "Files, logs and screenshots stored by SHA-256, with credentials, personal data and private paths removed.",
+          "Anything not captured is marked unknown rather than guessed."
+        ],
+        "by_kind": {
+          "error": [
+            "A minimal reproduction: the exact version or commit, the smallest input or command, and the expected and actual results.",
+            "Or a log excerpt with secrets removed, or a measurement with its method and sample size."
+          ],
+          "design_flaw": [
+            "For anything visual: screenshots at named widths, by default 320, 768 and 1440 pixels, in every theme the surface offers, such as light and dark, with the page address and version.",
+            "For a flaw that is not visual: the input that shows it, such as the folder name or setting that triggers it."
+          ],
+          "annoyance": [
+            "The person's words, verbatim, with who said them and when.",
+            "Where the annoying thing appears; two or three places are enough."
+          ],
+          "issue": [
+            "The link, receipt, run id, status code or timestamp that shows it.",
+            "For a process issue: the direction that applied, where it was written, and the action that broke it, with times."
+          ]
+        },
+        "never": [
+          "A credential value; say where it was, never what it was.",
+          "A screenshot or log that shows personal data or someone else's private information.",
+          "A claim of reproduction without a recorded run."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kind-definitions"
+        ]
+      ]
+    },
+    {
+      "slug": "disclosure-rules",
+      "category": "noun.skill_pack",
+      "role": "disclosure_rules",
+      "title": "Disclosure rules for findings",
+      "category_reason": "Guardrails that decide which findings may ever be described in public.",
+      "value": {
+        "rules": [
+          "Never publish details of an unfixed security finding. A security finding stays private until its fix is in effect everywhere the problem was seen; fixed_not_deployed is not enough.",
+          "Fixed findings, and findings with nothing sensitive in them, may be published once their owner agrees.",
+          "A finding marked public false stays private, even after it is fixed.",
+          "Never publish credentials, personal data, private names, private paths or private notes. Say where a secret was, never its value.",
+          "A public summary is a separate noun written for readers outside the team; the finding itself stays in the team's scope.",
+          "Publishing is the owner's act on a surface of their choice. No verb in this pack publishes anything.",
+          "Failures stay on the record in public too: a summary says plainly what went wrong, including mistakes in process."
+        ],
+        "deterministic_gate": [
+          {
+            "id": "marked-public",
+            "check": "The finding's public field is true."
+          },
+          {
+            "id": "security-fixed-everywhere",
+            "check": "A finding with sensitivity security has status fixed, verified or closed."
+          },
+          {
+            "id": "nothing-sensitive",
+            "check": "Sensitivity is none or security; credential, personal data and private context findings are never published."
+          },
+          {
+            "id": "no-secret-values",
+            "check": "The record checks' secret pattern finds nothing in the summary."
+          },
+          {
+            "id": "public-links-only",
+            "check": "Every link is a public https address or a public pull request or commit reference."
+          }
+        ],
+        "security_handling": {
+          "$pin": "security-review:scope-rules"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "security-review:scope-rules",
+          "security findings keep its private, local-only handling"
+        ]
+      ]
+    },
+    {
+      "slug": "record-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for findings, with real and synthetic golden findings",
+      "category_reason": "Deterministic checks with golden fixtures and recorded expected results that the validator recomputes.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every version of a finding must pass before triage, close or publish-finding accept it. The eight real public findings in this pack pass all of them; each synthetic known-bad finding fails exactly the one check named in fails. The validator recomputes every verdict.",
+        "deterministic_checks": [
+          {
+            "id": "kind-known",
+            "rule": {
+              "rule": "enum",
+              "path": "kind",
+              "values": [
+                "error",
+                "issue",
+                "design_flaw",
+                "annoyance"
+              ]
+            },
+            "why": "Every finding is one of the four kinds, so triage and the evidence checklist apply."
+          },
+          {
+            "id": "severity-known",
+            "rule": {
+              "rule": "enum",
+              "path": "severity",
+              "values": [
+                "P0",
+                "P1",
+                "P2",
+                "P3"
+              ]
+            },
+            "why": "Severity uses the guide's four levels."
+          },
+          {
+            "id": "status-known",
+            "rule": {
+              "rule": "enum",
+              "path": "status",
+              "values": [
+                "open",
+                "in_progress",
+                "fixed",
+                "fixed_not_deployed",
+                "verified",
+                "closed",
+                "duplicate",
+                "wont_fix"
+              ]
+            },
+            "why": "Status uses the method's eight meanings."
+          },
+          {
+            "id": "sensitivity-known",
+            "rule": {
+              "rule": "enum",
+              "path": "sensitivity",
+              "values": [
+                "none",
+                "security",
+                "personal_data",
+                "credential",
+                "private_context"
+              ]
+            },
+            "why": "The disclosure rules depend on sensitivity."
+          },
+          {
+            "id": "evidence-present",
+            "rule": {
+              "rule": "each_has",
+              "path": "evidence",
+              "fields": [
+                "kind",
+                "detail"
+              ],
+              "min": 1
+            },
+            "why": "A finding shows what was seen."
+          },
+          {
+            "id": "noticer-named",
+            "rule": {
+              "rule": "present",
+              "path": "noticed_by"
+            },
+            "why": "Who noticed it is part of the record."
+          },
+          {
+            "id": "noticed-dated",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "noticed_at",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
+            },
+            "why": "When it was noticed is part of the record."
+          },
+          {
+            "id": "fingerprint-shaped",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "fingerprint",
+              "pattern": "^(error|issue|design_flaw|annoyance)/[a-z0-9][a-z0-9-]{0,60}/[a-z0-9][a-z0-9-]{0,80}$"
+            },
+            "why": "Triage folds duplicates together by fingerprint."
+          },
+          {
+            "id": "error-shows-the-failure",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "kind",
+                "equals": "error"
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "evidence",
+                "pattern": "^(reproduction|log_excerpt|measurement)$"
+              }
+            },
+            "why": "An error comes with a reproduction, a log excerpt or a measurement."
+          },
+          {
+            "id": "design-flaw-shows-it",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "kind",
+                "equals": "design_flaw"
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "evidence",
+                "pattern": "^(screenshot|reproduction)$"
+              }
+            },
+            "why": "A design flaw comes with screenshots, or for anything not visual the input that shows it."
+          },
+          {
+            "id": "annoyance-quotes-the-person",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "kind",
+                "equals": "annoyance"
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "evidence",
+                "pattern": "^quote$"
+              }
+            },
+            "why": "An annoyance is recorded in the person's own words."
+          },
+          {
+            "id": "fix-described-when-fixed",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "in": [
+                  "fixed",
+                  "fixed_not_deployed",
+                  "verified",
+                  "closed"
+                ]
+              },
+              "then": {
+                "rule": "present",
+                "path": "fix"
+              }
+            },
+            "why": "A finding marked fixed says what the fix is."
+          },
+          {
+            "id": "closed-needs-independent-check",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "equals": "closed"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "verification.distinct_from_fixer",
+                "values": [
+                  true
+                ]
+              }
+            },
+            "why": "A fix is verified by a different worker than the one who made it."
+          },
+          {
+            "id": "closed-needs-guard-or-waiver",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "equals": "closed"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "guard.state",
+                "values": [
+                  "fails_without_fix",
+                  "waived"
+                ]
+              }
+            },
+            "why": "A closed finding has a guard shown to fail without the fix, or a waiver."
+          },
+          {
+            "id": "waiver-explained",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "guard.state",
+                "equals": "waived"
+              },
+              "then": {
+                "rule": "present",
+                "path": "guard.waiver_reason"
+              }
+            },
+            "why": "A waiver says why no guard can run."
+          },
+          {
+            "id": "duplicate-names-canonical",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "equals": "duplicate"
+              },
+              "then": {
+                "rule": "present",
+                "path": "duplicate_of"
+              }
+            },
+            "why": "A duplicate points at the finding that keeps its evidence."
+          },
+          {
+            "id": "wont-fix-names-a-decision",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "status",
+                "equals": "wont_fix"
+              },
+              "then": {
+                "rule": "present",
+                "path": "closure.decision_ref"
+              }
+            },
+            "why": "Only a person's recorded decision closes a finding as won't fix."
+          },
+          {
+            "id": "sensitive-data-never-public",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "public",
+                "equals": true
+              },
+              "then": {
+                "rule": "enum",
+                "path": "sensitivity",
+                "values": [
+                  "none",
+                  "security"
+                ]
+              }
+            },
+            "why": "Credential, personal data and private context findings are never published."
+          },
+          {
+            "id": "unfixed-security-stays-private",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "public",
+                "equals": true
+              },
+              "then": {
+                "rule": "when",
+                "if": {
+                  "path": "sensitivity",
+                  "equals": "security"
+                },
+                "then": {
+                  "rule": "enum",
+                  "path": "status",
+                  "values": [
+                    "fixed",
+                    "verified",
+                    "closed"
+                  ]
+                }
+              }
+            },
+            "why": "Never publish details of an unfixed security finding; fixed_not_deployed is not enough."
+          },
+          {
+            "id": "no-secret-values",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "(?i:\\b(?:api[_-]?key|secret|token|password|passwd|pwd|access[_-]?key|client[_-]?secret)\\b[\"']?\\s*[:=]\\s*[\"']?[A-Za-z0-9_\\-/+=.]{8,})|(?i:\\bbearer\\s+[A-Za-z0-9_\\-.=+/]{12,})|\\b[A-Z0-9_]*(?:SECRET|TOKEN|PASSWORD|API_KEY)[A-Z0-9_]*\\s*=\\s*[^\\s\"']{8,}"
+            },
+            "why": "Say where a secret is, never its value."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "real-f-001",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-001",
+              "title": "A task brief could widen a learner's output visibility past its pinned spec",
+              "kind": "error",
+              "severity": "P2",
+              "where": "Tessera src/tessera/learners/runtime.py",
+              "evidence": [
+                {
+                  "kind": "reproduction",
+                  "detail": "A private-only spec plus brief consumers=public_commons produced a public segment another key could read.",
+                  "location": "Reproduction record kept in the private review notes"
+                }
+              ],
+              "noticed_by": "agent A (review)",
+              "noticed_at": "2026-10-29T20:37Z",
+              "fingerprint": "error/learner-runtime/brief-widens-output-visibility",
+              "status": "fixed",
+              "sensitivity": "security",
+              "public": true,
+              "fix": {
+                "summary": "Tessera PR #14, merge 7e7433c",
+                "links": [
+                  "Tessera PR #14",
+                  "merge 7e7433c"
+                ]
+              },
+              "verification": {
+                "by": "agent B",
+                "method": "test fails without the fix",
+                "distinct_from_fixer": null
+              },
+              "guard": {
+                "kind": "automated_test",
+                "location": "tests/test_execution_learning.py::test_brief_cannot_widen_the_pinned_spec_visibility",
+                "state": "fails_without_fix"
+              },
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "done"
+                },
+                {
+                  "verb": "fix",
+                  "state": "done"
+                },
+                {
+                  "verb": "verify",
+                  "state": "done"
+                },
+                {
+                  "verb": "regression-check",
+                  "state": "done"
+                }
+              ]
+            }
+          },
+          {
+            "id": "real-f-002",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-002",
+              "title": "The video check verb trusted render-manifest paths, so a manifest could make QA read files outside the render folder",
+              "kind": "error",
+              "severity": "P1",
+              "where": "video pack tools, video_worker.py check_rendered_video",
+              "evidence": [
+                {
+                  "kind": "reproduction",
+                  "detail": "outputs.srt='../outside-run.txt' copied outside text into video-measurements.json.",
+                  "location": "Reproduction record kept in the private review notes"
+                }
+              ],
+              "noticed_by": "agent A (review)",
+              "noticed_at": "2026-10-29T20:35Z",
+              "fingerprint": "error/video-check-verb/manifest-paths-escape-render-folder",
+              "status": "fixed",
+              "sensitivity": "security",
+              "public": true,
+              "fix": {
+                "summary": "The video pack's code repo PR #6, merge 78bd722",
+                "links": [
+                  "the video pack's code repo PR #6",
+                  "merge 78bd722"
+                ]
+              },
+              "verification": {
+                "by": "agent B",
+                "method": "independent reproduction: main copies, fix refuses",
+                "distinct_from_fixer": null
+              },
+              "guard": {
+                "kind": "automated_test",
+                "location": "tests/test_video_manifest_paths.py (43 cases)",
+                "state": "unproven"
+              },
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "done"
+                },
+                {
+                  "verb": "fix",
+                  "state": "done"
+                },
+                {
+                  "verb": "verify",
+                  "state": "done"
+                },
+                {
+                  "verb": "regression-check",
+                  "state": "done"
+                }
+              ]
+            }
+          },
+          {
+            "id": "real-f-003",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-003",
+              "title": "Scored evaluation answers were cut off by an 800-token output default",
+              "kind": "error",
+              "severity": "P1",
+              "where": "The exploitation-evidence evaluation runner in the archived exploitation repo (cli_eval.py and evals/runner.py)",
+              "evidence": [
+                {
+                  "kind": "measurement",
+                  "detail": "ev-frozen-1: 91 of 92 returned calls cut at 800; ev-frozen-2: 94 of 94 incomplete at exactly 800 output tokens."
+                }
+              ],
+              "noticed_by": "agent A",
+              "noticed_at": "2026-10-29T20:30Z",
+              "fingerprint": "error/evaluation-runner/answers-cut-at-output-default",
+              "status": "open",
+              "sensitivity": "none",
+              "public": true,
+              "fix": null,
+              "verification": null,
+              "guard": null,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "done"
+                },
+                {
+                  "verb": "fix",
+                  "state": "blocked",
+                  "note": "no replacement ceiling authorized"
+                },
+                {
+                  "verb": "verify",
+                  "state": "pending"
+                }
+              ],
+              "note": "No score exists. Any rerun needs the limit fixed and a fresh, approved allowance."
+            }
+          },
+          {
+            "id": "real-f-004",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-004",
+              "title": "A pull request was merged after the owner asked to keep it unmerged",
+              "kind": "issue",
+              "severity": "P2",
+              "where": "archived exploitation repo PR #6",
+              "evidence": [
+                {
+                  "kind": "receipt",
+                  "detail": "Merged 2026-10-29T22:11Z; the archive direction said 'PR #6 unmerged'."
+                }
+              ],
+              "noticed_by": "agent A (review)",
+              "noticed_at": "2026-10-29T22:45Z",
+              "fingerprint": "issue/pull-request-merge/merged-against-owner-hold",
+              "status": "fixed",
+              "sensitivity": "none",
+              "public": true,
+              "fix": {
+                "summary": "Reverted in archive PR #7, merge ef710fc",
+                "links": [
+                  "archive PR #7",
+                  "merge ef710fc"
+                ]
+              },
+              "verification": {
+                "by": "agent B",
+                "method": "tree equals pre-merge 6a50fff",
+                "distinct_from_fixer": null
+              },
+              "guard": {
+                "kind": "process_rule",
+                "location": "process: read the newest owner handoff before merging",
+                "state": "unproven"
+              },
+              "work": [
+                {
+                  "verb": "fix",
+                  "state": "done"
+                },
+                {
+                  "verb": "verify",
+                  "state": "done"
+                }
+              ]
+            }
+          },
+          {
+            "id": "real-f-006",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-006",
+              "title": "The shared index generator writes the clone folder's name into generated files",
+              "kind": "design_flaw",
+              "severity": "P3",
+              "where": "scripts/build_index.py (copies in every repo)",
+              "evidence": [
+                {
+                  "kind": "reproduction",
+                  "detail": "A clone named [old video pack name]-paths produced 'Index of [old video pack name]-paths'; CI clones into the repo name, so indexes look stale."
+                }
+              ],
+              "noticed_by": "agent A and agent B",
+              "noticed_at": "2026-10-29T22:20Z",
+              "fingerprint": "design_flaw/index-generator/clone-folder-name-in-output",
+              "status": "open",
+              "sensitivity": "none",
+              "public": true,
+              "fix": null,
+              "workaround": "Clone into a folder named exactly like the repo.",
+              "verification": null,
+              "guard": null,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "done"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending",
+                  "note": "one portable version for the kit and every copy"
+                }
+              ]
+            }
+          },
+          {
+            "id": "real-f-009",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-009",
+              "title": "The map diagram was squeezed into the text column; labels collided with arrows; chip text was faint on the dark band",
+              "kind": "design_flaw",
+              "severity": "P3",
+              "where": "The public noticeboard site, docs/surfaces-and-seed-packs",
+              "evidence": [
+                {
+                  "kind": "screenshot",
+                  "detail": "First screenshot at 1440px cut the right side; arrows crossed band labels; a CSS order bug kept chip text dark on dark.",
+                  "widths_px": [
+                    1440
+                  ]
+                }
+              ],
+              "noticed_by": "agent B",
+              "noticed_at": "2026-10-29T23:55Z",
+              "fingerprint": "design_flaw/map-diagram/squeezed-colliding-faint-labels",
+              "status": "fixed",
+              "sensitivity": "none",
+              "public": true,
+              "fix": {
+                "summary": "Full-width block, short labels, specific chip rule",
+                "links": [
+                  "the public noticeboard site's PR #5"
+                ]
+              },
+              "verification": {
+                "by": null,
+                "method": "light and dark screenshots",
+                "distinct_from_fixer": null
+              },
+              "guard": null,
+              "work": [
+                {
+                  "verb": "fix",
+                  "state": "done"
+                },
+                {
+                  "verb": "verify",
+                  "state": "done"
+                }
+              ]
+            }
+          },
+          {
+            "id": "real-f-011",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-011",
+              "title": "Old pack brand names kept appearing in status messages, docs and pages",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "status messages, READMEs, pages",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "Owner: 'all language of [the old video pack name] should be removed'"
+                }
+              ],
+              "noticed_by": "the owner",
+              "noticed_at": "2026-10-29T22:35Z",
+              "fingerprint": "annoyance/public-wording/retired-pack-names-reappear",
+              "status": "in_progress",
+              "sensitivity": "none",
+              "public": true,
+              "fix": {
+                "summary": "The owner's MUST-FOLLOW rules, item 9; guard tests on pages; a language sweep across repos"
+              },
+              "verification": null,
+              "guard": {
+                "kind": "automated_test",
+                "location": "retired-name tests in the home portal and the public noticeboard site",
+                "state": "partial"
+              },
+              "work": [
+                {
+                  "verb": "fix",
+                  "state": "in_progress"
+                },
+                {
+                  "verb": "regression-check",
+                  "state": "partial"
+                }
+              ]
+            }
+          },
+          {
+            "id": "real-f-014",
+            "label": "known_good",
+            "provenance": "real public finding",
+            "finding": {
+              "id": "F-014",
+              "title": "Tessera's llms.txt lists 26 tools while tools/list serves 37",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "https://tessera.ta-amps.workers.dev/llms.txt",
+              "evidence": [
+                {
+                  "kind": "receipt",
+                  "detail": "The home portal's daily check recorded the gap and queued repair task t_3c2ba63ccd0c430a9cf5a47fecaaed51."
+                }
+              ],
+              "noticed_by": "the home portal's daily check",
+              "noticed_at": "2026-10-29T19:30Z",
+              "fingerprint": "issue/agent-instructions-file/tool-count-differs-from-tool-list",
+              "status": "open",
+              "sensitivity": "none",
+              "public": true,
+              "fix": null,
+              "verification": null,
+              "guard": null,
+              "work": [
+                {
+                  "verb": "repair",
+                  "state": "queued"
+                }
+              ]
+            }
+          },
+          {
+            "id": "good-closed",
+            "label": "known_good",
+            "finding": {
+              "id": "S-101",
+              "title": "SYNTHETIC: the parser drops the last row of a file",
+              "kind": "error",
+              "severity": "P2",
+              "where": "SYNTHETIC parser module",
+              "evidence": [
+                {
+                  "kind": "reproduction",
+                  "detail": "SYNTHETIC: a three-row file gave two rows."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "error/synthetic-parser/drops-last-row",
+              "status": "closed",
+              "sensitivity": "none",
+              "public": true,
+              "fix": {
+                "summary": "SYNTHETIC: keep the final row",
+                "links": [
+                  "SYNTHETIC PR #2"
+                ]
+              },
+              "verification": {
+                "by": "SYNTHETIC verifier",
+                "method": "reran the reproduction on the unfixed and fixed versions",
+                "distinct_from_fixer": true
+              },
+              "guard": {
+                "kind": "automated_test",
+                "location": "tests/test_parser.py::test_keeps_last_row",
+                "state": "fails_without_fix"
+              },
+              "closure": {
+                "reason": "resolved",
+                "at": "2026-10-29T15:00Z"
+              }
+            }
+          },
+          {
+            "id": "good-duplicate",
+            "label": "known_good",
+            "finding": {
+              "id": "S-102",
+              "title": "SYNTHETIC: the last row is missing after import",
+              "kind": "error",
+              "severity": "P2",
+              "where": "SYNTHETIC parser module",
+              "evidence": [
+                {
+                  "kind": "log_excerpt",
+                  "detail": "SYNTHETIC: import finished with 2 of 3 rows."
+                }
+              ],
+              "noticed_by": "SYNTHETIC person",
+              "noticed_at": "2026-10-29T13:00Z",
+              "fingerprint": "error/synthetic-parser/drops-last-row",
+              "status": "duplicate",
+              "sensitivity": "none",
+              "public": false,
+              "duplicate_of": "S-101",
+              "closure": {
+                "reason": "duplicate",
+                "at": "2026-10-29T13:30Z"
+              }
+            }
+          },
+          {
+            "id": "good-wont-fix",
+            "label": "known_good",
+            "finding": {
+              "id": "S-103",
+              "title": "SYNTHETIC: the settings page title feels too formal",
+              "kind": "annoyance",
+              "severity": "P3",
+              "where": "SYNTHETIC settings page",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "SYNTHETIC person: 'this heading sounds stiff'"
+                }
+              ],
+              "noticed_by": "SYNTHETIC person",
+              "noticed_at": "2026-10-29T14:00Z",
+              "fingerprint": "annoyance/synthetic-settings-page/title-too-formal",
+              "status": "wont_fix",
+              "sensitivity": "none",
+              "public": true,
+              "closure": {
+                "reason": "wont_fix",
+                "at": "2026-10-29T16:00Z",
+                "decision_ref": "SYNTHETIC: the person's palette choice of none"
+              }
+            }
+          },
+          {
+            "id": "bad-kind-known",
+            "label": "known_bad",
+            "fails": "kind-known",
+            "why": "A kind outside the four.",
+            "finding": {
+              "id": "S-201",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "bug",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-severity-known",
+            "label": "known_bad",
+            "fails": "severity-known",
+            "why": "A severity outside the guide.",
+            "finding": {
+              "id": "S-202",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "urgent",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-status-known",
+            "label": "known_bad",
+            "fails": "status-known",
+            "why": "A status outside the method.",
+            "finding": {
+              "id": "S-203",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "done",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-sensitivity-known",
+            "label": "known_bad",
+            "fails": "sensitivity-known",
+            "why": "A sensitivity outside the rules.",
+            "finding": {
+              "id": "S-204",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "internal",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-evidence-present",
+            "label": "known_bad",
+            "fails": "evidence-present",
+            "why": "No evidence at all.",
+            "finding": {
+              "id": "S-205",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-noticer-named",
+            "label": "known_bad",
+            "fails": "noticer-named",
+            "why": "Nobody is named as the noticer.",
+            "finding": {
+              "id": "S-206",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-noticed-dated",
+            "label": "known_bad",
+            "fails": "noticed-dated",
+            "why": "No date for when it was noticed.",
+            "finding": {
+              "id": "S-207",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "yesterday",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-fingerprint-shaped",
+            "label": "known_bad",
+            "fails": "fingerprint-shaped",
+            "why": "A fingerprint triage cannot compare.",
+            "finding": {
+              "id": "S-208",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "page broken",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-error-shows-the-failure",
+            "label": "known_bad",
+            "fails": "error-shows-the-failure",
+            "why": "An error with only a quote.",
+            "finding": {
+              "id": "S-209",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "error",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "SYNTHETIC: 'it seems broken'"
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "error/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-design-flaw-shows-it",
+            "label": "known_bad",
+            "fails": "design-flaw-shows-it",
+            "why": "A design flaw with only a quote.",
+            "finding": {
+              "id": "S-210",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "design_flaw",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "SYNTHETIC: 'it looks odd'"
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "design_flaw/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-annoyance-quotes-the-person",
+            "label": "known_bad",
+            "fails": "annoyance-quotes-the-person",
+            "why": "An annoyance without the person's words.",
+            "finding": {
+              "id": "S-211",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "annoyance",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "annoyance/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-fix-described-when-fixed",
+            "label": "known_bad",
+            "fails": "fix-described-when-fixed",
+            "why": "Marked fixed with no fix.",
+            "finding": {
+              "id": "S-212",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "fixed",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-closed-needs-independent-check",
+            "label": "known_bad",
+            "fails": "closed-needs-independent-check",
+            "why": "Closed after the fixer verified their own fix.",
+            "finding": {
+              "id": "S-213",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "closed",
+              "sensitivity": "none",
+              "public": false,
+              "fix": {
+                "summary": "SYNTHETIC: restore the page",
+                "links": [
+                  "SYNTHETIC PR #1"
+                ]
+              },
+              "verification": {
+                "by": "SYNTHETIC verifier",
+                "method": "reran the reproduction on the unfixed and fixed versions",
+                "distinct_from_fixer": false
+              },
+              "guard": {
+                "kind": "page_check",
+                "location": "SYNTHETIC link check for the help page",
+                "state": "fails_without_fix"
+              }
+            }
+          },
+          {
+            "id": "bad-closed-needs-guard-or-waiver",
+            "label": "known_bad",
+            "fails": "closed-needs-guard-or-waiver",
+            "why": "Closed with a guard never shown to fail without the fix.",
+            "finding": {
+              "id": "S-214",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "closed",
+              "sensitivity": "none",
+              "public": false,
+              "fix": {
+                "summary": "SYNTHETIC: restore the page",
+                "links": [
+                  "SYNTHETIC PR #1"
+                ]
+              },
+              "verification": {
+                "by": "SYNTHETIC verifier",
+                "method": "reran the reproduction on the unfixed and fixed versions",
+                "distinct_from_fixer": true
+              },
+              "guard": {
+                "kind": "page_check",
+                "location": "SYNTHETIC link check for the help page",
+                "state": "unproven"
+              }
+            }
+          },
+          {
+            "id": "bad-waiver-explained",
+            "label": "known_bad",
+            "fails": "waiver-explained",
+            "why": "A waiver with no reason.",
+            "finding": {
+              "id": "S-215",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "guard": {
+                "kind": "page_check",
+                "location": "SYNTHETIC link check for the help page",
+                "state": "waived"
+              }
+            }
+          },
+          {
+            "id": "bad-duplicate-names-canonical",
+            "label": "known_bad",
+            "fails": "duplicate-names-canonical",
+            "why": "A duplicate of nothing.",
+            "finding": {
+              "id": "S-216",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "duplicate",
+              "sensitivity": "none",
+              "public": false
+            }
+          },
+          {
+            "id": "bad-wont-fix-names-a-decision",
+            "label": "known_bad",
+            "fails": "wont-fix-names-a-decision",
+            "why": "Won't fix with no person's decision.",
+            "finding": {
+              "id": "S-217",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "wont_fix",
+              "sensitivity": "none",
+              "public": false,
+              "closure": {
+                "reason": "wont_fix"
+              }
+            }
+          },
+          {
+            "id": "bad-sensitive-data-never-public",
+            "label": "known_bad",
+            "fails": "sensitive-data-never-public",
+            "why": "A credential finding marked public.",
+            "finding": {
+              "id": "S-218",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "credential",
+              "public": true
+            }
+          },
+          {
+            "id": "bad-unfixed-security-stays-private",
+            "label": "known_bad",
+            "fails": "unfixed-security-stays-private",
+            "why": "An open security finding marked public.",
+            "finding": {
+              "id": "S-219",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "link",
+                  "detail": "SYNTHETIC: the help page returned 404."
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "security",
+              "public": true
+            }
+          },
+          {
+            "id": "bad-no-secret-values",
+            "label": "known_bad",
+            "fails": "no-secret-values",
+            "why": "A log excerpt that holds a key's value.",
+            "finding": {
+              "id": "S-220",
+              "title": "SYNTHETIC: a help page returns not found",
+              "kind": "issue",
+              "severity": "P3",
+              "where": "SYNTHETIC help page",
+              "evidence": [
+                {
+                  "kind": "log_excerpt",
+                  "detail": "SYNTHETIC log line: api_key=SYNTHETICPLACEHOLDER0000"
+                }
+              ],
+              "noticed_by": "SYNTHETIC worker",
+              "noticed_at": "2026-10-29T12:00Z",
+              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false
+            }
+          }
+        ],
+        "expected": {
+          "real-f-001": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-002": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-003": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-004": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-006": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-009": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-011": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "real-f-014": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-closed": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-duplicate": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-wont-fix": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-kind-known": {
+            "verdict": "fail",
+            "failed_checks": [
+              "kind-known"
+            ]
+          },
+          "bad-severity-known": {
+            "verdict": "fail",
+            "failed_checks": [
+              "severity-known"
+            ]
+          },
+          "bad-status-known": {
+            "verdict": "fail",
+            "failed_checks": [
+              "status-known"
+            ]
+          },
+          "bad-sensitivity-known": {
+            "verdict": "fail",
+            "failed_checks": [
+              "sensitivity-known"
+            ]
+          },
+          "bad-evidence-present": {
+            "verdict": "fail",
+            "failed_checks": [
+              "evidence-present"
+            ]
+          },
+          "bad-noticer-named": {
+            "verdict": "fail",
+            "failed_checks": [
+              "noticer-named"
+            ]
+          },
+          "bad-noticed-dated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "noticed-dated"
+            ]
+          },
+          "bad-fingerprint-shaped": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fingerprint-shaped"
+            ]
+          },
+          "bad-error-shows-the-failure": {
+            "verdict": "fail",
+            "failed_checks": [
+              "error-shows-the-failure"
+            ]
+          },
+          "bad-design-flaw-shows-it": {
+            "verdict": "fail",
+            "failed_checks": [
+              "design-flaw-shows-it"
+            ]
+          },
+          "bad-annoyance-quotes-the-person": {
+            "verdict": "fail",
+            "failed_checks": [
+              "annoyance-quotes-the-person"
+            ]
+          },
+          "bad-fix-described-when-fixed": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fix-described-when-fixed"
+            ]
+          },
+          "bad-closed-needs-independent-check": {
+            "verdict": "fail",
+            "failed_checks": [
+              "closed-needs-independent-check"
+            ]
+          },
+          "bad-closed-needs-guard-or-waiver": {
+            "verdict": "fail",
+            "failed_checks": [
+              "closed-needs-guard-or-waiver"
+            ]
+          },
+          "bad-waiver-explained": {
+            "verdict": "fail",
+            "failed_checks": [
+              "waiver-explained"
+            ]
+          },
+          "bad-duplicate-names-canonical": {
+            "verdict": "fail",
+            "failed_checks": [
+              "duplicate-names-canonical"
+            ]
+          },
+          "bad-wont-fix-names-a-decision": {
+            "verdict": "fail",
+            "failed_checks": [
+              "wont-fix-names-a-decision"
+            ]
+          },
+          "bad-sensitive-data-never-public": {
+            "verdict": "fail",
+            "failed_checks": [
+              "sensitive-data-never-public"
+            ]
+          },
+          "bad-unfixed-security-stays-private": {
+            "verdict": "fail",
+            "failed_checks": [
+              "unfixed-security-stays-private"
+            ]
+          },
+          "bad-no-secret-values": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-secret-values"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "template.finding"
+        ]
+      ]
+    },
+    {
+      "slug": "template.finding",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one noticed problem: what was seen, where, kind, severity, evidence, who noticed it and when, a fingerprint, status, sensitivity and links to its fix and guard",
+      "value": {
+        "describes": "one noticed problem: what was seen, where, kind, severity, evidence, who noticed it and when, a fingerprint, status, sensitivity and links to its fix and guard",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "title",
+            "kind",
+            "severity",
+            "where",
+            "evidence",
+            "noticed_by",
+            "noticed_at",
+            "fingerprint",
+            "status",
+            "sensitivity",
+            "public"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300,
+              "description": "What was seen, in one sentence."
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "error",
+                "issue",
+                "design_flaw",
+                "annoyance"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "P0",
+                "P1",
+                "P2",
+                "P3"
+              ]
+            },
+            "where": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "expected": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "detail"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "reproduction",
+                      "screenshot",
+                      "log_excerpt",
+                      "measurement",
+                      "quote",
+                      "link",
+                      "receipt"
+                    ]
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 800
+                  },
+                  "location": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "widths_px": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 200,
+                      "maximum": 4000
+                    }
+                  },
+                  "themes": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "light",
+                        "dark",
+                        "high_contrast"
+                      ]
+                    }
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "observed_at": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "noticed_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "noticed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "fingerprint": {
+              "type": "string",
+              "pattern": "^(error|issue|design_flaw|annoyance)/[a-z0-9][a-z0-9-]{0,60}/[a-z0-9][a-z0-9-]{0,80}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "open",
+                "in_progress",
+                "fixed",
+                "fixed_not_deployed",
+                "verified",
+                "closed",
+                "duplicate",
+                "wont_fix"
+              ]
+            },
+            "sensitivity": {
+              "type": "string",
+              "enum": [
+                "none",
+                "security",
+                "personal_data",
+                "credential",
+                "private_context"
+              ]
+            },
+            "public": {
+              "type": "boolean"
+            },
+            "duplicate_of": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "duplicates": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            },
+            "triage": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind_reason",
+                "severity_reason",
+                "route"
+              ],
+              "properties": {
+                "kind_reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "severity_reason": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "route": {
+                  "type": "string",
+                  "enum": [
+                    "this_pack",
+                    "security_review",
+                    "docs_improvement",
+                    "taste_call"
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 40
+                }
+              }
+            },
+            "fix": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "required": [
+                "summary"
+              ],
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "links": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 6,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "fix_ref": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "workaround": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            },
+            "verification": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "required": [
+                "by",
+                "method",
+                "distinct_from_fixer"
+              ],
+              "properties": {
+                "by": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "method": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "distinct_from_fixer": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "verification_ref": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "guard": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "location",
+                "state"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "automated_test",
+                    "deterministic_check",
+                    "page_check",
+                    "process_rule"
+                  ]
+                },
+                "location": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "fails_without_fix",
+                    "unproven",
+                    "partial",
+                    "waived"
+                  ]
+                },
+                "waiver_reason": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 600
+                },
+                "guard_ref": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "work": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "verb",
+                  "state"
+                ],
+                "properties": {
+                  "verb": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z-]{0,40}$"
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "done",
+                      "pending",
+                      "in_progress",
+                      "blocked",
+                      "queued",
+                      "partial"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "closure": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "reason"
+              ],
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "resolved",
+                    "duplicate",
+                    "wont_fix"
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 40
+                },
+                "decision_ref": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "note": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "Must pass every deterministic check in record-checks.",
+          "The fingerprint follows the rule in kind-definitions.",
+          "Status moves forward only through triage and close, by compare-and-set; every earlier version stays readable.",
+          "When unsure, set public to false; when it could expose data or grant access, set sensitivity to security."
+        ]
+      },
+      "category_reason": "A finding is a falsifiable claim that something is wrong, with the evidence and the reproduction that can confirm or contradict it."
+    },
+    {
+      "slug": "template.reproduction",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one reproduction of a finding: the exact versions, the smallest steps, expected and actual results and evidence by digest",
+      "value": {
+        "describes": "one reproduction of a finding: the exact versions, the smallest steps, expected and actual results and evidence by digest",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_ref",
+            "versions",
+            "steps",
+            "result",
+            "evidence"
+          ],
+          "properties": {
+            "finding_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "versions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "version",
+                  "result"
+                ],
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "reproduced",
+                      "not_reproduced",
+                      "inconclusive"
+                    ]
+                  }
+                }
+              }
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "expected": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            },
+            "actual": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 800
+            },
+            "result": {
+              "type": "string",
+              "enum": [
+                "reproduced",
+                "not_reproduced",
+                "inconclusive"
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "detail"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "log_excerpt",
+                      "screenshot",
+                      "measurement",
+                      "quote",
+                      "link"
+                    ]
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 800
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "widths_px": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 6,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 200,
+                      "maximum": 4000
+                    }
+                  },
+                  "themes": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "light",
+                        "dark",
+                        "high_contrast"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "environment": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            },
+            "redactions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "result is reproduced only when a recorded run showed the problem.",
+          "One entry per version tried: the version where it was seen first, then the latest.",
+          "Security findings are reproduced only through the security review pack, in a local sandbox."
+        ]
+      },
+      "category_reason": "A reproduction is a recorded run of the finding with versions and evidence digests."
+    },
+    {
+      "slug": "template.fix-proposal",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a proposed fix: the cause, one to three options each with its guard, and whether a person's taste call is needed",
+      "value": {
+        "describes": "a proposed fix: the cause, one to three options each with its guard, and whether a person's taste call is needed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_ref",
+            "cause",
+            "options",
+            "taste_call"
+          ],
+          "properties": {
+            "finding_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "cause": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "cause_shared": {
+              "type": "boolean"
+            },
+            "options": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "change",
+                  "change_type",
+                  "guard"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "pattern": "^[A-C]$"
+                  },
+                  "change": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "change_type": {
+                    "type": "string",
+                    "enum": [
+                      "repair",
+                      "build"
+                    ]
+                  },
+                  "plain_difference": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "risks": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  },
+                  "guard": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "effort": {
+                    "type": "string",
+                    "enum": [
+                      "small",
+                      "medium",
+                      "large",
+                      "unknown"
+                    ]
+                  }
+                }
+              }
+            },
+            "recommended": {
+              "type": "string",
+              "pattern": "^[A-C]$"
+            },
+            "taste_call": {
+              "type": "boolean"
+            },
+            "palette_brief_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "survey_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "alternatives_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "breakdown_needed": {
+              "type": "boolean"
+            },
+            "missing_authority": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "Every option names the guard that would fail without it and pass with it.",
+          "A taste call has two or three options, no recommended option and a palette brief.",
+          "cause_shared is true when the same cause lives in several copies; the shared fix is then one of the options.",
+          "A repair restores something to its own tested contract. An option marked build cites survey_ref, or the proposal proposes survey-existing first."
+        ]
+      },
+      "category_reason": "A fix proposal is a set of falsifiable hypotheses: each option should remove the cause, and its guard would show it."
+    },
+    {
+      "slug": "template.fix",
+      "category": "noun.code_node",
+      "role": "template",
+      "title": "Template: a fix made in a local copy: the patch by digest, the files, the test that failed before and passed after, and the suite result",
+      "value": {
+        "describes": "a fix made in a local copy: the patch by digest, the files, the test that failed before and passed after, and the suite result",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_ref",
+            "proposal_ref",
+            "option",
+            "base_version",
+            "patch_sha256",
+            "files",
+            "tests_added",
+            "failed_before",
+            "passed_after",
+            "suite_passed"
+          ],
+          "properties": {
+            "finding_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "proposal_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "option": {
+              "type": "string",
+              "pattern": "^[A-C]$"
+            },
+            "choice_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            },
+            "base_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "patch_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "tests_added": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "failed_before": {
+              "type": "boolean"
+            },
+            "passed_after": {
+              "type": "boolean"
+            },
+            "suite_passed": {
+              "type": "boolean"
+            },
+            "screenshots_after": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "width_px",
+                  "theme"
+                ],
+                "properties": {
+                  "width_px": {
+                    "type": "integer",
+                    "minimum": 200,
+                    "maximum": 4000
+                  },
+                  "theme": {
+                    "type": "string",
+                    "enum": [
+                      "light",
+                      "dark",
+                      "high_contrast"
+                    ]
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "notes": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "failed_before, passed_after and suite_passed come from actual runs.",
+          "The patch is stored by digest in the requester's scope; landing it is the owner's separate act.",
+          "No existing test or check is deleted, skipped or loosened."
+        ]
+      },
+      "category_reason": "A fix is a code artifact pinned by patch digest with its test evidence."
+    },
+    {
+      "slug": "template.verification",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an independent verification of a fix: runs on the unfixed and fixed versions, where it was checked and a verdict",
+      "value": {
+        "describes": "an independent verification of a fix: runs on the unfixed and fixed versions, where it was checked and a verdict",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_ref",
+            "fix_ref",
+            "verifier",
+            "distinct_from_fixer",
+            "runs",
+            "where_checked",
+            "verdict"
+          ],
+          "properties": {
+            "finding_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "fix_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "verifier": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "distinct_from_fixer": {
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "runs": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "version",
+                  "version_kind",
+                  "shows_problem"
+                ],
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "version_kind": {
+                    "type": "string",
+                    "enum": [
+                      "unfixed",
+                      "fixed"
+                    ]
+                  },
+                  "shows_problem": {
+                    "type": "boolean"
+                  },
+                  "evidence_sha256": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              }
+            },
+            "where_checked": {
+              "type": "string",
+              "enum": [
+                "local_copy",
+                "merged",
+                "deployed"
+              ]
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "fix_verified",
+                "fix_failed",
+                "inconclusive"
+              ]
+            },
+            "screenshots": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "width_px",
+                  "theme"
+                ],
+                "properties": {
+                  "width_px": {
+                    "type": "integer",
+                    "minimum": 200,
+                    "maximum": 4000
+                  },
+                  "theme": {
+                    "type": "string",
+                    "enum": [
+                      "light",
+                      "dark",
+                      "high_contrast"
+                    ]
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "new_problems": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "fix_verified needs an unfixed run that shows the problem and a fixed run that does not.",
+          "The verifier did not write the fix or its proposal.",
+          "A fix verified only on a local copy or a merged branch is not verified where a deployed problem was seen."
+        ]
+      },
+      "category_reason": "A verification is a recorded pair of runs with a verdict."
+    },
+    {
+      "slug": "template.regression-guard",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: a regression guard: the test or check, its runs with and without the fix and a trust verdict by the checks of checks rule",
+      "value": {
+        "describes": "a regression guard: the test or check, its runs with and without the fix and a trust verdict by the checks of checks rule",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_ref",
+            "fix_ref",
+            "kind",
+            "location",
+            "runs",
+            "verdict",
+            "repeat_identical"
+          ],
+          "properties": {
+            "finding_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "fix_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "automated_test",
+                "deterministic_check",
+                "page_check",
+                "process_rule"
+              ]
+            },
+            "location": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "rule": {
+              "type": "object"
+            },
+            "widths_px": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "integer",
+                "minimum": 200,
+                "maximum": 4000
+              }
+            },
+            "themes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "light",
+                  "dark",
+                  "high_contrast"
+                ]
+              }
+            },
+            "runs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "version_kind",
+                  "passed"
+                ],
+                "properties": {
+                  "version_kind": {
+                    "type": "string",
+                    "enum": [
+                      "fixed",
+                      "unfixed"
+                    ]
+                  },
+                  "passed": {
+                    "type": "boolean"
+                  },
+                  "failure_reason": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "trusted",
+                "revise",
+                "reject",
+                "needs_judges"
+              ]
+            },
+            "repeat_identical": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "judges": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "review_ref": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "trusted only when every fixed run passed and every unfixed run failed for the finding's reason, twice each.",
+          "A guard that passes without the fix is revise; one that fails with the fix is reject.",
+          "A process rule is needs_judges until two judges or a person agree on it.",
+          "A deterministic check uses only the checks of checks rule types."
+        ]
+      },
+      "category_reason": "A regression guard is a deterministic check whose power to tell the fixed version from the unfixed one has been measured."
+    },
+    {
+      "slug": "template.public-summary",
+      "category": "noun.public_source",
+      "role": "template",
+      "title": "Template: a public summary of one finding for readers outside the team, checked against the disclosure rules and waiting for the owner",
+      "value": {
+        "describes": "a public summary of one finding for readers outside the team, checked against the disclosure rules and waiting for the owner",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finding_ref",
+            "title",
+            "kind",
+            "severity",
+            "status",
+            "what_happened",
+            "what_changed",
+            "guard",
+            "links",
+            "redactions",
+            "disclosure_checks",
+            "release_decision",
+            "approved"
+          ],
+          "properties": {
+            "finding_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "error",
+                "issue",
+                "design_flaw",
+                "annoyance"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "P0",
+                "P1",
+                "P2",
+                "P3"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "open",
+                "in_progress",
+                "fixed",
+                "fixed_not_deployed",
+                "verified",
+                "closed",
+                "duplicate",
+                "wont_fix"
+              ]
+            },
+            "what_happened": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 800
+            },
+            "what_changed": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 800
+            },
+            "guard": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            },
+            "links": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "redactions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "disclosure_checks": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "result"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "enum": [
+                      "marked-public",
+                      "security-fixed-everywhere",
+                      "nothing-sensitive",
+                      "no-secret-values",
+                      "public-links-only"
+                    ]
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "pass",
+                      "fail"
+                    ]
+                  }
+                }
+              }
+            },
+            "release_decision": {
+              "type": "string",
+              "enum": [
+                "owner"
+              ]
+            },
+            "approved": {
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            }
+          }
+        },
+        "rules": [
+          "Every disclosure check passes, or no summary is written.",
+          "Links are public pull requests, commits and pages only.",
+          "approved stays false; whether and where it appears is the owner's decision."
+        ]
+      },
+      "category_reason": "A public summary is a document meant for public readers, kept separate from the finding it describes."
+    },
+    {
+      "slug": "template.pattern-review",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a pattern review: causes that keep coming back across findings, with counts, places and the upstream fix each needs",
+      "value": {
+        "describes": "a pattern review: causes that keep coming back across findings, with counts, places and the upstream fix each needs",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "window",
+            "findings_reviewed",
+            "patterns"
+          ],
+          "properties": {
+            "window": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  "maxLength": 40
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+                  "maxLength": 40
+                }
+              }
+            },
+            "findings_reviewed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+              }
+            },
+            "patterns": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cause",
+                  "findings",
+                  "count",
+                  "places",
+                  "evidence",
+                  "upstream_fix",
+                  "upstream",
+                  "falsified_if"
+                ],
+                "properties": {
+                  "cause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "findings": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 60,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                    }
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "places": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 12,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 400
+                    }
+                  },
+                  "upstream_fix": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "upstream": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "falsified_if": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "recurrences": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cause",
+                  "finding"
+                ],
+                "properties": {
+                  "cause": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "finding": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+                  }
+                }
+              }
+            },
+            "no_pattern_reason": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            }
+          }
+        },
+        "rules": [
+          "count equals the number of findings listed in the pattern.",
+          "A pattern has at least two findings, or one finding seen in several places.",
+          "Upstream fixes are proposed as verbs, never made in the review."
+        ]
+      },
+      "category_reason": "A pattern review states falsifiable hypotheses about shared causes; a cause that returns after its upstream fix contradicts it."
+    },
+    {
+      "slug": "example.f-001",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-001: a fixed error whose test is recorded as failing without the fix",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-001",
+          "title": "A task brief could widen a learner's output visibility past its pinned spec",
+          "kind": "error",
+          "severity": "P2",
+          "where": "Tessera src/tessera/learners/runtime.py",
+          "evidence": [
+            {
+              "kind": "reproduction",
+              "detail": "A private-only spec plus brief consumers=public_commons produced a public segment another key could read.",
+              "location": "Reproduction record kept in the private review notes"
+            }
+          ],
+          "noticed_by": "agent A (review)",
+          "noticed_at": "2026-10-29T20:37Z",
+          "fingerprint": "error/learner-runtime/brief-widens-output-visibility",
+          "status": "fixed",
+          "sensitivity": "security",
+          "public": true,
+          "fix": {
+            "summary": "Tessera PR #14, merge 7e7433c",
+            "links": [
+              "Tessera PR #14",
+              "merge 7e7433c"
+            ]
+          },
+          "verification": {
+            "by": "agent B",
+            "method": "test fails without the fix",
+            "distinct_from_fixer": null
+          },
+          "guard": {
+            "kind": "automated_test",
+            "location": "tests/test_execution_learning.py::test_brief_cannot_widen_the_pinned_spec_visibility",
+            "state": "fails_without_fix"
+          },
+          "work": [
+            {
+              "verb": "reproduce",
+              "state": "done"
+            },
+            {
+              "verb": "fix",
+              "state": "done"
+            },
+            {
+              "verb": "verify",
+              "state": "done"
+            },
+            {
+              "verb": "regression-check",
+              "state": "done"
+            }
+          ]
+        },
+        "shows": "A fixed error with a regression test recorded as failing without the fix. Who made the fix is not in the record, so distinct_from_fixer stays null and close would wait for verify-fix to record it.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind",
+          "guard kind and state",
+          "agent labels"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-002",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-002: a fixed error with an independent reproduction and a guard not yet shown to fail",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-002",
+          "title": "The video check verb trusted render-manifest paths, so a manifest could make QA read files outside the render folder",
+          "kind": "error",
+          "severity": "P1",
+          "where": "video pack tools, video_worker.py check_rendered_video",
+          "evidence": [
+            {
+              "kind": "reproduction",
+              "detail": "outputs.srt='../outside-run.txt' copied outside text into video-measurements.json.",
+              "location": "Reproduction record kept in the private review notes"
+            }
+          ],
+          "noticed_by": "agent A (review)",
+          "noticed_at": "2026-10-29T20:35Z",
+          "fingerprint": "error/video-check-verb/manifest-paths-escape-render-folder",
+          "status": "fixed",
+          "sensitivity": "security",
+          "public": true,
+          "fix": {
+            "summary": "The video pack's code repo PR #6, merge 78bd722",
+            "links": [
+              "the video pack's code repo PR #6",
+              "merge 78bd722"
+            ]
+          },
+          "verification": {
+            "by": "agent B",
+            "method": "independent reproduction: main copies, fix refuses",
+            "distinct_from_fixer": null
+          },
+          "guard": {
+            "kind": "automated_test",
+            "location": "tests/test_video_manifest_paths.py (43 cases)",
+            "state": "unproven"
+          },
+          "work": [
+            {
+              "verb": "reproduce",
+              "state": "done"
+            },
+            {
+              "verb": "fix",
+              "state": "done"
+            },
+            {
+              "verb": "verify",
+              "state": "done"
+            },
+            {
+              "verb": "regression-check",
+              "state": "done"
+            }
+          ]
+        },
+        "shows": "A fixed P1 error checked by an independent reproduction. No recorded run shows its 43-case test failing without the fix, so the guard is unproven and add-regression-guard is the next verb.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind",
+          "guard kind and state",
+          "agent labels"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-003",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-003: an open error whose fix is blocked on an authority nobody has given",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-003",
+          "title": "Scored evaluation answers were cut off by an 800-token output default",
+          "kind": "error",
+          "severity": "P1",
+          "where": "The exploitation-evidence evaluation runner in the archived exploitation repo (cli_eval.py and evals/runner.py)",
+          "evidence": [
+            {
+              "kind": "measurement",
+              "detail": "ev-frozen-1: 91 of 92 returned calls cut at 800; ev-frozen-2: 94 of 94 incomplete at exactly 800 output tokens."
+            }
+          ],
+          "noticed_by": "agent A",
+          "noticed_at": "2026-10-29T20:30Z",
+          "fingerprint": "error/evaluation-runner/answers-cut-at-output-default",
+          "status": "open",
+          "sensitivity": "none",
+          "public": true,
+          "fix": null,
+          "verification": null,
+          "guard": null,
+          "work": [
+            {
+              "verb": "reproduce",
+              "state": "done"
+            },
+            {
+              "verb": "fix",
+              "state": "blocked",
+              "note": "no replacement ceiling authorized"
+            },
+            {
+              "verb": "verify",
+              "state": "pending"
+            }
+          ],
+          "note": "No score exists. Any rerun needs the limit fixed and a fresh, approved allowance."
+        },
+        "shows": "An open P1 error that stays on the record with its fix blocked, because no replacement limit is authorized. No score exists, and none is claimed.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind",
+          "agent labels"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-004",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-004: a process issue, a merge against the owner's hold, reverted",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-004",
+          "title": "A pull request was merged after the owner asked to keep it unmerged",
+          "kind": "issue",
+          "severity": "P2",
+          "where": "archived exploitation repo PR #6",
+          "evidence": [
+            {
+              "kind": "receipt",
+              "detail": "Merged 2026-10-29T22:11Z; the archive direction said 'PR #6 unmerged'."
+            }
+          ],
+          "noticed_by": "agent A (review)",
+          "noticed_at": "2026-10-29T22:45Z",
+          "fingerprint": "issue/pull-request-merge/merged-against-owner-hold",
+          "status": "fixed",
+          "sensitivity": "none",
+          "public": true,
+          "fix": {
+            "summary": "Reverted in archive PR #7, merge ef710fc",
+            "links": [
+              "archive PR #7",
+              "merge ef710fc"
+            ]
+          },
+          "verification": {
+            "by": "agent B",
+            "method": "tree equals pre-merge 6a50fff",
+            "distinct_from_fixer": null
+          },
+          "guard": {
+            "kind": "process_rule",
+            "location": "process: read the newest owner handoff before merging",
+            "state": "unproven"
+          },
+          "work": [
+            {
+              "verb": "fix",
+              "state": "done"
+            },
+            {
+              "verb": "verify",
+              "state": "done"
+            }
+          ]
+        },
+        "shows": "A process issue fixed by a revert and verified by comparing trees. Its guard is a process rule, a judgment check that stays unproven until two judges or a person agree.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind",
+          "guard kind and state",
+          "agent labels"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-006",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-006: one open design flaw copied into every repository",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-006",
+          "title": "The shared index generator writes the clone folder's name into generated files",
+          "kind": "design_flaw",
+          "severity": "P3",
+          "where": "scripts/build_index.py (copies in every repo)",
+          "evidence": [
+            {
+              "kind": "reproduction",
+              "detail": "A clone named [old video pack name]-paths produced 'Index of [old video pack name]-paths'; CI clones into the repo name, so indexes look stale."
+            }
+          ],
+          "noticed_by": "agent A and agent B",
+          "noticed_at": "2026-10-29T22:20Z",
+          "fingerprint": "design_flaw/index-generator/clone-folder-name-in-output",
+          "status": "open",
+          "sensitivity": "none",
+          "public": true,
+          "fix": null,
+          "workaround": "Clone into a folder named exactly like the repo.",
+          "verification": null,
+          "guard": null,
+          "work": [
+            {
+              "verb": "reproduce",
+              "state": "done"
+            },
+            {
+              "verb": "propose-fix",
+              "state": "pending",
+              "note": "one portable version for the kit and every copy"
+            }
+          ]
+        },
+        "shows": "An open design flaw that lives in every copy of one script, with a workaround and a pending proposal for one portable version: the kind of cause review-patterns turns into an upstream fix.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind",
+          "agent labels",
+          "workaround field"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-009",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-009: a design flaw fixed and checked with light and dark screenshots",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-009",
+          "title": "The map diagram was squeezed into the text column; labels collided with arrows; chip text was faint on the dark band",
+          "kind": "design_flaw",
+          "severity": "P3",
+          "where": "The public noticeboard site, docs/surfaces-and-seed-packs",
+          "evidence": [
+            {
+              "kind": "screenshot",
+              "detail": "First screenshot at 1440px cut the right side; arrows crossed band labels; a CSS order bug kept chip text dark on dark.",
+              "widths_px": [
+                1440
+              ]
+            }
+          ],
+          "noticed_by": "agent B",
+          "noticed_at": "2026-10-29T23:55Z",
+          "fingerprint": "design_flaw/map-diagram/squeezed-colliding-faint-labels",
+          "status": "fixed",
+          "sensitivity": "none",
+          "public": true,
+          "fix": {
+            "summary": "Full-width block, short labels, specific chip rule",
+            "links": [
+              "the public noticeboard site's PR #5"
+            ]
+          },
+          "verification": {
+            "by": null,
+            "method": "light and dark screenshots",
+            "distinct_from_fixer": null
+          },
+          "guard": null,
+          "work": [
+            {
+              "verb": "fix",
+              "state": "done"
+            },
+            {
+              "verb": "verify",
+              "state": "done"
+            }
+          ]
+        },
+        "shows": "A visual design flaw fixed and checked with light and dark screenshots. It has no guard yet, so close needs add-regression-guard, for example a page check at 1440 pixels in both themes, or a written waiver.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind and width",
+          "agent labels"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-011",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-011: the owner's annoyance at retired names that keep coming back",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-011",
+          "title": "Old pack brand names kept appearing in status messages, docs and pages",
+          "kind": "annoyance",
+          "severity": "P2",
+          "where": "status messages, READMEs, pages",
+          "evidence": [
+            {
+              "kind": "quote",
+              "detail": "Owner: 'all language of [the old video pack name] should be removed'"
+            }
+          ],
+          "noticed_by": "the owner",
+          "noticed_at": "2026-10-29T22:35Z",
+          "fingerprint": "annoyance/public-wording/retired-pack-names-reappear",
+          "status": "in_progress",
+          "sensitivity": "none",
+          "public": true,
+          "fix": {
+            "summary": "The owner's MUST-FOLLOW rules, item 9; guard tests on pages; a language sweep across repos"
+          },
+          "verification": null,
+          "guard": {
+            "kind": "automated_test",
+            "location": "retired-name tests in the home portal and the public noticeboard site",
+            "state": "partial"
+          },
+          "work": [
+            {
+              "verb": "fix",
+              "state": "in_progress"
+            },
+            {
+              "verb": "regression-check",
+              "state": "partial"
+            }
+          ]
+        },
+        "shows": "An annoyance recorded with the owner's words. Its fix is the owner's rule plus a sweep, still in progress, and its guard covers only some places.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind",
+          "guard kind and state"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.f-014",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Real public finding F-014: an open issue found by a daily check, with a repair verb queued",
+      "category_reason": "A real finding in the finding template's shape: a claim about a problem with the evidence that supports it.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.finding"
+        },
+        "instance": {
+          "id": "F-014",
+          "title": "Tessera's llms.txt lists 26 tools while tools/list serves 37",
+          "kind": "issue",
+          "severity": "P3",
+          "where": "https://tessera.ta-amps.workers.dev/llms.txt",
+          "evidence": [
+            {
+              "kind": "receipt",
+              "detail": "The home portal's daily check recorded the gap and queued repair task t_3c2ba63ccd0c430a9cf5a47fecaaed51."
+            }
+          ],
+          "noticed_by": "the home portal's daily check",
+          "noticed_at": "2026-10-29T19:30Z",
+          "fingerprint": "issue/agent-instructions-file/tool-count-differs-from-tool-list",
+          "status": "open",
+          "sensitivity": "none",
+          "public": true,
+          "fix": null,
+          "verification": null,
+          "guard": null,
+          "work": [
+            {
+              "verb": "repair",
+              "state": "queued"
+            }
+          ]
+        },
+        "shows": "An open issue noticed by an automated daily check, which recorded the gap and queued a repair verb. Nothing is fixed yet, so it has no fix, verification or guard.",
+        "source": "Copied from the public entries of a findings ledger kept on 2026-10-29. Product, repository and agent names are written generically; private notes paths were left out. derived_here lists the fields this pack's rules filled in rather than copied.",
+        "derived_here": [
+          "fingerprint",
+          "sensitivity",
+          "evidence kind"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.finding",
+          "a real public finding in the template's shape"
+        ]
+      ]
+    },
+    {
+      "slug": "example.pattern-review",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a pattern review written by hand from the public findings",
+      "category_reason": "An example output of review-patterns: hypotheses about shared causes, drawn from real findings.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.pattern-review"
+        },
+        "instance": {
+          "window": {
+            "from": "2026-10-29",
+            "to": "2026-10-30"
+          },
+          "findings_reviewed": [
+            "F-001",
+            "F-002",
+            "F-003",
+            "F-004",
+            "F-005",
+            "F-006",
+            "F-007",
+            "F-008",
+            "F-009",
+            "F-010",
+            "F-011",
+            "F-012",
+            "F-013",
+            "F-014",
+            "F-016",
+            "F-017",
+            "F-018",
+            "F-019"
+          ],
+          "patterns": [
+            {
+              "cause": "Acting on held or paused work before reading the newest owner direction",
+              "findings": [
+                "F-004",
+                "F-005"
+              ],
+              "count": 2,
+              "places": [
+                "a pull request merge",
+                "an evaluation restart"
+              ],
+              "evidence": [
+                "F-004: A pull request was merged after the owner asked to keep it unmerged; guard: process: read the newest owner handoff before merging.",
+                "F-005: A stopped evaluation was restarted against a 'do not restart' direction; guard: process: check the owner handoff before resuming paused work."
+              ],
+              "upstream_fix": "One step before any merge, restart or resume: read the newest owner handoff first. Both findings' process guards name this step.",
+              "upstream": "The single step both process guards describe, instead of one guard per action.",
+              "falsified_if": "Another action against a written hold happens after that step is in place."
+            },
+            {
+              "cause": "One script copied into every repository, so one portability bug lives in every copy",
+              "findings": [
+                "F-006"
+              ],
+              "count": 1,
+              "places": [
+                "scripts/build_index.py in every repository"
+              ],
+              "evidence": [
+                "F-006: The shared index generator writes the clone folder's name into generated files; pending: one portable version for the kit and every copy."
+              ],
+              "upstream_fix": "One portable version for the kit and every copy, as F-006's pending propose-fix says.",
+              "upstream": "The shared kit's copy of the script, which every repository copies.",
+              "falsified_if": "A copy still writes its clone folder's name after the portable version lands."
+            },
+            {
+              "cause": "Retired names come back because each place checks for them its own way",
+              "findings": [
+                "F-011",
+                "F-019"
+              ],
+              "count": 2,
+              "places": [
+                "status messages, docs and pages",
+                "the pack library's validator"
+              ],
+              "evidence": [
+                "F-011: Old pack brand names kept appearing in status messages, docs and pages; guard: retired-name tests in the home portal and the public noticeboard site.",
+                "F-019: The pack library's brand check spells the brand names in its own regex; fix in progress: store the names as hashes, as check_public.py does."
+              ],
+              "upstream_fix": "One retired-name check that stores the names as hashes, as check_public.py does, reused by every repository and page.",
+              "upstream": "A single shared name check instead of one per place.",
+              "falsified_if": "A retired name reappears in a place that uses the shared check."
+            }
+          ],
+          "recurrences": []
+        },
+        "shows": "What review-patterns returns: three causes behind five findings, each with one upstream fix. It was written by hand from the public findings to show the shape; no worker has run review-patterns.",
+        "source": "Built from the public entries of the findings ledger kept on 2026-10-29, including F-005 and F-019, which are not separate examples here."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "template.pattern-review",
+          "an example output in the template's shape"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "record-finding",
+      "kind": "verb.problemize",
+      "title": "Record a noticed problem as a finding",
+      "claimant": "agent_or_human",
+      "summary": "Write down an error, issue, design flaw or annoyance as soon as anyone notices it: what was seen, where, evidence, who noticed it and when, a provisional kind and severity, and a fingerprint for spotting duplicates.",
+      "outcome": "A finding noun with status open, or no_change when this exact observation by this noticer is already recorded.",
+      "ready_outcome": "finding_recorded",
+      "pinned": [
+        "method",
+        "kind-definitions",
+        "severity-guide",
+        "evidence-checklist",
+        "disclosure-rules",
+        "record-checks"
+      ],
+      "slots": [
+        {
+          "name": "evidence_records",
+          "category": "noun.eval_run",
+          "description": "Pins of runs, check results or logs that already show the problem, if any.",
+          "required": false,
+          "many": true,
+          "max": 8
+        },
+        {
+          "name": "nearby_findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of findings already recorded for the same part, to compare fingerprints. A match is noted for triage, not skipped.",
+          "required": false,
+          "many": true,
+          "max": 40
+        }
+      ],
+      "params": {
+        "finding_id": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+          },
+          "description": "The id the requester assigned to the new finding.",
+          "required": true
+        },
+        "observation": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "description": "What was seen, in the noticer's own words.",
+          "required": true
+        },
+        "where": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "description": "Where it was seen: a file and line, a page address, a run id or a step in a process.",
+          "required": true
+        },
+        "noticed_by": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "description": "Who noticed it: a person, a worker or an automated check.",
+          "required": true
+        },
+        "noticed_at": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+            "maxLength": 40
+          },
+          "description": "When it was noticed, as a UTC date and time.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "finding",
+          "template": "template.finding"
+        }
+      ],
+      "steps": [
+        "Record it now, even if it looks small or will be fixed in a minute; recording never waits for a fix.",
+        "Write what was seen, where, who noticed it and when. For an annoyance, quote the person's words exactly.",
+        "Attach the evidence the checklist names for its kind and mark anything missing as unknown instead of guessing.",
+        "Choose a provisional kind and severity from the guides and compute the fingerprint by the kind definitions' rule. Compare it with any pinned nearby findings and note a match instead of skipping the record.",
+        "Remove credentials, personal data and private paths; say where a secret is, never its value. Set sensitivity to security, and public to false, when the problem could expose data, grant access or spend beyond a grant.",
+        "Set status open. Never delete or rewrite an earlier finding; a correction is a later version or a new finding."
+      ],
+      "acceptance": [
+        {
+          "id": "finding-matches-template",
+          "check": "The finding validates against template.finding's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "The finding passes every deterministic check in record-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fingerprint-matches-kind",
+          "check": "The fingerprint starts with the finding's kind.",
+          "method": "deterministic"
+        },
+        {
+          "id": "status-open",
+          "check": "The status is open.",
+          "method": "deterministic"
+        },
+        {
+          "id": "evidence-usable",
+          "check": "A different worker could see the same problem from the evidence.",
+          "method": "judgment"
+        }
+      ],
+      "ready_requires": [
+        "checks"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "notes": [
+        "Any worker on any verb, in any pack, can return this verb in its proposed_verbs when it notices a problem; an authorized requester enqueues it."
+      ]
+    },
+    {
+      "slug": "reproduce",
+      "kind": "verb.recover_fault",
+      "title": "Reproduce the finding",
+      "claimant": "agent",
+      "summary": "Show the problem happening again from the finding alone, at the exact version where it was seen and on the latest one, in the smallest way that still fails, so a fix can be checked against it.",
+      "outcome": "A reproduction record: reproduced, not reproduced or inconclusive, with versions, steps and evidence by digest.",
+      "ready_outcome": "reproduction_recorded",
+      "pinned": [
+        "method",
+        "evidence-checklist",
+        "disclosure-rules",
+        "decomposition-patterns:pattern.reproduce-then-repair"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the finding."
+        },
+        {
+          "name": "snapshot",
+          "category": "noun.public_source",
+          "description": "Pin of a snapshot of the code or page at the version where the problem was seen.",
+          "required": false
+        }
+      ],
+      "params": {
+        "version": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": "The exact commit, release or page address and date where the problem was seen.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "reproduction",
+          "template": "template.reproduction"
+        }
+      ],
+      "steps": [
+        "Verify the pins. If the finding's sensitivity is security, do not reproduce it here: end blocked, ask for the security review pack's scope check and propose its check-scope verb.",
+        "Reproduce at the exact version where it was seen, then on the latest version, and record each run.",
+        "Shrink the steps to the smallest input or command that still shows it. For a visual design flaw, capture screenshots at the named widths and themes; for an annoyance, show each place it appears.",
+        "Make only requests that change nothing, and only to public pages and files the finding names.",
+        "Store logs and screenshots by SHA-256 with secrets removed. If it does not reproduce, say so: not reproduced is a result, not a failure."
+      ],
+      "acceptance": [
+        {
+          "id": "reproduction-matches-template",
+          "check": "The reproduction validates against template.reproduction's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "versions-recorded",
+          "check": "Every run names its exact version, or page address and date.",
+          "method": "deterministic"
+        },
+        {
+          "id": "result-from-runs",
+          "check": "result is reproduced only when a recorded run shows the problem.",
+          "method": "deterministic"
+        },
+        {
+          "id": "minimal",
+          "check": "The steps are the smallest that still show the problem.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "network": [
+        "read_only",
+        "Requests that change nothing, only to public pages and files named in the finding, and package downloads for a sandbox build. Never to a system named in a security finding."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "a sandbox without credentials",
+        "write candidate nouns in the requester's scope"
+      ],
+      "follows": [
+        "findings-to-fixes.record-finding"
+      ]
+    },
+    {
+      "slug": "triage",
+      "kind": "verb.situate",
+      "title": "Triage the finding",
+      "claimant": "agent",
+      "summary": "Fold duplicates together by fingerprint, then set the finding's kind, severity and sensitivity from the guides and choose its route. Rerun it when a reproduction, fix, verification or guard points at the finding, to link them and move its status forward.",
+      "outcome": "A new version of the finding with kind, severity, sensitivity, duplicates and route set, or marked as a duplicate of an older finding.",
+      "ready_outcome": "finding_triaged",
+      "pinned": [
+        "method",
+        "kind-definitions",
+        "severity-guide",
+        "disclosure-rules",
+        "record-checks"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the current version of the finding to triage."
+        },
+        {
+          "name": "other_findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of findings that may be duplicates, such as those with the same component.",
+          "required": false,
+          "many": true,
+          "max": 40
+        },
+        {
+          "name": "runs",
+          "category": "noun.eval_run",
+          "description": "Pins of reproductions and verifications that point at this finding.",
+          "required": false,
+          "many": true,
+          "max": 8
+        },
+        {
+          "name": "fixes",
+          "category": "noun.code_node",
+          "description": "Pins of fixes made for this finding.",
+          "required": false,
+          "many": true,
+          "max": 4
+        },
+        {
+          "name": "guards",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of regression guards for this finding.",
+          "required": false,
+          "many": true,
+          "max": 4
+        }
+      ],
+      "produces": [
+        {
+          "name": "finding",
+          "template": "template.finding"
+        }
+      ],
+      "update_slot": "finding",
+      "steps": [
+        "Verify the pins. Compare fingerprints: an equal fingerprint is a duplicate; the same kind and component with a different symptom is a judgment call, so say why you folded it in or kept it apart.",
+        "If an older finding has the same fingerprint, mark this one as its duplicate and propose a triage of the older finding with this one's evidence. Otherwise list the duplicates here, copy their evidence references in and propose closing each one as a duplicate.",
+        "Set kind and severity from the guides with a reason for each. Keep the noticer's values when they fit, and never lower a severity to make a finding look smaller.",
+        "Set sensitivity and the route: a security finding stays private and goes to the security review pack, a documentation finding can go to the docs improvement pack, and an annoyance whose fix is a matter of taste is marked for a person's choice.",
+        "On a rerun, link the pinned runs, fixes and guards and move the status forward: in_progress, fixed, fixed_not_deployed when the fix is merged but not deployed where the problem was seen, or verified. Never set closed or wont_fix here.",
+        "Write one new version of the pinned finding with its current version as the compare-and-set expectation; a version conflict means re-read and stop."
+      ],
+      "acceptance": [
+        {
+          "id": "finding-matches-template",
+          "check": "The new version validates against template.finding's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "The new version passes every deterministic check in record-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "duplicates-pinned",
+          "check": "Every finding listed as a duplicate, or named in duplicate_of, is among the pinned findings.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-closed-here",
+          "check": "The status is not closed or wont_fix.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cas-update",
+          "check": "The write used the pinned version as its expected version.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reasons-cite-guides",
+          "check": "The kind and severity reasons cite the guides.",
+          "method": "judgment"
+        }
+      ],
+      "ready_requires": [
+        "checks"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "findings-to-fixes.record-finding",
+        "findings-to-fixes.reproduce"
+      ],
+      "notes": [
+        "This verb updates the finding through compare-and-set. Each run writes one new version, and every earlier version stays readable, so failures stay on the record."
+      ]
+    },
+    {
+      "slug": "propose-fix",
+      "kind": "verb.generate_seed",
+      "title": "Propose a fix",
+      "claimant": "agent",
+      "summary": "From the finding and its reproduction, propose the smallest fix that removes the cause, with the guard that would show it works. For an annoyance or another matter of taste, offer two or three options for a person to choose between.",
+      "outcome": "A fix proposal with one to three options, the cause it addresses and each option's guard, plus a palette brief when a person's taste call is needed.",
+      "ready_outcome": "fix_proposed",
+      "pinned": [
+        "method",
+        "kind-definitions",
+        "taste-palettes:method",
+        "decomposition-patterns:pattern.human-checkpoint"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the triaged finding."
+        },
+        {
+          "name": "reproduction",
+          "category": "noun.eval_run",
+          "description": "Pin of its reproduction.",
+          "required": false
+        },
+        {
+          "name": "snapshot",
+          "category": "noun.public_source",
+          "description": "Pin of a snapshot of the code or page.",
+          "required": false
+        },
+        {
+          "name": "earlier_findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of earlier findings for the same part, so the proposal does not repeat a fix that failed.",
+          "required": false,
+          "many": true,
+          "max": 20
+        },
+        {
+          "name": "survey",
+          "category": "noun.public_source",
+          "description": "Pin of a survey of what already exists for this fix, from the prior art and alternatives pack's survey-existing verb.",
+          "required": false
+        },
+        {
+          "name": "alternatives",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the alternatives that pack's research-alternatives verb laid out for this fix, including reuse as is, adapt and do nothing.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "fix_proposal",
+          "template": "template.fix-proposal"
+        },
+        {
+          "name": "palette_brief",
+          "template": "taste-palettes:template.brief"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Name the cause, not just the symptom, and read the pinned earlier findings so the proposal does not repeat a fix that already failed.",
+        "Prefer the smallest change that removes the cause where it lives. When the same cause lives in several copies, say so and include the shared fix as an option.",
+        "Mark each option repair or build. A repair restores something to its own tested contract. For a build, such as a new shared tool or check, base the option on the pinned survey and alternatives and prefer reusing or adapting what exists; without them, propose the prior art and alternatives pack's survey-existing and research-alternatives verbs first.",
+        "For each option, say what changes, what could break and which guard would fail without it and pass with it.",
+        "For an annoyance or any other matter of taste, offer two or three options with plain differences and no recommendation, and write a palette brief from the taste palettes template so a person chooses; never choose on their behalf.",
+        "When the fix is too large for one verb, propose a breakdown through the decomposition patterns pack instead of one large fix.",
+        "If the fix needs an authority nobody has given, such as a new spending allowance or a changed limit, end blocked with that one question."
+      ],
+      "acceptance": [
+        {
+          "id": "proposal-matches-template",
+          "check": "The proposal validates against template.fix-proposal's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "options-for-taste",
+          "check": "A taste call has two or three options and no recommended option.",
+          "method": "deterministic"
+        },
+        {
+          "id": "guard-per-option",
+          "check": "Every option names the guard that would fail without it.",
+          "method": "deterministic"
+        },
+        {
+          "id": "survey-for-build",
+          "check": "Every option marked build cites the pinned survey, or survey-existing is among the proposed verbs.",
+          "method": "deterministic"
+        },
+        {
+          "id": "brief-for-taste",
+          "check": "A palette brief is produced exactly when the proposal is a taste call, and it validates against the taste palettes brief template.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cause-not-symptom",
+          "check": "The options address the cause the reproduction shows.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "findings-to-fixes.triage",
+        "prior-art-and-alternatives.survey-existing",
+        "prior-art-and-alternatives.research-alternatives"
+      ]
+    },
+    {
+      "slug": "fix",
+      "kind": "verb.solve_draft",
+      "title": "Make the fix",
+      "claimant": "agent",
+      "summary": "Make the chosen option in a local copy: first a test or check that fails for the finding's reason, then the smallest change that makes it pass, with the existing checks still passing, stored by digest.",
+      "outcome": "A fix record with the patch digest, the changed files, the test that failed before and passed after and the suite result; landing it is the owner's separate act.",
+      "ready_outcome": "fix_ready",
+      "pinned": [
+        "method",
+        "decomposition-patterns:pattern.reproduce-then-repair"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the finding."
+        },
+        {
+          "name": "fix_proposal",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the fix proposal."
+        },
+        {
+          "name": "reproduction",
+          "category": "noun.eval_run",
+          "description": "Pin of the reproduction.",
+          "required": false
+        },
+        {
+          "name": "choice",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the person's recorded choice when the proposal was a taste call.",
+          "required": false
+        },
+        {
+          "name": "snapshot",
+          "category": "noun.public_source",
+          "description": "Pin of a snapshot of the code or page.",
+          "required": false
+        }
+      ],
+      "params": {
+        "option": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[A-C]$"
+          },
+          "description": "The option to make, A to C; for a taste call, the option the person chose.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "fix",
+          "template": "template.fix"
+        }
+      ],
+      "steps": [
+        "Verify the pins. For a taste call, make only the option the person chose; a choice of none ends no_change.",
+        "Write the test or check first and run it on the unfixed copy: it must fail for the finding's reason. If it cannot be made to fail, end unknown and say what is missing.",
+        "Make the smallest change that makes it pass, then run the existing checks. Never delete, skip or loosen another check to get a pass.",
+        "For a visual design flaw, capture screenshots after the change at the same widths and themes as the finding.",
+        "Store the patch by digest in the requester's scope. Do not push, merge or open a pull request; landing the fix is the owner's separate act."
+      ],
+      "acceptance": [
+        {
+          "id": "fix-matches-template",
+          "check": "The fix validates against template.fix's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fails-then-passes",
+          "check": "The added test failed on the unfixed copy and passed after the change, in recorded runs.",
+          "method": "deterministic"
+        },
+        {
+          "id": "suite-passes",
+          "check": "suite_passed is true from an actual run.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-weakened-checks",
+          "check": "No existing test or check was deleted, skipped or loosened.",
+          "method": "deterministic"
+        },
+        {
+          "id": "smallest",
+          "check": "The change is the smallest that removes the cause.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 2400
+      },
+      "network": [
+        "sandbox_packages",
+        "Package installs inside the sandbox to run the existing checks. No requests to any deployed system."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "a sandbox without credentials",
+        "write candidate nouns in the requester's scope"
+      ],
+      "follows": [
+        "findings-to-fixes.propose-fix",
+        "taste-palettes.record-choice"
+      ]
+    },
+    {
+      "slug": "verify-fix",
+      "kind": "verb.verify_gate",
+      "title": "Verify the fix independently",
+      "claimant": "agent",
+      "summary": "A different worker than the one who made the fix reruns the reproduction on the unfixed and the fixed versions, where the problem was seen when possible, and checks that the problem is gone without new ones.",
+      "outcome": "A verification: fix_verified, fix_failed or inconclusive, with both runs and where they ran.",
+      "ready_outcome": "verification_recorded",
+      "pinned": [
+        "method",
+        "evidence-checklist"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the finding."
+        },
+        {
+          "name": "fix",
+          "category": "noun.code_node",
+          "description": "Pin of the fix."
+        },
+        {
+          "name": "reproduction",
+          "category": "noun.eval_run",
+          "description": "Pin of the reproduction.",
+          "required": false
+        }
+      ],
+      "params": {
+        "where_checked": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "local_copy",
+              "merged",
+              "deployed"
+            ]
+          },
+          "description": "Where this verification runs. Use where the problem was seen when you can.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "verification",
+          "template": "template.verification"
+        }
+      ],
+      "steps": [
+        "Confirm you wrote neither the fix nor its proposal; otherwise end blocked.",
+        "Rerun the reproduction on the unfixed and the fixed versions: the first must still show the problem and the second must not.",
+        "Say where you checked. A fix checked only on a local copy or a merged branch is not verified for a problem seen on a deployed surface.",
+        "For a visual design flaw, compare screenshots at the finding's widths and themes; for an annoyance, check every place the finding names.",
+        "Record any new problem the fix caused as a proposed record-finding verb; never fix it inside this verb."
+      ],
+      "acceptance": [
+        {
+          "id": "verification-matches-template",
+          "check": "The verification validates against template.verification's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "distinct-verifier",
+          "check": "The verifying key differs from the keys that wrote the fix and its proposal.",
+          "method": "deterministic"
+        },
+        {
+          "id": "both-versions-run",
+          "check": "Recorded runs exist for the unfixed and the fixed versions.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdict-follows-runs",
+          "check": "fix_verified only when the unfixed run shows the problem and the fixed run does not.",
+          "method": "deterministic"
+        }
+      ],
+      "ready_requires": [
+        "checks"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "network": [
+        "read_only",
+        "Requests that change nothing, only to public pages and files named in the finding, and package downloads for a sandbox build. Never to a system named in a security finding."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "a sandbox without credentials",
+        "write candidate nouns in the requester's scope"
+      ],
+      "review": "distinct_reviewer",
+      "follows": [
+        "findings-to-fixes.fix"
+      ]
+    },
+    {
+      "slug": "add-regression-guard",
+      "kind": "verb.verify_gate",
+      "title": "Add a regression guard",
+      "claimant": "agent",
+      "summary": "Write or adopt a test or check that would catch the problem coming back, and prove it with the checks of checks trust rule: it passes on the fixed version and fails on the unfixed one, twice each.",
+      "outcome": "A regression guard record with its runs and a trusted, revise, reject or needs_judges verdict.",
+      "ready_outcome": "guard_recorded",
+      "pinned": [
+        "method",
+        "checks-of-checks:method",
+        "checks-of-checks:rule-types"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the finding."
+        },
+        {
+          "name": "fix",
+          "category": "noun.code_node",
+          "description": "Pin of the fix."
+        },
+        {
+          "name": "verification",
+          "category": "noun.eval_run",
+          "description": "Pin of the verification.",
+          "required": false
+        }
+      ],
+      "params": {
+        "guard_kind": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "automated_test",
+              "deterministic_check",
+              "page_check",
+              "process_rule"
+            ]
+          },
+          "description": "The kind of guard: an automated test, a deterministic check, a page check or a process rule.",
+          "required": true
+        }
+      },
+      "produces": [
+        {
+          "name": "guard",
+          "template": "template.regression-guard"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Prefer adopting a test the fix already added; otherwise write the smallest test or check that encodes the reproduction.",
+        "Run the guard on the fixed version and on the unfixed version, twice each. It is trusted only when it passes on the fixed version and fails on the unfixed one for the finding's reason, both times.",
+        "A guard that passes on the unfixed version is too weak: record revise and say what it misses. A guard that fails on the fixed version is wrong: record reject.",
+        "A deterministic check uses only the checks of checks rule types; a page check names its widths and themes; a process rule is a judgment check, needs_judges until two judges or a person agree.",
+        "Propose the checks of checks review-checks verb, so a different worker confirms the verdict."
+      ],
+      "acceptance": [
+        {
+          "id": "guard-matches-template",
+          "check": "The guard validates against template.regression-guard's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "verdict-follows-rule",
+          "check": "trusted only when both fixed runs passed and both unfixed runs failed; otherwise the verdict the trust rule gives.",
+          "method": "deterministic"
+        },
+        {
+          "id": "repeat-identical",
+          "check": "The second pass gave the same results as the first.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fails-for-the-reason",
+          "check": "The unfixed runs failed for the finding's reason, not an unrelated error.",
+          "method": "judgment"
+        }
+      ],
+      "ready_requires": [
+        "checks"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 2400
+      },
+      "network": [
+        "sandbox_packages",
+        "Package installs inside the sandbox to run the existing checks. No requests to any deployed system."
+      ],
+      "capabilities": [
+        "read permitted noun versions",
+        "a sandbox without credentials",
+        "write candidate nouns in the requester's scope"
+      ],
+      "follows": [
+        "findings-to-fixes.verify-fix"
+      ]
+    },
+    {
+      "slug": "close",
+      "kind": "verb.verify_gate",
+      "title": "Close the finding",
+      "claimant": "agent",
+      "summary": "Apply the close gate and, when it passes, write the finding's closing version: resolved with an independent verification and a guard shown to fail without the fix or a written waiver, a duplicate of a named finding, or won't fix by a person's decision.",
+      "outcome": "A new version of the finding with status closed, duplicate or wont_fix and the gate results, or no_change listing the gate checks that failed.",
+      "ready_outcome": "finding_closed",
+      "model_use": "none",
+      "pinned": [
+        "method",
+        "record-checks"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the current version of the finding."
+        },
+        {
+          "name": "verification",
+          "category": "noun.eval_run",
+          "description": "Pin of the independent verification, for resolved.",
+          "required": false
+        },
+        {
+          "name": "guard",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the regression guard, for resolved.",
+          "required": false
+        },
+        {
+          "name": "canonical",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the older finding this one duplicates, for duplicate.",
+          "required": false
+        },
+        {
+          "name": "decision",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a person's recorded decision not to fix, such as a taste palette choice of none, for wont_fix.",
+          "required": false
+        }
+      ],
+      "params": {
+        "reason": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "resolved",
+              "duplicate",
+              "wont_fix"
+            ]
+          },
+          "description": "Why the finding closes.",
+          "required": true
+        },
+        "waiver": {
+          "schema": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 600
+          },
+          "default": null,
+          "required": false,
+          "description": "For resolved without a trusted guard: the written reason no guard can run. Leave null otherwise."
+        }
+      },
+      "produces": [
+        {
+          "name": "finding",
+          "template": "template.finding"
+        }
+      ],
+      "update_slot": "finding",
+      "steps": [
+        "Verify the pins, then apply the gate for the reason given. Every gate check must pass; a failed check ends no_change with the checks that failed and the verbs that would satisfy them.",
+        "Resolved: a verification by a different worker than the fixer says fix_verified where the problem was seen, and a guard is trusted or a waiver gives its reason. A fix merged but not deployed where the problem was seen stays fixed_not_deployed.",
+        "Duplicate: the pinned canonical finding lists this finding among its duplicates.",
+        "Won't fix: a person's recorded decision is pinned; an agent alone never closes a finding as won't fix.",
+        "Write the closing version with its current version as the compare-and-set expectation, with links to the fix, the verification and the guard. Never remove earlier evidence or history."
+      ],
+      "acceptance": [
+        {
+          "id": "finding-matches-template",
+          "check": "The closing version validates against template.finding's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "The closing version passes every deterministic check in record-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "gate-recorded",
+          "check": "Every gate check for the given reason is recorded with its result in output.checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-decided",
+          "check": "For wont_fix, the pinned decision was written by a person's key.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cas-update",
+          "check": "The write used the pinned version as its expected version.",
+          "method": "deterministic"
+        }
+      ],
+      "ready_requires": [
+        "checks"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 300
+      },
+      "follows": [
+        "findings-to-fixes.add-regression-guard",
+        "findings-to-fixes.triage"
+      ],
+      "notes": [
+        "Deterministic: the gate reads pinned nouns only and calls no model. Like triage, it updates the finding through compare-and-set and keeps every earlier version."
+      ]
+    },
+    {
+      "slug": "publish-finding",
+      "kind": "verb.solve_draft",
+      "title": "Prepare a finding for publication",
+      "claimant": "agent",
+      "summary": "When the disclosure rules allow it, write a short public summary of a finding: what went wrong, what changed and how a guard keeps it from coming back, with public links only. The owner decides whether and where it appears; this verb never publishes anything.",
+      "outcome": "A public summary that passed every disclosure check, waiting for the owner, or no_change naming the rule that does not allow it yet.",
+      "ready_outcome": "summary_ready",
+      "pinned": [
+        "disclosure-rules",
+        "record-checks"
+      ],
+      "slots": [
+        {
+          "name": "finding",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the finding."
+        },
+        {
+          "name": "fix",
+          "category": "noun.code_node",
+          "description": "Pin of the fix.",
+          "required": false
+        },
+        {
+          "name": "verification",
+          "category": "noun.eval_run",
+          "description": "Pin of the verification.",
+          "required": false
+        },
+        {
+          "name": "guard",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the regression guard.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "public_summary",
+          "template": "template.public-summary"
+        }
+      ],
+      "steps": [
+        "Verify the pins and apply the disclosure gate first. An unfixed security finding, a finding marked public false, or one holding credentials or personal data ends no_change, and nothing about it is drafted.",
+        "Write for a reader outside the team: what was seen, its kind and severity, what changed, how a guard keeps it from coming back, and links only to public pull requests, commits and pages.",
+        "Say plainly what went wrong, including mistakes in process; failures stay on the record.",
+        "Remove private names, private paths, keys, personal data and anything else the rules list, and record each redaction.",
+        "Mark the summary as the owner's decision with approved false. Releasing it is the owner's separate act, on a surface of their choice."
+      ],
+      "acceptance": [
+        {
+          "id": "summary-matches-template",
+          "check": "The summary validates against template.public-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "disclosure-gate-passes",
+          "check": "Every disclosure gate check passed for this finding.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-secret-values",
+          "check": "The record checks' secret pattern finds nothing in the summary.",
+          "method": "deterministic"
+        },
+        {
+          "id": "owner-decides",
+          "check": "release_decision is owner and approved is false.",
+          "method": "deterministic"
+        },
+        {
+          "id": "faithful",
+          "check": "Every statement matches the finding and its linked nouns.",
+          "method": "judgment"
+        }
+      ],
+      "ready_requires": [
+        "checks"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "findings-to-fixes.close",
+        "findings-to-fixes.triage"
+      ]
+    },
+    {
+      "slug": "review-patterns",
+      "kind": "verb.distill_reflex",
+      "title": "Review patterns across findings",
+      "claimant": "agent",
+      "summary": "Periodically look across closed findings, and open ones with the same cause, for causes that keep coming back, and propose upstream fixes, such as one shared repair for a bug copied into many repositories.",
+      "outcome": "A pattern review listing repeated causes with their findings, counts, places and the upstream fix each needs, or no_change when no cause repeats.",
+      "ready_outcome": "patterns_reviewed",
+      "pinned": [
+        "method",
+        "kind-definitions"
+      ],
+      "slots": [
+        {
+          "name": "findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the findings to review: closed ones, and open ones that may share a cause.",
+          "many": true,
+          "max": 60
+        },
+        {
+          "name": "earlier_reviews",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of earlier pattern reviews, to see whether an upstream fix stopped its cause.",
+          "required": false,
+          "many": true,
+          "max": 10
+        }
+      ],
+      "params": {
+        "window_from": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+            "maxLength": 40
+          },
+          "description": "First date of the review window.",
+          "required": true
+        },
+        "window_to": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+            "maxLength": 40
+          },
+          "description": "Last date of the review window.",
+          "required": true
+        },
+        "min_findings": {
+          "schema": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 10
+          },
+          "default": 2,
+          "description": "Fewest findings that make a pattern, unless one finding is seen in several places."
+        }
+      },
+      "produces": [
+        {
+          "name": "pattern_review",
+          "template": "template.pattern-review"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Group findings by cause, not by wording: the same component in the fingerprint, the same guard, the same copied file or the same missed step.",
+        "A pattern needs at least min_findings findings, or one finding seen in several places, such as a script copied into every repository.",
+        "For each pattern, say where one upstream fix would cover every instance, such as a shared kit, template, checklist or generator, and propose a record-finding verb for the shared cause, the prior art and alternatives pack's survey-existing verb for what already exists, and a propose-fix verb. Do not make the fix here.",
+        "Read the earlier reviews: a cause that came back after its upstream fix is itself a new finding, so propose recording it."
+      ],
+      "acceptance": [
+        {
+          "id": "review-matches-template",
+          "check": "The review validates against template.pattern-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-from-findings",
+          "check": "Every count equals the number of findings listed in its pattern.",
+          "method": "deterministic"
+        },
+        {
+          "id": "findings-pinned",
+          "check": "Every finding named in a pattern is among the pinned findings.",
+          "method": "deterministic"
+        },
+        {
+          "id": "upstream-not-instance",
+          "check": "Each upstream fix addresses the shared cause, not one instance.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "findings-to-fixes.close"
+      ],
+      "notes": [
+        "Periodic: run it weekly or after every ten closed findings, whichever comes first. This pack activates no schedule; a recurring run needs Tessera's flag-gated schedule support and an authorized requester."
+      ]
+    }
+  ]
+}
