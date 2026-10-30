@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds thirty-five proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds forty proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -55,10 +55,15 @@ activated**, and no worker has run them yet.
 | [Status and handoff](packs/status-and-handoff/README.md) | Answering what is done, what is next and where to resume, with evidence |
 | [Release and verify](packs/release-and-verify/README.md) | Releasing a change and proving what is live, from the exact tested head to a receipt with a rollback target |
 | [Rename and relink](packs/rename-and-relink/README.md) | Renaming products, repositories and pages and rewriting every reference and link, with no redirect relied on |
+| [Voice narration](packs/voice-narration/README.md) | Narration with a text-to-speech voice: a pronunciation lexicon, seeded and measured takes chosen by a fixed rule, lines placed on their beats, a person's listening check and an AI-voice label |
+| [Narrated explainer video](packs/narrated-explainer-video/README.md) | Making a narrated explainer video with code, every step a verb with a receipt: a frame clock, an HTML stage, captions timed to the voice, two variants and a hashed release manifest |
+| [Continuous tuning](packs/continuous-tuning/README.md) | Tuning a small open model round after round, kept only when a rule fixed before scoring says so |
+| [Public company research](packs/public-company-research/README.md) | Researching public companies from official sources, with every number cited and never as financial advice |
+| [Deep research report](packs/deep-research-report/README.md) | Answering a research question with a cited report that states its limits, not for choosing what to build |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 621
-nouns and 209 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 764
+nouns and 250 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

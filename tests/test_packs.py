@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 11)
+        self.assertEqual(summary["worked_examples"], 16)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -843,6 +843,152 @@ class WorkedExamples(unittest.TestCase):
             expected[first] = {"tampered": True}
             with self.subTest(pack=pack), self.assertRaises(bp.PackError):
                 vp.check_fixtures([item])
+
+
+class TopicPackExamples(unittest.TestCase):
+    """The topic packs of October 30: their guardrail checks, and the worked-example arithmetic of the three packs
+    that ship no code. The video and tuning packs recompute their own examples in their code's CI jobs."""
+
+    FIXTURES = (("voice-narration", "narration-checks"), ("narrated-explainer-video", "release-checks"),
+                ("continuous-tuning", "decision-checks"), ("public-company-research", "brief-checks"),
+                ("deep-research-report", "report-checks"))
+
+    @staticmethod
+    def instance(pack: str, slug: str):
+        return record(pack, slug)["value"]["instance"]
+
+    def test_guardrail_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(value["finding_schema"], fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_voice_pace_take_choice_and_placements_recompute(self):
+        import re
+
+        pack = "voice-narration"
+        script = {line["line"]: line for line in self.instance(pack, "example.narration-script")["lines"]}
+        target = self.instance(pack, "example.narration-script")["target_wpm"]
+        measured = {row["line"]: row["takes"] for row in self.instance(pack, "example.line-measurements")["lines"]}
+        choice = self.instance(pack, "example.take-choice")
+
+        def words(text: str) -> int:
+            return sum(1 for token in text.split() if any(ch.isalnum() for ch in token))
+
+        chosen = {}
+        for line, takes in measured.items():
+            for take in takes:
+                if take["speech_s"] is not None:
+                    span = take["speech_s"][1] - take["speech_s"][0]
+                    self.assertEqual(take["wpm"], round(words(script[line]["text"]) / (span / 60), 1), (line, take["take"]))
+            clean = [t for t in takes if t["valid"] and t["end_of_speech"] and t["full_scale_samples"] == 0]
+            best = min(clean, key=lambda t: (t["cer"], abs(t["wpm"] - target), t["take"]))
+            chosen[line] = best
+        self.assertEqual({c["line"]: c["take"] for c in choice["chosen"]}, {k: v["take"] for k, v in chosen.items()})
+        listed = {(c["line"], c["take"]) for c in choice["chosen"]} | {(c["line"], c["take"]) for c in choice["not_chosen"]}
+        self.assertEqual(listed, {(line, t["take"]) for line, takes in measured.items() for t in takes})
+        lufs = [t["integrated_lufs"] for t in chosen.values()]
+        self.assertEqual(choice["loudness_spread_lu"], round(max(lufs) - min(lufs), 1))
+        track = self.instance(pack, "example.narration-track")
+        for placed in track["placements"]:
+            take = chosen[placed["line"]]
+            start = placed["start_s"]
+            self.assertEqual(placed["take"], take["take"])
+            self.assertEqual(placed["text"], script[placed["line"]]["text"])
+            self.assertEqual(placed["end_s"], round(start + take["duration_s"], 3))
+            self.assertEqual(placed["speech_s"], [round(start + x, 3) for x in take["speech_s"]])
+            self.assertEqual(placed["pauses_s"], [[round(start + a, 3), round(start + b, 3)] for a, b in take["pauses_s"]])
+        self.assertIn("AI-generated voice", track["disclosure"])
+        unmarked = re.compile(r"\[([^\]]+)\]\(/[^)]*/\)")
+        for line in self.instance(pack, "example.synthesis-log")["lines"]:
+            self.assertEqual(unmarked.sub(r"\1", line["text_sent"]), script[line["line"]]["text"])
+        for entry in self.instance(pack, "example.lexicon")["entries"]:
+            self.assertFalse(entry["confirmed_by_ear"], "only a person's listening check confirms an entry")
+            self.assertTrue(any(entry["grapheme"] in line["text"] for line in script.values()), entry["grapheme"])
+
+    def test_company_metrics_comparisons_dates_and_citations_recompute(self):
+        import re
+        from datetime import date, timedelta
+
+        pack = "public-company-research"
+        metrics = self.instance(pack, "example.metric-table")
+        values = {f["fact_id"]: f["value"] for f in metrics["facts"]}
+        for item in metrics["derived"]:
+            a, b = (values[name] for name in item["inputs"])
+            expected = a - b if " minus " in item["formula"] else round(a / b * 100, 1)
+            self.assertEqual(item["value"], expected, item["fact_id"])
+            values[item["fact_id"]] = item["value"]
+        for fact in metrics["facts"]:
+            self.assertTrue(fact["cik"].startswith("X") and fact["accession"].startswith("X"), "synthetic identifiers")
+        comparisons = self.instance(pack, "example.comparison")["comparisons"]
+        for row in comparisons:
+            self.assertEqual((row["from_value"], row["to_value"]), (values[row["from_fact"]], values[row["to_fact"]]))
+            self.assertEqual(row["change"], row["to_value"] - row["from_value"])
+            self.assertEqual(row["percent_change"], round(row["change"] / row["from_value"] * 100, 1))
+        events = {e["id"]: e for e in self.instance(pack, "example.catalyst-calendar")["events"]}
+        self.assertEqual(events["e-q3-10q"]["date"], (date(2026, 9, 30) + timedelta(days=40)).isoformat())
+        self.assertEqual(events["e-fy-10k"]["date"], (date(2026, 12, 31) + timedelta(days=75)).isoformat())
+        for event in events.values():
+            self.assertEqual(event["status"] == "due_by_rule", "rule" in event, event["id"])
+        risks = {r["id"] for r in self.instance(pack, "example.risk-factors")["factors"]}
+        brief = self.instance(pack, "example.cited-brief")
+        known = set(values) | {r["id"] for r in comparisons} | risks | set(events)
+        for point in brief["points"]:
+            self.assertLessEqual(set(point["cites"]), known, point["text"])
+        for figure in brief["figures"]:
+            self.assertEqual(figure["value"], values[figure["fact_id"]], figure["label"])
+        amounts = sum(len(re.findall(r"\d+\.\d+%?", point["text"])) for point in brief["points"])
+        self.assertEqual(self.instance(pack, "example.brief-review")["numbers_checked"], len(brief["figures"]) + amounts)
+
+    def test_research_quotes_flow_and_citations_recheck(self):
+        pack = "deep-research-report"
+        sources = {s["id"]: s for s in record(pack, "example.sources")["value"]["sources"]}
+        log = {s["id"]: s for s in self.instance(pack, "example.source-log")["sources"]}
+        for source_id, source in sources.items():
+            self.assertEqual(source["text_sha256"], hashlib.sha256(source["text"].encode()).hexdigest())
+            self.assertEqual(log[source_id]["text_sha256"], source["text_sha256"])
+        claims = {c["id"]: c for c in self.instance(pack, "example.claim-extract")["claims"]}
+        for claim in claims.values():
+            text, quote = sources[claim["source_id"]]["text"], claim["quote"]
+            self.assertEqual(text.count(quote["exact"]), 1, claim["id"])
+            self.assertEqual(text.count(quote["prefix"] + quote["exact"] + quote["suffix"]), 1, claim["id"])
+        screening = self.instance(pack, "example.screening-log")
+        flow = screening["flow"]
+        self.assertEqual(flow["identified"], flow["duplicates"] + flow["screened"])
+        self.assertEqual(flow["screened"], flow["excluded_title"] + flow["assessed"])
+        self.assertEqual(flow["assessed"], flow["excluded_full_text"] + flow["included"])
+        included = {d["source_id"] for d in screening["decisions"] if d["decision"] == "include"}
+        self.assertEqual(len(included), flow["included"])
+        self.assertEqual({c["source_id"] for c in claims.values()}, included)
+        for d in screening["decisions"]:
+            self.assertEqual(d["decision"] == "exclude", "reason" in d, d["source_id"])
+            if d.get("reason") == "retracted":
+                self.assertTrue(log[d["source_id"]]["retracted"])
+        synthesis = self.instance(pack, "example.synthesis")
+        report = self.instance(pack, "example.report")
+        for sentence in synthesis["sentences"] + report["findings"]:
+            if sentence["label"] in ("source", "synthesis"):
+                self.assertTrue(sentence["claims"] and set(sentence["claims"]) <= set(claims), sentence["text"])
+        contradicting = {c for c, v in claims.items() if v["direction"] == "contradicts"}
+        mentioned = {c for s in synthesis["sentences"] for c in s["claims"]} | {
+            c for row in synthesis["contradictions"] for c in row["claims"]}
+        self.assertLessEqual(contradicting, mentioned)
+        self.assertTrue(any(q["purpose"] == "counter" for q in self.instance(pack, "example.search-plan")["queries"]))
+        self.assertEqual(report["method"]["flow"], {"identified": flow["identified"], "included": flow["included"]})
+        self.assertEqual(self.instance(pack, "example.adversarial-review")["quotes_checked"], len(claims))
 
 
 if __name__ == "__main__":

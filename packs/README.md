@@ -51,8 +51,13 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Status and handoff](status-and-handoff/README.md) | Answering what is done, what is next and where to resume, with evidence | 15 | 6 |
 | [Release and verify](release-and-verify/README.md) | Releasing a change and proving what is live, from the exact tested head to a receipt with a rollback target | 16 | 7 |
 | [Rename and relink](rename-and-relink/README.md) | Renaming products, repositories and pages and rewriting every reference and link, with no redirect relied on | 17 | 7 |
+| [Voice narration](voice-narration/README.md) | Narration with a text-to-speech voice: a pronunciation lexicon, seeded and measured takes chosen by a fixed rule, lines placed on their beats, a person's listening check and an AI-voice label | 28 | 6 |
+| [Narrated explainer video](narrated-explainer-video/README.md) | Making a narrated explainer video with code, every step a verb with a receipt: a frame clock, an HTML stage, captions timed to the voice, two variants and a hashed release manifest | 26 | 9 |
+| [Continuous tuning](continuous-tuning/README.md) | Tuning a small open model round after round, kept only when a rule fixed before scoring says so | 33 | 9 |
+| [Public company research](public-company-research/README.md) | Researching public companies from official sources, with every number cited and never as financial advice | 27 | 8 |
+| [Deep research report](deep-research-report/README.md) | Answering a research question with a cited report that states its limits, not for choosing what to build | 29 | 9 |
 
-Together: 621 nouns and 209 verb templates across thirty-five packs. The
+Together: 764 nouns and 250 verb templates across forty packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -121,7 +126,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the eleven worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the sixteen worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether

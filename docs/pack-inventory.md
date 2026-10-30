@@ -29,11 +29,17 @@ authorized requester decides whether to enqueue them.
 | Every-frame and loudness QA | Video and motion: check-social-formats, check-video; Visual and 3D rendering: check-render; Video showcase: showcase checks in review-video | Exists, extended | benchmark_suite (thresholds, quality checks), eval_run (QA report) | verify_gate | fixes for failed checks |
 | Independent review | Video showcase: review-video | Exists | eval_run (review notes) | verify_gate (person or different agent) | |
 | Release, a person's verb | Video showcase: record-publication | Added now | eval_run (publication record) | verify_gate (human) | |
+| One frame clock for picture, voice and captions | [Narrated explainer video](../packs/narrated-explainer-video/README.md): plan-cut | Added now | scene_recipe (cut plan), reflex_procedure (frame clock rules), code_node (explainer checks) | solve_draft | build-stage-scenes |
+| Narration in a synthetic voice, labeled as AI | [Voice narration](../packs/voice-narration/README.md): prepare-lexicon, synthesize-lines, measure-lines, select-takes, place-on-beats, listen-and-approve (a person's verb) | Added now | skill_pack (lexicon), model_spec (voice model card), eval_run (synthesis log, measurements, take choice, listening record), scene_recipe (narration track) | generate_seed, compile_dag, verify_gate | listen-and-approve |
+| Scenes as code on an HTML stage, rendered losslessly | Narrated explainer video: build-stage-scenes, render-slices | Added now | scene_recipe (stage), eval_run (slice recordings) | solve_draft, compile_dag | render-slices |
+| Captions timed to the voice, as WebVTT, SRT and open captions | Narrated explainer video: time-captions, check-captions (a different worker) | Added now | scene_recipe (caption cues, caption track), eval_run (caption check) | compile_dag, verify_gate | compose-cut |
+| Two variants, a frame sheet, every receipt and a hashed release manifest | Narrated explainer video: compose-cut, make-frame-sheet, compile-receipts, assemble-release-manifest | Added now | scene_recipe (sequences), eval_run (compose record, frame sheet, receipts ledger, release manifest) | compile_dag, verify_gate | review-video, record-publication |
 | Tool and benchmark freshness for video and motion tools | [Tool discovery](../packs/tool-discovery/README.md), [Benchmark scores](../packs/benchmark-scores/README.md) | Exists, added now | code_node (candidates), eval_run (scores), benchmark_suite (trials) | probe_source, fetch_feed, recheck_fragility, benchmark_harness | run-trial, compare-on-profile |
 
 **Still needed for video:** caption translation into other languages; an audio
-description track for blind viewers; narration audio checks for noise floor and
-clipping; delivery presets per platform; and sourcing of licensed music and stock clips.
+description track for blind viewers; delivery presets per platform; and sourcing of
+licensed music and stock clips. Narration noise-floor and clipping checks are now in the
+voice narration pack.
 
 ## 2. Building agent kits for nonprofits
 
@@ -87,6 +93,27 @@ proving what is live, and renaming things without leaving old names or broken li
 with a capture matrix of widths and themes; mining past session prompts into categories and
 reusable verbs under strict privacy rules; and finishing the most valuable work first when a
 usage allowance is about to run out.
+
+## 5. Research, company research and model tuning
+
+Added October 30, 2026, for topics people asked for by name: research that ends in a cited report,
+research on public companies that is never financial advice, and tuning a small model that keeps a
+change only when a rule fixed in advance says so.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| A question framed, a search planned for and against the answer | [Deep research report](../packs/deep-research-report/README.md): frame-question, plan-search | Added now | seed_hypothesis (question, search plan), reflex_procedure (access, screening and strength rules) | problemize, expand_seed | collect-sources |
+| Sources collected, screened and quoted exactly | Deep research report: collect-sources, screen-sources, extract-claims | Added now | public_source (source log), eval_run (screening log), seed_hypothesis (claims) | probe_source, verify_gate, ingest | synthesize |
+| A labeled synthesis, an adversarial review and a report with limits | Deep research report: synthesize, adversarial-review (a different worker), write-report, decide-delivery (a person's verb) | Added now | seed_hypothesis (synthesis, report), eval_run (review), benchmark_suite (report checks) | solve_draft, verify_gate | counter searches the review missed |
+| Filings fetched under the SEC's fair-access rules | [Public company research](../packs/public-company-research/README.md): fetch-filings | Added now | public_source (filing index), reflex_procedure (EDGAR access rules) | probe_source | extract-metrics |
+| Metrics, comparisons, risk factors and a dated calendar | Public company research: extract-metrics, compare-periods-and-peers, summarize-risk-factors, build-catalyst-calendar | Added now | seed_hypothesis (metric table, comparison, risk factors, calendar) | ingest, situate, solve_draft | fetch-filings for a peer |
+| A cited brief, never advice, reviewed and decided by people | Public company research: write-cited-brief, review-brief (a different worker), decide-delivery (a person's verb) | Added now | seed_hypothesis (brief), eval_run (review), benchmark_suite (brief checks) | solve_draft, verify_gate | |
+| Owned examples, curated and frozen before any scoring | [Continuous tuning](../packs/continuous-tuning/README.md): register-rule (a person's verb), generate-examples, curate-dataset, freeze-test-set | Added now | code_node (promotion rule), benchmark_suite (batches, frozen test receipts) | verify_gate, solve_draft, ingest | train-adapter |
+| An adapter trained, scored, reloaded and decided by the rule | Continuous tuning: train-adapter, evaluate, check-reload, decide-promotion (a different worker), promote-or-roll-back | Added now | model_spec (adapter card, champion pointer), eval_run (runs, reload check, decision, roll back) | solve_draft, benchmark_harness, verify_gate | the next round's generate-examples |
+
+**Still needed here:** a descriptive options-chain review (greeks, implied volatility and roll
+candidates, described and never ordered); checked analysis of a CSV file; and research intake
+from newsletters and feeds.
 
 ## Work that supports every goal
 

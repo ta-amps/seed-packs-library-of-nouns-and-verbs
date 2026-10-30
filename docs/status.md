@@ -2,7 +2,7 @@
 
 This repository is instructions, synthetic examples and a library of proposed seed
 packs, dated October 29, 2026. It does not deploy a service and contains no active
-pack. The [packs/](../packs/README.md) library holds thirty-five proposals that are validated
+pack. The [packs/](../packs/README.md) library holds forty proposals that are validated
 examples only: none is installed, imported, admitted or activated, and no worker has
 run their verbs. Read the target's live schemas before sending work.
 
@@ -20,14 +20,15 @@ run their verbs. Read the target's live schemas before sending work.
 | Automatic ongoing work | None; no scheduler, daemon or server inference is installed |
 | Capability research | Proposed source-to-decision seed workflow; no feed/inbox connector, automated comparison or adoption service is active |
 | Research seed authoring | Tessera owns a bounded task builder with synthetic requests for discovery, collector preparation, schedule proposals and one scan; this repository remains a guide |
-| Seed pack library | Thirty-five proposed packs, 621 nouns and 209 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
+| Seed pack library | Forty proposed packs, 764 nouns and 250 verb templates, rebuilt byte for byte and validated offline by `make check`; not installed, imported, admitted or activated |
 | Pack code | The video and motion pack ships its tested code in `packs/video-motion/code`. Its own CI job runs every test with real renders and the pinned Tessera; the root `make check` pins the code by digest, never runs it, and stays install-free |
 | Pack scope probe | On a throwaway local Store, a key on the importing team's surface read every pack noun, claimed and submitted every instantiated template and updated a success record by compare-and-set; keys on other surfaces or none saw nothing. HTTP grants were not exercised |
 | Pack inventory | [Plain-English map](pack-inventory.md) of packs for making a video, building nonprofit kits and keeping knowledge fresh, with what is still missing |
 | Tessera model validation | Every pack noun and verb passed Tessera's own `RecordWrite`, `TaskSpec`, category, relation, `NounRef` and execution-report checks at the commit in [VALIDATION.json](../packs/VALIDATION.json); shape evidence only |
-| Pack worked examples | Eleven deterministic examples (repository and security finding checks, finding record checks, direction record checks, status report checks, release receipt checks, old-name sweep checks, check validation, evaluation arithmetic, benchmark staleness, text contrast) are recomputed by `make check`; they are synthetic, except that the finding record checks also recheck eight real public findings |
+| Pack worked examples | Sixteen deterministic examples (repository and security finding checks, finding record checks, direction record checks, status report checks, release receipt checks, old-name sweep checks, narration release checks, explainer video release checks, promotion decision checks, company brief checks, research report checks, check validation, evaluation arithmetic, benchmark staleness, text contrast) are recomputed by `make check`; they are synthetic, except that the finding record checks also recheck eight real public findings |
 | Prior-art surveys | The prior-art pack's two worked examples are real surveys, checked against their template's shape only: this library at `54c58c9` with Tessera's docs at `7e7433c`, and a hackathon directory of about 740 repositories for a PII redaction tool, which lists seven candidates unranked and runs none. Each records the sources it did not search |
 | Pack code | The code composition pack keeps its tested code as nouns in `packs/code-composition/code/`. A path-filtered CI job runs that code's checks and the pinned Tessera integration; the root `make check` only hashes it. No worker has run it |
+| Pack code, standard library only | The narrated explainer video and continuous tuning packs ship small standard-library code in `packs/<pack>/code/` whose tests recompute each pack's worked example; path-filtered CI jobs run them on Python 3.10 and 3.12, and the root `make check` only hashes them. The tuning code's draws, bootstrap and decisions match values recorded from Tessera's own continuous tuning example. The voice narration, public company research and deep research report packs' worked-example arithmetic, quotes and citations are rechecked by `make check`'s tests. No worker has run any of it |
 | Pack execution | None. No verb from the library has been claimed, run, measured or reviewed |
 | Recurring refresh | Daily schedule proposal nouns for tool discovery, benchmark scores and freshness checks only; they need Tessera's flag-gated schedule support, which is being designed, and no scheduler is activated |
 
