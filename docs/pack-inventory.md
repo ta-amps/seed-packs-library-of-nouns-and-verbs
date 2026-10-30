@@ -88,17 +88,21 @@ proving what is live, and renaming things without leaving old names or broken li
 | What is done, what is next and where to resume | [Status and handoff](../packs/status-and-handoff/README.md): take-snapshot, write-status, recheck-claims, rank-next-steps, write-handoff, resume-from-handoff | Added now | eval_run (snapshot, status, claim check, resume check), seed_hypothesis (next steps, handoff), recovery_playbook (resume) | probe_source, situate, verify_gate, decompose_dag, solve_draft, recover_fault | record-finding for contradicted claims |
 | Releasing a change and proving what is live | [Release and verify](../packs/release-and-verify/README.md): plan-release, check-head, record-release (the release owner's verb), verify-parity, run-smoke, write-receipt, prepare-rollback | Added now | seed_hypothesis (plan, rollback brief), eval_run (head check, record, parity, smoke, receipt), benchmark_suite (smoke checklist) | decompose_dag, verify_gate, benchmark_harness, recover_fault | prepare-rollback, record-finding |
 | Renames that reach every reference | [Rename and relink](../packs/rename-and-relink/README.md): build-inventory, plan-rewrites, rewrite-references, record-host-renames (the owner's verb), check-links, sweep-old-names, write-archive-notice | Added now | seed_hypothesis (map, plan), eval_run (inventory, link check, record, sweep), code_node (rewrite), public_source (notice) | probe_source, decompose_dag, solve_draft, verify_gate | record-finding for names that come back |
+| A screenshot sent with little or no text, described before anything is judged | [Screenshot design review](../packs/screenshot-design-review/README.md): describe-screenshot | Added now | seed_hypothesis (description) | situate | plan-captures |
+| Captures at named widths and themes, and seven design rules measured in every cell | Screenshot design review: plan-captures, capture-screens, check-design-rules | Added now | scene_recipe (capture plan), eval_run (capture set, layout facts, check report), benchmark_suite (design rules) | decompose_dag, compile_dag, verify_gate | record-design-findings |
+| Located findings with a proposed fix verb, and the same cells re-rendered and verified by a different worker | Screenshot design review: record-design-findings, rerender-and-verify; [Findings to fixes](../packs/findings-to-fixes/README.md): triage, propose-fix, fix, close | Added now | seed_hypothesis (findings in the findings to fixes shape), eval_run (re-render checks, verifications) | problemize, verify_gate | propose-fix for each finding, a palette brief for a matter of taste |
 
-**Still needed here:** review of a screenshot sent with little or no text, turned into findings
-with a capture matrix of widths and themes; mining past session prompts into categories and
-reusable verbs under strict privacy rules; and finishing the most valuable work first when a
-usage allowance is about to run out.
+**Still needed here:** mining past session prompts into categories and reusable verbs under strict
+privacy rules; and finishing the most valuable work first when a usage allowance is about to run out.
+Review of a screenshot sent with little or no text, with a capture matrix of widths and themes, is
+now the screenshot design review pack.
 
 ## 5. Research, company research and model tuning
 
 Added October 30, 2026, for topics people asked for by name: research that ends in a cited report,
 research on public companies that is never financial advice, and tuning a small model that keeps a
-change only when a rule fixed in advance says so.
+change only when a rule fixed in advance says so. Later that day the options chain review and checked
+data analysis packs were added here, and the screenshot design review to section 4.
 
 | Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
 | --- | --- | --- | --- | --- | --- |
@@ -110,10 +114,14 @@ change only when a rule fixed in advance says so.
 | A cited brief, never advice, reviewed and decided by people | Public company research: write-cited-brief, review-brief (a different worker), decide-delivery (a person's verb) | Added now | seed_hypothesis (brief), eval_run (review), benchmark_suite (brief checks) | solve_draft, verify_gate | |
 | Owned examples, curated and frozen before any scoring | [Continuous tuning](../packs/continuous-tuning/README.md): register-rule (a person's verb), generate-examples, curate-dataset, freeze-test-set | Added now | code_node (promotion rule), benchmark_suite (batches, frozen test receipts) | verify_gate, solve_draft, ingest | train-adapter |
 | An adapter trained, scored, reloaded and decided by the rule | Continuous tuning: train-adapter, evaluate, check-reload, decide-promotion (a different worker), promote-or-roll-back | Added now | model_spec (adapter card, champion pointer), eval_run (runs, reload check, decision, roll back) | solve_draft, benchmark_harness, verify_gate | the next round's generate-examples |
+| One timestamped options chain snapshot, read under its source's terms | [Options chain review](../packs/options-chain-review/README.md): capture-chain | Added now | feed_source (snapshot, implied volatility history), reflex_procedure (data access rules) | ingest | compute-measures |
+| Greeks beside the provider's, implied volatility and its rank, the person's screens and roll candidates | Options chain review: compute-measures, screen-liquidity, list-roll-candidates | Added now | eval_run (measures, screen), seed_hypothesis (candidates), code_node (chain measures) | verify_gate, situate | write-chain-review |
+| A descriptive chain review, never advice, rechecked and decided by people | Options chain review: write-chain-review, check-chain-review (a different worker), decide-delivery (a person's verb) | Added now | seed_hypothesis (review), eval_run (check, delivery record) | solve_draft, verify_gate | |
+| A CSV file pinned, profiled, validated and flagged, with no row dropped | [Checked data analysis](../packs/checked-data-analysis/README.md): profile-schema, validate-types-and-ranges, flag-missing-and-outliers | Added now | eval_run (profile, validation, flags), code_node (CSV checks) | ingest, verify_gate | compute-summaries |
+| Recorded queries, charts as data and findings traced to queries, rechecked and read by a person | Checked data analysis: compute-summaries, make-chart-specs, write-findings, check-findings (a different worker), decide-meaning (a person's verb) | Added now | eval_run (query results, check, interpretation), scene_recipe (chart specs), seed_hypothesis (findings) | situate, compile_dag, solve_draft, verify_gate | |
 
-**Still needed here:** a descriptive options-chain review (greeks, implied volatility and roll
-candidates, described and never ordered); checked analysis of a CSV file; and research intake
-from newsletters and feeds.
+**Still needed here:** research intake from newsletters and feeds. The descriptive options chain
+review and checked analysis of a CSV file are now packs, added later on October 30.
 
 ## Work that supports every goal
 

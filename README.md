@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds forty proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds forty-three proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -60,10 +60,13 @@ activated**, and no worker has run them yet.
 | [Continuous tuning](packs/continuous-tuning/README.md) | Tuning a small open model round after round, kept only when a rule fixed before scoring says so |
 | [Public company research](packs/public-company-research/README.md) | Researching public companies from official sources, with every number cited and never as financial advice |
 | [Deep research report](packs/deep-research-report/README.md) | Answering a research question with a cited report that states its limits, not for choosing what to build |
+| [Options chain review](packs/options-chain-review/README.md) | Reviewing an options chain descriptively from a licensed source the requester already has: greeks, implied volatility and its rank, liquidity screens and roll candidates, every number with its data timestamp and never as financial advice |
+| [Checked data analysis](packs/checked-data-analysis/README.md) | Analyzing a CSV file with a check at every step: profile, validation, flags that never drop rows, recorded queries, charts as data and findings traced to queries, while a person decides what they mean |
+| [Screenshot design review](packs/screenshot-design-review/README.md) | Reviewing a user interface screenshot against design rules: described first, captured at named widths and themes, measured, recorded as located findings and verified after a re-render |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 764
-nouns and 250 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 851
+nouns and 271 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

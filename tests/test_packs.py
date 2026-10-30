@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 16)
+        self.assertEqual(summary["worked_examples"], 19)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -989,6 +989,218 @@ class TopicPackExamples(unittest.TestCase):
         self.assertTrue(any(q["purpose"] == "counter" for q in self.instance(pack, "example.search-plan")["queries"]))
         self.assertEqual(report["method"]["flow"], {"identified": flow["identified"], "included": flow["included"]})
         self.assertEqual(self.instance(pack, "example.adversarial-review")["quotes_checked"], len(claims))
+
+
+class SecondRoundPackExamples(unittest.TestCase):
+    """The options chain, checked data and screenshot design review packs of October 30: their record checks,
+    guardrails defined once, cross-checks between their example nouns, and the screenshot review's measured checks
+    recomputed from its layout facts. The options and data packs recompute their worked examples in their code's
+    CI jobs."""
+
+    FIXTURES = (("options-chain-review", "review-checks"), ("checked-data-analysis", "findings-checks"),
+                ("screenshot-design-review", "design-finding-checks"))
+
+    @staticmethod
+    def instance(pack: str, slug: str):
+        return record(pack, slug)["value"]["instance"]
+
+    def test_record_checks_flag_each_bad_example_for_its_reason(self):
+        finding_schema = record("findings-to-fixes", "template.finding")["value"]["schema"]
+        for pack, slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    schema = value.get("finding_schema", finding_schema)
+                    self.assertEqual(vp.schema_errors(schema, fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_design_findings_are_findings_to_fixes_findings(self):
+        checks = record("findings-to-fixes", "record-checks")["value"]["deterministic_checks"]
+        goods = [f["finding"] for f in record("screenshot-design-review", "design-finding-checks")["value"]["golden_fixtures"]
+                 if f["label"] == "known_good"]
+        self.assertEqual(len(goods), 7)
+        for finding in goods:
+            self.assertEqual(vp.failing_checks(checks, finding), [], finding["id"])
+        self.assertEqual(self.instance("screenshot-design-review", "example.finding"), goods[0])
+
+    def test_guardrails_are_defined_once_and_the_financial_ones_are_pinned(self):
+        rules = [r["value"]["rule"] for p in PACKS for r in IDX.docs[p]["nouns.json"]["records"] if r["value"]["role"] == "guardrail"]
+        self.assertEqual(len(rules), len(set(rules)), "a guardrail's rule is written once in the library")
+        own = {r["key"] for r in IDX.docs["options-chain-review"]["nouns.json"]["records"] if r["value"]["role"] == "guardrail"}
+        self.assertEqual(own, {key("options-chain-review", "guardrail.timestamp-every-number")})
+        pinned = {pin["key"] for pin in record("options-chain-review", "pack")["value"]["guardrails"]}
+        for pack, slug in (("public-company-research", "guardrail.not-financial-advice"),
+                           ("public-company-research", "guardrail.no-trades-or-orders"),
+                           ("public-company-research", "guardrail.cite-every-number"),
+                           ("public-company-research", "guardrail.respect-provider-terms"),
+                           ("policy-and-law-watch", "guardrail.person-decides")):
+            self.assertIn(key(pack, slug), pinned)
+
+    def test_options_verbs_never_reach_a_brokerage_or_price_an_order(self):
+        for item in IDX.docs["options-chain-review"]["verbs.json"]["tasks"]:
+            brief = item["brief"]
+            network = brief["execution"]["network"]
+            self.assertIn(network["mode"], {"none", "read_only"}, brief["template_id"])
+            if network["mode"] == "read_only":
+                self.assertIn("never a brokerage", network["detail"])
+            self.assertFalse({name for name in brief["output_schema"]["properties"] if "order" in name or "trade" in name})
+        snapshot = self.instance("options-chain-review", "example.chain-snapshot")
+        underlying = snapshot["underlying"]["symbol"]
+        self.assertTrue(underlying.endswith(".X"))
+        self.assertTrue(all(c["symbol"].startswith(underlying + " ") for c in snapshot["contracts"]))
+        self.assertIs(snapshot["source"]["brokerage_connection"], False)
+        review = self.instance("options-chain-review", "example.chain-review")
+        self.assertEqual((review["notice"], review["stale_quotes_used"]), ("Not financial advice", False))
+
+    def test_data_findings_resolve_to_their_query_results(self):
+        import re
+
+        pack = "checked-data-analysis"
+        dataset = record(pack, "example.dataset")["value"]
+        self.assertEqual(dataset["sha256"], hashlib.sha256(dataset["text"].encode("utf-8")).hexdigest())
+        self.assertEqual(self.instance(pack, "example.analysis-request")["dataset"]["sha256"], dataset["sha256"])
+        results = {r["id"]: r for r in self.instance(pack, "example.query-results")["results"]}
+        findings = self.instance(pack, "example.findings")
+        self.assertEqual(findings["dataset_sha256"], dataset["sha256"])
+        for finding in findings["findings"]:
+            for number in finding["numbers"]:
+                self.assertEqual(results[number["query"]]["result"][number["row"]][number["column"]], number["value"])
+        for exclusion in findings["exclusions"]:
+            self.assertEqual(results[exclusion["query"]]["excluded_by_filter"], exclusion["excluded"])
+        for chart in self.instance(pack, "example.chart-specs")["charts"]:
+            self.assertEqual(chart["data"]["values"], results[chart["usermeta"]["query"]]["result"])
+        addresses = set(re.findall(r"[a-z-]+@example\.invalid", dataset["text"]))
+        self.assertTrue(addresses)
+        for item in IDX.docs[pack]["nouns.json"]["records"]:
+            if item["key"] != key(pack, "example.dataset"):
+                for address in addresses:
+                    self.assertNotIn(address, json.dumps(item["value"]), item["key"])
+
+    def test_screenshot_checks_recompute_from_the_layout(self):
+        from collections import Counter
+
+        pack = "screenshot-design-review"
+
+        def luminance(color):
+            channels = [int(color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+            linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+            return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+        def contrast(a, b):
+            high, low = sorted((luminance(a), luminance(b)), reverse=True)
+            return (high + 0.05) / (low + 0.05)
+
+        example = record("visual-rendering", "example.contrast")["value"]
+        for pair in example["pairs"]:
+            self.assertEqual(round(contrast(pair["foreground"], pair["background"]), 2), example["expected"][pair["id"]]["ratio"])
+
+        def failures(layout, request):
+            t = request["rules"]
+            out = []
+            for cell in layout["cells"]:
+                elements = {e["selector"]: e for e in cell["elements"]}
+
+                def add(rule, e, measured, threshold, cell=cell):
+                    out.append({"cell": cell["id"], "rule": rule, "selector": e["selector"], "box": e["box"],
+                                "measured": measured, "threshold": threshold})
+
+                for e in cell["elements"]:
+                    size = e.get("font_size_px")
+                    if size is not None and size < t["min_text_px"]:
+                        add("text-size", e, f"{size} px", f"{t['min_text_px']} px")
+                    if "color" in e:
+                        large = size >= t["large_text_px"] or (size >= t["large_bold_px"] and e["font_weight"] >= t["bold_weight"])
+                        need = t["contrast_large"] if large else t["contrast_normal"]
+                        ratio = contrast(e["color"], e["background"])
+                        if ratio < need:
+                            add("contrast", e, f"{ratio:.2f}:1", f"{need:g}:1")
+                    if e.get("clips_overflow") and e["scroll_width_px"] > e["client_width_px"] + 1:
+                        add("cropping", e, f"content {e['scroll_width_px']} px wide in {e['client_width_px']} px", "content fits its box")
+                    if e["role"] == "image" and (not e["loaded"] or e["natural_width_px"] == 0):
+                        add("broken-asset", e, f"not loaded, natural width {e['natural_width_px']} px", "loaded, natural width above 0")
+                if cell["document"]["scroll_width_px"] > cell["width_px"]:
+                    widest = max(cell["elements"], key=lambda e: (e["box"][0] + e["box"][2], e["selector"]))
+                    add("overflow", widest, f"page {cell['document']['scroll_width_px']} px wide at a {cell['width_px']} px viewport",
+                        "no sideways scrolling")
+                for group in request["alignment_groups"]:
+                    edges = Counter(elements[m]["box"][0] for m in group["members"])
+                    common = min(edges, key=lambda edge: (-edges[edge], edge))
+                    for m in group["members"]:
+                        if elements[m]["box"][0] != common:
+                            add("alignment", elements[m], f"{abs(elements[m]['box'][0] - common)} px off the group's left edge", "0 px")
+                for stack in request["stacks"]:
+                    members = sorted((elements[m] for m in stack["members"]), key=lambda e: e["box"][1])
+                    for above, below in zip(members, members[1:]):
+                        gap = below["box"][1] - above["box"][1] - above["box"][3]
+                        if gap % t["spacing_unit_px"]:
+                            add("spacing", below, f"gap {gap} px after {above['selector']}", f"multiples of {t['spacing_unit_px']} px")
+            return out
+
+        request = self.instance(pack, "example.review-request")
+        rule_order = ("text-size", "contrast", "cropping", "broken-asset", "overflow", "alignment", "spacing")
+        reports = {}
+        for when, layout_slug, report_slug, captures_slug in (
+                ("before", "example.layout-facts", "example.check-report", "example.capture-set"),
+                ("after", "example.layout-facts-after", "example.check-report-after", "example.capture-set-after")):
+            layout, report = self.instance(pack, layout_slug), self.instance(pack, report_slug)
+            found = failures(layout, request)
+            key_of = lambda f: (f["cell"], rule_order.index(f["rule"]), f["selector"])  # noqa: E731
+            self.assertEqual(sorted(found, key=key_of), sorted(report["failures"], key=key_of), when)
+            self.assertEqual(report["passed"], not found)
+            self.assertTrue(report["contrast_example_reproduced"])
+            self.assertEqual({(c["cell"], c["rule"]) for c in report["counts"]},
+                             {(cell["id"], rule) for cell in layout["cells"] for rule in rule_order})
+            for count in report["counts"]:
+                self.assertEqual(count["failed"], sum(1 for f in found if (f["cell"], f["rule"]) == (count["cell"], count["rule"])))
+            captures = {c["cell"]: c for c in self.instance(pack, captures_slug)["captures"]}
+            self.assertEqual(set(captures), {cell["id"] for cell in layout["cells"]})
+            for cell in layout["cells"]:
+                self.assertEqual(captures[cell["id"]]["layout_facts_sha256"], bp.value_sha256(cell))
+            reports[when] = (found, captures, bp.value_sha256(report))
+        before, shots, digest = reports["before"]
+        self.assertEqual(Counter(f["rule"] for f in before), Counter({"text-size": 6, "spacing": 6, "broken-asset": 6,
+                                                                       "alignment": 4, "contrast": 3, "cropping": 2, "overflow": 2}))
+        self.assertEqual([(f["cell"], f["rule"]) for f in reports["after"][0]], [("1440-light", "alignment"), ("1440-dark", "alignment")])
+        groups = {}
+        for f in before:
+            groups.setdefault((f["rule"], f["selector"]), []).append(f)
+        findings = [f["finding"] for f in record(pack, "design-finding-checks")["value"]["golden_fixtures"] if f["label"] == "known_good"]
+        self.assertEqual(len(findings), len(groups))
+        for finding in findings:
+            measurement = next(e for e in finding["evidence"] if e["kind"] == "measurement")
+            rule, selector = measurement["detail"].split(":")[0][len("rule "):], measurement["location"][len("selector "):]
+            rows = groups[(rule, selector)]
+            self.assertEqual(measurement["detail"], f"rule {rule}: measured {rows[0]['measured']}; threshold {rows[0]['threshold']}")
+            self.assertEqual(measurement["sha256"], digest)
+            screens = [e for e in finding["evidence"] if e["kind"] == "screenshot"]
+            self.assertEqual([s["location"] for s in screens],
+                             [f"cell {r['cell']}; box {r['box'][0]},{r['box'][1]},{r['box'][2]}x{r['box'][3]} css px" for r in rows])
+            self.assertEqual([s["sha256"] for s in screens], [shots[r["cell"]]["screenshot_sha256"] for r in rows])
+            self.assertTrue(finding["fingerprint"].startswith(f"design_flaw/signup-page/{rule}-"))
+        after = {(f["rule"], f["selector"]) for f in reports["after"][0]}
+        _, shots_after, digest_after = reports["after"]
+        for slug, group in (("example.verification-contrast", ("contrast", "a.terms-link")),
+                            ("example.verification-alignment", ("alignment", ".card:nth-child(2)"))):
+            check = self.instance(pack, slug)
+            self.assertEqual(check["verdict"], "fix_failed" if group in after else "fix_verified", slug)
+            self.assertEqual([run["shows_problem"] for run in check["runs"]], [True, group in after])
+            self.assertEqual(check["runs"][1]["evidence_sha256"], [digest_after])
+            self.assertEqual([s["sha256"] for s in check["screenshots"]],
+                             [shots_after[r["cell"]]["screenshot_sha256"] for r in groups[group]])
+        description = self.instance(pack, "example.screenshot-description")
+        self.assertIsNone(description["css_width"])
+        self.assertEqual(set(description["proposed_cells"]), {c["id"] for c in self.instance(pack, "example.capture-plan")["cells"]})
 
 
 if __name__ == "__main__":
