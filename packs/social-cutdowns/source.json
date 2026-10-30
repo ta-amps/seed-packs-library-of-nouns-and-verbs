@@ -1,0 +1,2007 @@
+{
+  "pack_id": "social-cutdowns",
+  "title": "Social cut-downs",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for deriving platform cut-downs from a longer video: hook moments ranked from the long cut, 9:16 and 1:1 reframes, burned-in captions, length targets per platform, a check that cutting changed no meaning, title and description drafts, a cover frame, and a person who approves every cut-down before posting it through the platform's own tools.",
+  "dependencies": [
+    "video-editing",
+    "video-motion",
+    "video-showcase",
+    "video-review"
+  ],
+  "boundaries": [
+    "A cut-down only shortens and reframes; it adds no claim and drops no qualifier.",
+    "Only a person approves and posts, through the platform's official tools; workers never post, schedule or hold credentials.",
+    "A held or failed cut-down stays on the record beside its long cut.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for deriving platform cut-downs from a longer video, approved by a person before anyone posts them",
+      "value": {
+        "lets_workers": "Derive short cut-downs from a longer video for each platform a person plans to use: hook moments ranked from what the long cut already earns, a segment plan with a length target per platform, 9:16 and 1:1 reframes, burned-in captions, a check that cutting changed no meaning and dropped no qualifier, title and description drafts with disclosures and credits, and a cover frame, ending with a person who watches each cut-down and approves it before posting it through the platform's own tools.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "social-cutdowns.find-hook-moments"
+            },
+            "when": "Rank moments of the long cut that can open a short one."
+          },
+          {
+            "verb": {
+              "$verb": "social-cutdowns.plan-cutdown"
+            },
+            "when": "Segments, order and length for one platform profile."
+          },
+          {
+            "verb": {
+              "$verb": "video-editing.plan-reframes"
+            },
+            "when": "Crop windows for 9:16 or 1:1, text re-rendered at full size."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.compose-cut"
+            },
+            "when": "The open-captions variant, with captions burned in."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.render-sequence"
+            },
+            "when": "Render the cut-down."
+          },
+          {
+            "verb": {
+              "$verb": "video-qa.check-legibility"
+            },
+            "when": "Text sizes and the platform's keep-out boxes on the new aspect."
+          },
+          {
+            "verb": {
+              "$verb": "social-cutdowns.check-meaning"
+            },
+            "when": "Nothing added, changed or dropped by cutting."
+          },
+          {
+            "verb": {
+              "$verb": "social-cutdowns.draft-copy"
+            },
+            "when": "Title, description, credits, disclosures, hashtags and alt text."
+          },
+          {
+            "verb": {
+              "$verb": "thumbnail-and-title.draft-thumbnails"
+            },
+            "when": "Cover candidates; a person picks one."
+          },
+          {
+            "verb": {
+              "$verb": "video-review.review-cut"
+            },
+            "when": "A different worker or a person reviews the cut-down."
+          },
+          {
+            "verb": {
+              "$verb": "social-cutdowns.approve-cutdown"
+            },
+            "when": "A person watches on a phone and approves or holds."
+          },
+          {
+            "verb": {
+              "$verb": "video-showcase.record-publication"
+            },
+            "when": "After posting it themselves, the person records where and when."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.a-person-posts"
+          },
+          {
+            "$pin": "guardrail.no-new-claims"
+          },
+          {
+            "$pin": "guardrail.labels-survive-the-cut"
+          },
+          {
+            "$pin": "guardrail.honest-hooks"
+          }
+        ],
+        "worked_example": "Synthetic: a fictional pantry's 2:30 explainer becomes a 33.6-second vertical teaser. Three hook moments are ranked, the plan takes four segments, the meaning check catches a dropped qualifier on a number, and the copy draft carries its disclosures and passes the privacy scan.",
+        "complements": "The video editing pack reframes and the video and motion pack renders; this pack decides what a short cut keeps, checks that cutting did not change what it says, and drafts the words that go with it, leaving every posting decision and act to a person.",
+        "provenance_notes": [
+          "Generalizes the posting kits of a working short-form video studio: designed covers rather than random frames, spoiler-free covers for reveals, burned-in captions sized for phones, a title, description, three to six hashtags, alt text and a credit line per video, a privacy scan of every kit, platform checks, and the rule that a person watches every frame and listens on a phone before posting, with nothing posted automatically."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.a-person-posts"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-new-claims"
+        ],
+        [
+          "requires_noun",
+          "guardrail.labels-survive-the-cut"
+        ],
+        [
+          "requires_noun",
+          "guardrail.honest-hooks"
+        ],
+        [
+          "requires_noun",
+          "rules.hook-selection"
+        ],
+        [
+          "requires_noun",
+          "rules.platform-targets"
+        ],
+        [
+          "requires_noun",
+          "rules.vertical-reframe"
+        ],
+        [
+          "requires_noun",
+          "rules.burned-captions"
+        ],
+        [
+          "requires_noun",
+          "rules.copy"
+        ],
+        [
+          "requires_noun",
+          "template.platform-profile"
+        ],
+        [
+          "requires_noun",
+          "template.hook-candidates"
+        ],
+        [
+          "requires_noun",
+          "template.cutdown-plan"
+        ],
+        [
+          "requires_noun",
+          "template.meaning-check"
+        ],
+        [
+          "requires_noun",
+          "template.copy-draft"
+        ],
+        [
+          "requires_noun",
+          "template.cutdown-approval"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.a-person-posts",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a person approves and posts, through the platform's own tools",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Only a person approves a cut-down, and only a person posts it, through the platform's official app or site. Workers never post, schedule, upload or reply, and they never hold an account's credentials.",
+        "how_it_is_checked": "Every approval record has posted_by_worker false, and no verb in this pack has a posting step."
+      }
+    },
+    {
+      "slug": "guardrail.no-new-claims",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a cut-down only shortens and reframes",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A cut-down never adds a claim, a number or a promise the long cut does not make, and cutting never drops a qualifier the claim needs, such as synthetic, one week, one task or a local run.",
+        "how_it_is_checked": "The meaning check lists new claims, changed claims and dropped qualifiers; approval needs all three empty."
+      }
+    },
+    {
+      "slug": "guardrail.labels-survive-the-cut",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: labels survive the cut and the crop",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Labels for an AI voice, synthetic data, scripted stand-ins and illustrations stay on screen and readable in every cut-down and every aspect; a label the crop loses is placed again.",
+        "how_it_is_checked": "The legibility row for the cut-down includes every label with must_read true."
+      }
+    },
+    {
+      "slug": "guardrail.honest-hooks",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: an honest hook",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A hook is a sentence that opens a question the cut-down answers. Never add an unsupported 'nobody' or 'most people', a number the video does not show, a false contradiction or a length promise to make a hook score higher.",
+        "how_it_is_checked": "Each hook candidate names the moment where the cut-down pays it off."
+      }
+    },
+    {
+      "slug": "rules.hook-selection",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Hook selection rules",
+      "category_reason": "A procedure with a closed list of devices, so 'no device found' is a fact about the line, not a taste call.",
+      "value": {
+        "steps": [
+          "List moments of the long cut where something visibly changes within 0.5 s and a line opens a question.",
+          "Name each candidate's curiosity devices from a closed list; a line that only announces what the system does names none.",
+          "Keep candidates that make sense without anything before them and whose payoff the cut-down can include.",
+          "Rank by: payoff inside the cut-down, no setup needed, visible motion from the first frame, then the number of devices.",
+          "A person can override the ranking with a reason; record it."
+        ],
+        "devices": [
+          "question",
+          "number",
+          "direct_address",
+          "viewer_task",
+          "stake",
+          "true_contradiction",
+          "negation",
+          "reveal"
+        ],
+        "announcing_is_not_a_hook": "A line that only states the rule, such as 'Every task gets a receipt', opens nothing; pair it with the question it answers.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.platform-targets",
+      "category": "noun.skill_pack",
+      "role": "platform_targets",
+      "title": "Platform targets: verified facts, dated, and house defaults",
+      "category_reason": "Reusable delivery facts with their sources and dates, kept apart from house defaults.",
+      "value": {
+        "verified": [
+          {
+            "platform": "YouTube Shorts",
+            "fact": "Shorts can be up to three minutes long; square or vertical videos of up to three minutes uploaded on or after October 15, 2024 are classified as Shorts.",
+            "url": "https://support.google.com/youtube/answer/15424877",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "platform": "YouTube",
+            "fact": "Recommended uploads are MP4 with the moov atom at the front, no edit lists, H.264 High with 4:2:0 chroma, AAC-LC audio at 48 kHz.",
+            "url": "https://support.google.com/youtube/answer/1722171",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "unverified_rule": "Every other platform's limits change often. Read its current official help page on the day, record the URL and date in the platform profile, and leave a value null until it is checked.",
+        "house_defaults": {
+          "teaser_s": [
+            15,
+            35
+          ],
+          "summary_s": [
+            45,
+            60
+          ],
+          "note": "Lengths that suit one production's teasers and summaries, not platform rules. A publisher's own minimum, such as a floor for finished clips, belongs in the brief as a house rule."
+        }
+      }
+    },
+    {
+      "slug": "rules.vertical-reframe",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Vertical and square reframe rules for cut-downs",
+      "category_reason": "A zero-call procedure that applies the editing and aspect rules to short vertical cuts.",
+      "value": {
+        "rules": [
+          "Follow the video editing pack's reframing rules: per-shot crop windows, restacked slides, text re-rendered at full size.",
+          "Crop screen captures to the element the line names, or recapture at a narrow viewport; a 16:9 page shrunk into 9:16 is unreadable.",
+          "Keep captions, labels and the subject inside the aspect's safe canvas and clear of its keep-out boxes, such as the right rail of buttons and the bottom caption overlay.",
+          "Punch in on details instead of showing whole frames small."
+        ],
+        "editing_rules": {
+          "$pin": "video-editing:rules.reframing"
+        },
+        "aspects": {
+          "$pin": "video-motion:rules.aspects"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-editing:rules.reframing"
+        ],
+        [
+          "requires_noun",
+          "video-motion:rules.aspects"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.burned-captions",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Burned-in caption rules for muted autoplay",
+      "category_reason": "A zero-call procedure: fixed sizes, places and sources for burned-in captions.",
+      "value": {
+        "rules": [
+          "Burn captions into every cut-down, because many viewers start with the sound off; also give the platform the sidecar where it accepts one.",
+          "At most 2 lines; at least 2.6 percent of frame height, about 50 px on a 1920 px tall frame; on a panel with contrast of at least 4.5 to 1.",
+          "Inside the safe canvas, never over a face, the subject, a label or the platform's buttons and overlays.",
+          "A highlighted keyword is optional and uses the palette's accent.",
+          "Caption text comes from the script, never from speech recognition, and never shows a payoff before the voice says it."
+        ],
+        "caption_limits": {
+          "$pin": "video-showcase:style-guide"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-showcase:style-guide"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.copy",
+      "category": "noun.skill_pack",
+      "role": "copy_rules",
+      "title": "Copy rules: titles, descriptions and what goes with a post",
+      "category_reason": "Reusable rules every copy draft follows, with the scan that proves the last two.",
+      "value": {
+        "rules": [
+          "The title states what the video shows, as the video shows it; it is a question the video answers or a plain statement.",
+          "The description's first line repeats the hook honestly; the rest says what is shown, credits every source and licence, and states the AI-voice and synthetic-data disclosures in words.",
+          "One call to action that fits the video, such as watching the full film or reading the overview.",
+          "Three to six hashtags that describe the content, never trending tags it does not match.",
+          "Alt text describes the cover for people who cannot see it; for a reveal, it may name the answer the cover hides.",
+          "A privacy scan before anything leaves draft: no local paths, emails, account names, keys or private names.",
+          "No follower, view or engagement promises."
+        ]
+      }
+    },
+    {
+      "slug": "template.platform-profile",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one platform's delivery profile",
+      "value": {
+        "describes": "the aspect, length limits and caption mode for one platform, with the official page and date each verified value came from",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "platform",
+            "aspect",
+            "max_length_s",
+            "target_length_s",
+            "captions",
+            "source_url",
+            "checked_date",
+            "notes"
+          ],
+          "properties": {
+            "platform": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "reels_9x16",
+                "square_1x1",
+                "feed_4x5",
+                "landscape_16x9"
+              ]
+            },
+            "max_length_s": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 1,
+              "maximum": 86400
+            },
+            "target_length_s": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 86400
+              }
+            },
+            "captions": {
+              "type": "string",
+              "enum": [
+                "burned",
+                "sidecar",
+                "both"
+              ]
+            },
+            "source_url": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "checked_date": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 10,
+              "maxLength": 10
+            },
+            "notes": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "A value that was not checked on the day is null, never a remembered number."
+        ]
+      }
+    },
+    {
+      "slug": "template.hook-candidates",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: ranked hook moments from the long cut",
+      "value": {
+        "describes": "candidate openings taken from the long cut, each with its time span, line, curiosity devices, whether it stands alone and where its payoff is",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_sha256",
+            "candidates"
+          ],
+          "properties": {
+            "source_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rank",
+                  "start_s",
+                  "end_s",
+                  "line",
+                  "devices",
+                  "visible_change_by_0_5_s",
+                  "self_contained",
+                  "payoff_at_s",
+                  "reasons"
+                ],
+                "properties": {
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "line": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "devices": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "question",
+                        "number",
+                        "direct_address",
+                        "viewer_task",
+                        "stake",
+                        "true_contradiction",
+                        "negation",
+                        "reveal"
+                      ]
+                    }
+                  },
+                  "visible_change_by_0_5_s": {
+                    "type": "boolean"
+                  },
+                  "self_contained": {
+                    "type": "boolean"
+                  },
+                  "payoff_at_s": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "reasons": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.cutdown-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: a cut-down plan for one platform",
+      "value": {
+        "describes": "the source cut, the platform profile, the segments taken from the long cut in order with their purpose, the reframe, the caption mode and the labels kept",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_cut",
+            "source_sha256",
+            "platform_profile",
+            "segments",
+            "length_s",
+            "reframe",
+            "captions",
+            "labels"
+          ],
+          "properties": {
+            "source_cut": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "source_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "platform_profile": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "segments": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_in_s",
+                  "source_out_s",
+                  "purpose"
+                ],
+                "properties": {
+                  "source_in_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "source_out_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 86400
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "hook",
+                      "setup",
+                      "payoff",
+                      "call_to_action"
+                    ]
+                  }
+                }
+              }
+            },
+            "length_s": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 86400
+            },
+            "reframe": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "captions": {
+              "type": "string",
+              "enum": [
+                "burned",
+                "sidecar",
+                "both"
+              ]
+            },
+            "labels": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.meaning-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a check that cutting changed no meaning",
+      "value": {
+        "describes": "the cut-down's lines against the long cut's: new claims, changed claims, dropped qualifiers and every number with whether it is still traced",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_transcript",
+            "cutdown_lines",
+            "new_claims",
+            "changed_claims",
+            "dropped_qualifiers",
+            "numbers",
+            "passes",
+            "fix"
+          ],
+          "properties": {
+            "source_transcript": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "cutdown_lines": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "new_claims": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "changed_claims": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "dropped_qualifiers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "numbers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "value",
+                  "traced"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "traced": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "passes": {
+              "type": "boolean"
+            },
+            "fix": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.copy-draft",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the words that go with a cut-down",
+      "value": {
+        "describes": "a title, description, call to action, hashtags, alt text, credits, disclosures and an optional pinned comment, with the privacy scan's results",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "description",
+            "call_to_action",
+            "hashtags",
+            "alt_text",
+            "credits",
+            "disclosures",
+            "links",
+            "pinned_comment",
+            "privacy_scan"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "call_to_action": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "hashtags": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 40,
+                "pattern": "^#[A-Za-z0-9]+$"
+              }
+            },
+            "alt_text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "credits": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "disclosures": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "links": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "pinned_comment": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "privacy_scan": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "local_paths",
+                "emails",
+                "account_names",
+                "keys"
+              ],
+              "properties": {
+                "local_paths": {
+                  "type": "boolean"
+                },
+                "emails": {
+                  "type": "boolean"
+                },
+                "account_names": {
+                  "type": "boolean"
+                },
+                "keys": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.cutdown-approval",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's approval of a cut-down",
+      "value": {
+        "describes": "a person's record of watching one cut-down on a phone with sound and muted, reading its copy, and approving or holding it; posting stays the person's own act",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutdown_sha256",
+            "person_role",
+            "watched_with_sound",
+            "watched_muted",
+            "on_phone",
+            "copy_read",
+            "decision",
+            "posted_by_worker",
+            "notes"
+          ],
+          "properties": {
+            "cutdown_sha256": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "person_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "watched_with_sound": {
+              "type": "boolean"
+            },
+            "watched_muted": {
+              "type": "boolean"
+            },
+            "on_phone": {
+              "type": "boolean"
+            },
+            "copy_read": {
+              "type": "boolean"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "approved",
+                "hold"
+              ]
+            },
+            "posted_by_worker": {
+              "type": "boolean"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "cutdown-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Cut-down checks, with one good and six bad cut-downs the validator recomputes",
+      "category_reason": "A golden fixture: fixed cut-down summaries and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks a cut-down's summary passes before a person is asked to approve it, each shown failing on a bad summary for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ai_voice",
+            "disclosures",
+            "hashtags",
+            "copy_text",
+            "new_claims_count",
+            "dropped_qualifiers_count",
+            "decision",
+            "approved_by",
+            "posted_by_worker"
+          ],
+          "properties": {
+            "ai_voice": {
+              "type": "boolean"
+            },
+            "disclosures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 6,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "hashtags": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "copy_text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "new_claims_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "dropped_qualifiers_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "approved",
+                "hold"
+              ]
+            },
+            "approved_by": {
+              "type": "string",
+              "enum": [
+                "person",
+                "agent",
+                "none"
+              ]
+            },
+            "posted_by_worker": {
+              "type": "boolean"
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "ai-voice-disclosed",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "ai_voice",
+                "equals": true
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "disclosures",
+                "pattern": "(?i)\\bAI[- ]generated voice\\b"
+              }
+            },
+            "why": "An AI voice is disclosed in words."
+          },
+          {
+            "id": "enough-hashtags",
+            "rule": {
+              "rule": "min_items",
+              "path": "hashtags",
+              "min": 3
+            },
+            "why": "Three to six descriptive hashtags."
+          },
+          {
+            "id": "nothing-private",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "copy_text",
+              "pattern": "(?i)[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}|(^|\\s)(/home/|/Users/|~/|[A-Za-z]:\\\\)"
+            },
+            "why": "No email address or local path in the copy."
+          },
+          {
+            "id": "no-new-claims",
+            "rule": {
+              "rule": "enum",
+              "path": "new_claims_count",
+              "values": [
+                0
+              ]
+            },
+            "why": "A cut-down adds no claim."
+          },
+          {
+            "id": "qualifiers-kept",
+            "rule": {
+              "rule": "enum",
+              "path": "dropped_qualifiers_count",
+              "values": [
+                0
+              ]
+            },
+            "why": "Cutting drops no qualifier."
+          },
+          {
+            "id": "approved-by-a-person",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "decision",
+                "equals": "approved"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "approved_by",
+                "values": [
+                  "person"
+                ]
+              }
+            },
+            "why": "Only a person approves."
+          },
+          {
+            "id": "worker-never-posts",
+            "rule": {
+              "rule": "enum",
+              "path": "posted_by_worker",
+              "values": [
+                false
+              ]
+            },
+            "why": "Only a person posts, through the platform's own tools."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-approved-teaser",
+            "label": "known_good",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-undisclosed-voice",
+            "label": "known_bad",
+            "fails": "ai-voice-disclosed",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-two-hashtags",
+            "label": "known_bad",
+            "fails": "enough-hashtags",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#ai"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-email-in-copy",
+            "label": "known_bad",
+            "fails": "nothing-private",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description. Questions: someone@example.org",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-new-claim",
+            "label": "known_bad",
+            "fails": "no-new-claims",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 1,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-dropped-qualifier",
+            "label": "known_bad",
+            "fails": "qualifiers-kept",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 1,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-agent-approved",
+            "label": "known_bad",
+            "fails": "approved-by-a-person",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "agent",
+              "posted_by_worker": false
+            }
+          },
+          {
+            "id": "bad-worker-posted",
+            "label": "known_bad",
+            "fails": "worker-never-posts",
+            "finding": {
+              "ai_voice": true,
+              "disclosures": [
+                "AI-generated voice",
+                "Synthetic data from a local run"
+              ],
+              "hashtags": [
+                "#foodbank",
+                "#volunteers",
+                "#nonprofit"
+              ],
+              "copy_text": "Who restocks the pantry overnight? A volunteer's agent drafts the list; a person checks it. Full film in the description.",
+              "new_claims_count": 0,
+              "dropped_qualifiers_count": 0,
+              "decision": "approved",
+              "approved_by": "person",
+              "posted_by_worker": true
+            }
+          }
+        ],
+        "expected": {
+          "good-approved-teaser": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-undisclosed-voice": {
+            "verdict": "fail",
+            "failed_checks": [
+              "ai-voice-disclosed"
+            ]
+          },
+          "bad-two-hashtags": {
+            "verdict": "fail",
+            "failed_checks": [
+              "enough-hashtags"
+            ]
+          },
+          "bad-email-in-copy": {
+            "verdict": "fail",
+            "failed_checks": [
+              "nothing-private"
+            ]
+          },
+          "bad-new-claim": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-new-claims"
+            ]
+          },
+          "bad-dropped-qualifier": {
+            "verdict": "fail",
+            "failed_checks": [
+              "qualifiers-kept"
+            ]
+          },
+          "bad-agent-approved": {
+            "verdict": "fail",
+            "failed_checks": [
+              "approved-by-a-person"
+            ]
+          },
+          "bad-worker-posted": {
+            "verdict": "fail",
+            "failed_checks": [
+              "worker-never-posts"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.copy-draft"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "posting-checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before posting a cut-down",
+      "category_reason": "A short checklist a person runs is part of the posting guardrails.",
+      "value": {
+        "items": [
+          "Watch the cut-down on a phone once with sound and once muted; it must make sense both ways.",
+          "Every label is readable on the phone, and no caption or label sits under the platform's buttons.",
+          "Read the copy aloud: the title is true, the disclosures are there, every credit and link is right.",
+          "The cover is a designed frame, not a half-caption, and gives nothing away a reveal needs.",
+          "Post it yourself through the platform's own app or site; never hand an account's password to a worker.",
+          "Afterwards, record where and when you posted with the video showcase pack's record-publication."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for cut-downs",
+      "value": {
+        "sources": [
+          {
+            "title": "YouTube Help: Upload YouTube Shorts",
+            "url": "https://support.google.com/youtube/answer/15424877",
+            "used_for": "Shorts up to three minutes; square or vertical",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "YouTube Help: Recommended upload encoding settings",
+            "url": "https://support.google.com/youtube/answer/1722171",
+            "used_for": "MP4, moov atom first, no edit lists, H.264 High, AAC-LC",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.2.2, Captions (Prerecorded)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html",
+            "used_for": "Captions for every cut-down's speech",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.4.3, Contrast (Minimum)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+            "used_for": "Caption panels at 4.5 to 1",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for cut-downs",
+      "value": {
+        "cases": [
+          {
+            "id": "SC-ANNOUNCES-RULE",
+            "scenario": "The top-ranked hook only announces a rule",
+            "sample_input": "SYNTHETIC: 'Every step gets a receipt' at 47 s, with no question and no payoff in the segment.",
+            "expected_outcome": "hooks_ranked",
+            "expected_indicators": [
+              "no_device_named",
+              "ranked_below_a_question"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "SC-QUALIFIER-DROPPED",
+            "scenario": "A segment ends before a number's qualifier",
+            "sample_input": "SYNTHETIC: '112 households' is kept but 'in the week of 19 October' falls outside the segment.",
+            "expected_outcome": "meaning_checked",
+            "expected_indicators": [
+              "dropped_qualifier_named",
+              "segment_extended"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "SC-LABEL-CROPPED",
+            "scenario": "The vertical crop loses the AI-voice label",
+            "sample_input": "SYNTHETIC: the label sat in the 16:9 frame's corner, outside the 9:16 window.",
+            "expected_outcome": "cutdown_planned",
+            "expected_indicators": [
+              "label_placed_again"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "SC-UNCHECKED-LIMIT",
+            "scenario": "A platform's length limit is remembered, not checked",
+            "sample_input": "SYNTHETIC: the profile says 90 s with no URL or date.",
+            "expected_outcome": "unknown",
+            "expected_indicators": [
+              "value_set_to_null",
+              "check_official_page"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "SC-ASKED-TO-POST",
+            "scenario": "A worker is asked to post the approved cut-down",
+            "sample_input": "SYNTHETIC: the brief asks the worker to upload it with the account's token.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "person_posts",
+              "no_credentials_taken"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "SC-CLICKBAIT",
+            "scenario": "A drafted title promises more than the cut shows",
+            "sample_input": "SYNTHETIC: 'This AI feeds a whole city' for a pantry's restock list.",
+            "expected_outcome": "copy_drafted",
+            "expected_indicators": [
+              "claim_not_supported",
+              "title_rewritten_plainly"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.platform-profile",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: one platform profile, checked on the day",
+      "value": {
+        "notice": "SYNTHETIC use of a verified public fact.",
+        "conforms_to": {
+          "$pin": "template.platform-profile"
+        },
+        "instance": {
+          "platform": "YouTube Shorts",
+          "aspect": "reels_9x16",
+          "max_length_s": 180,
+          "target_length_s": [
+            15,
+            35
+          ],
+          "captions": "both",
+          "source_url": "https://support.google.com/youtube/answer/15424877",
+          "checked_date": "2026-10-30",
+          "notes": "The target is a house default for teasers; the maximum is the platform's, checked on the day."
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.hook-candidates",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: three ranked hook moments",
+      "value": {
+        "notice": "SYNTHETIC. A fictional pantry's 2:30 explainer.",
+        "conforms_to": {
+          "$pin": "template.hook-candidates"
+        },
+        "instance": {
+          "source_sha256": "000000000000000000000000000000000000000000000000000000000000000e",
+          "candidates": [
+            {
+              "rank": 1,
+              "start_s": 12.4,
+              "end_s": 18.0,
+              "line": "Who restocks the pantry overnight?",
+              "devices": [
+                "question"
+              ],
+              "visible_change_by_0_5_s": true,
+              "self_contained": true,
+              "payoff_at_s": 104.0,
+              "reasons": "A question the payoff answers; the shelves move from the first frame."
+            },
+            {
+              "rank": 2,
+              "start_s": 48.0,
+              "end_s": 58.5,
+              "line": "Last week, 112 households came to the pantry.",
+              "devices": [
+                "number",
+                "stake"
+              ],
+              "visible_change_by_0_5_s": true,
+              "self_contained": false,
+              "payoff_at_s": null,
+              "reasons": "A real number, but it needs the week and the list to land."
+            },
+            {
+              "rank": 3,
+              "start_s": 95.0,
+              "end_s": 99.0,
+              "line": "Every step gets a receipt.",
+              "devices": [],
+              "visible_change_by_0_5_s": false,
+              "self_contained": false,
+              "payoff_at_s": null,
+              "reasons": "Announces a rule; opens nothing on its own."
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.cutdown-plan",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: a 33.6-second vertical teaser plan",
+      "value": {
+        "notice": "SYNTHETIC. The library's tests recompute its length from its segments.",
+        "conforms_to": {
+          "$pin": "template.cutdown-plan"
+        },
+        "instance": {
+          "source_cut": "pantry-150s",
+          "source_sha256": "000000000000000000000000000000000000000000000000000000000000000e",
+          "platform_profile": "example.platform-profile",
+          "segments": [
+            {
+              "source_in_s": 12.4,
+              "source_out_s": 18.0,
+              "purpose": "hook"
+            },
+            {
+              "source_in_s": 48.0,
+              "source_out_s": 58.5,
+              "purpose": "setup"
+            },
+            {
+              "source_in_s": 96.0,
+              "source_out_s": 110.0,
+              "purpose": "payoff"
+            },
+            {
+              "source_in_s": 146.0,
+              "source_out_s": 149.5,
+              "purpose": "call_to_action"
+            }
+          ],
+          "length_s": 33.6,
+          "reframe": "a 9:16 reframe plan from the video editing pack",
+          "captions": "both",
+          "labels": [
+            "AI-generated voice",
+            "local run, synthetic data"
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.meaning-check",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a meaning check that catches a dropped qualifier",
+      "value": {
+        "notice": "SYNTHETIC.",
+        "conforms_to": {
+          "$pin": "template.meaning-check"
+        },
+        "instance": {
+          "source_transcript": "the long cut's caption track",
+          "cutdown_lines": [
+            "Who restocks the pantry overnight?",
+            "Last week, 112 households came to the pantry.",
+            "A volunteer's agent drafts the restock list, and a person checks every change.",
+            "Watch the full film, linked below."
+          ],
+          "new_claims": [],
+          "changed_claims": [],
+          "dropped_qualifiers": [
+            "in the week of 19 October, from the intake log"
+          ],
+          "numbers": [
+            {
+              "value": "112 households",
+              "traced": true
+            }
+          ],
+          "passes": false,
+          "fix": "Extend the setup segment by 1.2 s so the line ends with its week, then check again."
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.copy-draft",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the copy for the teaser",
+      "value": {
+        "notice": "SYNTHETIC. The library's tests rescan it for private data and check its disclosures.",
+        "conforms_to": {
+          "$pin": "template.copy-draft"
+        },
+        "instance": {
+          "title": "Who restocks the pantry overnight?",
+          "description": "Who restocks the pantry overnight? A volunteer's agent drafts the restock list from the evening counts, and a person checks every change before anything is ordered. The full 2:30 film is linked below. AI-generated voice. The counts are synthetic data from a local run.",
+          "call_to_action": "Watch the full film",
+          "hashtags": [
+            "#foodbank",
+            "#volunteers",
+            "#nonprofit",
+            "#communityfood"
+          ],
+          "alt_text": "A pantry shelf with a restock list beside it and a checkmark from a person.",
+          "credits": [
+            "Music: generated in-house from a recorded seed"
+          ],
+          "disclosures": [
+            "AI-generated voice",
+            "Synthetic data from a local run"
+          ],
+          "links": [
+            "the full film's address"
+          ],
+          "pinned_comment": null,
+          "privacy_scan": {
+            "local_paths": false,
+            "emails": false,
+            "account_names": false,
+            "keys": false
+          }
+        }
+      },
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "find-hook-moments",
+      "kind": "verb.situate",
+      "title": "Find hook moments in the long cut",
+      "claimant": "agent",
+      "summary": "Rank moments of the long cut that can open a short one: visible change within half a second, a line with named curiosity devices, meaning without setup, and a payoff the cut-down can include, without writing any new line.",
+      "outcome": "Ranked hook candidates.",
+      "ready_outcome": "hooks_ranked",
+      "pinned": [
+        "rules.hook-selection",
+        "guardrail.honest-hooks"
+      ],
+      "slots": [
+        {
+          "name": "source_cut",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the long cut's encoded file media noun."
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the long cut's caption track."
+        },
+        {
+          "name": "panel_set",
+          "category": "noun.eval_run",
+          "description": "Pin of the long cut's panels, for visible change.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "hook_candidates",
+          "template": "template.hook-candidates"
+        }
+      ],
+      "steps": [
+        "Take candidate lines only from the long cut's own captions.",
+        "Name each candidate's devices from the closed list, and where its payoff is.",
+        "Rank by the rules' order and give the reason for each rank."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.hook-candidates's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "lines-from-source",
+          "check": "Every candidate line appears in the pinned caption track.",
+          "method": "deterministic"
+        },
+        {
+          "id": "ranks-unique",
+          "check": "Ranks run from 1 without gaps or repeats.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-review.review-cut"
+      ]
+    },
+    {
+      "slug": "plan-cutdown",
+      "kind": "verb.decompose_dag",
+      "title": "Plan a cut-down for one platform",
+      "claimant": "agent",
+      "summary": "Choose the segments of the long cut a cut-down keeps, in order, with a purpose each, a length inside the platform profile's target, a reframe, a caption mode and the labels it must carry, and propose the reframe and compose verbs it needs.",
+      "outcome": "A cut-down plan, and proposals for its reframe and compose.",
+      "ready_outcome": "cutdown_planned",
+      "pinned": [
+        "rules.platform-targets",
+        "rules.vertical-reframe",
+        "rules.burned-captions",
+        "guardrail.no-new-claims",
+        "guardrail.labels-survive-the-cut"
+      ],
+      "slots": [
+        {
+          "name": "source_cut",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the long cut's encoded file media noun."
+        },
+        {
+          "name": "hook_candidates",
+          "category": "noun.eval_run",
+          "description": "Pin of the ranked hook candidates."
+        },
+        {
+          "name": "platform_profile",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the platform profile."
+        }
+      ],
+      "produces": [
+        {
+          "name": "cutdown_plan",
+          "template": "template.cutdown-plan"
+        }
+      ],
+      "steps": [
+        "Open on the chosen hook and keep its payoff.",
+        "End each segment after the qualifiers its claims need.",
+        "Fit the target length with whole segments; never with freezes, slowed motion or loops.",
+        "Propose video-editing plan-reframes and narrated-explainer-video compose-cut for the plan."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.cutdown-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "length-adds-up",
+          "check": "length_s equals the sum of the segments' lengths.",
+          "method": "deterministic"
+        },
+        {
+          "id": "inside-target",
+          "check": "length_s lies inside the profile's target, and under its maximum when one is set.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "social-cutdowns.find-hook-moments"
+      ]
+    },
+    {
+      "slug": "check-meaning",
+      "kind": "verb.verify_gate",
+      "title": "Check that cutting changed no meaning",
+      "claimant": "agent",
+      "review": "distinct_reviewer",
+      "summary": "Compare the cut-down's lines with the long cut's, list any new claim, changed claim or dropped qualifier, check that every number is still traced, and pass only when all three lists are empty.",
+      "outcome": "A meaning check.",
+      "ready_outcome": "meaning_checked",
+      "pinned": [
+        "guardrail.no-new-claims",
+        "video-review:guardrail.trace-every-number"
+      ],
+      "slots": [
+        {
+          "name": "cutdown_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut-down plan."
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the long cut's caption track."
+        },
+        {
+          "name": "claim_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the long cut's claim trace."
+        }
+      ],
+      "produces": [
+        {
+          "name": "meaning_check",
+          "template": "template.meaning-check"
+        }
+      ],
+      "steps": [
+        "Read every line the segments keep, in the cut-down's order.",
+        "For each claim, compare it with the long cut's sentence and its trace; name anything added, changed or cut off.",
+        "Propose the segment change that fixes a dropped qualifier."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.meaning-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "passes-follows",
+          "check": "passes is true only when new_claims, changed_claims and dropped_qualifiers are all empty and every number is traced.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The checking key differs from the key that planned the cut-down.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "social-cutdowns.plan-cutdown"
+      ]
+    },
+    {
+      "slug": "draft-copy",
+      "kind": "verb.solve_draft",
+      "title": "Draft the copy for a cut-down",
+      "claimant": "agent",
+      "summary": "Draft the title, description, call to action, three to six hashtags, alt text, credits and disclosures for one cut-down from what it shows, and run the privacy scan before returning the draft.",
+      "outcome": "A copy draft with its privacy scan.",
+      "ready_outcome": "copy_drafted",
+      "pinned": [
+        "rules.copy",
+        "guardrail.honest-hooks",
+        "cutdown-checks"
+      ],
+      "slots": [
+        {
+          "name": "cutdown_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut-down plan."
+        },
+        {
+          "name": "meaning_check",
+          "category": "noun.eval_run",
+          "description": "Pin of a passing meaning check."
+        }
+      ],
+      "produces": [
+        {
+          "name": "copy_draft",
+          "template": "template.copy-draft"
+        }
+      ],
+      "steps": [
+        "Write only what the cut-down shows; every number in the copy is one the cut-down shows and traces.",
+        "State the disclosures in words, credit every source and licence, and pick hashtags that describe the content.",
+        "Run the privacy scan; a hit is removed before the draft is returned."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.copy-draft's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scan-clean",
+          "check": "Every privacy_scan field is false and the cut-down checks' nothing-private rule passes on the copy.",
+          "method": "deterministic"
+        },
+        {
+          "id": "meaning-passed",
+          "check": "The pinned meaning check has passes true.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "social-cutdowns.check-meaning"
+      ]
+    },
+    {
+      "slug": "approve-cutdown",
+      "kind": "verb.verify_gate",
+      "title": "Approve or hold a cut-down",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person watches the cut-down on a phone with sound and muted, reads its copy aloud, and approves or holds it; posting stays the person's own act, through the platform's official app or site.",
+      "outcome": "An approval record.",
+      "ready_outcome": "cutdown_decided",
+      "pinned": [
+        "posting-checklist",
+        "guardrail.a-person-posts"
+      ],
+      "slots": [
+        {
+          "name": "cutdown_output",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the rendered cut-down's media noun."
+        },
+        {
+          "name": "copy_draft",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the copy draft."
+        },
+        {
+          "name": "review",
+          "category": "noun.eval_run",
+          "description": "Pin of the cut-down's review.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "approval",
+          "template": "template.cutdown-approval"
+        }
+      ],
+      "steps": [
+        "Run the posting checklist on a phone.",
+        "Approve or hold, in your own words; a worker never posts, and this record is not a post."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.cutdown-approval's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "never-posted-by-worker",
+          "check": "posted_by_worker is false.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "social-cutdowns.draft-copy",
+        "video-review.review-cut"
+      ]
+    }
+  ]
+}
