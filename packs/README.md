@@ -69,8 +69,14 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Usability heuristics review](usability-heuristics-review/README.md) | Reviewing a page or app against ten usability heuristics, with independent evaluators, severities, screenshot regions and a fix verb per finding | 25 | 5 |
 | [Launch readiness](launch-readiness/README.md) | Deciding whether a site or app is ready to launch: links, status claims, analytics, error pages, rollback and the owner's go, with the release left to a person | 18 | 8 |
 | [Exploratory testing charters](exploratory-testing-charters/README.md) | Exploratory testing in time-boxed sessions: charters, notes taken as it happens, bugs as findings, debriefs and coverage notes | 15 | 4 |
+| [Video QA checks](video-qa/README.md) | Checking an encoded video beyond the eight post-encode checks: blank and frozen frames, cut cadence, loudness range and true peak, clipping and silence, caption lint and timing against speech, the delivery spec read from the file's own boxes and a legibility proxy, with tested code | 20 | 7 |
+| [Video editing](video-editing/README.md) | Editing a video from its script: an edit decision list paced to the words, J and L cuts, b-roll, transitions, colour, the mix, reframes and an export spec, with every revision kept and a person locking the cut | 31 | 9 |
+| [Video review](video-review/README.md) | Reviewing a video with a fixed rubric, by a person or a worker that did not make it: timestamped findings with a severity, evidence and a fix verb, every number traced, and a re-review after fixes | 26 | 7 |
+| [Social cut-downs](social-cutdowns/README.md) | Deriving platform cut-downs from a longer video that keep its meaning: hooks, reframes, burned-in captions, length targets and copy, approved and posted by a person through the platform's own tools | 25 | 5 |
+| [Thumbnails and titles](thumbnail-and-title/README.md) | Drafting thumbnail and title candidates from what a video shows, checking them at small sizes and for honesty, and planning an A/B test, with a person picking | 24 | 6 |
+| [Video audience acceptance](video-uat/README.md) | Testing whether a video's intended viewers understand it, with tasks and pass criteria a person agrees to before any session and results that describe only the people asked | 16 | 5 |
 
-Together: 1035 nouns and 342 verb templates across fifty-three packs. The
+Together: 1177 nouns and 381 verb templates across fifty-nine packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -139,7 +145,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the thirty worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the thirty-seven worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether

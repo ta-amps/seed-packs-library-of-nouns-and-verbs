@@ -37,9 +37,10 @@ authorized requester decides whether to enqueue them.
 | Tool and benchmark freshness for video and motion tools | [Tool discovery](../packs/tool-discovery/README.md), [Benchmark scores](../packs/benchmark-scores/README.md) | Exists, added now | code_node (candidates), eval_run (scores), benchmark_suite (trials) | probe_source, fetch_feed, recheck_fragility, benchmark_harness | run-trial, compare-on-profile |
 
 **Still needed for video:** caption translation into other languages; an audio
-description track for blind viewers; delivery presets per platform; and sourcing of
-licensed music and stock clips. Narration noise-floor and clipping checks are now in the
-voice narration pack.
+description track for blind viewers; and sourcing of licensed music and stock clips.
+Narration noise-floor and clipping checks are now in the voice narration pack. Editing,
+review, extended QA, cut-downs with platform profiles, covers and titles, and audience
+acceptance are in section 8.
 
 ## 2. Building agent kits for nonprofits
 
@@ -174,6 +175,32 @@ review judges whole tasks.
 **Still needed here:** moderated usability sessions with real participants, which need consent
 and human-sensitive handling; performance and load budgets; contract tests for public APIs; and
 testing translated surfaces with fluent reviewers.
+
+## 8. Editing, reviewing and improving a video
+
+Added October 30, 2026, at the owner's request for editing, review, QA and acceptance packs that can be
+used to improve a video: an edit paced to its words, measured checks beyond the eight post-encode
+checks, a rubric review with a fix verb per finding, cut-downs that keep their meaning, honest covers
+and titles, and whether the intended viewers understand it. They hand the page and player to the accessibility
+audit pack, single frames with known layout to the screenshot design review pack, and criteria
+agreement and sign-off to the user acceptance testing pack, instead of redefining them.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| An edit decision list paced to the words | [Video editing](../packs/video-editing/README.md): draft-edit-list, check-pacing | Added now | scene_recipe (edit list), eval_run (pacing report), reflex_procedure (pacing, split edit, b-roll and transition rules) | solve_draft, verify_gate | revise-edit for flagged shots |
+| Mix, colour, reframes, conform and export | Video editing: plan-mix, check-color, plan-reframes, write-export-spec, conform-edit | Added now | scene_recipe (mix plan, reframe plan, export spec), eval_run (colour report, conform record), reflex_procedure (mix, colour, reframing, conform rules) | solve_draft, verify_gate | render-sequence per profile |
+| Findings answered in new versions, and a person's lock | Video editing: revise-edit, lock-cut (a person's verb) | Added now | scene_recipe (edit list), eval_run (revision note, lock record), benchmark_suite (edit checks) | solve_draft, verify_gate (human) | re-review |
+| Measured checks beyond the eight post-encode checks | [Video QA checks](../packs/video-qa/README.md): collect-measurements, lint-captions, check-picture, check-sound, check-file-spec, check-legibility, compile-qa-report | Added now; the code is tested | scene_recipe (QA plan, text items), eval_run (measurement set, check rows, extended QA report), code_node (QA checks), benchmark_suite (extended checks, report checks) | compile_dag, verify_gate | record-finding per failure |
+| Panels, claims and a rubric review | [Video review](../packs/video-review/README.md): make-panels, trace-claims, review-cut (a person or a different worker) | Added now | seed_hypothesis (scope), eval_run (panel set, claim trace, review findings), benchmark_suite (rubric, severity guide, review checks), reflex_procedure (fix routes) | compile_dag, verify_gate | route-findings |
+| A second reviewer, a person listening, routing and re-review | Video review: compare-reviews, watch-and-listen (a person's verb), route-findings, re-review | Added now | eval_run (comparison, listening record, re-review), seed_hypothesis (fix routing) | verify_gate, verify_gate (human), decompose_dag | record-finding and one fix verb per cause |
+| Cut-downs that keep their meaning | [Social cut-downs](../packs/social-cutdowns/README.md): find-hook-moments, plan-cutdown, check-meaning (a different worker), draft-copy, approve-cutdown (a person's verb) | Added now | seed_hypothesis (platform profile, copy draft), eval_run (hook candidates, meaning check, approval), scene_recipe (cut-down plan), benchmark_suite (cut-down checks) | situate, decompose_dag, verify_gate, solve_draft, verify_gate (human) | plan-reframes, compose-cut |
+| Covers and titles a person picks | [Thumbnails and titles](../packs/thumbnail-and-title/README.md): draft-titles, draft-thumbnails, check-thumbnails, check-honesty (a different worker), plan-ab-test, record-ab-result (a person's verb) | Added now | seed_hypothesis (titles, A/B plan), scene_recipe (thumbnails), eval_run (size check, honesty check, A/B result), benchmark_suite (title checks, contrast example) | solve_draft, verify_gate, verify_gate (human) | assemble-comparison, record-choice |
+| Whether the intended viewers understand it | [Video audience acceptance](../packs/video-uat/README.md): plan-acceptance, run-session (a person's verb), score-answers (a different worker), decide-acceptance, write-uat-findings | Added now | seed_hypothesis (plan), eval_run (session notes, scored answers, decision), benchmark_suite (task bank, acceptance checks) | problemize, verify_gate (human), verify_gate, decompose_dag | agree-criteria and sign-off in user acceptance testing, record-finding per miss |
+
+**Still needed here:** checking each platform's current limits on the day, which the cut-down
+profiles leave to a person; comparing a posted cut-down's retention with its long cut's, which needs
+numbers only the platform shows a person; and the caption translation and audio description that
+section 1 still lists.
 
 ## Work that supports every goal
 

@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 30)
+        self.assertEqual(summary["worked_examples"], 37)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -1373,6 +1373,162 @@ class QualityPackExamples(unittest.TestCase):
             else:
                 self.assertEqual(finding["conformance"], "advisory", finding["id"])
         self.assertEqual(report["statement"], "failures_found")
+
+
+class VideoImprovementPackExamples(unittest.TestCase):
+    """The video editing, QA, review, cut-down, thumbnail and audience acceptance packs of October 30: their record
+    checks, and the arithmetic and consistency their worked examples state. The video QA pack recomputes its own
+    worked example in its code's CI job."""
+
+    FIXTURES = (("video-qa", "report-checks"), ("video-editing", "edit-checks"), ("video-review", "review-checks"),
+                ("social-cutdowns", "cutdown-checks"), ("thumbnail-and-title", "title-checks"), ("video-uat", "uat-checks"))
+
+    @staticmethod
+    def instance(pack: str, slug: str):
+        return record(pack, slug)["value"]["instance"]
+
+    @staticmethod
+    def words(text: str) -> int:
+        return sum(1 for token in text.split() if any(ch.isalnum() for ch in token))
+
+    def test_record_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(value["finding_schema"], fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_pacing_report_recomputes_from_the_edit_list(self):
+        edl = record("video-editing", "example.edit-list")["value"]
+        lines, plan = edl["lines"], edl["instance"]
+        report = self.instance("video-editing", "example.pacing-report")
+        limits = report["limits"]
+        rows = []
+        for ev in [e for e in plan["events"] if e["track"] == "V1"]:
+            start, end = ev["record_in_frame"] / plan["fps"], ev["record_out_frame"] / plan["fps"]
+            length = round(end - start, 3)
+            spoken = sum(self.words(lines[line]) for line in ev["carries_lines"])
+            marks = [start, *ev["beats_s"], end]
+            gap = round(max(b - a for a, b in zip(marks, marks[1:])), 3)
+            wps, need = round(spoken / length, 2), round(0.5 + ev["new_text_words"] / 3, 2)
+            verdicts = [name for name, hit in (
+                ("rushed", wps > limits["rushed_above_wps"]),
+                ("slack", wps < limits["slack_below_wps"] and not ev["beats_s"]),
+                ("unreadable", length < need),
+                ("dense", ev["new_text_words"] > limits["dense_new_words"] and spoken > 0),
+                ("long", length > limits["long_shot_s"] and gap > limits["max_gap_between_beats_s"])) if hit]
+            rows.append({"shot_id": ev["event_id"], "start_s": round(start, 3), "end_s": round(end, 3), "length_s": length,
+                         "spoken_words": spoken, "words_per_second": wps, "new_text_words": ev["new_text_words"],
+                         "reading_need_s": need, "longest_gap_s": gap, "verdicts": verdicts})
+        self.assertEqual(rows, report["shots"])
+        self.assertEqual(report["flagged"], sum(1 for row in rows if row["verdicts"]))
+        main = [e for e in plan["events"] if e["track"] == "V1"]
+        self.assertEqual([e["record_in_frame"] for e in main[1:]], [e["record_out_frame"] for e in main[:-1]])
+        self.assertEqual(main[-1]["record_out_frame"], plan["total_frames"])
+        note = self.instance("video-editing", "example.revision-note")
+        self.assertFalse(note["overwrites_previous"])
+        self.assertLessEqual({e for change in note["changes"] for e in change["events"]}, {e["event_id"] for e in plan["events"]})
+
+    def test_review_examples_agree_with_each_other(self):
+        review = self.instance("video-review", "example.review-findings")
+        ids = [f["finding_id"] for f in review["findings"]]
+        self.assertEqual(review["open_blockers"], sum(1 for f in review["findings"] if f["severity"] == "blocker" and f["status"] == "open"))
+        self.assertLessEqual(set(review["top_fixes"]), set(ids))
+        self.assertEqual(set(review["scores"]), set(record("video-review", "rubric")["value"]["areas"]))
+        for finding in review["findings"]:
+            self.assertIn(finding["fix_verb"], IDX.templates, finding["finding_id"])
+            self.assertLessEqual(finding["start_s"], finding["end_s"], finding["finding_id"])
+        trace = self.instance("video-review", "example.claim-trace")
+        self.assertEqual(trace["numbers_found"], len(trace["claims"]))
+        self.assertEqual(trace["numbers_traced"], sum(1 for c in trace["claims"] if c["result"] in ("upheld", "disputed")))
+        again = self.instance("video-review", "example.re-review")
+        self.assertEqual(sorted(r["finding_id"] for r in again["results"]), sorted(ids))
+        self.assertNotEqual(again["media_sha256"], again["previous_sha256"])
+        self.assertEqual(again["open_blockers"], sum(1 for f in again["new_findings"] if f["severity"] == "blocker"))
+        routes = record("video-review", "fix-routes")["value"]["routes"]
+        for route in routes:
+            self.assertIn(route["fix_verb"], IDX.templates)
+
+    def test_cutdown_plan_and_copy_recheck(self):
+        plan = self.instance("social-cutdowns", "example.cutdown-plan")
+        profile = self.instance("social-cutdowns", "example.platform-profile")
+        self.assertEqual(plan["length_s"], round(sum(s["source_out_s"] - s["source_in_s"] for s in plan["segments"]), 3))
+        low, high = profile["target_length_s"]
+        self.assertTrue(low <= plan["length_s"] <= high and plan["length_s"] <= profile["max_length_s"])
+        self.assertEqual(plan["segments"][0]["purpose"], "hook")
+        hooks = self.instance("social-cutdowns", "example.hook-candidates")["candidates"]
+        self.assertEqual(sorted(h["rank"] for h in hooks), list(range(1, len(hooks) + 1)))
+        self.assertEqual(plan["segments"][0]["source_in_s"], next(h for h in hooks if h["rank"] == 1)["start_s"])
+        meaning = self.instance("social-cutdowns", "example.meaning-check")
+        empty = not (meaning["new_claims"] or meaning["changed_claims"] or meaning["dropped_qualifiers"])
+        self.assertEqual(meaning["passes"], empty and all(n["traced"] for n in meaning["numbers"]))
+        copy = self.instance("social-cutdowns", "example.copy-draft")
+        self.assertTrue(3 <= len(copy["hashtags"]) <= 6)
+        self.assertTrue(any("AI-generated voice" in d for d in copy["disclosures"]))
+        private = record("social-cutdowns", "cutdown-checks")["value"]["deterministic_checks"]
+        rule = next(c["rule"] for c in private if c["id"] == "nothing-private")
+        for text in (copy["title"], copy["description"], copy["alt_text"], copy["call_to_action"]):
+            self.assertTrue(vp.rule_passes(rule, {"copy_text": text}), text)
+        self.assertFalse(any(copy["privacy_scan"].values()))
+
+    def test_thumbnail_sizes_contrast_and_honesty_recompute(self):
+        thumbs = self.instance("thumbnail-and-title", "example.thumbnail-candidates")
+        sizes = self.instance("thumbnail-and-title", "example.size-check")
+        width = thumbs["master"]["width_px"]
+        for cand, checked in zip(thumbs["candidates"], sizes["candidates"]):
+            self.assertEqual(cand["words"], self.words(cand["text_overlay"]), cand["candidate_id"])
+            rows = [{"display": s["name"], "width_px": s["width_px"], "text_css_px": round(cand["text_px"] * s["width_px"] / width, 2),
+                     "readable": round(cand["text_px"] * s["width_px"] / width, 2) >= sizes["min_css_px"]} for s in sizes["sizes"]]
+            self.assertEqual(checked["rows"], rows, cand["candidate_id"])
+            self.assertEqual(checked["readable_everywhere"], all(r["readable"] for r in rows))
+            self.assertEqual(checked["words_ok"], cand["words"] <= 5)
+        contrast = record("thumbnail-and-title", "contrast-example")["value"]
+        self.assertEqual(vp.run_contrast_ratio(contrast), contrast["expected"])
+        self.assertFalse(contrast["expected"]["T3"]["normal_text"])
+        titles = self.instance("thumbnail-and-title", "example.title-candidates")["candidates"]
+        for title in titles:
+            self.assertEqual(title["chars"], len(title["text"]), title["candidate_id"])
+        honesty = {c["candidate_id"]: c for c in self.instance("thumbnail-and-title", "example.honesty-check")["candidates"]}
+        banned = record("thumbnail-and-title", "rules.honesty")["value"]["banned_pattern"]
+        for title in titles:
+            found = bool(__import__("re").search(banned, title["text"]))
+            self.assertEqual(bool(honesty[title["candidate_id"]]["banned_patterns"]), found, title["candidate_id"])
+        for item in honesty.values():
+            kept = all(c["traced"] for c in item["claims"]) and not item["banned_patterns"] and item["promise_kept_at_s"] is not None
+            self.assertEqual(item["passes"], kept, item["candidate_id"])
+        plan = self.instance("thumbnail-and-title", "example.ab-plan")
+        self.assertTrue(set(plan["variants"]) <= {k for k, v in honesty.items() if v["passes"]})
+
+    def test_acceptance_decision_recomputes_from_the_plan_and_scores(self):
+        plan = self.instance("video-uat", "example.uat-plan")
+        scores = self.instance("video-uat", "example.scored-answers")
+        decision = self.instance("video-uat", "example.uat-decision")
+        self.assertLess(plan["criteria_fixed_on"], plan["first_session_on"])
+        results = []
+        for crit in plan["pass_criteria"]:
+            rows = [r for r in scores["rows"] if r["task_id"] == crit["task_id"] and crit["segment"] in ("all", r["segment"])]
+            met = sum(1 for r in rows if r["met_key"])
+            share = round(met / len(rows), 3) if rows else None
+            result = "unknown" if share is None else ("met" if share >= crit["min_share"] else "missed")
+            results.append({"task_id": crit["task_id"], "segment": crit["segment"], "answers": len(rows), "met": met,
+                            "share": share, "min_share": crit["min_share"], "result": result})
+        self.assertEqual(decision["results"], results)
+        self.assertEqual(decision["accepted"], all(r["result"] == "met" for r in results))
+        self.assertEqual(decision["findings_proposed"], sum(1 for r in results if r["result"] == "missed") + len(scores["notes"]))
+        bank = {task["task_id"] for task in record("video-uat", "task-bank")["value"]["tasks"]}
+        self.assertLessEqual(set(plan["tasks"]), bank)
 
 
 if __name__ == "__main__":
