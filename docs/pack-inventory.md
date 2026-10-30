@@ -151,6 +151,28 @@ compared; turning one request into many varied questions, personas and situation
 lineage and budget-derived grants for one task split across many workers over days; and wiring
 checks that fail when a capability is reachable from no live path.
 
+## 7. Testing, acceptance and accessibility
+
+Added October 30, 2026, so a surface can be tested the way the people using it would, audited
+against WCAG 2.2 AA, explored for what no script asked about and checked before anyone shares its
+link. Every pack keeps the decision with a person: a sign-off, an assistive-technology session or a
+go decision is a person's verb.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| Personas and criteria a person agrees to before testing | [User acceptance testing](../packs/user-acceptance-testing/README.md): draft-personas, write-acceptance-criteria, agree-criteria (a person's verb) | Added now | seed_hypothesis (personas, criteria), eval_run (agreement), skill_pack (guides) | solve_draft, problemize, verify_gate (human) | write-scenario-scripts |
+| Scripts run on a named build, results recorded as observed | User acceptance testing: write-scenario-scripts, run-scenario | Added now | benchmark_suite (script), eval_run (session record), reflex_procedure (defect and test-data rules) | solve_draft, benchmark_harness | record-finding per failed or blocked step |
+| Verdicts by a fixed rule and a person's go or no-go | User acceptance testing: compile-results, sign-off (a person's verb) | Added now | eval_run (summary, sign-off), benchmark_suite (sign-off checks) | verify_gate | |
+| A WCAG 2.2 AA audit, every finding citing its criterion | [Accessibility audit](../packs/accessibility-audit/README.md): plan-audit, capture-states, check-contrast, lint-structure, walk-keyboard, check-reflow, check-target-size, check-media, check-motion, check-text-alternatives | Added now; the contrast and lint code is tested | seed_hypothesis (plan), eval_run (captures, check results), benchmark_suite (checklist, audit checks), public_source (WCAG 2.2), code_node (contrast and lint tool) | problemize, ingest, verify_gate | record-finding per failure |
+| A person with assistive technology, the report and its review | Accessibility audit: check-with-assistive-tech (a person's verb), write-audit-report, review-audit (a different worker) | Added now | eval_run (session, report, review) | verify_gate, solve_draft | verify-fix after fixes |
+| Ten heuristics, independent evaluators and a fix verb per finding | [Usability heuristics review](../packs/usability-heuristics-review/README.md): scope-review, evaluate-against-heuristics, combine-findings, review-findings (a different worker), propose-fixes | Added now | skill_pack (ten heuristics), reflex_procedure (severity, combine and evidence rules), eval_run (sheets, combined findings, review), seed_hypothesis (scope, fix plan) | problemize, verify_gate, decompose_dag | propose-fix, draft-embodiments, plan-audit |
+| Links, claims, analytics, error pages, rollback and the owner's go | [Launch readiness](../packs/launch-readiness/README.md): plan-readiness, check-live-links, check-page-claims, check-analytics, check-error-pages, review-rollback, assemble-readiness, record-go-decision (a person's verb) | Added now | benchmark_suite (checklist, go checks), reflex_procedure (claim, analytics and error page rules), eval_run (checks, report, decision) | decompose_dag, verify_gate | record-finding per mismatch, prepare-rollback |
+| Time-boxed exploration with charters, debriefs and coverage | [Exploratory testing charters](../packs/exploratory-testing-charters/README.md): draft-charters, run-session, debrief-session (a different worker), map-coverage | Added now | seed_hypothesis (charter), eval_run (notes, debrief, coverage), skill_pack (charter guide, test ideas), reflex_procedure (session rules, coverage model) | generate_seed, benchmark_harness, verify_gate | record-finding per bug, draft-charters per gap |
+
+**Still needed here:** moderated usability sessions with real participants, which need consent
+and human-sensitive handling; performance and load budgets; contract tests for public APIs; and
+testing translated surfaces with fluent reviewers.
+
 ## Work that supports every goal
 
 [Repository review](../packs/repo-review/README.md), [Decomposition patterns](../packs/decomposition-patterns/README.md),

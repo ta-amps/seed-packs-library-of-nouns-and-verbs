@@ -64,8 +64,13 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Retrieval triggers and reuse](retrieval-triggers-and-reuse/README.md) | Looking up existing nouns before generating new ones, and reusing past solutions only under the check | 18 | 7 |
 | [File triage at scale](file-triage-at-scale/README.md) | Organizing very large collections of files without losing any, with every move approved by a person and verified by hash | 18 | 9 |
 | [Measured claims](measured-claims/README.md) | Technical notes whose every claim says how it is known, with conclusions resting on evidence and corrections kept on the record | 12 | 4 |
+| [User acceptance testing](user-acceptance-testing/README.md) | User acceptance testing with synthetic personas, criteria a person agrees to before testing, scenario scripts, results recorded as observed, defects proposed as findings and a person's go or no-go | 21 | 7 |
+| [Accessibility audit](accessibility-audit/README.md) | Auditing a page or app against WCAG 2.2 level AA, every finding citing its success criterion, with tested contrast and landmark code | 23 | 13 |
+| [Usability heuristics review](usability-heuristics-review/README.md) | Reviewing a page or app against ten usability heuristics, with independent evaluators, severities, screenshot regions and a fix verb per finding | 25 | 5 |
+| [Launch readiness](launch-readiness/README.md) | Deciding whether a site or app is ready to launch: links, status claims, analytics, error pages, rollback and the owner's go, with the release left to a person | 18 | 8 |
+| [Exploratory testing charters](exploratory-testing-charters/README.md) | Exploratory testing in time-boxed sessions: charters, notes taken as it happens, bugs as findings, debriefs and coverage notes | 15 | 4 |
 
-Together: 933 nouns and 305 verb templates across forty-eight packs. The
+Together: 1035 nouns and 342 verb templates across fifty-three packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -134,7 +139,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the twenty-four worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the thirty worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether
