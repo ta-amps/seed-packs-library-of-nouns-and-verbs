@@ -56,8 +56,11 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Continuous tuning](continuous-tuning/README.md) | Tuning a small open model round after round, kept only when a rule fixed before scoring says so | 33 | 9 |
 | [Public company research](public-company-research/README.md) | Researching public companies from official sources, with every number cited and never as financial advice | 27 | 8 |
 | [Deep research report](deep-research-report/README.md) | Answering a research question with a cited report that states its limits, not for choosing what to build | 29 | 9 |
+| [Options chain review](options-chain-review/README.md) | Reviewing an options chain descriptively from a licensed source the requester already has: greeks, implied volatility and its rank, liquidity screens and roll candidates, every number with its data timestamp and never as financial advice | 27 | 7 |
+| [Checked data analysis](checked-data-analysis/README.md) | Analyzing a CSV file with a check at every step: profile, validation, flags that never drop rows, recorded queries, charts as data and findings traced to queries, while a person decides what they mean | 32 | 8 |
+| [Screenshot design review](screenshot-design-review/README.md) | Reviewing a user interface screenshot against design rules: described first, captured at named widths and themes, measured, recorded as located findings and verified after a re-render | 28 | 6 |
 
-Together: 764 nouns and 250 verb templates across forty packs. The
+Together: 851 nouns and 271 verb templates across forty-three packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
@@ -126,7 +129,7 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the sixteen worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the nineteen worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
 | `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
 
 The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether
