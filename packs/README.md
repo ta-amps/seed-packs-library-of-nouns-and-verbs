@@ -20,6 +20,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Video showcase](video-showcase/README.md) | Making a truthful demo video, from script to QA, review and release | 22 | 11 |
 | [Visual and 3D rendering](visual-rendering/README.md) | Rendering images, motion graphics and 3D scenes and checking them | 11 | 5 |
 | [Tool discovery](tool-discovery/README.md) | Discovering, trialing, deciding on and refreshing new tools | 23 | 7 |
+| [Prior art and alternatives](prior-art-and-alternatives/README.md) | Finding what already exists and what the alternatives are, before anything new is built | 21 | 7 |
 | [Benchmark scores](benchmark-scores/README.md) | Keeping benchmark scores current and comparable | 10 | 5 |
 | [Freshness checks](freshness-checks/README.md) | Finding stale, deprecated or end-of-life knowledge | 7 | 4 |
 | [Evaluation design](evaluation-design/README.md) | Fair, pre-registered evaluations with exact-match scoring | 10 | 7 |
@@ -34,7 +35,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Cost optimization](cost-optimization/README.md) | Finding and measuring cost savings | 8 | 6 |
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 
-Together: 344 nouns and 106 verb templates across seventeen packs. The
+Together: 365 nouns and 113 verb templates across eighteen packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
