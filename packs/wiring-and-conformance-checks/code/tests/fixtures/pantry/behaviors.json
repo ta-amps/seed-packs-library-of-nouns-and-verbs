@@ -1,0 +1,14 @@
+[
+ {"id": "B1", "claim": "Booking a slot saves it.", "doc": "README.md, Booking",
+  "real_path": ["pantry_app.routes.book", "pantry_app.slots.book_slot", "pantry_app.store.Store.save"],
+  "tests": ["tests/test_slots.py::BookingTests::test_book_returns_a_slot"]},
+ {"id": "B2", "claim": "Cancelling a slot removes it.", "doc": "README.md, Cancelling",
+  "real_path": ["pantry_app.routes.cancel", "pantry_app.store.Store.delete"],
+  "tests": ["tests/test_slots.py::CancelTests::test_cancel_removes_the_slot"]},
+ {"id": "B3", "claim": "The health endpoint answers.", "doc": "README.md, Health",
+  "real_path": ["pantry_app.health.healthz"],
+  "tests": ["tests/test_health.py::test_healthz_says_ok"]},
+ {"id": "B4", "claim": "Weekly reports count visits.", "doc": "docs/reports.md",
+  "real_path": ["pantry_app.reports.weekly_counts"],
+  "tests": []}
+]

@@ -1,0 +1,5023 @@
+{
+  "pack_id": "living-research-dossier",
+  "title": "Living research dossier",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for keeping a research dossier current: a numbered queue of open questions worked in cycles, with at most one sub-agent per question in each cycle; sourced answers folded in and a cycle log appended; every fact carrying an as-of date and a decay class; a switch to watching named triggers once the questions run out; decayed facts refreshed against their sources; and a person deciding which version is published. It pins the deep research report pack's questions, source logs, claims and reviews instead of redefining them.",
+  "dependencies": [
+    "deep-research-report",
+    "policy-and-law-watch"
+  ],
+  "boundaries": [
+    "Permitted access only, as the deep research report pack's rules say: official APIs, feeds and pages, robots.txt and terms respected, no logins, paywall bypasses or personal data.",
+    "At most one sub-agent per question in a cycle; every sub-agent is named in the cycle log.",
+    "No scheduler is activated: every cycle, trigger check and refresh is a verb an authorized requester enqueues.",
+    "Only a person decides which dossier version is published.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for keeping a research dossier current",
+      "value": {
+        "lets_workers": "Keep a dossier on a topic people keep relying on: number its open questions and work them in cycles, with at most one sub-agent per question in each cycle; fold sourced answers in and append a cycle log; give every fact an as-of date, a decay class and a refresh date; switch to watching named triggers once no question is open; refresh facts as they decay; and leave the decision about which version is published to a person. Questions, source logs, claims and reviews use the deep research report pack's nouns.",
+        "not_for": "A question answered once. One cited answer is a deep research report; a dossier is for a topic whose answers go stale.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "living-research-dossier.open-dossier"
+            },
+            "when": "A topic that must stay current gets a numbered queue."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.plan-cycle"
+            },
+            "when": "Each cycle picks open questions, one sub-agent each."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.answer-question"
+            },
+            "when": "The one sub-agent for one question in one cycle."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.fold-in"
+            },
+            "when": "Sourced answers, refreshes and fired triggers make a new version."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.log-cycle"
+            },
+            "when": "Every cycle appends what changed and who worked what."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.switch-to-watching"
+            },
+            "when": "No question is open: name the triggers."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.check-triggers"
+            },
+            "when": "Each check of the named triggers, as the requester enqueues it."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.refresh-decayed-facts"
+            },
+            "when": "Facts past their refresh date are read again."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.review-dossier"
+            },
+            "when": "Before anyone relies on a version; a different worker."
+          },
+          {
+            "verb": {
+              "$verb": "living-research-dossier.decide-publication"
+            },
+            "when": "A person decides which version is published."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.one-sub-agent-per-question"
+          },
+          {
+            "$pin": "guardrail.date-every-fact"
+          },
+          {
+            "$pin": "guardrail.keep-the-history"
+          },
+          {
+            "$pin": "deep-research-report:guardrail.quote-exactly"
+          },
+          {
+            "$pin": "deep-research-report:guardrail.search-on-the-record"
+          },
+          {
+            "$pin": "deep-research-report:guardrail.seek-counter-evidence"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.no-personal-data"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.person-decides"
+          }
+        ],
+        "builds_on": [
+          {
+            "$pin": "deep-research-report:template.research-question"
+          },
+          {
+            "$pin": "deep-research-report:template.source-log"
+          },
+          {
+            "$pin": "deep-research-report:template.claim-extract"
+          },
+          {
+            "$pin": "deep-research-report:template.adversarial-review"
+          },
+          {
+            "$pin": "deep-research-report:rules.permitted-access"
+          },
+          {
+            "$pin": "deep-research-report:rules.screening"
+          },
+          {
+            "$pin": "deep-research-report:rules.evidence-strength"
+          },
+          {
+            "$pin": "deep-research-report:checklist"
+          },
+          {
+            "$pin": "policy-and-law-watch:template.delivery-record"
+          }
+        ],
+        "worked_example": "Synthetic: a dossier on cold-storage grants for small food banks. Two cycles answer three questions and park one; the dossier switches to watching three triggers; a volatile closing date is refreshed; a changed guidelines page fires a trigger that reopens two questions; a third cycle supersedes the award range and parks the fiscal sponsor question again; a person decides the version that is published."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "deep-research-report:pack",
+          "A dossier is a deep research report kept current."
+        ],
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.one-sub-agent-per-question"
+        ],
+        [
+          "requires_noun",
+          "guardrail.date-every-fact"
+        ],
+        [
+          "requires_noun",
+          "guardrail.keep-the-history"
+        ],
+        [
+          "requires_noun",
+          "rules.question-queue"
+        ],
+        [
+          "requires_noun",
+          "rules.cycles"
+        ],
+        [
+          "requires_noun",
+          "rules.decay-classes"
+        ],
+        [
+          "requires_noun",
+          "rules.triggers"
+        ],
+        [
+          "requires_noun",
+          "template.dossier"
+        ],
+        [
+          "requires_noun",
+          "deep-research-report:template.source-log"
+        ],
+        [
+          "requires_noun",
+          "deep-research-report:template.claim-extract"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How a dossier is opened, worked in cycles, watched and refreshed",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "open-dossier writes the first version: the topic, a numbered question queue and the role of the person who decides what is published.",
+          "plan-cycle picks open questions in number order up to the cycle's limit and proposes one answer-question verb for each; nobody else works those questions in that cycle.",
+          "answer-question, the sub-agent, answers one question with a source log and a claim extract in the deep research report pack's shapes.",
+          "fold-in writes the next version by compare-and-set; log-cycle appends the cycle log.",
+          "When no question is open, switch-to-watching names the triggers; check-triggers and refresh-decayed-facts run whenever the requester enqueues them, and fold-in applies what they find.",
+          "review-dossier, by a worker that wrote none of it, comes before a person decides a version is published."
+        ],
+        "rules": [
+          "The dossier is one noun with versions; only fold-in and switch-to-watching write it, each by compare-and-set against the version it read.",
+          "Answers, cycle logs, trigger checks and refresh records are written once and never edited.",
+          "A sub-agent reads the dossier version its cycle plan pins, so answers in one cycle never see each other.",
+          "An answer whose facts lack exact quotes from sources read through permitted access is not folded in.",
+          "A fired trigger sends the dossier back to working questions; watching resumes when the queue runs out again.",
+          "Workers create nouns and propose verbs; they never enqueue. A person decides which version is published."
+        ],
+        "follow_ups": {
+          "look_up_first": {
+            "$verb": "retrieval-triggers-and-reuse.look-up-first"
+          },
+          "one_off_question": {
+            "$verb": "deep-research-report.frame-question"
+          },
+          "wrong_published_fact": {
+            "$verb": "measured-claims.record-correction"
+          },
+          "process_problem": {
+            "$verb": "findings-to-fixes.record-finding"
+          }
+        }
+      }
+    },
+    {
+      "slug": "guardrail.one-sub-agent-per-question",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: at most one sub-agent per question in a cycle",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "In one cycle, at most one sub-agent works any one question. A question that needs more work waits for the next cycle, and every sub-agent is named in the cycle log beside the question it worked.",
+        "how_it_is_checked": "Each cycle plan and cycle log lists a question at most once, and the dossier's fan-out summary never exceeds one."
+      }
+    },
+    {
+      "slug": "guardrail.date-every-fact",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every fact has an as-of date and a decay class",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every fact carries its as-of date, the day it was last confirmed against its source, a decay class and the refresh date that follows from them. A fact past its refresh date is due until it is read again, and is never shown as current.",
+        "how_it_is_checked": "Every fact has as_of, decay_class and refresh_by; refresh_by follows from the decay classes; and a dossier anyone relies on lists nothing as due."
+      }
+    },
+    {
+      "slug": "guardrail.keep-the-history",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: nothing in a dossier is overwritten",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A changed fact keeps its earlier statement, as-of date and sources, marked superseded by the fact that replaced it, and every cycle appends a log, so a reader can see what the dossier said on any date and why it changed.",
+        "how_it_is_checked": "Every superseded fact names its replacement and the reason, and every cycle the dossier lists names its log."
+      }
+    },
+    {
+      "slug": "rules.question-queue",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "The numbered question queue",
+      "category_reason": "A zero-call deterministic procedure: the same queue and answers always give the same result.",
+      "value": {
+        "rules": [
+          "Number questions 1, 2, 3 in the order they are added, and never reuse or renumber one.",
+          "Each question is one a source could answer, framed like the deep research report pack's research question: its scope, definitions and what would change the answer.",
+          "Status is open, partial, answered, parked, split or duplicate. No question is deleted: split names its new numbers and duplicate names the question it repeats.",
+          "Park a question, with the reason and what would reopen it, when the permitted sources cannot answer it or after three cycles without an answer.",
+          "An answer that raises a new question adds it after the last number, saying which cycle and question raised it.",
+          "open_questions counts open and partial questions; the queue has run out when it is zero."
+        ],
+        "statuses": [
+          "open",
+          "partial",
+          "answered",
+          "parked",
+          "split",
+          "duplicate"
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "deep-research-report:template.research-question"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.cycles",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Working the queue in cycles",
+      "category_reason": "A zero-call deterministic procedure: the same plan and answers always give the same log.",
+      "value": {
+        "rules": [
+          "A cycle is plan, answer, fold in and log, numbered one after the last.",
+          "plan-cycle picks open and partial questions lowest number first, up to max_questions (three by default), and lists every open question it did not pick with the reason.",
+          "One answer-question verb is proposed per picked question; a second sub-agent on the same question waits for the next cycle.",
+          "A cycle stops at its time budget; unfinished questions stay open.",
+          "A cycle that folds nothing in still appends a log that says why.",
+          "Each sub-agent's task id, model and cost belong in its own execution report; a cost nobody measured stays null with a reason."
+        ],
+        "defaults": {
+          "max_questions": 3,
+          "max_elapsed_seconds": 3600
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.decay-classes",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Decay classes: how long a fact stays current",
+      "category_reason": "A zero-call deterministic procedure: the same fact, class and date always give the same refresh date.",
+      "value": {
+        "classes": {
+          "stable": {
+            "refresh_after_days": 365,
+            "for": "definitions in a dated text, past events, a published study's reported result"
+          },
+          "slow": {
+            "refresh_after_days": 180,
+            "for": "laws and rules in force, eligibility that changes yearly, an organization's structure"
+          },
+          "periodic": {
+            "refresh_after_days": 90,
+            "for": "award sizes, quarterly or annual figures, budgets, published schedules"
+          },
+          "fast": {
+            "refresh_after_days": 30,
+            "for": "prices, software versions, contacts by role, rules under revision"
+          },
+          "volatile": {
+            "refresh_after_days": 7,
+            "for": "open calls, deadlines within the month, counts that change daily"
+          }
+        },
+        "rules": [
+          "refresh_by is as_of plus the class's days; when the source states an earlier end, such as a deadline, refresh_by is that date.",
+          "Choose the fastest class that fits; between two, take the faster.",
+          "A fact is due when its refresh_by is before the check date.",
+          "A refreshed fact that still holds gets a new as_of and refresh_by; one that changed is superseded by a new fact.",
+          "A source that cannot be read leaves the fact due, never confirmed."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.triggers",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Named triggers: watching for changes once the questions run out",
+      "category_reason": "A zero-call deterministic procedure: the same source state always gives the same result.",
+      "value": {
+        "rules": [
+          "Watching starts only when no question is open or partial.",
+          "Every trigger has a name, the one source it watches, how it is checked, what change fires it and the questions it reopens; every question with a fact that is not stable has at least one.",
+          "Check cheaply: a conditional request with the validator the source last returned, a feed's newest entry id, the SHA-256 of one named section's text, or a date passing.",
+          "Unchanged is not fired. A change fires only when it matches the trigger's condition; other changes are noted as changed_not_fired.",
+          "A source that fails two checks in a row is unreachable, not fired, and the facts it supports become due.",
+          "A fired trigger reopens its questions and the dossier goes back to working them in cycles.",
+          "Triggers watch public sources through permitted access only, never a person or a page behind a login.",
+          "A cadence is a suggestion to the requester. No scheduler is activated; each check is a verb an authorized requester enqueues."
+        ],
+        "check_kinds": [
+          "conditional_request",
+          "feed_entry",
+          "section_digest",
+          "date_passes"
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "deep-research-report:rules.permitted-access"
+        ]
+      ]
+    },
+    {
+      "slug": "template.dossier",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a living dossier: the numbered questions, dated facts with decay classes, superseded facts, what is due, the fan-out, cycles, triggers, publication and limits",
+      "category_reason": "A dossier is a set of dated claims, each a hypothesis that later checks confirm or overturn.",
+      "value": {
+        "describes": "a living dossier: the numbered questions, dated facts with decay classes, superseded facts, what is due, the fan-out, cycles, triggers, publication and limits",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "topic",
+            "as_of",
+            "mode",
+            "open_questions",
+            "questions",
+            "parked",
+            "facts",
+            "superseded",
+            "due",
+            "max_sub_agents_per_question",
+            "cycles",
+            "triggers",
+            "publication",
+            "limits"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,39}$",
+              "maxLength": 40
+            },
+            "topic": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "questions",
+                "watching"
+              ]
+            },
+            "open_questions": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "questions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "number",
+                  "question",
+                  "status",
+                  "raised_by",
+                  "facts"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "partial",
+                      "answered",
+                      "parked",
+                      "split",
+                      "duplicate"
+                    ]
+                  },
+                  "raised_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "facts": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^F[0-9]{1,4}$",
+                      "maxLength": 12
+                    }
+                  }
+                }
+              }
+            },
+            "parked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "number",
+                  "reason",
+                  "reopen_when"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "reopen_when": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "facts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "statement",
+                  "as_of",
+                  "decay_class",
+                  "refresh_by",
+                  "claims",
+                  "sources"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "as_of": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "decay_class": {
+                    "type": "string",
+                    "enum": [
+                      "stable",
+                      "slow",
+                      "periodic",
+                      "fast",
+                      "volatile"
+                    ]
+                  },
+                  "refresh_by": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "maxLength": 20
+                    }
+                  },
+                  "sources": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "maxLength": 20
+                    }
+                  }
+                }
+              }
+            },
+            "superseded": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "statement",
+                  "as_of",
+                  "superseded_by",
+                  "why"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "as_of": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "superseded_by": {
+                    "type": "string",
+                    "pattern": "^(F[0-9]{1,4})?$",
+                    "maxLength": 12
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "due": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 12
+              }
+            },
+            "max_sub_agents_per_question": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "cycles": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cycle",
+                  "log_ref",
+                  "questions_worked"
+                ],
+                "properties": {
+                  "cycle": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "log_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "questions_worked": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 500
+                    }
+                  }
+                }
+              }
+            },
+            "triggers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "watches",
+                  "check",
+                  "fires_when",
+                  "reopens"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  },
+                  "watches": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "check": {
+                    "type": "string",
+                    "enum": [
+                      "conditional_request",
+                      "feed_entry",
+                      "section_digest",
+                      "date_passes"
+                    ]
+                  },
+                  "fires_when": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "reopens": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 500
+                    }
+                  }
+                }
+              }
+            },
+            "publication": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "decided_by_kind",
+                "owner_role",
+                "delivery_record_ref"
+              ],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "unpublished",
+                    "published"
+                  ]
+                },
+                "decided_by_kind": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "person"
+                  ]
+                },
+                "owner_role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "delivery_record_ref": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "One noun with versions, written by compare-and-set.",
+          "facts cite claim ids from claim extracts and source ids from source logs.",
+          "due lists the facts whose refresh_by is before as_of."
+        ]
+      }
+    },
+    {
+      "slug": "template.cycle-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one cycle's plan: the questions picked, one sub-agent each, and the questions skipped with reasons",
+      "category_reason": "A plan is a bounded proposal for the next cycle's work.",
+      "value": {
+        "describes": "one cycle's plan: the questions picked, one sub-agent each, and the questions skipped with reasons",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "dossier_version",
+            "cycle",
+            "planned_on",
+            "max_questions",
+            "picked",
+            "skipped",
+            "max_elapsed_seconds"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "dossier_version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "cycle": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            "planned_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "max_questions": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "picked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "question",
+                  "why_now"
+                ],
+                "properties": {
+                  "question": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "why_now": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "skipped": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "question",
+                  "reason"
+                ],
+                "properties": {
+                  "question": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "max_elapsed_seconds": {
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 86400
+            }
+          }
+        },
+        "rules": [
+          "A question appears in picked at most once."
+        ]
+      }
+    },
+    {
+      "slug": "template.answer",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: one sub-agent's answer to one question: dated facts with their claims and sources, the evidence against, what was not searched and any new questions",
+      "category_reason": "An answer is a set of sourced claims a fold-in may accept or reject.",
+      "value": {
+        "describes": "one sub-agent's answer to one question: dated facts with their claims and sources, the evidence against, what was not searched and any new questions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "dossier_version",
+            "cycle",
+            "question",
+            "sub_agent",
+            "status",
+            "short_answer",
+            "facts",
+            "evidence_against",
+            "raises",
+            "not_searched",
+            "source_log_ref",
+            "claim_extract_ref"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "dossier_version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "cycle": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            "question": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "sub_agent": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "answered",
+                "partial",
+                "unanswered"
+              ]
+            },
+            "short_answer": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 600
+            },
+            "facts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "statement",
+                  "as_of",
+                  "decay_class",
+                  "refresh_by",
+                  "claims",
+                  "sources",
+                  "replaces"
+                ],
+                "properties": {
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "as_of": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "decay_class": {
+                    "type": "string",
+                    "enum": [
+                      "stable",
+                      "slow",
+                      "periodic",
+                      "fast",
+                      "volatile"
+                    ]
+                  },
+                  "refresh_by": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "maxLength": 20
+                    }
+                  },
+                  "sources": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "maxLength": 20
+                    }
+                  },
+                  "replaces": {
+                    "type": "string",
+                    "pattern": "^(F[0-9]{1,4})?$",
+                    "maxLength": 12
+                  }
+                }
+              }
+            },
+            "evidence_against": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "raises": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "not_searched": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source",
+                  "why"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "source_log_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "claim_extract_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        },
+        "rules": [
+          "Every fact cites claims from the answer's claim extract and sources from its source log.",
+          "replaces names the fact a changed fact supersedes, or is empty."
+        ]
+      }
+    },
+    {
+      "slug": "template.cycle-log",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one cycle's appended log: questions worked and by which sub-agent, facts added, superseded and refreshed, questions added and parked, and the dossier checks",
+      "category_reason": "A cycle log is a measured record of one cycle's changes.",
+      "value": {
+        "describes": "one cycle's appended log: questions worked and by which sub-agent, facts added, superseded and refreshed, questions added and parked, and the dossier checks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "cycle",
+            "plan_ref",
+            "dossier_before",
+            "dossier_after",
+            "started_at",
+            "ended_at",
+            "worked",
+            "max_sub_agents_per_question",
+            "facts_added",
+            "facts_superseded",
+            "facts_refreshed",
+            "questions_added",
+            "questions_parked",
+            "open_questions_after",
+            "mode_after",
+            "dossier_checks",
+            "failed_checks",
+            "cost_note"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "cycle": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            "plan_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "dossier_before": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "dossier_after": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "started_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "ended_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "worked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "question",
+                  "sub_agent",
+                  "outcome"
+                ],
+                "properties": {
+                  "question": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "sub_agent": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "outcome": {
+                    "type": "string",
+                    "enum": [
+                      "answered",
+                      "partial",
+                      "unanswered"
+                    ]
+                  }
+                }
+              }
+            },
+            "max_sub_agents_per_question": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "facts_added": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "pattern": "^F[0-9]{1,4}$",
+                "maxLength": 12
+              }
+            },
+            "facts_superseded": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "by"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  },
+                  "by": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  }
+                }
+              }
+            },
+            "facts_refreshed": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "pattern": "^F[0-9]{1,4}$",
+                "maxLength": 12
+              }
+            },
+            "questions_added": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 500
+              }
+            },
+            "questions_parked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 500
+              }
+            },
+            "open_questions_after": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "mode_after": {
+              "type": "string",
+              "enum": [
+                "questions",
+                "watching"
+              ]
+            },
+            "dossier_checks": {
+              "type": "string",
+              "enum": [
+                "passed",
+                "failed"
+              ]
+            },
+            "failed_checks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "cost_note": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "Written once; a later cycle appends its own log."
+        ]
+      }
+    },
+    {
+      "slug": "template.trigger-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one check of every named trigger: the result and evidence for each and the questions fired triggers reopen",
+      "category_reason": "A trigger check is an observed run against sources.",
+      "value": {
+        "describes": "one check of every named trigger: the result and evidence for each and the questions fired triggers reopen",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "dossier_version",
+            "checked_at",
+            "results",
+            "fired",
+            "reopened",
+            "model_calls"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "dossier_version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "checked_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "results": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "trigger",
+                  "check",
+                  "result",
+                  "evidence",
+                  "reopens"
+                ],
+                "properties": {
+                  "trigger": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "check": {
+                    "type": "string",
+                    "enum": [
+                      "conditional_request",
+                      "feed_entry",
+                      "section_digest",
+                      "date_passes"
+                    ]
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "unchanged",
+                      "changed_not_fired",
+                      "fired",
+                      "unreachable",
+                      "not_permitted"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "reopens": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 500
+                    }
+                  }
+                }
+              }
+            },
+            "fired": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "reopened": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 500
+              }
+            },
+            "model_calls": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 0
+            }
+          }
+        },
+        "rules": [
+          "reopened is the union of the fired triggers' reopens."
+        ]
+      }
+    },
+    {
+      "slug": "template.refresh-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one refresh of the facts that were due: each fact's result, its new dates and the digest of the text it was found in",
+      "category_reason": "A refresh record is an observed recheck against sources.",
+      "value": {
+        "describes": "one refresh of the facts that were due: each fact's result, its new dates and the digest of the text it was found in",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "dossier_version",
+            "checked_on",
+            "facts",
+            "due_before",
+            "due_after"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "dossier_version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "facts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fact",
+                  "decay_class",
+                  "refresh_by",
+                  "result",
+                  "quote_found",
+                  "new_as_of",
+                  "new_refresh_by",
+                  "source_text_sha256"
+                ],
+                "properties": {
+                  "fact": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  },
+                  "decay_class": {
+                    "type": "string",
+                    "enum": [
+                      "stable",
+                      "slow",
+                      "periodic",
+                      "fast",
+                      "volatile"
+                    ]
+                  },
+                  "refresh_by": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "still_true",
+                      "changed",
+                      "contradicted",
+                      "retracted",
+                      "source_unreadable"
+                    ]
+                  },
+                  "quote_found": {
+                    "type": "boolean"
+                  },
+                  "new_as_of": {
+                    "type": "string",
+                    "pattern": "^([0-9]{4}-[0-9]{2}-[0-9]{2})?$"
+                  },
+                  "new_refresh_by": {
+                    "type": "string",
+                    "pattern": "^([0-9]{4}-[0-9]{2}-[0-9]{2})?$"
+                  },
+                  "source_text_sha256": {
+                    "type": "string",
+                    "pattern": "^([0-9a-f]{64})?$"
+                  }
+                }
+              }
+            },
+            "due_before": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "due_after": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            }
+          }
+        },
+        "rules": [
+          "Only facts whose refresh_by is before checked_on are listed.",
+          "new_as_of and new_refresh_by are empty unless the result is still_true.",
+          "due_before counts the listed facts; due_after counts those still due, the ones whose source could not be read."
+        ]
+      }
+    },
+    {
+      "slug": "dossier-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for dossiers, with synthetic golden dossiers",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every dossier must pass before anyone relies on it. The two synthetic good dossiers, one working questions and one watching, pass all of them; each synthetic bad dossier fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "as-of-dated",
+            "rule": {
+              "rule": "present",
+              "path": "as_of"
+            },
+            "why": "A dossier is true only as of a date."
+          },
+          {
+            "id": "questions-numbered",
+            "rule": {
+              "rule": "each_has",
+              "path": "questions",
+              "fields": [
+                "number",
+                "question",
+                "status",
+                "raised_by"
+              ],
+              "min": 1
+            },
+            "why": "Every question has its number, its status and what raised it."
+          },
+          {
+            "id": "parked-explained",
+            "rule": {
+              "rule": "each_has",
+              "path": "parked",
+              "fields": [
+                "number",
+                "reason",
+                "reopen_when"
+              ]
+            },
+            "why": "A parked question says why, and what would reopen it."
+          },
+          {
+            "id": "facts-dated-and-sourced",
+            "rule": {
+              "rule": "each_has",
+              "path": "facts",
+              "fields": [
+                "as_of",
+                "decay_class",
+                "refresh_by",
+                "claims",
+                "sources"
+              ]
+            },
+            "why": "Every fact carries an as-of date, a decay class, its refresh date, its claims and its sources."
+          },
+          {
+            "id": "history-kept",
+            "rule": {
+              "rule": "each_has",
+              "path": "superseded",
+              "fields": [
+                "id",
+                "statement",
+                "as_of",
+                "superseded_by",
+                "why"
+              ]
+            },
+            "why": "A changed fact stays on the record with what replaced it and why."
+          },
+          {
+            "id": "nothing-due",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "due",
+              "pattern": "."
+            },
+            "why": "Facts past their refresh date are refreshed before anyone relies on the dossier."
+          },
+          {
+            "id": "one-sub-agent-per-question",
+            "rule": {
+              "rule": "enum",
+              "path": "max_sub_agents_per_question",
+              "values": [
+                0,
+                1
+              ]
+            },
+            "why": "No question had more than one sub-agent in any cycle."
+          },
+          {
+            "id": "cycles-logged",
+            "rule": {
+              "rule": "each_has",
+              "path": "cycles",
+              "fields": [
+                "cycle",
+                "log_ref",
+                "questions_worked"
+              ]
+            },
+            "why": "Every cycle names its appended log and the questions it worked."
+          },
+          {
+            "id": "watch-only-when-run-out",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "mode",
+                "equals": "watching"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "open_questions",
+                "values": [
+                  0
+                ]
+              }
+            },
+            "why": "The dossier watches triggers only once no question is open."
+          },
+          {
+            "id": "watching-has-triggers",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "mode",
+                "equals": "watching"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "triggers",
+                "min": 1
+              }
+            },
+            "why": "Watching means watching named triggers."
+          },
+          {
+            "id": "triggers-named",
+            "rule": {
+              "rule": "each_has",
+              "path": "triggers",
+              "fields": [
+                "name",
+                "watches",
+                "check",
+                "fires_when",
+                "reopens"
+              ]
+            },
+            "why": "Every trigger names its source, its check, what fires it and the questions it reopens."
+          },
+          {
+            "id": "person-publishes",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "publication.status",
+                "equals": "published"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "publication.decided_by_kind",
+                "values": [
+                  "person"
+                ]
+              }
+            },
+            "why": "Only a person's decision publishes a version."
+          },
+          {
+            "id": "limits-stated",
+            "rule": {
+              "rule": "min_items",
+              "path": "limits",
+              "min": 1
+            },
+            "why": "Every dossier states what it does not establish."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-working",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-02",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "good-watching",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 0,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "parked",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [
+                {
+                  "number": 3,
+                  "reason": "No source addresses it.",
+                  "reopen_when": "The guidelines change."
+                }
+              ],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "F3",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [
+                {
+                  "name": "guidelines-page",
+                  "watches": "The guidelines page",
+                  "check": "section_digest",
+                  "fires_when": "The award section changes.",
+                  "reopens": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "person",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-undated",
+            "label": "known_bad",
+            "fails": "as-of-dated",
+            "why": "No version date.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-unnumbered",
+            "label": "known_bad",
+            "fails": "questions-numbered",
+            "why": "A question lost its number.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-02",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-parked-silent",
+            "label": "known_bad",
+            "fails": "parked-explained",
+            "why": "Parked with no reason.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 0,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "parked",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [
+                {
+                  "number": 3,
+                  "reason": "",
+                  "reopen_when": "The guidelines change."
+                }
+              ],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "F3",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [
+                {
+                  "name": "guidelines-page",
+                  "watches": "The guidelines page",
+                  "check": "section_digest",
+                  "fires_when": "The award section changes.",
+                  "reopens": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "person",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-fact-unsourced",
+            "label": "known_bad",
+            "fails": "facts-dated-and-sourced",
+            "why": "A fact with no source.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-02",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": []
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-history-lost",
+            "label": "known_bad",
+            "fails": "history-kept",
+            "why": "Superseded by nothing named.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 0,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "parked",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [
+                {
+                  "number": 3,
+                  "reason": "No source addresses it.",
+                  "reopen_when": "The guidelines change."
+                }
+              ],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [
+                {
+                  "name": "guidelines-page",
+                  "watches": "The guidelines page",
+                  "check": "section_digest",
+                  "fires_when": "The award section changes.",
+                  "reopens": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "person",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-due-left",
+            "label": "known_bad",
+            "fails": "nothing-due",
+            "why": "F2 is past its refresh date and still due.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2027-01-05",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [
+                "F2"
+              ],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-two-sub-agents",
+            "label": "known_bad",
+            "fails": "one-sub-agent-per-question",
+            "why": "Two sub-agents on question 2 in cycle 1.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-02",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 2,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-cycle-unlogged",
+            "label": "known_bad",
+            "fails": "cycles-logged",
+            "why": "A cycle with no log.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-02",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-watching-too-soon",
+            "label": "known_bad",
+            "fails": "watch-only-when-run-out",
+            "why": "Watching while question 3 is open.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "F3",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [
+                {
+                  "name": "guidelines-page",
+                  "watches": "The guidelines page",
+                  "check": "section_digest",
+                  "fires_when": "The award section changes.",
+                  "reopens": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "person",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-watching-blind",
+            "label": "known_bad",
+            "fails": "watching-has-triggers",
+            "why": "Watching with no triggers.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 0,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "parked",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [
+                {
+                  "number": 3,
+                  "reason": "No source addresses it.",
+                  "reopen_when": "The guidelines change."
+                }
+              ],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "F3",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "person",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-trigger-unnamed",
+            "label": "known_bad",
+            "fails": "triggers-named",
+            "why": "A trigger with no name.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 0,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "parked",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [
+                {
+                  "number": 3,
+                  "reason": "No source addresses it.",
+                  "reopen_when": "The guidelines change."
+                }
+              ],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "F3",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [
+                {
+                  "name": "",
+                  "watches": "The guidelines page",
+                  "check": "section_digest",
+                  "fires_when": "The award section changes.",
+                  "reopens": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "person",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-self-published",
+            "label": "known_bad",
+            "fails": "person-publishes",
+            "why": "Published without a person's decision.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-30",
+              "mode": "watching",
+              "open_questions": 0,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F3"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "May a sponsor apply?",
+                  "status": "parked",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [
+                {
+                  "number": 3,
+                  "reason": "No source addresses it.",
+                  "reopen_when": "The guidelines change."
+                }
+              ],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F3",
+                  "statement": "Awards run 5,000 to 40,000.",
+                  "as_of": "2026-10-29",
+                  "decay_class": "periodic",
+                  "refresh_by": "2027-01-27",
+                  "claims": [
+                    "c4"
+                  ],
+                  "sources": [
+                    "s3"
+                  ]
+                }
+              ],
+              "superseded": [
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "superseded_by": "F3",
+                  "why": "The guidelines raised the limit."
+                }
+              ],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "cycle": 2,
+                  "log_ref": "log 2",
+                  "questions_worked": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "triggers": [
+                {
+                  "name": "guidelines-page",
+                  "watches": "The guidelines page",
+                  "check": "section_digest",
+                  "fires_when": "The award section changes.",
+                  "reopens": [
+                    2,
+                    3
+                  ]
+                }
+              ],
+              "publication": {
+                "status": "published",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": "delivery record 4"
+              },
+              "limits": [
+                "Synthetic sources only."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-limits",
+            "label": "known_bad",
+            "fails": "limits-stated",
+            "why": "No limits.",
+            "finding": {
+              "dossier_id": "LD-1",
+              "topic": "Cold-storage grants",
+              "as_of": "2026-10-02",
+              "mode": "questions",
+              "open_questions": 1,
+              "questions": [
+                {
+                  "number": 1,
+                  "question": "Who funds cold storage?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F1"
+                  ]
+                },
+                {
+                  "number": 2,
+                  "question": "What sizes are awards?",
+                  "status": "answered",
+                  "raised_by": "opening",
+                  "facts": [
+                    "F2"
+                  ]
+                },
+                {
+                  "number": 3,
+                  "question": "When does it close?",
+                  "status": "open",
+                  "raised_by": "cycle 1, question 2",
+                  "facts": []
+                }
+              ],
+              "parked": [],
+              "facts": [
+                {
+                  "id": "F1",
+                  "statement": "A state fund gives the grants.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "slow",
+                  "refresh_by": "2027-03-31",
+                  "claims": [
+                    "c1"
+                  ],
+                  "sources": [
+                    "s1"
+                  ]
+                },
+                {
+                  "id": "F2",
+                  "statement": "Awards run 5,000 to 25,000.",
+                  "as_of": "2026-10-02",
+                  "decay_class": "periodic",
+                  "refresh_by": "2026-12-31",
+                  "claims": [
+                    "c2"
+                  ],
+                  "sources": [
+                    "s2"
+                  ]
+                }
+              ],
+              "superseded": [],
+              "due": [],
+              "max_sub_agents_per_question": 1,
+              "cycles": [
+                {
+                  "cycle": 1,
+                  "log_ref": "log 1",
+                  "questions_worked": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "triggers": [],
+              "publication": {
+                "status": "unpublished",
+                "decided_by_kind": "none",
+                "owner_role": "programs director",
+                "delivery_record_ref": ""
+              },
+              "limits": []
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dossier_id",
+            "topic",
+            "as_of",
+            "mode",
+            "open_questions",
+            "questions",
+            "parked",
+            "facts",
+            "superseded",
+            "due",
+            "max_sub_agents_per_question",
+            "cycles",
+            "triggers",
+            "publication",
+            "limits"
+          ],
+          "properties": {
+            "dossier_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,39}$",
+              "maxLength": 40
+            },
+            "topic": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "questions",
+                "watching"
+              ]
+            },
+            "open_questions": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500
+            },
+            "questions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "number",
+                  "question",
+                  "status",
+                  "raised_by",
+                  "facts"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "partial",
+                      "answered",
+                      "parked",
+                      "split",
+                      "duplicate"
+                    ]
+                  },
+                  "raised_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "facts": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^F[0-9]{1,4}$",
+                      "maxLength": 12
+                    }
+                  }
+                }
+              }
+            },
+            "parked": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "number",
+                  "reason",
+                  "reopen_when"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "reopen_when": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "facts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "statement",
+                  "as_of",
+                  "decay_class",
+                  "refresh_by",
+                  "claims",
+                  "sources"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "as_of": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "decay_class": {
+                    "type": "string",
+                    "enum": [
+                      "stable",
+                      "slow",
+                      "periodic",
+                      "fast",
+                      "volatile"
+                    ]
+                  },
+                  "refresh_by": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "maxLength": 20
+                    }
+                  },
+                  "sources": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]*$",
+                      "maxLength": 20
+                    }
+                  }
+                }
+              }
+            },
+            "superseded": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "statement",
+                  "as_of",
+                  "superseded_by",
+                  "why"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^F[0-9]{1,4}$",
+                    "maxLength": 12
+                  },
+                  "statement": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "as_of": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "superseded_by": {
+                    "type": "string",
+                    "pattern": "^(F[0-9]{1,4})?$",
+                    "maxLength": 12
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "due": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 12
+              }
+            },
+            "max_sub_agents_per_question": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "cycles": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cycle",
+                  "log_ref",
+                  "questions_worked"
+                ],
+                "properties": {
+                  "cycle": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "log_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "questions_worked": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 500
+                    }
+                  }
+                }
+              }
+            },
+            "triggers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "watches",
+                  "check",
+                  "fires_when",
+                  "reopens"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  },
+                  "watches": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "check": {
+                    "type": "string",
+                    "enum": [
+                      "conditional_request",
+                      "feed_entry",
+                      "section_digest",
+                      "date_passes"
+                    ]
+                  },
+                  "fires_when": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "reopens": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 500
+                    }
+                  }
+                }
+              }
+            },
+            "publication": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "decided_by_kind",
+                "owner_role",
+                "delivery_record_ref"
+              ],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "unpublished",
+                    "published"
+                  ]
+                },
+                "decided_by_kind": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "person"
+                  ]
+                },
+                "owner_role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "delivery_record_ref": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 300
+                }
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "expected": {
+          "good-working": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-watching": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-undated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "as-of-dated"
+            ]
+          },
+          "bad-unnumbered": {
+            "verdict": "fail",
+            "failed_checks": [
+              "questions-numbered"
+            ]
+          },
+          "bad-parked-silent": {
+            "verdict": "fail",
+            "failed_checks": [
+              "parked-explained"
+            ]
+          },
+          "bad-fact-unsourced": {
+            "verdict": "fail",
+            "failed_checks": [
+              "facts-dated-and-sourced"
+            ]
+          },
+          "bad-history-lost": {
+            "verdict": "fail",
+            "failed_checks": [
+              "history-kept"
+            ]
+          },
+          "bad-due-left": {
+            "verdict": "fail",
+            "failed_checks": [
+              "nothing-due"
+            ]
+          },
+          "bad-two-sub-agents": {
+            "verdict": "fail",
+            "failed_checks": [
+              "one-sub-agent-per-question"
+            ]
+          },
+          "bad-cycle-unlogged": {
+            "verdict": "fail",
+            "failed_checks": [
+              "cycles-logged"
+            ]
+          },
+          "bad-watching-too-soon": {
+            "verdict": "fail",
+            "failed_checks": [
+              "watch-only-when-run-out"
+            ]
+          },
+          "bad-watching-blind": {
+            "verdict": "fail",
+            "failed_checks": [
+              "watching-has-triggers"
+            ]
+          },
+          "bad-trigger-unnamed": {
+            "verdict": "fail",
+            "failed_checks": [
+              "triggers-named"
+            ]
+          },
+          "bad-self-published": {
+            "verdict": "fail",
+            "failed_checks": [
+              "person-publishes"
+            ]
+          },
+          "bad-no-limits": {
+            "verdict": "fail",
+            "failed_checks": [
+              "limits-stated"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before a dossier version is published",
+      "category_reason": "A short checklist a person runs is part of the dossier's guardrails.",
+      "value": {
+        "items": [
+          "Every fact shows its as-of date, and nothing past its refresh date is shown as current.",
+          "Superseded facts are still visible, with what replaced them and why.",
+          "The cycle logs account for every change since the last published version.",
+          "Parked questions say why, and what would reopen them.",
+          "In watching mode, named triggers cover every fact that can change.",
+          "Hold the version, with the reason, when a fact is due or disputed; holding is a valid decision."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for living dossiers",
+      "value": {
+        "sources": [
+          {
+            "title": "Elliott and others, Living Systematic Reviews: An Emerging Opportunity to Narrow the Evidence-Practice Gap, PLOS Medicine, 2014",
+            "url": "https://doi.org/10.1371/journal.pmed.1001603",
+            "used_for": "A review kept current by searching continually and folding new evidence in",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "RFC 9110: HTTP Semantics, section 13.1 on conditional requests",
+            "url": "https://www.rfc-editor.org/rfc/rfc9110",
+            "used_for": "Cheap trigger checks with If-None-Match and If-Modified-Since",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "RFC 4287: The Atom Syndication Format",
+            "url": "https://www.rfc-editor.org/rfc/rfc4287",
+            "used_for": "Feed entry ids and update dates for feed triggers",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "example.cycle-plan",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the plan for cycle 3, after a trigger reopened two questions",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.cycle-plan"
+        },
+        "instance": {
+          "dossier_id": "LD-7",
+          "dossier_version": 6,
+          "cycle": 3,
+          "planned_on": "2026-10-29",
+          "max_questions": 3,
+          "picked": [
+            {
+              "question": 2,
+              "why_now": "Reopened by guidelines-page on 2026-10-28."
+            },
+            {
+              "question": 4,
+              "why_now": "Reopened by guidelines-page on 2026-10-28."
+            }
+          ],
+          "skipped": [],
+          "max_elapsed_seconds": 3600
+        },
+        "shows": "Two reopened questions, one sub-agent each; no open question is left unpicked.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.answer",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the cycle 3 answer that supersedes the award range",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.answer"
+        },
+        "instance": {
+          "dossier_id": "LD-7",
+          "dossier_version": 6,
+          "cycle": 3,
+          "question": 2,
+          "sub_agent": "task-31",
+          "status": "answered",
+          "short_answer": "Awards now range from 5,000 to 40,000.",
+          "facts": [
+            {
+              "statement": "Awards range from 5,000 to 40,000.",
+              "as_of": "2026-10-29",
+              "decay_class": "periodic",
+              "refresh_by": "2027-01-27",
+              "claims": [
+                "c4"
+              ],
+              "sources": [
+                "s3"
+              ],
+              "replaces": "F2"
+            }
+          ],
+          "evidence_against": "None found: the counter query for a lower limit returned only the superseded guidelines.",
+          "raises": [],
+          "not_searched": [
+            {
+              "source": "News coverage",
+              "why": "The fund's own guidelines are the primary source."
+            }
+          ],
+          "source_log_ref": "source log of task-31",
+          "claim_extract_ref": "claim extract of task-31"
+        },
+        "shows": "One fact with its claim, source, decay class and refresh date, naming the fact it supersedes.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.cycle-log",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the log of cycle 3",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.cycle-log"
+        },
+        "instance": {
+          "dossier_id": "LD-7",
+          "cycle": 3,
+          "plan_ref": "cycle plan LD-7/3",
+          "dossier_before": 6,
+          "dossier_after": 7,
+          "started_at": "2026-10-29T09:00Z",
+          "ended_at": "2026-10-29T10:40Z",
+          "worked": [
+            {
+              "question": 2,
+              "sub_agent": "task-31",
+              "outcome": "answered"
+            },
+            {
+              "question": 4,
+              "sub_agent": "task-32",
+              "outcome": "unanswered"
+            }
+          ],
+          "max_sub_agents_per_question": 1,
+          "facts_added": [
+            "F4"
+          ],
+          "facts_superseded": [
+            {
+              "id": "F2",
+              "by": "F4"
+            }
+          ],
+          "facts_refreshed": [],
+          "questions_added": [],
+          "questions_parked": [
+            4
+          ],
+          "open_questions_after": 0,
+          "mode_after": "questions",
+          "dossier_checks": "passed",
+          "failed_checks": [],
+          "cost_note": "Each sub-agent's execution report holds its model and token counts; none are summed here."
+        },
+        "shows": "Each worked question once with its sub-agent; F2 superseded by F4; question 4 parked again.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.trigger-check",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a guidelines change fires one trigger",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.trigger-check"
+        },
+        "instance": {
+          "dossier_id": "LD-7",
+          "dossier_version": 5,
+          "checked_at": "2026-10-28T07:00Z",
+          "results": [
+            {
+              "trigger": "guidelines-page",
+              "check": "section_digest",
+              "result": "fired",
+              "evidence": "The award section's SHA-256 changed and its upper limit now reads 40,000.",
+              "reopens": [
+                2,
+                4
+              ]
+            },
+            {
+              "trigger": "notices-feed",
+              "check": "feed_entry",
+              "result": "unchanged",
+              "evidence": "The newest entry id is the one recorded last time.",
+              "reopens": []
+            },
+            {
+              "trigger": "round-closes",
+              "check": "date_passes",
+              "result": "unchanged",
+              "evidence": "2026-11-20 has not passed.",
+              "reopens": []
+            }
+          ],
+          "fired": [
+            "guidelines-page"
+          ],
+          "reopened": [
+            2,
+            4
+          ],
+          "model_calls": 0
+        },
+        "shows": "One trigger fired and reopened questions 2 and 4; two stayed unchanged.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.refresh-record",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a volatile closing date read again and still true",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.refresh-record"
+        },
+        "instance": {
+          "dossier_id": "LD-7",
+          "dossier_version": 4,
+          "checked_on": "2026-10-26",
+          "facts": [
+            {
+              "fact": "F3",
+              "decay_class": "volatile",
+              "refresh_by": "2026-10-16",
+              "result": "still_true",
+              "quote_found": true,
+              "new_as_of": "2026-10-26",
+              "new_refresh_by": "2026-11-02",
+              "source_text_sha256": "5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c5f0c"
+            }
+          ],
+          "due_before": 1,
+          "due_after": 0
+        },
+        "shows": "F3 was due on 2026-10-26, was found again in its source and now refreshes by 2026-11-02.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.dossier",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the dossier watching three triggers after its third cycle",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.dossier"
+        },
+        "instance": {
+          "dossier_id": "LD-7",
+          "topic": "Cold-storage grants open to small food banks in Examplia",
+          "as_of": "2026-10-30",
+          "mode": "watching",
+          "open_questions": 0,
+          "questions": [
+            {
+              "number": 1,
+              "question": "Which public programs fund cold storage for small food banks?",
+              "status": "answered",
+              "raised_by": "opening",
+              "facts": [
+                "F1"
+              ]
+            },
+            {
+              "number": 2,
+              "question": "What award sizes does the fund offer?",
+              "status": "answered",
+              "raised_by": "opening",
+              "facts": [
+                "F4"
+              ]
+            },
+            {
+              "number": 3,
+              "question": "When does the current round close?",
+              "status": "answered",
+              "raised_by": "cycle 1, question 2",
+              "facts": [
+                "F3"
+              ]
+            },
+            {
+              "number": 4,
+              "question": "May a fiscal sponsor apply for a food bank?",
+              "status": "parked",
+              "raised_by": "cycle 1, question 2",
+              "facts": []
+            }
+          ],
+          "parked": [
+            {
+              "number": 4,
+              "reason": "The guidelines, old and revised, do not address fiscal sponsors.",
+              "reopen_when": "The guidelines page changes again."
+            }
+          ],
+          "facts": [
+            {
+              "id": "F1",
+              "statement": "The Examplia Food Security Fund gives cold-storage grants to food banks with yearly budgets under 2 million.",
+              "as_of": "2026-10-02",
+              "decay_class": "slow",
+              "refresh_by": "2027-03-31",
+              "claims": [
+                "c1"
+              ],
+              "sources": [
+                "s1"
+              ]
+            },
+            {
+              "id": "F3",
+              "statement": "The current round closes on 2026-11-20.",
+              "as_of": "2026-10-26",
+              "decay_class": "volatile",
+              "refresh_by": "2026-11-02",
+              "claims": [
+                "c3"
+              ],
+              "sources": [
+                "s2"
+              ]
+            },
+            {
+              "id": "F4",
+              "statement": "Awards range from 5,000 to 40,000.",
+              "as_of": "2026-10-29",
+              "decay_class": "periodic",
+              "refresh_by": "2027-01-27",
+              "claims": [
+                "c4"
+              ],
+              "sources": [
+                "s3"
+              ]
+            }
+          ],
+          "superseded": [
+            {
+              "id": "F2",
+              "statement": "Awards range from 5,000 to 25,000.",
+              "as_of": "2026-10-02",
+              "superseded_by": "F4",
+              "why": "The guidelines revised on 2026-10-27 raised the upper limit."
+            }
+          ],
+          "due": [],
+          "max_sub_agents_per_question": 1,
+          "cycles": [
+            {
+              "cycle": 1,
+              "log_ref": "cycle log LD-7/1",
+              "questions_worked": [
+                1,
+                2
+              ]
+            },
+            {
+              "cycle": 2,
+              "log_ref": "cycle log LD-7/2",
+              "questions_worked": [
+                3,
+                4
+              ]
+            },
+            {
+              "cycle": 3,
+              "log_ref": "cycle log LD-7/3",
+              "questions_worked": [
+                2,
+                4
+              ]
+            }
+          ],
+          "triggers": [
+            {
+              "name": "guidelines-page",
+              "watches": "The fund's program guidelines page",
+              "check": "section_digest",
+              "fires_when": "The award or applicant section changes.",
+              "reopens": [
+                2,
+                4
+              ]
+            },
+            {
+              "name": "notices-feed",
+              "watches": "The fund's official notices feed",
+              "check": "feed_entry",
+              "fires_when": "A new notice names cold storage.",
+              "reopens": [
+                1,
+                3
+              ]
+            },
+            {
+              "name": "round-closes",
+              "watches": "The closing date in F3",
+              "check": "date_passes",
+              "fires_when": "2026-11-20 passes.",
+              "reopens": [
+                3
+              ]
+            }
+          ],
+          "publication": {
+            "status": "published",
+            "decided_by_kind": "person",
+            "owner_role": "programs director",
+            "delivery_record_ref": "delivery record for LD-7 version 8"
+          },
+          "limits": [
+            "Synthetic: no real program, page or feed was read.",
+            "A trigger misses any change it does not watch; refresh dates are the backstop."
+          ]
+        },
+        "shows": "Three answered questions, one parked with its reason, F2 superseded by F4, nothing due, three triggers and a version a person decided to publish.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "open-dossier",
+      "kind": "verb.problemize",
+      "title": "Open a dossier with a numbered question queue",
+      "claimant": "agent",
+      "summary": "Turn a topic people will keep relying on into a first dossier version: its scope, a numbered queue of questions a source could answer, and the role of the person who decides what is published.",
+      "outcome": "A dossier in questions mode, or no_change with a pointer when one cited answer is enough.",
+      "ready_outcome": "dossier_opened",
+      "pinned": [
+        "rules.question-queue",
+        "rules.decay-classes",
+        "guardrail.date-every-fact",
+        "deep-research-report:template.research-question",
+        "deep-research-report:guardrail.search-on-the-record",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the requester's topic and why it must stay current, in their own words."
+        },
+        {
+          "name": "earlier_work",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of earlier reports or dossiers on the topic, to start from.",
+          "many": true,
+          "max": 10,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "dossier",
+          "template": "template.dossier"
+        }
+      ],
+      "steps": [
+        "Write three to seven opening questions numbered from 1, each one a source could answer, framed like the research question template.",
+        "Carry a fact over from earlier work only with its claims, sources, as-of date and decay class; anything else becomes a question.",
+        "Name the role of the person who decides what is published, never a person.",
+        "End no_change when the request needs one answer once, and propose the deep research report pack's frame-question verb."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The dossier validates against template.dossier's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "numbered-from-one",
+          "check": "Questions are numbered 1 to n without gaps, and mode is questions.",
+          "method": "deterministic"
+        },
+        {
+          "id": "dossier-checks-pass",
+          "check": "The dossier passes every check in dossier-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "answerable",
+          "check": "Each question asks one thing a source could answer.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "plan-cycle",
+      "kind": "verb.decompose_dag",
+      "title": "Plan one cycle: which questions, one sub-agent each",
+      "claimant": "agent",
+      "summary": "Pick the open questions this cycle works, lowest number first up to the cycle's limit, and propose exactly one answer-question verb for each picked question.",
+      "outcome": "A cycle plan with its proposed answer-question verbs, or no_change when no question is open.",
+      "ready_outcome": "cycle_planned",
+      "pinned": [
+        "rules.cycles",
+        "rules.question-queue",
+        "guardrail.one-sub-agent-per-question"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the current dossier version."
+        }
+      ],
+      "params": {
+        "max_questions": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "description": "Most questions one cycle works.",
+          "default": 3
+        }
+      },
+      "produces": [
+        {
+          "name": "cycle_plan",
+          "template": "template.cycle-plan"
+        }
+      ],
+      "steps": [
+        "Verify the pin, and number the cycle one after the dossier's last.",
+        "Pick open and partial questions lowest number first, up to max_questions, and list every open question not picked with the reason.",
+        "Propose one answer-question verb per picked question, pinned to this dossier version, and none for a question another sub-agent already holds this cycle.",
+        "End no_change when no question is open or partial, and propose switch-to-watching."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The cycle plan validates against template.cycle-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "one-per-question",
+          "check": "No question appears twice in picked, and proposed_verbs holds exactly one answer-question verb per picked question.",
+          "method": "deterministic"
+        },
+        {
+          "id": "within-limit",
+          "check": "picked has at most max_questions entries, and every other open question is in skipped with a reason.",
+          "method": "deterministic"
+        }
+      ],
+      "ready_requires": [
+        "proposed_verbs"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "living-research-dossier.open-dossier"
+      ]
+    },
+    {
+      "slug": "answer-question",
+      "kind": "verb.solve_draft",
+      "title": "Answer one numbered question with sources (the one sub-agent)",
+      "claimant": "agent",
+      "summary": "As the one sub-agent for one question in one cycle, search permitted sources for and against the likely answer, quote every claim exactly, and return facts that each carry an as-of date, a decay class, a refresh date, their claims and their sources.",
+      "outcome": "An answer with its source log and claim extract; partial or unanswered says what was searched.",
+      "ready_outcome": "question_answered",
+      "pinned": [
+        "guardrail.one-sub-agent-per-question",
+        "guardrail.date-every-fact",
+        "rules.decay-classes",
+        "deep-research-report:guardrail.quote-exactly",
+        "deep-research-report:guardrail.seek-counter-evidence",
+        "deep-research-report:rules.permitted-access",
+        "deep-research-report:rules.screening",
+        "deep-research-report:rules.evidence-strength",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the dossier version the cycle plan names."
+        },
+        {
+          "name": "cycle_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cycle plan that picked this question."
+        }
+      ],
+      "params": {
+        "question": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "description": "The number of the question to answer.",
+          "required": true
+        }
+      },
+      "network": [
+        "read_only",
+        "Only the sources this verb's inputs name, through their official APIs, feeds, downloads or pages as their terms and robots.txt permit, at each source's stated rate; no logins, paywall bypasses or personal data."
+      ],
+      "produces": [
+        {
+          "name": "answer",
+          "template": "template.answer"
+        },
+        {
+          "name": "source_log",
+          "template": "deep-research-report:template.source-log"
+        },
+        {
+          "name": "claim_extract",
+          "template": "deep-research-report:template.claim-extract"
+        }
+      ],
+      "steps": [
+        "Verify the pins and that the cycle plan picked this question; end blocked when the plan did not.",
+        "Search for and against the likely answer through permitted access, log every query, and quote every claim exactly with its locator.",
+        "Date each fact on the day it was confirmed, give it the fastest decay class that fits and the refresh date that follows.",
+        "Return partial or unanswered, with what was searched, when the sources fall short, and list new questions the answer raises."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The answer, source log and claim extract validate against their templates.",
+          "method": "deterministic"
+        },
+        {
+          "id": "facts-complete",
+          "check": "Every fact has as_of, decay_class, refresh_by, claims and sources, and refresh_by follows from the decay classes.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-on-record",
+          "check": "Every claim a fact cites is in the claim extract, and every source it cites is in the source log.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counter-searched",
+          "check": "The search looked for evidence against the answer.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "living-research-dossier.plan-cycle"
+      ]
+    },
+    {
+      "slug": "fold-in",
+      "kind": "verb.situate",
+      "title": "Fold answers, refreshes, fired triggers and publication into the dossier",
+      "claimant": "agent",
+      "summary": "Write the next dossier version: add sourced facts, supersede changed ones while keeping them, apply refresh results, reopen questions for fired triggers, record a person's publication decision, add raised questions at the end and recount what is open and due.",
+      "outcome": "A new dossier version by compare-and-set, or no_change when nothing passes the fold-in rules.",
+      "ready_outcome": "dossier_updated",
+      "pinned": [
+        "guardrail.date-every-fact",
+        "guardrail.keep-the-history",
+        "guardrail.one-sub-agent-per-question",
+        "rules.question-queue",
+        "rules.decay-classes",
+        "dossier-checks"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the dossier version to update."
+        },
+        {
+          "name": "cycle_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cycle plan the answers belong to.",
+          "required": false
+        },
+        {
+          "name": "answers",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the cycle's answers.",
+          "many": true,
+          "max": 20,
+          "required": false
+        },
+        {
+          "name": "refresh_records",
+          "category": "noun.eval_run",
+          "description": "Pins of refresh records to apply.",
+          "many": true,
+          "max": 10,
+          "required": false
+        },
+        {
+          "name": "trigger_checks",
+          "category": "noun.eval_run",
+          "description": "Pins of trigger checks whose fired triggers reopen questions.",
+          "many": true,
+          "max": 10,
+          "required": false
+        },
+        {
+          "name": "delivery_records",
+          "category": "noun.eval_run",
+          "description": "Pins of a person's delivery records for earlier versions of this dossier.",
+          "many": true,
+          "max": 4,
+          "required": false
+        }
+      ],
+      "update_slot": "dossier",
+      "produces": [
+        {
+          "name": "dossier",
+          "template": "template.dossier"
+        }
+      ],
+      "steps": [
+        "Verify the pins. Reject any fact without an as-of date, decay class, claims and sources, and any second answer to one question from one cycle.",
+        "Add new facts; when a fact changes, keep the old one under superseded with its replacement and why.",
+        "Reopen the questions each fired trigger names and set mode to questions; add raised questions after the last number.",
+        "Set publication only from a person's delivery record. Recount open_questions, recompute due for today and max_sub_agents_per_question, and run the dossier checks."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The new version validates against template.dossier's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "dossier-checks-pass",
+          "check": "The new version passes every dossier check, except that nothing-due may fail until due facts are refreshed.",
+          "method": "deterministic"
+        },
+        {
+          "id": "nothing-lost",
+          "check": "Every question and fact of the previous version is still present, as a fact or under superseded.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "living-research-dossier.answer-question",
+        "living-research-dossier.refresh-decayed-facts",
+        "living-research-dossier.check-triggers",
+        "living-research-dossier.decide-publication"
+      ]
+    },
+    {
+      "slug": "log-cycle",
+      "kind": "verb.verify_gate",
+      "title": "Append the cycle log",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compare the dossier versions before and after a cycle, and append a log of each question worked and by which sub-agent, the facts added, superseded and refreshed, the questions added and parked, what is still open and the dossier checks.",
+      "outcome": "A cycle log, written once.",
+      "ready_outcome": "cycle_logged",
+      "pinned": [
+        "guardrail.one-sub-agent-per-question",
+        "guardrail.keep-the-history",
+        "rules.cycles",
+        "dossier-checks"
+      ],
+      "slots": [
+        {
+          "name": "dossier_before",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the dossier version the cycle plan named."
+        },
+        {
+          "name": "dossier_after",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the version fold-in wrote."
+        },
+        {
+          "name": "cycle_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cycle plan."
+        },
+        {
+          "name": "answers",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the cycle's answers.",
+          "many": true,
+          "max": 20,
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "cycle_log",
+          "template": "template.cycle-log"
+        }
+      ],
+      "steps": [
+        "Verify the pins and that both versions belong to one dossier.",
+        "List each worked question once with its sub-agent's task id and outcome, and record the most sub-agents any question had.",
+        "List the facts added, superseded and refreshed, the questions added and parked, and the open count and mode after.",
+        "Run the dossier checks on the new version and record each failure; a cycle that changed nothing still gets a log that says why."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The cycle log validates against template.cycle-log's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "diff-recomputes",
+          "check": "Facts added, superseded and refreshed equal the difference between the two versions.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fan-out-counted",
+          "check": "max_sub_agents_per_question equals the largest number of sub-agents on one question this cycle.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 600
+      },
+      "follows": [
+        "living-research-dossier.fold-in"
+      ]
+    },
+    {
+      "slug": "switch-to-watching",
+      "kind": "verb.situate",
+      "title": "Switch the dossier to watching named triggers",
+      "claimant": "agent",
+      "summary": "When no question is open or partial, name the triggers that would make the dossier wrong, each watching one public source with a cheap check, a firing condition and the questions it reopens, and set the dossier to watching.",
+      "outcome": "A dossier version in watching mode, or no_change while questions remain open.",
+      "ready_outcome": "watching",
+      "pinned": [
+        "rules.triggers",
+        "rules.question-queue",
+        "dossier-checks",
+        "deep-research-report:rules.permitted-access",
+        "policy-and-law-watch:guardrail.public-sources-only"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the dossier version whose queue has run out."
+        }
+      ],
+      "update_slot": "dossier",
+      "produces": [
+        {
+          "name": "dossier",
+          "template": "template.dossier"
+        }
+      ],
+      "steps": [
+        "Verify the pin. End no_change, proposing plan-cycle, when any question is open or partial.",
+        "Name one trigger per source whose change could change an answer, so every question with a fact that is not stable is reopened by at least one.",
+        "Give each trigger the cheapest check its source permits: a conditional request, a feed's newest entry, a section's digest or a date passing.",
+        "Suggest each trigger's cadence in run_notes for the requester; nothing here schedules a check."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The new version validates against template.dossier's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "only-when-run-out",
+          "check": "open_questions is 0, mode is watching and the dossier checks pass.",
+          "method": "deterministic"
+        },
+        {
+          "id": "facts-watched",
+          "check": "Every question with a fact that is not stable is reopened by at least one trigger.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      },
+      "follows": [
+        "living-research-dossier.log-cycle"
+      ]
+    },
+    {
+      "slug": "check-triggers",
+      "kind": "verb.probe_source",
+      "title": "Check the named triggers",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Check each named trigger against its one source in the cheap way it names, record unchanged, changed but not fired, fired, unreachable or not permitted with the evidence, and list the questions the fired triggers reopen.",
+      "outcome": "A trigger check, with fold-in proposed when a trigger fired.",
+      "ready_outcome": "triggers_checked",
+      "pinned": [
+        "rules.triggers",
+        "deep-research-report:rules.permitted-access",
+        "policy-and-law-watch:guardrail.no-scraping-against-terms"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the dossier version in watching mode."
+        }
+      ],
+      "network": [
+        "read_only",
+        "Only the sources the dossier's triggers name, by conditional requests, feeds or official pages as their terms and robots.txt permit; no logins or personal data."
+      ],
+      "produces": [
+        {
+          "name": "trigger_check",
+          "template": "template.trigger-check"
+        }
+      ],
+      "steps": [
+        "Verify the pin, and end no_change when the dossier is not in watching mode.",
+        "Check every trigger with its named check and record the evidence, such as the validator returned or the section digest.",
+        "A source that also failed the previous check is unreachable; one whose terms forbid the check is not_permitted.",
+        "List the questions fired triggers reopen and propose fold-in; propose nothing when no trigger fired."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The trigger check validates against template.trigger-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-trigger-checked",
+          "check": "results names every trigger in the dossier exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reopened-follows",
+          "check": "reopened equals the union of the reopens of the fired triggers.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "living-research-dossier.switch-to-watching"
+      ]
+    },
+    {
+      "slug": "refresh-decayed-facts",
+      "kind": "verb.recheck_fragility",
+      "title": "Refresh the facts that have decayed",
+      "claimant": "agent",
+      "summary": "List the facts whose refresh date is before the check date, read each one's source again through permitted access, find its quote, and record whether it still holds, changed, was contradicted or retracted, or could not be read.",
+      "outcome": "A refresh record, with fold-in proposed to apply it.",
+      "ready_outcome": "facts_refreshed",
+      "pinned": [
+        "guardrail.date-every-fact",
+        "rules.decay-classes",
+        "deep-research-report:guardrail.quote-exactly",
+        "deep-research-report:rules.permitted-access"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the current dossier version."
+        }
+      ],
+      "params": {
+        "checked_on": {
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "description": "The date the facts are checked against.",
+          "required": true
+        }
+      },
+      "network": [
+        "read_only",
+        "Only the sources this verb's inputs name, through their official APIs, feeds, downloads or pages as their terms and robots.txt permit, at each source's stated rate; no logins, paywall bypasses or personal data."
+      ],
+      "produces": [
+        {
+          "name": "refresh_record",
+          "template": "template.refresh-record"
+        }
+      ],
+      "steps": [
+        "Verify the pin, and list exactly the facts whose refresh_by is before checked_on.",
+        "Read each fact's source again through permitted access and look for its exact quote.",
+        "Record still_true with new dates from the decay classes, or changed, contradicted, retracted or source_unreadable with the evidence; never confirm a fact whose source could not be read.",
+        "Propose fold-in, and an answer-question verb for any fact that changed."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The refresh record validates against template.refresh-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "exactly-the-due",
+          "check": "The listed facts are exactly those whose refresh_by is before checked_on.",
+          "method": "deterministic"
+        },
+        {
+          "id": "dates-follow",
+          "check": "Every still_true fact's new_refresh_by follows from new_as_of and its decay class.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "living-research-dossier.switch-to-watching"
+      ]
+    },
+    {
+      "slug": "review-dossier",
+      "kind": "verb.verify_gate",
+      "title": "Review a dossier version before anyone relies on it (a different worker)",
+      "claimant": "agent_or_human",
+      "review": "distinct_reviewer",
+      "summary": "A worker or person who wrote none of the dossier rechecks every quote its facts rest on, lists facts stated more strongly than their claims allow, runs the dossier checks and lists counter searches the cycles missed.",
+      "outcome": "An adversarial review in the deep research report pack's shape.",
+      "ready_outcome": "dossier_reviewed",
+      "pinned": [
+        "dossier-checks",
+        "guardrail.date-every-fact",
+        "deep-research-report:guardrail.quote-exactly",
+        "deep-research-report:guardrail.seek-counter-evidence"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the current dossier version."
+        },
+        {
+          "name": "claim_extracts",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the claim extracts the facts cite.",
+          "many": true,
+          "max": 50
+        },
+        {
+          "name": "source_logs",
+          "category": "noun.public_source",
+          "description": "Pins of the source logs those claims come from.",
+          "many": true,
+          "max": 50
+        }
+      ],
+      "network": [
+        "read_only",
+        "Only the sources this verb's inputs name, through their official APIs, feeds, downloads or pages as their terms and robots.txt permit, at each source's stated rate; no logins, paywall bypasses or personal data."
+      ],
+      "produces": [
+        {
+          "name": "review",
+          "template": "deep-research-report:template.adversarial-review"
+        }
+      ],
+      "steps": [
+        "Verify the pins and that you wrote no part of the dossier.",
+        "Recheck every quote a current fact rests on, with its prefix and suffix, against the retrieved text.",
+        "List facts stated more strongly than their claims allow, and run the dossier checks; a failed check fails the review.",
+        "List counter searches the cycles missed and propose the ones that matter as answer-question verbs."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The review validates against template.adversarial-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quotes-rechecked",
+          "check": "quotes_checked equals the number of claims the current facts cite.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The reviewing key differs from every key that wrote a version or an answer.",
+          "method": "deterministic"
+        },
+        {
+          "id": "overreach-judged",
+          "check": "Every overreach listed says what the claims do and do not show.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "living-research-dossier.fold-in"
+      ]
+    },
+    {
+      "slug": "decide-publication",
+      "kind": "verb.verify_gate",
+      "title": "Decide whether a dossier version is published (a person)",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person reads one dossier version and its review and decides whether that exact version is delivered to its readers, or held with the reason, such as a fact still due or a dispute to settle first.",
+      "outcome": "A delivery record for one dossier version.",
+      "ready_outcome": "publication_decided",
+      "pinned": [
+        "policy-and-law-watch:guardrail.person-decides",
+        "checklist",
+        "deep-research-report:checklist"
+      ],
+      "slots": [
+        {
+          "name": "dossier",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the exact dossier version."
+        },
+        {
+          "name": "review",
+          "category": "noun.eval_run",
+          "description": "Pin of the review of that version."
+        }
+      ],
+      "produces": [
+        {
+          "name": "delivery_record",
+          "template": "policy-and-law-watch:template.delivery-record"
+        }
+      ],
+      "steps": [
+        "Run both checklists.",
+        "Deliver only a version whose review passed and whose dossier checks pass; holding is a valid decision, with the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.delivery-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-passed",
+          "check": "A deliver decision has review_passed true, and output_ref names the exact dossier version.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-decides",
+          "check": "The submitting key belongs to a person who neither wrote nor reviewed the dossier.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "living-research-dossier.review-dossier"
+      ]
+    }
+  ]
+}

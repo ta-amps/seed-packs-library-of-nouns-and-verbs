@@ -146,11 +146,11 @@ how they are known.
 | A move plan a person approves, and verified moves | File triage at scale: plan-moves, approve-plan (a person's verb), move-and-verify, retire-sources (a person's verb), reconcile-indexes | Added now | seed_hypothesis (move plan), eval_run (approval, journal, retirement, reconciliation), benchmark_suite (triage checks) | decompose_dag, verify_gate (human), compile_dag, recheck_fragility | record-finding for drift |
 | Claims that say how they are known | [Measured claims](../packs/measured-claims/README.md): label-claims, reproduce-claim, record-correction, audit-note (a different worker or a person) | Added now | seed_hypothesis (note), eval_run (reproduction, correction, audit), benchmark_suite (claim checks) | situate, benchmark_harness, recheck_fragility, verify_gate | reproduce-claim for each reported number a conclusion needs |
 
-**Still needed here:** a research dossier kept current by a queue of questions worked in cycles;
-a panel of stakeholder personas that review a plan independently before their disagreements are
-compared; turning one request into many varied questions, personas and situations for testing;
-lineage and budget-derived grants for one task split across many workers over days; and wiring
-checks that fail when a capability is reachable from no live path.
+**Still needed here:** turning one request into many varied questions, personas and situations for
+testing; and lineage and budget-derived grants for one task split across many workers over days. A
+research dossier kept current in cycles, a panel of independent reviewers whose disagreements are
+compared, and wiring checks that fail when a capability is reachable from no live path are now
+packs, in section 9.
 
 ## 7. Testing, acceptance and accessibility
 
@@ -201,6 +201,30 @@ agreement and sign-off to the user acceptance testing pack, instead of redefinin
 profiles leave to a person; comparing a posted cut-down's retention with its long cut's, which needs
 numbers only the platform shows a person; and the caption translation and audio description that
 section 1 still lists.
+
+## 9. Research that stays current, wiring checks and second opinions
+
+Added October 30, 2026, from the same recurring patterns as section 6: a research dossier kept current
+long after its first answers, proof that a code project's tested capabilities are reachable from the
+paths that run, and independent second opinions before a decision. The dossier pins the deep research
+report pack's nouns, the wiring checks record every gap in the findings to fixes shape, and the panel
+hands disagreements of taste to the taste palettes pack and factual ones to the evaluation design pack.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| A numbered question queue for a topic that must stay current | [Living research dossier](../packs/living-research-dossier/README.md): open-dossier | Added now | seed_hypothesis (dossier), reflex_procedure (queue, cycle, decay class and trigger rules) | problemize | plan-cycle |
+| Cycles with one sub-agent per question, folded in and logged | Living research dossier: plan-cycle, answer-question, fold-in, log-cycle | Added now | seed_hypothesis (cycle plan, answer, dossier), public_source (source log), eval_run (cycle log) | decompose_dag, solve_draft, situate, verify_gate | answer-question per picked question |
+| Named triggers once the questions run out, and decayed facts read again | Living research dossier: switch-to-watching, check-triggers, refresh-decayed-facts | Added now | seed_hypothesis (dossier), eval_run (trigger check, refresh record) | situate, probe_source, recheck_fragility | fold-in, plan-cycle |
+| A different worker's review and a person's publication decision | Living research dossier: review-dossier, decide-publication (a person's verb) | Added now | eval_run (adversarial review, delivery record), benchmark_suite (dossier checks) | verify_gate, verify_gate (human) | answer-question for a missed counter search |
+| Entry points, dark modules, config round trips and probes that probe | [Wiring and conformance checks](../packs/wiring-and-conformance-checks/README.md): scope-wiring, find-unused-modules, check-config-round-trip, check-health-probes | Added now; the code is tested | seed_hypothesis (scope), eval_run (module map, round-trip report, probe report), code_node (wiring checks) | problemize, verify_gate | record-wiring-findings |
+| Documented behaviors on their real path, a canary per rule and one conformance report | Wiring and conformance checks: map-behaviors-to-tests, plant-canaries, record-wiring-findings, compile-conformance-report | Added now | eval_run (behavior map, conformance report), benchmark_suite (canary set, wiring checks), seed_hypothesis (findings in the findings to fixes shape) | verify_gate, problemize, compile_dag | triage and propose-fix per finding |
+| A panel of stated perspectives on other model families | [Persona panel and second opinion](../packs/persona-panel-second-opinion/README.md): define-panel | Added now | seed_hypothesis (panel), prompt_shim (perspective cards), reflex_procedure (panel, independence and synthesis rules) | problemize | give-view per reviewer |
+| Takes given alone, checked before anyone reads them | Persona panel and second opinion: give-view, check-independence | Added now | eval_run (view, independence check) | verify_gate | give-view again for an excluded view |
+| Disagreements first, audited, and a person's decision | Persona panel and second opinion: synthesize-disagreements, audit-synthesis, decide (a person's verb) | Added now | seed_hypothesis (synthesis, palette brief), eval_run (audit, decision), benchmark_suite (panel checks) | solve_draft, verify_gate, verify_gate (human) | design-evaluation for a factual disagreement, draft-embodiments for one of taste |
+
+**Still needed here:** wiring checks for languages other than Python; dossier sources that sit behind a
+login the requester holds, which need their own access rules; and a panel of real stakeholders instead of
+perspective cards, which needs consent and human-sensitive handling.
 
 ## Work that supports every goal
 

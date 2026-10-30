@@ -1,0 +1,4824 @@
+{
+  "pack_id": "wiring-and-conformance-checks",
+  "title": "Wiring and conformance checks",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for proving that a code project's capabilities are wired in: modules no live path imports, config fields that do not survive a save and reload, health probes that probe nothing, a canary for every rule so a check that stops firing is noticed, and documented behaviors whose only tests replace the real path with a mock; every gap recorded as a finding in the findings to fixes shape, with tested standard-library code that finds unused modules, mock-only tests and hollow probes in Python packages.",
+  "dependencies": [
+    "findings-to-fixes",
+    "checks-of-checks"
+  ],
+  "boundaries": [
+    "Checks run in a local copy at an exact commit; nothing outside that copy is read or changed.",
+    "A check never deletes or rewires code: every gap is a finding, and a person decides its fix.",
+    "The pack's code reads source with ast and never imports or runs what it reads; workers run it under their own permissions.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for proving a code project's capabilities are wired in",
+      "value": {
+        "lets_workers": "Prove that what a code project has written and tested is actually reachable: find modules no live path imports, check that every config field survives a save and reload, check that every health probe fails when its dependency stops, give every rule a canary its check must catch, and confirm each documented behavior has a test that runs the real path rather than a mock. Every gap becomes a finding in the findings to fixes pack's shape. Tested standard-library code finds unused modules, mock-only tests and hollow probes in Python packages.",
+        "not_for": "Deciding what the code should do, or reviewing its security; the repository review and security review packs do those.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.scope-wiring"
+            },
+            "when": "Entry points, config schemas, probes, docs and rules, at one commit."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.find-unused-modules"
+            },
+            "when": "The import graph from the entry points, then a runtime trace."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.check-config-round-trip"
+            },
+            "when": "Every config field saved, reloaded and compared."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.check-health-probes"
+            },
+            "when": "Hollow probes found statically, the rest run with dependencies stopped."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.map-behaviors-to-tests"
+            },
+            "when": "Each documented behavior, its real path and its tests' patches."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.plant-canaries"
+            },
+            "when": "One known-bad canary per rule, caught by its check."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.record-wiring-findings"
+            },
+            "when": "One finding per gap, in the findings to fixes shape."
+          },
+          {
+            "verb": {
+              "$verb": "wiring-and-conformance-checks.compile-conformance-report"
+            },
+            "when": "Every rule's result, canary and finding in one report."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.triage"
+            },
+            "when": "Each finding triaged, then a fix proposed and verified."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.live-path-or-finding"
+          },
+          {
+            "$pin": "guardrail.real-path-not-a-mock"
+          },
+          {
+            "$pin": "guardrail.canary-for-every-rule"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.wiring-checks"
+        },
+        "worked_example": "Synthetic: a food pantry's appointment app. The module map finds two dark modules, one only tests reach, one used only for type checking and two that a computed import name could load, which a runtime trace confirms. One setting is lost on reload and unknown keys vanish. Three probes are hollow on their face, and a fourth passes with its database stopped. Two documented behaviors are covered only by tests that patch their own path, and one has no test. Twelve findings follow."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.live-path-or-finding"
+        ],
+        [
+          "requires_noun",
+          "guardrail.real-path-not-a-mock"
+        ],
+        [
+          "requires_noun",
+          "guardrail.canary-for-every-rule"
+        ],
+        [
+          "requires_noun",
+          "rules.live-paths"
+        ],
+        [
+          "requires_noun",
+          "rules.config-round-trip"
+        ],
+        [
+          "requires_noun",
+          "rules.health-probes"
+        ],
+        [
+          "requires_noun",
+          "rules.behavior-coverage"
+        ],
+        [
+          "requires_noun",
+          "tool.wiring-checks"
+        ],
+        [
+          "requires_noun",
+          "template.conformance-report"
+        ],
+        [
+          "requires_noun",
+          "findings-to-fixes:template.finding"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How wiring and conformance are checked, from scope to findings",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "scope-wiring names the commit, packages, entry points, config schemas, probes, docs and rules.",
+          "find-unused-modules, check-config-round-trip, check-health-probes and map-behaviors-to-tests each run one rule in a local copy and record what they saw.",
+          "plant-canaries gives every rule a known-bad example its check must catch.",
+          "record-wiring-findings writes one finding per gap; compile-conformance-report puts every rule's result, canary and finding in one report.",
+          "The findings to fixes pack triages, fixes and verifies each finding; the report is compiled again at the fixed commit."
+        ],
+        "rules": [
+          "Static reading finds leads and a check that ran decides: confirm a dark module with a runtime import trace from every entry point, and a probe with its dependency stopped.",
+          "Work in a local copy at the exact commit; nothing outside that copy is read or changed.",
+          "A check never deletes or rewires anything. A gap becomes a finding whose fix proposal says wire it in or remove it, and a person decides.",
+          "Mocks at the edges, such as the clock, the network or a payment provider, are fine; a mock on the documented path is not coverage.",
+          "Canaries live in the test tree, never on a live path.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "follow_ups": {
+          "finding": {
+            "$verb": "findings-to-fixes.record-finding"
+          },
+          "triage": {
+            "$verb": "findings-to-fixes.triage"
+          },
+          "fix": {
+            "$verb": "findings-to-fixes.propose-fix"
+          },
+          "guard": {
+            "$verb": "findings-to-fixes.add-regression-guard"
+          },
+          "check_the_checks": {
+            "$verb": "checks-of-checks.validate-checks"
+          }
+        }
+      }
+    },
+    {
+      "slug": "guardrail.live-path-or-finding",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: on a live path, or a finding",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every module, config field, health probe and documented behavior in scope is either shown on a live path by a check that ran, or recorded as a finding. Nothing counts as wired because it has tests, is imported by a test or is described in a document.",
+        "how_it_is_checked": "The conformance report lists every rule's results, and every failure in it names its finding."
+      }
+    },
+    {
+      "slug": "guardrail.real-path-not-a-mock",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a behavior is covered by a test of its real path",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "A documented behavior counts as covered only by a test that runs the code people reach. A test that replaces a function on that path with a mock, stub or fake proves its own wiring, not the product's.",
+        "how_it_is_checked": "At least one listed test for each covered behavior patches nothing on the behavior's real path, by the mock scan's record of every patched target."
+      }
+    },
+    {
+      "slug": "guardrail.canary-for-every-rule",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every rule has a canary its check must catch",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every conformance rule has a canary: a planted, known-bad example its check must flag each time it runs. A check that misses its canary is broken, and its clean results count for nothing until it catches the canary again.",
+        "how_it_is_checked": "Every rule in the conformance report names its canary and the run that caught it."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "checks-of-checks:method",
+          "A canary is a known-bad example in the checks of checks sense."
+        ]
+      ]
+    },
+    {
+      "slug": "rules.live-paths",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "What a live path is, and how modules are classified",
+      "category_reason": "A zero-call deterministic procedure: the same source and entry points give the same map.",
+      "value": {
+        "entry_points": [
+          "Console and GUI scripts and plugin entry points declared in packaging metadata.",
+          "python -m targets: the __main__ modules.",
+          "Server, worker and scheduled-job start-up modules a deployment runs.",
+          "Modules a deployment loads by configuration, such as a plugin list in a settings file, named in the scope."
+        ],
+        "counts_as_an_import": [
+          "import x and from x import y, absolute or relative.",
+          "Importing a submodule, which loads its parent packages.",
+          "importlib.import_module or __import__ with a constant name.",
+          "An import inside a function, which runs when the function does."
+        ],
+        "does_not_count": [
+          "An import only under if TYPE_CHECKING.",
+          "An import only from tests.",
+          "An import from a module that is itself dark."
+        ],
+        "statuses": {
+          "live": "Reached from an entry point through imports that run.",
+          "dynamic_candidate": "Could be loaded by a computed import name; a runtime trace settles it.",
+          "type_only": "Reached only for type checking; not a gap.",
+          "test_only": "Reached only from tests; a gap.",
+          "dark": "Reached from nothing; a gap."
+        },
+        "rules": [
+          "A computed module name leaves the graph open: list the call, and settle the modules its prefix could load with a trace.",
+          "Before recording a dark or test-only module, run every entry point in a local copy with python -X importtime, or a dump of sys.modules, and confirm it never loads."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.config-round-trip",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Config fields survive a save and a reload",
+      "category_reason": "A zero-call deterministic procedure: the same schema and values give the same results.",
+      "value": {
+        "rules": [
+          "For every field in the config schema, set a value that differs from its default, save it with the project's own writer, load it with its own reader and compare.",
+          "Load, save and load again: the second load equals the first. Stability alone does not prove a field survives; a lost field is stable at its default.",
+          "A field read back as its default, or missing, is lost; one read back as another value is changed.",
+          "A field the code never reads after loading is not_read: it is wired to nothing.",
+          "An unknown key is rejected with an error or preserved; dropping it silently is a gap.",
+          "Round-trip environment and command-line overrides separately.",
+          "Use synthetic values only; never put a real secret in a fixture."
+        ],
+        "results": [
+          "survives",
+          "lost",
+          "changed",
+          "not_read"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.health-probes",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "A health probe probes",
+      "category_reason": "A zero-call deterministic procedure: the same probe and stopped dependency give the same result.",
+      "value": {
+        "rules": [
+          "A probe probes a dependency when stopping that dependency makes it fail or report degraded within its timeout, and restoring it makes it healthy again.",
+          "Stop each dependency the probe claims to cover, in a local copy only: a database, a queue, a cache, an upstream service, a disk or a model endpoint.",
+          "A probe that returns a constant, or only a flag set at start-up, is hollow whatever its tests say.",
+          "A probe that calls a dependency but ignores the answer is hollow too; only the stopped run shows it.",
+          "Liveness checks the process itself and does not fail because a downstream dependency is down; readiness checks the dependencies traffic needs.",
+          "A probe answers within its caller's timeout and changes nothing it checks."
+        ],
+        "static_kinds": {
+          "constant": "Returns only literals; cannot fail.",
+          "flag_only": "Reads a remembered state; probes no dependency.",
+          "calls": "Calls something; a lead until the stopped run."
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.behavior-coverage",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Each documented behavior has a test of its real path",
+      "category_reason": "A zero-call deterministic procedure: the same map and tests give the same statuses.",
+      "value": {
+        "rules": [
+          "List each behavior the docs, help text or API description promise as one sentence, with where it is promised.",
+          "Name its real path: the dotted names from the entry people reach to the effect.",
+          "Map each behavior to the tests said to cover it, and record what every test patches.",
+          "real_path: at least one listed test patches nothing on the path. mock_only: every listed test does. untested: no listed test exists.",
+          "A behavior that needs an outside service gets a contract test against a recorded exchange, not a mock of its own path.",
+          "A test that patches nothing may still not reach the entry; read it to confirm that it does."
+        ],
+        "statuses": [
+          "real_path",
+          "mock_only",
+          "untested"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.wiring-scope",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: what a wiring check covers: the commit, packages, entry points, tests, config schemas, probes, docs and rules",
+      "category_reason": "A scope states what is believed to be live, which the checks confirm or refute.",
+      "value": {
+        "describes": "what a wiring check covers: the commit, packages, entry points, tests, config schemas, probes, docs and rules",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project",
+            "commit",
+            "source_root",
+            "packages",
+            "entry_points",
+            "test_paths",
+            "config_schemas",
+            "probes",
+            "docs",
+            "rules",
+            "out_of_scope"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "source_root": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "packages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "entry_points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "module",
+                  "why"
+                ],
+                "properties": {
+                  "module": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "test_paths": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "config_schemas": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "reader",
+                  "writer"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "reader": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "writer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "probes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "probe",
+                  "kind",
+                  "dependencies"
+                ],
+                "properties": {
+                  "probe": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "liveness",
+                      "readiness",
+                      "startup",
+                      "other"
+                    ]
+                  },
+                  "dependencies": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    }
+                  }
+                }
+              }
+            },
+            "docs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "rules": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "no-dark-modules",
+                  "config-round-trip",
+                  "probes-probe",
+                  "behaviors-on-real-path"
+                ]
+              }
+            },
+            "out_of_scope": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every entry point says why it runs in production."
+        ]
+      }
+    },
+    {
+      "slug": "template.module-map",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the unused-module finder's result at one commit, with the runtime trace that settled its leads",
+      "category_reason": "A module map is a measured run of the finder.",
+      "value": {
+        "describes": "the unused-module finder's result at one commit, with the runtime trace that settled its leads",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project",
+            "commit",
+            "checked_on",
+            "command",
+            "result",
+            "trace"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "result": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "entries",
+                "missing_entries",
+                "modules",
+                "counts",
+                "open_dynamic_imports",
+                "unparsed",
+                "graph"
+              ],
+              "properties": {
+                "entries": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 50,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "missing_entries": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 50,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "modules": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 5000,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "module",
+                      "path",
+                      "status",
+                      "reached_from"
+                    ],
+                    "properties": {
+                      "module": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 400
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "live",
+                          "dynamic_candidate",
+                          "type_only",
+                          "test_only",
+                          "dark"
+                        ]
+                      },
+                      "reached_from": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 400
+                      }
+                    }
+                  }
+                },
+                "counts": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "live",
+                    "dynamic_candidate",
+                    "type_only",
+                    "test_only",
+                    "dark"
+                  ],
+                  "properties": {
+                    "live": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "dynamic_candidate": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "type_only": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "test_only": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "dark": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100000
+                    }
+                  }
+                },
+                "open_dynamic_imports": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "module",
+                      "line",
+                      "prefix"
+                    ],
+                    "properties": {
+                      "module": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "line": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 200
+                      }
+                    }
+                  }
+                },
+                "unparsed": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "path",
+                      "error"
+                    ],
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 400
+                      },
+                      "error": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1000
+                      }
+                    }
+                  }
+                },
+                "graph": {
+                  "type": "string",
+                  "enum": [
+                    "closed",
+                    "open"
+                  ]
+                }
+              }
+            },
+            "trace": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "ran",
+                "command",
+                "loaded",
+                "note"
+              ],
+              "properties": {
+                "ran": {
+                  "type": "boolean"
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 400
+                },
+                "loaded": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 500,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "result is the finder's JSON output, unchanged."
+        ]
+      }
+    },
+    {
+      "slug": "template.round-trip-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: every config field saved and reloaded: what was set, what came back and the result",
+      "category_reason": "A round-trip report is a measured test run.",
+      "value": {
+        "describes": "every config field saved and reloaded: what was set, what came back and the result",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project",
+            "commit",
+            "checked_on",
+            "config",
+            "reader",
+            "writer",
+            "fields",
+            "load_save_load_stable",
+            "unknown_keys",
+            "command",
+            "output_sha256"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "config": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "reader": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "writer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "fields": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "field",
+                  "set_to",
+                  "read_back",
+                  "result",
+                  "test"
+                ],
+                "properties": {
+                  "field": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "set_to": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "read_back": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "survives",
+                      "lost",
+                      "changed",
+                      "not_read"
+                    ]
+                  },
+                  "test": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "load_save_load_stable": {
+              "type": "boolean"
+            },
+            "unknown_keys": {
+              "type": "string",
+              "enum": [
+                "rejected",
+                "preserved",
+                "silently_dropped",
+                "not_checked"
+              ]
+            },
+            "command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "output_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "rules": [
+          "One row per field in the schema."
+        ]
+      }
+    },
+    {
+      "slug": "template.probe-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: health probes read statically, then run with each dependency stopped and restored",
+      "category_reason": "A probe report is a measured run.",
+      "value": {
+        "describes": "health probes read statically, then run with each dependency stopped and restored",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project",
+            "commit",
+            "checked_on",
+            "static",
+            "runs",
+            "hollow"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "static": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "probes",
+                "hollow"
+              ],
+              "properties": {
+                "probes": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "probe",
+                      "path",
+                      "line",
+                      "why",
+                      "kind",
+                      "calls",
+                      "reads",
+                      "awaits"
+                    ],
+                    "properties": {
+                      "probe": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      },
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 400
+                      },
+                      "line": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000
+                      },
+                      "why": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "constant",
+                          "flag_only",
+                          "calls"
+                        ]
+                      },
+                      "calls": {
+                        "type": "array",
+                        "minItems": 0,
+                        "maxItems": 100,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "reads": {
+                        "type": "array",
+                        "minItems": 0,
+                        "maxItems": 100,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      },
+                      "awaits": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "hollow": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 500,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "runs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "probe",
+                  "dependency",
+                  "how_stopped",
+                  "when_stopped",
+                  "when_restored",
+                  "seconds"
+                ],
+                "properties": {
+                  "probe": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "dependency": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "how_stopped": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "when_stopped": {
+                    "type": "string",
+                    "enum": [
+                      "failed",
+                      "degraded",
+                      "passed"
+                    ]
+                  },
+                  "when_restored": {
+                    "type": "string",
+                    "enum": [
+                      "healthy",
+                      "still_failing"
+                    ]
+                  },
+                  "seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 3600
+                  }
+                }
+              }
+            },
+            "hollow": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "static is the probe scan's JSON output, unchanged.",
+          "hollow is the static hollow probes plus every probe that passed with its dependency stopped."
+        ]
+      }
+    },
+    {
+      "slug": "template.behavior-map",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: documented behaviors with their real paths and tests, and the mock scan's result",
+      "category_reason": "A behavior map is a measured scan of the tests.",
+      "value": {
+        "describes": "documented behaviors with their real paths and tests, and the mock scan's result",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project",
+            "commit",
+            "checked_on",
+            "behaviors",
+            "scan",
+            "command"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "behaviors": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "claim",
+                  "doc",
+                  "real_path",
+                  "tests"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "doc": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "real_path": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    }
+                  },
+                  "tests": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 400
+                    }
+                  }
+                }
+              }
+            },
+            "scan": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "tests",
+                "behaviors"
+              ],
+              "properties": {
+                "tests": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 5000,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "patched"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 400
+                      },
+                      "patched": {
+                        "type": "array",
+                        "minItems": 0,
+                        "maxItems": 100,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      }
+                    }
+                  }
+                },
+                "behaviors": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 500,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "status",
+                      "real_path_tests",
+                      "tests",
+                      "missing_tests"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "real_path",
+                          "mock_only",
+                          "untested"
+                        ]
+                      },
+                      "real_path_tests": {
+                        "type": "array",
+                        "minItems": 0,
+                        "maxItems": 30,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        }
+                      },
+                      "tests": {
+                        "type": "array",
+                        "minItems": 0,
+                        "maxItems": 30,
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "test",
+                            "patched_on_path"
+                          ],
+                          "properties": {
+                            "test": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 400
+                            },
+                            "patched_on_path": {
+                              "type": "array",
+                              "minItems": 0,
+                              "maxItems": 30,
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "missing_tests": {
+                        "type": "array",
+                        "minItems": 0,
+                        "maxItems": 30,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 400
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "scan is the mock scan's JSON output, unchanged."
+        ]
+      }
+    },
+    {
+      "slug": "template.canary-set",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: one canary per rule: where it is planted, what its check must report and the run that caught it",
+      "category_reason": "A canary set is a suite of known-bad examples for the rules' checks.",
+      "value": {
+        "describes": "one canary per rule: where it is planted, what its check must report and the run that caught it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project",
+            "commit",
+            "canaries"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "canaries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rule",
+                  "canary",
+                  "planted_in",
+                  "expected",
+                  "caught",
+                  "run"
+                ],
+                "properties": {
+                  "rule": {
+                    "type": "string",
+                    "enum": [
+                      "no-dark-modules",
+                      "config-round-trip",
+                      "probes-probe",
+                      "behaviors-on-real-path"
+                    ]
+                  },
+                  "canary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "planted_in": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "expected": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "caught": {
+                    "type": "boolean"
+                  },
+                  "run": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Canaries live in the test tree, never on a live path."
+        ]
+      }
+    },
+    {
+      "slug": "template.conformance-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a conformance report: every rule's result, evidence and canary, every gap with its finding, the behaviors covered by their real path, the probes verified and the limits",
+      "category_reason": "A conformance report is a measured run of every rule.",
+      "value": {
+        "describes": "a conformance report: every rule's result, evidence and canary, every gap with its finding, the behaviors covered by their real path, the probes verified and the limits",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "project",
+            "commit",
+            "checked_on",
+            "entry_points",
+            "rules",
+            "failures",
+            "real_path_behaviors",
+            "probes_verified",
+            "limits"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "entry_points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "module",
+                  "why"
+                ],
+                "properties": {
+                  "module": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "rules": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rule",
+                  "status",
+                  "checked",
+                  "failures",
+                  "command",
+                  "evidence",
+                  "canary",
+                  "canary_caught_by"
+                ],
+                "properties": {
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ran",
+                      "not_run"
+                    ]
+                  },
+                  "checked": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "failures": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "canary": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "canary_caught_by": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "failures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rule",
+                  "item",
+                  "detail",
+                  "finding_ref"
+                ],
+                "properties": {
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "finding_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  }
+                }
+              }
+            },
+            "real_path_behaviors": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "claim",
+                  "doc",
+                  "tests",
+                  "path_patches"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "doc": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "tests": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 400
+                    }
+                  },
+                  "path_patches": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^patched:.+$",
+                      "maxLength": 300
+                    }
+                  }
+                }
+              }
+            },
+            "probes_verified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "probe",
+                  "dependency",
+                  "when_stopped",
+                  "when_restored"
+                ],
+                "properties": {
+                  "probe": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "dependency": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "when_stopped": {
+                    "type": "string",
+                    "enum": [
+                      "failed",
+                      "degraded",
+                      "passed"
+                    ]
+                  },
+                  "when_restored": {
+                    "type": "string",
+                    "enum": [
+                      "healthy",
+                      "still_failing"
+                    ]
+                  }
+                }
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "path_patches entries read patched:<target>; a covered behavior has none."
+        ]
+      }
+    },
+    {
+      "slug": "wiring-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Record checks for conformance reports, with synthetic golden reports",
+      "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Checks every conformance report must pass before anyone relies on it. The two synthetic good reports, one with gaps and their findings and one after the fixes, pass all of them; each synthetic bad report fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "commit-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "commit",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "why": "A conformance report is about one exact commit."
+          },
+          {
+            "id": "entry-points-named",
+            "rule": {
+              "rule": "each_has",
+              "path": "entry_points",
+              "fields": [
+                "module",
+                "why"
+              ],
+              "min": 1
+            },
+            "why": "Live paths start from named entry points, each with the reason it runs."
+          },
+          {
+            "id": "every-rule-checked",
+            "rule": {
+              "rule": "min_items",
+              "path": "rules",
+              "min": 4
+            },
+            "why": "The four rules all ran: modules, config round trips, probes and behaviors."
+          },
+          {
+            "id": "no-rule-skipped",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "rules",
+              "pattern": "^not_run$"
+            },
+            "why": "A rule that did not run makes the report incomplete."
+          },
+          {
+            "id": "rules-evidenced",
+            "rule": {
+              "rule": "each_has",
+              "path": "rules",
+              "fields": [
+                "command",
+                "evidence"
+              ]
+            },
+            "why": "Every rule names its command and its evidence."
+          },
+          {
+            "id": "canary-per-rule",
+            "rule": {
+              "rule": "each_has",
+              "path": "rules",
+              "fields": [
+                "canary",
+                "canary_caught_by"
+              ]
+            },
+            "why": "Every rule has a canary, and the run that caught it."
+          },
+          {
+            "id": "failures-are-findings",
+            "rule": {
+              "rule": "each_has",
+              "path": "failures",
+              "fields": [
+                "rule",
+                "item",
+                "detail",
+                "finding_ref"
+              ]
+            },
+            "why": "Every gap is a finding in the findings to fixes shape."
+          },
+          {
+            "id": "real-path-tested",
+            "rule": {
+              "rule": "each_has",
+              "path": "real_path_behaviors",
+              "fields": [
+                "id",
+                "claim",
+                "doc",
+                "tests"
+              ]
+            },
+            "why": "A behavior counted as covered names where it is promised and the tests that run it."
+          },
+          {
+            "id": "real-path-unpatched",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "real_path_behaviors",
+              "pattern": "^patched:"
+            },
+            "why": "A behavior counted as covered has no test patching its real path."
+          },
+          {
+            "id": "probes-fail-when-stopped",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "probes_verified",
+              "pattern": "^passed$"
+            },
+            "why": "A verified probe failed when its dependency stopped."
+          },
+          {
+            "id": "probes-recover",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "probes_verified",
+              "pattern": "^still_failing$"
+            },
+            "why": "A verified probe recovered when its dependency came back."
+          },
+          {
+            "id": "limits-stated",
+            "rule": {
+              "rule": "min_items",
+              "path": "limits",
+              "min": 1
+            },
+            "why": "Every report says what it does not show."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-open-gaps",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "good-after-fixes",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "report_id": "WC-3",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 0,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                },
+                {
+                  "id": "B2",
+                  "claim": "Deleting a note removes it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::delete"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-unpinned",
+            "label": "known_bad",
+            "fails": "commit-pinned",
+            "why": "Checked at a branch name.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "main",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-entry",
+            "label": "known_bad",
+            "fails": "entry-points-named",
+            "why": "No entry points.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-rule-missing",
+            "label": "known_bad",
+            "fails": "every-rule-checked",
+            "why": "Config round trips never ran.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-rule-skipped",
+            "label": "known_bad",
+            "fails": "no-rule-skipped",
+            "why": "The probe rule did not run.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "not_run",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-evidence",
+            "label": "known_bad",
+            "fails": "rules-evidenced",
+            "why": "A rule with no evidence.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-canary-missed",
+            "label": "known_bad",
+            "fails": "canary-per-rule",
+            "why": "No run caught the round-trip canary.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": ""
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-gap-unrecorded",
+            "label": "known_bad",
+            "fails": "failures-are-findings",
+            "why": "A dark module with no finding.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": ""
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-behavior-untested",
+            "label": "known_bad",
+            "fails": "real-path-tested",
+            "why": "Counted as covered with no test.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-mocked-path",
+            "label": "known_bad",
+            "fails": "real-path-unpatched",
+            "why": "Its only test patches the save it promises.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": [
+                    "patched:tiny.notes.save"
+                  ]
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-probe-passes-stopped",
+            "label": "known_bad",
+            "fails": "probes-fail-when-stopped",
+            "why": "The probe passed with the database stopped.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "passed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-probe-stuck",
+            "label": "known_bad",
+            "fails": "probes-recover",
+            "why": "The probe never recovered.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "still_failing"
+                }
+              ],
+              "limits": [
+                "One commit, static and local runs."
+              ]
+            }
+          },
+          {
+            "id": "bad-no-limits",
+            "label": "known_bad",
+            "fails": "limits-stated",
+            "why": "No limits.",
+            "finding": {
+              "report_id": "WC-2",
+              "project": "tiny-svc",
+              "commit": "5e2b7c41d0a9f3e8b6c2d4a1f0e9b8c7d6a5f4e3",
+              "checked_on": "2026-10-30",
+              "entry_points": [
+                {
+                  "module": "tiny.__main__",
+                  "why": "python -m tiny"
+                }
+              ],
+              "rules": [
+                {
+                  "rule": "no-dark-modules",
+                  "status": "ran",
+                  "checked": 6,
+                  "failures": 1,
+                  "command": "modules src",
+                  "evidence": "map M1",
+                  "canary": "dark.py",
+                  "canary_caught_by": "R1"
+                },
+                {
+                  "rule": "config-round-trip",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 0,
+                  "command": "test_round_trip",
+                  "evidence": "trip T1",
+                  "canary": "lost_field",
+                  "canary_caught_by": "R2"
+                },
+                {
+                  "rule": "probes-probe",
+                  "status": "ran",
+                  "checked": 1,
+                  "failures": 0,
+                  "command": "stop db, call readyz",
+                  "evidence": "probes P1",
+                  "canary": "constant_probe",
+                  "canary_caught_by": "R3"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "status": "ran",
+                  "checked": 2,
+                  "failures": 1,
+                  "command": "mocks tests",
+                  "evidence": "map B1",
+                  "canary": "mocked_test",
+                  "canary_caught_by": "R4"
+                }
+              ],
+              "failures": [
+                {
+                  "rule": "no-dark-modules",
+                  "item": "tiny.old_sync",
+                  "detail": "dark",
+                  "finding_ref": "F-21"
+                },
+                {
+                  "rule": "behaviors-on-real-path",
+                  "item": "B2",
+                  "detail": "mock_only",
+                  "finding_ref": "F-22"
+                }
+              ],
+              "real_path_behaviors": [
+                {
+                  "id": "B1",
+                  "claim": "Saving a note stores it.",
+                  "doc": "README",
+                  "tests": [
+                    "t::save"
+                  ],
+                  "path_patches": []
+                }
+              ],
+              "probes_verified": [
+                {
+                  "probe": "tiny.health.readyz",
+                  "dependency": "db",
+                  "when_stopped": "failed",
+                  "when_restored": "healthy"
+                }
+              ],
+              "limits": []
+            }
+          }
+        ],
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_id",
+            "project",
+            "commit",
+            "checked_on",
+            "entry_points",
+            "rules",
+            "failures",
+            "real_path_behaviors",
+            "probes_verified",
+            "limits"
+          ],
+          "properties": {
+            "report_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "project": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "commit": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "maxLength": 40
+            },
+            "checked_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "entry_points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "module",
+                  "why"
+                ],
+                "properties": {
+                  "module": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "why": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "rules": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rule",
+                  "status",
+                  "checked",
+                  "failures",
+                  "command",
+                  "evidence",
+                  "canary",
+                  "canary_caught_by"
+                ],
+                "properties": {
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ran",
+                      "not_run"
+                    ]
+                  },
+                  "checked": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "failures": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 400
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "canary": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "canary_caught_by": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "failures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "rule",
+                  "item",
+                  "detail",
+                  "finding_ref"
+                ],
+                "properties": {
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "item": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "finding_ref": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 60
+                  }
+                }
+              }
+            },
+            "real_path_behaviors": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "claim",
+                  "doc",
+                  "tests",
+                  "path_patches"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "doc": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 300
+                  },
+                  "tests": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 400
+                    }
+                  },
+                  "path_patches": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 30,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^patched:.+$",
+                      "maxLength": 300
+                    }
+                  }
+                }
+              }
+            },
+            "probes_verified": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "probe",
+                  "dependency",
+                  "when_stopped",
+                  "when_restored"
+                ],
+                "properties": {
+                  "probe": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "dependency": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "when_stopped": {
+                    "type": "string",
+                    "enum": [
+                      "failed",
+                      "degraded",
+                      "passed"
+                    ]
+                  },
+                  "when_restored": {
+                    "type": "string",
+                    "enum": [
+                      "healthy",
+                      "still_failing"
+                    ]
+                  }
+                }
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "expected": {
+          "good-open-gaps": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-after-fixes": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-unpinned": {
+            "verdict": "fail",
+            "failed_checks": [
+              "commit-pinned"
+            ]
+          },
+          "bad-no-entry": {
+            "verdict": "fail",
+            "failed_checks": [
+              "entry-points-named"
+            ]
+          },
+          "bad-rule-missing": {
+            "verdict": "fail",
+            "failed_checks": [
+              "every-rule-checked"
+            ]
+          },
+          "bad-rule-skipped": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-rule-skipped"
+            ]
+          },
+          "bad-no-evidence": {
+            "verdict": "fail",
+            "failed_checks": [
+              "rules-evidenced"
+            ]
+          },
+          "bad-canary-missed": {
+            "verdict": "fail",
+            "failed_checks": [
+              "canary-per-rule"
+            ]
+          },
+          "bad-gap-unrecorded": {
+            "verdict": "fail",
+            "failed_checks": [
+              "failures-are-findings"
+            ]
+          },
+          "bad-behavior-untested": {
+            "verdict": "fail",
+            "failed_checks": [
+              "real-path-tested"
+            ]
+          },
+          "bad-mocked-path": {
+            "verdict": "fail",
+            "failed_checks": [
+              "real-path-unpatched"
+            ]
+          },
+          "bad-probe-passes-stopped": {
+            "verdict": "fail",
+            "failed_checks": [
+              "probes-fail-when-stopped"
+            ]
+          },
+          "bad-probe-stuck": {
+            "verdict": "fail",
+            "failed_checks": [
+              "probes-recover"
+            ]
+          },
+          "bad-no-limits": {
+            "verdict": "fail",
+            "failed_checks": [
+              "limits-stated"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.wiring-checks",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: the wiring checks",
+      "category_reason": "Tested code a worker runs inside a claimed verb, pinned by path, file count and digest.",
+      "value": {
+        "name": "wiring checks",
+        "code": {
+          "$code": "wiring-and-conformance-checks"
+        },
+        "runtime": "Python 3.10 or later, standard library only; nothing to install.",
+        "commands": [
+          "python -m wiring_checks modules ROOT [--package NAME] [--entry MODULE] [--tests PATH] [--pyproject FILE] [--base DIR] [--strict]",
+          "python -m wiring_checks mocks PATH [PATH ...] [--behaviors FILE] [--base DIR]",
+          "python -m wiring_checks probes ROOT [PATH ...] [--names REGEX] [--base DIR]"
+        ],
+        "does": [
+          "Classifies every module of a Python package as live, dynamic_candidate, type_only, test_only or dark from its import graph and entry points.",
+          "Lists what every test patches through unittest.mock or monkeypatch, and marks each documented behavior real_path, mock_only or untested.",
+          "Finds health probes by name or route and marks each constant, flag_only or calls."
+        ],
+        "does_not": [
+          "Import or run the code it reads, start a dependency or call a probe.",
+          "Open a network connection, call a model or write any file.",
+          "Decide anything: static results are leads for the verbs' runtime checks."
+        ],
+        "code_license": "MIT",
+        "tests": "The code's tests cover every rule on small synthetic packages and on a synthetic pantry app, and recompute this pack's module map, behavior map and probe scan from source.json, in the library's CI job for the pack."
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.live-paths"
+        ],
+        [
+          "verifies",
+          "rules.behavior-coverage"
+        ],
+        [
+          "verifies",
+          "rules.health-probes"
+        ]
+      ]
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for wiring and conformance checks",
+      "value": {
+        "sources": [
+          {
+            "title": "Python documentation: ast, Abstract Syntax Trees",
+            "url": "https://docs.python.org/3/library/ast.html",
+            "used_for": "Reading imports, patches and probes without running code",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: importlib",
+            "url": "https://docs.python.org/3/library/importlib.html",
+            "used_for": "import_module and relative names with a package",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: unittest.mock, Where to patch",
+            "url": "https://docs.python.org/3/library/unittest.mock.html",
+            "used_for": "Why a patch replaces the name where it is looked up",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: command line, -X importtime",
+            "url": "https://docs.python.org/3/using/cmdline.html",
+            "used_for": "A runtime trace of the modules an entry point loads",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Python documentation: typing.TYPE_CHECKING",
+            "url": "https://docs.python.org/3/library/typing.html",
+            "used_for": "Imports that run only for type checkers",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Kubernetes: Configure Liveness, Readiness and Startup Probes",
+            "url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+            "used_for": "What liveness and readiness probes are for",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "vulture: find dead Python code",
+            "url": "https://github.com/jendrikseipp/vulture",
+            "used_for": "Prior art for unused functions and names inside modules, which this pack does not cover",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "example.module-map",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the synthetic pantry app's module map and runtime trace",
+      "synthetic": true,
+      "category_reason": "The finder's real output on the synthetic fixture, recomputed by the code's tests.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.module-map"
+        },
+        "instance": {
+          "project": "pantry-app (synthetic)",
+          "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
+          "checked_on": "2026-10-30",
+          "command": "python -m wiring_checks modules src --tests tests --base .",
+          "result": {
+            "entries": [
+              "pantry_app.__main__"
+            ],
+            "missing_entries": [],
+            "modules": [
+              {
+                "module": "pantry_app",
+                "path": "src/pantry_app/__init__.py",
+                "status": "live",
+                "reached_from": "pantry_app.__main__"
+              },
+              {
+                "module": "pantry_app.__main__",
+                "path": "src/pantry_app/__main__.py",
+                "status": "live",
+                "reached_from": "entry point"
+              },
+              {
+                "module": "pantry_app._types",
+                "path": "src/pantry_app/_types.py",
+                "status": "type_only",
+                "reached_from": "pantry_app.slots"
+              },
+              {
+                "module": "pantry_app.cli",
+                "path": "src/pantry_app/cli.py",
+                "status": "live",
+                "reached_from": "pantry_app.__main__"
+              },
+              {
+                "module": "pantry_app.config",
+                "path": "src/pantry_app/config.py",
+                "status": "live",
+                "reached_from": "pantry_app.cli"
+              },
+              {
+                "module": "pantry_app.exporters",
+                "path": "src/pantry_app/exporters/__init__.py",
+                "status": "dynamic_candidate",
+                "reached_from": "pantry_app.cli"
+              },
+              {
+                "module": "pantry_app.exporters.csv_out",
+                "path": "src/pantry_app/exporters/csv_out.py",
+                "status": "dynamic_candidate",
+                "reached_from": "pantry_app.cli"
+              },
+              {
+                "module": "pantry_app.health",
+                "path": "src/pantry_app/health.py",
+                "status": "live",
+                "reached_from": "pantry_app.routes"
+              },
+              {
+                "module": "pantry_app.legacy_export",
+                "path": "src/pantry_app/legacy_export.py",
+                "status": "dark",
+                "reached_from": null
+              },
+              {
+                "module": "pantry_app.plugins",
+                "path": "src/pantry_app/plugins/__init__.py",
+                "status": "live",
+                "reached_from": "pantry_app.routes"
+              },
+              {
+                "module": "pantry_app.plugins.fax",
+                "path": "src/pantry_app/plugins/fax.py",
+                "status": "dark",
+                "reached_from": null
+              },
+              {
+                "module": "pantry_app.plugins.sms",
+                "path": "src/pantry_app/plugins/sms.py",
+                "status": "live",
+                "reached_from": "pantry_app.routes"
+              },
+              {
+                "module": "pantry_app.reports",
+                "path": "src/pantry_app/reports.py",
+                "status": "test_only",
+                "reached_from": "tests/test_reports.py"
+              },
+              {
+                "module": "pantry_app.routes",
+                "path": "src/pantry_app/routes.py",
+                "status": "live",
+                "reached_from": "pantry_app.cli"
+              },
+              {
+                "module": "pantry_app.slots",
+                "path": "src/pantry_app/slots.py",
+                "status": "live",
+                "reached_from": "pantry_app.routes"
+              },
+              {
+                "module": "pantry_app.store",
+                "path": "src/pantry_app/store.py",
+                "status": "live",
+                "reached_from": "pantry_app.routes"
+              },
+              {
+                "module": "pantry_app.version",
+                "path": "src/pantry_app/version.py",
+                "status": "live",
+                "reached_from": "pantry_app"
+              }
+            ],
+            "counts": {
+              "live": 11,
+              "dynamic_candidate": 2,
+              "type_only": 1,
+              "test_only": 1,
+              "dark": 2
+            },
+            "open_dynamic_imports": [
+              {
+                "module": "pantry_app.cli",
+                "line": 11,
+                "prefix": "pantry_app.exporters."
+              }
+            ],
+            "unparsed": [],
+            "graph": "open"
+          },
+          "trace": {
+            "ran": true,
+            "command": "python -X importtime -m pantry_app export --format csv_out",
+            "loaded": [
+              "pantry_app.exporters",
+              "pantry_app.exporters.csv_out"
+            ],
+            "note": "The two dynamic candidates loaded through the computed export name; the dark and test-only modules did not load from either command."
+          }
+        },
+        "shows": "Eleven live modules, two dynamic candidates the trace loaded, one type-only, one test-only and two dark.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.behavior-map",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: four documented behaviors and what their tests patch",
+      "synthetic": true,
+      "category_reason": "The mock scan's real output on the synthetic fixture, recomputed by the code's tests.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.behavior-map"
+        },
+        "instance": {
+          "project": "pantry-app (synthetic)",
+          "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
+          "checked_on": "2026-10-30",
+          "behaviors": [
+            {
+              "id": "B1",
+              "claim": "Booking a slot saves it.",
+              "doc": "README.md, Booking",
+              "real_path": [
+                "pantry_app.routes.book",
+                "pantry_app.slots.book_slot",
+                "pantry_app.store.Store.save"
+              ],
+              "tests": [
+                "tests/test_slots.py::BookingTests::test_book_returns_a_slot"
+              ]
+            },
+            {
+              "id": "B2",
+              "claim": "Cancelling a slot removes it.",
+              "doc": "README.md, Cancelling",
+              "real_path": [
+                "pantry_app.routes.cancel",
+                "pantry_app.store.Store.delete"
+              ],
+              "tests": [
+                "tests/test_slots.py::CancelTests::test_cancel_removes_the_slot"
+              ]
+            },
+            {
+              "id": "B3",
+              "claim": "The health endpoint answers.",
+              "doc": "README.md, Health",
+              "real_path": [
+                "pantry_app.health.healthz"
+              ],
+              "tests": [
+                "tests/test_health.py::test_healthz_says_ok"
+              ]
+            },
+            {
+              "id": "B4",
+              "claim": "Weekly reports count visits.",
+              "doc": "docs/reports.md",
+              "real_path": [
+                "pantry_app.reports.weekly_counts"
+              ],
+              "tests": []
+            }
+          ],
+          "scan": {
+            "tests": [
+              {
+                "id": "tests/test_health.py::test_healthz_says_ok",
+                "patched": []
+              },
+              {
+                "id": "tests/test_health.py::test_livez_when_ready",
+                "patched": [
+                  "pantry_app.health.READY"
+                ]
+              },
+              {
+                "id": "tests/test_reports.py::test_weekly_counts_add_up",
+                "patched": []
+              },
+              {
+                "id": "tests/test_slots.py::BookingTests::test_book_returns_a_slot",
+                "patched": [
+                  "pantry_app.store.Store.save"
+                ]
+              },
+              {
+                "id": "tests/test_slots.py::BookingTests::test_book_slot_saves_the_row",
+                "patched": []
+              },
+              {
+                "id": "tests/test_slots.py::CancelTests::test_cancel_removes_the_slot",
+                "patched": [
+                  "pantry_app.store.Store.delete"
+                ]
+              }
+            ],
+            "behaviors": [
+              {
+                "id": "B1",
+                "status": "mock_only",
+                "real_path_tests": [],
+                "tests": [
+                  {
+                    "test": "tests/test_slots.py::BookingTests::test_book_returns_a_slot",
+                    "patched_on_path": [
+                      "pantry_app.store.Store.save"
+                    ]
+                  }
+                ],
+                "missing_tests": []
+              },
+              {
+                "id": "B2",
+                "status": "mock_only",
+                "real_path_tests": [],
+                "tests": [
+                  {
+                    "test": "tests/test_slots.py::CancelTests::test_cancel_removes_the_slot",
+                    "patched_on_path": [
+                      "pantry_app.store.Store.delete"
+                    ]
+                  }
+                ],
+                "missing_tests": []
+              },
+              {
+                "id": "B3",
+                "status": "real_path",
+                "real_path_tests": [
+                  "tests/test_health.py::test_healthz_says_ok"
+                ],
+                "tests": [
+                  {
+                    "test": "tests/test_health.py::test_healthz_says_ok",
+                    "patched_on_path": []
+                  }
+                ],
+                "missing_tests": []
+              },
+              {
+                "id": "B4",
+                "status": "untested",
+                "real_path_tests": [],
+                "tests": [],
+                "missing_tests": []
+              }
+            ]
+          },
+          "command": "python -m wiring_checks mocks tests --behaviors behaviors.json --base ."
+        },
+        "shows": "Two behaviors covered only by tests that patch their path, one real path and one untested.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.probe-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: four probes: three hollow on their face, one that ignores its answer",
+      "synthetic": true,
+      "category_reason": "The probe scan's real output on the synthetic fixture, recomputed by the code's tests; the stopped run is synthetic.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.probe-report"
+        },
+        "instance": {
+          "project": "pantry-app (synthetic)",
+          "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
+          "checked_on": "2026-10-30",
+          "static": {
+            "probes": [
+              {
+                "probe": "pantry_app.health.healthz",
+                "path": "src/pantry_app/health.py",
+                "line": 11,
+                "why": "name healthz",
+                "kind": "constant",
+                "calls": [],
+                "reads": [],
+                "awaits": false
+              },
+              {
+                "probe": "pantry_app.health.livez",
+                "path": "src/pantry_app/health.py",
+                "line": 15,
+                "why": "name livez",
+                "kind": "flag_only",
+                "calls": [],
+                "reads": [
+                  "READY"
+                ],
+                "awaits": false
+              },
+              {
+                "probe": "pantry_app.health.readyz",
+                "path": "src/pantry_app/health.py",
+                "line": 19,
+                "why": "name readyz",
+                "kind": "calls",
+                "calls": [
+                  "store.ping"
+                ],
+                "reads": [],
+                "awaits": false
+              },
+              {
+                "probe": "pantry_app.routes.service_check",
+                "path": "src/pantry_app/routes.py",
+                "line": 34,
+                "why": "route /healthcheck",
+                "kind": "constant",
+                "calls": [],
+                "reads": [],
+                "awaits": false
+              }
+            ],
+            "hollow": [
+              "pantry_app.health.healthz",
+              "pantry_app.health.livez",
+              "pantry_app.routes.service_check"
+            ]
+          },
+          "runs": [
+            {
+              "probe": "pantry_app.health.readyz",
+              "dependency": "store database",
+              "how_stopped": "Stopped the local database in the copy, then called readyz.",
+              "when_stopped": "passed",
+              "when_restored": "healthy",
+              "seconds": 0.2
+            }
+          ],
+          "hollow": [
+            "pantry_app.health.healthz",
+            "pantry_app.health.livez",
+            "pantry_app.health.readyz",
+            "pantry_app.routes.service_check"
+          ]
+        },
+        "shows": "The static scan flags three probes; readyz calls the store but passes with it stopped, so all four are hollow.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.round-trip-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: one setting lost on reload, and unknown keys dropped",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.round-trip-report"
+        },
+        "instance": {
+          "project": "pantry-app (synthetic)",
+          "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
+          "checked_on": "2026-10-30",
+          "config": "pantry_app.config.Config",
+          "reader": "pantry_app.config.load_config",
+          "writer": "pantry_app.config.save_config",
+          "fields": [
+            {
+              "field": "slot_minutes",
+              "set_to": "20",
+              "read_back": "20",
+              "result": "survives",
+              "test": "tests/test_config_round_trip.py::test_slot_minutes"
+            },
+            {
+              "field": "open_hour",
+              "set_to": "8",
+              "read_back": "8",
+              "result": "survives",
+              "test": "tests/test_config_round_trip.py::test_open_hour"
+            },
+            {
+              "field": "reminder_hours",
+              "set_to": "48",
+              "read_back": "24",
+              "result": "lost",
+              "test": "tests/test_config_round_trip.py::test_reminder_hours"
+            }
+          ],
+          "load_save_load_stable": true,
+          "unknown_keys": "silently_dropped",
+          "command": "python -m unittest tests.test_config_round_trip -v",
+          "output_sha256": "6c0d2b5e9a4f1873c2e6b0d9a5f4183e7c2b6d0a9f5e4183c7b2e6d0a9f5c418"
+        },
+        "shows": "reminder_hours is written as 48 and read back as its default, 24, though load, save and load is stable.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.conformance-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: the pantry app's conformance report, with twelve findings",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.conformance-report"
+        },
+        "instance": {
+          "report_id": "WC-1",
+          "project": "pantry-app (synthetic)",
+          "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
+          "checked_on": "2026-10-30",
+          "entry_points": [
+            {
+              "module": "pantry_app.__main__",
+              "why": "python -m pantry_app serves and exports"
+            }
+          ],
+          "rules": [
+            {
+              "rule": "no-dark-modules",
+              "status": "ran",
+              "checked": 17,
+              "failures": 3,
+              "command": "python -m wiring_checks modules src --tests tests",
+              "evidence": "module map of 2026-10-30",
+              "canary": "tests/canaries/dark_pkg",
+              "canary_caught_by": "canary run 1"
+            },
+            {
+              "rule": "config-round-trip",
+              "status": "ran",
+              "checked": 3,
+              "failures": 2,
+              "command": "python -m unittest tests.test_config_round_trip",
+              "evidence": "round-trip report of 2026-10-30",
+              "canary": "tests/canaries/lost_field.py",
+              "canary_caught_by": "canary run 2"
+            },
+            {
+              "rule": "probes-probe",
+              "status": "ran",
+              "checked": 4,
+              "failures": 4,
+              "command": "python -m wiring_checks probes src, then readyz with the store stopped",
+              "evidence": "probe report of 2026-10-30",
+              "canary": "tests/canaries/constant_probe.py",
+              "canary_caught_by": "canary run 3"
+            },
+            {
+              "rule": "behaviors-on-real-path",
+              "status": "ran",
+              "checked": 4,
+              "failures": 3,
+              "command": "python -m wiring_checks mocks tests --behaviors behaviors.json",
+              "evidence": "behavior map of 2026-10-30",
+              "canary": "tests/canaries/test_mocked_path.py",
+              "canary_caught_by": "canary run 4"
+            }
+          ],
+          "failures": [
+            {
+              "rule": "no-dark-modules",
+              "item": "pantry_app.legacy_export",
+              "detail": "dark",
+              "finding_ref": "WF-1"
+            },
+            {
+              "rule": "no-dark-modules",
+              "item": "pantry_app.plugins.fax",
+              "detail": "dark",
+              "finding_ref": "WF-2"
+            },
+            {
+              "rule": "no-dark-modules",
+              "item": "pantry_app.reports",
+              "detail": "test_only",
+              "finding_ref": "WF-3"
+            },
+            {
+              "rule": "config-round-trip",
+              "item": "Config.reminder_hours",
+              "detail": "lost: written as 48, read back as 24",
+              "finding_ref": "WF-4"
+            },
+            {
+              "rule": "config-round-trip",
+              "item": "unknown keys",
+              "detail": "silently dropped by load_config",
+              "finding_ref": "WF-5"
+            },
+            {
+              "rule": "probes-probe",
+              "item": "pantry_app.health.healthz",
+              "detail": "constant",
+              "finding_ref": "WF-6"
+            },
+            {
+              "rule": "probes-probe",
+              "item": "pantry_app.health.livez",
+              "detail": "flag_only",
+              "finding_ref": "WF-7"
+            },
+            {
+              "rule": "probes-probe",
+              "item": "pantry_app.health.readyz",
+              "detail": "passed with its dependency stopped",
+              "finding_ref": "WF-8"
+            },
+            {
+              "rule": "probes-probe",
+              "item": "pantry_app.routes.service_check",
+              "detail": "constant",
+              "finding_ref": "WF-9"
+            },
+            {
+              "rule": "behaviors-on-real-path",
+              "item": "B1",
+              "detail": "mock_only",
+              "finding_ref": "WF-10"
+            },
+            {
+              "rule": "behaviors-on-real-path",
+              "item": "B2",
+              "detail": "mock_only",
+              "finding_ref": "WF-11"
+            },
+            {
+              "rule": "behaviors-on-real-path",
+              "item": "B4",
+              "detail": "untested",
+              "finding_ref": "WF-12"
+            }
+          ],
+          "real_path_behaviors": [
+            {
+              "id": "B3",
+              "claim": "The health endpoint answers.",
+              "doc": "README.md, Health",
+              "tests": [
+                "tests/test_health.py::test_healthz_says_ok"
+              ],
+              "path_patches": []
+            }
+          ],
+          "probes_verified": [],
+          "limits": [
+            "Static reading plus local runs at one commit; a module loaded only by deployment settings needs naming as an entry.",
+            "No probe was verified: three are hollow on their face and readyz ignores the answer it asks for."
+          ]
+        },
+        "shows": "Every rule ran with its canary caught; twelve gaps each name a finding; one behavior is covered by its real path and no probe is verified.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.finding",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the finding for a dark module, in the findings to fixes shape",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "findings-to-fixes:template.finding"
+        },
+        "instance": {
+          "id": "WF-1",
+          "title": "The module pantry_app.legacy_export is imported by no live path",
+          "kind": "issue",
+          "severity": "P3",
+          "where": "src/pantry_app/legacy_export.py at commit 9b1f4e2c7a6d",
+          "expected": "Every module is on a live path, or it is removed.",
+          "evidence": [
+            {
+              "kind": "measurement",
+              "detail": "wiring_checks modules: status dark, reached from nothing.",
+              "location": "module map of 2026-10-30",
+              "sha256": "1b5565d127eb6b4d88d9fc38cfbbd75d454c964fe4b8e6a028d824646996060b",
+              "observed_at": "2026-10-30T09:00Z"
+            },
+            {
+              "kind": "reproduction",
+              "detail": "python -X importtime -m pantry_app serve and export in a local copy never loaded pantry_app.legacy_export.",
+              "location": "local copy at the pinned commit",
+              "observed_at": "2026-10-30T09:05Z"
+            }
+          ],
+          "noticed_by": "find-unused-modules worker",
+          "noticed_at": "2026-10-30T09:05Z",
+          "fingerprint": "issue/pantry-legacy-export/module-imported-by-nothing",
+          "status": "open",
+          "sensitivity": "none",
+          "public": false,
+          "work": [
+            {
+              "verb": "triage",
+              "state": "pending"
+            },
+            {
+              "verb": "propose-fix",
+              "state": "pending",
+              "note": "Wire it into the export command, or remove it; a person decides."
+            }
+          ]
+        },
+        "shows": "An open issue with the finder's measurement and a runtime trace, proposing triage and a fix a person decides.",
+        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "scope-wiring",
+      "kind": "verb.problemize",
+      "title": "Scope a wiring check at one commit",
+      "claimant": "agent",
+      "summary": "Read a project at an exact commit and name what its checks cover: the packages, the entry points that run in production and why, the test folders, the config schemas with their readers and writers, the health probes with the dependencies each claims, the docs that promise behavior and the rules in force.",
+      "outcome": "A wiring scope, or blocked when the commit cannot be checked out locally.",
+      "ready_outcome": "wiring_scoped",
+      "pinned": [
+        "rules.live-paths",
+        "guardrail.live-path-or-finding"
+      ],
+      "slots": [
+        {
+          "name": "project",
+          "category": "noun.public_source",
+          "description": "Pin of a noun shaped like the repository review pack's template.repo-snapshot: the repository and exact commit."
+        }
+      ],
+      "network": [
+        "local_only",
+        "A local checkout of the project at the pinned commit; nothing outside it is read or changed."
+      ],
+      "produces": [
+        {
+          "name": "scope",
+          "template": "template.wiring-scope"
+        }
+      ],
+      "steps": [
+        "Verify the pin and work in a local checkout of the exact commit.",
+        "Name every entry point with the reason it runs: packaging metadata, __main__ modules, start-up modules and modules a deployment loads by configuration.",
+        "List config schemas with their readers and writers, probes with the dependencies each claims, and the docs, help text and API descriptions that promise behavior.",
+        "Put all four rules in scope unless the project has none of a kind, and say why under out_of_scope."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The scope validates against template.wiring-scope's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "commit-exact",
+          "check": "commit is a full 40-character commit that the local checkout matches.",
+          "method": "deterministic"
+        },
+        {
+          "id": "entries-justified",
+          "check": "Every entry point says why it runs in production.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      }
+    },
+    {
+      "slug": "find-unused-modules",
+      "kind": "verb.verify_gate",
+      "title": "Find modules no live path imports",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run the unused-module finder from the scope's entry points, then run the entry points in a local copy with an import trace to settle dynamic candidates and confirm that dark and test-only modules never load.",
+      "outcome": "A module map with its runtime trace.",
+      "ready_outcome": "modules_mapped",
+      "pinned": [
+        "rules.live-paths",
+        "guardrail.live-path-or-finding",
+        "tool.wiring-checks"
+      ],
+      "slots": [
+        {
+          "name": "scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the wiring scope."
+        }
+      ],
+      "network": [
+        "local_only",
+        "A local checkout of the project at the pinned commit; nothing outside it is read or changed."
+      ],
+      "produces": [
+        {
+          "name": "module_map",
+          "template": "template.module-map"
+        }
+      ],
+      "steps": [
+        "Run python -m wiring_checks modules with the scope's source root, entry points and test folders, and keep its JSON unchanged as result.",
+        "Run each entry point in the local copy with python -X importtime, or a dump of sys.modules, and record which candidates, dark and test-only modules loaded.",
+        "A module that loaded is live, whatever the static reading said; one that never loaded stays a gap.",
+        "Propose record-wiring-findings for every dark and test-only module that never loaded."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The module map validates against template.module-map's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "finder-output-kept",
+          "check": "result equals the finder's output for the scope's inputs at the commit.",
+          "method": "deterministic"
+        },
+        {
+          "id": "leads-settled",
+          "check": "Every dynamic candidate, dark and test-only module is named in the trace's loaded list or confirmed absent by the trace.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "wiring-and-conformance-checks.scope-wiring"
+      ]
+    },
+    {
+      "slug": "check-config-round-trip",
+      "kind": "verb.verify_gate",
+      "title": "Check that every config field survives a save and a reload",
+      "claimant": "agent",
+      "summary": "In a local copy, write one round-trip test per field of each config schema with synthetic values, run it through the project's own writer and reader, and record whether each field survives, is lost, changes or is never read, and what happens to unknown keys.",
+      "outcome": "A round-trip report for each config schema.",
+      "ready_outcome": "round_trips_checked",
+      "pinned": [
+        "rules.config-round-trip",
+        "guardrail.live-path-or-finding"
+      ],
+      "slots": [
+        {
+          "name": "scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the wiring scope."
+        }
+      ],
+      "network": [
+        "local_only",
+        "A local checkout of the project at the pinned commit; nothing outside it is read or changed."
+      ],
+      "produces": [
+        {
+          "name": "round_trip_report",
+          "template": "template.round-trip-report",
+          "max": 20
+        }
+      ],
+      "steps": [
+        "Verify the pin. For each field, set a synthetic value that differs from its default, save with the project's writer, load with its reader and compare.",
+        "Run load, save and load, and check what an unknown key does.",
+        "Search the code for reads of each field after loading; a field nothing reads is not_read.",
+        "Keep the tests in the copy's test tree and record their command and output digest."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Each report validates against template.round-trip-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-field",
+          "check": "fields has one row for every field of the schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "synthetic-values",
+          "check": "No value in the tests or the report is a real secret or personal data.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "wiring-and-conformance-checks.scope-wiring"
+      ]
+    },
+    {
+      "slug": "check-health-probes",
+      "kind": "verb.verify_gate",
+      "title": "Check that every health probe probes",
+      "claimant": "agent",
+      "summary": "Run the probe scan to find probes that are hollow on their face, then in a local copy stop each dependency the other probes claim, call the probe, restore the dependency and call it again.",
+      "outcome": "A probe report naming every hollow probe.",
+      "ready_outcome": "probes_checked",
+      "pinned": [
+        "rules.health-probes",
+        "guardrail.live-path-or-finding",
+        "tool.wiring-checks"
+      ],
+      "slots": [
+        {
+          "name": "scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the wiring scope."
+        }
+      ],
+      "network": [
+        "local_only",
+        "A local copy of the project at the pinned commit and its local dependencies only; dependencies are stopped and restarted only inside that copy."
+      ],
+      "produces": [
+        {
+          "name": "probe_report",
+          "template": "template.probe-report"
+        }
+      ],
+      "steps": [
+        "Run python -m wiring_checks probes on the scope's source root and keep its JSON unchanged as static.",
+        "For every probe that calls something, stop each dependency it claims inside the copy, call the probe, restore the dependency and call it again, recording both results and the time taken.",
+        "A probe that passed with its dependency stopped is hollow, like a constant or flag-only one.",
+        "Change nothing outside the copy; propose record-wiring-findings for every hollow probe."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The probe report validates against template.probe-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "hollow-follows",
+          "check": "hollow equals the static hollow probes plus every run that passed while stopped.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-claim-run",
+          "check": "Every dependency the scope says a calling probe covers has a run.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "wiring-and-conformance-checks.scope-wiring"
+      ]
+    },
+    {
+      "slug": "map-behaviors-to-tests",
+      "kind": "verb.verify_gate",
+      "title": "Map each documented behavior to a test of its real path",
+      "claimant": "agent",
+      "summary": "List every behavior the docs promise with where it is promised, name its real path, map the tests said to cover it, and run the mock scan to mark each behavior real_path, mock_only or untested.",
+      "outcome": "A behavior map with the mock scan's result.",
+      "ready_outcome": "behaviors_mapped",
+      "pinned": [
+        "rules.behavior-coverage",
+        "guardrail.real-path-not-a-mock",
+        "tool.wiring-checks"
+      ],
+      "slots": [
+        {
+          "name": "scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the wiring scope."
+        }
+      ],
+      "network": [
+        "local_only",
+        "A local checkout of the project at the pinned commit; nothing outside it is read or changed."
+      ],
+      "produces": [
+        {
+          "name": "behavior_map",
+          "template": "template.behavior-map"
+        }
+      ],
+      "steps": [
+        "Verify the pin. Write each promised behavior as one sentence with its locator, and its real path as dotted names from the entry people reach to the effect.",
+        "List the tests said to cover each behavior, then run python -m wiring_checks mocks with the map and keep its JSON unchanged as scan.",
+        "Read every real_path test to confirm it calls the behavior's entry; one that does not is not coverage.",
+        "Propose record-wiring-findings for every mock_only and untested behavior."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The behavior map validates against template.behavior-map's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scan-kept",
+          "check": "scan equals the mock scan's output for the listed tests and map.",
+          "method": "deterministic"
+        },
+        {
+          "id": "docs-covered",
+          "check": "Every promise in the scope's docs appears as a behavior.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 3600
+      },
+      "follows": [
+        "wiring-and-conformance-checks.scope-wiring"
+      ]
+    },
+    {
+      "slug": "plant-canaries",
+      "kind": "verb.verify_gate",
+      "title": "Plant one canary per rule and prove its check catches it",
+      "claimant": "agent",
+      "summary": "For every rule in scope, plant one known-bad example in the copy's test tree, such as a module nothing imports, a field the loader loses, a constant probe or a test that patches its own path, run the rule's check on it and record that the check caught it.",
+      "outcome": "A canary set with one caught canary per rule.",
+      "ready_outcome": "canaries_planted",
+      "pinned": [
+        "guardrail.canary-for-every-rule",
+        "checks-of-checks:method",
+        "checks-of-checks:rule-types",
+        "tool.wiring-checks"
+      ],
+      "slots": [
+        {
+          "name": "scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the wiring scope."
+        }
+      ],
+      "network": [
+        "local_only",
+        "A local checkout of the project at the pinned commit; nothing outside it is read or changed."
+      ],
+      "produces": [
+        {
+          "name": "canary_set",
+          "template": "template.canary-set"
+        }
+      ],
+      "steps": [
+        "Verify the pin. Write one canary per rule in the test tree, never on a live path.",
+        "Run each rule's check exactly as the conformance run does, and record whether it flagged its canary.",
+        "A check that misses its canary is broken: record caught false and propose a finding for the check.",
+        "Propose the checks of checks pack's validate-checks verb when a check is new."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The canary set validates against template.canary-set's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "one-per-rule",
+          "check": "Every rule in scope has exactly one canary, and each names the run that caught it.",
+          "method": "deterministic"
+        },
+        {
+          "id": "off-the-live-path",
+          "check": "No canary is under a package the module map marks live.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "wiring-and-conformance-checks.scope-wiring"
+      ]
+    },
+    {
+      "slug": "record-wiring-findings",
+      "kind": "verb.problemize",
+      "title": "Record each wiring gap as a finding",
+      "claimant": "agent",
+      "summary": "Record one finding in the findings to fixes shape for every dark or test-only module that never loaded, every lost, changed or unread field, every hollow probe, every behavior without a real-path test and every missed canary, with the evidence each kind needs.",
+      "outcome": "Findings, each with triage and a fix proposal proposed.",
+      "ready_outcome": "findings_recorded",
+      "pinned": [
+        "guardrail.live-path-or-finding",
+        "findings-to-fixes:kind-definitions",
+        "findings-to-fixes:evidence-checklist",
+        "findings-to-fixes:record-checks"
+      ],
+      "slots": [
+        {
+          "name": "module_map",
+          "category": "noun.eval_run",
+          "description": "Pin of the module map.",
+          "required": false
+        },
+        {
+          "name": "round_trip_reports",
+          "category": "noun.eval_run",
+          "description": "Pins of the round-trip reports.",
+          "many": true,
+          "max": 20,
+          "required": false
+        },
+        {
+          "name": "probe_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the probe report.",
+          "required": false
+        },
+        {
+          "name": "behavior_map",
+          "category": "noun.eval_run",
+          "description": "Pin of the behavior map.",
+          "required": false
+        },
+        {
+          "name": "canary_set",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the canary set.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "finding",
+          "template": "findings-to-fixes:template.finding",
+          "max": 60
+        }
+      ],
+      "steps": [
+        "Verify the pins. Record one open finding per gap, with a fingerprint naming the component and the gap.",
+        "A dark or test-only module, or a behavior without a real-path test, is an issue; a lost field, a hollow probe or a missed canary is an error with its reproduction.",
+        "Give each finding the measurement or run that shows it, with its digest, and propose findings-to-fixes triage and propose-fix, listing both as pending.",
+        "Run the findings to fixes record checks on every finding before submitting."
+      ],
+      "acceptance": [
+        {
+          "id": "findings-match-template",
+          "check": "Every finding validates against template.finding's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "Every finding passes the findings to fixes record checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-gap-recorded",
+          "check": "Every gap in the pinned reports has exactly one finding.",
+          "method": "deterministic"
+        }
+      ],
+      "ready_requires": [
+        "proposed_verbs"
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "follows": [
+        "wiring-and-conformance-checks.find-unused-modules",
+        "wiring-and-conformance-checks.check-config-round-trip",
+        "wiring-and-conformance-checks.check-health-probes",
+        "wiring-and-conformance-checks.map-behaviors-to-tests",
+        "wiring-and-conformance-checks.plant-canaries"
+      ]
+    },
+    {
+      "slug": "compile-conformance-report",
+      "kind": "verb.compile_dag",
+      "title": "Compile the conformance report",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Put every rule's result, command, evidence and canary, every gap with its finding, the behaviors covered by their real path and the probes verified into one report for the commit, and run the wiring checks on it.",
+      "outcome": "A conformance report that passes the wiring checks.",
+      "ready_outcome": "report_compiled",
+      "pinned": [
+        "wiring-checks",
+        "guardrail.live-path-or-finding",
+        "guardrail.canary-for-every-rule"
+      ],
+      "slots": [
+        {
+          "name": "scope",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the wiring scope."
+        },
+        {
+          "name": "module_map",
+          "category": "noun.eval_run",
+          "description": "Pin of the module map."
+        },
+        {
+          "name": "round_trip_reports",
+          "category": "noun.eval_run",
+          "description": "Pins of the round-trip reports.",
+          "many": true,
+          "max": 20
+        },
+        {
+          "name": "probe_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the probe report."
+        },
+        {
+          "name": "behavior_map",
+          "category": "noun.eval_run",
+          "description": "Pin of the behavior map."
+        },
+        {
+          "name": "canary_set",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the canary set."
+        },
+        {
+          "name": "findings",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the recorded findings.",
+          "many": true,
+          "max": 60,
+          "required": false
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "conformance_report",
+          "template": "template.conformance-report"
+        }
+      ],
+      "steps": [
+        "Verify the pins and that every input names the scope's commit.",
+        "Write one rule row per rule with its command, evidence, canary and the run that caught it; mark a rule not_run, with the reason as its evidence, when its input is missing.",
+        "List every gap with the id of its finding, the behaviors with a real-path test, and the probes that failed when stopped and recovered.",
+        "Run the wiring checks on the report before submitting; a failing check means the report is not ready."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The report validates against template.conformance-report's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "wiring-checks-pass",
+          "check": "The report passes every check in wiring-checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "gaps-match-findings",
+          "check": "Every failure's finding_ref names one pinned finding, and every pinned finding is some failure's.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "wiring-and-conformance-checks.record-wiring-findings"
+      ]
+    }
+  ]
+}

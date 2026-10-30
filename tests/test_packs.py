@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 37)
+        self.assertEqual(summary["worked_examples"], 40)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -1529,6 +1529,237 @@ class VideoImprovementPackExamples(unittest.TestCase):
         self.assertEqual(decision["findings_proposed"], sum(1 for r in results if r["result"] == "missed") + len(scores["notes"]))
         bank = {task["task_id"] for task in record("video-uat", "task-bank")["value"]["tasks"]}
         self.assertLessEqual(set(plan["tasks"]), bank)
+
+
+class GapPackExamples(unittest.TestCase):
+    """The living research dossier, wiring and conformance checks, and persona panel packs of October 30: their
+    record checks against their own templates, and the dates, counts, digests, reading order and quotes their worked
+    examples state. The wiring pack's code recomputes its module map, behavior map and probe scan in its own CI job."""
+
+    FIXTURES = (("living-research-dossier", "dossier-checks", "template.dossier", "example.dossier"),
+                ("wiring-and-conformance-checks", "wiring-checks", "template.conformance-report",
+                 "example.conformance-report"),
+                ("persona-panel-second-opinion", "panel-checks", "template.synthesis", "example.synthesis"))
+
+    @staticmethod
+    def instance(pack: str, slug: str):
+        return record(pack, slug)["value"]["instance"]
+
+    def test_record_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug, template_slug, example_slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            self.assertEqual(value["finding_schema"], record(pack, template_slug)["value"]["schema"], pack)
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(value["finding_schema"], fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            self.assertEqual(vp.failing_checks(value["deterministic_checks"], self.instance(pack, example_slug)), [], pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_dossier_dates_queue_cycles_and_triggers_recompute(self):
+        from datetime import date, timedelta
+
+        pack = "living-research-dossier"
+        days = {name: spec["refresh_after_days"] for name, spec in record(pack, "rules.decay-classes")["value"]["classes"].items()}
+
+        def refresh_by(as_of: str, decay: str) -> str:
+            return (date.fromisoformat(as_of) + timedelta(days=days[decay])).isoformat()
+
+        dossier = self.instance(pack, "example.dossier")
+        facts = {f["id"]: f for f in dossier["facts"]}
+        for fact in facts.values():
+            self.assertEqual(fact["refresh_by"], refresh_by(fact["as_of"], fact["decay_class"]), fact["id"])
+        self.assertEqual(dossier["due"], [f for f, v in facts.items() if v["refresh_by"] < dossier["as_of"]])
+        self.assertEqual(dossier["open_questions"], sum(q["status"] in ("open", "partial") for q in dossier["questions"]))
+        self.assertEqual((dossier["mode"], dossier["open_questions"]), ("watching", 0))
+        self.assertEqual([q["number"] for q in dossier["questions"]], list(range(1, len(dossier["questions"]) + 1)))
+        for question in dossier["questions"]:
+            self.assertLessEqual(set(question["facts"]), set(facts), question["number"])
+        self.assertEqual({p["number"] for p in dossier["parked"]},
+                         {q["number"] for q in dossier["questions"] if q["status"] == "parked"})
+        for old in dossier["superseded"]:
+            self.assertIn(old["superseded_by"], facts)
+            self.assertNotIn(old["id"], facts)
+        self.assertEqual([c["cycle"] for c in dossier["cycles"]], list(range(1, len(dossier["cycles"]) + 1)))
+        most = max(c["questions_worked"].count(n) for c in dossier["cycles"] for n in c["questions_worked"])
+        self.assertEqual(dossier["max_sub_agents_per_question"], most)
+        watched = {n for trigger in dossier["triggers"] for n in trigger["reopens"]}
+        for question in dossier["questions"]:
+            if any(facts[f]["decay_class"] != "stable" for f in question["facts"]):
+                self.assertIn(question["number"], watched, question["number"])
+        self.assertEqual(dossier["publication"]["decided_by_kind"], "person")
+        for item in IDX.docs[pack]["nouns.json"]["records"]:
+            self.assertNotEqual(item["value"]["role"], "schedule_proposal", "no schedule is proposed or activated")
+
+        plan, log = self.instance(pack, "example.cycle-plan"), self.instance(pack, "example.cycle-log")
+        worked = [w["question"] for w in log["worked"]]
+        self.assertEqual([p["question"] for p in plan["picked"]], worked)
+        self.assertEqual(len(set(worked)), len(worked), "one sub-agent per question in a cycle")
+        self.assertEqual(len({w["sub_agent"] for w in log["worked"]}), len(worked))
+        self.assertEqual(log["max_sub_agents_per_question"], 1)
+        self.assertEqual(next(c for c in dossier["cycles"] if c["cycle"] == log["cycle"])["questions_worked"], worked)
+        self.assertLessEqual(set(log["facts_added"]), set(facts))
+        self.assertEqual({(s["id"], s["by"]) for s in log["facts_superseded"]},
+                         {(s["id"], s["superseded_by"]) for s in dossier["superseded"]})
+        self.assertEqual(log["questions_parked"], [p["number"] for p in dossier["parked"]])
+
+        trigger = self.instance(pack, "example.trigger-check")
+        fired = [r for r in trigger["results"] if r["result"] == "fired"]
+        self.assertEqual(trigger["fired"], [r["trigger"] for r in fired])
+        self.assertEqual(trigger["reopened"], sorted({n for r in fired for n in r["reopens"]}))
+        self.assertEqual({p["question"] for p in plan["picked"]}, set(trigger["reopened"]))
+        self.assertEqual([r["trigger"] for r in trigger["results"]], [t["name"] for t in dossier["triggers"]])
+        for row in trigger["results"]:
+            named = next(t for t in dossier["triggers"] if t["name"] == row["trigger"])
+            self.assertEqual((row["check"], row["reopens"] if row in fired else named["reopens"]),
+                             (named["check"], named["reopens"]))
+
+        refresh = self.instance(pack, "example.refresh-record")
+        for row in refresh["facts"]:
+            self.assertLess(row["refresh_by"], refresh["checked_on"], row["fact"])
+            if row["result"] == "still_true":
+                self.assertEqual(row["new_refresh_by"], refresh_by(row["new_as_of"], row["decay_class"]))
+                self.assertEqual((facts[row["fact"]]["as_of"], facts[row["fact"]]["refresh_by"]),
+                                 (row["new_as_of"], row["new_refresh_by"]))
+        self.assertEqual(refresh["due_before"], len(refresh["facts"]))
+        self.assertEqual(refresh["due_after"], sum(r["result"] == "source_unreadable" for r in refresh["facts"]))
+
+        answer = self.instance(pack, "example.answer")
+        for fact in answer["facts"]:
+            self.assertEqual(fact["refresh_by"], refresh_by(fact["as_of"], fact["decay_class"]))
+            replaced = next(s for s in dossier["superseded"] if s["id"] == fact["replaces"])
+            current = facts[replaced["superseded_by"]]
+            self.assertEqual({k: current[k] for k in ("statement", "as_of", "decay_class", "refresh_by", "claims", "sources")},
+                             {k: fact[k] for k in ("statement", "as_of", "decay_class", "refresh_by", "claims", "sources")})
+        self.assertIn(answer["sub_agent"], {w["sub_agent"] for w in log["worked"] if w["question"] == answer["question"]})
+
+    def test_dossier_pins_the_deep_research_nouns_instead_of_redefining_them(self):
+        pack = "living-research-dossier"
+        own = {r["value"]["describes"] for r in IDX.docs[pack]["nouns.json"]["records"] if r["value"]["role"] == "template"}
+        theirs = {r["value"]["describes"] for r in IDX.docs["deep-research-report"]["nouns.json"]["records"]
+                  if r["value"]["role"] == "template"}
+        self.assertFalse(own & theirs)
+        tasks = {t["brief"]["template_id"]: t["brief"] for t in IDX.docs[pack]["verbs.json"]["tasks"]}
+        produced = {tid: {p["template"]["key"] for p in brief["output_contract"]["produces"]} for tid, brief in tasks.items()}
+        self.assertLessEqual({key("deep-research-report", "template.source-log"), key("deep-research-report", "template.claim-extract")},
+                             produced[f"{pack}.answer-question"])
+        self.assertEqual(produced[f"{pack}.review-dossier"], {key("deep-research-report", "template.adversarial-review")})
+        self.assertEqual(produced[f"{pack}.decide-publication"], {key("policy-and-law-watch", "template.delivery-record")})
+        pinned = {pin["key"] for brief in tasks.values() for pin in brief["inputs"]["pinned"]}
+        for slug in ("guardrail.quote-exactly", "guardrail.seek-counter-evidence", "guardrail.search-on-the-record",
+                     "template.research-question", "rules.permitted-access", "rules.screening", "rules.evidence-strength",
+                     "checklist"):
+            self.assertIn(key("deep-research-report", slug), pinned, slug)
+        self.assertEqual(tasks[f"{pack}.check-triggers"]["execution"]["model_use"], "none")
+        for tid in (f"{pack}.answer-question", f"{pack}.check-triggers", f"{pack}.refresh-decayed-facts", f"{pack}.review-dossier"):
+            self.assertEqual(tasks[tid]["execution"]["network"]["mode"], "read_only", tid)
+
+    def test_wiring_examples_agree_with_each_other_and_with_findings_to_fixes(self):
+        pack = "wiring-and-conformance-checks"
+        modules = self.instance(pack, "example.module-map")["result"]
+        self.assertEqual(modules["counts"], {s: sum(1 for r in modules["modules"] if r["status"] == s) for s in modules["counts"]})
+        report = self.instance(pack, "example.conformance-report")
+        gaps = {(f["rule"], f["item"]) for f in report["failures"]}
+        self.assertEqual({item for rule, item in gaps if rule == "no-dark-modules"},
+                         {r["module"] for r in modules["modules"] if r["status"] in ("dark", "test_only")})
+        probes = self.instance(pack, "example.probe-report")
+        passed = [run["probe"] for run in probes["runs"] if run["when_stopped"] == "passed"]
+        self.assertEqual(probes["hollow"], sorted(probes["static"]["hollow"] + passed))
+        self.assertEqual({item for rule, item in gaps if rule == "probes-probe"}, set(probes["hollow"]))
+        coverage = self.instance(pack, "example.behavior-map")["scan"]["behaviors"]
+        self.assertEqual({item for rule, item in gaps if rule == "behaviors-on-real-path"},
+                         {row["id"] for row in coverage if row["status"] != "real_path"})
+        rules = record(pack, "template.wiring-scope")["value"]["schema"]["properties"]["rules"]["items"]["enum"]
+        self.assertEqual([row["rule"] for row in report["rules"]], rules)
+        for row in report["rules"]:
+            self.assertEqual(row["failures"], sum(1 for f in report["failures"] if f["rule"] == row["rule"]), row["rule"])
+            self.assertTrue(row["canary"] and row["canary_caught_by"], row["rule"])
+        finding = self.instance(pack, "example.finding")
+        checks = record("findings-to-fixes", "record-checks")["value"]["deterministic_checks"]
+        self.assertEqual(vp.failing_checks(checks, finding), [])
+        self.assertEqual(vp.schema_errors(record("findings-to-fixes", "template.finding")["value"]["schema"], finding), [])
+        self.assertIn(finding["id"], {f["finding_ref"] for f in report["failures"]})
+        measurement = next(e for e in finding["evidence"] if e["kind"] == "measurement")
+        self.assertEqual(measurement["sha256"], bp.value_sha256(self.instance(pack, "example.module-map")))
+        tool = record(pack, "tool.wiring-checks")["value"]["code"]
+        code = IDX.docs[pack]["manifest.json"]["code"]
+        self.assertEqual(tool, {k: code[k] for k in ("path", "files", "sha256")})
+        for item in IDX.docs[pack]["verbs.json"]["tasks"]:
+            self.assertIn(item["brief"]["execution"]["network"]["mode"], ("none", "local_only"), item["brief"]["template_id"])
+
+    def test_panel_digests_order_quotes_and_decision_recompute(self):
+        import re
+
+        pack = "persona-panel-second-opinion"
+        panel = self.instance(pack, "example.panel")
+        views = {v["reviewer_id"]: v for v in (self.instance(pack, f"example.view-{r['reviewer_id']}") for r in panel["reviewers"])}
+        check = self.instance(pack, "example.independence-check")
+        self.assertEqual(check["shuffle_seed"], panel["shuffle_seed"])
+        for row in check["views"]:
+            view = views[row["reviewer_id"]]
+            self.assertEqual(row["view_sha256"], bp.value_sha256(view))
+            self.assertEqual((row["packet_sha256"], view["packet_sha256"]), (panel["packet_sha256"], panel["packet_sha256"]))
+            self.assertEqual(row["sealed_at"], view["sealed_at"])
+            self.assertEqual(row["late"], view["sealed_at"] > panel["deadline"])
+            self.assertFalse(view["saw_other_views"])
+        self.assertLess(max(v["sealed_at"] for v in views.values()), check["checked_at"])
+        order = sorted(views, key=lambda rid: hashlib.sha256(f"{check['shuffle_seed']}:{rid}".encode()).hexdigest())
+        self.assertEqual(check["read_order"], order)
+        for rid, view in views.items():
+            text = " ".join([view["summary"], view["would_change_my_mind"], *(p["text"] + " " + p["why"] for p in view["points"])])
+            for other in set(views) - {rid}:
+                self.assertIsNone(re.search(rf"\b{other}\b", text), (rid, other))
+                self.assertNotIn(views[other]["perspective"], text, (rid, other))
+        cards = {r["key"].rsplit(".v0.1.0.", 1)[1]: r["value"] for r in IDX.docs[pack]["nouns.json"]["records"]
+                 if r["value"]["role"] == "perspective_card"}
+        for reviewer in panel["reviewers"]:
+            self.assertEqual(cards[reviewer["card_ref"]]["perspective"], reviewer["perspective"])
+            self.assertEqual(views[reviewer["reviewer_id"]]["perspective"], reviewer["perspective"])
+            same = reviewer["model_family"] == panel["producer"]["model_family"]
+            self.assertEqual(bool(reviewer["same_family_reason"]), same, reviewer["reviewer_id"])
+        self.assertEqual(len({r["perspective"] for r in panel["reviewers"]}), len(panel["reviewers"]))
+        synthesis = self.instance(pack, "example.synthesis")
+        self.assertEqual({(v["reviewer_id"], v["view_sha256"]) for v in synthesis["views"]},
+                         {(v["reviewer_id"], v["view_sha256"]) for v in check["views"]})
+        self.assertEqual({r["reviewer_id"] for r in synthesis["same_family_reviewers"]},
+                         {r["reviewer_id"] for r in panel["reviewers"] if r["same_family_reason"]})
+        for position in synthesis["positions"]:
+            view = views[position["reviewer_id"]]
+            self.assertIn(position["quote"], " ".join([view["summary"], *(p["text"] for p in view["points"])]), position)
+        routes = record(pack, "rules.synthesis")["value"]["routes"]
+        ids = [d["id"] for d in synthesis["disagreements"]]
+        self.assertEqual(synthesis["disagreement_count"], len(ids))
+        for disagreement in synthesis["disagreements"]:
+            self.assertEqual(disagreement["route"], routes[disagreement["kind"]], disagreement["id"])
+            sides = {p["reviewer_id"] for p in synthesis["positions"] if p["disagreement_id"] == disagreement["id"]}
+            self.assertGreaterEqual(len(sides), 2, disagreement["id"])
+        audit = self.instance(pack, "example.synthesis-audit")
+        self.assertEqual(audit["positions_checked"], len(synthesis["positions"]))
+        self.assertEqual(audit["passed"], not any(audit[k] for k in ("quotes_not_found", "points_dropped", "misrouted",
+                                                                      "head_count_language")))
+        decision = self.instance(pack, "example.decision")
+        self.assertEqual(decision["audit_passed"], audit["passed"])
+        answered = [s["disagreement_id"] for s in decision["settled"]] + [s["disagreement_id"] for s in decision["left_open"]]
+        self.assertEqual(sorted(answered), sorted(ids))
+
+    def test_people_decide_and_reviewers_are_distinct(self):
+        for template_id in ("living-research-dossier.decide-publication", "persona-panel-second-opinion.decide"):
+            brief = task(template_id)["brief"]
+            self.assertEqual((brief["claimant"], brief["execution"]["model_use"]), ("human", "none"), template_id)
+        for template_id in ("living-research-dossier.review-dossier", "persona-panel-second-opinion.give-view",
+                            "persona-panel-second-opinion.synthesize-disagreements",
+                            "persona-panel-second-opinion.audit-synthesis"):
+            self.assertEqual(task(template_id)["brief"]["review"]["required"], "distinct_reviewer", template_id)
 
 
 if __name__ == "__main__":
