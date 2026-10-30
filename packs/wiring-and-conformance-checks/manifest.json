@@ -1,0 +1,288 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "wiring-and-conformance-checks",
+  "title": "Wiring and conformance checks",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for proving that a code project's capabilities are wired in: modules no live path imports, config fields that do not survive a save and reload, health probes that probe nothing, a canary for every rule so a check that stops firing is noticed, and documented behaviors whose only tests replace the real path with a mock; every gap recorded as a finding in the findings to fixes shape, with tested standard-library code that finds unused modules, mock-only tests and hollow probes in Python packages.",
+  "license": "MIT",
+  "store": "seedpack.wiring-and-conformance-checks",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "7570086f81043f5c7515299aaa7324b0b005f19e27e1f6e9a04741e50227eb8d"
+    },
+    {
+      "path": "source.json",
+      "sha256": "9a2c3aa0737b1a4a699f7d50fc404e96e17450b3b48706e93815671d2aa31636"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "4b22c89d8d42b02b02994d8888ce14b17aa1760c05a035e1d55c03c57544a7a1"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "c06ae4a3cd4b87f3ffec89479bfdc0e427f64fc82e9bfe4c46b52f00c9da5134"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "b40e61ac056aa152c829bf2cbfef677be5e36f471a2e9b672906d05d582b17dc"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "ac33d6957d843adae8f2f6bda56e619957d46ba60ae69923bf0fd5376d9cd04e"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.guardrail.live-path-or-finding",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "21c7eb4b00ddfc7a9ce37bb1e8f413fa3350c2c985baf2c94b1544d57515ff25"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.guardrail.real-path-not-a-mock",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "f1337c00295812b1b33c538684e8fd83a6ccba9573322708b7653fe8dabefe48"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.guardrail.canary-for-every-rule",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "82b8130705b1a0e334c2d9e933c7ce13acc6f72b3bd2a1871c2f0c6444864335"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.rules.live-paths",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "0ae286888b9b56ff3c3b12f895e6f9cacd28033642fd75dfca3ced0147d0d705"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.rules.config-round-trip",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "03b523c25f9a77d82b39a6d22df7ebf2f3c4ce41a79260d274e1b7b28bd248cc"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.rules.health-probes",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "7d088fbcabd35770093f5a8950ef1df52b68780c5c3937be61d146ba6eac347a"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.rules.behavior-coverage",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "80d22d9d939be7d065cd70fe5f876634fefee01b7c93c6ee828af08162809b36"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.wiring-scope",
+      "category_id": "noun.seed_hypothesis",
+      "role": "template",
+      "value_sha256": "5eb5f01bb58c66b79e233976f6ef7ac30a3d3b6a5044fcfc28b9c3ec670565d2"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.module-map",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "4aafa7446c3451356d99c8bd9e5952db8a317d650ec27d1727fcb1cc57ea5336"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.round-trip-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "1ada59432e8ab69779f83f63a2d62dabbbe027d1819afebaddc2d31f7c006e9d"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.probe-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "6f05d30f2cccdf9c604595f6a98bd1fc3a85a78e5753adbd930bfc5fb18cf479"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.behavior-map",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "0ad9287ecba5fe9608f7696d100fa2979621fee5018946c7bb17498821f9e7ab"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.canary-set",
+      "category_id": "noun.benchmark_suite",
+      "role": "template",
+      "value_sha256": "1743d90da3618ecdfc1c612afd14a19f6272a5b5f00344483327e10e8e0eba50"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.template.conformance-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "3a1fff73ddbd12f59b859a89899c804a9fbb1bbab6ca7deb61ba3510d2c03df9"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.wiring-checks",
+      "category_id": "noun.benchmark_suite",
+      "role": "record_checks",
+      "value_sha256": "bea17715eed87dc6cdf85a2a14823d45899d5a95e2bc85ef97c6cbc14caebe30"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.tool.wiring-checks",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "c90bddd1076d7491d827bcdf1372a6a9f94570d9c0238967f4370ba07c608d96"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.sources",
+      "category_id": "noun.public_source",
+      "role": "sources",
+      "value_sha256": "c976cf73b3495ed6ebf56235d24a23e899a5f32154c290de467da508e09adf76"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.example.module-map",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "fd77710c58a5aea5f1365a7ece4832b439e163697d5471e76e5c853af7f4dfe9"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.example.behavior-map",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "068da3f3e4fa40c09465f1d8e8f0abb4bf9a666cc9b348ee385a79e3bf9874ac"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.example.probe-report",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "4516784819acf2f1e4aebc378e4535aab265464a52de1c4177d0927cc1ac8629"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.example.round-trip-report",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "3e34b69ebb0e1384847da134bce3aaf3bd8cf2658866297ae87c1a10ed533373"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.example.conformance-report",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "9db6c624a5d5c82d1ea5744e5640b8e33d0bcfe9af8fe935281d41459fb41cb5"
+    },
+    {
+      "key": "wiring-and-conformance-checks.v0.1.0.example.finding",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "1ff8b292d2f746d97241e6c940c44473f941e7e0dacda2aff11af1b4ce5c7dd9"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "wiring-and-conformance-checks.scope-wiring",
+      "kind": "verb.problemize",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:scope-wiring:ce9c5ea67546d39c8ace5c65aa4ee504fb90072fc02e936d101eadbf4a80a8e8",
+      "report_shape_sha256": "94396c3315129435b10b764b331ad63b8ce58341c6b092803b3d7eefe1ad3f00"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.find-unused-modules",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:find-unused-modules:ae870754eae24187ac832807ec45d99d84236fe2e92c97ff7e593c0c562901ef",
+      "report_shape_sha256": "83dfdedcc0b746499fa9e6df8292ece699e7e4b65bcf92d2b40be176baf0a3db"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.check-config-round-trip",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:check-config-round-trip:d712681524f47823d142250bfe144dc7ccdbcb5e2b43b407ff194e3ec3982c00",
+      "report_shape_sha256": "0026455c08ca148318dfdc4e8d190bd2825061ed4431834546ee978de1bb8dc4"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.check-health-probes",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:check-health-probes:25a1bb85a84765592f8fc14a227fe648953d40ace29195848fbc3296f889a94b",
+      "report_shape_sha256": "19352024279c38e7fb381e970ce654fafbc24354ffd2448b8cbd7bcfd9824fd5"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.map-behaviors-to-tests",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:map-behaviors-to-tests:055ad42063a57ecd83d96657e2fdbea11ab82c1d32cd2be3f4ab7366cb9ceae9",
+      "report_shape_sha256": "b30afe9899b74704e32be5837a2721fa46c4ff44e70ba2ce6831af7d1b13c5d5"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.plant-canaries",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:plant-canaries:79bb9661f4bb50605c78cd2c1e1e219bf0d0cd893ec828ecafd2d667c0e08887",
+      "report_shape_sha256": "03e4c989be2bd576a2dc84e8f7edc9d164d37da199a4450f4e5462a4854a9ece"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.record-wiring-findings",
+      "kind": "verb.problemize",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:record-wiring-findings:936c0242d89d30a4acd332799c460721b8e21714f3cddef48d8914f14a2fb200",
+      "report_shape_sha256": "081e244dc5f9b4cceb456efd62f8591a5bfbf3e36547231a5ecf08706e8e7f32"
+    },
+    {
+      "template_id": "wiring-and-conformance-checks.compile-conformance-report",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:wiring-and-conformance-checks:compile-conformance-report:65133664675e6945c423f3584e81d856a10351fd701e907df865cdcf482f37c2",
+      "report_shape_sha256": "ec07492fd2c0c60ac088b298e6f5bfff35146c5fbc1d51d72369cc8617b0c148"
+    }
+  ],
+  "code": {
+    "path": "packs/wiring-and-conformance-checks/code",
+    "files": 36,
+    "sha256": "07383e416c5148d872a7a41a5a55c2e37b7171708e6f97588d6bdd66a6a4e328",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "findings-to-fixes",
+      "keys": [
+        "findings-to-fixes.v0.1.0.evidence-checklist",
+        "findings-to-fixes.v0.1.0.kind-definitions",
+        "findings-to-fixes.v0.1.0.record-checks",
+        "findings-to-fixes.v0.1.0.template.finding"
+      ]
+    },
+    {
+      "pack_id": "checks-of-checks",
+      "keys": [
+        "checks-of-checks.v0.1.0.method",
+        "checks-of-checks.v0.1.0.rule-types"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Checks run in a local copy at an exact commit; nothing outside that copy is read or changed.",
+    "A check never deletes or rewires code: every gap is a finding, and a person decides its fix.",
+    "The pack's code reads source with ast and never imports or runs what it reads; workers run it under their own permissions.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

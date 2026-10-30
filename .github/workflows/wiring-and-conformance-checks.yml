@@ -1,0 +1,37 @@
+# Checks for the wiring and conformance checks pack's code, run only when that pack or this workflow changes.
+# Standard library only: nothing is installed.
+name: wiring-and-conformance-checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/wiring-and-conformance-checks/**"
+      - ".github/workflows/wiring-and-conformance-checks.yml"
+  pull_request:
+    paths:
+      - "packs/wiring-and-conformance-checks/**"
+      - ".github/workflows/wiring-and-conformance-checks.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Compile with warnings as errors, then every test: the import graph, the patch scan, the probe scan, the
+    # command line, and the recomputation of the pack's module map, behavior map and probe scan.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/wiring-and-conformance-checks/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python
