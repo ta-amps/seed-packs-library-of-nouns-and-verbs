@@ -1,0 +1,3879 @@
+{
+  "pack_id": "annoyance-hunt",
+  "title": "Annoyance hunt",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for hunting the friction and papercuts people meet, from their point of view: confusing copy, extra clicks, slow steps, surprising defaults, noisy output, repeated prompts, dead ends, inconsistent naming and things that work but feel wrong, with friction tours as charters for websites, command lines, videos and docs, every annoyance recorded in the person's own words with how often it happens, how much it hurts, who it affects and how to reproduce it, ranked by frequency times pain and confirmed by a person.",
+  "dependencies": [
+    "findings-to-fixes",
+    "exploratory-testing-charters",
+    "usability-heuristics-review",
+    "taste-palettes",
+    "policy-and-law-watch"
+  ],
+  "boundaries": [
+    "Sessions are read-only on live targets with synthetic personas and data; booking, submitting or creating runs only on a test target a person named.",
+    "Complaints come only from feedback the requester is permitted to share, and keep no personal data; nobody is replied to or contacted.",
+    "A person confirms the ranking and every matter of taste; an agent never decides taste.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for hunting the friction and papercuts people meet",
+      "value": {
+        "lets_workers": "Hunt the friction people meet, from their point of view: confusing copy, extra clicks, slow steps, surprising defaults, noisy output, repeated prompts, dead ends, inconsistent naming and things that work but feel wrong; walk friction tours as time-boxed charters for websites, command lines, videos and docs; read permitted feedback for complaints in people's own words; count how often each annoyance happens and how much it hurts, rank by frequency times pain, and have a person confirm the ranking; and record each one as a finding with who it affects, how to reproduce it, a fix and a guard.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "annoyance-hunt.draft-friction-charters"
+            },
+            "when": "When a surface changes, or complaints pile up."
+          },
+          {
+            "verb": {
+              "$verb": "annoyance-hunt.hunt-annoyances"
+            },
+            "when": "One charter per session, by an agent or a person."
+          },
+          {
+            "verb": {
+              "$verb": "exploratory-testing-charters.debrief-session"
+            },
+            "when": "A different worker or a person debriefs each session."
+          },
+          {
+            "verb": {
+              "$verb": "annoyance-hunt.collect-complaints"
+            },
+            "when": "When the requester can share feedback."
+          },
+          {
+            "verb": {
+              "$verb": "annoyance-hunt.rank-annoyances"
+            },
+            "when": "After several sessions and extracts."
+          },
+          {
+            "verb": {
+              "$verb": "annoyance-hunt.confirm-ranking"
+            },
+            "when": "A person who knows the users, before anything is fixed."
+          },
+          {
+            "verb": {
+              "$verb": "annoyance-hunt.record-annoyance-findings"
+            },
+            "when": "Every confirmed annoyance becomes a finding."
+          },
+          {
+            "verb": {
+              "$verb": "taste-palettes.draft-embodiments"
+            },
+            "when": "When the fix is a matter of taste, options for a person."
+          },
+          {
+            "verb": {
+              "$verb": "findings-to-fixes.verify-fix"
+            },
+            "when": "The same reproduction and measure on the fixed build, by a different worker."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.in-their-words"
+          },
+          {
+            "$pin": "guardrail.product-not-person"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.no-personal-data"
+          }
+        ],
+        "worked_examples": [
+          {
+            "$pin": "annoyance-checks"
+          },
+          {
+            "$pin": "example.charter-website"
+          },
+          {
+            "$pin": "example.charter-cli"
+          },
+          {
+            "$pin": "example.charter-video"
+          },
+          {
+            "$pin": "example.charter-docs"
+          },
+          {
+            "$pin": "example.friction-session"
+          },
+          {
+            "$pin": "example.complaint-extract"
+          },
+          {
+            "$pin": "example.annoyance-log"
+          },
+          {
+            "$pin": "example.ranking-confirmation"
+          },
+          {
+            "$pin": "example.finding"
+          }
+        ],
+        "complements": [
+          "Charters, sessions and debriefs follow the exploratory testing charters pack; this pack adds friction tours, measures and a ranking.",
+          "The usability heuristics review pack judges a design against ten heuristics; this pack counts what people actually hit, and each friction category points at its heuristic.",
+          "When reviewers disagree about a pain rating, the persona panel and second opinion pack can take independent views before the person confirms.",
+          "Findings, fixes, verification and guards come from the findings to fixes pack; matters of taste go to the taste palettes pack."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.in-their-words"
+        ],
+        [
+          "requires_noun",
+          "guardrail.product-not-person"
+        ],
+        [
+          "requires_noun",
+          "friction-catalog"
+        ],
+        [
+          "requires_noun",
+          "pain-scale"
+        ],
+        [
+          "requires_noun",
+          "frequency-rule"
+        ],
+        [
+          "requires_noun",
+          "friction-tours"
+        ],
+        [
+          "requires_noun",
+          "annoyance-checks"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "How annoyances are hunted, counted, ranked and handed to fixes",
+      "category_reason": "A reusable procedure with guardrails, followed by every verb in this pack.",
+      "value": {
+        "lifecycle": [
+          "draft-friction-charters writes time-boxed charters from the friction tours, for websites, command lines, videos and docs.",
+          "hunt-annoyances walks one charter from the user's point of view, counting actions, waits, prompts and lines, and quoting every hesitation.",
+          "collect-complaints reads feedback the requester is permitted to share and keeps each complaint in the person's own words, with no personal data.",
+          "rank-annoyances folds duplicates together by fingerprint, counts how often each happens, applies the pain scale and ranks by frequency times pain.",
+          "confirm-ranking is a person's verb: someone who knows the users confirms or changes the pain and the ranking.",
+          "record-annoyance-findings writes each confirmed annoyance as a finding with its measurement, quote and reproduction, and proposes its fix."
+        ],
+        "rules": [
+          "From the user's point of view: count what a person has to do, wait for, read and remember, not what the code does.",
+          "Quote the person: an annoyance is recorded in the words of the person or tester who hit it.",
+          "Describe the product, never blame the person.",
+          "A fix to an annoyance is verified the way it was found: the same reproduction and the same measure on the fixed build, by a different worker.",
+          "When the fix is a matter of taste, a person chooses from a palette; an agent never decides taste. The annoyance is still recorded as a finding.",
+          "Pain 4, when people gave up, is a design flaw rather than an annoyance; it is recorded as one, with the same evidence.",
+          "Synthetic personas and test data only on live targets; nothing is booked, bought or sent.",
+          "Workers create nouns and propose verbs; they never enqueue."
+        ],
+        "sources": [
+          "Charters and sessions follow the exploratory testing charters pack, after session-based test management.",
+          "Response-time limits of 0.1, 1 and 10 seconds come from Nielsen's usability engineering work.",
+          "The friction categories, scales and rules are written for this pack."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.in-their-words",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: an annoyance starts from what someone said or did",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "An annoyance starts from what a person, or a tester walking a persona's path, said or did, quoted exactly with the step it happened at. A reviewer's opinion of a design is not an annoyance until someone hit it.",
+        "how_it_is_checked": "Every annoyance has a quote naming the session or message, the step and the speaker's role."
+      }
+    },
+    {
+      "slug": "guardrail.product-not-person",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: describe the product, never blame the person",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "An annoyance describes what the product did, never what the person failed to do: the error appears only after submitting, not the user missed the hint.",
+        "how_it_is_checked": "No annoyance title blames the person; the record checks reject blaming words."
+      }
+    },
+    {
+      "slug": "friction-catalog",
+      "category": "noun.benchmark_suite",
+      "role": "friction_catalog",
+      "title": "Nine kinds of friction, what each looks like and how to count it",
+      "category_reason": "A catalog of friction categories, each with its signals and its measure.",
+      "value": {
+        "categories": [
+          {
+            "category": "confusing-copy",
+            "looks_like": "Words a person reads twice, asks about or misreads.",
+            "signals": [
+              "rereading",
+              "a question about a word",
+              "jargon",
+              "a claim that needs checking"
+            ],
+            "measure": "Readers who stopped or asked, of all who reached the text.",
+            "examples": {
+              "website": "A button that says Submit request where people expect Sign up.",
+              "cli": "An error naming an internal module.",
+              "video": "A term on screen the narration never explains.",
+              "docs": "A step that names a tool before introducing it."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.match-real-world"
+            }
+          },
+          {
+            "category": "extra-clicks",
+            "looks_like": "More actions than the task needs.",
+            "signals": [
+              "going back",
+              "repeating a choice",
+              "scrolling to find the next step"
+            ],
+            "measure": "Actions taken from intent to done, against the shortest path through the same build.",
+            "examples": {
+              "website": "Picking the week again after choosing a shift.",
+              "cli": "A flag needed on every run that could be the default.",
+              "video": "Pausing to read a card that leaves too soon.",
+              "docs": "Opening three pages to finish one task."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.flexibility-efficiency"
+            }
+          },
+          {
+            "category": "slow-step",
+            "looks_like": "A wait with nothing to show for it.",
+            "signals": [
+              "pressing again",
+              "asking whether it froze",
+              "leaving the page"
+            ],
+            "measure": "Seconds from the action to visible feedback; 0.1 s feels instant, 1 s keeps the flow, 10 s loses attention.",
+            "examples": {
+              "website": "A confirm button that takes four seconds with no progress shown.",
+              "cli": "A command that is silent for a minute.",
+              "video": "A long black lead-in before anything happens.",
+              "docs": "A search that takes seconds to answer."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.visibility-of-status"
+            }
+          },
+          {
+            "category": "surprising-default",
+            "looks_like": "A default most people change, or one that does something they did not expect.",
+            "signals": [
+              "changing a setting at once",
+              "undoing",
+              "a complaint about a setting"
+            ],
+            "measure": "Share of sessions in which the default was changed or undone.",
+            "examples": {
+              "website": "A week picker that opens on last week.",
+              "cli": "A command that writes to production unless told not to.",
+              "video": "Sound that starts loud.",
+              "docs": "An example that uses a setting nobody should copy."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.error-prevention"
+            }
+          },
+          {
+            "category": "noisy-output",
+            "looks_like": "Output a person must read past to find what matters.",
+            "signals": [
+              "scrolling back",
+              "missing the one line that mattered",
+              "a warning shown every time"
+            ],
+            "measure": "Lines printed per run that the person did not need, and repeats of the same line.",
+            "examples": {
+              "website": "A banner of notices on every page.",
+              "cli": "Debug lines on every run.",
+              "video": "Captions that repeat what is on screen.",
+              "docs": "A page of warnings before the first step."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.minimalist-design"
+            }
+          },
+          {
+            "category": "repeated-prompt",
+            "looks_like": "The same question asked twice in one task.",
+            "signals": [
+              "typing the same thing again",
+              "a sigh",
+              "copying from an earlier step"
+            ],
+            "measure": "Prompts per task for information already given.",
+            "examples": {
+              "website": "A phone number asked for on the form and again at confirmation.",
+              "cli": "A password prompt for every subcommand.",
+              "video": "Two sign-up prompts in thirty seconds.",
+              "docs": "The same setup steps on every page."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.recognition-over-recall"
+            }
+          },
+          {
+            "category": "dead-end",
+            "looks_like": "A state with no way forward except back or starting over.",
+            "signals": [
+              "closing the page",
+              "asking what now",
+              "starting again"
+            ],
+            "measure": "Sessions that reached the state, of all that reached the step before it.",
+            "examples": {
+              "website": "An empty result with no next step.",
+              "cli": "A command that prints nothing and exits as if it worked.",
+              "video": "An ending that never says where to go.",
+              "docs": "A page that ends mid-task."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.user-control"
+            }
+          },
+          {
+            "category": "inconsistent-naming",
+            "looks_like": "One thing called two names, or two things called one.",
+            "signals": [
+              "asking whether two words mean the same",
+              "searching for the wrong word"
+            ],
+            "measure": "Places that use each name for the same thing, across the surfaces people move between.",
+            "examples": {
+              "website": "Shift on one page, slot on the next.",
+              "cli": "session in the command line for the same thing.",
+              "video": "Narration and screen text that use different words.",
+              "docs": "A term the product never uses."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.consistency"
+            }
+          },
+          {
+            "category": "feels-wrong",
+            "looks_like": "It works, but people hesitate, distrust it or check twice.",
+            "signals": [
+              "doing it twice to be sure",
+              "asking whether it worked",
+              "taking a screenshot as proof"
+            ],
+            "measure": "Sessions with a double check, a repeat or a question about whether it worked.",
+            "examples": {
+              "website": "A saved form that reappears with only a faint note.",
+              "cli": "Success that prints nothing at all.",
+              "video": "A promise in the title the video never shows.",
+              "docs": "An example whose output differs slightly from what the page shows."
+            },
+            "heuristic": {
+              "$pin": "usability-heuristics-review:heuristic.error-recovery"
+            }
+          }
+        ],
+        "not_an_annoyance": "A reaction to looks with no cost to a task, such as disliking a color, is a matter of taste for a palette brief, not a finding."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "usability-heuristics-review:heuristic.match-real-world"
+        ],
+        [
+          "derives_from",
+          "usability-heuristics-review:heuristic.consistency"
+        ]
+      ]
+    },
+    {
+      "slug": "pain-scale",
+      "category": "noun.reflex_procedure",
+      "role": "pain_scale",
+      "title": "How much an annoyance hurts, from 1 to 4",
+      "category_reason": "A zero-call rule: the same observation always gets the same level.",
+      "value": {
+        "levels": {
+          "1": "Papercut: noticed it and carried on.",
+          "2": "Annoying: slowed down or said so.",
+          "3": "Painful: needed a workaround, help or a second try.",
+          "4": "Blocking: gave up, or would have without help."
+        },
+        "who_rates": "The person who hit it, or the tester for a persona's path; a person who knows the users confirms or changes it in confirm-ranking, with the reason.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "frequency-rule",
+      "category": "noun.reflex_procedure",
+      "role": "frequency_rule",
+      "title": "How often an annoyance happens, the score and the rank",
+      "category_reason": "A zero-call rule: the same counts always give the same score and rank.",
+      "value": {
+        "share": "Occurrences divided by opportunities: the sessions, runs, viewers, readers or messages in which the step was reached.",
+        "levels": {
+          "4": "75 percent or more",
+          "3": "35 to 74 percent",
+          "2": "10 to 34 percent",
+          "1": "under 10 percent"
+        },
+        "low_confidence": "Fewer than three opportunities; the rank stands, and the person confirming it is told.",
+        "score": "frequency level times pain, from 1 to 16.",
+        "rank": "Highest score first; ties go to the annoyance that affects more groups, then the higher pain, then the lower id.",
+        "severity": "A score of 8 or more is P2 and below 8 is P3, as the findings to fixes severity guide places annoyances; a low-confidence entry stays P3 until more sessions confirm it. An annoyance is never P1 or P0: anything that gives wrong results or loses data is an error, and a step people gave up on is a design flaw whose severity triage sets.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "friction-tours",
+      "category": "noun.skill_pack",
+      "role": "friction_tours",
+      "title": "Friction tours for websites, command lines, videos and docs",
+      "category_reason": "Reusable missions for friction sessions, by medium.",
+      "value": {
+        "website": [
+          {
+            "tour": "first visit",
+            "mission": "Explore the home page with a newcomer persona and no instructions to discover what they cannot tell or find in the first minute",
+            "count": "questions asked, seconds to the first useful action"
+          },
+          {
+            "tour": "main task",
+            "mission": "Explore the main task with a persona's goal to discover every extra step, wait and repeated question",
+            "count": "actions against the shortest path, waits over 1 s, prompts repeated"
+          },
+          {
+            "tour": "error",
+            "mission": "Explore the forms with a hurried persona making ordinary mistakes to discover messages that blame, hide or confuse",
+            "count": "messages reread, dead ends reached"
+          },
+          {
+            "tour": "return visit",
+            "mission": "Explore the site with a returning persona to discover what it forgot about them",
+            "count": "choices made again"
+          },
+          {
+            "tour": "phone",
+            "mission": "Explore every task with a phone at 390 pixels to discover what is slower or harder than on a computer",
+            "count": "actions and waits against the computer run"
+          }
+        ],
+        "cli": [
+          {
+            "tour": "install to first success",
+            "mission": "Explore the command line from installing it to its first useful result with only its own help to discover where people stall",
+            "count": "commands typed, errors hit, minutes to success"
+          },
+          {
+            "tour": "typo",
+            "mission": "Explore the commands with common typos and missing arguments to discover messages that do not say how to fix them",
+            "count": "errors that name no next step"
+          },
+          {
+            "tour": "help",
+            "mission": "Explore the help output with a newcomer's questions to discover what it never answers",
+            "count": "questions left open"
+          },
+          {
+            "tour": "quiet",
+            "mission": "Explore a normal run with an eye on its output to discover lines nobody needs",
+            "count": "lines printed, repeats"
+          },
+          {
+            "tour": "long run",
+            "mission": "Explore a long-running command with interruptions to discover missing progress and unsafe stops",
+            "count": "seconds of silence, state left after an interrupt"
+          }
+        ],
+        "video": [
+          {
+            "tour": "cold viewer",
+            "mission": "Explore the video as a viewer who knows nothing about the product to discover where the point gets lost",
+            "count": "points missed, questions at the end"
+          },
+          {
+            "tour": "muted",
+            "mission": "Explore the video with the sound off to discover what only the narration says",
+            "count": "points lost without sound"
+          },
+          {
+            "tour": "scrub",
+            "mission": "Explore the video by skipping around to discover parts that make no sense on their own",
+            "count": "places a viewer cannot rejoin"
+          },
+          {
+            "tour": "end screen",
+            "mission": "Explore the last ten seconds with a viewer ready to act to discover whether they know what to do next",
+            "count": "viewers who could name the next step"
+          }
+        ],
+        "docs": [
+          {
+            "tour": "copy and paste",
+            "mission": "Explore the getting-started page with copy and paste only to discover commands that fail or need knowledge it never gives",
+            "count": "commands that fail, unexplained terms"
+          },
+          {
+            "tour": "search",
+            "mission": "Explore the docs with a newcomer's search words to discover tasks the words never reach",
+            "count": "searches with no useful result"
+          },
+          {
+            "tour": "first task",
+            "mission": "Explore the first real task with only the docs to discover where a reader has to leave them",
+            "count": "times the reader left the docs"
+          },
+          {
+            "tour": "stale",
+            "mission": "Explore the docs against the current product to discover names, flags and screens that changed",
+            "count": "mismatches with the product"
+          }
+        ],
+        "rules": [
+          "Each tour becomes a charter in the exploratory testing charters pack's form, time-boxed at 45, 90 or 120 minutes.",
+          "Use synthetic personas and data; on a live target never book, buy, submit or create an account."
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "exploratory-testing-charters:test-ideas"
+        ]
+      ]
+    },
+    {
+      "slug": "annoyance-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Annoyance finding checks, with synthetic golden findings",
+      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes every verdict.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every annoyance this pack records passes on top of the findings to fixes record checks: kind annoyance; a measurement naming its friction category, how often it happened against how often it could have, its pain, its score and who it affects; a located quote; steps to reproduce it; a fingerprint naming the category; open when recorded; no blame and no taste reaction; no personal data; and a fix verb and a regression guard proposed. The three good findings are the worked example's; each bad one fails exactly the one check named in fails.",
+        "deterministic_checks": [
+          {
+            "id": "kind-known",
+            "rule": {
+              "rule": "enum",
+              "path": "kind",
+              "values": [
+                "annoyance",
+                "design_flaw"
+              ]
+            },
+            "why": "An annoyance, or a design flaw when people gave up at pain 4, in the findings to fixes pack's terms."
+          },
+          {
+            "id": "category-named",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "^category (confusing-copy|extra-clicks|slow-step|surprising-default|noisy-output|repeated-prompt|dead-end|inconsistent-naming|feels-wrong): "
+            },
+            "why": "The measurement names one of the nine friction categories."
+          },
+          {
+            "id": "frequency-counted",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "\\bfrequency [0-9]+ of [0-9]+ (sessions|runs|viewers|readers|messages)\\b"
+            },
+            "why": "How often it happened is counted against how often it could have."
+          },
+          {
+            "id": "pain-rated",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "\\bpain [1-4] of 4\\b"
+            },
+            "why": "How much it hurt is on the pain scale."
+          },
+          {
+            "id": "scored",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "\\bscore ([1-9]|1[0-6]) \\(frequency level [1-4] x pain [1-4]\\)"
+            },
+            "why": "The score is written as frequency level times pain; rank-annoyances' acceptance recomputes the product."
+          },
+          {
+            "id": "who-affected",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "; affects [a-z][^;]{2,}$"
+            },
+            "why": "The measurement says who it affects."
+          },
+          {
+            "id": "quote-located",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "^(session|extract) [A-Za-z0-9-]+, (step|message) [0-9]+, said by .+$"
+            },
+            "why": "The quote names where it came from and who said it."
+          },
+          {
+            "id": "steps-to-reproduce",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "evidence",
+              "pattern": "^reproduction$"
+            },
+            "why": "An annoyance comes with the steps that show it again."
+          },
+          {
+            "id": "fingerprint-without-category",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "fingerprint",
+              "pattern": "^[a-z_]+/[a-z0-9-]+/(confusing-copy|extra-clicks|slow-step|surprising-default|noisy-output|repeated-prompt|dead-end|inconsistent-naming|feels-wrong)(-|$)"
+            },
+            "why": "The fingerprint names the surface and what goes wrong, not the category, so a person can change the category without splitting duplicates."
+          },
+          {
+            "id": "open-when-recorded",
+            "rule": {
+              "rule": "enum",
+              "path": "status",
+              "values": [
+                "open"
+              ]
+            },
+            "why": "A newly recorded annoyance is open."
+          },
+          {
+            "id": "no-blame",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "title",
+              "pattern": "(?i)\\b(user error|(users?|volunteers?|people|customers?|readers?|viewers?|coordinators?|they) (failed|forgot|missed|ignored|did not|didn't|should have|could not figure)|stupid|lazy|careless|confused users?)\\b"
+            },
+            "why": "An annoyance describes the product, never blames the person."
+          },
+          {
+            "id": "not-a-taste-reaction",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "title",
+              "pattern": "(?i)\\b(ugly|bland|boring|(do not|don't) like|not pretty|looks (bad|off|cheap|dated))\\b"
+            },
+            "why": "A reaction to looks is a palette brief, not an annoyance."
+          },
+          {
+            "id": "no-contact-data",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}|\\b[0-9]{3}[-. )]{1,2}[0-9]{3}[-. ][0-9]{4}\\b"
+            },
+            "why": "Quotes and steps hold no email address or phone number."
+          },
+          {
+            "id": "sensitivity-none",
+            "rule": {
+              "rule": "enum",
+              "path": "sensitivity",
+              "values": [
+                "none"
+              ]
+            },
+            "why": "An annoyance finding holds no personal data, so its sensitivity is none."
+          },
+          {
+            "id": "fix-verbs-proposed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "work",
+              "pattern": "^propose-fix$"
+            },
+            "why": "Every annoyance carries its proposed fix verb."
+          },
+          {
+            "id": "regression-guard-proposed",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "work",
+              "pattern": "^add-regression-guard$"
+            },
+            "why": "Every annoyance carries a guard, such as a page check that counts the steps."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-website",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "AN-1",
+              "title": "Signing up for one shift takes seven actions where three would do",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC volunteer site, build 2026-10-30.4, /shifts to /signup",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "Why do I have to pick the week again?",
+                  "location": "session FS-1, step 4, said by tester walking the first-time volunteer persona"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category extra-clicks: frequency 4 of 5 sessions; pain 3 of 4; score 12 (frequency level 4 x pain 3); affects first-time volunteers on phones"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "On a phone at 390 pixels, open /shifts, choose Saturday's morning shift, press Sign up, and count the actions until the confirmation."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/signup-page/week-chosen-twice",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "good-cli",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "good-docs",
+            "label": "known_good",
+            "provenance": "synthetic",
+            "finding": {
+              "id": "AN-9",
+              "title": "The getting-started page says run the bootstrap target without saying what it does",
+              "kind": "annoyance",
+              "severity": "P3",
+              "where": "SYNTHETIC roster docs, getting-started page, version 0.4",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "Bootstrap what, exactly?",
+                  "location": "session FS-4, step 2, said by tester walking the new coordinator persona"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category confusing-copy: frequency 3 of 4 readers; pain 1 of 4; score 4 (frequency level 4 x pain 1); affects new coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Open the getting-started page as a new coordinator and follow it with copy and paste only until the bootstrap step."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/docs/bootstrap-target-unexplained",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-kind",
+            "label": "known_bad",
+            "fails": "kind-known",
+            "why": "Recorded as an error, though nothing gives a wrong result.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "error",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-category",
+            "label": "known_bad",
+            "fails": "category-named",
+            "why": "No friction category.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-frequency",
+            "label": "known_bad",
+            "fails": "frequency-counted",
+            "why": "How often is not counted.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency always; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-pain-off-scale",
+            "label": "known_bad",
+            "fails": "pain-rated",
+            "why": "Pain off the scale.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 7 of 10; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-score",
+            "label": "known_bad",
+            "fails": "scored",
+            "why": "No score.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; high priority; affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-nobody-affected",
+            "label": "known_bad",
+            "fails": "who-affected",
+            "why": "Nobody named as affected.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2)"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-quote-unplaced",
+            "label": "known_bad",
+            "fails": "quote-located",
+            "why": "A quote with no source or speaker.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "feedback"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-steps",
+            "label": "known_bad",
+            "fails": "steps-to-reproduce",
+            "why": "No way to see it again.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-fingerprint",
+            "label": "known_bad",
+            "fails": "fingerprint-without-category",
+            "why": "The category baked into the fingerprint.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/noisy-output-sync-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-not-open",
+            "label": "known_bad",
+            "fails": "open-when-recorded",
+            "why": "Recorded as already in progress.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "in_progress",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-blame",
+            "label": "known_bad",
+            "fails": "no-blame",
+            "why": "Blames the person.",
+            "finding": {
+              "id": "AN-3",
+              "title": "Users forgot that roster sync is verbose",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-taste",
+            "label": "known_bad",
+            "fails": "not-a-taste-reaction",
+            "why": "A reaction to looks, with no cost to a task.",
+            "finding": {
+              "id": "AN-3",
+              "title": "The roster output looks bad",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-contact-data",
+            "label": "known_bad",
+            "fails": "no-contact-data",
+            "why": "A quote that kept an email address.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked; write to test.volunteer@example.org",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-sensitivity",
+            "label": "known_bad",
+            "fails": "sensitivity-none",
+            "why": "Marked as holding personal data.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "personal_data",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-fix-verb",
+            "label": "known_bad",
+            "fails": "fix-verbs-proposed",
+            "why": "No fix proposed.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "add-regression-guard",
+                  "state": "pending"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-no-guard",
+            "label": "known_bad",
+            "fails": "regression-guard-proposed",
+            "why": "No regression guard proposed.",
+            "finding": {
+              "id": "AN-3",
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "kind": "annoyance",
+              "severity": "P2",
+              "where": "SYNTHETIC roster command line 0.4.2, roster sync",
+              "evidence": [
+                {
+                  "kind": "quote",
+                  "detail": "I can't tell if it worked in all that.",
+                  "location": "extract CE-1, message 3, said by a volunteer coordinator"
+                },
+                {
+                  "kind": "measurement",
+                  "detail": "category noisy-output: frequency 6 of 6 runs; pain 2 of 4; score 8 (frequency level 4 x pain 2); affects volunteer coordinators"
+                },
+                {
+                  "kind": "reproduction",
+                  "detail": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked."
+                }
+              ],
+              "noticed_by": "hunt-annoyances worker",
+              "noticed_at": "2026-10-30T15:00Z",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines",
+              "status": "open",
+              "sensitivity": "none",
+              "public": false,
+              "work": [
+                {
+                  "verb": "reproduce",
+                  "state": "pending"
+                },
+                {
+                  "verb": "propose-fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "fix",
+                  "state": "pending"
+                },
+                {
+                  "verb": "verify-fix",
+                  "state": "pending"
+                }
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "good-website": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-cli": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-docs": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-kind": {
+            "verdict": "fail",
+            "failed_checks": [
+              "kind-known"
+            ]
+          },
+          "bad-no-category": {
+            "verdict": "fail",
+            "failed_checks": [
+              "category-named"
+            ]
+          },
+          "bad-no-frequency": {
+            "verdict": "fail",
+            "failed_checks": [
+              "frequency-counted"
+            ]
+          },
+          "bad-pain-off-scale": {
+            "verdict": "fail",
+            "failed_checks": [
+              "pain-rated"
+            ]
+          },
+          "bad-no-score": {
+            "verdict": "fail",
+            "failed_checks": [
+              "scored"
+            ]
+          },
+          "bad-nobody-affected": {
+            "verdict": "fail",
+            "failed_checks": [
+              "who-affected"
+            ]
+          },
+          "bad-quote-unplaced": {
+            "verdict": "fail",
+            "failed_checks": [
+              "quote-located"
+            ]
+          },
+          "bad-no-steps": {
+            "verdict": "fail",
+            "failed_checks": [
+              "steps-to-reproduce"
+            ]
+          },
+          "bad-fingerprint": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fingerprint-without-category"
+            ]
+          },
+          "bad-not-open": {
+            "verdict": "fail",
+            "failed_checks": [
+              "open-when-recorded"
+            ]
+          },
+          "bad-blame": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-blame"
+            ]
+          },
+          "bad-taste": {
+            "verdict": "fail",
+            "failed_checks": [
+              "not-a-taste-reaction"
+            ]
+          },
+          "bad-contact-data": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-contact-data"
+            ]
+          },
+          "bad-sensitivity": {
+            "verdict": "fail",
+            "failed_checks": [
+              "sensitivity-none"
+            ]
+          },
+          "bad-no-fix-verb": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fix-verbs-proposed"
+            ]
+          },
+          "bad-no-guard": {
+            "verdict": "fail",
+            "failed_checks": [
+              "regression-guard-proposed"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.friction-session",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one friction session: the charter, the persona, every task's actions, waits, prompts and output against the shortest path, and every hesitation quoted",
+      "category_reason": "A session is a recorded run.",
+      "value": {
+        "describes": "one friction session: the charter, the persona, every task's actions, waits, prompts and output against the shortest path, and every hesitation quoted",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "session_id",
+            "charter_ref",
+            "medium",
+            "build",
+            "persona",
+            "tester_kind",
+            "started_at",
+            "minutes",
+            "tasks",
+            "observations",
+            "not_covered"
+          ],
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "charter_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "store",
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "store": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "medium": {
+              "type": "string",
+              "enum": [
+                "website",
+                "cli",
+                "video",
+                "docs"
+              ]
+            },
+            "build": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "persona": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "tester_kind": {
+              "type": "string",
+              "enum": [
+                "agent",
+                "person"
+              ]
+            },
+            "started_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 600
+            },
+            "tasks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task",
+                  "shortest_actions",
+                  "actions_taken",
+                  "seconds",
+                  "longest_wait_s",
+                  "prompts_repeated",
+                  "lines_printed",
+                  "done"
+                ],
+                "properties": {
+                  "task": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "shortest_actions": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "actions_taken": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "longest_wait_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "prompts_repeated": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "lines_printed": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000000
+                  },
+                  "done": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "observations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "at",
+                  "step",
+                  "category",
+                  "quote",
+                  "said_by"
+                ],
+                "properties": {
+                  "at": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+                    "maxLength": 30
+                  },
+                  "step": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "confusing-copy",
+                      "extra-clicks",
+                      "slow-step",
+                      "surprising-default",
+                      "noisy-output",
+                      "repeated-prompt",
+                      "dead-end",
+                      "inconsistent-naming",
+                      "feels-wrong"
+                    ]
+                  },
+                  "quote": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "said_by": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "not_covered": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "Observations are written as the session happens, with times.",
+          "not_covered says what the session did not reach."
+        ]
+      }
+    },
+    {
+      "slug": "template.complaint-extract",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: complaints taken from permitted feedback in the person's own words, counted, with no personal data",
+      "category_reason": "An extract is a recorded reading of permitted sources.",
+      "value": {
+        "describes": "complaints taken from permitted feedback in the person's own words, counted, with no personal data",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "extract_id",
+            "sources",
+            "permission",
+            "messages_read",
+            "complaints",
+            "excluded",
+            "messages_with_complaint",
+            "messages_without_complaint",
+            "personal_data_kept"
+          ],
+          "properties": {
+            "extract_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "permission": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "messages_read": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "complaints": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "category",
+                  "quote",
+                  "message",
+                  "count",
+                  "step"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "confusing-copy",
+                      "extra-clicks",
+                      "slow-step",
+                      "surprising-default",
+                      "noisy-output",
+                      "repeated-prompt",
+                      "dead-end",
+                      "inconsistent-naming",
+                      "feels-wrong"
+                    ]
+                  },
+                  "quote": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "message": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            },
+            "excluded": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "reason",
+                  "count"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  }
+                }
+              }
+            },
+            "messages_with_complaint": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            "messages_without_complaint": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            },
+            "personal_data_kept": {
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            }
+          }
+        },
+        "rules": [
+          "Quotes are trimmed to the complaint and hold no name, address, phone number or account.",
+          "Every message left out is counted with its reason."
+        ]
+      }
+    },
+    {
+      "slug": "template.annoyance-log",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: the annoyance log: every annoyance with how often it happens, how much it hurts, who it affects, how to reproduce it, its score and rank",
+      "category_reason": "The log is a recorded, ranked combination of sessions and extracts.",
+      "value": {
+        "describes": "the annoyance log: every annoyance with how often it happens, how much it hurts, who it affects, how to reproduce it, its score and rank",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "log_id",
+            "as_of",
+            "sources",
+            "entries"
+          ],
+          "properties": {
+            "log_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "entries": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "rank",
+                  "title",
+                  "category",
+                  "surface",
+                  "groups",
+                  "occurrences",
+                  "opportunities",
+                  "unit",
+                  "frequency_level",
+                  "low_confidence",
+                  "pain",
+                  "score",
+                  "severity",
+                  "quotes",
+                  "reproduce",
+                  "measure",
+                  "fingerprint"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "confusing-copy",
+                      "extra-clicks",
+                      "slow-step",
+                      "surprising-default",
+                      "noisy-output",
+                      "repeated-prompt",
+                      "dead-end",
+                      "inconsistent-naming",
+                      "feels-wrong"
+                    ]
+                  },
+                  "surface": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "groups": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    }
+                  },
+                  "occurrences": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "opportunities": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "sessions",
+                      "runs",
+                      "viewers",
+                      "readers",
+                      "messages"
+                    ]
+                  },
+                  "frequency_level": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  },
+                  "low_confidence": {
+                    "type": "boolean"
+                  },
+                  "pain": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4
+                  },
+                  "score": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 16
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "P2",
+                      "P3"
+                    ]
+                  },
+                  "quotes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "quote",
+                        "from"
+                      ],
+                      "properties": {
+                        "quote": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        },
+                        "from": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        }
+                      }
+                    }
+                  },
+                  "reproduce": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "measure": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "fingerprint": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Scores, severities and ranks recompute by the frequency rule.",
+          "Every entry keeps every quote that folded into it, each with where it came from."
+        ]
+      }
+    },
+    {
+      "slug": "template.ranking-confirmation",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's confirmation of the ranking: pain, categories or groups changed with reasons, taste calls flagged and the ranking that results",
+      "category_reason": "A person's confirmation is a recorded decision.",
+      "value": {
+        "describes": "a person's confirmation of the ranking: pain, categories or groups changed with reasons, taste calls flagged and the ranking that results",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "confirmation_id",
+            "log_ref",
+            "confirmed_by_role",
+            "confirmed_by_kind",
+            "decided_at",
+            "changes",
+            "taste_calls",
+            "ranking_after"
+          ],
+          "properties": {
+            "confirmation_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,40}$"
+            },
+            "log_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "store",
+                "key",
+                "version",
+                "value_sha256"
+              ],
+              "properties": {
+                "store": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000000
+                },
+                "value_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "confirmed_by_role": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "confirmed_by_kind": {
+              "type": "string",
+              "enum": [
+                "person"
+              ]
+            },
+            "decided_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z$",
+              "maxLength": 30
+            },
+            "changes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "field",
+                  "from",
+                  "to",
+                  "reason"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "field": {
+                    "type": "string",
+                    "enum": [
+                      "pain",
+                      "category",
+                      "groups",
+                      "removed"
+                    ]
+                  },
+                  "from": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "to": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            },
+            "taste_calls": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "ranking_after": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            }
+          }
+        },
+        "rules": [
+          "Recorded by a person; workers never write it."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for annoyance hunts",
+      "value": {
+        "sources": [
+          {
+            "title": "Nielsen Norman Group: Response Times, the 3 Important Limits",
+            "url": "https://www.nngroup.com/articles/response-times-3-important-limits/",
+            "used_for": "0.1 second feels instant, 1 second keeps the flow, 10 seconds loses attention",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Nielsen Norman Group: 10 Usability Heuristics for User Interface Design",
+            "url": "https://www.nngroup.com/articles/ten-usability-heuristics/",
+            "used_for": "The heuristic each friction category relates to",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Command Line Interface Guidelines",
+            "url": "https://clig.dev/",
+            "used_for": "Output, errors and help that respect the person at the terminal",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it."
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before confirming an annoyance ranking",
+      "value": {
+        "items": [
+          "Read the top five quotes: did someone really hit each one, in a task that matters?",
+          "Check each pain rating against what you know of the people affected; change it with a reason, never silently.",
+          "Look at every low-confidence entry: is it worth another session before acting on it?",
+          "Mark any fix that is a matter of taste, so it goes to a palette instead of a single answer.",
+          "Make sure no quote holds a name, contact detail or anything else personal."
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for annoyance hunts",
+      "synthetic": true,
+      "value": {
+        "cases": [
+          {
+            "id": "AH-BLAME",
+            "scenario": "A session note blames the person",
+            "sample_input": "SYNTHETIC: the user missed the hint under the field.",
+            "expected_outcome": "session_counted",
+            "expected_indicators": [
+              "rewritten_as_product_behavior"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "AH-TASTE",
+            "scenario": "Someone dislikes a color, with no cost to a task",
+            "sample_input": "SYNTHETIC: the green is ugly.",
+            "expected_outcome": "no_change",
+            "expected_indicators": [
+              "palette_brief_proposed",
+              "not_an_annoyance"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "AH-PERSONAL-QUOTE",
+            "scenario": "A complaint names a neighbor",
+            "sample_input": "SYNTHETIC: a message that names another person.",
+            "expected_outcome": "complaints_extracted",
+            "expected_indicators": [
+              "excluded_with_reason",
+              "no_personal_data_kept"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "AH-ONE-VIEWER",
+            "scenario": "Only one viewer watched the video",
+            "sample_input": "SYNTHETIC: 1 of 1 viewers missed the next step.",
+            "expected_outcome": "annoyances_ranked",
+            "expected_indicators": [
+              "low_confidence",
+              "person_told"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "AH-LIVE-BOOKING",
+            "scenario": "A tour would book a real shift on the live site",
+            "sample_input": "SYNTHETIC: no test target named.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "test_target_needed"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "AH-FIX-VERIFY",
+            "scenario": "A fix lands for the extra clicks",
+            "sample_input": "SYNTHETIC: the week is remembered after choosing a shift.",
+            "expected_outcome": "verification_recorded",
+            "expected_indicators": [
+              "same_reproduction",
+              "same_measure",
+              "different_worker"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      }
+    },
+    {
+      "slug": "example.charter-website",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a phone sign-up tour of a volunteer site",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "exploratory-testing-charters:template.charter"
+        },
+        "instance": {
+          "charter_id": "FC-1",
+          "mission": "Explore the shift sign-up with a first-time volunteer persona on a phone to discover every extra step, wait and repeated question",
+          "target": "SYNTHETIC volunteer site /shifts and /signup",
+          "build": "site build 2026-10-30.4",
+          "areas": [
+            "shift list",
+            "sign-up form",
+            "confirmation"
+          ],
+          "resources": [
+            "Persona: first-time volunteer on a phone (synthetic)",
+            "Chromium at 390 pixels",
+            "Test volunteer data set D-4"
+          ],
+          "risks": [
+            "Sign-ups started but not finished rose last month",
+            "The confirmation step changed in this build"
+          ],
+          "time_box": "short",
+          "time_box_minutes": 45,
+          "test_ideas": [
+            "Count actions against the shortest path",
+            "Time every wait over a second",
+            "Note every question asked twice"
+          ],
+          "out_of_scope": [
+            "Accessibility checks, which the accessibility audit pack runs"
+          ],
+          "priority": 1,
+          "why_now": "Unfinished sign-ups rose after the last release."
+        },
+        "shows": "A friction tour written as an exploratory charter: one mission, synthetic resources, the risk behind it and what is out of scope.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.charter-cli",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: an install-to-first-success tour of a command line",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "exploratory-testing-charters:template.charter"
+        },
+        "instance": {
+          "charter_id": "FC-2",
+          "mission": "Explore the roster command line from install to its first sync with only its own help to discover noisy output, repeated prompts and dead ends",
+          "target": "SYNTHETIC roster command line",
+          "build": "version 0.4.2",
+          "areas": [
+            "install",
+            "roster sync",
+            "roster export"
+          ],
+          "resources": [
+            "Persona: volunteer coordinator new to the tool (synthetic)",
+            "A clean virtual environment",
+            "The synthetic roster file"
+          ],
+          "risks": [
+            "Coordinators asked for help with the first sync three times this month"
+          ],
+          "time_box": "short",
+          "time_box_minutes": 45,
+          "test_ideas": [
+            "Count lines printed per run",
+            "Try the commands with no data",
+            "Read every error for a next step"
+          ],
+          "out_of_scope": [
+            "Packaging for other operating systems"
+          ],
+          "priority": 2,
+          "why_now": "Coordinators keep asking for help with the first sync."
+        },
+        "shows": "A friction tour written as an exploratory charter: one mission, synthetic resources, the risk behind it and what is out of scope.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.charter-video",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a cold-viewer tour of an explainer",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "exploratory-testing-charters:template.charter"
+        },
+        "instance": {
+          "charter_id": "FC-3",
+          "mission": "Explore the 45-second explainer as a cold viewer on a phone with the sound off at first to discover where the point gets lost and whether the next step is clear",
+          "target": "SYNTHETIC 45-second explainer",
+          "build": "render 2026-10-29.2, by digest",
+          "areas": [
+            "opening",
+            "middle",
+            "end screen"
+          ],
+          "resources": [
+            "Persona: someone scrolling social media with no context (synthetic)",
+            "Phone player 360 pixels wide"
+          ],
+          "risks": [
+            "The video is about to be posted as a short cut"
+          ],
+          "time_box": "short",
+          "time_box_minutes": 45,
+          "test_ideas": [
+            "Watch muted, then with sound",
+            "Ask what to do next at the end"
+          ],
+          "out_of_scope": [
+            "Caption timing, which the video QA pack measures"
+          ],
+          "priority": 2,
+          "why_now": "A short cut of this video is planned."
+        },
+        "shows": "A friction tour written as an exploratory charter: one mission, synthetic resources, the risk behind it and what is out of scope.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.charter-docs",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a copy-and-paste tour of getting-started docs",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "exploratory-testing-charters:template.charter"
+        },
+        "instance": {
+          "charter_id": "FC-4",
+          "mission": "Explore the getting-started page with a new coordinator persona and copy and paste only to discover commands that fail, unexplained terms and names that differ from the product",
+          "target": "SYNTHETIC roster docs, getting-started page",
+          "build": "docs version 0.4",
+          "areas": [
+            "install steps",
+            "first sync",
+            "glossary"
+          ],
+          "resources": [
+            "Persona: new coordinator (synthetic)",
+            "A clean machine profile"
+          ],
+          "risks": [
+            "Three support questions this month quote this page"
+          ],
+          "time_box": "short",
+          "time_box_minutes": 45,
+          "test_ideas": [
+            "Run every command as written",
+            "List every term the page never explains"
+          ],
+          "out_of_scope": [
+            "Translated pages"
+          ],
+          "priority": 3,
+          "why_now": "Support questions keep quoting this page."
+        },
+        "shows": "A friction tour written as an exploratory charter: one mission, synthetic resources, the risk behind it and what is out of scope.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.friction-session",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a phone sign-up session that counts its own friction",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.friction-session"
+        },
+        "instance": {
+          "session_id": "FS-1",
+          "charter_ref": {
+            "$pin": "example.charter-website"
+          },
+          "medium": "website",
+          "build": "site build 2026-10-30.4",
+          "persona": "first-time volunteer on a phone (synthetic)",
+          "tester_kind": "agent",
+          "started_at": "2026-10-30T13:00Z",
+          "minutes": 45,
+          "tasks": [
+            {
+              "task": "Sign up for Saturday's morning shift",
+              "shortest_actions": 3,
+              "actions_taken": 7,
+              "seconds": 96,
+              "longest_wait_s": 4.2,
+              "prompts_repeated": 1,
+              "lines_printed": 0,
+              "done": true
+            }
+          ],
+          "observations": [
+            {
+              "at": "2026-10-30T13:06Z",
+              "step": 4,
+              "category": "extra-clicks",
+              "quote": "Why do I have to pick the week again?",
+              "said_by": "tester walking the first-time volunteer persona"
+            },
+            {
+              "at": "2026-10-30T13:09Z",
+              "step": 6,
+              "category": "repeated-prompt",
+              "quote": "I already typed my number.",
+              "said_by": "tester walking the first-time volunteer persona"
+            },
+            {
+              "at": "2026-10-30T13:11Z",
+              "step": 7,
+              "category": "slow-step",
+              "quote": "Did it freeze?",
+              "said_by": "tester walking the first-time volunteer persona"
+            },
+            {
+              "at": "2026-10-30T13:12Z",
+              "step": 8,
+              "category": "feels-wrong",
+              "quote": "Is that it? I'll do it again to be sure.",
+              "said_by": "tester walking the first-time volunteer persona"
+            }
+          ],
+          "not_covered": [
+            "A screen reader",
+            "The dark theme",
+            "Cancelling a sign-up"
+          ]
+        },
+        "shows": "Seven actions against a shortest path of three, a 4.2-second wait, a repeated prompt and a double check, each quoted at its step, and what was not covered.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.complaint-extract",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: complaints from permitted feedback, in people's own words",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.complaint-extract"
+        },
+        "instance": {
+          "extract_id": "CE-1",
+          "sources": [
+            "Coordinator support inbox, October, as a permitted export (synthetic)",
+            "Sign-up survey free-text answers (synthetic)"
+          ],
+          "permission": "The site owner shared both exports for this review; names and contact details were removed before reading.",
+          "messages_read": 40,
+          "complaints": [
+            {
+              "id": "CE-1-a",
+              "category": "noisy-output",
+              "quote": "I can't tell if it worked in all that.",
+              "message": 3,
+              "count": 4,
+              "step": "roster sync"
+            },
+            {
+              "id": "CE-1-b",
+              "category": "surprising-default",
+              "quote": "Why does the calendar start on last week?",
+              "message": 11,
+              "count": 7,
+              "step": "week picker"
+            },
+            {
+              "id": "CE-1-c",
+              "category": "dead-end",
+              "quote": "Export printed nothing and I thought it was done.",
+              "message": 17,
+              "count": 2,
+              "step": "roster export"
+            }
+          ],
+          "excluded": [
+            {
+              "reason": "Named another person",
+              "count": 2
+            },
+            {
+              "reason": "Not about the product",
+              "count": 5
+            }
+          ],
+          "messages_with_complaint": 13,
+          "messages_without_complaint": 20,
+          "personal_data_kept": false
+        },
+        "shows": "Three complaints counted across forty messages, seven messages left out with reasons, and no personal data kept.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.annoyance-log",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: ten annoyances ranked by frequency times pain",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.annoyance-log"
+        },
+        "instance": {
+          "log_id": "AL-1",
+          "as_of": "2026-10-30T15:00Z",
+          "sources": [
+            "sessions FS-1, FS-2, FS-5, FS-6 and FS-7 on the sign-up site",
+            "session FS-8, six runs of the command line",
+            "sessions FS-3 and FS-9, one viewer each",
+            "sessions FS-4, FS-10, FS-11 and FS-12, one reader each",
+            "extract CE-1"
+          ],
+          "entries": [
+            {
+              "id": "A-1",
+              "rank": 1,
+              "title": "Signing up for one shift takes seven actions where three would do",
+              "category": "extra-clicks",
+              "surface": "signup-page",
+              "groups": [
+                "first-time volunteers on phones"
+              ],
+              "occurrences": 4,
+              "opportunities": 5,
+              "unit": "sessions",
+              "frequency_level": 4,
+              "low_confidence": false,
+              "pain": 3,
+              "score": 12,
+              "severity": "P2",
+              "quotes": [
+                {
+                  "quote": "Why do I have to pick the week again?",
+                  "from": "session FS-1, step 4, said by tester walking the first-time volunteer persona"
+                },
+                {
+                  "quote": "I picked Saturday already.",
+                  "from": "session FS-5, step 4, said by tester walking the first-time volunteer persona"
+                }
+              ],
+              "reproduce": "On a phone at 390 pixels, open /shifts, choose Saturday's morning shift, press Sign up, and count the actions until the confirmation.",
+              "measure": "7 actions against a shortest path of 3",
+              "fingerprint": "annoyance/signup-page/week-chosen-twice"
+            },
+            {
+              "id": "A-4",
+              "rank": 2,
+              "title": "The explainer ends without showing where to sign up",
+              "category": "dead-end",
+              "surface": "explainer-video",
+              "groups": [
+                "people watching on social media"
+              ],
+              "occurrences": 2,
+              "opportunities": 2,
+              "unit": "viewers",
+              "frequency_level": 4,
+              "low_confidence": true,
+              "pain": 3,
+              "score": 12,
+              "severity": "P3",
+              "quotes": [
+                {
+                  "quote": "Okay, but where do I go now?",
+                  "from": "session FS-3, step 2, said by tester walking the cold viewer persona"
+                }
+              ],
+              "reproduce": "Watch the explainer to the end on a phone and ask what to do next.",
+              "measure": "0 of 2 viewers could name the next step",
+              "fingerprint": "annoyance/explainer-video/no-next-step-at-end"
+            },
+            {
+              "id": "A-5",
+              "rank": 3,
+              "title": "Confirm takes 4.2 seconds with no sign that anything is happening",
+              "category": "slow-step",
+              "surface": "signup-page",
+              "groups": [
+                "volunteers on slow connections"
+              ],
+              "occurrences": 3,
+              "opportunities": 5,
+              "unit": "sessions",
+              "frequency_level": 3,
+              "low_confidence": false,
+              "pain": 3,
+              "score": 9,
+              "severity": "P2",
+              "quotes": [
+                {
+                  "quote": "Did it freeze?",
+                  "from": "session FS-1, step 7, said by tester walking the first-time volunteer persona"
+                }
+              ],
+              "reproduce": "Throttle to a slow mobile profile, press Confirm and time the wait for any feedback.",
+              "measure": "4.2 s to the first feedback",
+              "fingerprint": "annoyance/signup-page/confirm-wait-without-progress"
+            },
+            {
+              "id": "A-2",
+              "rank": 4,
+              "title": "The phone number is asked for on the form and again at confirmation",
+              "category": "repeated-prompt",
+              "surface": "signup-page",
+              "groups": [
+                "first-time volunteers",
+                "returning volunteers"
+              ],
+              "occurrences": 5,
+              "opportunities": 5,
+              "unit": "sessions",
+              "frequency_level": 4,
+              "low_confidence": false,
+              "pain": 2,
+              "score": 8,
+              "severity": "P2",
+              "quotes": [
+                {
+                  "quote": "I already typed my number.",
+                  "from": "session FS-1, step 6, said by tester walking the first-time volunteer persona"
+                }
+              ],
+              "reproduce": "Sign up for any shift and count the times the phone number is asked for.",
+              "measure": "1 prompt repeated per sign-up",
+              "fingerprint": "annoyance/signup-page/phone-number-asked-twice"
+            },
+            {
+              "id": "A-3",
+              "rank": 5,
+              "title": "roster sync prints 140 lines of debug output on every run",
+              "category": "noisy-output",
+              "surface": "roster-cli",
+              "groups": [
+                "volunteer coordinators"
+              ],
+              "occurrences": 6,
+              "opportunities": 6,
+              "unit": "runs",
+              "frequency_level": 4,
+              "low_confidence": false,
+              "pain": 2,
+              "score": 8,
+              "severity": "P2",
+              "quotes": [
+                {
+                  "quote": "I can't tell if it worked in all that.",
+                  "from": "extract CE-1, message 3, said by a volunteer coordinator"
+                }
+              ],
+              "reproduce": "Run roster sync on the synthetic roster and count the lines printed; only the last one says whether it worked.",
+              "measure": "140 lines printed, 1 needed",
+              "fingerprint": "annoyance/roster-cli/sync-prints-debug-lines"
+            },
+            {
+              "id": "A-7",
+              "rank": 6,
+              "title": "The docs say slot, the site says shift and the command line says session for the same thing",
+              "category": "inconsistent-naming",
+              "surface": "docs",
+              "groups": [
+                "new coordinators",
+                "first-time volunteers"
+              ],
+              "occurrences": 2,
+              "opportunities": 4,
+              "unit": "readers",
+              "frequency_level": 3,
+              "low_confidence": false,
+              "pain": 2,
+              "score": 6,
+              "severity": "P3",
+              "quotes": [
+                {
+                  "quote": "Is a slot the same as a shift?",
+                  "from": "session FS-4, step 5, said by tester walking the new coordinator persona"
+                }
+              ],
+              "reproduce": "Read the getting-started page, the /shifts page and roster --help, and list the word each uses.",
+              "measure": "3 names for 1 thing",
+              "fingerprint": "annoyance/docs/shift-slot-session-names"
+            },
+            {
+              "id": "A-6",
+              "rank": 7,
+              "title": "roster export with no shifts prints nothing and exits as if it worked",
+              "category": "dead-end",
+              "surface": "roster-cli",
+              "groups": [
+                "volunteer coordinators"
+              ],
+              "occurrences": 2,
+              "opportunities": 6,
+              "unit": "runs",
+              "frequency_level": 2,
+              "low_confidence": false,
+              "pain": 3,
+              "score": 6,
+              "severity": "P3",
+              "quotes": [
+                {
+                  "quote": "Export printed nothing and I thought it was done.",
+                  "from": "extract CE-1, message 17, said by a volunteer coordinator"
+                }
+              ],
+              "reproduce": "Run roster export on a roster with no shifts and read the output and the exit status.",
+              "measure": "0 lines and exit status 0 for an empty export",
+              "fingerprint": "annoyance/roster-cli/empty-export-silent"
+            },
+            {
+              "id": "A-10",
+              "rank": 8,
+              "title": "After Confirm the form reappears with only a faint note, so people sign up twice to be sure",
+              "category": "feels-wrong",
+              "surface": "signup-page",
+              "groups": [
+                "first-time volunteers"
+              ],
+              "occurrences": 2,
+              "opportunities": 5,
+              "unit": "sessions",
+              "frequency_level": 3,
+              "low_confidence": false,
+              "pain": 2,
+              "score": 6,
+              "severity": "P3",
+              "quotes": [
+                {
+                  "quote": "Is that it? I'll do it again to be sure.",
+                  "from": "session FS-1, step 8, said by tester walking the first-time volunteer persona"
+                }
+              ],
+              "reproduce": "Sign up for a shift and watch what the page shows after Confirm.",
+              "measure": "2 of 5 sessions signed up twice",
+              "fingerprint": "annoyance/signup-page/faint-confirmation"
+            },
+            {
+              "id": "A-8",
+              "rank": 9,
+              "title": "The week picker opens on last week",
+              "category": "surprising-default",
+              "surface": "signup-page",
+              "groups": [
+                "returning volunteers"
+              ],
+              "occurrences": 7,
+              "opportunities": 33,
+              "unit": "messages",
+              "frequency_level": 2,
+              "low_confidence": false,
+              "pain": 2,
+              "score": 4,
+              "severity": "P3",
+              "quotes": [
+                {
+                  "quote": "Why does the calendar start on last week?",
+                  "from": "extract CE-1, message 11, said by a volunteer"
+                }
+              ],
+              "reproduce": "Open /shifts on a Monday and read which week the picker shows.",
+              "measure": "7 of the 33 messages about the product",
+              "fingerprint": "annoyance/signup-page/week-picker-opens-last-week"
+            },
+            {
+              "id": "A-9",
+              "rank": 10,
+              "title": "The getting-started page says run the bootstrap target without saying what it does",
+              "category": "confusing-copy",
+              "surface": "docs",
+              "groups": [
+                "new coordinators"
+              ],
+              "occurrences": 3,
+              "opportunities": 4,
+              "unit": "readers",
+              "frequency_level": 4,
+              "low_confidence": false,
+              "pain": 1,
+              "score": 4,
+              "severity": "P3",
+              "quotes": [
+                {
+                  "quote": "Bootstrap what, exactly?",
+                  "from": "session FS-4, step 2, said by tester walking the new coordinator persona"
+                }
+              ],
+              "reproduce": "Open the getting-started page as a new coordinator and follow it with copy and paste only until the bootstrap step.",
+              "measure": "3 of 4 readers stopped at the step",
+              "fingerprint": "annoyance/docs/bootstrap-target-unexplained"
+            }
+          ]
+        },
+        "shows": "Websites, a command line, a video and docs in one ranking, with ties broken by groups affected and pain, and a video annoyance flagged as low confidence.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.ranking-confirmation",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a person confirms the ranking with one change",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.ranking-confirmation"
+        },
+        "instance": {
+          "confirmation_id": "RC-1",
+          "log_ref": {
+            "$pin": "example.annoyance-log"
+          },
+          "confirmed_by_role": "volunteer coordinator lead",
+          "confirmed_by_kind": "person",
+          "decided_at": "2026-10-30T16:30Z",
+          "changes": [
+            {
+              "id": "A-4",
+              "field": "pain",
+              "from": "3",
+              "to": "2",
+              "reason": "Only two viewers; on the site the sign-up button sits right under the video, so most viewers find it."
+            }
+          ],
+          "taste_calls": [
+            "A-10"
+          ],
+          "ranking_after": [
+            "A-1",
+            "A-5",
+            "A-2",
+            "A-3",
+            "A-4",
+            "A-7",
+            "A-6",
+            "A-10",
+            "A-8",
+            "A-9"
+          ]
+        },
+        "shows": "The coordinator lead lowers one pain rating with a reason and marks one fix as a matter of taste for a palette.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    },
+    {
+      "slug": "example.finding",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: the top annoyance, in the findings to fixes shape",
+      "synthetic": true,
+      "category_reason": "A synthetic instance in the template's shape.",
+      "value": {
+        "conforms_to": {
+          "$pin": "findings-to-fixes:template.finding"
+        },
+        "instance": {
+          "id": "AN-1",
+          "title": "Signing up for one shift takes seven actions where three would do",
+          "kind": "annoyance",
+          "severity": "P2",
+          "where": "SYNTHETIC volunteer site, build 2026-10-30.4, /shifts to /signup",
+          "evidence": [
+            {
+              "kind": "quote",
+              "detail": "Why do I have to pick the week again?",
+              "location": "session FS-1, step 4, said by tester walking the first-time volunteer persona"
+            },
+            {
+              "kind": "measurement",
+              "detail": "category extra-clicks: frequency 4 of 5 sessions; pain 3 of 4; score 12 (frequency level 4 x pain 3); affects first-time volunteers on phones"
+            },
+            {
+              "kind": "reproduction",
+              "detail": "On a phone at 390 pixels, open /shifts, choose Saturday's morning shift, press Sign up, and count the actions until the confirmation."
+            }
+          ],
+          "noticed_by": "hunt-annoyances worker",
+          "noticed_at": "2026-10-30T15:00Z",
+          "fingerprint": "annoyance/signup-page/week-chosen-twice",
+          "status": "open",
+          "sensitivity": "none",
+          "public": false,
+          "work": [
+            {
+              "verb": "reproduce",
+              "state": "pending"
+            },
+            {
+              "verb": "propose-fix",
+              "state": "pending"
+            },
+            {
+              "verb": "fix",
+              "state": "pending"
+            },
+            {
+              "verb": "verify-fix",
+              "state": "pending"
+            },
+            {
+              "verb": "add-regression-guard",
+              "state": "pending"
+            }
+          ]
+        },
+        "shows": "A quoted, measured and reproducible annoyance with reproduce, propose-fix, fix, verify-fix and add-regression-guard proposed.",
+        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "draft-friction-charters",
+      "kind": "verb.generate_seed",
+      "title": "Draft friction charters from the tours",
+      "claimant": "agent",
+      "summary": "Write one to eight time-boxed charters from the friction tours for the target's websites, command lines, videos and docs, each aimed at a named risk such as rising drop-offs or repeated support questions.",
+      "outcome": "Charters in the exploratory testing form.",
+      "ready_outcome": "charters_drafted",
+      "pinned": [
+        "method",
+        "friction-tours",
+        "friction-catalog",
+        "exploratory-testing-charters:charter-guide"
+      ],
+      "slots": [
+        {
+          "name": "target_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a brief naming the target, its build, its media and its users."
+        },
+        {
+          "name": "complaints",
+          "category": "noun.eval_run",
+          "description": "Pins of complaint extracts, if any.",
+          "required": false,
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "charter",
+          "template": "exploratory-testing-charters:template.charter",
+          "max": 8
+        }
+      ],
+      "steps": [
+        "Pick tours for the media the target has, and the risks the brief and any complaints point at.",
+        "Write each mission in the explore, with, to discover form, with a synthetic persona and what to count.",
+        "Time-box each at 45, 90 or 120 minutes and say what is out of scope."
+      ],
+      "acceptance": [
+        {
+          "id": "charters-match-template",
+          "check": "Every charter validates against template.charter's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "counts-named",
+          "check": "Every charter's test ideas name what to count.",
+          "method": "deterministic"
+        },
+        {
+          "id": "aimed-at-risk",
+          "check": "Each charter is aimed at a risk the brief or complaints support.",
+          "method": "judgment"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1200
+      }
+    },
+    {
+      "slug": "hunt-annoyances",
+      "kind": "verb.benchmark_harness",
+      "title": "Walk one charter and count its friction",
+      "claimant": "agent_or_human",
+      "summary": "Walk one friction charter from the user's point of view within its time box, counting actions against the shortest path, waits, repeated prompts and lines printed, and quoting every hesitation at its step.",
+      "outcome": "A friction session, with an annoyance proposed for each hesitation.",
+      "ready_outcome": "session_counted",
+      "pinned": [
+        "method",
+        "friction-catalog",
+        "guardrail.in-their-words",
+        "guardrail.product-not-person",
+        "exploratory-testing-charters:session-rules"
+      ],
+      "slots": [
+        {
+          "name": "charter",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the friction charter."
+        }
+      ],
+      "params": {
+        "test_target_named": {
+          "schema": {
+            "type": "boolean"
+          },
+          "description": "True only when a person named a test target for actions that book, submit or create.",
+          "default": false
+        }
+      },
+      "produces": [
+        {
+          "name": "friction_session",
+          "template": "template.friction-session"
+        }
+      ],
+      "steps": [
+        "Find the shortest path through the same build first, so every task's actions have something to be counted against.",
+        "Walk each task as the persona would; note the time, the step and the exact words at every hesitation, wait over a second or repeated question.",
+        "Count lines printed for a command line, and points missed for a video or docs.",
+        "Use synthetic data only; never book, submit or create anything on a live target unless a person named a test target.",
+        "Say what the session did not cover."
+      ],
+      "acceptance": [
+        {
+          "id": "session-matches-template",
+          "check": "The session validates against template.friction-session's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "quotes-timed",
+          "check": "Every observation has a time, a step and a quote.",
+          "method": "deterministic"
+        },
+        {
+          "id": "tasks-counted",
+          "check": "Every task has actions taken and the shortest path.",
+          "method": "deterministic"
+        }
+      ],
+      "network": [
+        "read_only",
+        "Read-only page loads and navigation on the charter's target with synthetic data; anything that would book, submit or create runs only on a test target a person named."
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 10800
+      },
+      "ready_requires": [
+        "proposed_verbs"
+      ],
+      "follows": [
+        "annoyance-hunt.draft-friction-charters"
+      ]
+    },
+    {
+      "slug": "collect-complaints",
+      "kind": "verb.ingest",
+      "title": "Collect complaints from permitted feedback",
+      "claimant": "agent",
+      "summary": "Read feedback the requester is permitted to share, such as a support inbox export or survey answers, and keep each complaint in the person's own words with its count, leaving out anything personal.",
+      "outcome": "A complaint extract.",
+      "ready_outcome": "complaints_extracted",
+      "pinned": [
+        "friction-catalog",
+        "guardrail.in-their-words",
+        "policy-and-law-watch:guardrail.no-personal-data"
+      ],
+      "slots": [
+        {
+          "name": "feedback",
+          "category": "noun.public_source",
+          "description": "Pins of the permitted feedback exports.",
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "complaint_extract",
+          "template": "template.complaint-extract"
+        }
+      ],
+      "steps": [
+        "Confirm the requester's permission to read each source; without it, end blocked.",
+        "Quote each complaint exactly, trimmed to the complaint itself, and count the messages that make the same one.",
+        "Leave out every message that names a person or holds an address, a phone number or an account, and count them with the reason.",
+        "Never reply to, forward or follow up on any message."
+      ],
+      "acceptance": [
+        {
+          "id": "extract-matches-template",
+          "check": "The extract validates against template.complaint-extract's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "No quote holds a name, address, phone number, email address or account.",
+          "method": "deterministic"
+        },
+        {
+          "id": "exclusions-counted",
+          "check": "messages_read equals the messages with a complaint, plus those excluded, plus those without a complaint.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "ready_requires": [
+        "proposed_verbs"
+      ]
+    },
+    {
+      "slug": "rank-annoyances",
+      "kind": "verb.situate",
+      "title": "Rank the annoyances by frequency times pain",
+      "claimant": "agent",
+      "summary": "Fold annoyances from sessions and extracts together by fingerprint, count how often each happened against how often it could have, apply the pain scale, and rank by frequency times pain.",
+      "outcome": "A ranked annoyance log.",
+      "ready_outcome": "annoyances_ranked",
+      "model_use": "none",
+      "pinned": [
+        "frequency-rule",
+        "pain-scale",
+        "friction-catalog"
+      ],
+      "slots": [
+        {
+          "name": "sessions",
+          "category": "noun.eval_run",
+          "description": "Pins of the friction sessions.",
+          "many": true,
+          "max": 32
+        },
+        {
+          "name": "extracts",
+          "category": "noun.eval_run",
+          "description": "Pins of the complaint extracts.",
+          "required": false,
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "annoyance_log",
+          "template": "template.annoyance-log"
+        }
+      ],
+      "steps": [
+        "Fold together annoyances with the same surface, category and step into one entry, keeping every quote's source.",
+        "Count occurrences and opportunities per entry, set the frequency level and flag fewer than three opportunities as low confidence.",
+        "Apply the pain scale, score, rank and set the severity by the frequency rule.",
+        "Give every entry its reproduction steps and its measure."
+      ],
+      "acceptance": [
+        {
+          "id": "log-matches-template",
+          "check": "The log validates against template.annoyance-log's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scores-recompute",
+          "check": "Every level, score, severity and rank recomputes by the frequency rule.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-quote-kept",
+          "check": "Every observation and complaint in the pinned sessions and extracts is in exactly one entry.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "annoyance-hunt.hunt-annoyances",
+        "annoyance-hunt.collect-complaints"
+      ]
+    },
+    {
+      "slug": "confirm-ranking",
+      "kind": "verb.verify_gate",
+      "title": "Confirm the ranking (a person)",
+      "claimant": "human",
+      "summary": "A person who knows the users reads the ranked log, confirms or changes pain, category and groups with reasons, marks fixes that are matters of taste, and records the ranking that results. This template performs nothing itself.",
+      "outcome": "A ranking confirmation.",
+      "ready_outcome": "ranking_confirmed",
+      "model_use": "none",
+      "pinned": [
+        "pain-scale",
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "annoyance_log",
+          "category": "noun.eval_run",
+          "description": "Pin of the ranked annoyance log."
+        }
+      ],
+      "produces": [
+        {
+          "name": "confirmation",
+          "template": "template.ranking-confirmation"
+        }
+      ],
+      "steps": [
+        "Read the top entries' quotes and measures, and every low-confidence entry.",
+        "Change a rating only with a reason, and mark each fix that is a matter of taste."
+      ],
+      "acceptance": [
+        {
+          "id": "confirmation-matches-template",
+          "check": "The confirmation validates against template.ranking-confirmation's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-confirmed",
+          "check": "confirmed_by_kind is person.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 86400
+      },
+      "follows": [
+        "annoyance-hunt.rank-annoyances"
+      ]
+    },
+    {
+      "slug": "record-annoyance-findings",
+      "kind": "verb.problemize",
+      "title": "Record each confirmed annoyance as a finding",
+      "claimant": "agent",
+      "summary": "Write each confirmed annoyance as a findings to fixes finding with its quote, its measurement and its reproduction, and propose its fix, verification and guard; a matter of taste also gets a palette brief, so a person chooses the fix.",
+      "outcome": "Annoyance findings, each with its follow-up verbs proposed.",
+      "ready_outcome": "annoyances_recorded",
+      "pinned": [
+        "annoyance-checks",
+        "frequency-rule",
+        "findings-to-fixes:record-checks",
+        "findings-to-fixes:kind-definitions",
+        "taste-palettes:method"
+      ],
+      "slots": [
+        {
+          "name": "annoyance_log",
+          "category": "noun.eval_run",
+          "description": "Pin of the ranked annoyance log."
+        },
+        {
+          "name": "confirmation",
+          "category": "noun.eval_run",
+          "description": "Pin of the person's ranking confirmation."
+        }
+      ],
+      "produces": [
+        {
+          "name": "finding",
+          "template": "findings-to-fixes:template.finding",
+          "max": 20
+        },
+        {
+          "name": "palette_brief",
+          "template": "taste-palettes:template.brief",
+          "max": 4
+        }
+      ],
+      "steps": [
+        "Use the confirmed ranking; leave out entries the person removed and say so.",
+        "Give each finding a located quote, a measurement with its category, frequency, pain, score and who it affects, and the reproduction steps.",
+        "Propose findings-to-fixes.reproduce, propose-fix, fix, verify-fix and add-regression-guard, and list them in the finding's work as pending; the verification reruns the same steps and measure.",
+        "Record every confirmed entry as a finding; for each one the person marked as taste, also write a palette brief instead of choosing a fix.",
+        "Record pain 4 as a design flaw; write low confidence into the finding's note and keep its severity at P3 until more sessions confirm it.",
+        "Run the findings to fixes record checks and the annoyance checks on every finding."
+      ],
+      "acceptance": [
+        {
+          "id": "findings-match-template",
+          "check": "Every finding validates against template.finding's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "Every finding passes the findings to fixes record checks and the annoyance checks.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-entry-recorded",
+          "check": "Every confirmed entry is exactly one finding, and every taste call also has one palette brief.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 1800
+      },
+      "ready_requires": [
+        "proposed_verbs"
+      ],
+      "follows": [
+        "annoyance-hunt.confirm-ranking"
+      ]
+    }
+  ]
+}
