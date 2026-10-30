@@ -1,4 +1,4 @@
-# Pack contributions
+# Seed-pack library – every pack of nouns and verbs
 
 Instructions and synthetic examples for contributing useful noun records and
 verb seeds to the [Tessera work fabric](https://github.com/ta-amps/tessera).
