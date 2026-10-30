@@ -1,0 +1,40 @@
+# Checks for the narrated explainer video pack's code, run only when that pack, the sources its
+# worked example reads, or this workflow changes. Standard library only: nothing is installed.
+name: narrated-explainer-video
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/narrated-explainer-video/**"
+      - "packs/voice-narration/source.json"
+      - "packs/video-showcase/source.json"
+      - ".github/workflows/narrated-explainer-video.yml"
+  pull_request:
+    paths:
+      - "packs/narrated-explainer-video/**"
+      - "packs/voice-narration/source.json"
+      - "packs/video-showcase/source.json"
+      - ".github/workflows/narrated-explainer-video.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Compile with warnings as errors, then every test, including the worked example's recomputation.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/narrated-explainer-video/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python

@@ -1,0 +1,3787 @@
+{
+  "pack_id": "narrated-explainer-video",
+  "title": "Narrated explainer video",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for making a narrated explainer video with code, every step a claimed verb that ends with a receipt: a script and a cut plan on one frame clock, narration placed on its beats, scenes rendered from a frame-addressable HTML stage, captions timed to the measured voice and checked against what it said, a caption-free master and an open-captions variant, video checks and a frame sheet, a ledger of every receipt, and a release manifest that hashes every delivered file before the owner decides.",
+  "dependencies": [
+    "video-motion",
+    "video-showcase",
+    "voice-narration"
+  ],
+  "boundaries": [
+    "Every step is a claimed verb that submits once with an execution report; failed attempts stay on the record.",
+    "Scenes are code rendered by a pinned browser build; no model draws a frame.",
+    "Workers never release the video; the owner decides and records it.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for making a narrated explainer video with code, every step a verb with a receipt",
+      "value": {
+        "lets_workers": "Make a narrated explainer video with code as one pipeline of claimed verbs, each ending with a receipt: a script and a cut plan on one frame clock, narration placed on its beats, scenes rendered from a frame-addressable HTML stage, captions timed to the measured voice and checked against what it said, a caption-free master and an open-captions variant, video checks and a frame sheet, a ledger of every receipt, and a release manifest that hashes every delivered file before the owner decides.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "video-showcase.draft-script"
+            },
+            "when": "The script: timed beats, every on-screen number a claim."
+          },
+          {
+            "verb": {
+              "$verb": "video-showcase.storyboard"
+            },
+            "when": "Scenes, shots and visual intent."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.plan-cut"
+            },
+            "when": "One frame clock for picture, voice and captions."
+          },
+          {
+            "verb": {
+              "$verb": "voice-narration.prepare-lexicon"
+            },
+            "when": "The narration, in six steps of the voice narration pack."
+          },
+          {
+            "verb": {
+              "$verb": "voice-narration.synthesize-lines"
+            },
+            "when": "Seeded takes with the lexicon applied."
+          },
+          {
+            "verb": {
+              "$verb": "voice-narration.measure-lines"
+            },
+            "when": "Loudness, peaks, pace and round-trip errors."
+          },
+          {
+            "verb": {
+              "$verb": "voice-narration.select-takes"
+            },
+            "when": "By the rule fixed before scoring."
+          },
+          {
+            "verb": {
+              "$verb": "voice-narration.place-on-beats"
+            },
+            "when": "One narration track per cut."
+          },
+          {
+            "verb": {
+              "$verb": "voice-narration.listen-and-approve"
+            },
+            "when": "A person listens before the voice goes into a cut."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.build-stage-scenes"
+            },
+            "when": "Scenes as code on the HTML stage."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.render-slices"
+            },
+            "when": "Lossless recordings of every slice."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.time-captions"
+            },
+            "when": "Cues from the script, timed to the voice."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.check-captions"
+            },
+            "when": "Rules and a round-trip transcript, by a different worker."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.compose-cut"
+            },
+            "when": "A caption-free master and an open-captions variant."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.render-sequence"
+            },
+            "when": "Encode each variant."
+          },
+          {
+            "verb": {
+              "$verb": "video-motion.check-video"
+            },
+            "when": "Eight post-encode checks, preferably by a different worker."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.make-frame-sheet"
+            },
+            "when": "One decoded frame per clip."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.compile-receipts"
+            },
+            "when": "Every step's receipt, or the gap."
+          },
+          {
+            "verb": {
+              "$verb": "narrated-explainer-video.assemble-release-manifest"
+            },
+            "when": "Every delivered file hashed."
+          },
+          {
+            "verb": {
+              "$verb": "video-showcase.review-video"
+            },
+            "when": "A person or a different agent watches and decides."
+          },
+          {
+            "verb": {
+              "$verb": "video-showcase.record-publication"
+            },
+            "when": "The owner releases or holds, and records which."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.every-step-a-receipt"
+          },
+          {
+            "$pin": "guardrail.one-frame-clock"
+          },
+          {
+            "$pin": "guardrail.claims-from-records"
+          },
+          {
+            "$pin": "guardrail.disclose-every-layer"
+          },
+          {
+            "$pin": "voice-narration:guardrail.label-ai-voice"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.explainer-checks"
+        },
+        "worked_example": "Synthetic, recomputed by the code's tests: a 20-second cut with a crossfade, a hard cut and an end card; the voice narration pack's two placed lines; four caption cues showing a sentence split, pause snapping, a comma split and a closed blink gap; the WebVTT and SRT text; and a release manifest whose digests are real.",
+        "complements": "The video showcase pack makes demo videos from screen captures with a person's voice; the video and motion pack renders and checks sequences. This pack adds the frame clock, the HTML stage, captions timed to a synthetic voice, the receipts ledger and the release manifest.",
+        "provenance_notes": [
+          "Packages the production pipeline ta-amps was using for its own explainer video on October 29 and 30, 2026, still in draft runs when this pack was written: a cut plan shared by picture, voice and captions, scenes on a frame-addressable HTML stage rendered losslessly in headless Chromium, a locally synthesized voice with a phoneme override, captions timed to measured pauses and checked by a local recognizer, two variants per cut, and a ledger of every verb's receipt."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.every-step-a-receipt"
+        ],
+        [
+          "requires_noun",
+          "guardrail.one-frame-clock"
+        ],
+        [
+          "requires_noun",
+          "guardrail.claims-from-records"
+        ],
+        [
+          "requires_noun",
+          "guardrail.disclose-every-layer"
+        ],
+        [
+          "requires_noun",
+          "voice-narration:guardrail.label-ai-voice"
+        ],
+        [
+          "requires_noun",
+          "rules.frame-clock"
+        ],
+        [
+          "requires_noun",
+          "rules.html-stage"
+        ],
+        [
+          "requires_noun",
+          "rules.captions"
+        ],
+        [
+          "requires_noun",
+          "tool.explainer-checks"
+        ],
+        [
+          "requires_noun",
+          "template.cut-plan"
+        ],
+        [
+          "requires_noun",
+          "template.stage"
+        ],
+        [
+          "requires_noun",
+          "template.slice-recordings"
+        ],
+        [
+          "requires_noun",
+          "template.caption-cues"
+        ],
+        [
+          "requires_noun",
+          "template.caption-check"
+        ],
+        [
+          "requires_noun",
+          "template.compose-record"
+        ],
+        [
+          "requires_noun",
+          "template.frame-sheet"
+        ],
+        [
+          "requires_noun",
+          "template.receipts-ledger"
+        ],
+        [
+          "requires_noun",
+          "template.release-manifest"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.every-step-a-receipt",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every step is a claimed verb with a receipt",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every step of the production is a verb that an authorized worker claims, performs and submits once with an execution report, and every accepted result has a receipt. Failed attempts stay on the record, and nothing runs that was not claimed.",
+        "how_it_is_checked": "The receipts ledger lists every step of the production plan with its receipt and ready outcome, and every failed attempt with its error."
+      }
+    },
+    {
+      "slug": "guardrail.one-frame-clock",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: one frame clock for picture, voice and captions",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Picture, voice and captions read one cut plan. Changing a clip's length or crossfade makes a new cut plan version, and every verb after it runs again on that version.",
+        "how_it_is_checked": "Every sequence, narration track and caption cue list pins the same cut plan version, and the clock check finds no problem."
+      }
+    },
+    {
+      "slug": "guardrail.claims-from-records",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every claim checked against its record",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every number or claim on screen or in the narration is checked against the record it came from before the cut is composed, and an unverified claim blocks the cut. A closing line about how the video was made runs only when every step before it has a receipt; a narrower line runs otherwise.",
+        "how_it_is_checked": "The compose record lists every claim with its record and result, and every step the closing line depends on has a receipt in the ledger."
+      }
+    },
+    {
+      "slug": "guardrail.disclose-every-layer",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every layer says what it is",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Each layer says what it is: a capture of a real screen, a scene rendered from code, synthetic example data, an AI voice or procedural music. The disclosures travel in the sequences and the release manifest, and on screen wherever a viewer could be misled.",
+        "how_it_is_checked": "The release manifest's disclosures name every kind of layer the sequences use, and the review confirms the on-screen labels."
+      }
+    },
+    {
+      "slug": "rules.frame-clock",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Frame clock rules for a cut plan",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "rules": [
+          "A clip starts where the previous clip ends minus its crossfade frames; the first clip starts at frame 0 with no crossfade, and a crossfade is no longer than either clip it joins.",
+          "A beat runs from the middle of the crossfade into its first clip to the middle of the crossfade into the next beat's first clip; the first beat starts at 0 and the last ends with the cut. A beat is one run of clips.",
+          "A cut's clips add up to its duration times its fps exactly.",
+          "A narration line starts inside its beat, at least 0.2 s after the previous line ends, and ends at least 0.1 s before the cut ends.",
+          "A frame-sheet frame for a clip is taken at the middle of the span where it plays alone: from the end of its crossfade in to the start of the next clip.",
+          "Times are whole milliseconds and frames are integers; a time between frames rounds to the nearest frame, halves up."
+        ],
+        "tool": {
+          "$pin": "tool.explainer-checks"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.one-frame-clock"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.html-stage",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Rules for scenes rendered from a frame-addressable HTML stage",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "contract": "The stage page exposes boot(scene, config), which builds a scene, and renderFrame(t), which draws scene time t in seconds.",
+        "rules": [
+          "Every visible property is a pure function of scene time t: no clock reads, no CSS animations or transitions, no timers and no unseeded randomness, so any frame can be rendered in any order.",
+          "Fonts are embedded from pinned files with their licenses and checked as loaded before the first frame; every image is a local file pinned by digest and checked as loaded.",
+          "The stage loads nothing from the network while rendering.",
+          "Frames render at 1920 by 1080 and device scale 1 with the pinned headless browser build and the flags --force-color-profile=srgb and --disable-gpu; frame i of a slice is drawn at t equal to its start plus i over fps.",
+          "Each slice is encoded losslessly with libx264rgb at qp 0 with bit-exact flags, so composing works on exact frames.",
+          "Determinism is checked, not assumed: sampled frames rendered shuffled and repeated must match the in-order pixel digests.",
+          "Pixel identity holds only for the same browser build, fonts and flags; record all three."
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-motion:tool.chromium"
+        ],
+        [
+          "requires_noun",
+          "video-motion:tool.playwright"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.captions",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Caption rules: text from the script, timing from the measured voice",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "numbers_from": "The video showcase style guide's caption rules: at most 2 lines of 42 characters, 1 to 7 s on screen and at most 17 characters per second. They are stricter than the render tools' own minimums, so cues that pass here pass there.",
+        "steps": [
+          "Cue text comes from the placed narration lines, never from speech recognition.",
+          "Split each line at sentence ends; split a sentence longer than 80 characters, or one that two lines cannot hold, at the comma nearest its middle, and at the middle word when it has no comma.",
+          "Place each split at the unused measured pause nearest a character-proportional estimate when one lies within 1.2 s; otherwise at the estimate.",
+          "End each cue 0.25 s after its speech, or later when its text needs more time at 16.4 characters per second; never past the next cue's start or 7 s, and the last cue 0.05 s before the cut ends.",
+          "Snap starts and ends to frames, halves up, and close any gap of 1 or 2 frames by ending the earlier cue where the next begins.",
+          "Wrap each cue into one line, or two lines as even as the words allow.",
+          "Write WebVTT and SRT sidecars from the same cues; burn captions only into the open-captions variant.",
+          "Check what the voice said with a pinned local recognizer: a line over the error-rate limit, 0.06 by default, is listed as a deviation and never silently fixed."
+        ],
+        "tool": {
+          "$pin": "tool.explainer-checks"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "derives_from",
+          "video-showcase:style-guide"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.explainer-checks",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: the explainer checks",
+      "category_reason": "Tested code a worker runs inside a claimed verb, pinned by path, file count and digest.",
+      "value": {
+        "name": "explainer checks",
+        "code": {
+          "$code": "narrated-explainer-video"
+        },
+        "runtime": "Python 3.10 or later, standard library only; nothing to install.",
+        "commands": [
+          "python -m explainer_checks clock --cut-plan PLAN.json --cut 20s [--track TRACK.json]",
+          "python -m explainer_checks captions --cut-plan PLAN.json --cut 20s --track TRACK.json --out DIR",
+          "python -m explainer_checks manifest --root DIR --cut 20s --title TITLE --out FILE --entry PATH ROLE TYPE",
+          "python -m explainer_checks verify --manifest FILE --root DIR",
+          "python -m explainer_checks ledger --ledger FILE [--steps a,b]"
+        ],
+        "does": [
+          "Clip, beat and frame-sheet times from a cut plan, with every clock problem named.",
+          "Caption cues from a narration track, the rule check, and WebVTT and SRT text.",
+          "SHA-256 rows for a release manifest, the file check, and the receipts ledger check."
+        ],
+        "does_not": [
+          "Render, encode, decode or play media.",
+          "Call a model or open a network connection.",
+          "Write inside the seed-pack library; it refuses an output path there."
+        ],
+        "code_license": "MIT",
+        "tests": "The code's tests recompute this pack's worked example from source.json and run in the library's CI job for the pack."
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.frame-clock"
+        ],
+        [
+          "verifies",
+          "rules.captions"
+        ]
+      ]
+    },
+    {
+      "slug": "template.cut-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: every cut's clips, beats, narration starts and claims on one frame clock",
+      "value": {
+        "describes": "a cut plan: the frame rate, the beats, and for each cut its clips with frames and crossfades, the start and beat of every narration line, and every on-screen claim with the record it is checked against",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fps",
+            "beats",
+            "cuts"
+          ],
+          "properties": {
+            "fps": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 120
+            },
+            "beats": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "beat_id",
+                  "visual_intent"
+                ],
+                "properties": {
+                  "beat_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "visual_intent": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "on_screen_text": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "cuts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cut_id",
+                  "duration_s",
+                  "clips",
+                  "narration",
+                  "claims"
+                ],
+                "properties": {
+                  "cut_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "duration_s": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 3600
+                  },
+                  "clips": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 300,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "clip_id",
+                        "beat_id",
+                        "scene",
+                        "scene_start_s",
+                        "frames",
+                        "xfade_frames",
+                        "source"
+                      ],
+                      "properties": {
+                        "clip_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                        },
+                        "beat_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                        },
+                        "scene": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                        },
+                        "scene_start_s": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 3600
+                        },
+                        "frames": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 216000
+                        },
+                        "xfade_frames": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 600
+                        },
+                        "source": {
+                          "type": "string",
+                          "enum": [
+                            "rendered_scene",
+                            "screen_capture",
+                            "still",
+                            "title_card"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "narration": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 200,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "line",
+                        "start_s",
+                        "beat_id"
+                      ],
+                      "properties": {
+                        "line": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20,
+                          "pattern": "^[a-z0-9-]+$"
+                        },
+                        "start_s": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 3600
+                        },
+                        "beat_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                        }
+                      }
+                    }
+                  },
+                  "claims": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 60,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "claim_id",
+                        "text",
+                        "beat_id",
+                        "source_ref",
+                        "check"
+                      ],
+                      "properties": {
+                        "claim_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                        },
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "beat_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60,
+                          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                        },
+                        "source_ref": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        },
+                        "check": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Frames add up to duration times fps exactly.",
+          "Every claim names the record it is checked against."
+        ]
+      }
+    },
+    {
+      "slug": "template.stage",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: a frame-addressable HTML stage pinned by digest",
+      "value": {
+        "describes": "the HTML stage the scenes are written on: its files, scenes, viewport, fonts and browser build pinned by digest, and the result of its determinism probe",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stage_id",
+            "entry",
+            "files",
+            "scenes",
+            "viewport",
+            "browser",
+            "fonts",
+            "remote_requests",
+            "determinism_probe"
+          ],
+          "properties": {
+            "stage_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "entry": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "bytes",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "bytes": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "scenes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "scene",
+                  "duration_s"
+                ],
+                "properties": {
+                  "scene": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "duration_s": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 3600
+                  }
+                }
+              }
+            },
+            "viewport": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "width",
+                "height",
+                "device_scale_factor"
+              ],
+              "properties": {
+                "width": {
+                  "type": "integer",
+                  "minimum": 16,
+                  "maximum": 7680
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 16,
+                  "maximum": 7680
+                },
+                "device_scale_factor": {
+                  "type": "number",
+                  "minimum": 0.5,
+                  "maximum": 4
+                }
+              }
+            },
+            "browser": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "build",
+                "sha256",
+                "flags"
+              ],
+              "properties": {
+                "build": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "flags": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                }
+              }
+            },
+            "fonts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "family",
+                  "file",
+                  "sha256",
+                  "font_license"
+                ],
+                "properties": {
+                  "family": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "file": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "font_license": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "remote_requests": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 0
+            },
+            "determinism_probe": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "frames_checked",
+                "shuffled_matches_in_order",
+                "repeat_matches"
+              ],
+              "properties": {
+                "frames_checked": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "shuffled_matches_in_order": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "repeat_matches": {
+                  "type": "boolean",
+                  "const": true
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "remote_requests is 0.",
+          "A failed determinism probe is an outcome of blocked, never a stage noun."
+        ]
+      }
+    },
+    {
+      "slug": "template.slice-recordings",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: lossless recordings of every slice, with digests",
+      "value": {
+        "describes": "the lossless recordings rendered from the stage for every clip's slice, with the encoder settings, browser build, file digests and sampled frame digests",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stage",
+            "fps",
+            "browser_build",
+            "encoder",
+            "slices",
+            "samples"
+          ],
+          "properties": {
+            "stage": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 120
+            },
+            "browser_build": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "encoder": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "codec",
+                "settings"
+              ],
+              "properties": {
+                "codec": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "settings": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            },
+            "slices": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 300,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "slice",
+                  "scene",
+                  "start_s",
+                  "frames",
+                  "file",
+                  "bytes",
+                  "sha256"
+                ],
+                "properties": {
+                  "slice": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "scene": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 3600
+                  },
+                  "frames": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "file": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "bytes": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "samples": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 300,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "slice",
+                  "frame",
+                  "png_sha256"
+                ],
+                "properties": {
+                  "slice": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "frame": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "png_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.caption-cues",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: caption cues timed to the measured voice, with WebVTT and SRT",
+      "value": {
+        "describes": "one cut's caption cues built from the placed narration text and timed to the measured speech, with frames, wrapped lines, any rule problem, and the WebVTT and SRT sidecars' digests",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "fps",
+            "narration_track",
+            "cues",
+            "rule_problems",
+            "webvtt",
+            "srt"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "fps": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 120
+            },
+            "narration_track": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "cues": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 600,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cue_id",
+                  "start_frame",
+                  "end_frame",
+                  "start_s",
+                  "end_s",
+                  "text",
+                  "lines",
+                  "line",
+                  "beat_id"
+                ],
+                "properties": {
+                  "cue_id": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 6,
+                    "pattern": "^c[0-9]{2,4}$"
+                  },
+                  "start_frame": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end_frame": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 90
+                  },
+                  "lines": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 42
+                    }
+                  },
+                  "line": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "beat_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  }
+                }
+              }
+            },
+            "rule_problems": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "webvtt": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "role",
+                "media_type",
+                "bytes",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "webvtt",
+                    "srt"
+                  ]
+                },
+                "media_type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                }
+              }
+            },
+            "srt": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "role",
+                "media_type",
+                "bytes",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "webvtt",
+                    "srt"
+                  ]
+                },
+                "media_type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "rule_problems is empty before the cues are used.",
+          "Sidecar text is inline only when it is small."
+        ]
+      }
+    },
+    {
+      "slug": "template.caption-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a different worker's caption check: rules and a round-trip transcript",
+      "value": {
+        "describes": "a caption check by a worker other than the one that timed the cues: the rules rechecked, each placed line's round-trip error rate, and every deviation listed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "caption_cues",
+            "rule_problems",
+            "recognizer",
+            "cer_limit",
+            "lines",
+            "mean_cer",
+            "deviations",
+            "passed"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "caption_cues": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "rule_problems": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "recognizer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "cer_limit": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "lines": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "line",
+                  "cer",
+                  "heard"
+                ],
+                "properties": {
+                  "line": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "cer": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "heard": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "mean_cer": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "deviations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "line",
+                  "beat_id",
+                  "script",
+                  "heard"
+                ],
+                "properties": {
+                  "line": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "beat_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "script": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "heard": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 600
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "passed is true only with no rule problem and no deviation.",
+          "Deviations are listed, never fixed here."
+        ]
+      }
+    },
+    {
+      "slug": "template.compose-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: what was checked before a cut was composed",
+      "value": {
+        "describes": "the compose record for one cut: every claim checked against its record, the closing line chosen from the ledger, the two sequences made and the disclosures they carry",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "claims",
+            "closing_line",
+            "missing_receipts",
+            "sequences",
+            "disclosures"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "claims": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "claim_id",
+                  "on_screen",
+                  "in_record",
+                  "record",
+                  "verified"
+                ],
+                "properties": {
+                  "claim_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "on_screen": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "in_record": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 200
+                  },
+                  "record": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "verified": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "closing_line": {
+              "type": "string",
+              "enum": [
+                "full",
+                "narrowed",
+                "none"
+              ]
+            },
+            "missing_receipts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "pattern": "^[a-z0-9][a-z0-9.-]*$"
+              }
+            },
+            "sequences": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "variant",
+                  "sequence",
+                  "prerender_passed"
+                ],
+                "properties": {
+                  "variant": {
+                    "type": "string",
+                    "enum": [
+                      "master",
+                      "open_captions"
+                    ]
+                  },
+                  "sequence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "prerender_passed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "disclosures": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "rules": [
+          "A claim that is not verified blocks the cut.",
+          "closing_line is full only with no missing receipt."
+        ]
+      }
+    },
+    {
+      "slug": "template.frame-sheet",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one decoded frame per clip of a delivered video",
+      "value": {
+        "describes": "a frame sheet for review: one frame per clip decoded from the delivered file at the middle of the clip's solo span, with each frame's digest and the sheet's",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "video_sha256",
+            "frames",
+            "sheet_sha256"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "video_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "frames": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 300,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "clip_id",
+                  "time_s",
+                  "png_sha256"
+                ],
+                "properties": {
+                  "clip_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 7200
+                  },
+                  "png_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "sheet_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.receipts-ledger",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: every step of a production with its receipt, or the gap",
+      "value": {
+        "describes": "a receipts ledger read from Tessera: every step of the production plan with its task, ready outcome, receipt, output pins and failed attempts, and whether every step has a receipt",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "production",
+            "read_at",
+            "steps",
+            "every_step_has_receipt"
+          ],
+          "properties": {
+            "production": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "read_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "step",
+                  "template_id",
+                  "task_id",
+                  "ready_outcome",
+                  "outcome",
+                  "receipt",
+                  "outputs",
+                  "failed_attempts"
+                ],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^[a-z0-9][a-z0-9.-]*$"
+                  },
+                  "template_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "task_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "ready_outcome": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 41
+                  },
+                  "outcome": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 41
+                  },
+                  "receipt": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "outputs": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 40,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "role",
+                        "key",
+                        "value_sha256"
+                      ],
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "key": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 256
+                        },
+                        "value_sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      }
+                    }
+                  },
+                  "failed_attempts": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "receipt",
+                        "error"
+                      ],
+                      "properties": {
+                        "receipt": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "error": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 600
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "every_step_has_receipt": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "every_step_has_receipt is true only when each step has a receipt and its ready outcome.",
+          "Failed attempts are kept, never removed."
+        ]
+      }
+    },
+    {
+      "slug": "template.release-manifest",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: every delivered file hashed, for the owner's decision",
+      "value": {
+        "describes": "a release manifest: every file to be delivered with its role, media type, size and SHA-256, every layer's disclosure, the ledger and QA results, and released false, because releasing is the owner's separate act",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "cut_id",
+            "files",
+            "disclosures",
+            "ledger",
+            "every_step_has_receipt",
+            "qa_passed",
+            "released"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "cut_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "role",
+                  "media_type",
+                  "bytes",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "master",
+                      "open_captions",
+                      "webvtt",
+                      "srt",
+                      "qa_report",
+                      "frame_sheet",
+                      "cut_plan",
+                      "ledger",
+                      "narration_track"
+                    ]
+                  },
+                  "media_type": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "bytes": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "disclosures": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "ledger": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "every_step_has_receipt": {
+              "type": "boolean"
+            },
+            "qa_passed": {
+              "type": "boolean"
+            },
+            "released": {
+              "type": "boolean",
+              "const": false
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "rules": [
+          "Paths are relative to the delivery folder.",
+          "A worker never sets released to true."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before the owner decides on a release",
+      "category_reason": "A short checklist a person runs is part of the release's guardrails.",
+      "value": {
+        "items": [
+          "Watch each variant start to finish at normal speed, with sound, once on headphones.",
+          "The AI-voice label is on screen whenever the voice plays, and synthetic data is labeled where it appears.",
+          "Every number on screen matches the compose record and its source record.",
+          "Captions are readable, in sync and match what is said; every listed deviation has a decision.",
+          "The frame sheet shows every clip as planned, with nothing private in any capture.",
+          "Every file's SHA-256 matches the release manifest, and every step has a receipt or a stated gap."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for narrated explainer videos",
+      "value": {
+        "sources": [
+          {
+            "title": "W3C: WebVTT, the Web Video Text Tracks Format",
+            "url": "https://www.w3.org/TR/webvtt1/",
+            "used_for": "The caption sidecar format and its timestamps",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.2.2, Captions (Prerecorded)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html",
+            "used_for": "Why every cut ships with captions",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 2.3.1, Three Flashes or Below Threshold",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html",
+            "used_for": "Scenes as code must not flash",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "W3C WAI: Understanding Success Criterion 1.4.3, Contrast (Minimum)",
+            "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+            "used_for": "Caption and label contrast",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Chrome for Developers: Chrome Headless mode",
+            "url": "https://developer.chrome.com/docs/chromium/headless",
+            "used_for": "The headless shell build the stage renders with",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Playwright: Screenshots",
+            "url": "https://playwright.dev/docs/screenshots",
+            "used_for": "Rendering a frame to PNG",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "FFmpeg Codecs Documentation: libx264 and libx264rgb",
+            "url": "https://ffmpeg.org/ffmpeg-codecs.html",
+            "used_for": "Lossless slice encoding at qp 0",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for narrated explainer videos",
+      "value": {
+        "cases": [
+          {
+            "id": "NEV-CLOCK-SHORT",
+            "scenario": "The clips do not add up to the cut's length",
+            "sample_input": "SYNTHETIC: The clips lay out 598 frames for a cut planned at 20 s and 30 fps.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "clock_problem_named",
+              "cut_plan_revised_first"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "NEV-LINE-OUTSIDE-BEAT",
+            "scenario": "A narration line starts after its beat ends",
+            "sample_input": "SYNTHETIC: Line l1 is planned at 9.9 s in beat check, which ends at 9.75 s.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "line_outside_beat_named",
+              "new_cut_plan_version"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "NEV-CSS-TRANSITION",
+            "scenario": "A scene uses a CSS transition",
+            "sample_input": "SYNTHETIC: A card fades in with a CSS transition, so frame 120 differs between the in-order and shuffled renders.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "determinism_probe_failed",
+              "rewrite_as_function_of_t"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "NEV-REMOTE-FONT",
+            "scenario": "The stage loads a web font from a public server while rendering",
+            "sample_input": "SYNTHETIC: The stage links a font stylesheet on a public font server; the browser logs 2 remote requests.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "remote_requests_counted",
+              "embed_pinned_font"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "NEV-FAST-CUE",
+            "scenario": "A line has no pause or comma to split at and reads too fast",
+            "sample_input": "SYNTHETIC: A 78-character sentence is spoken in 3.9 s with no internal pause and no comma.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "rule_problem_named",
+              "author_shortens_line"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "NEV-ASR-DEVIATION",
+            "scenario": "The recognizer hears a different word",
+            "sample_input": "SYNTHETIC: The script says restock list; the recognizer hears restocked lists, an error rate of 0.08.",
+            "expected_outcome": "unknown",
+            "expected_indicators": [
+              "deviation_listed",
+              "cues_not_edited",
+              "person_decides"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "NEV-UNVERIFIED-CLAIM",
+            "scenario": "An on-screen number disagrees with its record",
+            "sample_input": "SYNTHETIC: The script shows 3 items running low; the restock list record has 4.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "claim_mismatch_named",
+              "cut_not_composed"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "NEV-MISSING-RECEIPT",
+            "scenario": "A step failed and was not retried before composing",
+            "sample_input": "SYNTHETIC: check-captions failed once with a timeout and has no accepted result; the full closing line says every step has a receipt.",
+            "expected_outcome": "cut_composed",
+            "expected_indicators": [
+              "narrowed_closing_line",
+              "gap_in_ledger"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "NEV-HOME-PATH",
+            "scenario": "The manifest lists an absolute local path",
+            "sample_input": "SYNTHETIC: The release manifest lists /home/someone/videos/explainer-20s.mp4.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "relative_paths_required",
+              "manifest_rebuilt"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.cut-plan",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: a 20-second cut with a crossfade, a hard cut and an end card",
+      "value": {
+        "notice": "SYNTHETIC. A made-up street fridge; no real place or organization.",
+        "conforms_to": {
+          "$pin": "template.cut-plan"
+        },
+        "instance": {
+          "fps": 30,
+          "beats": [
+            {
+              "beat_id": "check",
+              "visual_intent": "A volunteer's checklist ticks down the fridge shelves.",
+              "on_screen_text": "3 items running low"
+            },
+            {
+              "beat_id": "restock",
+              "visual_intent": "A draft list fills in overnight; a person's initials sign it.",
+              "on_screen_text": "Drafted overnight, signed by a person"
+            },
+            {
+              "beat_id": "end-card",
+              "visual_intent": "The end card with the AI-voice label.",
+              "on_screen_text": "Velmora Street community fridge (synthetic example)"
+            }
+          ],
+          "cuts": [
+            {
+              "cut_id": "20s",
+              "duration_s": 20.0,
+              "clips": [
+                {
+                  "clip_id": "shot01",
+                  "beat_id": "check",
+                  "scene": "fridge",
+                  "scene_start_s": 0.0,
+                  "frames": 300,
+                  "xfade_frames": 0,
+                  "source": "rendered_scene"
+                },
+                {
+                  "clip_id": "shot02",
+                  "beat_id": "restock",
+                  "scene": "list",
+                  "scene_start_s": 0.0,
+                  "frames": 210,
+                  "xfade_frames": 15,
+                  "source": "rendered_scene"
+                },
+                {
+                  "clip_id": "shot03",
+                  "beat_id": "restock",
+                  "scene": "sign-off",
+                  "scene_start_s": 0.0,
+                  "frames": 60,
+                  "xfade_frames": 0,
+                  "source": "rendered_scene"
+                },
+                {
+                  "clip_id": "shot04",
+                  "beat_id": "end-card",
+                  "scene": "end",
+                  "scene_start_s": 0.0,
+                  "frames": 60,
+                  "xfade_frames": 15,
+                  "source": "title_card"
+                }
+              ],
+              "narration": [
+                {
+                  "line": "l1",
+                  "start_s": 0.5,
+                  "beat_id": "check"
+                },
+                {
+                  "line": "l2",
+                  "start_s": 10.2,
+                  "beat_id": "restock"
+                }
+              ],
+              "claims": [
+                {
+                  "claim_id": "low-items",
+                  "text": "3 items running low",
+                  "beat_id": "check",
+                  "source_ref": "the example restock list (synthetic)",
+                  "check": "count the items whose level is low"
+                }
+              ]
+            }
+          ]
+        },
+        "computed": {
+          "beats_ms": [
+            [
+              "check",
+              0,
+              9750
+            ],
+            [
+              "restock",
+              9750,
+              18250
+            ],
+            [
+              "end-card",
+              18250,
+              20000
+            ]
+          ],
+          "sheet_times_ms": [
+            [
+              "shot01",
+              4750
+            ],
+            [
+              "shot02",
+              13250
+            ],
+            [
+              "shot03",
+              17250
+            ],
+            [
+              "shot04",
+              19250
+            ]
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.caption-cues",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: cues for the voice pack's placed lines, with WebVTT and SRT",
+      "value": {
+        "notice": "SYNTHETIC. Computed by the pack's code from voice-narration's example.narration-track and this pack's example.cut-plan; the code's tests recompute it.",
+        "conforms_to": {
+          "$pin": "template.caption-cues"
+        },
+        "instance": {
+          "cut_id": "20s",
+          "fps": 30,
+          "narration_track": "voice-narration example.narration-track (cut 20s)",
+          "cues": [
+            {
+              "cue_id": "c01",
+              "start_frame": 17,
+              "end_frame": 131,
+              "start_s": 0.567,
+              "end_s": 4.367,
+              "text": "Every evening, volunteers check the Velmora Street fridge.",
+              "lines": [
+                "Every evening, volunteers check",
+                "the Velmora Street fridge."
+              ],
+              "line": "l1",
+              "beat_id": "check"
+            },
+            {
+              "cue_id": "c02",
+              "start_frame": 135,
+              "end_frame": 197,
+              "start_s": 4.5,
+              "end_s": 6.567,
+              "text": "They log what is running low.",
+              "lines": [
+                "They log what is running low."
+              ],
+              "line": "l1",
+              "beat_id": "check"
+            },
+            {
+              "cue_id": "c03",
+              "start_frame": 308,
+              "end_frame": 404,
+              "start_s": 10.267,
+              "end_s": 13.467,
+              "text": "An AI drafts the restock list overnight,",
+              "lines": [
+                "An AI drafts the restock list overnight,"
+              ],
+              "line": "l2",
+              "beat_id": "restock"
+            },
+            {
+              "cue_id": "c04",
+              "start_frame": 404,
+              "end_frame": 511,
+              "start_s": 13.467,
+              "end_s": 17.033,
+              "text": "and by morning a person signs off on every change.",
+              "lines": [
+                "and by morning a person",
+                "signs off on every change."
+              ],
+              "line": "l2",
+              "beat_id": "restock"
+            }
+          ],
+          "rule_problems": [],
+          "webvtt": {
+            "path": "captions-20s.vtt",
+            "role": "webvtt",
+            "media_type": "text/vtt",
+            "bytes": 312,
+            "sha256": "dbfee4c572000971f4c427742103005fac5cf316d52da26d8a4e209c9e10fba1",
+            "text": "WEBVTT\n\n00:00:00.567 --> 00:00:04.367\nEvery evening, volunteers check\nthe Velmora Street fridge.\n\n00:00:04.500 --> 00:00:06.567\nThey log what is running low.\n\n00:00:10.267 --> 00:00:13.467\nAn AI drafts the restock list overnight,\n\n00:00:13.467 --> 00:00:17.033\nand by morning a person\nsigns off on every change.\n"
+          },
+          "srt": {
+            "path": "captions-20s.srt",
+            "role": "srt",
+            "media_type": "application/x-subrip",
+            "bytes": 312,
+            "sha256": "e97abb50452aa8652c1e2690e35f8038a10e38595678d9faa732b89e00017f53",
+            "text": "1\n00:00:00,567 --> 00:00:04,367\nEvery evening, volunteers check\nthe Velmora Street fridge.\n\n2\n00:00:04,500 --> 00:00:06,567\nThey log what is running low.\n\n3\n00:00:10,267 --> 00:00:13,467\nAn AI drafts the restock list overnight,\n\n4\n00:00:13,467 --> 00:00:17,033\nand by morning a person\nsigns off on every change.\n"
+          }
+        },
+        "narration_track": {
+          "$pin": "voice-narration:example.narration-track"
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.caption-check",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a passing caption check",
+      "value": {
+        "notice": "SYNTHETIC. The recognizer's results are illustrative; no audio exists.",
+        "conforms_to": {
+          "$pin": "template.caption-check"
+        },
+        "instance": {
+          "cut_id": "20s",
+          "caption_cues": "example.caption-cues",
+          "rule_problems": [],
+          "recognizer": "a pinned local recognizer, greedy decoding, no language model",
+          "cer_limit": 0.06,
+          "lines": [
+            {
+              "line": "l1",
+              "cer": 0.0,
+              "heard": "EVERY EVENING VOLUNTEERS CHECK THE VELMORA STREET FRIDGE THEY LOG WHAT IS RUNNING LOW"
+            },
+            {
+              "line": "l2",
+              "cer": 0.012,
+              "heard": "AN A I DRAFTS THE RESTOCK LIST OVER NIGHT AND BY MORNING A PERSON SIGNS OF ON EVERY CHANGE"
+            }
+          ],
+          "mean_cer": 0.006,
+          "deviations": [],
+          "passed": true
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.release-manifest",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a manifest of the files this example defines",
+      "value": {
+        "notice": "SYNTHETIC. Every digest is real: of the cut plan JSON and the two sidecar texts.",
+        "conforms_to": {
+          "$pin": "template.release-manifest"
+        },
+        "instance": {
+          "title": "Velmora Street fridge restock, 20 s (synthetic example)",
+          "cut_id": "20s",
+          "files": [
+            {
+              "path": "cut-plan-20s.json",
+              "role": "cut_plan",
+              "media_type": "application/json",
+              "bytes": 1796,
+              "sha256": "353080e5542bb6105fe24375b5620e4203db48045ab7223c75afff475cb208dd"
+            },
+            {
+              "path": "captions-20s.vtt",
+              "role": "webvtt",
+              "media_type": "text/vtt",
+              "bytes": 312,
+              "sha256": "dbfee4c572000971f4c427742103005fac5cf316d52da26d8a4e209c9e10fba1"
+            },
+            {
+              "path": "captions-20s.srt",
+              "role": "srt",
+              "media_type": "application/x-subrip",
+              "bytes": 312,
+              "sha256": "e97abb50452aa8652c1e2690e35f8038a10e38595678d9faa732b89e00017f53"
+            }
+          ],
+          "disclosures": [
+            "AI-generated voice (an open text-to-speech model's stock voice), labeled on screen while it plays.",
+            "Scenes are rendered from code; the fridge, street and list are synthetic examples."
+          ],
+          "ledger": "none: no verb ran for this synthetic example",
+          "every_step_has_receipt": false,
+          "qa_passed": false,
+          "released": false,
+          "notes": [
+            "SYNTHETIC. No video was rendered, so the manifest lists only the files the example defines; a real manifest lists both MP4s, both sidecars, the QA reports and the frame sheets.",
+            "cut-plan-20s.json is the cut plan instance as JSON with a one-space indent and a final newline."
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "release-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Release checks, with good and bad manifests the validator recomputes",
+      "category_reason": "A golden fixture: fixed manifests and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks a release manifest must pass before the owner decides, each shown failing on a bad manifest for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "roles",
+            "disclosures",
+            "ai_voice_used",
+            "every_step_has_receipt",
+            "qa_passed",
+            "released"
+          ],
+          "properties": {
+            "files": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "role",
+                  "bytes",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "bytes": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            },
+            "roles": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 60,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "disclosures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "ai_voice_used": {
+              "type": "boolean"
+            },
+            "every_step_has_receipt": {
+              "type": "boolean"
+            },
+            "qa_passed": {
+              "type": "boolean"
+            },
+            "released": {
+              "type": "boolean"
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "files-hashed",
+            "rule": {
+              "rule": "each_has",
+              "path": "files",
+              "fields": [
+                "path",
+                "bytes",
+                "sha256"
+              ],
+              "min": 1
+            },
+            "why": "Every delivered file has a size and a SHA-256."
+          },
+          {
+            "id": "has-master",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "roles",
+              "pattern": "^master$"
+            },
+            "why": "The caption-free master is delivered."
+          },
+          {
+            "id": "has-webvtt",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "roles",
+              "pattern": "^webvtt$"
+            },
+            "why": "A WebVTT sidecar is always delivered."
+          },
+          {
+            "id": "ai-voice-disclosed",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "ai_voice_used",
+                "equals": true
+              },
+              "then": {
+                "rule": "pattern_present",
+                "path": "disclosures",
+                "pattern": "(?i)\\bAI[- ]generated voice\\b"
+              }
+            },
+            "why": "An AI voice is disclosed whenever one is used."
+          },
+          {
+            "id": "receipts-complete",
+            "rule": {
+              "rule": "enum",
+              "path": "every_step_has_receipt",
+              "values": [
+                true
+              ]
+            },
+            "why": "Every step that made the files has a receipt."
+          },
+          {
+            "id": "qa-passed",
+            "rule": {
+              "rule": "enum",
+              "path": "qa_passed",
+              "values": [
+                true
+              ]
+            },
+            "why": "The video checks passed."
+          },
+          {
+            "id": "not-released-by-worker",
+            "rule": {
+              "rule": "enum",
+              "path": "released",
+              "values": [
+                false
+              ]
+            },
+            "why": "Releasing is the owner's separate act."
+          },
+          {
+            "id": "relative-paths",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "files",
+              "pattern": "^(/|~|[A-Za-z]:[\\\\/])"
+            },
+            "why": "Paths are relative to the delivery folder and name no one's home folder."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-complete",
+            "label": "known_good",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-unhashed-file",
+            "label": "known_bad",
+            "fails": "files-hashed",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": ""
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-no-master",
+            "label": "known_bad",
+            "fails": "has-master",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-no-webvtt",
+            "label": "known_bad",
+            "fails": "has-webvtt",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-undisclosed-voice",
+            "label": "known_bad",
+            "fails": "ai-voice-disclosed",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "Scenes rendered from code."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-missing-receipt",
+            "label": "known_bad",
+            "fails": "receipts-complete",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": false,
+              "qa_passed": true,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-failed-qa",
+            "label": "known_bad",
+            "fails": "qa-passed",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": false,
+              "released": false
+            }
+          },
+          {
+            "id": "bad-self-released",
+            "label": "known_bad",
+            "fails": "not-released-by-worker",
+            "finding": {
+              "files": [
+                {
+                  "path": "explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": true
+            }
+          },
+          {
+            "id": "bad-home-path",
+            "label": "known_bad",
+            "fails": "relative-paths",
+            "finding": {
+              "files": [
+                {
+                  "path": "/home/someone/videos/explainer-20s.mp4",
+                  "role": "master",
+                  "bytes": 4194304,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000b"
+                },
+                {
+                  "path": "explainer-20s-open-captions.mp4",
+                  "role": "open_captions",
+                  "bytes": 4296704,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000c"
+                },
+                {
+                  "path": "explainer-20s.vtt",
+                  "role": "webvtt",
+                  "bytes": 312,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000d"
+                },
+                {
+                  "path": "explainer-20s.srt",
+                  "role": "srt",
+                  "bytes": 318,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000e"
+                },
+                {
+                  "path": "qa/explainer-20s.video-qa.json",
+                  "role": "qa_report",
+                  "bytes": 2048,
+                  "sha256": "000000000000000000000000000000000000000000000000000000000000000f"
+                }
+              ],
+              "roles": [
+                "master",
+                "open_captions",
+                "webvtt",
+                "srt",
+                "qa_report"
+              ],
+              "disclosures": [
+                "AI-generated voice, labeled on screen.",
+                "Scenes rendered from code with synthetic data."
+              ],
+              "ai_voice_used": true,
+              "every_step_has_receipt": true,
+              "qa_passed": true,
+              "released": false
+            }
+          }
+        ],
+        "expected": {
+          "good-complete": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-unhashed-file": {
+            "verdict": "fail",
+            "failed_checks": [
+              "files-hashed"
+            ]
+          },
+          "bad-no-master": {
+            "verdict": "fail",
+            "failed_checks": [
+              "has-master"
+            ]
+          },
+          "bad-no-webvtt": {
+            "verdict": "fail",
+            "failed_checks": [
+              "has-webvtt"
+            ]
+          },
+          "bad-undisclosed-voice": {
+            "verdict": "fail",
+            "failed_checks": [
+              "ai-voice-disclosed"
+            ]
+          },
+          "bad-missing-receipt": {
+            "verdict": "fail",
+            "failed_checks": [
+              "receipts-complete"
+            ]
+          },
+          "bad-failed-qa": {
+            "verdict": "fail",
+            "failed_checks": [
+              "qa-passed"
+            ]
+          },
+          "bad-self-released": {
+            "verdict": "fail",
+            "failed_checks": [
+              "not-released-by-worker"
+            ]
+          },
+          "bad-home-path": {
+            "verdict": "fail",
+            "failed_checks": [
+              "relative-paths"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.every-step-a-receipt"
+        ],
+        [
+          "requires_noun",
+          "guardrail.disclose-every-layer"
+        ]
+      ],
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-cut",
+      "kind": "verb.solve_draft",
+      "title": "Lay out the cut on one frame clock",
+      "claimant": "agent",
+      "summary": "Lay out each cut on one frame clock: every clip with its frames and crossfade, every beat, the start of every narration line and every on-screen claim with its record, checked by exact frame arithmetic.",
+      "outcome": "A cut plan whose clock check finds no problem.",
+      "ready_outcome": "cut_planned",
+      "pinned": [
+        "rules.frame-clock",
+        "guardrail.one-frame-clock",
+        "guardrail.claims-from-records",
+        "tool.explainer-checks"
+      ],
+      "slots": [
+        {
+          "name": "script",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the script, in the video showcase script format."
+        },
+        {
+          "name": "storyboard",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the storyboard."
+        },
+        {
+          "name": "line_measurements",
+          "category": "noun.eval_run",
+          "description": "Optional pin of measured narration lines, so each start leaves room for its line.",
+          "required": false
+        }
+      ],
+      "params": {
+        "fps": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 120
+          },
+          "description": "Frames per second for every cut.",
+          "default": 30
+        }
+      },
+      "produces": [
+        {
+          "name": "cut_plan",
+          "template": "template.cut-plan"
+        }
+      ],
+      "steps": [
+        "Turn each storyboard scene into clips with whole frame counts; a crossfade is never longer than either clip it joins.",
+        "Make each cut's frames add up to its duration at the plan's fps exactly.",
+        "Start each narration line inside its beat with the required gaps, using measured line lengths when they exist.",
+        "List every on-screen number or claim from the script with the record it is checked against.",
+        "Run the clock check from the pack's code and resolve every problem it names."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.cut-plan's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "clock-clean",
+          "check": "python -m explainer_checks clock reports no problem for every cut.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-listed",
+          "check": "Every claim in the script appears in a cut with a source_ref and a check.",
+          "method": "deterministic"
+        },
+        {
+          "id": "pacing",
+          "check": "Each beat has time for its narration and its picture.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "video-showcase.storyboard"
+      ]
+    },
+    {
+      "slug": "build-stage-scenes",
+      "kind": "verb.solve_draft",
+      "title": "Write the scenes on a frame-addressable HTML stage",
+      "claimant": "agent",
+      "summary": "Write the cut's scenes as code on a frame-addressable HTML stage, where every visible property is a function of scene time, and pin the stage's files, fonts and browser build by digest.",
+      "outcome": "A stage noun that passes the determinism probe.",
+      "ready_outcome": "stage_built",
+      "pinned": [
+        "rules.html-stage",
+        "guardrail.disclose-every-layer",
+        "video-motion:tool.playwright",
+        "video-motion:tool.chromium"
+      ],
+      "slots": [
+        {
+          "name": "cut_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut plan."
+        },
+        {
+          "name": "capture_media",
+          "category": "noun.scene_recipe",
+          "description": "Pins of captured screens or images the scenes frame.",
+          "required": false,
+          "many": true,
+          "max": 40
+        }
+      ],
+      "network": [
+        "sandbox_packages",
+        "Only to install the pinned browser build when no qualified installation exists; the stage itself requests nothing from any host."
+      ],
+      "produces": [
+        {
+          "name": "stage",
+          "template": "template.stage"
+        }
+      ],
+      "steps": [
+        "Write each scene so renderFrame(t) sets every visible property from scene time alone: no clock reads, CSS animations or transitions, timers or unseeded randomness.",
+        "Embed fonts from pinned files with their licenses and use only local images pinned by digest.",
+        "Label every layer that could mislead a viewer: synthetic data, captures and the AI voice.",
+        "Run the determinism probe: render sampled frames in order, then shuffled and repeated, and compare their pixel digests."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.stage's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "deterministic-frames",
+          "check": "Shuffled and repeated renders of the sampled frames match the in-order pixel digests.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-remote-requests",
+          "check": "The browser recorded zero requests to any host while rendering.",
+          "method": "deterministic"
+        },
+        {
+          "id": "scenes-cover-clips",
+          "check": "Every clip's scene exists and lasts at least its scene_start_s plus the clip's length.",
+          "method": "deterministic"
+        },
+        {
+          "id": "fonts-loaded",
+          "check": "Every font reports loaded and no image is broken before the first frame.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.plan-cut"
+      ]
+    },
+    {
+      "slug": "render-slices",
+      "kind": "verb.compile_dag",
+      "title": "Render every slice losslessly",
+      "claimant": "agent",
+      "summary": "Render every clip's slice frame by frame with the pinned browser build and encode each slice losslessly, recording every file's digest and sampled frame digests.",
+      "outcome": "Lossless recordings of every slice, ready to compose.",
+      "ready_outcome": "slices_rendered",
+      "model_use": "none",
+      "pinned": [
+        "rules.html-stage",
+        "video-motion:tool.ffmpeg",
+        "video-motion:tool.chromium"
+      ],
+      "slots": [
+        {
+          "name": "stage",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the stage."
+        },
+        {
+          "name": "cut_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut plan."
+        }
+      ],
+      "params": {
+        "processes": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64
+          },
+          "description": "Parallel render processes on the worker's machine.",
+          "default": 4
+        }
+      },
+      "network": [
+        "local_only",
+        "Only the worker's own machine: the stage is served from local files, and the browser, encoder and recognizer make no remote request."
+      ],
+      "produces": [
+        {
+          "name": "slice_recordings",
+          "template": "template.slice-recordings"
+        }
+      ],
+      "steps": [
+        "Render frame i of each slice at scene time start plus i over fps, at 1920 by 1080 and device scale 1.",
+        "Encode each slice losslessly with libx264rgb at qp 0 and bit-exact flags.",
+        "Record each recording's SHA-256 and size, and the pixel digests of sampled frames."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.slice-recordings's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "frames-complete",
+          "check": "Every slice has exactly the frames its clip needs.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-recorded",
+          "check": "Every recording's SHA-256 matches its file.",
+          "method": "deterministic"
+        },
+        {
+          "id": "samples-match",
+          "check": "Frames decoded from each recording match the PNG digests rendered for them.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.build-stage-scenes"
+      ]
+    },
+    {
+      "slug": "time-captions",
+      "kind": "verb.compile_dag",
+      "title": "Time the captions to the measured voice",
+      "claimant": "agent",
+      "summary": "Build each cut's caption cues from the placed narration text, timed to the measured speech and pauses, and write the WebVTT and SRT sidecars with their digests.",
+      "outcome": "Caption cues with no rule problem, and both sidecars.",
+      "ready_outcome": "captions_timed",
+      "model_use": "none",
+      "pinned": [
+        "rules.captions",
+        "tool.explainer-checks",
+        "video-showcase:style-guide"
+      ],
+      "slots": [
+        {
+          "name": "narration_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut's narration track."
+        },
+        {
+          "name": "cut_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "caption_cues",
+          "template": "template.caption-cues"
+        }
+      ],
+      "steps": [
+        "Run python -m explainer_checks captions on the cut plan and the narration track.",
+        "Take cue text only from the placed narration lines, never from speech recognition.",
+        "End blocked when a rule problem remains, naming the line; its author shortens it or the cut plan gives it more time."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.caption-cues's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rules-hold",
+          "check": "check_cues finds no problem: at most 2 lines of 42 characters, 1 to 7 s, at most 17 characters per second, no overlap and no 1 or 2 frame gap.",
+          "method": "deterministic"
+        },
+        {
+          "id": "text-from-script",
+          "check": "The cue texts joined in order equal the placed lines' texts joined in order.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sidecars-match",
+          "check": "The WebVTT and SRT digests match their files, which carry the same cues.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "voice-narration.place-on-beats"
+      ]
+    },
+    {
+      "slug": "check-captions",
+      "kind": "verb.verify_gate",
+      "title": "Check the captions against what the voice said",
+      "claimant": "agent",
+      "summary": "A worker other than the one that timed the captions rechecks every rule and transcribes each placed line with a pinned local recognizer, listing every deviation from the script instead of fixing it.",
+      "outcome": "A caption check, and the caption track with every deviation listed.",
+      "ready_outcome": "captions_checked",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "rules.captions",
+        "tool.explainer-checks"
+      ],
+      "slots": [
+        {
+          "name": "caption_cues",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption cues."
+        },
+        {
+          "name": "narration_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the narration track."
+        },
+        {
+          "name": "script",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the narration script."
+        }
+      ],
+      "params": {
+        "cer_limit": {
+          "schema": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "description": "Largest round-trip error rate a line may have.",
+          "default": 0.06
+        }
+      },
+      "network": [
+        "local_only",
+        "Only the worker's own machine: the stage is served from local files, and the browser, encoder and recognizer make no remote request."
+      ],
+      "produces": [
+        {
+          "name": "caption_check",
+          "template": "template.caption-check"
+        },
+        {
+          "name": "caption_track",
+          "template": "video-showcase:template.caption-track"
+        }
+      ],
+      "steps": [
+        "Recheck every cue rule with the pack's code.",
+        "Transcribe each placed line with the pinned recognizer and compute its error rate against the script.",
+        "List each line over cer_limit as a deviation with what was heard; never edit the cues to match.",
+        "Write the caption track in the video showcase format with corrected_by none."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.caption-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rules-recomputed",
+          "check": "check_cues on the cues finds exactly the listed rule problems.",
+          "method": "deterministic"
+        },
+        {
+          "id": "deviations-listed",
+          "check": "Every line over the limit is in deviations and in the caption track's deviations_from_script.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The checking key differs from the key that timed the captions.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.time-captions"
+      ]
+    },
+    {
+      "slug": "compose-cut",
+      "kind": "verb.compile_dag",
+      "title": "Compose the master and the open-captions variant",
+      "claimant": "agent",
+      "summary": "Compose each cut as two sequences on the same timeline, a caption-free master with sidecars and an open-captions variant, after checking every on-screen claim against its record and the closing line against the receipts.",
+      "outcome": "Two sequences that pass pre-render QA, and a compose record.",
+      "ready_outcome": "cut_composed",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.claims-from-records",
+        "guardrail.disclose-every-layer",
+        "guardrail.one-frame-clock",
+        "tool.explainer-checks",
+        "video-motion:tool.video-motion-tools"
+      ],
+      "slots": [
+        {
+          "name": "cut_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut plan."
+        },
+        {
+          "name": "slice_recordings",
+          "category": "noun.eval_run",
+          "description": "Pin of the slice recordings."
+        },
+        {
+          "name": "narration_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the narration track."
+        },
+        {
+          "name": "caption_track",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the checked caption track."
+        },
+        {
+          "name": "claim_records",
+          "category": "noun.eval_run",
+          "description": "Pins of the records the claims cite.",
+          "required": false,
+          "many": true,
+          "max": 30
+        },
+        {
+          "name": "receipts_ledger",
+          "category": "noun.eval_run",
+          "description": "Optional pin of the ledger read just before composing, for the closing line.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "sequence",
+          "template": "video-motion:template.sequence",
+          "max": 2
+        },
+        {
+          "name": "compose_record",
+          "template": "template.compose-record"
+        }
+      ],
+      "steps": [
+        "Check every claim against the record it names, and end blocked on any mismatch.",
+        "Use the full closing line only when the ledger shows a receipt for every step before it; otherwise use the narrower line.",
+        "Build both sequences in the video and motion format from the same clips, narration and music bed, and burn captions only into the open-captions variant.",
+        "Copy every layer's disclosure into both sequences and run pre-render QA on each."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.compose-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "claims-verified",
+          "check": "Every claim's on-screen value equals its record's value.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-timeline",
+          "check": "Both sequences have the cut plan's frame count and clip starts.",
+          "method": "deterministic"
+        },
+        {
+          "id": "prerender-passed",
+          "check": "Pre-render QA passes for both sequences.",
+          "method": "deterministic"
+        },
+        {
+          "id": "closing-line-gate",
+          "check": "The full closing line appears only when no step before it lacks a receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.check-captions",
+        "narrated-explainer-video.render-slices"
+      ]
+    },
+    {
+      "slug": "make-frame-sheet",
+      "kind": "verb.verify_gate",
+      "title": "Make a frame sheet from the delivered file",
+      "claimant": "agent",
+      "summary": "Decode one frame per clip from the delivered file, at the middle of the span where the clip plays alone, and tile them with timecodes for review.",
+      "outcome": "A frame sheet for the delivered cut.",
+      "ready_outcome": "sheet_made",
+      "model_use": "none",
+      "pinned": [
+        "rules.frame-clock",
+        "tool.explainer-checks",
+        "video-motion:tool.ffmpeg"
+      ],
+      "slots": [
+        {
+          "name": "video",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the rendered MP4 media noun."
+        },
+        {
+          "name": "cut_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the cut plan."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Only the worker's own machine: the stage is served from local files, and the browser, encoder and recognizer make no remote request."
+      ],
+      "produces": [
+        {
+          "name": "frame_sheet",
+          "template": "template.frame-sheet"
+        }
+      ],
+      "steps": [
+        "Compute each clip's time with python -m explainer_checks clock.",
+        "Decode those frames from the delivered MP4 itself, not from intermediate frames.",
+        "Record each frame's PNG digest and the sheet's digest."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.frame-sheet's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "one-per-clip",
+          "check": "The sheet has exactly one frame per clip.",
+          "method": "deterministic"
+        },
+        {
+          "id": "times-recomputed",
+          "check": "Each time equals the middle of its clip's solo span.",
+          "method": "deterministic"
+        },
+        {
+          "id": "decoded-from-delivery",
+          "check": "video_sha256 equals the MP4 the video QA report names.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "video-motion.check-video"
+      ]
+    },
+    {
+      "slug": "compile-receipts",
+      "kind": "verb.verify_gate",
+      "title": "Compile the receipts ledger",
+      "claimant": "agent",
+      "summary": "Read the production's tasks from Tessera and list every step with its receipt, ready outcome, outputs and failed attempts, saying plainly whether every step has a receipt.",
+      "outcome": "A receipts ledger.",
+      "ready_outcome": "ledger_compiled",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.every-step-a-receipt",
+        "tool.explainer-checks"
+      ],
+      "slots": [
+        {
+          "name": "production_plan",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the production plan: its steps, verb templates and task ids."
+        }
+      ],
+      "network": [
+        "assigned_tessera",
+        "Reads the production's own tasks, results and receipts on the assigned Tessera with the requester's grants, and writes only the ledger."
+      ],
+      "produces": [
+        {
+          "name": "receipts_ledger",
+          "template": "template.receipts-ledger"
+        }
+      ],
+      "steps": [
+        "List every step in the plan with its task's ready outcome, receipt and output pins.",
+        "Keep every failed attempt with its receipt and error.",
+        "Set every_step_has_receipt from the steps and confirm it with python -m explainer_checks ledger."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.receipts-ledger's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-step-listed",
+          "check": "Every step in the production plan appears exactly once.",
+          "method": "deterministic"
+        },
+        {
+          "id": "flag-consistent",
+          "check": "check_ledger finds no problem with the ledger.",
+          "method": "deterministic"
+        },
+        {
+          "id": "receipts-resolve",
+          "check": "Every listed receipt matches its task's accepted result on the store.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.make-frame-sheet"
+      ]
+    },
+    {
+      "slug": "assemble-release-manifest",
+      "kind": "verb.compile_dag",
+      "title": "Hash every delivered file into a release manifest",
+      "claimant": "agent",
+      "summary": "Hash every file to be delivered, list every layer's disclosure, pin the ledger and the QA reports, and record released false for the owner's decision.",
+      "outcome": "A release manifest the owner can verify file by file.",
+      "ready_outcome": "manifest_assembled",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.disclose-every-layer",
+        "guardrail.every-step-a-receipt",
+        "tool.explainer-checks"
+      ],
+      "slots": [
+        {
+          "name": "receipts_ledger",
+          "category": "noun.eval_run",
+          "description": "Pin of the receipts ledger."
+        },
+        {
+          "name": "qa_reports",
+          "category": "noun.eval_run",
+          "description": "Pins of the video QA reports.",
+          "many": true,
+          "max": 4
+        },
+        {
+          "name": "videos",
+          "category": "noun.scene_recipe",
+          "description": "Pins of the rendered MP4 media nouns.",
+          "many": true,
+          "max": 4
+        },
+        {
+          "name": "caption_cues",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption cues with the sidecars."
+        },
+        {
+          "name": "frame_sheets",
+          "category": "noun.eval_run",
+          "description": "Pins of the frame sheets.",
+          "required": false,
+          "many": true,
+          "max": 4
+        }
+      ],
+      "produces": [
+        {
+          "name": "release_manifest",
+          "template": "template.release-manifest"
+        }
+      ],
+      "steps": [
+        "Hash every delivered file with python -m explainer_checks manifest, using paths relative to the delivery folder.",
+        "Copy every layer's disclosure from the sequences and the ledger's every_step_has_receipt.",
+        "Record released false: whether and where to release is the owner's separate decision, recorded with the video showcase pack's record-publication verb."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.release-manifest's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "files-verified",
+          "check": "python -m explainer_checks verify finds no problem.",
+          "method": "deterministic"
+        },
+        {
+          "id": "disclosures-complete",
+          "check": "Every kind of layer in the sequences has a disclosure in the manifest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "relative-paths",
+          "check": "No path is absolute or names a home folder.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-released",
+          "check": "released is false.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "narrated-explainer-video.compile-receipts"
+      ]
+    }
+  ]
+}
