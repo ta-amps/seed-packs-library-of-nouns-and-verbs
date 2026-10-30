@@ -1,0 +1,4737 @@
+{
+  "pack_id": "continuous-tuning",
+  "title": "Continuous tuning",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for tuning a small open model at one narrow task, round after round, and keeping a change only when a rule committed before any scoring says so: owned synthetic examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
+  "dependencies": [
+    "evaluation-design"
+  ],
+  "boundaries": [
+    "Keeping the champion is a valid outcome; a promotion moves only a private pointer, never a deployment, admission or serving change.",
+    "Owned synthetic data only, or data whose license and consent permit training.",
+    "Training uses the worker's own or free GPUs within their terms; this pack grants no compute or spending.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for tuning a small open model round after round, kept only when a rule fixed in advance says so",
+      "value": {
+        "lets_workers": "Improve a small open model at one narrow task, round after round, keeping a change only when a rule committed before any scoring says so: owned synthetic examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "continuous-tuning.register-rule"
+            },
+            "when": "Before anything is scored, a person commits the rule."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.generate-examples"
+            },
+            "when": "Owned synthetic rows from templates."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.curate-dataset"
+            },
+            "when": "Zero contamination; rejected rows kept."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.freeze-test-set"
+            },
+            "when": "Hashes registered before any scoring."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.train-adapter"
+            },
+            "when": "QLoRA or LoRA on free or local GPUs."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.evaluate"
+            },
+            "when": "Dev selects; test, fresh and sanity decide."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.check-reload"
+            },
+            "when": "Before the decision, because the rule's integrity checks need it."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.decide-promotion"
+            },
+            "when": "By the rule, by a worker other than the trainer."
+          },
+          {
+            "verb": {
+              "$verb": "continuous-tuning.promote-or-roll-back"
+            },
+            "when": "A private pointer moves, or nothing does."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.pre-register-before-scoring"
+          },
+          {
+            "$pin": "guardrail.no-contamination"
+          },
+          {
+            "$pin": "guardrail.owned-data-only"
+          },
+          {
+            "$pin": "guardrail.private-pointer-only"
+          },
+          {
+            "$pin": "guardrail.license-and-compute-terms"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.promotion-check"
+          },
+          {
+            "$pin": "tool.tuning-loop"
+          }
+        ],
+        "worked_example": "Synthetic, recomputed by the code's tests: 40 frozen rows and their real receipt, then two rounds under the real pre-registered rule. Round 1 promotes; round 2 keeps the champion because a guard holds against a real-looking gain.",
+        "order_note": "check-reload runs before decide-promotion, because the rule's integrity checks need its result.",
+        "provenance_notes": [
+          "Generalizes Tessera's continuous tuning example (docs/continuous-tuning.md and examples/continuous_tuning at commit 2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98).",
+          "The Glimmer 30B result cited in measured-results is published at https://github.com/ta-amps/agora-public-overview-architecture-setup-and-contribution/tree/ba54a01a2e1e7eea31ebbe87e8b8e7613cd1a27e/evidence/glimmer-30b-2026-10-29, checked on 2026-10-30."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.pre-register-before-scoring"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-contamination"
+        ],
+        [
+          "requires_noun",
+          "guardrail.owned-data-only"
+        ],
+        [
+          "requires_noun",
+          "guardrail.private-pointer-only"
+        ],
+        [
+          "requires_noun",
+          "guardrail.license-and-compute-terms"
+        ],
+        [
+          "requires_noun",
+          "scoring.strict-exact-match"
+        ],
+        [
+          "requires_noun",
+          "method.paired-bootstrap"
+        ],
+        [
+          "requires_noun",
+          "check.contamination"
+        ],
+        [
+          "requires_noun",
+          "check.reload-equivalence"
+        ],
+        [
+          "requires_noun",
+          "rule.tool-call-specialist-v1"
+        ],
+        [
+          "requires_noun",
+          "tool.promotion-check"
+        ],
+        [
+          "requires_noun",
+          "template.promotion-rule"
+        ],
+        [
+          "requires_noun",
+          "template.learner-spec"
+        ],
+        [
+          "requires_noun",
+          "template.example-batch"
+        ],
+        [
+          "requires_noun",
+          "template.frozen-test-receipt"
+        ],
+        [
+          "requires_noun",
+          "template.adapter-card"
+        ],
+        [
+          "requires_noun",
+          "template.run-record"
+        ],
+        [
+          "requires_noun",
+          "template.reload-check"
+        ],
+        [
+          "requires_noun",
+          "template.promotion-decision"
+        ],
+        [
+          "requires_noun",
+          "template.champion-pointer"
+        ],
+        [
+          "requires_noun",
+          "template.rollback-record"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.pre-register-before-scoring",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the rule and the test are registered before any scoring",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Commit the promotion rule and register every frozen test set's hashes before any candidate is scored on them. Changing either makes a new version, and results scored under the old version keep their meaning.",
+        "how_it_is_checked": "Every decision pins a rule and frozen test receipts whose registration times precede every evaluation run it uses, and whose digests recompute from their files."
+      }
+    },
+    {
+      "slug": "guardrail.no-contamination",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: no training row shares a fingerprint with a held-out row",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "No training row may share its exact content, its normalized request or its template shape with any held-out row, and whole families, templates and phrasings sit in exactly one split. Rejected rows are kept with their reasons.",
+        "how_it_is_checked": "Every accepted batch and frozen test receipt records zero shared fingerprints of each kind and zero rows from a held-out family."
+      }
+    },
+    {
+      "slug": "guardrail.owned-data-only",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: owned data only",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Train only on owned synthetic data, or on data whose license and the consent of the people in it permit training. Never train on a provider's outputs when its terms forbid it, on private history, on execution reports, or on personal data.",
+        "how_it_is_checked": "Every example batch records model_generated false and no external source, or names the license and consent that permit training on each source."
+      }
+    },
+    {
+      "slug": "guardrail.private-pointer-only",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: keeping the champion is valid, and a promotion moves only a private pointer",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Keeping the champion is a valid outcome, never a failure to fix by rerunning. A promotion moves only the private champion pointer the next round compares against; it deploys, admits, publishes and serves nothing. A person decides any roll back, with the reason on the record.",
+        "how_it_is_checked": "Every pointer change names a decision with outcome promote_candidate, or a roll back recorded by a person's key, and is written by compare-and-set."
+      }
+    },
+    {
+      "slug": "guardrail.license-and-compute-terms",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the base model's license and the compute's terms are followed",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "The base model's license and acceptable use policy apply to every adapter trained from it, and adapters stay private unless that license and the owner allow otherwise. Free or shared GPUs are used only within their terms and quotas, and no spending goes beyond the worker's own allowance.",
+        "how_it_is_checked": "Every adapter card names the base model's license and its obligations, records distribution private and admitted false, and records the GPU, its memory peak and the minutes used."
+      }
+    },
+    {
+      "slug": "scoring.strict-exact-match",
+      "category": "noun.reflex_procedure",
+      "role": "scoring_procedure",
+      "title": "Strict exact-match scoring of typed replies",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "steps": [
+          "Parse the reply as one JSON object; prose, code fences or a second object make it invalid.",
+          "Canonicalize the reply and the label the same way: sorted keys, numbers compared by value so 300 equals 300.0, and optional arguments that restate the schema default or pass null dropped.",
+          "The reply is exactly right only when the canonical forms are equal; an invalid reply, an error or a timeout is wrong.",
+          "Also record JSON validity, schema validity, type correctness, the rate of stringified typed values, refusal accuracy, refusal recall and the false-refusal rate.",
+          "A lenient diagnostic that accepts fences and prose is recorded beside the strict score and never decides anything."
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "derives_from",
+          "evaluation-design:scoring.exact-match"
+        ]
+      ]
+    },
+    {
+      "slug": "method.paired-bootstrap",
+      "category": "noun.reflex_procedure",
+      "role": "method",
+      "title": "Paired bootstrap of exact match on the same frozen rows",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "steps": [
+          "Pair the candidate's and the champion's exact results row by row; each difference is 1, 0 or -1.",
+          "Draw each resample's row indices with replacement from SHA-256 over a counter, seeded by the rule's seed string and the row count, so any language repeats the same draws.",
+          "Average each resample's differences, sort the averages, and take the rule's percentile interval.",
+          "Report the mean difference, the interval, and the rows that improved and regressed."
+        ],
+        "draws": "Draw(\"paired-bootstrap\", seed, n): the seed is SHA-256 of the canonical JSON of that list; draw k is SHA-256 of the seed followed by k as 8 big-endian bytes, and its first 8 bytes, big-endian, modulo n give the row.",
+        "power_note": "About 18 percent of rows flip between two close adapters in the published runs; at that rate a 150-row test detects a true 5-point gain only about 31 percent of the time, and 80 percent power needs about 560 rows.",
+        "tool": {
+          "$pin": "tool.promotion-check"
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "check.contamination",
+      "category": "noun.reflex_procedure",
+      "role": "check",
+      "title": "Contamination check: three fingerprints per row",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "fingerprints": {
+          "exact": "SHA-256 of the canonical JSON of the request text, the offered tools and the label.",
+          "request": "SHA-256 of the request text, lowercased with whitespace collapsed.",
+          "shape": "SHA-256 of the request with every slot value masked, so the same template with other values matches."
+        },
+        "steps": [
+          "Compute the three fingerprints for every training row and every held-out row with the generator's own normalization and masks.",
+          "Count shared fingerprints of each kind between training rows and each held-out set, and count training rows from held-out families.",
+          "Reject a training row that shares any fingerprint, or repeats an accepted row's exact or request fingerprint, and keep it in the batch's rejected list with its reason."
+        ],
+        "passes_when": "Every count is zero.",
+        "tool": {
+          "$pin": "tool.promotion-check"
+        },
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.no-contamination"
+        ]
+      ]
+    },
+    {
+      "slug": "check.reload-equivalence",
+      "category": "noun.reflex_procedure",
+      "role": "check",
+      "title": "Reload equivalence check for a saved adapter",
+      "category_reason": "A deterministic check recipe: greedy regeneration from pinned files gives the same replies.",
+      "value": {
+        "steps": [
+          "Load a fresh copy of the base model from weights whose digests match its noun.",
+          "Attach the saved adapter from its files, whose digests match the adapter card.",
+          "Regenerate the probe rows greedily and require every reply to equal the reply recorded at evaluation, byte for byte.",
+          "Disable the adapter and require the replies to equal the base model's.",
+          "Hash the base weights again and require them unchanged."
+        ],
+        "passes_when": "Every probe reply matches, the disabled adapter reproduces the base, and the base digests are unchanged.",
+        "model_calls": "Local greedy generation of the probe rows only; no provider call."
+      }
+    },
+    {
+      "slug": "rule.tool-call-specialist-v1",
+      "category": "noun.code_node",
+      "role": "promotion_rule",
+      "title": "Promotion rule: the typed tool-call specialist, version 1, as pre-registered",
+      "category_reason": "A real, public pre-registered rule, mirrored with its source commit and digest.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.promotion-rule"
+        },
+        "instance": {
+          "format": "tessera.continuous-tuning.promotion-rule.v1",
+          "rule_id": "tool-call-specialist.promotion",
+          "version": 1,
+          "registered": "2026-10-29, committed before round 1 ran",
+          "selection": {
+            "split": "dev",
+            "metric": "exact_match_strict",
+            "tie_break": [
+              "json_valid_rate",
+              "lower learning rate",
+              "fewer training rows",
+              "label"
+            ],
+            "note": "Dev chooses among candidates; the frozen test is read only for the dev winner's decision"
+          },
+          "promotion": {
+            "baseline": "the current champion; before any promotion, the unchanged base model",
+            "primary_metric": "exact_match_strict",
+            "min_delta": 0.03,
+            "paired_bootstrap": {
+              "resamples": 2000,
+              "confidence": 0.95,
+              "seed": "tool-call-specialist.promotion.v1",
+              "require_lower_bound_above": 0.0
+            },
+            "no_regression": [
+              {
+                "name": "test JSON validity does not drop more than 0.02",
+                "split": "test",
+                "metric": "json_valid_rate",
+                "max_drop": 0.02
+              },
+              {
+                "name": "test schema validity does not drop more than 0.02",
+                "split": "test",
+                "metric": "schema_valid_rate",
+                "max_drop": 0.02
+              },
+              {
+                "name": "test refusal accuracy does not drop more than 0.03",
+                "split": "test",
+                "metric": "refusal_accuracy",
+                "max_drop": 0.03
+              },
+              {
+                "name": "sanity accuracy does not drop more than 0.05 against the champion",
+                "split": "sanity",
+                "metric": "accuracy",
+                "max_drop": 0.05
+              },
+              {
+                "name": "sanity accuracy stays within 0.10 of the unchanged base",
+                "split": "sanity",
+                "metric": "accuracy",
+                "max_drop": 0.1,
+                "against": "base"
+              },
+              {
+                "name": "fresh holdout exact match does not drop below the champion",
+                "split": "fresh",
+                "metric": "exact_match_strict",
+                "max_drop": 0.0,
+                "optional": true
+              }
+            ],
+            "integrity": [
+              "no_contamination",
+              "frozen_base_unchanged",
+              "adapter_reload_equivalent",
+              "holdout_digests_match"
+            ],
+            "otherwise": "keep_champion",
+            "effects": "Moves only the private local champion pointer that the next round compares against. No deployment, publication, admission or serving change."
+          },
+          "ablation": "When a round trains several strategies, dev selects one. Test results for the others are analysis only and never change the decision.",
+          "caveats": [
+            "The frozen test is evaluated once per round, so later rounds carry multiple-comparison risk; each round's fresh holdout is the check against that",
+            "Synthetic templates measure this task only; no claim about other tasks or real user traffic follows"
+          ]
+        },
+        "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+        "source": {
+          "repository": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine",
+          "commit": "2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98",
+          "path": "examples/continuous_tuning/promotion_rule.json",
+          "file_sha256": "7777bed73c9305b74a526dc024bbac2d3c651ff49905412f565970b2ca716dbf"
+        },
+        "digest_note": "rule_sha256 is the SHA-256 of the rule's canonical JSON as the loop computes it: sorted keys, no spaces, and 0.0 kept as a float. A copy whose whole floats became integers digests differently, so check a stored copy against the file at the pinned commit."
+      }
+    },
+    {
+      "slug": "tool.promotion-check",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: the promotion check",
+      "category_reason": "Tested code a worker runs inside a claimed verb, pinned by path, file count and digest.",
+      "value": {
+        "name": "promotion check",
+        "code": {
+          "$code": "continuous-tuning"
+        },
+        "runtime": "Python 3.10 or later, standard library only; nothing to install.",
+        "commands": [
+          "python -m promotion_check decide --rule RULE.json --evaluations EVALS.json --integrity INTEGRITY.json",
+          "python -m promotion_check bootstrap --pairs PAIRS.json --resamples 2000 --seed SEED --confidence 0.95",
+          "python -m promotion_check receipt --receipt RECEIPT.json --rows ROWS.jsonl --first-scored-at TIME",
+          "python -m promotion_check digest RULE.json"
+        ],
+        "does": [
+          "Recomputes a decision from evaluations, integrity results and the rule, as the loop's own code does.",
+          "Checks a frozen test receipt's hashes and registration time against its rows.",
+          "Counts shared fingerprints between training and held-out rows."
+        ],
+        "does_not": [
+          "Train, load or call a model.",
+          "Open a network connection.",
+          "Move a champion pointer."
+        ],
+        "compatibility": "Its draws, bootstrap and decisions match Tessera's examples/continuous_tuning at 2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98 on every vector its tests record.",
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "method.paired-bootstrap"
+        ],
+        [
+          "verifies",
+          "rule.tool-call-specialist-v1"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.tuning-loop",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: Tessera's continuous tuning loop, pinned by commit",
+      "category_reason": "A pinned card for external code: repository, commit, path and file digests.",
+      "value": {
+        "name": "continuous tuning loop",
+        "repository": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine",
+        "commit": "2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98",
+        "path": "examples/continuous_tuning",
+        "files": [
+          {
+            "file": "promotion_rule.json",
+            "sha256": "7777bed73c9305b74a526dc024bbac2d3c651ff49905412f565970b2ca716dbf"
+          },
+          {
+            "file": "promotion.py",
+            "sha256": "dfa5cd64a4961005fe41e6b34461f6fa774f8c18e26203b3c7a1eb43f5eee781"
+          },
+          {
+            "file": "decide.py",
+            "sha256": "5d2b151d0f3eb20653a57fb7fb632ae0f7272cbb3d782bb801f9158cee12f153"
+          },
+          {
+            "file": "dataset.py",
+            "sha256": "d7b0a666aa7f1c2eb9376cde1324772e0ba7b67feff09a72ac7fb9f400192ddb"
+          },
+          {
+            "file": "loop.py",
+            "sha256": "8fd5aef1194331e8c3f6a851201a9f2e9902a01aacbe41d8b0a9ad8a986d69cb"
+          },
+          {
+            "file": "model_verbs.py",
+            "sha256": "4569413ad14340c2571eee807bfa772cc2b88f1d09f1e15f8f9e91eae750bc42"
+          },
+          {
+            "file": "backend_hf.py",
+            "sha256": "d627c944d7d8aa7ad5f9e3630fe0f2065eb6b22bde4e7880b5ed000ae517fadc"
+          },
+          {
+            "file": "learner_spec.json",
+            "sha256": "2941302f592c0fe78815a7a9ea71a12edf10ec8f92a2f8706b360e472db7371f"
+          },
+          {
+            "file": "trigger.json",
+            "sha256": "76a0635c778258ea172e4e62fed329910173626770ba17b0546eaf1522bb8381"
+          }
+        ],
+        "what_it_runs": "The verbs of a round on a local Tessera store: tick, generate, curate, tune, train, evaluate, decide, mine and a serving check, with a fixture backend that needs no GPU and a GPU backend that needs CUDA, Transformers and PEFT in a prepared worker environment.",
+        "docs": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98/docs/continuous-tuning.md",
+        "install_policy": "This card installs nothing. A worker uses a checkout whose files match these digests, under its own permissions."
+      }
+    },
+    {
+      "slug": "template.promotion-rule",
+      "category": "noun.code_node",
+      "role": "template",
+      "title": "Template: a promotion rule, committed before any candidate is scored",
+      "category_reason": "Tessera's continuous tuning example keeps its promotion rule as a code node: executable decision logic with a pinned digest.",
+      "value": {
+        "describes": "a pre-registered promotion rule in the version-1 format: dev selects, and a candidate replaces the champion only when the primary metric improves by the minimum with a paired bootstrap lower bound above zero, no guard is broken and every integrity check holds",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "rule_id",
+            "version",
+            "registered",
+            "selection",
+            "promotion"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "const": "tessera.continuous-tuning.promotion-rule.v1"
+            },
+            "rule_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "registered": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "selection": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "split",
+                "metric",
+                "tie_break",
+                "note"
+              ],
+              "properties": {
+                "split": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+                },
+                "metric": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "tie_break": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 10,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "promotion": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "baseline",
+                "primary_metric",
+                "min_delta",
+                "paired_bootstrap",
+                "no_regression",
+                "integrity",
+                "otherwise",
+                "effects"
+              ],
+              "properties": {
+                "baseline": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "primary_metric": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "min_delta": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "paired_bootstrap": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "resamples",
+                    "confidence",
+                    "seed",
+                    "require_lower_bound_above"
+                  ],
+                  "properties": {
+                    "resamples": {
+                      "type": "integer",
+                      "minimum": 100,
+                      "maximum": 100000
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "minimum": 0.5,
+                      "maximum": 0.999
+                    },
+                    "seed": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "require_lower_bound_above": {
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 1
+                    }
+                  }
+                },
+                "no_regression": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "name",
+                      "split",
+                      "metric",
+                      "max_drop"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "split": {
+                        "type": "string",
+                        "enum": [
+                          "test",
+                          "fresh",
+                          "sanity",
+                          "dev"
+                        ]
+                      },
+                      "metric": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "max_drop": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "against": {
+                        "type": "string",
+                        "enum": [
+                          "base",
+                          "champion"
+                        ]
+                      },
+                      "optional": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "integrity": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 10,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                },
+                "otherwise": {
+                  "type": "string",
+                  "const": "keep_champion"
+                },
+                "effects": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                }
+              }
+            },
+            "ablation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "caveats": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            }
+          }
+        },
+        "rules": [
+          "A person commits the rule before any candidate is scored.",
+          "A change makes a new rule version."
+        ]
+      }
+    },
+    {
+      "slug": "template.learner-spec",
+      "category": "noun.code_node",
+      "role": "template",
+      "title": "Template: one learner as a component: what it reads, writes, costs and is judged by",
+      "value": {
+        "describes": "a learner spec: the learner, strategy and version, the facet it improves, what it reads and writes, its trigger, its budget, how it is evaluated against its baseline, and who consumes its champion",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "learner",
+            "strategy",
+            "version",
+            "facet",
+            "reads",
+            "writes",
+            "trigger",
+            "budget",
+            "evaluation",
+            "consumers"
+          ],
+          "properties": {
+            "learner": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "strategy": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "facet": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "reads": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "writes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "trigger": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "budget": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "gpu",
+                "max_training_rows",
+                "max_round_seconds",
+                "provider_calls",
+                "spending"
+              ],
+              "properties": {
+                "gpu": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "max_training_rows": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000000
+                },
+                "max_round_seconds": {
+                  "type": "integer",
+                  "minimum": 60,
+                  "maximum": 604800
+                },
+                "provider_calls": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "spending": {
+                  "type": "string",
+                  "const": "none"
+                }
+              }
+            },
+            "evaluation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "baseline",
+                "metric",
+                "method",
+                "min_evidence_rows"
+              ],
+              "properties": {
+                "baseline": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "metric": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "method": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "min_evidence_rows": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100000
+                }
+              }
+            },
+            "consumers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "provider_calls is 0 and spending is none; the budget is local compute only."
+        ]
+      }
+    },
+    {
+      "slug": "template.example-batch",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: a batch of owned synthetic examples, with digests and rejections",
+      "value": {
+        "describes": "an example batch: how it was generated, its origin, rows and families, the digests that pin its rows, its provenance, the contamination counts against every held-out set, and every rejected row with its reason",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "batch",
+            "generator",
+            "origin",
+            "rows",
+            "refusals",
+            "families",
+            "jsonl_sha256",
+            "ids_sha256",
+            "provenance",
+            "contamination",
+            "rejected"
+          ],
+          "properties": {
+            "batch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "generator": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "version",
+                "snapshot"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "snapshot": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            },
+            "origin": {
+              "type": "string",
+              "enum": [
+                "initial",
+                "streamed",
+                "mined",
+                "control",
+                "fresh_holdout",
+                "frozen_test"
+              ]
+            },
+            "rows": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "refusals": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "families": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "jsonl_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "ids_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "provenance": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model_generated",
+                "external_sources",
+                "license"
+              ],
+              "properties": {
+                "model_generated": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "external_sources": {
+                  "type": "array",
+                  "minItems": 0,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "license": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                }
+              }
+            },
+            "contamination": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "exact",
+                "request",
+                "shape",
+                "held_out_family_rows"
+              ],
+              "properties": {
+                "exact": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "request": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "shape": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "held_out_family_rows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                }
+              }
+            },
+            "rejected": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "reason"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Labels are computed from templates, never written by a model.",
+          "Every contamination count is zero."
+        ]
+      }
+    },
+    {
+      "slug": "template.frozen-test-receipt",
+      "category": "noun.benchmark_suite",
+      "role": "template",
+      "title": "Template: a frozen test set's hashes, registered before any scoring",
+      "value": {
+        "describes": "a frozen test receipt: the set's role, when it was registered, its rows, refusals and families, the SHA-256 of its rows as canonical JSON lines and of its ordered ids, the generator, and zero contamination against every training batch",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "set_id",
+            "role",
+            "registered_at",
+            "rows",
+            "refusals",
+            "families",
+            "jsonl_sha256",
+            "ids_sha256",
+            "generator",
+            "contamination"
+          ],
+          "properties": {
+            "set_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "frozen_test",
+                "fresh_holdout",
+                "dev",
+                "sanity"
+              ]
+            },
+            "registered_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "rows": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "refusals": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "families": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "jsonl_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "ids_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "generator": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "contamination": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "exact",
+                "request",
+                "shape",
+                "held_out_family_rows"
+              ],
+              "properties": {
+                "exact": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "request": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "shape": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                },
+                "held_out_family_rows": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 0
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "registered_at precedes the first scoring of any model on these rows.",
+          "The digests recompute from the rows; a mismatch voids the receipt."
+        ]
+      }
+    },
+    {
+      "slug": "template.adapter-card",
+      "category": "noun.model_spec",
+      "role": "template",
+      "title": "Template: one trained adapter: base, method, data, hardware and files",
+      "value": {
+        "describes": "an adapter card: the base model and its license, the method (QLoRA or LoRA) and its settings, the training batches, the hardware and time, the adapter files' digests, and its status: private and not admitted",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapter_id",
+            "base",
+            "method",
+            "rank",
+            "alpha",
+            "targets",
+            "trainable_parameters",
+            "training",
+            "hardware",
+            "files",
+            "obligations",
+            "distribution",
+            "admitted"
+          ],
+          "properties": {
+            "adapter_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "base": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model",
+                "revision",
+                "weights_sha256",
+                "base_license"
+              ],
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "revision": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "weights_sha256": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 20,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "base_license": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                }
+              }
+            },
+            "method": {
+              "type": "string",
+              "enum": [
+                "qlora_4bit",
+                "lora_bf16"
+              ]
+            },
+            "rank": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1024
+            },
+            "alpha": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 4096
+            },
+            "targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "trainable_parameters": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "training": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "batches",
+                "rows",
+                "learning_rate",
+                "epochs",
+                "seed"
+              ],
+              "properties": {
+                "batches": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 100,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "rows": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "learning_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "epochs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "seed": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "hardware": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "gpu",
+                "memory_peak_gb",
+                "minutes"
+              ],
+              "properties": {
+                "gpu": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "memory_peak_gb": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1000
+                },
+                "minutes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100000
+                }
+              }
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "file",
+                  "sha256",
+                  "bytes"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "bytes": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            },
+            "obligations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "distribution": {
+              "type": "string",
+              "const": "private"
+            },
+            "admitted": {
+              "type": "boolean",
+              "const": false
+            }
+          }
+        },
+        "rules": [
+          "The base model's license applies to the adapter.",
+          "admitted stays false; promotion moves a pointer only."
+        ]
+      }
+    },
+    {
+      "slug": "template.run-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: one model scored on one split, row by row",
+      "value": {
+        "describes": "an evaluation run: which model (the base, or the base with an adapter), which split and frozen set, greedy decoding settings, when it was scored, the per-row exact results and the aggregate metrics",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "model",
+            "split",
+            "set_receipt",
+            "ids_sha256",
+            "decoding",
+            "scored_at",
+            "exact",
+            "aggregate"
+          ],
+          "properties": {
+            "model": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "base",
+                "adapter"
+              ],
+              "properties": {
+                "base": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "adapter": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                }
+              }
+            },
+            "split": {
+              "type": "string",
+              "enum": [
+                "dev",
+                "test",
+                "fresh",
+                "sanity"
+              ]
+            },
+            "set_receipt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "ids_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "decoding": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "max_new_tokens"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "const": "greedy"
+                },
+                "max_new_tokens": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100000
+                }
+              }
+            },
+            "scored_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            },
+            "exact": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 5000,
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "aggregate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "properties": {
+                "exact_match_strict": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "exact_match_lenient": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "json_valid_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "schema_valid_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "type_correct_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "stringified_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "refusal_accuracy": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "refusal_recall": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "false_refusal_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "accuracy": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Rows follow the frozen set's id order.",
+          "The lenient score is a diagnostic and never decides."
+        ]
+      }
+    },
+    {
+      "slug": "template.reload-check",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: an adapter reloaded onto a fresh base, regenerating the same replies",
+      "value": {
+        "describes": "a reload check: the adapter and base digests, the probe rows regenerated and how many matched, whether the disabled adapter reproduced the base, and whether the base weights stayed unchanged",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapter",
+            "base_weights_sha256",
+            "probe_rows",
+            "regenerated_match",
+            "disabled_matches_base",
+            "base_weights_unchanged",
+            "passed"
+          ],
+          "properties": {
+            "adapter": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "base_weights_sha256": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "probe_rows": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "regenerated_match": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "disabled_matches_base": {
+              "type": "boolean"
+            },
+            "base_weights_unchanged": {
+              "type": "boolean"
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "passed is true only when every probe row matched and both other checks hold."
+        ]
+      }
+    },
+    {
+      "slug": "template.promotion-decision",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a promotion decision with every check and what it observed",
+      "value": {
+        "describes": "a promotion decision: the rule and its digest, the paired test, every check with its result and what it observed, the outcome, and its only effect",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rule_id",
+            "rule_sha256",
+            "outcome",
+            "paired_test",
+            "checks",
+            "effects"
+          ],
+          "properties": {
+            "rule_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "rule_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "promote_candidate",
+                "keep_champion"
+              ]
+            },
+            "paired_test": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "delta",
+                "lower",
+                "upper",
+                "improved_rows",
+                "regressed_rows"
+              ],
+              "properties": {
+                "delta": {
+                  "type": "number",
+                  "minimum": -1,
+                  "maximum": 1
+                },
+                "lower": {
+                  "type": "number",
+                  "minimum": -1,
+                  "maximum": 1
+                },
+                "upper": {
+                  "type": "number",
+                  "minimum": -1,
+                  "maximum": 1
+                },
+                "improved_rows": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "regressed_rows": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "checks": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "check",
+                  "passed"
+                ],
+                "properties": {
+                  "check": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "passed": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "observed": {
+                    "type": [
+                      "number",
+                      "string",
+                      "array",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "effects": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          }
+        },
+        "rules": [
+          "promote_candidate only when every required check passed.",
+          "keep_champion is a valid outcome."
+        ]
+      }
+    },
+    {
+      "slug": "template.champion-pointer",
+      "category": "noun.model_spec",
+      "role": "template",
+      "title": "Template: the one mutable noun: which model is the champion",
+      "value": {
+        "describes": "the champion pointer for one learner and base: the champion (the base or an adapter), its evaluations, the decision or roll back that set it, the previous champion and the round",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "learner",
+            "base",
+            "champion",
+            "champion_evals",
+            "set_by",
+            "previous",
+            "round"
+          ],
+          "properties": {
+            "learner": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            },
+            "base": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "champion": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "ref"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "base",
+                    "adapter"
+                  ]
+                },
+                "ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                }
+              }
+            },
+            "champion_evals": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "set_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "previous": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 300
+            },
+            "round": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            }
+          }
+        },
+        "rules": [
+          "Written only by compare-and-set.",
+          "Private: it changes what the next round compares against, nothing else."
+        ]
+      }
+    },
+    {
+      "slug": "template.rollback-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's roll back of the champion pointer, with the reason",
+      "value": {
+        "describes": "a roll back record: from which champion to which, why, the evidence, and the role of the person who decided",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "from_champion",
+            "to_champion",
+            "reason",
+            "explanation",
+            "evidence",
+            "decided_by_role",
+            "on"
+          ],
+          "properties": {
+            "from_champion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "to_champion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "regression_on_fresh_holdout",
+                "reload_mismatch",
+                "license_or_terms",
+                "data_problem",
+                "other"
+              ]
+            },
+            "explanation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 600
+            },
+            "evidence": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "decided_by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}",
+              "maxLength": 40
+            }
+          }
+        },
+        "rules": [
+          "decided_by_role names a role, never a person."
+        ]
+      }
+    },
+    {
+      "slug": "measured-results",
+      "category": "noun.eval_run",
+      "role": "cited_results",
+      "title": "Published results of this loop: three models, one synthetic task each",
+      "category_reason": "A fingerprinted evaluation summary: published, dated results with their sources.",
+      "value": {
+        "summary": "Each result is one synthetic typed tool-call task with one seed per configuration. They show the loop measuring gains from little owned data and keeping out regressions by a rule fixed in advance; they do not show general improvement.",
+        "results": [
+          {
+            "model": "Llama 3.2 1B Instruct",
+            "test": "frozen 150-row synthetic test over tool families never trained on",
+            "before": 0.12,
+            "after": 0.507,
+            "rounds": "4 rounds on one GPU, 2 promoted",
+            "kept_out": "Round 2 (twice the data) did not beat the champion; round 4 raised dev but not test, and its schema validity fell to 0.617.",
+            "source": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98/docs/continuous-tuning.md"
+          },
+          {
+            "model": "Llama 3.2 3B Instruct",
+            "test": "the same frozen 150-row test",
+            "before": 0.52,
+            "after": 0.727,
+            "rounds": "2 rounds, 1 promoted",
+            "kept_out": "Round 2 scored 0.793, but its schema validity fell 0.025 against a 0.02 limit.",
+            "source": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98/docs/continuous-tuning.md"
+          },
+          {
+            "model": "Glimmer 30B",
+            "test": "a fresh 150-row synthetic holdout, its hashes registered before scoring",
+            "before": 0.933,
+            "after": 0.993,
+            "paired": "+0.060, paired bootstrap 95 percent interval +0.020 to +0.107; 10 rows improved, 1 regressed",
+            "kept_out": "Nothing: 12 of 12 rule checks passed, and a fresh reload regenerated 8 of 8 rows exactly. Nothing was promoted, admitted or registered; the adapter weights are not published.",
+            "method": "A QLoRA adapter trained on free cloud GPUs with synthetic examples only.",
+            "source": "Published evidence; its address is in this pack's descriptor provenance notes."
+          }
+        ],
+        "limits": [
+          "One synthetic task per model and one seed per configuration; no variance across seeds was measured.",
+          "The frozen test is reused across rounds; each round's fresh holdout guards against that.",
+          "A gain here says nothing about other tasks, real traffic or a harness's end-to-end success."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before a round's decision is trusted",
+      "category_reason": "A short checklist a person runs is part of the loop's guardrails.",
+      "value": {
+        "items": [
+          "The promotion rule's digest and the frozen test's hashes were registered before the round's first scoring.",
+          "Every training batch says model_generated false, and its contamination counts are all zero.",
+          "The adapter card names the base model's license and keeps the adapter private and not admitted.",
+          "The decision recomputes with the promotion check, and a different worker than the trainer decided it.",
+          "A kept champion is accepted as a result; nobody reran the round until it passed.",
+          "Any roll back has a reason and evidence on the record, decided by a person."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for continuous tuning",
+      "value": {
+        "sources": [
+          {
+            "title": "Tessera: continuous tuning, learning and evaluation (docs at commit 2e7d6ab)",
+            "url": "https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98/docs/continuous-tuning.md",
+            "used_for": "The loop, the pre-registered rule, the measured 1B and 3B results and their limits",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Dettmers et al.: QLoRA, efficient finetuning of quantized LLMs (arXiv 2305.14314)",
+            "url": "https://arxiv.org/abs/2305.14314",
+            "used_for": "4-bit quantized adapters on one GPU",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Hu et al.: LoRA, low-rank adaptation of large language models (arXiv 2106.09685)",
+            "url": "https://arxiv.org/abs/2106.09685",
+            "used_for": "Low-rank adapters on a frozen base",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Koehn: statistical significance tests for machine translation evaluation (ACL Anthology W04-3250)",
+            "url": "https://aclanthology.org/W04-3250/",
+            "used_for": "Paired bootstrap resampling of per-item scores",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Hugging Face: PEFT documentation",
+            "url": "https://huggingface.co/docs/peft/index",
+            "used_for": "Training, saving and loading adapters, and attaching several to one base",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Llama 3.2 Community License Agreement",
+            "url": "https://www.llama.com/llama3_2/license/",
+            "used_for": "An example of a base model license whose terms carry to every adapter trained from it",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for continuous tuning",
+      "value": {
+        "cases": [
+          {
+            "id": "CT-DEV-NOT-TEST",
+            "scenario": "Dev improves but the frozen test does not",
+            "sample_input": "SYNTHETIC: A schema-augmented candidate lifts dev from 0.61 to 0.76, but frozen test exact match ties the champion at 0.51.",
+            "expected_outcome": "promotion_decided",
+            "expected_indicators": [
+              "keep_champion",
+              "min_delta_check_failed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CT-GUARD-HOLDS",
+            "scenario": "A real-looking gain breaks a guard",
+            "sample_input": "SYNTHETIC: The candidate gains 0.067 on test with a lower bound above zero, but schema validity falls 0.025 against a 0.02 limit.",
+            "expected_outcome": "promotion_decided",
+            "expected_indicators": [
+              "keep_champion",
+              "guard_named_in_failed_checks"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CT-SHAPE-OVERLAP",
+            "scenario": "A training row shares a template shape with a test row",
+            "sample_input": "SYNTHETIC: A new training row reads List the objects in bucket demo-77 whose names start with logs/, the same template as test row t01 with other values.",
+            "expected_outcome": "dataset_curated",
+            "expected_indicators": [
+              "row_rejected_with_reason",
+              "shape_count_zero_after"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CT-LATE-RECEIPT",
+            "scenario": "A fresh holdout is registered after a model was scored on it",
+            "sample_input": "SYNTHETIC: The receipt says 15:20; the first evaluation run on those rows says 15:10.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "receipt_not_pre_registered",
+              "new_holdout_needed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CT-RELOAD-MISMATCH",
+            "scenario": "A reloaded adapter regenerates 7 of 8 probe rows",
+            "sample_input": "SYNTHETIC: After reloading onto a fresh base, probe row 5 differs in one argument.",
+            "expected_outcome": "promotion_decided",
+            "expected_indicators": [
+              "keep_champion",
+              "integrity_failed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CT-PROVIDER-OUTPUTS",
+            "scenario": "A batch built from a hosted model's replies whose terms forbid training on them",
+            "sample_input": "SYNTHETIC: A batch of 200 rows was written by a hosted model under terms that forbid training competing models.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "owned_data_only",
+              "batch_rejected"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "CT-QUOTA-RUNS-OUT",
+            "scenario": "The free GPU session ends mid-training",
+            "sample_input": "SYNTHETIC: The free GPU quota ends at minute 41 of a 45-minute round; the lease lapses.",
+            "expected_outcome": "unknown",
+            "expected_indicators": [
+              "attempt_recorded",
+              "no_partial_adapter_promoted",
+              "retry_is_a_new_attempt"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "CT-ROLLBACK",
+            "scenario": "A regression shows up after a promotion",
+            "sample_input": "SYNTHETIC: The next round's fresh holdout scores the champion 0.38 against the previous champion's 0.44.",
+            "expected_outcome": "pointer_moved",
+            "expected_indicators": [
+              "person_records_rollback",
+              "pointer_moved_by_compare_and_set"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.frozen-test-rows",
+      "category": "noun.benchmark_suite",
+      "role": "example",
+      "title": "Worked example: 40 synthetic frozen test rows for a typed tool-call task",
+      "category_reason": "A golden fixture set: fixed rows whose digests the receipt registers.",
+      "value": {
+        "notice": "SYNTHETIC. Template draws for a stand-in task: list objects in a bucket, read a feed, or refuse an operation no offered tool performs. Every name is made up.",
+        "rows": [
+          {
+            "id": "t01",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-01 whose names start with logs/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-01",
+                "prefix": "logs/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t02",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-02 whose names start with drafts/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-02",
+                "prefix": "drafts/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t03",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-03 whose names start with exports/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-03",
+                "prefix": "exports/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t04",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-04 whose names start with images/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-04",
+                "prefix": "images/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t05",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-05 whose names start with logs/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-05",
+                "prefix": "logs/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t06",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-06 whose names start with drafts/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-06",
+                "prefix": "drafts/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t07",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-07 whose names start with exports/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-07",
+                "prefix": "exports/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t08",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-08 whose names start with images/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-08",
+                "prefix": "images/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t09",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-09 whose names start with logs/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-09",
+                "prefix": "logs/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t10",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-10 whose names start with drafts/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-10",
+                "prefix": "drafts/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t11",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-11 whose names start with exports/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-11",
+                "prefix": "exports/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t12",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-12 whose names start with images/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-12",
+                "prefix": "images/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t13",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-13 whose names start with logs/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-13",
+                "prefix": "logs/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t14",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-14 whose names start with drafts/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-14",
+                "prefix": "drafts/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t15",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-15 whose names start with exports/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-15",
+                "prefix": "exports/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t16",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-16 whose names start with images/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-16",
+                "prefix": "images/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t17",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-17 whose names start with logs/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-17",
+                "prefix": "logs/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t18",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-18 whose names start with drafts/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-18",
+                "prefix": "drafts/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t19",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-19 whose names start with exports/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-19",
+                "prefix": "exports/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t20",
+            "family": "buckets",
+            "request": "List the objects in bucket demo-20 whose names start with images/.",
+            "label": {
+              "tool": "list_objects",
+              "arguments": {
+                "bucket": "demo-20",
+                "prefix": "images/"
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t21",
+            "family": "feeds",
+            "request": "Read the newest 20 entries of feed news-01.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-01",
+                "limit": 20
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t22",
+            "family": "feeds",
+            "request": "Read the newest 5 entries of feed news-02.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-02",
+                "limit": 5
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t23",
+            "family": "feeds",
+            "request": "Read the newest 10 entries of feed news-03.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-03",
+                "limit": 10
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t24",
+            "family": "feeds",
+            "request": "Read the newest 20 entries of feed news-04.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-04",
+                "limit": 20
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t25",
+            "family": "feeds",
+            "request": "Read the newest 5 entries of feed news-05.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-05",
+                "limit": 5
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t26",
+            "family": "feeds",
+            "request": "Read the newest 10 entries of feed news-06.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-06",
+                "limit": 10
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t27",
+            "family": "feeds",
+            "request": "Read the newest 20 entries of feed news-07.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-07",
+                "limit": 20
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t28",
+            "family": "feeds",
+            "request": "Read the newest 5 entries of feed news-08.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-08",
+                "limit": 5
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t29",
+            "family": "feeds",
+            "request": "Read the newest 10 entries of feed news-09.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-09",
+                "limit": 10
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t30",
+            "family": "feeds",
+            "request": "Read the newest 20 entries of feed news-10.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-10",
+                "limit": 20
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t31",
+            "family": "feeds",
+            "request": "Read the newest 5 entries of feed news-11.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-11",
+                "limit": 5
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t32",
+            "family": "feeds",
+            "request": "Read the newest 10 entries of feed news-12.",
+            "label": {
+              "tool": "read_feed",
+              "arguments": {
+                "feed": "news-12",
+                "limit": 10
+              }
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t33",
+            "family": "buckets",
+            "request": "Rename bucket demo-01 to archive-01.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t34",
+            "family": "buckets",
+            "request": "Rename bucket demo-02 to archive-02.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t35",
+            "family": "buckets",
+            "request": "Rename bucket demo-03 to archive-03.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t36",
+            "family": "buckets",
+            "request": "Rename bucket demo-04 to archive-04.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t37",
+            "family": "buckets",
+            "request": "Rename bucket demo-05 to archive-05.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t38",
+            "family": "buckets",
+            "request": "Rename bucket demo-06 to archive-06.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t39",
+            "family": "buckets",
+            "request": "Rename bucket demo-07 to archive-07.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          },
+          {
+            "id": "t40",
+            "family": "buckets",
+            "request": "Rename bucket demo-08 to archive-08.",
+            "label": {
+              "refusal": "no_matching_tool"
+            },
+            "offered": [
+              "list_objects",
+              "get_object",
+              "put_object",
+              "read_feed",
+              "list_feeds"
+            ]
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.frozen-test-receipt",
+      "category": "noun.benchmark_suite",
+      "role": "example",
+      "title": "Worked example: the 40 rows' receipt, registered before the first scoring",
+      "value": {
+        "notice": "SYNTHETIC. The digests are real: of the rows in example.frozen-test-rows as canonical JSON lines and of their ordered ids.",
+        "conforms_to": {
+          "$pin": "template.frozen-test-receipt"
+        },
+        "instance": {
+          "set_id": "example-frozen-test-v1",
+          "role": "frozen_test",
+          "registered_at": "2026-10-29T14:00:00Z",
+          "rows": 40,
+          "refusals": 8,
+          "families": [
+            "buckets",
+            "feeds"
+          ],
+          "jsonl_sha256": "5e71972dc79dec429f5652ea289a04d33bbbb4874b20deb1e7656b77bc527e18",
+          "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4",
+          "generator": "example templates, version 1 (synthetic)",
+          "contamination": {
+            "exact": 0,
+            "request": 0,
+            "shape": 0,
+            "held_out_family_rows": 0
+          }
+        },
+        "first_scored_at": "2026-10-29T15:10:00Z",
+        "rows_noun": {
+          "$pin": "example.frozen-test-rows"
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.evaluations",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: two rounds of evaluations, in the shape the decision reads",
+      "category_reason": "Fixed evaluations whose decisions the pack's code recomputes.",
+      "value": {
+        "notice": "SYNTHETIC. Per-row exact results on the 40 frozen rows for the base, candidate A (round 1) and candidate B (round 2), with aggregates, a 24-row fresh holdout and a sanity set.",
+        "round_1": {
+          "candidate": {
+            "test": {
+              "aggregate": {
+                "exact_match_strict": 0.625,
+                "json_valid_rate": 0.975,
+                "schema_valid_rate": 0.8,
+                "refusal_accuracy": 0.8
+              },
+              "exact": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4"
+            },
+            "sanity": {
+              "aggregate": {
+                "accuracy": 0.925
+              }
+            },
+            "fresh": {
+              "aggregate": {
+                "exact_match_strict": 0.583333
+              }
+            }
+          },
+          "champion": {
+            "test": {
+              "aggregate": {
+                "exact_match_strict": 0.3,
+                "json_valid_rate": 0.85,
+                "schema_valid_rate": 0.4,
+                "refusal_accuracy": 0.75
+              },
+              "exact": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4"
+            },
+            "sanity": {
+              "aggregate": {
+                "accuracy": 0.95
+              }
+            },
+            "fresh": {
+              "aggregate": {
+                "exact_match_strict": 0.25
+              }
+            }
+          },
+          "base": {
+            "test": {
+              "aggregate": {
+                "exact_match_strict": 0.3,
+                "json_valid_rate": 0.85,
+                "schema_valid_rate": 0.4,
+                "refusal_accuracy": 0.75
+              },
+              "exact": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4"
+            },
+            "sanity": {
+              "aggregate": {
+                "accuracy": 0.95
+              }
+            }
+          },
+          "integrity": {
+            "no_contamination": true,
+            "frozen_base_unchanged": true,
+            "adapter_reload_equivalent": true,
+            "holdout_digests_match": true
+          }
+        },
+        "round_2": {
+          "candidate": {
+            "test": {
+              "aggregate": {
+                "exact_match_strict": 0.8,
+                "json_valid_rate": 0.975,
+                "schema_valid_rate": 0.775,
+                "refusal_accuracy": 0.825
+              },
+              "exact": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4"
+            },
+            "sanity": {
+              "aggregate": {
+                "accuracy": 0.95
+              }
+            },
+            "fresh": {
+              "aggregate": {
+                "exact_match_strict": 0.583333
+              }
+            }
+          },
+          "champion": {
+            "test": {
+              "aggregate": {
+                "exact_match_strict": 0.625,
+                "json_valid_rate": 0.975,
+                "schema_valid_rate": 0.8,
+                "refusal_accuracy": 0.8
+              },
+              "exact": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4"
+            },
+            "sanity": {
+              "aggregate": {
+                "accuracy": 0.925
+              }
+            },
+            "fresh": {
+              "aggregate": {
+                "exact_match_strict": 0.541667
+              }
+            }
+          },
+          "base": {
+            "test": {
+              "aggregate": {
+                "exact_match_strict": 0.3,
+                "json_valid_rate": 0.85,
+                "schema_valid_rate": 0.4,
+                "refusal_accuracy": 0.75
+              },
+              "exact": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4"
+            },
+            "sanity": {
+              "aggregate": {
+                "accuracy": 0.95
+              }
+            }
+          },
+          "integrity": {
+            "no_contamination": true,
+            "frozen_base_unchanged": true,
+            "adapter_reload_equivalent": true,
+            "holdout_digests_match": true
+          }
+        },
+        "story": [
+          "Round 1: A is right on 25 of 40 rows against the base's 12, with 15 rows better and 2 worse; every guard holds, so A becomes the champion.",
+          "Round 2: B is right on 32 rows against A's 25 and its bootstrap lower bound is above zero, but its schema validity fell 0.025 against a 0.02 limit, so the champion stays."
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.decision-round-1",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: round 1: promote candidate A",
+      "value": {
+        "notice": "SYNTHETIC. Recomputed by the pack's code from example.evaluations with the real rule.",
+        "conforms_to": {
+          "$pin": "template.promotion-decision"
+        },
+        "instance": {
+          "rule_id": "tool-call-specialist.promotion",
+          "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+          "outcome": "promote_candidate",
+          "paired_test": {
+            "delta": 0.325,
+            "lower": 0.15,
+            "upper": 0.5,
+            "improved_rows": 15,
+            "regressed_rows": 2
+          },
+          "checks": [
+            {
+              "check": "test exact_match_strict improves by at least 0.03",
+              "passed": true,
+              "observed": 0.325
+            },
+            {
+              "check": "paired bootstrap lower bound above zero",
+              "passed": true,
+              "observed": 0.15
+            },
+            {
+              "check": "test JSON validity does not drop more than 0.02",
+              "passed": true,
+              "observed": [
+                0.85,
+                0.975
+              ]
+            },
+            {
+              "check": "test schema validity does not drop more than 0.02",
+              "passed": true,
+              "observed": [
+                0.4,
+                0.8
+              ]
+            },
+            {
+              "check": "test refusal accuracy does not drop more than 0.03",
+              "passed": true,
+              "observed": [
+                0.75,
+                0.8
+              ]
+            },
+            {
+              "check": "sanity accuracy does not drop more than 0.05 against the champion",
+              "passed": true,
+              "observed": [
+                0.95,
+                0.925
+              ]
+            },
+            {
+              "check": "sanity accuracy stays within 0.10 of the unchanged base",
+              "passed": true,
+              "observed": [
+                0.95,
+                0.925
+              ]
+            },
+            {
+              "check": "fresh holdout exact match does not drop below the champion",
+              "passed": true,
+              "observed": [
+                0.25,
+                0.583333
+              ]
+            },
+            {
+              "check": "integrity: no_contamination",
+              "passed": true
+            },
+            {
+              "check": "integrity: frozen_base_unchanged",
+              "passed": true
+            },
+            {
+              "check": "integrity: adapter_reload_equivalent",
+              "passed": true
+            },
+            {
+              "check": "integrity: holdout_digests_match",
+              "passed": true
+            }
+          ],
+          "effects": "Moves only the private local champion pointer that the next round compares against. No deployment, publication, admission or serving change."
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.decision-round-2",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: round 2: keep the champion; a guard holds",
+      "value": {
+        "notice": "SYNTHETIC. Recomputed by the pack's code from example.evaluations with the real rule.",
+        "conforms_to": {
+          "$pin": "template.promotion-decision"
+        },
+        "instance": {
+          "rule_id": "tool-call-specialist.promotion",
+          "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+          "outcome": "keep_champion",
+          "paired_test": {
+            "delta": 0.175,
+            "lower": 0.05,
+            "upper": 0.325,
+            "improved_rows": 8,
+            "regressed_rows": 1
+          },
+          "checks": [
+            {
+              "check": "test exact_match_strict improves by at least 0.03",
+              "passed": true,
+              "observed": 0.175
+            },
+            {
+              "check": "paired bootstrap lower bound above zero",
+              "passed": true,
+              "observed": 0.05
+            },
+            {
+              "check": "test JSON validity does not drop more than 0.02",
+              "passed": true,
+              "observed": [
+                0.975,
+                0.975
+              ]
+            },
+            {
+              "check": "test schema validity does not drop more than 0.02",
+              "passed": false,
+              "observed": [
+                0.8,
+                0.775
+              ]
+            },
+            {
+              "check": "test refusal accuracy does not drop more than 0.03",
+              "passed": true,
+              "observed": [
+                0.8,
+                0.825
+              ]
+            },
+            {
+              "check": "sanity accuracy does not drop more than 0.05 against the champion",
+              "passed": true,
+              "observed": [
+                0.925,
+                0.95
+              ]
+            },
+            {
+              "check": "sanity accuracy stays within 0.10 of the unchanged base",
+              "passed": true,
+              "observed": [
+                0.95,
+                0.95
+              ]
+            },
+            {
+              "check": "fresh holdout exact match does not drop below the champion",
+              "passed": true,
+              "observed": [
+                0.541667,
+                0.583333
+              ]
+            },
+            {
+              "check": "integrity: no_contamination",
+              "passed": true
+            },
+            {
+              "check": "integrity: frozen_base_unchanged",
+              "passed": true
+            },
+            {
+              "check": "integrity: adapter_reload_equivalent",
+              "passed": true
+            },
+            {
+              "check": "integrity: holdout_digests_match",
+              "passed": true
+            }
+          ],
+          "effects": "Moves only the private local champion pointer that the next round compares against. No deployment, publication, admission or serving change."
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "decision-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Promotion decision checks, with good and bad decisions the validator recomputes",
+      "category_reason": "A golden fixture: fixed decisions and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every promotion decision passes before a pointer moves, each shown failing on a bad decision for exactly its own reason. A kept champion passes too: keeping is valid.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rule_sha256",
+            "rule_registered_before_scoring",
+            "test_receipt_registered_before_scoring",
+            "outcome",
+            "failed_checks",
+            "integrity",
+            "decided_by",
+            "trained_by",
+            "effects"
+          ],
+          "properties": {
+            "rule_sha256": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "rule_registered_before_scoring": {
+              "type": "boolean"
+            },
+            "test_receipt_registered_before_scoring": {
+              "type": "boolean"
+            },
+            "outcome": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "failed_checks": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "integrity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "no_contamination",
+                "frozen_base_unchanged",
+                "adapter_reload_equivalent",
+                "holdout_digests_match"
+              ],
+              "properties": {
+                "no_contamination": {
+                  "type": "boolean"
+                },
+                "frozen_base_unchanged": {
+                  "type": "boolean"
+                },
+                "adapter_reload_equivalent": {
+                  "type": "boolean"
+                },
+                "holdout_digests_match": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "decided_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "trained_by": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "effects": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "rule-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "rule_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "A decision names the exact rule it applied."
+          },
+          {
+            "id": "rule-first",
+            "rule": {
+              "rule": "enum",
+              "path": "rule_registered_before_scoring",
+              "values": [
+                true
+              ]
+            },
+            "why": "The rule was committed before any candidate was scored."
+          },
+          {
+            "id": "test-first",
+            "rule": {
+              "rule": "enum",
+              "path": "test_receipt_registered_before_scoring",
+              "values": [
+                true
+              ]
+            },
+            "why": "The frozen test's hashes were registered before any scoring."
+          },
+          {
+            "id": "outcome-valid",
+            "rule": {
+              "rule": "enum",
+              "path": "outcome",
+              "values": [
+                "promote_candidate",
+                "keep_champion"
+              ]
+            },
+            "why": "Only the two outcomes the rule defines."
+          },
+          {
+            "id": "promote-passes-every-check",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "outcome",
+                "equals": "promote_candidate"
+              },
+              "then": {
+                "rule": "pattern_absent",
+                "path": "failed_checks",
+                "pattern": "."
+              }
+            },
+            "why": "A promotion has no failed check."
+          },
+          {
+            "id": "keep-names-a-check",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "outcome",
+                "equals": "keep_champion"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "failed_checks",
+                "min": 1
+              }
+            },
+            "why": "A kept champion names the check that kept it."
+          },
+          {
+            "id": "reload-equivalent",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "outcome",
+                "equals": "promote_candidate"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "integrity.adapter_reload_equivalent",
+                "values": [
+                  true
+                ]
+              }
+            },
+            "why": "A promoted adapter reloads to the same replies."
+          },
+          {
+            "id": "uncontaminated",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "outcome",
+                "equals": "promote_candidate"
+              },
+              "then": {
+                "rule": "enum",
+                "path": "integrity.no_contamination",
+                "values": [
+                  true
+                ]
+              }
+            },
+            "why": "A promoted adapter never trained on a held-out row."
+          },
+          {
+            "id": "effects-private",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "effects",
+              "pattern": "(?i)\\bprivate\\b"
+            },
+            "why": "The only effect is a private pointer."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-promote",
+            "label": "known_good",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "good-keep",
+            "label": "known_good",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "keep_champion",
+              "failed_checks": [
+                "test schema validity does not drop more than 0.02"
+              ],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-no-rule-digest",
+            "label": "known_bad",
+            "fails": "rule-pinned",
+            "finding": {
+              "rule_sha256": "",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-rule-after-scoring",
+            "label": "known_bad",
+            "fails": "rule-first",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": false,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-test-after-scoring",
+            "label": "known_bad",
+            "fails": "test-first",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": false,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-outcome",
+            "label": "known_bad",
+            "fails": "outcome-valid",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_with_caveats",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-promote-over-a-failure",
+            "label": "known_bad",
+            "fails": "promote-passes-every-check",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [
+                "sanity accuracy does not drop more than 0.05 against the champion"
+              ],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-silent-keep",
+            "label": "known_bad",
+            "fails": "keep-names-a-check",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "keep_champion",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-reload-mismatch",
+            "label": "known_bad",
+            "fails": "reload-equivalent",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": false,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-contaminated",
+            "label": "known_bad",
+            "fails": "uncontaminated",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": false,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Moves only the private local champion pointer that the next round compares against."
+            }
+          },
+          {
+            "id": "bad-public-effect",
+            "label": "known_bad",
+            "fails": "effects-private",
+            "finding": {
+              "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
+              "rule_registered_before_scoring": true,
+              "test_receipt_registered_before_scoring": true,
+              "outcome": "promote_candidate",
+              "failed_checks": [],
+              "integrity": {
+                "no_contamination": true,
+                "frozen_base_unchanged": true,
+                "adapter_reload_equivalent": true,
+                "holdout_digests_match": true
+              },
+              "decided_by": "review worker",
+              "trained_by": "gpu worker",
+              "effects": "Deploys the adapter to the shared endpoint."
+            }
+          }
+        ],
+        "expected": {
+          "good-promote": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-keep": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-rule-digest": {
+            "verdict": "fail",
+            "failed_checks": [
+              "rule-pinned"
+            ]
+          },
+          "bad-rule-after-scoring": {
+            "verdict": "fail",
+            "failed_checks": [
+              "rule-first"
+            ]
+          },
+          "bad-test-after-scoring": {
+            "verdict": "fail",
+            "failed_checks": [
+              "test-first"
+            ]
+          },
+          "bad-outcome": {
+            "verdict": "fail",
+            "failed_checks": [
+              "outcome-valid"
+            ]
+          },
+          "bad-promote-over-a-failure": {
+            "verdict": "fail",
+            "failed_checks": [
+              "promote-passes-every-check"
+            ]
+          },
+          "bad-silent-keep": {
+            "verdict": "fail",
+            "failed_checks": [
+              "keep-names-a-check"
+            ]
+          },
+          "bad-reload-mismatch": {
+            "verdict": "fail",
+            "failed_checks": [
+              "reload-equivalent"
+            ]
+          },
+          "bad-contaminated": {
+            "verdict": "fail",
+            "failed_checks": [
+              "uncontaminated"
+            ]
+          },
+          "bad-public-effect": {
+            "verdict": "fail",
+            "failed_checks": [
+              "effects-private"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.pre-register-before-scoring"
+        ],
+        [
+          "requires_noun",
+          "guardrail.private-pointer-only"
+        ]
+      ],
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "generate-examples",
+      "kind": "verb.solve_draft",
+      "title": "Generate owned synthetic examples",
+      "claimant": "agent",
+      "summary": "Generate a batch of owned synthetic examples from the generator's templates with seeded counter draws; each label is computed from its template and checked against the offered tool's schema, never written by a model.",
+      "outcome": "An example batch with its digests.",
+      "ready_outcome": "examples_generated",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.owned-data-only",
+        "guardrail.no-contamination"
+      ],
+      "slots": [
+        {
+          "name": "learner_spec",
+          "category": "noun.code_node",
+          "description": "Pin of the learner spec."
+        },
+        {
+          "name": "generator",
+          "category": "noun.code_node",
+          "description": "Pin of the generator's tool card: templates, version and digest."
+        }
+      ],
+      "params": {
+        "batch": {
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9][a-z0-9.-]*$"
+          },
+          "description": "The batch name; the same name gives the same rows.",
+          "default": "stand-in"
+        },
+        "rows": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000
+          },
+          "description": "How many rows to draw.",
+          "default": 32
+        },
+        "origin": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "initial",
+              "streamed",
+              "mined",
+              "control",
+              "fresh_holdout",
+              "frozen_test"
+            ]
+          },
+          "description": "What the batch is for.",
+          "default": "streamed"
+        }
+      },
+      "network": "none",
+      "produces": [
+        {
+          "name": "example_batch",
+          "template": "template.example-batch"
+        }
+      ],
+      "steps": [
+        "Draw every value from the generator's templates with a SHA-256 counter seeded by the batch name.",
+        "Compute each label from its template and validate it against the offered tool's schema.",
+        "Record model_generated false and no external source; this verb uses no model text."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.example-batch's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "labels-valid",
+          "check": "Every label validates against its offered tool's schema or is a fixed refusal.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reproducible",
+          "check": "Generating the same batch name twice gives byte-identical rows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "owned",
+          "check": "provenance.model_generated is false and external_sources is empty.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "curate-dataset",
+      "kind": "verb.ingest",
+      "title": "Curate a batch against every held-out set",
+      "claimant": "agent",
+      "summary": "Accept a candidate batch's rows only when they share no fingerprint with any held-out row or accepted row and come from a training family, and keep every rejected row with its reason.",
+      "outcome": "An accepted batch with zero contamination.",
+      "ready_outcome": "dataset_curated",
+      "model_use": "none",
+      "pinned": [
+        "check.contamination",
+        "guardrail.no-contamination",
+        "tool.promotion-check"
+      ],
+      "slots": [
+        {
+          "name": "candidate_batch",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the generated batch."
+        },
+        {
+          "name": "held_out_receipts",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of every frozen and fresh set's receipt.",
+          "many": true,
+          "max": 20
+        }
+      ],
+      "produces": [
+        {
+          "name": "accepted_batch",
+          "template": "template.example-batch"
+        }
+      ],
+      "steps": [
+        "Compute the three fingerprints for every row with the generator's normalization and masks.",
+        "Reject any row that shares a fingerprint with a held-out row, repeats an accepted row or comes from a held-out family, and record the reason.",
+        "Count the overlaps again on the accepted rows; every count is zero."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.example-batch's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "zero-overlap",
+          "check": "overlap_counts between the accepted rows and every held-out set are all zero.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rejections-kept",
+          "check": "Every candidate row is accepted or listed in rejected with a reason.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "continuous-tuning.generate-examples"
+      ]
+    },
+    {
+      "slug": "freeze-test-set",
+      "kind": "verb.ingest",
+      "title": "Freeze a test set and register its hashes before scoring",
+      "claimant": "agent",
+      "summary": "Freeze a test set or a fresh holdout and register the SHA-256 of its rows and of its ordered ids before any model is scored on it, with zero contamination against every training batch.",
+      "outcome": "A frozen test receipt.",
+      "ready_outcome": "test_set_frozen",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.pre-register-before-scoring",
+        "check.contamination",
+        "tool.promotion-check"
+      ],
+      "slots": [
+        {
+          "name": "candidate_batch",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of the batch to freeze."
+        },
+        {
+          "name": "training_batches",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of every training batch so far.",
+          "required": false,
+          "many": true,
+          "max": 50
+        }
+      ],
+      "produces": [
+        {
+          "name": "frozen_test_receipt",
+          "template": "template.frozen-test-receipt"
+        }
+      ],
+      "steps": [
+        "Write the rows as canonical JSON lines and hash them, and hash the ordered row ids.",
+        "Count overlaps against every training batch; end blocked when any count is above zero.",
+        "Register the receipt create-only before any evaluation verb on these rows is enqueued."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.frozen-test-receipt's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "hashes-recompute",
+          "check": "python -m promotion_check receipt finds no problem with the rows.",
+          "method": "deterministic"
+        },
+        {
+          "id": "before-scoring",
+          "check": "No evaluation run on these rows has a scored_at at or before registered_at.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "continuous-tuning.curate-dataset"
+      ]
+    },
+    {
+      "slug": "register-rule",
+      "kind": "verb.verify_gate",
+      "title": "Commit the promotion rule before any scoring (a person)",
+      "claimant": "human",
+      "summary": "A person commits the promotion rule and its digest before any candidate is scored; it never changes afterwards, and a change makes a new rule version.",
+      "outcome": "A registered promotion rule.",
+      "ready_outcome": "rule_registered",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.pre-register-before-scoring",
+        "rule.tool-call-specialist-v1"
+      ],
+      "slots": [
+        {
+          "name": "draft_rule",
+          "category": "noun.code_node",
+          "description": "Pin of the drafted rule."
+        }
+      ],
+      "produces": [
+        {
+          "name": "promotion_rule",
+          "template": "template.promotion-rule"
+        }
+      ],
+      "steps": [
+        "Read the drafted rule's thresholds, guards and integrity checks, and change any before committing.",
+        "Commit it create-only with its digest from python -m promotion_check digest."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.promotion-rule's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "before-scoring",
+          "check": "No evaluation run of any candidate under this rule precedes its registration.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-commits",
+          "check": "The submitting key belongs to a person, not to a worker that trains or scores.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      }
+    },
+    {
+      "slug": "train-adapter",
+      "kind": "verb.solve_draft",
+      "title": "Train one adapter",
+      "claimant": "agent",
+      "summary": "Train one QLoRA or LoRA adapter on the accepted batches, on the worker's own GPU or a free GPU service within its terms, from base weights verified against their noun, and record an adapter card.",
+      "outcome": "An adapter card with the adapter's file digests, private and not admitted.",
+      "ready_outcome": "adapter_trained",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.license-and-compute-terms",
+        "guardrail.owned-data-only",
+        "guardrail.no-contamination",
+        "tool.tuning-loop"
+      ],
+      "slots": [
+        {
+          "name": "learner_spec",
+          "category": "noun.code_node",
+          "description": "Pin of the learner spec."
+        },
+        {
+          "name": "base_model",
+          "category": "noun.model_spec",
+          "description": "Pin of the base model noun with its weight digests."
+        },
+        {
+          "name": "training_batches",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of the accepted batches.",
+          "many": true,
+          "max": 50
+        },
+        {
+          "name": "frozen_receipts",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of every held-out receipt.",
+          "many": true,
+          "max": 20
+        }
+      ],
+      "params": {
+        "method": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "qlora_4bit",
+              "lora_bf16"
+            ]
+          },
+          "description": "Quantized or full-precision adapter training.",
+          "default": "qlora_4bit"
+        },
+        "learning_rate": {
+          "schema": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "description": "Learning rate.",
+          "default": 0.0002
+        },
+        "rank": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1024
+          },
+          "description": "Adapter rank.",
+          "default": 16
+        },
+        "seed": {
+          "schema": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Training seed.",
+          "default": 0
+        }
+      },
+      "network": [
+        "provider_destination",
+        "Only the worker's own GPU, or one free GPU service the requester names, within its terms and quota; only the owned training rows and the pinned base weights go there, and no other host."
+      ],
+      "produces": [
+        {
+          "name": "adapter_card",
+          "template": "template.adapter-card"
+        }
+      ],
+      "steps": [
+        "Verify every base weight file against the base model noun before the first load.",
+        "Train on the accepted batches only, within the learner spec's row and time budget.",
+        "Hash the base weights again after training, and every adapter file.",
+        "Keep the adapter private with admitted false, and record the GPU, its memory peak and the minutes."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.adapter-card's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "weights-verified",
+          "check": "Every base weight file matched its digest before loading.",
+          "method": "deterministic"
+        },
+        {
+          "id": "base-unchanged",
+          "check": "The base weight digests after training equal those before.",
+          "method": "deterministic"
+        },
+        {
+          "id": "private",
+          "check": "distribution is private and admitted is false.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_attempts": 1,
+        "max_elapsed_seconds": 7200
+      },
+      "follows": [
+        "continuous-tuning.freeze-test-set"
+      ]
+    },
+    {
+      "slug": "evaluate",
+      "kind": "verb.benchmark_harness",
+      "title": "Score models on dev, the frozen test, the fresh holdout and sanity",
+      "claimant": "agent",
+      "summary": "Score the base, the champion and each candidate with greedy decoding: dev to select among candidates, then the frozen test, this round's fresh holdout and the sanity set, by strict exact match row by row.",
+      "outcome": "Run records with per-row results and aggregates.",
+      "ready_outcome": "models_scored",
+      "model_use": "none",
+      "pinned": [
+        "scoring.strict-exact-match",
+        "guardrail.pre-register-before-scoring"
+      ],
+      "slots": [
+        {
+          "name": "models",
+          "category": "noun.model_spec",
+          "description": "Pins of the base model and the adapter cards to score.",
+          "many": true,
+          "max": 6
+        },
+        {
+          "name": "frozen_receipts",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of the receipts of the sets to score on.",
+          "many": true,
+          "max": 8
+        }
+      ],
+      "network": [
+        "local_only",
+        "Only the worker's own machine; no provider and no other host."
+      ],
+      "produces": [
+        {
+          "name": "run_record",
+          "template": "template.run-record",
+          "max": 24
+        }
+      ],
+      "steps": [
+        "Check each set's rows against its receipt before scoring.",
+        "Score every row with greedy decoding and strict exact match, in the receipt's id order.",
+        "Record the lenient diagnostic beside the strict score; it never decides."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.run-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sets-match",
+          "check": "Every run's ids_sha256 equals its receipt's.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rescore",
+          "check": "Rescoring the stored replies gives the same exact list.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "continuous-tuning.train-adapter"
+      ]
+    },
+    {
+      "slug": "check-reload",
+      "kind": "verb.verify_gate",
+      "title": "Check that the saved adapter reloads to the same replies",
+      "claimant": "agent",
+      "summary": "Reload the saved adapter onto a fresh copy of the base, regenerate the probe rows greedily and require identical replies, require the disabled adapter to reproduce the base, and require unchanged base weights.",
+      "outcome": "A reload check.",
+      "ready_outcome": "reload_checked",
+      "model_use": "none",
+      "pinned": [
+        "check.reload-equivalence"
+      ],
+      "slots": [
+        {
+          "name": "adapter_card",
+          "category": "noun.model_spec",
+          "description": "Pin of the adapter card."
+        },
+        {
+          "name": "base_model",
+          "category": "noun.model_spec",
+          "description": "Pin of the base model noun."
+        },
+        {
+          "name": "run_records",
+          "category": "noun.eval_run",
+          "description": "Pins of the runs whose replies the probes repeat.",
+          "many": true,
+          "max": 4
+        }
+      ],
+      "params": {
+        "probe_rows": {
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "description": "Rows to regenerate.",
+          "default": 8
+        }
+      },
+      "network": [
+        "local_only",
+        "Only the worker's own machine; no provider and no other host."
+      ],
+      "produces": [
+        {
+          "name": "reload_check",
+          "template": "template.reload-check"
+        }
+      ],
+      "steps": [
+        "Load a fresh base and the adapter only from files whose digests match their nouns.",
+        "Regenerate the probe rows greedily and compare each reply byte for byte.",
+        "Disable the adapter and compare with the base's replies; hash the base weights again."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.reload-check's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-probe-matches",
+          "check": "passed is true only when regenerated_match equals probe_rows and both other checks hold.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "continuous-tuning.evaluate"
+      ]
+    },
+    {
+      "slug": "decide-promotion",
+      "kind": "verb.verify_gate",
+      "title": "Decide by the pre-registered rule",
+      "claimant": "agent",
+      "summary": "Apply the pre-registered rule to the candidate's, champion's and base's evaluations with the integrity results, and record promote_candidate or keep_champion with every check and what it observed.",
+      "outcome": "A promotion decision anyone can recompute.",
+      "ready_outcome": "promotion_decided",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "method.paired-bootstrap",
+        "tool.promotion-check",
+        "guardrail.private-pointer-only",
+        "guardrail.pre-register-before-scoring"
+      ],
+      "slots": [
+        {
+          "name": "promotion_rule",
+          "category": "noun.code_node",
+          "description": "Pin of the registered promotion rule."
+        },
+        {
+          "name": "run_records",
+          "category": "noun.eval_run",
+          "description": "Pins of the candidate's, champion's and base's runs.",
+          "many": true,
+          "max": 24
+        },
+        {
+          "name": "reload_check",
+          "category": "noun.eval_run",
+          "description": "Pin of the candidate's reload check."
+        },
+        {
+          "name": "frozen_receipts",
+          "category": "noun.benchmark_suite",
+          "description": "Pins of the receipts behind those runs.",
+          "many": true,
+          "max": 8
+        }
+      ],
+      "produces": [
+        {
+          "name": "promotion_decision",
+          "template": "template.promotion-decision"
+        }
+      ],
+      "steps": [
+        "Confirm the rule and every receipt were registered before the first run they judge.",
+        "Run python -m promotion_check decide on the evaluations and the integrity results.",
+        "Record keep_champion as a ready result when any check fails; never rerun to get a pass."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.promotion-decision's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recomputed",
+          "check": "python -m promotion_check decide reproduces the record exactly.",
+          "method": "deterministic"
+        },
+        {
+          "id": "not-the-trainer",
+          "check": "The deciding key differs from the key that trained the candidate.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "continuous-tuning.check-reload"
+      ]
+    },
+    {
+      "slug": "promote-or-roll-back",
+      "kind": "verb.verify_gate",
+      "title": "Move the private champion pointer, or roll it back",
+      "claimant": "agent_or_human",
+      "summary": "Move the private champion pointer by compare-and-set exactly as a promote_candidate decision says, or, when a person records why, roll it back to the previous champion.",
+      "outcome": "A new version of the champion pointer, or no change.",
+      "ready_outcome": "pointer_moved",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.private-pointer-only"
+      ],
+      "slots": [
+        {
+          "name": "champion_pointer",
+          "category": "noun.model_spec",
+          "description": "Pin of the current champion pointer."
+        },
+        {
+          "name": "promotion_decision",
+          "category": "noun.eval_run",
+          "description": "Pin of the decision, for a promotion.",
+          "required": false
+        },
+        {
+          "name": "rollback_record",
+          "category": "noun.eval_run",
+          "description": "Pin of a person's roll back record, for a roll back.",
+          "required": false
+        }
+      ],
+      "produces": [
+        {
+          "name": "champion_pointer",
+          "template": "template.champion-pointer"
+        },
+        {
+          "name": "rollback_record",
+          "template": "template.rollback-record"
+        }
+      ],
+      "steps": [
+        "Promote only on a decision with outcome promote_candidate; on keep_champion, end no_change.",
+        "Roll back only with a roll back record a person wrote, naming the reason and the evidence.",
+        "Write the pointer by compare-and-set with its pinned version; on a conflict, re-read and stop."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.champion-pointer's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "follows-decision",
+          "check": "A promotion names a decision whose outcome is promote_candidate.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rollback-by-person",
+          "check": "A roll back names a roll back record submitted by a person's key.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "continuous-tuning.decide-promotion"
+      ],
+      "update_slot": "champion_pointer"
+    }
+  ]
+}

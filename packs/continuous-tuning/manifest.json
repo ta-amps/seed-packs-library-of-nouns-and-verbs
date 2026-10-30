@@ -1,0 +1,332 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "continuous-tuning",
+  "title": "Continuous tuning",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for tuning a small open model at one narrow task, round after round, and keeping a change only when a rule committed before any scoring says so: owned synthetic examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
+  "license": "MIT",
+  "store": "seedpack.continuous-tuning",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "87282fcffb6f5147790bb2475870f6d0d08f698b283df779fc25f9f7e926dbf8"
+    },
+    {
+      "path": "source.json",
+      "sha256": "73b21c6858339641239568e6cd7d8efdc27606e747047183d93533d37071c98f"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "4c4d2f44c14bf65a5cd094551de8e2eea4ee110791b26e9df3f2a5b65ef24228"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "e39b6a4cc81cb7413006eb46d079653db967b6b21eb6810c89f138153d4fc951"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "continuous-tuning.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "08ae0f12b3af5198b9ef8c6c6b83151e1ff133882a3ff9ea6983ac9d248eadb8"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.guardrail.pre-register-before-scoring",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "1e9074b6ef6efec707ca75f8aaf3a02f287b1f9985922f458b3e0bbfbb048919"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.guardrail.no-contamination",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "be02f9d5375f5222410f2aa6631b345f6afae55a88e6e610d9484e025e85e691"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.guardrail.owned-data-only",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "0fc97b126cd21874f4af54400115d9f07dc888bdf0e890a55f521290488cfb4b"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.guardrail.private-pointer-only",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "62ba392c2dd56217b52fddad27613ef941503c8fb480c031b8bac1f9c6d7bb24"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.guardrail.license-and-compute-terms",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "d2ee201f9a59a231d588dc9fb716958988cd5c427107a5a213c39b1544fcc822"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.scoring.strict-exact-match",
+      "category_id": "noun.reflex_procedure",
+      "role": "scoring_procedure",
+      "value_sha256": "7b9591a35d469e41f0c938b4f0b8819e4929fe267428cf6c0f0f704ef26f0b50"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.method.paired-bootstrap",
+      "category_id": "noun.reflex_procedure",
+      "role": "method",
+      "value_sha256": "490b99246b84701b908abb82363b20cb05e5a90e4c9b861a5ea80331158e4139"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.check.contamination",
+      "category_id": "noun.reflex_procedure",
+      "role": "check",
+      "value_sha256": "efaecb518970758fc57b20ffe9ee58c09526be0e3b25b971b2f41d652d3f5eb4"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.check.reload-equivalence",
+      "category_id": "noun.reflex_procedure",
+      "role": "check",
+      "value_sha256": "4b04e7dba306c2457f83835475017c744b8d54454945e4bd81e06f37ce8eb125"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.rule.tool-call-specialist-v1",
+      "category_id": "noun.code_node",
+      "role": "promotion_rule",
+      "value_sha256": "e034b349ecd4db056e2aab1ec33c1a6f19d6397af3d6f8c21781785a993ee210"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.tool.promotion-check",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "993f8b333cb36ca08261e9f92df5eede6babeecff32d806637e0be6279568c88"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.tool.tuning-loop",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "4a102661907e1f989501c6d0f4045671b0342451491552baecdcb60fd61e8476"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.promotion-rule",
+      "category_id": "noun.code_node",
+      "role": "template",
+      "value_sha256": "b9c3383bd29cd4b06d7a62e48c38ad4f1c774788a534441732b12a89bed24034"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.learner-spec",
+      "category_id": "noun.code_node",
+      "role": "template",
+      "value_sha256": "6da8286fbc4bec0f47578ccbcd1deacdb8828df9d79a5f831157f44f65250cb2"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.example-batch",
+      "category_id": "noun.benchmark_suite",
+      "role": "template",
+      "value_sha256": "0547febd22d8870f900e3d9cb358cf0a16ce92151ab6e6609c69d17a2cf6a05a"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.frozen-test-receipt",
+      "category_id": "noun.benchmark_suite",
+      "role": "template",
+      "value_sha256": "d33da506ec0ab2013c20dac7b3781826edd6caf793c856111ad1233ab959fbfb"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.adapter-card",
+      "category_id": "noun.model_spec",
+      "role": "template",
+      "value_sha256": "2732828f046c371e94f734ce36db23a24202e834677aed0a3e84bc2776bb0587"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.run-record",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "b3878b357e70d135840804fe0c2130ce0ab2dd487ec6a39b53d87b02042a2bfc"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.reload-check",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "1f00aa7d58fda12f4b6ad4f777235e72c5dd355d43c35a61f74649526740c147"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.promotion-decision",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "ea0aaf97e702995079d0af0a23d41edf689bd8da337585731817655d9fb030e9"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.champion-pointer",
+      "category_id": "noun.model_spec",
+      "role": "template",
+      "value_sha256": "53ee3f8ce8ba92b779f5fefe87263bfdbf8dcac216e82b751c8e258052ffe15a"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.template.rollback-record",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "c1e735209c6054d9d8804935d136c9e4b3a5a58125b6c4f54210932b095638f1"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.measured-results",
+      "category_id": "noun.eval_run",
+      "role": "cited_results",
+      "value_sha256": "5d1e0f447f4c7cbf7bad999cba2f51abe890eac5e0ef0746ce79650db7edebe3"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.checklist",
+      "category_id": "noun.skill_pack",
+      "role": "checklist",
+      "value_sha256": "c74666ebf3037076f4b360cea8ff42423c527c7b3c4c0da468d6972ef1478aef"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.sources",
+      "category_id": "noun.public_source",
+      "role": "sources",
+      "value_sha256": "ebf271ea2cddde413234aca85cab557a82f565bb821bbcf24f1ff01aeec944f2"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.test-cases",
+      "category_id": "noun.benchmark_suite",
+      "role": "test_cases",
+      "value_sha256": "f796f63fe1ac26d6fc74a96fae7ef409522646c90978c54a377f99db8606ce8b"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.example.frozen-test-rows",
+      "category_id": "noun.benchmark_suite",
+      "role": "example",
+      "value_sha256": "dfc6adad57601affdfc9b93757acfdec3fed06de55a9faff5bbbd5e334a66291"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.example.frozen-test-receipt",
+      "category_id": "noun.benchmark_suite",
+      "role": "example",
+      "value_sha256": "d2c05d6d71cd06c9022e9174da010cf6f34f1bbed4b8dc5d33eec34c19b82cec"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.example.evaluations",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "7bd2d65e8e3b46f50800b28ef28cee9f7e30fc5340aaa37dd3668256b2f67a8f"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.example.decision-round-1",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "2e80281c828fe4362e1b510009bbd7bccb2c90601cc3d517ff42fe198a7b38a8"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.example.decision-round-2",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "9549c98f56640160b1b3bd425760e5c525b802f1865af1be7dc1140edc3805a4"
+    },
+    {
+      "key": "continuous-tuning.v0.1.0.decision-checks",
+      "category_id": "noun.benchmark_suite",
+      "role": "worked_example",
+      "value_sha256": "998096110fcc5d5f29e6f0c5fdcdfe6d819d9138216571b9729d44fd843cf1a7"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "continuous-tuning.generate-examples",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:generate-examples:b873d22273ced5c9ad287732760dd625922dafdd60302af54b25c6ed73f923d8",
+      "report_shape_sha256": "d67575c9f44200b124c060f6f16e4fc16c79b7ba5f76afb31cd48b293afe2765"
+    },
+    {
+      "template_id": "continuous-tuning.curate-dataset",
+      "kind": "verb.ingest",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:curate-dataset:72f368e543f9bf8fe39a7c4781b54258a4cede6c1d2cf47145b94e75c43a5c17",
+      "report_shape_sha256": "3c4de450708d604824a20e836df9a7bcdcfbacd33c3cafb3ec9d5e85f7b6c2d2"
+    },
+    {
+      "template_id": "continuous-tuning.freeze-test-set",
+      "kind": "verb.ingest",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:freeze-test-set:fb157d29bc25485b68f2368e6d395eaff4ec16c1750f0d8e5763cff68f9f9282",
+      "report_shape_sha256": "71df405475d9210e8096768937aee6b363131761cd7c9bfce0b99534e22646c5"
+    },
+    {
+      "template_id": "continuous-tuning.register-rule",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:continuous-tuning:register-rule:2b0ca0c92f9fd77bd26cdad06094ba11b6ec7b17674c7de327406f086a379146",
+      "report_shape_sha256": "06ba2e53269616d1078f1eaade215456e8c8ca86fb76f6b748bb74fef15b4918"
+    },
+    {
+      "template_id": "continuous-tuning.train-adapter",
+      "kind": "verb.solve_draft",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:train-adapter:ccfa87bedb634792ca812089035c42dc55a9d02de44379917091a58be9dde493",
+      "report_shape_sha256": "c0fa8b86a200cb521c82ec78704223d838266ed906cbf85a6a2618aceab6c0a3"
+    },
+    {
+      "template_id": "continuous-tuning.evaluate",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:evaluate:c2af2ffa177593e7ec2bfdee64f5726d47de4d83fd9df9af41254d37ce255df9",
+      "report_shape_sha256": "1513ae4a1218fe519e138833ce56815bb0321836c14156127fda9d2a8f8283f2"
+    },
+    {
+      "template_id": "continuous-tuning.check-reload",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:check-reload:e157eff8ced8de66b85a642fbf4e110743ef0d69fa3441f5c5910797699ef9f7",
+      "report_shape_sha256": "005e61ffe1e46a1d9da54abd0ca447b50160e7567306c99635a20497f292b4b4"
+    },
+    {
+      "template_id": "continuous-tuning.decide-promotion",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:continuous-tuning:decide-promotion:bdf7c8c93d09fa8de6207e03571e44fd40b8c4412a110310214dfcc58a1daed0",
+      "report_shape_sha256": "9ae9db8fa99efed938777b32c36c01206f0ceae086db82d95ad5247118d3e5b9"
+    },
+    {
+      "template_id": "continuous-tuning.promote-or-roll-back",
+      "kind": "verb.verify_gate",
+      "claimant": "agent_or_human",
+      "idempotency_key": "seedpack:continuous-tuning:promote-or-roll-back:ef13a304271ee1ee1eb0630cf340da5bd14f5af79479e16a6d64e1d9ab78e65c",
+      "report_shape_sha256": "606f184dd55433d4ca312328a7aaa73659956fd1890740f7164109a92b9def9b"
+    }
+  ],
+  "code": {
+    "path": "packs/continuous-tuning/code",
+    "files": 15,
+    "sha256": "44cfb2f8c54d572caacc9d23cde94412143e578fe879bae5727f39e1c67b041b",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "evaluation-design",
+      "keys": [
+        "evaluation-design.v0.1.0.scoring.exact-match"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Keeping the champion is a valid outcome; a promotion moves only a private pointer, never a deployment, admission or serving change.",
+    "Owned synthetic data only, or data whose license and consent permit training.",
+    "Training uses the worker's own or free GPUs within their terms; this pack grants no compute or spending.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}
