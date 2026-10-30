@@ -46,7 +46,7 @@ from code_composition.seed_nodes import build_seed_nodes
 PACK_FORMAT = "code-composition.seed-pack.preview.v2"
 TASK_CONTRACT = "code-composition.compile-dag-seed.v1"
 DIMENSION_METHOD = "code-composition.seed-dimensions.v1"
-REPOSITORY = "https://github.com/ta-amps/pack-contributions"
+REPOSITORY = "https://github.com/ta-amps/seed-packs-library-of-nouns-and-verbs"
 # Where this source tree sits inside REPOSITORY. Provenance source paths are relative to it, and
 # a checkout commit is read only when the tree sits exactly here.
 REPOSITORY_PATH = "packs/code-composition/code"

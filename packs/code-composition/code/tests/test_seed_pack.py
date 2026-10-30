@@ -226,7 +226,10 @@ def test_nouns_use_registered_categories_typed_relations_and_provenance() -> Non
         assert set(value["dimension_basis"]) == set(REQUIRED_DIMENSIONS)
         assert value["spdx_license"] in ALLOWED_SPDX_LICENSES
         provenance = value["provenance"]
-        assert provenance["repository"] == "https://github.com/ta-amps/pack-contributions"
+        assert (
+            provenance["repository"]
+            == "https://github.com/ta-amps/seed-packs-library-of-nouns-and-verbs"
+        )
         assert provenance["path"] == "packs/code-composition/code"
         assert provenance["commit"] == commit
         assert provenance["package_version"] == code_composition.__version__

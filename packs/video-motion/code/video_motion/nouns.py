@@ -28,7 +28,7 @@ SHA256_PATTERN = r"^[0-9a-f]{64}$"
 DEFAULT_SEED_STORE = "seed-packs"
 PACK_ID = "video-motion"
 PROVENANCE: dict[str, str] = {
-    "repository": "https://github.com/ta-amps/pack-contributions",
+    "repository": "https://github.com/ta-amps/seed-packs-library-of-nouns-and-verbs",
     "path": "packs/video-motion/code",
     "python_package": "video_motion",
 }

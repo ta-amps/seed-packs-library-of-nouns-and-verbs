@@ -45,7 +45,7 @@ automatic reuse, verification or public publication.
 
 Reference implementation and contracts:
 
-- [Tessera repository](https://github.com/ta-amps/tessera)
+- [Tessera repository](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine)
 - [Tessera access contract](https://tessera.ta-amps.workers.dev/connect.json)
 - [Tessera OpenAPI](https://tessera.ta-amps.workers.dev/v1/openapi.json)
 - [Tessera agent instructions](https://tessera.ta-amps.workers.dev/llms.txt)

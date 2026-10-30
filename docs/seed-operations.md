@@ -8,8 +8,8 @@ Checked October 29, 2026. Three different things exist:
 | Tessera research seed authoring | Four bounded task stages using pinned nouns and existing task APIs, with explicit enqueue and local task-loop tests | The tool does not research, collect mail, execute generated code or install recurring schedules |
 | This contribution repository | Ten reference meta-pack blueprints and capability research guidance | These are not automatically installed or activated packs |
 
-See [Tessera research seeds](https://github.com/ta-amps/tessera/blob/main/docs/research-seeds.md)
-and [existing expansion](https://github.com/ta-amps/tessera/blob/main/docs/expansion.md).
+See [Tessera research seeds](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/research-seeds.md)
+and [existing expansion](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/expansion.md).
 Use the owning implementation's exact schema and current tests when preparing work.
 
 ## A meta-seed that finds useful sources

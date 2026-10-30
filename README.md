@@ -1,7 +1,7 @@
 # Seed-pack library – every pack of nouns and verbs
 
 Instructions and synthetic examples for contributing useful noun records and
-verb seeds to the [Tessera work fabric](https://github.com/ta-amps/tessera).
+verb seeds to the [Tessera work fabric](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine).
 This repository is a guide and a library of seed packs, not an importer or service.
 A pack may include tested code as nouns, in `packs/<pack>/code/`. The library never runs pack code except in its own CI tests; workers run it under their own permissions. Reading, exporting or importing a pack still runs nothing, activates nothing, publishes nothing and grants nothing.
 
