@@ -1,0 +1,865 @@
+{
+  "pack_id": "kit-flyer-translation-check",
+  "title": "Flyer translation check kit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for a community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed.",
+  "dependencies": [],
+  "boundaries": [
+    "Use only synthetic, clearly marked test data.",
+    "Steps marked for a person never go to an agent.",
+    "Outputs stay surface_only in the requester's scope.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for a multilingual service flyer translation check agent kit",
+      "value": {
+        "lets_workers": "Check each translated service flyer against its English source: every fact present, numbers, dates, times and phone numbers matching exactly, words left in English, and sentences above the reading level. The agent lists questions for a fluent community reviewer, who approves each language; staff decide what gets printed and put up.",
+        "kit": {
+          "$pin": "kit"
+        },
+        "flow": [
+          {
+            "verb": {
+              "$verb": "kit-flyer-translation-check.compare-facts"
+            },
+            "claimant": "agent",
+            "boundary": "drafts"
+          },
+          {
+            "verb": {
+              "$verb": "kit-flyer-translation-check.draft-reviewer-questions"
+            },
+            "claimant": "agent",
+            "boundary": "assists"
+          },
+          {
+            "verb": {
+              "$verb": "kit-flyer-translation-check.fluent-review"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          },
+          {
+            "verb": {
+              "$verb": "kit-flyer-translation-check.print-and-post"
+            },
+            "claimant": "human",
+            "boundary": "human_only"
+          }
+        ],
+        "human_only": [
+          "Approve each translation (fluent community reviewer).",
+          "Decide what gets printed and posted."
+        ],
+        "rules": [
+          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
+          "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "kit"
+        ],
+        [
+          "requires_noun",
+          "example.request"
+        ],
+        [
+          "requires_noun",
+          "template.fact-comparison"
+        ],
+        [
+          "requires_noun",
+          "template.reviewer-questions"
+        ],
+        [
+          "requires_noun",
+          "template.person-step-record"
+        ]
+      ]
+    },
+    {
+      "slug": "kit",
+      "category": "noun.skill_pack",
+      "role": "kit",
+      "title": "Multilingual Service Flyer Translation Check Kit",
+      "category_reason": "The agent's whole setup as one noun: its step map and pins to every part.",
+      "value": {
+        "kit_format": "agent-kit.v1",
+        "summary": "Checks each translated service flyer against its English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level. A fluent community reviewer approves each language, and staff decide what gets printed and posted.",
+        "goal": "Help a community center check translated service flyers against the English source for dropped facts, changed numbers and dates, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed and posted.",
+        "target_org": "Community health and services center printing flyers in five languages",
+        "step_map": [
+          {
+            "id": "compare-facts",
+            "title": "Compare facts across the source and each translation",
+            "step_kind": "translation_check",
+            "boundary": "drafts",
+            "actor": "Translation check agent",
+            "guidance": "List every fact in the English source, such as the service, hours, dates, address line, phone number, cost and who can use it, and check that each appears unchanged in each translation. Numbers, dates and phone numbers must match exactly.",
+            "verb": {
+              "$verb": "kit-flyer-translation-check.compare-facts"
+            }
+          },
+          {
+            "id": "draft-reviewer-questions",
+            "title": "Draft questions for the fluent reviewer",
+            "step_kind": "review_prep",
+            "boundary": "assists",
+            "actor": "Review preparation agent",
+            "guidance": "For each language, list the sentences where meaning may have shifted, words left in English and sentences above the target reading level, as questions for the fluent reviewer, not corrections.",
+            "verb": {
+              "$verb": "kit-flyer-translation-check.draft-reviewer-questions"
+            }
+          },
+          {
+            "id": "fluent-review",
+            "title": "Approve each translation (fluent community reviewer)",
+            "step_kind": "fluent_review",
+            "boundary": "human_only",
+            "actor": "Fluent community reviewer",
+            "guidance": "A fluent speaker from the community reads the whole flyer, answers the questions and approves or corrects the translation. Machine checks never replace this step.",
+            "verb": {
+              "$verb": "kit-flyer-translation-check.fluent-review"
+            }
+          },
+          {
+            "id": "print-and-post",
+            "title": "Decide what gets printed and posted",
+            "step_kind": "external_send",
+            "boundary": "human_only",
+            "actor": "Communications coordinator",
+            "guidance": "Staff print and post only translations the fluent reviewer approved, and keep each approval with its flyer version.",
+            "verb": {
+              "$verb": "kit-flyer-translation-check.print-and-post"
+            }
+          }
+        ],
+        "skills": [
+          {
+            "$pin": "skill.flyer-fact-checker"
+          }
+        ],
+        "tools": [
+          {
+            "$pin": "tool.compare-flyer-facts"
+          }
+        ],
+        "files": [
+          {
+            "$pin": "file.translation-review-sheet"
+          },
+          {
+            "$pin": "file.flyer-fact-list"
+          }
+        ],
+        "checklist": {
+          "$pin": "checklist"
+        },
+        "sources": {
+          "$pin": "sources"
+        },
+        "test_cases": {
+          "$pin": "test-cases"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.request",
+          "built for this request"
+        ],
+        [
+          "requires_noun",
+          "skill.flyer-fact-checker"
+        ],
+        [
+          "requires_noun",
+          "tool.compare-flyer-facts"
+        ],
+        [
+          "requires_noun",
+          "file.translation-review-sheet"
+        ],
+        [
+          "requires_noun",
+          "file.flyer-fact-list"
+        ],
+        [
+          "requires_noun",
+          "checklist"
+        ],
+        [
+          "requires_noun",
+          "sources"
+        ]
+      ]
+    },
+    {
+      "slug": "skill.flyer-fact-checker",
+      "category": "noun.skill_pack",
+      "role": "skill",
+      "title": "Skill: check a translated flyer against its source",
+      "value": {
+        "name": "flyer-fact-checker",
+        "description": "Compares a translated flyer with its English source for dropped or changed facts, exact numbers and dates, and untranslated text.",
+        "boundary": "drafts",
+        "instructions": "Work from the English source and the translation the center provides. Build a fact list from the source: service name, days, hours, dates, address line, phone number, cost and who can use the service. For each translation, mark each fact as matching, changed or missing; numbers, dates, times and phone numbers must match character for character after normal formatting for that language. List words left in English. Turn every problem into a question for the fluent reviewer. Never rewrite the translation yourself and never call a translation approved.",
+        "refuses": [
+          "Approving a translation",
+          "Rewriting a flyer in another language for printing",
+          "Printing, posting or sharing a flyer",
+          "Guessing a fact the source does not state"
+        ]
+      }
+    },
+    {
+      "slug": "tool.compare-flyer-facts",
+      "category": "noun.mcp_server",
+      "role": "tool",
+      "title": "Read-only tool card: compare flyer facts across languages",
+      "value": {
+        "name": "compare_flyer_facts",
+        "description": "Extracts dates, times, phone numbers and amounts from the source and each translation and lists any that differ or are missing.",
+        "input_schema": {
+          "type": "object",
+          "required": [
+            "source_text",
+            "translations"
+          ],
+          "properties": {
+            "source_text": {
+              "type": "string"
+            },
+            "translations": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "target_reading_grade": {
+              "type": "integer",
+              "minimum": 3,
+              "maximum": 12
+            }
+          }
+        },
+        "output_fields": [
+          "facts",
+          "mismatched_numbers",
+          "missing_facts",
+          "untranslated_terms",
+          "long_sentences"
+        ],
+        "read_only": true
+      }
+    },
+    {
+      "slug": "file.translation-review-sheet",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Translation Review Sheet",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "translation_review_sheet",
+        "artifact_format": "checklist_pack",
+        "boundary": "drafts",
+        "summary": "What a fluent community reviewer confirms for each language before a flyer is printed.",
+        "spec": [
+          "Every fact in the English source appears in this language.",
+          "Dates, times, phone numbers and costs match the source exactly.",
+          "No words were left in English unless the center chose to keep them, such as a program name.",
+          "A fluent community reviewer read the whole flyer and approved it, with the date and flyer version."
+        ]
+      }
+    },
+    {
+      "slug": "file.flyer-fact-list",
+      "category": "noun.skill_pack",
+      "role": "file",
+      "title": "Flyer Fact List",
+      "category_reason": "A ready-to-use working file belongs to the kit's skill bundle.",
+      "value": {
+        "name": "flyer_fact_list",
+        "artifact_format": "csv_template",
+        "boundary": "drafts",
+        "summary": "One row per fact and language: the source text, the translated text and whether it matches, changed or is missing.",
+        "spec": {
+          "columns": [
+            "fact_id",
+            "fact_type",
+            "source_text",
+            "language",
+            "translation_text",
+            "status"
+          ],
+          "pii_allowed": false
+        }
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs with the flyer translation check kit",
+      "category_reason": "A short checklist people run with the kit is part of its guardrails.",
+      "value": {
+        "items": [
+          "Run the fact comparison on the final file that will be printed, not an earlier draft.",
+          "A fluent community reviewer approves every language before printing.",
+          "Keep each approval with the flyer version it covers."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for the flyer translation check kit",
+      "value": {
+        "sources": [
+          {
+            "title": "US Department of Justice, Civil Rights Division: Limited English Proficiency",
+            "url": "https://www.justice.gov/crt/limited-english-proficiency",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "Digital.gov: Plain language guide series",
+            "url": "https://digital.gov/guides/plain-language",
+            "checked_date": "2026-10-30"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for the flyer translation check kit",
+      "value": {
+        "cases": [
+          {
+            "id": "FX-FLYER-MATCH",
+            "scenario": "All five translations carry every fact unchanged",
+            "sample_input": "SYNTHETIC: Flu clinic flyer in English with Spanish, Vietnamese, Arabic, Haitian Creole and Tagalog versions; the date 2026-11-12, the hours 9:00 to 13:00 and the phone line 555-0142 match in every version.",
+            "expected_indicators": [
+              "all_facts_present",
+              "questions_listed_for_reviewer"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "FX-FLYER-MISMATCH",
+            "scenario": "A translated date and phone number differ from the source",
+            "sample_input": "SYNTHETIC: The Tagalog version shows 2026-11-21 instead of 2026-11-12 and the phone line 555-0124 instead of 555-0142.",
+            "expected_indicators": [
+              "mismatched_date",
+              "mismatched_phone_number",
+              "hold_for_fluent_reviewer"
+            ],
+            "expected_human_escalation": true
+          }
+        ]
+      },
+      "relations": [
+        [
+          "verifies",
+          "kit"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "slug": "example.request",
+      "category": "noun.seed_hypothesis",
+      "role": "request",
+      "title": "A community center's need, in its own words",
+      "category_reason": "A need in an organization's own plain words frames what the kit should do.",
+      "value": {
+        "says": "We need each translated flyer checked against the English version before we print it, so a wrong date or phone number never goes out again. A fluent person from the community approves every language.",
+        "mark": "SYNTHETIC"
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "template.fact-comparison",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: facts compared across a flyer's languages",
+      "category_reason": "A fact comparison is a deterministic check run with a result per fact.",
+      "value": {
+        "describes": "every source fact checked in every translation as match, changed or missing, with words left in English",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "flyer_version",
+            "languages",
+            "facts",
+            "untranslated_terms"
+          ],
+          "properties": {
+            "flyer_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "languages": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"
+              }
+            },
+            "facts": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fact_id",
+                  "fact_type",
+                  "language",
+                  "status"
+                ],
+                "properties": {
+                  "fact_id": {
+                    "type": "string",
+                    "pattern": "^F-[0-9]{1,3}$"
+                  },
+                  "fact_type": {
+                    "type": "string",
+                    "enum": [
+                      "service",
+                      "date",
+                      "time",
+                      "address",
+                      "phone",
+                      "cost",
+                      "eligibility"
+                    ]
+                  },
+                  "language": {
+                    "type": "string",
+                    "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "match",
+                      "changed",
+                      "missing"
+                    ]
+                  }
+                }
+              }
+            },
+            "untranslated_terms": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "language",
+                  "term"
+                ],
+                "properties": {
+                  "language": {
+                    "type": "string",
+                    "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"
+                  },
+                  "term": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "flyer_version": "flu-clinic-2026-11-v3",
+          "languages": [
+            "tl"
+          ],
+          "facts": [
+            {
+              "fact_id": "F-2",
+              "fact_type": "date",
+              "language": "tl",
+              "status": "changed"
+            },
+            {
+              "fact_id": "F-5",
+              "fact_type": "phone",
+              "language": "tl",
+              "status": "changed"
+            }
+          ],
+          "untranslated_terms": []
+        },
+        "rules": [
+          "A date, time, phone or cost fact matches only when its digits are identical to the source."
+        ]
+      }
+    },
+    {
+      "slug": "template.reviewer-questions",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: questions for the fluent reviewer of one language",
+      "category_reason": "Questions for the reviewer are candidate problems the fluent reviewer confirms or dismisses.",
+      "value": {
+        "describes": "questions for the fluent reviewer of one language, each quoting the source and the translation",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "flyer_version",
+            "language",
+            "questions"
+          ],
+          "properties": {
+            "flyer_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "language": {
+              "type": "string",
+              "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"
+            },
+            "questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "about",
+                  "question"
+                ],
+                "properties": {
+                  "about": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "flyer_version": "flu-clinic-2026-11-v3",
+          "language": "tl",
+          "questions": [
+            {
+              "about": "F-2",
+              "question": "The source says 2026-11-12, and this version says 2026-11-21. Which date is right?"
+            }
+          ]
+        },
+        "rules": [
+          "Questions only, never corrections or approval."
+        ]
+      }
+    },
+    {
+      "slug": "template.person-step-record",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a person's record of a step that stays with people",
+      "category_reason": "A person's recorded outcome for a step is an attested result, kept without personal details.",
+      "value": {
+        "describes": "what a person did at a step that stays with people, without names or case details",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "step",
+            "outcome",
+            "by_role",
+            "on"
+          ],
+          "properties": {
+            "step": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{1,39}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "done",
+                "changed",
+                "held",
+                "not_needed"
+              ]
+            },
+            "by_role": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "by_role names a role, such as coordinator, never a person.",
+          "No names, contact details or case details: the record says what happened at the step, not who it was about."
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "compare-facts",
+      "kind": "verb.verify_gate",
+      "title": "Compare facts across the source and each translation",
+      "claimant": "agent",
+      "summary": "Extract the facts from the English source and check each translation for every fact, with numbers, dates, times and phone numbers matching exactly.",
+      "outcome": "A fact comparison per language, with every changed or missing fact listed.",
+      "ready_outcome": "facts_compared",
+      "model_use": "none",
+      "pinned": [
+        "tool.compare-flyer-facts",
+        "file.flyer-fact-list"
+      ],
+      "slots": [
+        {
+          "name": "source_flyer",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of a noun holding the final English flyer text."
+        },
+        {
+          "name": "translations",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of nouns holding each translated flyer's final text.",
+          "many": true,
+          "max": 10
+        }
+      ],
+      "produces": [
+        {
+          "name": "fact_comparison",
+          "template": "template.fact-comparison"
+        }
+      ],
+      "steps": [
+        "Build the fact list from the English source with the pinned read-only tool.",
+        "Mark each fact in each translation as match, changed or missing.",
+        "Numbers, dates, times and phone numbers match character for character after the language's normal formatting.",
+        "List words left in English."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.fact-comparison's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-fact-every-language",
+          "check": "Every fact in the source appears once per translation with a status.",
+          "method": "deterministic"
+        },
+        {
+          "id": "exact-numbers",
+          "check": "A date, time, phone or cost fact is a match only when its digits are identical to the source.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      }
+    },
+    {
+      "slug": "draft-reviewer-questions",
+      "kind": "verb.solve_draft",
+      "title": "Draft questions for the fluent reviewer",
+      "claimant": "agent",
+      "summary": "List questions for the fluent reviewer about each changed or missing fact, words left in English and long sentences, without rewriting the translation.",
+      "outcome": "Questions per language for the fluent reviewer, never corrections.",
+      "ready_outcome": "questions_listed",
+      "pinned": [
+        "skill.flyer-fact-checker",
+        "file.translation-review-sheet"
+      ],
+      "slots": [
+        {
+          "name": "fact_comparison",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the fact comparison."
+        }
+      ],
+      "produces": [
+        {
+          "name": "reviewer_questions",
+          "template": "template.reviewer-questions",
+          "max": 10
+        }
+      ],
+      "steps": [
+        "Turn every changed or missing fact into a question that quotes the source and the translation.",
+        "Add a question for each word left in English and each sentence above the target reading level.",
+        "Never rewrite the translation and never call it approved."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.reviewer-questions's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-mismatch-asked",
+          "check": "Every changed or missing fact in the comparison has a question.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-approval-language",
+          "check": "No question or note says the translation is approved or correct.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 900
+      },
+      "follows": [
+        "kit-flyer-translation-check.compare-facts"
+      ]
+    },
+    {
+      "slug": "fluent-review",
+      "kind": "verb.verify_gate",
+      "title": "Approve each translation (fluent community reviewer)",
+      "claimant": "human",
+      "summary": "A fluent speaker from the community reads the whole translated flyer, answers the questions, and approves or corrects it.",
+      "outcome": "A step record saying the translation was approved, corrected or held.",
+      "ready_outcome": "translation_reviewed",
+      "model_use": "none",
+      "pinned": [
+        "checklist",
+        "file.translation-review-sheet"
+      ],
+      "slots": [
+        {
+          "name": "reviewer_questions",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the questions for this language."
+        }
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Read the whole translated flyer, not only the questions.",
+        "Answer every question, and correct the translation where needed.",
+        "Record the outcome with the flyer version and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "kit-flyer-translation-check.draft-reviewer-questions"
+      ]
+    },
+    {
+      "slug": "print-and-post",
+      "kind": "verb.verify_gate",
+      "title": "Decide what gets printed and posted",
+      "claimant": "human",
+      "summary": "The communications coordinator prints and puts up only translations the fluent reviewer approved; the agent never shares a flyer anywhere.",
+      "outcome": "A step record saying the flyers were printed, changed or held.",
+      "ready_outcome": "flyers_released",
+      "model_use": "none",
+      "pinned": [
+        "checklist"
+      ],
+      "produces": [
+        {
+          "name": "step_record",
+          "template": "template.person-step-record"
+        }
+      ],
+      "steps": [
+        "Print only translations with a fluent reviewer's approval for this flyer version.",
+        "Keep each approval with its flyer version.",
+        "Record only the outcome and your role."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.person-step-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-submits",
+          "check": "The submitting key belongs to a person in the step's actor role, not to an agent.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-personal-data",
+          "check": "The output holds no names, phone numbers, email addresses, street addresses or case details.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 259200
+      },
+      "follows": [
+        "kit-flyer-translation-check.fluent-review"
+      ]
+    }
+  ]
+}

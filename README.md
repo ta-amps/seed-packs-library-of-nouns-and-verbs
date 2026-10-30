@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds twenty-eight proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds thirty-one proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -48,10 +48,13 @@ activated**, and no worker has run them yet.
 | [Volunteer shift schedule kit](packs/kit-volunteer-shift-schedule/README.md) | A disaster relief hub's volunteer shift schedule |
 | [Policy and law watch](packs/policy-and-law-watch/README.md) | Watching official public sources for new laws and rules on a topic |
 | [Public budget report](packs/public-budget-report/README.md) | Reporting on a public state or city budget |
+| [Donor thank-you letters kit](packs/kit-donor-thank-you-letters/README.md) | A small nonprofit's agent kit that drafts donor thank-you letters from a coded gift list with the finance lead's acknowledgment wording and checks donors' privacy choices first, while staff decide special handling and sign every letter |
+| [Flyer translation check kit](packs/kit-flyer-translation-check/README.md) | A community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed |
+| [Food bank inventory and pickup kit](packs/kit-food-bank-pickups/README.md) | A food bank's agent kit |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 516
-nouns and 169 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 556
+nouns and 182 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
