@@ -108,7 +108,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 6)
+        self.assertEqual(summary["worked_examples"], 7)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -116,7 +116,7 @@ class LibraryChecks(unittest.TestCase):
         for pack in ("repo-review", "video-showcase", "tool-discovery", "evaluation-design", "checks-of-checks",
                      "decomposition-patterns", "taste-palettes", "harness-onboarding-e2e", "security-review",
                      "cost-optimization", "docs-improvement", "benchmark-scores", "visual-rendering",
-                     "public-good-kits", "freshness-checks"):
+                     "public-good-kits", "freshness-checks", "findings-to-fixes"):
             self.assertIn(pack, PACKS)
 
     def test_packs_are_plain_english_collections(self):
@@ -143,6 +143,26 @@ class LibraryChecks(unittest.TestCase):
                 self.assertIn(verb, IDX.templates)
         bank = record("repo-review", "question-bank")["value"]
         self.assertEqual({q["pin"]["key"] for q in bank["questions"]}, {q["key"] for q in questions})
+
+    def test_findings_to_fixes_keeps_failures_and_independent_checks(self):
+        tasks = {t["brief"]["template_id"].split(".", 1)[1]: t["brief"] for t in IDX.docs["findings-to-fixes"]["verbs.json"]["tasks"]}
+        self.assertEqual(set(tasks), {"record-finding", "reproduce", "triage", "propose-fix", "fix", "verify-fix",
+                                      "add-regression-guard", "close", "publish-finding", "review-patterns"})
+        for slug in ("triage", "close"):
+            contract = tasks[slug]["output_contract"]
+            self.assertEqual((contract["write_mode"], contract["target_slot"]), ("compare_and_set", "finding"), slug)
+        for slug in set(tasks) - {"triage", "close"}:
+            self.assertEqual(tasks[slug]["output_contract"]["write_mode"], "create_only", slug)
+        self.assertEqual(tasks["verify-fix"]["review"]["required"], "distinct_reviewer")
+        self.assertEqual(tasks["close"]["execution"]["model_use"], "none")
+        produced = {item["template"]["key"] for item in tasks["propose-fix"]["output_contract"]["produces"]}
+        self.assertIn(key("taste-palettes", "template.brief"), produced)
+        self.assertIn(key("checks-of-checks", "method"), {pin["key"] for pin in tasks["add-regression-guard"]["inputs"]["pinned"]})
+        self.assertLessEqual({"prior-art-and-alternatives.survey-existing", "prior-art-and-alternatives.research-alternatives"},
+                             set(tasks["propose-fix"]["follows_templates"]))
+        for brief in tasks.values():
+            self.assertFalse(brief["review"]["publication_permitted"])
+            self.assertEqual(brief["execution"]["external_effects"], "none")
 
     def test_daily_refresh_packs_have_unactivated_schedules(self):
         schedules = [r for p in PACKS for r in IDX.docs[p]["nouns.json"]["records"] if r["value"]["role"] == "schedule_proposal"]
@@ -705,10 +725,37 @@ class WorkedExamples(unittest.TestCase):
         self.assertEqual(results["gray-767676-on-white"]["ratio"], 4.54)
         self.assertFalse(results["gray-777777-on-white"]["normal_text"])
 
+    def test_finding_record_checks_flag_each_bad_finding_for_its_reason(self):
+        value = record("findings-to-fixes", "record-checks")["value"]
+        results = vp.run_finding_checks(value)
+        self.assertEqual(results, value["expected"])
+        for fixture in value["golden_fixtures"]:
+            if fixture["label"] == "known_good":
+                self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+            else:
+                self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+        caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+        self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]})
+
+    def test_real_findings_are_public_and_rechecked(self):
+        schema = record("findings-to-fixes", "template.finding")["value"]["schema"]
+        fixtures = record("findings-to-fixes", "record-checks")["value"]["golden_fixtures"]
+        good = {f["finding"]["id"]: f["finding"] for f in fixtures if f["label"] == "known_good"}
+        examples = [r["value"] for r in IDX.docs["findings-to-fixes"]["nouns.json"]["records"]
+                    if r["value"]["role"] == "example" and r["value"]["conforms_to"]["key"] == key("findings-to-fixes", "template.finding")]
+        self.assertEqual(len(examples), 8)
+        for example in examples:
+            instance = example["instance"]
+            self.assertTrue(instance["public"], instance["id"])
+            self.assertEqual(good[instance["id"]], instance)
+        for finding in good.values():
+            self.assertEqual(vp.schema_errors(schema, finding), [], finding["id"])
+
     def test_tampered_expectations_fail(self):
         for pack, slug in (("repo-review", "evidence-standard"), ("checks-of-checks", "example.source-card-checks"),
                            ("evaluation-design", "example.worked"), ("security-review", "severity-rubric"),
-                           ("benchmark-scores", "example.staleness"), ("visual-rendering", "example.contrast")):
+                           ("benchmark-scores", "example.staleness"), ("visual-rendering", "example.contrast"),
+                           ("findings-to-fixes", "record-checks")):
             item = record(pack, slug)
             expected = item["value"]["expected"]
             first = next(iter(expected))
