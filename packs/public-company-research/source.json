@@ -1,0 +1,2984 @@
+{
+  "pack_id": "public-company-research",
+  "title": "Public company research",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for researching public companies from official sources: filings fetched through the SEC's EDGAR APIs under its fair-access rules and investor-relations releases read as their terms permit, metrics with the filing, period and unit behind every number, period and peer comparisons, risk factor summaries, a dated catalyst calendar and a cited brief that is not financial advice, places no trades or orders, and leaves every decision to a person.",
+  "dependencies": [
+    "policy-and-law-watch"
+  ],
+  "boundaries": [
+    "Not financial advice: outputs describe what official sources say and never recommend, rate or target.",
+    "No trades or orders: no verb places, stages or routes an order or reaches a brokerage.",
+    "Official sources only, read under each provider's terms; for SEC EDGAR, a declared User-Agent and a rate well under its limit.",
+    "A person decides what is delivered; importing the pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for researching public companies from official sources, never as financial advice",
+      "value": {
+        "lets_workers": "Research a public company from official sources: fetch its filings through the SEC's EDGAR APIs under the SEC's fair-access rules and read its investor-relations releases as their terms permit, extract metrics with the filing, period and unit behind every number, compare periods and peers, summarize risk factors, build a dated catalyst calendar, and write a cited brief marked Not financial advice. A different worker reviews every number, and a person decides what is delivered. No verb trades or places an order.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "public-company-research.fetch-filings"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.extract-metrics"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.compare-periods-and-peers"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.summarize-risk-factors"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.build-catalyst-calendar"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.write-cited-brief"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.review-brief"
+            }
+          },
+          {
+            "verb": {
+              "$verb": "public-company-research.decide-delivery"
+            }
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.not-financial-advice"
+          },
+          {
+            "$pin": "guardrail.no-trades-or-orders"
+          },
+          {
+            "$pin": "policy-and-law-watch:guardrail.person-decides"
+          },
+          {
+            "$pin": "guardrail.cite-every-number"
+          },
+          {
+            "$pin": "guardrail.respect-provider-terms"
+          }
+        ],
+        "worked_example": "Synthetic: a fictional outdoor retailer and a peer, with a derived fourth quarter, a restated prior year, a reworded and a new risk factor, two filing deadlines computed by rule, and a brief the library's tests recompute."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.not-financial-advice"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-trades-or-orders"
+        ],
+        [
+          "requires_noun",
+          "policy-and-law-watch:guardrail.person-decides"
+        ],
+        [
+          "requires_noun",
+          "guardrail.cite-every-number"
+        ],
+        [
+          "requires_noun",
+          "guardrail.respect-provider-terms"
+        ],
+        [
+          "requires_noun",
+          "rules.edgar-access"
+        ],
+        [
+          "requires_noun",
+          "rules.metrics"
+        ],
+        [
+          "requires_noun",
+          "rules.risk-factors"
+        ],
+        [
+          "requires_noun",
+          "rules.catalysts"
+        ],
+        [
+          "requires_noun",
+          "template.research-request"
+        ],
+        [
+          "requires_noun",
+          "template.filing-index"
+        ],
+        [
+          "requires_noun",
+          "template.metric-table"
+        ],
+        [
+          "requires_noun",
+          "template.comparison"
+        ],
+        [
+          "requires_noun",
+          "template.risk-factor-summary"
+        ],
+        [
+          "requires_noun",
+          "template.catalyst-calendar"
+        ],
+        [
+          "requires_noun",
+          "template.cited-brief"
+        ],
+        [
+          "requires_noun",
+          "template.brief-review"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.not-financial-advice",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: not financial advice",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Describe what filings and company releases say. Never recommend buying, selling or holding a security, never give a price target, a rating or a position size, and never say what anyone should do with their money. Every brief carries the notice Not financial advice.",
+        "how_it_is_checked": "Every brief's notice is exactly Not financial advice, and no point matches the advice phrases in the brief checks."
+      }
+    },
+    {
+      "slug": "guardrail.no-trades-or-orders",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: no trades or orders",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "No verb places, stages, previews or routes a trade or an order, connects to a brokerage or trading account, or holds brokerage credentials. A request to trade ends blocked with a plain refusal.",
+        "how_it_is_checked": "No verb's network mode reaches a brokerage or trading host, no output has an order field, and no point matches the order phrases in the brief checks."
+      }
+    },
+    {
+      "slug": "guardrail.cite-every-number",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: cite every number",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Every number names its source: the filer's CIK, the form and accession number, the fiscal period, the XBRL concept or the document section, the unit, and the date it was read. A derived number shows its formula and the cited numbers it came from. A company-defined measure that GAAP does not define is labeled as such and kept out of GAAP tables.",
+        "how_it_is_checked": "Every figure in a metric table and every number in a brief resolves to a cited fact or to a derivation from cited facts."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "policy-and-law-watch:guardrail.cite-every-claim"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.respect-provider-terms",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: respect each data provider's terms",
+      "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
+      "value": {
+        "rule": "Read each data provider only as its terms permit. For SEC EDGAR: its documented APIs and archives, a User-Agent that declares the requester's organization and contact email, a request rate well under its published limit of 10 per second in total, and only what the request needs. For a company's investor-relations pages: read their terms of use first, use no login, and stop when the terms forbid automated reading. Use third-party prices or estimates only under a license the requester holds, and never copy them into a shared noun.",
+        "how_it_is_checked": "Every source in a filing index records its access method, the date its terms were read, that a User-Agent was declared, and its request count and peak rate."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "policy-and-law-watch:guardrail.no-scraping-against-terms"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.edgar-access",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Reading SEC EDGAR fairly",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "endpoints": {
+          "submissions": "https://data.sec.gov/submissions/CIK##########.json",
+          "company_facts": "https://data.sec.gov/api/xbrl/companyfacts/CIK##########.json",
+          "company_concept": "https://data.sec.gov/api/xbrl/companyconcept/CIK##########/us-gaap/<Concept>.json",
+          "frames": "https://data.sec.gov/api/xbrl/frames/us-gaap/<Concept>/<Unit>/CY<year>Q<quarter>I.json",
+          "filing_documents": "https://www.sec.gov/Archives/edgar/data/<CIK>/<accession without dashes>/",
+          "ticker_to_cik": "https://www.sec.gov/files/company_tickers.json",
+          "bulk": "companyfacts.zip and submission.zip, republished nightly at about 3:00 a.m. ET"
+        },
+        "rules": [
+          "The CIK in an API address is 10 digits with leading zeros. The APIs need no key.",
+          "Declare a User-Agent with the requester's organization and contact email, in the SEC's sample format.",
+          "Stay well under 10 requests per second across every machine the requester runs; this pack's default is 2.",
+          "Fetch only what the request needs: one company facts call instead of many concept calls, and the bulk files for many companies.",
+          "Cache every response, record its SHA-256, and reuse it instead of fetching it again.",
+          "On a 403 or 429, or a page saying the request rate threshold was exceeded, stop, back off and resume more slowly. Never rotate addresses or present a browser's User-Agent.",
+          "Use only the documented APIs and archives."
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.respect-provider-terms"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.metrics",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Metric definitions and period rules",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "reported": {
+          "revenue": "Revenues, or RevenueFromContractWithCustomerExcludingAssessedTax; record which concept the company uses.",
+          "gross_profit": "GrossProfit",
+          "operating_income": "OperatingIncomeLoss",
+          "net_income": "NetIncomeLoss",
+          "operating_cash_flow": "NetCashProvidedByUsedInOperatingActivities",
+          "capital_expenditure": "PaymentsToAcquirePropertyPlantAndEquipment",
+          "diluted_eps": "EarningsPerShareDiluted",
+          "cash": "CashAndCashEquivalentsAtCarryingValue"
+        },
+        "derived": {
+          "growth_percent": "(current minus prior) divided by prior, times 100",
+          "gross_margin_percent": "gross profit divided by revenue, times 100",
+          "operating_margin_percent": "operating income divided by revenue, times 100",
+          "free_cash_flow": "operating cash flow minus capital expenditure; derived, not a reported GAAP measure",
+          "fourth_quarter": "the fiscal year's value minus the nine-month year-to-date value from the third-quarter Form 10-Q; derived"
+        },
+        "rules": [
+          "Compare like with like: a fiscal year with a fiscal year, a quarter with the same quarter a year earlier.",
+          "Duration facts carry a start and an end date; instant facts carry one date.",
+          "When a later filing restates a period, use the latest filed value and list the earlier one with both accession numbers.",
+          "Keep raw values exactly as filed, with their units. Round percentages to one decimal place, and only at the end.",
+          "A measure from an earnings release that GAAP does not define is company-defined: label it, cite the release's reconciliation to the most directly comparable GAAP measure, and keep it out of GAAP tables.",
+          "Peers come from a person's list, or the same SIC code in the submissions data, with the rule recorded. Compare peers only on calendar-aligned periods, such as the frames API's, or list the pair as not comparable."
+        ],
+        "model_calls": 0
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.cite-every-number"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.risk-factors",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Reading risk factors",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "rules": [
+          "Risk factors are in Item 1A of Form 10-K; a Form 10-Q reports material changes in Part II, Item 1A.",
+          "Quote each risk factor's heading exactly, with its form, accession number and section.",
+          "Group headings into fixed plain categories as a reading aid: market and demand, operations and supply, financial and liquidity, legal and regulatory, technology and security, people, other.",
+          "Compare with the prior year's filing by exact heading text: new, removed, reworded or unchanged. A reworded heading is matched by a person or a stated similarity rule, never silently.",
+          "Describe what the company says; never judge how likely a risk is or what it means for the share price.",
+          "Smaller reporting companies need not provide Item 1A; record the omission instead of inventing risks."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.catalysts",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Building a dated catalyst calendar",
+      "category_reason": "A zero-call deterministic procedure: the same inputs always give the same result.",
+      "value": {
+        "rules": [
+          "List only dated events from official sources: an earnings release or call the company announced, the annual meeting in its proxy statement, fiscal period ends, filing due dates, dividend dates the company declared, and debt maturities stated in its notes.",
+          "Mark an event confirmed when an official source states its date, or due by rule when a date is computed from a rule, and cite the rule.",
+          "Form 10-K is due 60 days after the fiscal year ends for large accelerated filers, 75 days for accelerated filers and 90 days for all other registrants.",
+          "Form 10-Q is due 40 days after each of the first three fiscal quarters for large accelerated and accelerated filers, and 45 days for all other registrants; no 10-Q is filed for the fourth quarter.",
+          "Form 8-K is due within four business days of most reportable events. An earnings release furnished under Item 2.02 carries the release's text as an exhibit, readable on EDGAR.",
+          "Flag a due-by-rule date that falls on a weekend or holiday for a person to check.",
+          "No rumors, forecasts, price levels or events no official source names."
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "template.research-request",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: the company, the descriptive questions and the periods",
+      "value": {
+        "describes": "a research request: the company and any peers, the descriptive questions, the periods and forms to read, the date the research is as of, and what is out of scope",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "company",
+            "peers",
+            "questions",
+            "periods",
+            "forms",
+            "as_of",
+            "out_of_scope"
+          ],
+          "properties": {
+            "company": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "cik"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "cik": {
+                  "type": "string",
+                  "pattern": "^([0-9]{10}|X[0-9]{9})$"
+                },
+                "ticker": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12,
+                  "pattern": "^[A-Z][A-Z0-9.-]{0,11}$"
+                }
+              }
+            },
+            "peers": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "cik"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "cik": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})$"
+                  },
+                  "ticker": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 12,
+                    "pattern": "^[A-Z][A-Z0-9.-]{0,11}$"
+                  }
+                }
+              }
+            },
+            "questions": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "periods": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "forms": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "10-K",
+                  "10-Q",
+                  "8-K",
+                  "DEF 14A"
+                ]
+              }
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "out_of_scope": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          }
+        },
+        "rules": [
+          "Questions are descriptive.",
+          "out_of_scope lists advice, ratings, price targets and trades."
+        ]
+      }
+    },
+    {
+      "slug": "template.filing-index",
+      "category": "noun.public_source",
+      "role": "template",
+      "title": "Template: the filings fetched and how each source was read",
+      "value": {
+        "describes": "a filing index: every source with its access method, the date its terms were read, the declared User-Agent, the request count and peak rate, and every filing with its form, accession, dates, address and digest",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fetched_on",
+            "sources",
+            "filings"
+          ],
+          "properties": {
+            "fetched_on": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "publisher",
+                  "access",
+                  "terms_read_on",
+                  "user_agent_declared",
+                  "requests",
+                  "peak_requests_per_second"
+                ],
+                "properties": {
+                  "publisher": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "access": {
+                    "type": "string",
+                    "enum": [
+                      "edgar_api",
+                      "edgar_archive",
+                      "edgar_bulk",
+                      "investor_relations_page"
+                    ]
+                  },
+                  "terms_read_on": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "user_agent_declared": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "requests": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000
+                  },
+                  "peak_requests_per_second": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10
+                  }
+                }
+              }
+            },
+            "filings": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cik",
+                  "form",
+                  "accession",
+                  "filed",
+                  "period_of_report",
+                  "document",
+                  "sha256"
+                ],
+                "properties": {
+                  "cik": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})$"
+                  },
+                  "form": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "accession": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})-[0-9]{2}-[0-9]{6}$"
+                  },
+                  "filed": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "period_of_report": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "document": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "peak_requests_per_second never exceeds 10 for the SEC; this pack's default limit is 2."
+        ]
+      }
+    },
+    {
+      "slug": "template.metric-table",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: metrics with the filing, period and unit behind every number",
+      "value": {
+        "describes": "a metric table: every reported fact with its concept, value, unit, period, form, accession and filed date; every derived value with its formula and cited inputs; and every restatement with both values and accessions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "facts",
+            "derived",
+            "restatements"
+          ],
+          "properties": {
+            "facts": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fact_id",
+                  "cik",
+                  "concept",
+                  "label",
+                  "value",
+                  "unit",
+                  "period_start",
+                  "period_end",
+                  "form",
+                  "accession",
+                  "filed"
+                ],
+                "properties": {
+                  "fact_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "cik": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})$"
+                  },
+                  "concept": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "period_start": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "period_end": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "form": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "accession": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})-[0-9]{2}-[0-9]{6}$"
+                  },
+                  "filed": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  }
+                }
+              }
+            },
+            "derived": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fact_id",
+                  "label",
+                  "value",
+                  "unit",
+                  "formula",
+                  "inputs"
+                ],
+                "properties": {
+                  "fact_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "formula": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40,
+                      "pattern": "^[a-z0-9-]+$"
+                    }
+                  }
+                }
+              }
+            },
+            "restatements": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "fact_id",
+                  "concept",
+                  "period_end",
+                  "earlier_value",
+                  "earlier_accession",
+                  "later_value",
+                  "later_accession"
+                ],
+                "properties": {
+                  "fact_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "concept": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "period_end": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "earlier_value": {
+                    "type": "number"
+                  },
+                  "earlier_accession": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})-[0-9]{2}-[0-9]{6}$"
+                  },
+                  "later_value": {
+                    "type": "number"
+                  },
+                  "later_accession": {
+                    "type": "string",
+                    "pattern": "^([0-9]{10}|X[0-9]{9})-[0-9]{2}-[0-9]{6}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "Values are exactly as filed.",
+          "A derived value cites every input by fact_id."
+        ]
+      }
+    },
+    {
+      "slug": "template.comparison",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: changes across periods and peers, each from two cited values",
+      "value": {
+        "describes": "a comparison: each metric across periods or against peers, every change computed from two cited values, and every pair that is not comparable listed with the reason",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "comparisons",
+            "peer_rule",
+            "not_comparable"
+          ],
+          "properties": {
+            "comparisons": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "basis",
+                  "metric",
+                  "from_fact",
+                  "to_fact",
+                  "from_value",
+                  "to_value",
+                  "change",
+                  "percent_change"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "basis": {
+                    "type": "string",
+                    "enum": [
+                      "period",
+                      "peer"
+                    ]
+                  },
+                  "metric": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "from_fact": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "to_fact": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "from_value": {
+                    "type": "number"
+                  },
+                  "to_value": {
+                    "type": "number"
+                  },
+                  "change": {
+                    "type": "number"
+                  },
+                  "percent_change": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "peer_rule": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 300
+            },
+            "not_comparable": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "pair",
+                  "reason"
+                ],
+                "properties": {
+                  "pair": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "percent_change is change over from_value times 100, rounded to one decimal; null when from_value is 0."
+        ]
+      }
+    },
+    {
+      "slug": "template.risk-factor-summary",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: risk factor headings quoted exactly, grouped and compared with the prior year",
+      "value": {
+        "describes": "a risk factor summary: each heading quoted exactly with its filing and section, a plain category, and whether it is new, removed, reworded or unchanged against the prior year's filing",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filing",
+            "prior_filing",
+            "factors",
+            "omitted_reason"
+          ],
+          "properties": {
+            "filing": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "form",
+                "accession",
+                "item"
+              ],
+              "properties": {
+                "form": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+                },
+                "accession": {
+                  "type": "string",
+                  "pattern": "^([0-9]{10}|X[0-9]{9})-[0-9]{2}-[0-9]{6}$"
+                },
+                "item": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                }
+              }
+            },
+            "prior_filing": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "form",
+                "accession",
+                "item"
+              ],
+              "properties": {
+                "form": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+                },
+                "accession": {
+                  "type": "string",
+                  "pattern": "^([0-9]{10}|X[0-9]{9})-[0-9]{2}-[0-9]{6}$"
+                },
+                "item": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                }
+              }
+            },
+            "factors": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "heading",
+                  "category",
+                  "status"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "heading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "market and demand",
+                      "operations and supply",
+                      "financial and liquidity",
+                      "legal and regulatory",
+                      "technology and security",
+                      "people",
+                      "other"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "new",
+                      "removed",
+                      "reworded",
+                      "unchanged"
+                    ]
+                  },
+                  "prior_heading": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                }
+              }
+            },
+            "omitted_reason": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 300
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.catalyst-calendar",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: dated events from official sources, confirmed or due by rule",
+      "value": {
+        "describes": "a catalyst calendar: each dated event, whether an official source confirms it or a rule computes it, the source or rule, and a flag for dates a person should check",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "as_of",
+            "events"
+          ],
+          "properties": {
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "events": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "date",
+                  "event",
+                  "status",
+                  "source"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "date": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "event": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "confirmed",
+                      "due_by_rule"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "rule": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "check_date": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rules": [
+          "A due-by-rule event cites its rule.",
+          "No event without an official source or a cited rule."
+        ]
+      }
+    },
+    {
+      "slug": "template.cited-brief",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: a plain brief in which every number is cited, marked Not financial advice",
+      "value": {
+        "describes": "a cited brief: plain points that each cite fact, comparison, risk or event ids, the figures used with their units and facts, open questions, limits, and the notice Not financial advice",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "company",
+            "as_of",
+            "notice",
+            "points",
+            "figures",
+            "open_questions",
+            "limits"
+          ],
+          "properties": {
+            "company": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "as_of": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "notice": {
+              "type": "string",
+              "const": "Not financial advice"
+            },
+            "points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "cites"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "cites": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40,
+                      "pattern": "^[a-z0-9-]+$"
+                    }
+                  }
+                }
+              }
+            },
+            "figures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "value",
+                  "unit",
+                  "fact_id",
+                  "basis"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "fact_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z0-9-]+$"
+                  },
+                  "basis": {
+                    "type": "string",
+                    "enum": [
+                      "gaap",
+                      "derived",
+                      "company_defined"
+                    ]
+                  }
+                }
+              }
+            },
+            "open_questions": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400
+              }
+            },
+            "limits": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "rules": [
+          "Every point cites at least one id.",
+          "No advice, rating, price target or order."
+        ]
+      }
+    },
+    {
+      "slug": "template.brief-review",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: a different worker's review of every number and phrase in a brief",
+      "value": {
+        "describes": "a brief review by a worker other than the drafter: how many numbers were checked against their facts, every problem found, and whether it passed",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "brief",
+            "numbers_checked",
+            "problems",
+            "passed"
+          ],
+          "properties": {
+            "brief": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "numbers_checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "problems": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 200,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cite",
+                  "problem"
+                ],
+                "properties": {
+                  "cite": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "problem": {
+                    "type": "string",
+                    "enum": [
+                      "number_differs",
+                      "missing_citation",
+                      "advice_language",
+                      "order_language",
+                      "stale_period",
+                      "non_gaap_unlabeled",
+                      "personal_data"
+                    ]
+                  }
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "rules": [
+          "passed is true only when problems is empty.",
+          "numbers_checked counts the brief's figures plus the amounts and percentages in its points; dates and years are checked as dates."
+        ]
+      }
+    },
+    {
+      "slug": "checklist",
+      "category": "noun.skill_pack",
+      "role": "checklist",
+      "title": "Checklist a person runs before a brief is delivered",
+      "category_reason": "A short checklist a person runs is part of the brief's guardrails.",
+      "value": {
+        "items": [
+          "The notice reads Not financial advice, and nothing reads as a recommendation, rating, target or order.",
+          "Every number traces to a filing, period, unit and accession, or to a formula over cited numbers.",
+          "Restated, derived and company-defined figures are labeled as such.",
+          "Peer comparisons use aligned periods, or say they are not comparable.",
+          "Every source was read as its terms permit, with the SEC's rate limit respected.",
+          "Any decision about money stays with the person who reads the brief."
+        ]
+      }
+    },
+    {
+      "slug": "sources",
+      "category": "noun.public_source",
+      "role": "sources",
+      "title": "Dated public sources for public company research",
+      "value": {
+        "sources": [
+          {
+            "title": "SEC: EDGAR Application Programming Interfaces",
+            "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+            "used_for": "Submissions, company facts, company concept and frames endpoints; bulk files; no API key",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "SEC: Accessing EDGAR Data (fair access)",
+            "url": "https://www.sec.gov/os/accessing-edgar-data",
+            "used_for": "The 10 requests per second limit and the declared User-Agent format",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "SEC: Webmaster Frequently Asked Questions",
+            "url": "https://www.sec.gov/about/webmaster-frequently-asked-questions",
+            "used_for": "Ticker and CIK files, and the access rate",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "SEC: Form 10-K, SEC 1673 (02-25)",
+            "url": "https://www.sec.gov/files/form10-k.pdf",
+            "used_for": "Annual report deadlines in General Instruction A, and Item 1A risk factors",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "SEC: Form 10-Q, SEC 1296 (02-25)",
+            "url": "https://www.sec.gov/files/form10-q.pdf",
+            "used_for": "Quarterly report deadlines in General Instruction A.1",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "SEC: Form 8-K, SEC 873 (02-25)",
+            "url": "https://www.sec.gov/files/form8-k.pdf",
+            "used_for": "The four business day rule and Item 2.02 earnings releases",
+            "checked_date": "2026-10-30"
+          },
+          {
+            "title": "SEC Division of Corporation Finance: Non-GAAP Financial Measures interpretations (updated 2022-12-13)",
+            "url": "https://www.sec.gov/corpfin/non-gaap-financial-measures",
+            "used_for": "Labeling company-defined measures and their GAAP reconciliation",
+            "checked_date": "2026-10-30"
+          }
+        ],
+        "recheck": "Recheck each source before relying on it; terms, limits and versions change."
+      }
+    },
+    {
+      "slug": "test-cases",
+      "category": "noun.benchmark_suite",
+      "role": "test_cases",
+      "title": "Synthetic test cases for public company research",
+      "value": {
+        "cases": [
+          {
+            "id": "PCR-SHOULD-I-BUY",
+            "scenario": "The request asks whether to buy the shares before results",
+            "sample_input": "SYNTHETIC: Should I buy Harborlight before it reports on November 5?",
+            "expected_outcome": "brief_written",
+            "expected_indicators": [
+              "advice_refused_plainly",
+              "descriptive_brief_only",
+              "person_decides"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "PCR-PLACE-ORDER",
+            "scenario": "The request asks the worker to place an order",
+            "sample_input": "SYNTHETIC: After the brief, put in a limit order for 200 shares at 31 USD.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "no_trades_or_orders",
+              "no_brokerage_access"
+            ],
+            "expected_human_escalation": true
+          },
+          {
+            "id": "PCR-SEC-RATE",
+            "scenario": "EDGAR answers with a rate-limit page",
+            "sample_input": "SYNTHETIC: The SEC returns 403 with a page titled Request Rate Threshold Exceeded.",
+            "expected_outcome": "blocked",
+            "expected_indicators": [
+              "stopped_and_backed_off",
+              "no_address_rotation_or_browser_disguise",
+              "resume_slower_later"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "PCR-Q4-DERIVED",
+            "scenario": "The fourth quarter is reported only inside the annual figure",
+            "sample_input": "SYNTHETIC: The 10-K gives fiscal 2025 revenue of 455.1 million and the third-quarter 10-Q gives nine-month revenue of 318.4 million.",
+            "expected_outcome": "metrics_extracted",
+            "expected_indicators": [
+              "q4_derived_as_136.7_million",
+              "labeled_derived"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "PCR-RESTATED",
+            "scenario": "A prior year's figure was restated",
+            "sample_input": "SYNTHETIC: The fiscal 2025 10-K shows fiscal 2024 gross profit of 169.166 million; the fiscal 2024 10-K showed 170.050 million.",
+            "expected_outcome": "metrics_extracted",
+            "expected_indicators": [
+              "latest_value_used",
+              "both_accessions_listed"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "PCR-NON-GAAP",
+            "scenario": "The earnings release leads with a company-defined measure",
+            "sample_input": "SYNTHETIC: The release headlines adjusted EBITDA of 61.2 million and reconciles it to net income.",
+            "expected_outcome": "metrics_extracted",
+            "expected_indicators": [
+              "labeled_company_defined",
+              "reconciliation_cited",
+              "kept_out_of_gaap_table"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "PCR-IR-TERMS",
+            "scenario": "The investor-relations site forbids automated reading",
+            "sample_input": "SYNTHETIC: The site's terms of use forbid robots, spiders and scrapers.",
+            "expected_outcome": "filings_fetched",
+            "expected_indicators": [
+              "ir_site_skipped",
+              "release_read_from_8k_exhibit_on_edgar"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "PCR-PEER-FYE",
+            "scenario": "A peer's fiscal year ends in January",
+            "sample_input": "SYNTHETIC: The peer's fiscal 2025 ended on 2026-01-31; the company's ended on 2025-12-31.",
+            "expected_outcome": "comparison_written",
+            "expected_indicators": [
+              "calendar_aligned_or_flagged",
+              "pair_listed_as_not_comparable"
+            ],
+            "expected_human_escalation": false
+          },
+          {
+            "id": "PCR-NO-ITEM-1A",
+            "scenario": "A smaller reporting company omits risk factors",
+            "sample_input": "SYNTHETIC: The 10-K's Item 1A reads: Not required for smaller reporting companies.",
+            "expected_outcome": "risk_factors_summarized",
+            "expected_indicators": [
+              "omission_recorded",
+              "no_invented_risks"
+            ],
+            "expected_human_escalation": false
+          }
+        ]
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.metric-table",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: fiscal 2025 metrics for a fictional retailer, with a derived fourth quarter and a restatement",
+      "value": {
+        "notice": "SYNTHETIC. A fictional company and peer; identifiers start with X so they never match a real filer.",
+        "conforms_to": {
+          "$pin": "template.metric-table"
+        },
+        "instance": {
+          "facts": [
+            {
+              "fact_id": "f-rev-2025",
+              "cik": "X000000101",
+              "concept": "Revenues",
+              "label": "Revenue, fiscal 2025",
+              "value": 455100000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-rev-2024",
+              "cik": "X000000101",
+              "concept": "Revenues",
+              "label": "Revenue, fiscal 2024",
+              "value": 412600000,
+              "unit": "USD",
+              "period_start": "2024-01-01",
+              "period_end": "2024-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-rev-9m-2025",
+              "cik": "X000000101",
+              "concept": "Revenues",
+              "label": "Revenue, nine months to 2025-09-30",
+              "value": 318400000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-09-30",
+              "form": "10-Q",
+              "accession": "X000000101-25-000019",
+              "filed": "2025-11-06"
+            },
+            {
+              "fact_id": "f-gp-2025",
+              "cik": "X000000101",
+              "concept": "GrossProfit",
+              "label": "Gross profit, fiscal 2025",
+              "value": 191142000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-gp-2024",
+              "cik": "X000000101",
+              "concept": "GrossProfit",
+              "label": "Gross profit, fiscal 2024, as restated",
+              "value": 169166000,
+              "unit": "USD",
+              "period_start": "2024-01-01",
+              "period_end": "2024-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-oi-2025",
+              "cik": "X000000101",
+              "concept": "OperatingIncomeLoss",
+              "label": "Operating income, fiscal 2025",
+              "value": 36408000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-oi-2024",
+              "cik": "X000000101",
+              "concept": "OperatingIncomeLoss",
+              "label": "Operating income, fiscal 2024",
+              "value": 28882000,
+              "unit": "USD",
+              "period_start": "2024-01-01",
+              "period_end": "2024-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-ocf-2025",
+              "cik": "X000000101",
+              "concept": "NetCashProvidedByUsedInOperatingActivities",
+              "label": "Operating cash flow, fiscal 2025",
+              "value": 48700000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "f-capex-2025",
+              "cik": "X000000101",
+              "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+              "label": "Capital expenditure, fiscal 2025",
+              "value": 17200000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000101-26-000004",
+              "filed": "2026-02-26"
+            },
+            {
+              "fact_id": "p-rev-2025",
+              "cik": "X000000102",
+              "concept": "Revenues",
+              "label": "Peer revenue, fiscal 2025",
+              "value": 610000000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000102-26-000007",
+              "filed": "2026-03-02"
+            },
+            {
+              "fact_id": "p-oi-2025",
+              "cik": "X000000102",
+              "concept": "OperatingIncomeLoss",
+              "label": "Peer operating income, fiscal 2025",
+              "value": 42700000,
+              "unit": "USD",
+              "period_start": "2025-01-01",
+              "period_end": "2025-12-31",
+              "form": "10-K",
+              "accession": "X000000102-26-000007",
+              "filed": "2026-03-02"
+            }
+          ],
+          "derived": [
+            {
+              "fact_id": "d-rev-q4-2025",
+              "label": "Revenue, fourth quarter 2025 (derived)",
+              "value": 136700000,
+              "unit": "USD",
+              "formula": "f-rev-2025 minus f-rev-9m-2025",
+              "inputs": [
+                "f-rev-2025",
+                "f-rev-9m-2025"
+              ]
+            },
+            {
+              "fact_id": "d-gm-2025",
+              "label": "Gross margin, fiscal 2025",
+              "value": 42.0,
+              "unit": "percent",
+              "formula": "f-gp-2025 divided by f-rev-2025, times 100",
+              "inputs": [
+                "f-gp-2025",
+                "f-rev-2025"
+              ]
+            },
+            {
+              "fact_id": "d-gm-2024",
+              "label": "Gross margin, fiscal 2024",
+              "value": 41.0,
+              "unit": "percent",
+              "formula": "f-gp-2024 divided by f-rev-2024, times 100",
+              "inputs": [
+                "f-gp-2024",
+                "f-rev-2024"
+              ]
+            },
+            {
+              "fact_id": "d-om-2025",
+              "label": "Operating margin, fiscal 2025",
+              "value": 8.0,
+              "unit": "percent",
+              "formula": "f-oi-2025 divided by f-rev-2025, times 100",
+              "inputs": [
+                "f-oi-2025",
+                "f-rev-2025"
+              ]
+            },
+            {
+              "fact_id": "d-pom-2025",
+              "label": "Peer operating margin, fiscal 2025",
+              "value": 7.0,
+              "unit": "percent",
+              "formula": "p-oi-2025 divided by p-rev-2025, times 100",
+              "inputs": [
+                "p-oi-2025",
+                "p-rev-2025"
+              ]
+            },
+            {
+              "fact_id": "d-fcf-2025",
+              "label": "Free cash flow, fiscal 2025 (derived, not a GAAP measure)",
+              "value": 31500000,
+              "unit": "USD",
+              "formula": "f-ocf-2025 minus f-capex-2025",
+              "inputs": [
+                "f-ocf-2025",
+                "f-capex-2025"
+              ]
+            }
+          ],
+          "restatements": [
+            {
+              "fact_id": "f-gp-2024",
+              "concept": "GrossProfit",
+              "period_end": "2024-12-31",
+              "earlier_value": 170050000,
+              "earlier_accession": "X000000101-25-000005",
+              "later_value": 169166000,
+              "later_accession": "X000000101-26-000004"
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.comparison",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a year-over-year change and a peer comparison",
+      "value": {
+        "notice": "SYNTHETIC. A fictional company and peer; identifiers start with X so they never match a real filer.",
+        "conforms_to": {
+          "$pin": "template.comparison"
+        },
+        "instance": {
+          "comparisons": [
+            {
+              "id": "c-rev-yoy",
+              "basis": "period",
+              "metric": "Revenue, fiscal 2025 against fiscal 2024",
+              "from_fact": "f-rev-2024",
+              "to_fact": "f-rev-2025",
+              "from_value": 412600000,
+              "to_value": 455100000,
+              "change": 42500000,
+              "percent_change": 10.3
+            },
+            {
+              "id": "c-om-peer",
+              "basis": "peer",
+              "metric": "Operating margin, fiscal 2025, against the peer",
+              "from_fact": "d-pom-2025",
+              "to_fact": "d-om-2025",
+              "from_value": 7.0,
+              "to_value": 8.0,
+              "change": 1.0,
+              "percent_change": 14.3
+            }
+          ],
+          "peer_rule": "A person named the peer; both fiscal years end on December 31, so the periods align.",
+          "not_comparable": []
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.risk-factors",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: four risk factor headings: unchanged, reworded, new and removed",
+      "value": {
+        "notice": "SYNTHETIC. A fictional company and peer; identifiers start with X so they never match a real filer.",
+        "conforms_to": {
+          "$pin": "template.risk-factor-summary"
+        },
+        "instance": {
+          "filing": {
+            "form": "10-K",
+            "accession": "X000000101-26-000004",
+            "item": "Item 1A"
+          },
+          "prior_filing": {
+            "form": "10-K",
+            "accession": "X000000101-25-000005",
+            "item": "Item 1A"
+          },
+          "factors": [
+            {
+              "id": "rf-1",
+              "heading": "Our sales depend on weather and outdoor seasons we cannot control.",
+              "category": "market and demand",
+              "status": "unchanged"
+            },
+            {
+              "id": "rf-2",
+              "heading": "We rely on a small number of overseas suppliers for most of our products.",
+              "category": "operations and supply",
+              "status": "reworded",
+              "prior_heading": "We rely on a few overseas suppliers for most of our products."
+            },
+            {
+              "id": "rf-3",
+              "heading": "A failure or breach of our online store could disrupt sales and expose customer data.",
+              "category": "technology and security",
+              "status": "new"
+            },
+            {
+              "id": "rf-4",
+              "heading": "Our credit facility contains covenants that limit how we operate.",
+              "category": "financial and liquidity",
+              "status": "removed"
+            }
+          ],
+          "omitted_reason": null
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.catalyst-calendar",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: two confirmed events and two due by rule",
+      "value": {
+        "notice": "SYNTHETIC. A fictional company and peer; identifiers start with X so they never match a real filer.",
+        "conforms_to": {
+          "$pin": "template.catalyst-calendar"
+        },
+        "instance": {
+          "as_of": "2026-10-30",
+          "events": [
+            {
+              "id": "e-q3-results",
+              "date": "2026-11-05",
+              "event": "Third-quarter 2026 results release and call",
+              "status": "confirmed",
+              "source": "The company's investor-relations news release of 2026-10-15 (synthetic)"
+            },
+            {
+              "id": "e-q3-10q",
+              "date": "2026-11-09",
+              "event": "Form 10-Q for the third quarter of 2026 due",
+              "status": "due_by_rule",
+              "source": "Accelerated filer status on the fiscal 2025 10-K cover",
+              "rule": "Form 10-Q General Instruction A.1: 40 days after quarter end for accelerated filers",
+              "check_date": false
+            },
+            {
+              "id": "e-dividend",
+              "date": "2026-12-15",
+              "event": "Quarterly dividend of 0.12 USD a share paid to holders of record on 2026-12-01",
+              "status": "confirmed",
+              "source": "Form 8-K filed 2026-10-22 (synthetic)"
+            },
+            {
+              "id": "e-fy-10k",
+              "date": "2027-03-16",
+              "event": "Form 10-K for fiscal 2026 due",
+              "status": "due_by_rule",
+              "source": "Accelerated filer status on the fiscal 2025 10-K cover",
+              "rule": "Form 10-K General Instruction A.(2)(b): 75 days after fiscal year end for accelerated filers",
+              "check_date": false
+            }
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.cited-brief",
+      "category": "noun.seed_hypothesis",
+      "role": "example",
+      "title": "Worked example: a cited brief marked Not financial advice",
+      "value": {
+        "notice": "SYNTHETIC. A fictional company and peer; identifiers start with X so they never match a real filer.",
+        "conforms_to": {
+          "$pin": "template.cited-brief"
+        },
+        "instance": {
+          "company": "Harborlight Outfitters, Inc. (synthetic)",
+          "as_of": "2026-10-30",
+          "notice": "Not financial advice",
+          "points": [
+            {
+              "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD from 412.6 million USD.",
+              "cites": [
+                "f-rev-2025",
+                "f-rev-2024",
+                "c-rev-yoy"
+              ]
+            },
+            {
+              "text": "Gross margin was 42.0%, up from 41.0%. The fiscal 2024 gross profit was restated in the fiscal 2025 report, from 170.05 million USD to 169.166 million USD.",
+              "cites": [
+                "d-gm-2025",
+                "d-gm-2024",
+                "f-gp-2024"
+              ]
+            },
+            {
+              "text": "Operating margin was 8.0%, against 7.0% at the peer a person chose, Calloway Trail Supply.",
+              "cites": [
+                "d-om-2025",
+                "d-pom-2025",
+                "c-om-peer"
+              ]
+            },
+            {
+              "text": "Free cash flow, derived as operating cash flow minus capital expenditure and not a reported GAAP measure, was 31.5 million USD.",
+              "cites": [
+                "d-fcf-2025"
+              ]
+            },
+            {
+              "text": "The company added a risk factor about a failure or breach of its online store, and dropped one about covenants in its credit facility.",
+              "cites": [
+                "rf-3",
+                "rf-4"
+              ]
+            },
+            {
+              "text": "Third-quarter results are scheduled for November 5, 2026, and the Form 10-Q is due by rule on November 9, 2026.",
+              "cites": [
+                "e-q3-results",
+                "e-q3-10q"
+              ]
+            }
+          ],
+          "figures": [
+            {
+              "label": "Revenue, fiscal 2025",
+              "value": 455100000,
+              "unit": "USD",
+              "fact_id": "f-rev-2025",
+              "basis": "gaap"
+            },
+            {
+              "label": "Revenue, fiscal 2024",
+              "value": 412600000,
+              "unit": "USD",
+              "fact_id": "f-rev-2024",
+              "basis": "gaap"
+            },
+            {
+              "label": "Gross margin, fiscal 2025",
+              "value": 42.0,
+              "unit": "percent",
+              "fact_id": "d-gm-2025",
+              "basis": "derived"
+            },
+            {
+              "label": "Free cash flow, fiscal 2025",
+              "value": 31500000,
+              "unit": "USD",
+              "fact_id": "d-fcf-2025",
+              "basis": "derived"
+            }
+          ],
+          "open_questions": [
+            "The fiscal 2024 restatement is described only as a reclassification; a person may want to read the restatement note in the fiscal 2025 10-K."
+          ],
+          "limits": [
+            "Figures come from synthetic stand-in filings.",
+            "No prices, estimates or ratings were used."
+          ]
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "example.brief-review",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: a passing review by a different worker",
+      "value": {
+        "notice": "SYNTHETIC. A fictional company and peer; identifiers start with X so they never match a real filer.",
+        "conforms_to": {
+          "$pin": "template.brief-review"
+        },
+        "instance": {
+          "brief": "example.cited-brief",
+          "numbers_checked": 14,
+          "problems": [],
+          "passed": true
+        }
+      },
+      "synthetic": true
+    },
+    {
+      "slug": "brief-checks",
+      "category": "noun.benchmark_suite",
+      "role": "worked_example",
+      "title": "Brief checks, with good and bad briefs the validator recomputes",
+      "category_reason": "A golden fixture: fixed briefs and the recorded results of every check.",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every cited brief passes before a different worker reviews it, each shown failing on a bad brief for exactly its own reason.",
+        "finding_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "notice",
+            "points",
+            "figures",
+            "sources_terms_read"
+          ],
+          "properties": {
+            "notice": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 60
+            },
+            "points": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 40,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text",
+                  "cites"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 600
+                  },
+                  "cites": {
+                    "type": "array",
+                    "minItems": 0,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40,
+                      "pattern": "^[a-z0-9-]+$"
+                    }
+                  }
+                }
+              }
+            },
+            "figures": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "value",
+                  "unit",
+                  "fact_id"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                  },
+                  "fact_id": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "sources_terms_read": {
+              "type": "boolean"
+            }
+          }
+        },
+        "deterministic_checks": [
+          {
+            "id": "notice-exact",
+            "rule": {
+              "rule": "enum",
+              "path": "notice",
+              "values": [
+                "Not financial advice"
+              ]
+            },
+            "why": "Every brief is marked Not financial advice."
+          },
+          {
+            "id": "points-cited",
+            "rule": {
+              "rule": "each_has",
+              "path": "points",
+              "fields": [
+                "text",
+                "cites"
+              ],
+              "min": 1
+            },
+            "why": "Every point cites at least one fact, comparison, risk or event."
+          },
+          {
+            "id": "figures-cited",
+            "rule": {
+              "rule": "each_has",
+              "path": "figures",
+              "fields": [
+                "value",
+                "unit",
+                "fact_id"
+              ]
+            },
+            "why": "Every figure has a unit and the fact it came from."
+          },
+          {
+            "id": "no-advice-language",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "points",
+              "pattern": "(?i)\\b(buy|sell|hold)\\s+(rating|recommendation|the stock|the shares|now)\\b|\\b(price target|target price|we recommend|you should|investors should|should buy|should sell|outperform|underperform|overweight|underweight|undervalued|overvalued|strong buy|top pick)\\b"
+            },
+            "why": "No recommendation, rating or price target."
+          },
+          {
+            "id": "no-order-language",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "points",
+              "pattern": "(?i)\\b(place an order|limit order|market order|stop[- ]loss|order ticket|buy order|sell order|position size)\\b"
+            },
+            "why": "No order, ticket or position size."
+          },
+          {
+            "id": "terms-read",
+            "rule": {
+              "rule": "enum",
+              "path": "sources_terms_read",
+              "values": [
+                true
+              ]
+            },
+            "why": "Every source's terms were read before it was used."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-descriptive",
+            "label": "known_good",
+            "finding": {
+              "notice": "Not financial advice",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": "f-rev-2025"
+                }
+              ],
+              "sources_terms_read": true
+            }
+          },
+          {
+            "id": "bad-no-notice",
+            "label": "known_bad",
+            "fails": "notice-exact",
+            "finding": {
+              "notice": "",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": "f-rev-2025"
+                }
+              ],
+              "sources_terms_read": true
+            }
+          },
+          {
+            "id": "bad-uncited-point",
+            "label": "known_bad",
+            "fails": "points-cited",
+            "finding": {
+              "notice": "Not financial advice",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                },
+                {
+                  "text": "Margins look healthy.",
+                  "cites": []
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": "f-rev-2025"
+                }
+              ],
+              "sources_terms_read": true
+            }
+          },
+          {
+            "id": "bad-uncited-figure",
+            "label": "known_bad",
+            "fails": "figures-cited",
+            "finding": {
+              "notice": "Not financial advice",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": ""
+                }
+              ],
+              "sources_terms_read": true
+            }
+          },
+          {
+            "id": "bad-recommendation",
+            "label": "known_bad",
+            "fails": "no-advice-language",
+            "finding": {
+              "notice": "Not financial advice",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                },
+                {
+                  "text": "We recommend the shares ahead of the results.",
+                  "cites": [
+                    "e-q3-results"
+                  ]
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": "f-rev-2025"
+                }
+              ],
+              "sources_terms_read": true
+            }
+          },
+          {
+            "id": "bad-order",
+            "label": "known_bad",
+            "fails": "no-order-language",
+            "finding": {
+              "notice": "Not financial advice",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                },
+                {
+                  "text": "A limit order at the open would capture the dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": "f-rev-2025"
+                }
+              ],
+              "sources_terms_read": true
+            }
+          },
+          {
+            "id": "bad-terms-unread",
+            "label": "known_bad",
+            "fails": "terms-read",
+            "finding": {
+              "notice": "Not financial advice",
+              "points": [
+                {
+                  "text": "Revenue rose 10.3% in fiscal 2025, to 455.1 million USD.",
+                  "cites": [
+                    "f-rev-2025",
+                    "c-rev-yoy"
+                  ]
+                },
+                {
+                  "text": "Holders of record on December 1 receive the declared dividend.",
+                  "cites": [
+                    "e-dividend"
+                  ]
+                }
+              ],
+              "figures": [
+                {
+                  "label": "Revenue, fiscal 2025",
+                  "value": 455100000,
+                  "unit": "USD",
+                  "fact_id": "f-rev-2025"
+                }
+              ],
+              "sources_terms_read": false
+            }
+          }
+        ],
+        "expected": {
+          "good-descriptive": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-no-notice": {
+            "verdict": "fail",
+            "failed_checks": [
+              "notice-exact"
+            ]
+          },
+          "bad-uncited-point": {
+            "verdict": "fail",
+            "failed_checks": [
+              "points-cited"
+            ]
+          },
+          "bad-uncited-figure": {
+            "verdict": "fail",
+            "failed_checks": [
+              "figures-cited"
+            ]
+          },
+          "bad-recommendation": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-advice-language"
+            ]
+          },
+          "bad-order": {
+            "verdict": "fail",
+            "failed_checks": [
+              "no-order-language"
+            ]
+          },
+          "bad-terms-unread": {
+            "verdict": "fail",
+            "failed_checks": [
+              "terms-read"
+            ]
+          }
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.not-financial-advice"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-trades-or-orders"
+        ],
+        [
+          "requires_noun",
+          "guardrail.cite-every-number"
+        ]
+      ],
+      "synthetic": true
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "fetch-filings",
+      "kind": "verb.probe_source",
+      "title": "Fetch the filings from official sources",
+      "claimant": "agent",
+      "summary": "Fetch the filings a research request names from SEC EDGAR's documented APIs and archives, and from the company's own investor-relations pages, under each provider's terms, recording how each source was read and every document's digest.",
+      "outcome": "A filing index, or blocked when a provider's terms forbid the reading.",
+      "ready_outcome": "filings_fetched",
+      "model_use": "none",
+      "pinned": [
+        "guardrail.respect-provider-terms",
+        "rules.edgar-access",
+        "policy-and-law-watch:guardrail.public-sources-only"
+      ],
+      "slots": [
+        {
+          "name": "research_request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research request."
+        }
+      ],
+      "params": {
+        "user_agent": {
+          "schema": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200,
+            "pattern": "^[^@]+ [^ @]+@[^ @]+$"
+          },
+          "description": "The User-Agent to declare: the requester's organization and its address, in the SEC's sample format.",
+          "default": "Requester Organization research@example.invalid"
+        },
+        "max_rate_per_second": {
+          "schema": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 10
+          },
+          "description": "The most requests per second to the SEC.",
+          "default": 2
+        }
+      },
+      "network": [
+        "read_only",
+        "Only the SEC's documented EDGAR endpoints on data.sec.gov and www.sec.gov, and the investor-relations pages the request names, read as their terms permit; never more than max_rate_per_second requests to the SEC, under a declared User-Agent; no logins, brokerage hosts or paid data feeds."
+      ],
+      "produces": [
+        {
+          "name": "filing_index",
+          "template": "template.filing-index"
+        }
+      ],
+      "steps": [
+        "Read each provider's terms first, and stop with blocked when they forbid automated reading.",
+        "Resolve each company's CIK from the SEC's ticker file, then fetch only the submissions, company facts and filing documents the request needs, caching every response.",
+        "Back off and slow down on a 403, a 429 or a rate-limit page; never disguise the client.",
+        "Record each source's access, terms date, request count and peak rate, and each document's SHA-256."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.filing-index's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "terms-recorded",
+          "check": "Every source records its access method and the date its terms were read.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rate-under-limit",
+          "check": "Every SEC source's peak rate is at most max_rate_per_second.",
+          "method": "deterministic"
+        },
+        {
+          "id": "requested-only",
+          "check": "Every filing belongs to a company and form the request names.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "extract-metrics",
+      "kind": "verb.ingest",
+      "title": "Extract metrics with the filing behind every number",
+      "claimant": "agent",
+      "summary": "Extract the requested metrics from the company facts and filings with the concept, period, unit, form, accession and filed date behind each, derive margins, free cash flow and missing quarters by the metric rules, and record every restatement.",
+      "outcome": "A metric table in which every number is cited.",
+      "ready_outcome": "metrics_extracted",
+      "model_use": "none",
+      "pinned": [
+        "rules.metrics",
+        "guardrail.cite-every-number"
+      ],
+      "slots": [
+        {
+          "name": "filing_index",
+          "category": "noun.public_source",
+          "description": "Pin of the filing index."
+        },
+        {
+          "name": "research_request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research request."
+        }
+      ],
+      "produces": [
+        {
+          "name": "metric_table",
+          "template": "template.metric-table"
+        }
+      ],
+      "steps": [
+        "Copy each reported value exactly as filed, with its concept, unit, period and filing.",
+        "Derive each ratio, free cash flow and any missing fourth quarter by its formula over cited facts.",
+        "Use the latest filed value for a restated period and list the earlier one with both accessions."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.metric-table's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "facts-trace",
+          "check": "Every fact equals the cited filing's value for its concept, unit and period.",
+          "method": "deterministic"
+        },
+        {
+          "id": "derived-recomputed",
+          "check": "Every derived value equals its formula over its inputs, with percentages rounded to one decimal.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "public-company-research.fetch-filings"
+      ]
+    },
+    {
+      "slug": "compare-periods-and-peers",
+      "kind": "verb.situate",
+      "title": "Compare periods and peers",
+      "claimant": "agent",
+      "summary": "Compare each metric with earlier periods and with the peers the request names, on aligned periods only, computing every change from two cited values.",
+      "outcome": "A comparison in which every change is computed from cited values.",
+      "ready_outcome": "comparison_written",
+      "model_use": "none",
+      "pinned": [
+        "rules.metrics",
+        "guardrail.cite-every-number",
+        "guardrail.not-financial-advice"
+      ],
+      "slots": [
+        {
+          "name": "metric_tables",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of the company's and each peer's metric tables.",
+          "many": true,
+          "max": 6
+        },
+        {
+          "name": "research_request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research request."
+        }
+      ],
+      "produces": [
+        {
+          "name": "comparison",
+          "template": "template.comparison"
+        }
+      ],
+      "steps": [
+        "Compare a period only with the same kind of period.",
+        "Compare peers only on calendar-aligned periods; list any other pair as not comparable, with why.",
+        "Describe differences; never rank companies as investments."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.comparison's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "changes-computed",
+          "check": "Every change equals to_value minus from_value, and percent_change equals change over from_value times 100 rounded to one decimal, or null when from_value is 0.",
+          "method": "deterministic"
+        },
+        {
+          "id": "aligned",
+          "check": "Every peer comparison uses matching period ends, or is listed as not comparable.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "public-company-research.extract-metrics"
+      ]
+    },
+    {
+      "slug": "summarize-risk-factors",
+      "kind": "verb.solve_draft",
+      "title": "Summarize the risk factors and what changed",
+      "claimant": "agent",
+      "summary": "Quote each risk factor heading exactly with its filing and section, group the headings into plain categories, and say which are new, removed, reworded or unchanged against the prior year.",
+      "outcome": "A risk factor summary with exact quotes.",
+      "ready_outcome": "risk_factors_summarized",
+      "pinned": [
+        "rules.risk-factors",
+        "policy-and-law-watch:guardrail.cite-every-claim",
+        "guardrail.not-financial-advice"
+      ],
+      "slots": [
+        {
+          "name": "filing_index",
+          "category": "noun.public_source",
+          "description": "Pin of the filing index with this year's and last year's annual reports."
+        }
+      ],
+      "produces": [
+        {
+          "name": "risk_factor_summary",
+          "template": "template.risk-factor-summary"
+        }
+      ],
+      "steps": [
+        "Quote headings exactly; never paraphrase a heading as if quoting it.",
+        "Compare exact heading texts with the prior year's filing and state each status.",
+        "Record an omitted Item 1A instead of inventing risks."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.risk-factor-summary's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "headings-exact",
+          "check": "Every heading appears character for character in the cited filing's Item 1A.",
+          "method": "deterministic"
+        },
+        {
+          "id": "no-likelihood",
+          "check": "No summary judges how likely a risk is or what it means for the price.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "public-company-research.fetch-filings"
+      ]
+    },
+    {
+      "slug": "build-catalyst-calendar",
+      "kind": "verb.solve_draft",
+      "title": "Build a dated catalyst calendar",
+      "claimant": "agent",
+      "summary": "List the dated events official sources name, such as results dates, filing deadlines, dividend dates and the annual meeting, each confirmed by its source or computed by a cited rule.",
+      "outcome": "A catalyst calendar with no speculative events.",
+      "ready_outcome": "calendar_built",
+      "pinned": [
+        "rules.catalysts",
+        "guardrail.cite-every-number"
+      ],
+      "slots": [
+        {
+          "name": "filing_index",
+          "category": "noun.public_source",
+          "description": "Pin of the filing index."
+        },
+        {
+          "name": "research_request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research request."
+        }
+      ],
+      "produces": [
+        {
+          "name": "catalyst_calendar",
+          "template": "template.catalyst-calendar"
+        }
+      ],
+      "steps": [
+        "Take confirmed dates only from official sources, and compute due dates only from cited rules.",
+        "Flag a computed date on a weekend or holiday for a person to check.",
+        "Leave out rumors, forecasts and price levels."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.catalyst-calendar's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rules-recomputed",
+          "check": "Every due-by-rule date equals its period end plus the days its cited rule sets.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sourced",
+          "check": "Every confirmed event names an official source that states its date.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "public-company-research.fetch-filings"
+      ]
+    },
+    {
+      "slug": "write-cited-brief",
+      "kind": "verb.solve_draft",
+      "title": "Write a cited brief, marked Not financial advice",
+      "claimant": "agent",
+      "summary": "Write a plain brief from the metric table, comparison, risk factor summary and calendar in which every number is cited, every derived or company-defined figure is labeled, and the notice reads Not financial advice.",
+      "outcome": "A cited brief with its notice.",
+      "ready_outcome": "brief_written",
+      "pinned": [
+        "guardrail.not-financial-advice",
+        "guardrail.no-trades-or-orders",
+        "guardrail.cite-every-number",
+        "brief-checks"
+      ],
+      "slots": [
+        {
+          "name": "metric_table",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the metric table."
+        },
+        {
+          "name": "comparison",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the comparison."
+        },
+        {
+          "name": "risk_factor_summary",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the risk factor summary."
+        },
+        {
+          "name": "catalyst_calendar",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the catalyst calendar."
+        },
+        {
+          "name": "research_request",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the research request."
+        }
+      ],
+      "produces": [
+        {
+          "name": "cited_brief",
+          "template": "template.cited-brief"
+        }
+      ],
+      "steps": [
+        "Cite fact, comparison, risk or event ids for every point.",
+        "Answer only the descriptive questions; turn any request for advice into a plain refusal and a pointer to the person who decides.",
+        "Run the brief checks and fix every failure before submitting."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.cited-brief's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "brief-checks-pass",
+          "check": "Every check in brief-checks passes on the brief.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cites-resolve",
+          "check": "Every cited id exists in the pinned inputs.",
+          "method": "deterministic"
+        },
+        {
+          "id": "plain",
+          "check": "Points read plainly, without jargon a general reader would not know.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "public-company-research.compare-periods-and-peers"
+      ]
+    },
+    {
+      "slug": "review-brief",
+      "kind": "verb.verify_gate",
+      "title": "Review every number and phrase (a different worker)",
+      "claimant": "agent_or_human",
+      "summary": "A worker other than the drafter checks every number in the brief against its cited fact or formula, and every phrase against the advice and order lists, and lists every problem.",
+      "outcome": "A brief review that passes only with no problems.",
+      "ready_outcome": "brief_reviewed",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "guardrail.cite-every-number",
+        "guardrail.not-financial-advice",
+        "guardrail.no-trades-or-orders"
+      ],
+      "slots": [
+        {
+          "name": "cited_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cited brief."
+        },
+        {
+          "name": "metric_table",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the metric table."
+        },
+        {
+          "name": "filing_index",
+          "category": "noun.public_source",
+          "description": "Pin of the filing index."
+        }
+      ],
+      "produces": [
+        {
+          "name": "brief_review",
+          "template": "template.brief-review"
+        }
+      ],
+      "steps": [
+        "Recompute every number from its cited facts.",
+        "List every uncited number, advice or order phrase, stale period, unlabeled company-defined measure and any personal data.",
+        "Pass only when nothing is listed."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.brief-review's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-number",
+          "check": "numbers_checked equals the brief's figures plus the amounts and percentages in its points.",
+          "method": "deterministic"
+        },
+        {
+          "id": "different-worker",
+          "check": "The reviewing key differs from the drafting key.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "public-company-research.write-cited-brief"
+      ]
+    },
+    {
+      "slug": "decide-delivery",
+      "kind": "verb.verify_gate",
+      "title": "Decide whether the reviewed brief is delivered (a person)",
+      "claimant": "human",
+      "summary": "A person reads the reviewed brief and its review and decides whether it is delivered to the requester inside the requester's scope; any decision about money stays with the reader.",
+      "outcome": "A delivery record: delivered or held, with the reason.",
+      "ready_outcome": "delivery_decided",
+      "model_use": "none",
+      "pinned": [
+        "policy-and-law-watch:guardrail.person-decides",
+        "guardrail.not-financial-advice",
+        "checklist"
+      ],
+      "slots": [
+        {
+          "name": "cited_brief",
+          "category": "noun.seed_hypothesis",
+          "description": "Pin of the cited brief."
+        },
+        {
+          "name": "brief_review",
+          "category": "noun.eval_run",
+          "description": "Pin of the brief review."
+        }
+      ],
+      "produces": [
+        {
+          "name": "delivery_record",
+          "template": "policy-and-law-watch:template.delivery-record"
+        }
+      ],
+      "steps": [
+        "Deliver only a brief whose review passed.",
+        "Holding is a valid decision; give the reason."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "The output validates against template.delivery-record's schema.",
+          "method": "deterministic"
+        },
+        {
+          "id": "review-passed",
+          "check": "A deliver decision has review_passed true.",
+          "method": "deterministic"
+        },
+        {
+          "id": "person-decides",
+          "check": "The submitting key belongs to a person who neither drafted nor reviewed the brief.",
+          "method": "deterministic"
+        }
+      ],
+      "bounds": {
+        "max_elapsed_seconds": 604800
+      },
+      "follows": [
+        "public-company-research.review-brief"
+      ]
+    }
+  ]
+}
