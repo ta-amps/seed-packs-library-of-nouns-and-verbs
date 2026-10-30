@@ -7,6 +7,8 @@
 
 Each pack is authored in packs/<pack>/source.json. The build turns it into Tessera
 RecordWrite bodies (nouns), TaskSpec templates (verbs) and a proposal manifest.
+A pack may also ship tested code as nouns in packs/<pack>/code/; the build only
+hashes those files, never runs or imports them, and pins them in the manifest.
 It reads local files only. It never calls a service or model, never enqueues or
 writes to a fabric and never activates anything. `--instantiate` prints one filled
 TaskSpec for review; enqueueing it remains an explicit act with your own grants.
@@ -28,6 +30,15 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKS = ROOT / "packs"
 GENERATED = ("nouns.json", "verbs.json", "manifest.json")
 PACK_FILES = ("README.md", "source.json", *GENERATED)
+# Optional tested code shipped as nouns. Hashed and pinned, never run by the build or validators.
+CODE_DIR = "code"
+CODE_SKIP_DIRS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache",
+                  ".tox", ".hypothesis", "node_modules", "build", "dist", "test-results"}
+CODE_SKIP_SUFFIXES = {".pyc", ".pyo"}
+CODE_RUNS = (
+    "The library runs this code only in its own CI tests; workers run it under their own "
+    "permissions. Reading, exporting or importing the pack runs none of it."
+)
 MAX_EXACT = 2**53
 
 MANIFEST_FORMAT = "ta-amps.seed-pack.proposal.v1"
@@ -345,12 +356,45 @@ SOURCE_FIELDS = {"pack_id", "title", "version", "summary", "nouns", "verbs"}
 SOURCE_OPTIONAL = {"dependencies", "boundaries"}
 
 
+def code_files(pack_dir: Path) -> list[Path]:
+    """The files of a pack's code/ folder that the pack pins; caches and build output are skipped."""
+    root = pack_dir / CODE_DIR
+    if not root.exists():
+        return []
+    if root.is_symlink() or not root.is_dir():
+        fail(f"{pack_dir.name}: {CODE_DIR} must be a folder")
+    found = []
+    for path in sorted(root.rglob("*")):
+        rel = path.relative_to(root)
+        if any(part in CODE_SKIP_DIRS or part.endswith(".egg-info") for part in rel.parts):
+            continue
+        if path.is_symlink():
+            fail(f"{pack_dir.name}/{CODE_DIR}: symbolic links are not allowed ({rel.as_posix()})")
+        if path.is_file() and path.suffix not in CODE_SKIP_SUFFIXES:
+            found.append(path)
+    if not found:
+        fail(f"{pack_dir.name}: {CODE_DIR} holds no files")
+    return found
+
+
+def code_digest(pack_dir: Path) -> dict[str, Any] | None:
+    """Where a pack's code lives, how many files it has and one SHA-256 over every path and file digest."""
+    files = code_files(pack_dir)
+    if not files:
+        return None
+    root = pack_dir / CODE_DIR
+    entries = sorted([path.relative_to(root).as_posix(), hashlib.sha256(path.read_bytes()).hexdigest()] for path in files)
+    return {"path": f"packs/{pack_dir.name}/{CODE_DIR}", "files": len(entries), "sha256": digest(entries, "pack-code-v1\0")}
+
+
 class Library:
     """All pack sources, resolved together so cross-pack pins stay consistent."""
 
-    def __init__(self, sources: dict[str, dict[str, Any]], readmes: dict[str, bytes]) -> None:
+    def __init__(self, sources: dict[str, dict[str, Any]], readmes: dict[str, bytes],
+                 code: dict[str, dict[str, Any] | None] | None = None) -> None:
         self.sources = sources
         self.readmes = readmes
+        self.code = code or {}
         self.nouns: dict[tuple[str, str], dict[str, Any]] = {}
         self.templates: set[str] = set()
         for pack_id, source in sources.items():
@@ -388,10 +432,18 @@ class Library:
         }
 
     def resolve(self, pack_id: str, obj: Any, where: str) -> Any:
-        """Replace {"$pin": ref} with a NounRef, {"$key": ref} with a key and {"$verb": id} with a template id."""
+        """Replace {"$pin": ref} with a NounRef, {"$key": ref} with a key, {"$verb": id} with a template id
+        and {"$code": pack} with that pack's code location, file count and digest."""
         if isinstance(obj, dict):
             if set(obj) == {"$pin"}:
                 return self.pin(pack_id, obj["$pin"], where)
+            if set(obj) == {"$code"}:
+                target = obj["$code"]
+                if target != pack_id and target not in self.sources[pack_id].get("dependencies", []):
+                    fail(f"{where}: {target!r} needs {target!r} in dependencies")
+                if not self.code.get(target):
+                    fail(f"{where}: pack {target!r} has no {CODE_DIR} folder")
+                return dict(self.code[target])
             if set(obj) == {"$key"}:
                 return self.key(*self.locate(pack_id, obj["$key"], where))
             if set(obj) == {"$verb"}:
@@ -538,16 +590,18 @@ def check_source(pack_id: str, source: Any) -> None:
 def load_library(packs_dir: Path = PACKS) -> Library:
     sources: dict[str, dict[str, Any]] = {}
     readmes: dict[str, bytes] = {}
+    code: dict[str, dict[str, Any] | None] = {}
     for directory in sorted(path for path in packs_dir.iterdir() if path.is_dir()):
         source = load_json(directory / "source.json")
         check_source(directory.name, source)
         sources[directory.name] = source
         readmes[directory.name] = (directory / "README.md").read_bytes()
+        code[directory.name] = code_digest(directory)
     for pack_id, source in sources.items():
         for dep in source.get("dependencies", []):
             if dep not in sources:
                 fail(f"{pack_id}: dependency {dep!r} is not a pack in this library")
-    return Library(sources, readmes)
+    return Library(sources, readmes, code)
 
 
 # ---------------------------------------------------------------------------
@@ -976,6 +1030,7 @@ def build_library(lib: Library) -> dict[str, dict[str, bytes]]:
                 }
                 for task in tasks
             ],
+            **({"code": {**lib.code[pack_id], "runs": CODE_RUNS}} if lib.code.get(pack_id) else {}),
             "dependencies": deps,
             "boundaries": text_list(source.get("boundaries", []), f"{pack_id}.boundaries", allow_empty=True),
             "override_policy": {"automatic_merge": False, "on_conflict": "stop_and_clarify"},

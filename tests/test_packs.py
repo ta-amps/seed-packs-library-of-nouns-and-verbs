@@ -509,6 +509,86 @@ class NegativeChecks(unittest.TestCase):
         self.assertEqual(vp.schema_errors({"type": "string", "pattern": "^[a-z]+$"}, "abc"), [])
 
 
+class PackCodeChecks(unittest.TestCase):
+    """A pack may ship tested code as nouns in code/: the library hashes and pins it, never runs it."""
+
+    CODE = {"README.md": "# Tool\n", "tool/run.py": 'raise SystemExit("pack code must never run during a build")\n'}
+    JUNK = ("__pycache__/run.cpython-312.pyc", ".venv/bin/python", ".pytest_cache/v/cache", "tool/__pycache__/x.pyc",
+            "tool.egg-info/PKG-INFO")
+
+    def copy_with_code(self, directory: str) -> Path:
+        root = Path(directory)
+        shutil.copytree(ROOT / "packs", root / "packs")
+        for name in ("README.md", "docs/status.md"):
+            (root / name).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(ROOT / name, root / name)
+        code = root / "packs" / "repo-review" / bp.CODE_DIR
+        for rel, text in {**self.CODE, **{junk: "cache" for junk in self.JUNK}}.items():
+            (code / rel).parent.mkdir(parents=True, exist_ok=True)
+            (code / rel).write_text(text)
+        return root
+
+    def rebuild(self, root: Path) -> dict:
+        built = bp.build_library(bp.load_library(root / "packs"))
+        for pack, files in built.items():
+            for name, data in files.items():
+                (root / "packs" / pack / name).write_bytes(data)
+        return built
+
+    def test_code_is_pinned_in_the_manifest_and_never_run(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.copy_with_code(directory)
+            built = self.rebuild(root)
+            code_dir = root / "packs" / "repo-review" / bp.CODE_DIR
+            entries = sorted([rel, hashlib.sha256((code_dir / rel).read_bytes()).hexdigest()] for rel in self.CODE)
+            expected = {"path": "packs/repo-review/code", "files": len(self.CODE),
+                        "sha256": bp.digest(entries, "pack-code-v1\0"), "runs": bp.CODE_RUNS}
+            manifest = json.loads(built["repo-review"]["manifest.json"])
+            self.assertEqual(manifest["code"], expected)
+            self.assertEqual(built["repo-review"]["nouns.json"], IDX.built["repo-review"]["nouns.json"])
+            self.assertEqual(built["repo-review"]["verbs.json"], IDX.built["repo-review"]["verbs.json"])
+            self.assertNotIn("code", json.loads(IDX.built["repo-review"]["manifest.json"]))
+            self.assertEqual(vp.validate_library(root)["packs"], len(PACKS))
+            (code_dir / "tool" / "run.py").write_text("print('changed')\n")
+            with self.assertRaises(bp.PackError):
+                vp.validate_library(root)
+            changed = json.loads(bp.build_library(bp.load_library(root / "packs"))["repo-review"]["manifest.json"])
+            self.assertNotEqual(changed["code"]["sha256"], expected["sha256"])
+
+    def test_code_folder_rules(self):
+        def broken(change):
+            with tempfile.TemporaryDirectory() as directory:
+                root = self.copy_with_code(directory)
+                change(root / "packs" / "repo-review")
+                with self.assertRaises(bp.PackError):
+                    self.rebuild(root)
+                    vp.validate_library(root)
+
+        broken(lambda pack: (pack / bp.CODE_DIR / "link.py").symlink_to(pack / "README.md"))
+        broken(lambda pack: shutil.rmtree(pack / bp.CODE_DIR) or (pack / bp.CODE_DIR).write_text("not a folder"))
+        broken(lambda pack: shutil.rmtree(pack / bp.CODE_DIR) or (pack / bp.CODE_DIR).mkdir())
+        broken(lambda pack: (pack / "notes.txt").write_text("a stray file"))
+
+    def test_code_directive_pins_own_or_dependency_code_only(self):
+        def build(value: dict, pack: str = "repo-review") -> dict:
+            with tempfile.TemporaryDirectory() as directory:
+                root = self.copy_with_code(directory)
+                path = root / "packs" / pack / "source.json"
+                source = json.loads(path.read_text())
+                source["nouns"][1]["value"].update(value)
+                path.write_text(json.dumps(source))
+                built = bp.build_library(bp.load_library(root / "packs"))
+                records = json.loads(built[pack]["nouns.json"])["records"]
+                return records[1]["value"]
+
+        value = build({"code": {"$code": "repo-review"}})
+        self.assertEqual(set(value["code"]), {"path", "files", "sha256"})
+        self.assertEqual(value["code"]["path"], "packs/repo-review/code")
+        for bad, pack in (({"code": {"$code": "tool-discovery"}}, "repo-review"), ({"code": {"$code": "tool-discovery"}}, "tool-discovery")):
+            with self.subTest(bad=bad, pack=pack), self.assertRaises(bp.PackError):
+                build(bad, pack)
+
+
 class SourceChecks(unittest.TestCase):
     def build_copy(self, mutate):
         with tempfile.TemporaryDirectory() as directory:

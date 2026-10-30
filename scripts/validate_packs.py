@@ -4,7 +4,8 @@
 This checks the generated packs against packs/tessera-contract.json, a snapshot
 derived from Tessera's own code by scripts/validate_against_tessera.py. It also
 runs the packs' deterministic worked examples. It never calls a service, invokes
-a model, writes a record, enqueues a task or runs content from a pack.
+a model, writes a record, enqueues a task or runs content from a pack, including
+the tested code a pack may ship in its code/ folder, which it only hashes.
 """
 
 from __future__ import annotations
@@ -716,6 +717,11 @@ def check_manifest(manifest: dict[str, Any], pack_dir: Path, pack_id: str) -> No
     require([entry["path"] for entry in manifest["files"]] == ["README.md", "source.json", "nouns.json", "verbs.json"], f"{pack_id}: manifest file list")
     for entry in manifest["files"]:
         require(entry["sha256"] == hashlib.sha256((pack_dir / entry["path"]).read_bytes()).hexdigest(), f"{pack_id}: manifest digest for {entry['path']}")
+    code = bp.code_digest(pack_dir)
+    if code is None:
+        require("code" not in manifest, f"{pack_id}: manifest names code the pack does not have")
+    else:
+        require(manifest.get("code") == {**code, "runs": bp.CODE_RUNS}, f"{pack_id}: manifest code digest differs from {bp.CODE_DIR}/; run python3 scripts/build_packs.py")
 
 
 def check_doc_counts(root: Path, idx: "Index") -> None:
@@ -741,7 +747,8 @@ def validate_library(root: Path = ROOT) -> dict[str, Any]:
     for pack_id, files in idx.docs.items():
         directory = packs_dir / pack_id
         present = sorted(p.name for p in directory.iterdir())
-        require(present == sorted(bp.PACK_FILES), f"{pack_id}: pack directory holds exactly {sorted(bp.PACK_FILES)}")
+        allowed = sorted([*bp.PACK_FILES, *([bp.CODE_DIR] if bp.CODE_DIR in present else [])])
+        require(present == allowed, f"{pack_id}: pack directory holds exactly {sorted(bp.PACK_FILES)} and an optional {bp.CODE_DIR} folder")
         for name, data in idx.built[pack_id].items():
             require((directory / name).read_bytes() == data, f"{pack_id}/{name} is stale; run python3 scripts/build_packs.py")
         check_manifest(files["manifest.json"], directory, pack_id)
