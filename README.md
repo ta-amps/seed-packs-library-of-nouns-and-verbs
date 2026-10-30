@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds forty-eight proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds fifty-three proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -68,10 +68,15 @@ activated**, and no worker has run them yet.
 | [Retrieval triggers and reuse](packs/retrieval-triggers-and-reuse/README.md) | Looking up existing nouns before generating new ones, and reusing past solutions only under the check |
 | [File triage at scale](packs/file-triage-at-scale/README.md) | Organizing very large collections of files without losing any, with every move approved by a person and verified by hash |
 | [Measured claims](packs/measured-claims/README.md) | Technical notes whose every claim says how it is known, with conclusions resting on evidence and corrections kept on the record |
+| [User acceptance testing](packs/user-acceptance-testing/README.md) | User acceptance testing with synthetic personas, criteria a person agrees to before testing, scenario scripts, results recorded as observed, defects proposed as findings and a person's go or no-go |
+| [Accessibility audit](packs/accessibility-audit/README.md) | Auditing a page or app against WCAG 2.2 level AA, every finding citing its success criterion, with tested contrast and landmark code |
+| [Usability heuristics review](packs/usability-heuristics-review/README.md) | Reviewing a page or app against ten usability heuristics, with independent evaluators, severities, screenshot regions and a fix verb per finding |
+| [Launch readiness](packs/launch-readiness/README.md) | Deciding whether a site or app is ready to launch: links, status claims, analytics, error pages, rollback and the owner's go, with the release left to a person |
+| [Exploratory testing charters](packs/exploratory-testing-charters/README.md) | Exploratory testing in time-boxed sessions: charters, notes taken as it happens, bugs as findings, debriefs and coverage notes |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 933
-nouns and 305 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1035
+nouns and 342 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

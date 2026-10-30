@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 24)
+        self.assertEqual(summary["worked_examples"], 30)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -1302,6 +1302,77 @@ class CorpusPackExamples(unittest.TestCase):
         self.assertEqual(rep["correction_needed"], not within)
         correction = self.instance("measured-claims", "example.correction")
         self.assertIn(rep["claimed_value"].split()[0], correction["claimed"])
+
+
+class QualityPackExamples(unittest.TestCase):
+    """The acceptance, accessibility, usability, launch and exploratory packs of October 30: their record checks,
+    the theme contrast example, and the people who keep every decision. The accessibility audit pack's code
+    recomputes its contrast and lint examples in its own CI job."""
+
+    FIXTURES = (("user-acceptance-testing", "signoff-checks"), ("accessibility-audit", "audit-checks"),
+                ("usability-heuristics-review", "heuristic-checks"), ("launch-readiness", "go-checks"),
+                ("exploratory-testing-charters", "session-checks"))
+    PEOPLE = ("user-acceptance-testing.agree-criteria", "user-acceptance-testing.sign-off",
+              "accessibility-audit.check-with-assistive-tech", "launch-readiness.record-go-decision")
+
+    def test_record_checks_flag_each_bad_example_for_its_reason(self):
+        for pack, slug in self.FIXTURES:
+            item = record(pack, slug)
+            value = item["value"]
+            results = vp.run_finding_checks(value)
+            self.assertEqual(results, value["expected"], pack)
+            for fixture in value["golden_fixtures"]:
+                if fixture["label"] == "known_good":
+                    self.assertEqual(results[fixture["id"]], {"verdict": "pass", "failed_checks": []}, fixture["id"])
+                    self.assertEqual(vp.schema_errors(value["finding_schema"], fixture["finding"]), [], fixture["id"])
+                else:
+                    self.assertEqual(results[fixture["id"]]["failed_checks"], [fixture["fails"]], fixture["id"])
+            caught = {c for f in value["golden_fixtures"] if f["label"] == "known_bad" for c in results[f["id"]]["failed_checks"]}
+            self.assertEqual(caught, {check["id"] for check in value["deterministic_checks"]}, pack)
+            first = next(iter(value["expected"]))
+            value["expected"][first] = {"tampered": True}
+            with self.assertRaises(bp.PackError):
+                vp.check_fixtures([item])
+
+    def test_record_check_schemas_are_the_templates_they_check(self):
+        for pack, slug, template_slug in (("user-acceptance-testing", "signoff-checks", "template.sign-off"),
+                                          ("launch-readiness", "go-checks", "template.readiness-report"),
+                                          ("exploratory-testing-charters", "session-checks", "template.session-notes")):
+            self.assertEqual(record(pack, slug)["value"]["finding_schema"], record(pack, template_slug)["value"]["schema"], pack)
+
+    def test_theme_contrast_example_recomputes(self):
+        value = record("accessibility-audit", "example.contrast")["value"]
+        results = vp.run_contrast_ratio(value)
+        self.assertEqual(results, value["expected"])
+        self.assertTrue(results["muted-text-light"]["normal_text"])
+        self.assertFalse(results["muted-text-dark"]["normal_text"])
+        self.assertEqual(results["muted-text-dark"]["ratio"], 3.69)
+
+    def test_decisions_and_sessions_stay_with_people(self):
+        for template_id in self.PEOPLE:
+            brief = task(template_id)["brief"]
+            self.assertEqual((brief["claimant"], brief["execution"]["model_use"]), ("human", "none"), template_id)
+        for template_id in ("accessibility-audit.review-audit", "usability-heuristics-review.review-findings",
+                            "exploratory-testing-charters.debrief-session"):
+            self.assertEqual(task(template_id)["brief"]["review"]["required"], "distinct_reviewer", template_id)
+
+    def test_live_checks_are_read_only(self):
+        for pack in ("accessibility-audit", "user-acceptance-testing", "usability-heuristics-review", "launch-readiness",
+                     "exploratory-testing-charters"):
+            for item in IDX.docs[pack]["verbs.json"]["tasks"]:
+                mode = item["brief"]["execution"]["network"]["mode"]
+                self.assertIn(mode, ("none", "read_only"), item["brief"]["template_id"])
+                self.assertEqual(item["brief"]["execution"]["external_effects"], "none")
+
+    def test_findings_cite_wcag_criteria_from_the_checklist(self):
+        listed = {row["sc"] for row in record("accessibility-audit", "wcag-checklist")["value"]["criteria"]}
+        report = record("accessibility-audit", "example.audit-report")["value"]["instance"]
+        for finding in report["findings"]:
+            if finding["level"] != "AAA":
+                self.assertIn(finding["sc"], listed, finding["id"])
+            else:
+                self.assertEqual(finding["conformance"], "advisory", finding["id"])
+        self.assertEqual(report["statement"], "failures_found")
 
 
 if __name__ == "__main__":
