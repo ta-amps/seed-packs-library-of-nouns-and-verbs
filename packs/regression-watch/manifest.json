@@ -1,0 +1,276 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "regression-watch",
+  "title": "Regression watch",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for watching for regressions: baselines kept as nouns, from page screenshots by hash to metrics with tolerances, API response shapes and video QA numbers; every change measured again under the same settings and compared by fixed rules; every mismatch measured twice more before anything is reported, so a flaky check is told apart from a real regression; regressions and flaky checks recorded as findings; and a new baseline accepted only by a person.",
+  "license": "MIT",
+  "store": "seedpack.regression-watch",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "3901cc5075bdb1b4b6c02d8a1e4ffca172d84fcdd22dc7795c286fe62764e0dc"
+    },
+    {
+      "path": "source.json",
+      "sha256": "0e1fa9e862e788e971d1171acfb7f3231b4fb7a10ed4e428581630b84e944b5b"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "496a6885ecf8d840ad2ab8b05396ecc222dee20e8af46a4b02453573d2d082dc"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "de4ca234ce5a8cfbb48ad2f8dc813dd4df67b2ea42b9a5c6d3ac9a3afcdbfccf"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "regression-watch.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "c4497485e79899351ab3203238c3fe7ef35a770baddc106039a81a6fc9c1d788"
+    },
+    {
+      "key": "regression-watch.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "53c183d02c8ebb31bd2c36729b0a0eac42e0722d9ccd7eecfd8969e323439075"
+    },
+    {
+      "key": "regression-watch.v0.1.0.guardrail.compare-like-with-like",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "8a8ef840aced4080bc1862d3d8bcaef26c23e8acd70272c93ca2e1533dc91d9b"
+    },
+    {
+      "key": "regression-watch.v0.1.0.guardrail.rerun-before-reporting",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "91d4d080c15bee9fea232efa9df79020aa41432c420adbe1255179fb9fbf2cc3"
+    },
+    {
+      "key": "regression-watch.v0.1.0.guardrail.person-accepts-baseline",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "5ed694230b385e29cc840752a1dc2d9e4e1e31bab27ee1cf0b41f4aea71173e9"
+    },
+    {
+      "key": "regression-watch.v0.1.0.baseline-kinds",
+      "category_id": "noun.skill_pack",
+      "role": "baseline_kinds",
+      "value_sha256": "425c88b3f4e5e221959fcd0f8b248787cc34d7334b9453a133b223419fb4ad06"
+    },
+    {
+      "key": "regression-watch.v0.1.0.compare-rules",
+      "category_id": "noun.reflex_procedure",
+      "role": "compare_rules",
+      "value_sha256": "4abfd2be9e22a78a89091d272fe839cd016effc9a2cc1e62d42866b50f4241a6"
+    },
+    {
+      "key": "regression-watch.v0.1.0.flake-rules",
+      "category_id": "noun.reflex_procedure",
+      "role": "flake_rules",
+      "value_sha256": "205013b3c485d2e07242ff411344e5d5cd742efe3c4a9b6fbb7845a1ccade740"
+    },
+    {
+      "key": "regression-watch.v0.1.0.watch-checks",
+      "category_id": "noun.benchmark_suite",
+      "role": "record_checks",
+      "value_sha256": "c4fb35ea15bc569b1aeb3f7d978cc4105935756bf05a1540e57c639fc4c9f03e"
+    },
+    {
+      "key": "regression-watch.v0.1.0.template.baseline",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "9bf49719e3273d7f98db2b9e8e10058cc7a41b468941675a8fd2d5178d95838e"
+    },
+    {
+      "key": "regression-watch.v0.1.0.template.measurement",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "9f8a1a9a3fa4801640753fc448232848c815efc99642f3385691e16bd6a4fbd5"
+    },
+    {
+      "key": "regression-watch.v0.1.0.template.comparison",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "0aff79e468a87b70dcd794fbd4622d17625c118f1f97e321d2c1e090bf510493"
+    },
+    {
+      "key": "regression-watch.v0.1.0.template.baseline-acceptance",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "ca692b66864a025255fe2da4d44c190e6e4727dc3ac5d9cf5db3dbf639b5aec0"
+    },
+    {
+      "key": "regression-watch.v0.1.0.template.flake-review",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "a01d996aa2e0531c1e585e777b7adb40549d16948b3c5841792761552fb10001"
+    },
+    {
+      "key": "regression-watch.v0.1.0.test-cases",
+      "category_id": "noun.benchmark_suite",
+      "role": "test_cases",
+      "value_sha256": "b5692c7fac35115be20c3682b662c0ba1246472f6b9ca0bcca25f492d82cf4b1"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.baseline-set",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "92cded7f6679ffe60c109b9f866da36ebf2cdc0ad1c1cb3c174cb7576f42aaff"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.measurement",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "b668e72dd9fda41bbc532f911b5509911db9b9d90b9ee9b52aa541f22ddc4ff8"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.comparison",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "6d980b065268de5faa840546d18e15892901a2b12f7b2f74c37f9f6801606b64"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.acceptance",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "e18687f700d4fc82af711a3c98438332324f309e9b281f29e39beac3ad1a6e41"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.new-baseline-set",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "bbebd4d2c58721a9f7677d03a56e17c0590f32ae35765a71de1a960325bf4e42"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.regression-finding",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "45bf33b48437ce6420fc545e551436c3b07a01324fd21a6be5ec4226c56d5c79"
+    },
+    {
+      "key": "regression-watch.v0.1.0.example.flake-finding",
+      "category_id": "noun.seed_hypothesis",
+      "role": "example",
+      "value_sha256": "1a762bc970277d0e28ceea7bf1e82284a0e101f8f1dbec851cad67c0a76c3be9"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "regression-watch.capture-baseline",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:regression-watch:capture-baseline:2ed0753ceabc37957f42ed2f6be50fa7d9369c8eab7a274db771ba6ac38a1c65",
+      "report_shape_sha256": "3a7a527045e4b3217f5e15f4f43a78c2d6ebe3d1d24a47e7aa1c81b71c3e6b29"
+    },
+    {
+      "template_id": "regression-watch.accept-baseline",
+      "kind": "verb.verify_gate",
+      "claimant": "human",
+      "idempotency_key": "seedpack:regression-watch:accept-baseline:679b4cc93869916328b88e91e8d4eb98f89b13cc86628ba5b9b8ab8e0e221a50",
+      "report_shape_sha256": "2b5f81c09d3a9ef05113067a71550410679393e15fb25869bb09f4b7416f642e"
+    },
+    {
+      "template_id": "regression-watch.apply-acceptance",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:regression-watch:apply-acceptance:22688cb5b1057b248450f2020b609a700268d18e686f3cc64065fb432b2f373a",
+      "report_shape_sha256": "d00fda78bd75300e3e4e073d64da3c0ffc10339fb473a701132792af68e98427"
+    },
+    {
+      "template_id": "regression-watch.remeasure",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:regression-watch:remeasure:26f57a2be506bdbe54edf330d167b460c0f7a4df45f12580cfc212575c662c16",
+      "report_shape_sha256": "06e48150faf7a0b1fd90c5018eb39ab6f1363900430f5b144bdbc4870bdcfab0"
+    },
+    {
+      "template_id": "regression-watch.compare-to-baseline",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:regression-watch:compare-to-baseline:33e8920937d9d9ffab7519533b1a15496440278ee078f10dd4d4593f65d86de8",
+      "report_shape_sha256": "38eab8d5d459b40ff8577561521e35a346320b6519391cc00554a0e76f1f80d5"
+    },
+    {
+      "template_id": "regression-watch.report-regressions",
+      "kind": "verb.problemize",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:regression-watch:report-regressions:313ba3bc34603c438fb3fd9179be8809ad1ed8b01ff3628049b939f9cf393259",
+      "report_shape_sha256": "efa26b1ea1a21a261386dfc19d74d3cced421c98d313fe9dc75e85cd70a0f9e3"
+    },
+    {
+      "template_id": "regression-watch.review-flaky-checks",
+      "kind": "verb.distill_reflex",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:regression-watch:review-flaky-checks:afd2540774899aee5fdb9f7b01f67828a0d2d390b950dd6f78e1ab8cda1ff5d9",
+      "report_shape_sha256": "a73f516221feecd9e97fef5633d7db7fd9bdf1957a0aa80268b4f46db6760795"
+    }
+  ],
+  "dependencies": [
+    {
+      "pack_id": "findings-to-fixes",
+      "keys": [
+        "findings-to-fixes.v0.1.0.record-checks",
+        "findings-to-fixes.v0.1.0.severity-guide",
+        "findings-to-fixes.v0.1.0.template.finding"
+      ]
+    },
+    {
+      "pack_id": "video-qa",
+      "keys": [
+        "video-qa.v0.1.0.checks.extended",
+        "video-qa.v0.1.0.guardrail.measure-the-exact-bytes",
+        "video-qa.v0.1.0.guardrail.not-run-is-not-a-pass"
+      ]
+    },
+    {
+      "pack_id": "release-and-verify",
+      "keys": [
+        "release-and-verify.v0.1.0.parity-methods",
+        "release-and-verify.v0.1.0.smoke-checklist"
+      ]
+    },
+    {
+      "pack_id": "screenshot-design-review",
+      "keys": [
+        "screenshot-design-review.v0.1.0.capture-matrix"
+      ]
+    },
+    {
+      "pack_id": "checks-of-checks",
+      "keys": [
+        "checks-of-checks.v0.1.0.method"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Measurements are read-only: page loads and GET requests to a local build or a test target a person named, and local files.",
+    "Only a person accepts a baseline; comparisons never move one, and every earlier set is kept.",
+    "No worker switches or reverts a live version; that stays the release owner's act in the release and verify pack.",
+    "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
+    "Importing the pack writes nothing and enqueues nothing."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}
