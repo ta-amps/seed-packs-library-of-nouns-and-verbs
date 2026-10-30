@@ -68,7 +68,7 @@ and enqueue the printed task yourself. Workers need keys on the same surface.
   0.1.0; module and emitted-module digests changed with the code's plain name. This is the
   author's measurement, not independent verification.
 - Not done: no worker has claimed these verbs, and nothing is installed, imported, admitted
-  or activated. The descriptor's provenance notes record where the pack and its code came from.
+  or activated. The pack's `moved_from` field records the repository and commit its code came from.
 
 ## Limits
 

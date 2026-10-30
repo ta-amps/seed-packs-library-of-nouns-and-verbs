@@ -624,6 +624,23 @@ class PackCodeChecks(unittest.TestCase):
             changed = json.loads(bp.build_library(bp.load_library(root / "packs"))["repo-review"]["manifest.json"])
             self.assertNotEqual(changed["code"]["sha256"], expected["sha256"])
 
+    def test_code_folder_ignores_what_its_gitignore_ignores(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.copy_with_code(directory)
+            code_dir = root / "packs" / "repo-review" / bp.CODE_DIR
+            before = bp.code_digest(root / "packs" / "repo-review")
+            (code_dir / ".gitignore").write_text("# generated\n/generated/\n*.log\nout/\n")
+            kept = {"README.md", "tool/run.py", ".gitignore", "sub/generated/keep.py"}
+            for rel in ("generated/data.json", "run.log", "sub/out/frame.png", "sub/generated/keep.py"):
+                (code_dir / rel).parent.mkdir(parents=True, exist_ok=True)
+                (code_dir / rel).write_text("x")
+            pinned = {path.relative_to(code_dir).as_posix() for path in bp.code_files(root / "packs" / "repo-review")}
+            self.assertEqual(pinned, kept)
+            self.assertNotEqual(bp.code_digest(root / "packs" / "repo-review")["sha256"], before["sha256"])
+            (code_dir / ".gitignore").write_text("!keep.py\n")
+            with self.assertRaises(bp.PackError):
+                bp.code_files(root / "packs" / "repo-review")
+
     def test_code_folder_rules(self):
         def broken(change):
             with tempfile.TemporaryDirectory() as directory:

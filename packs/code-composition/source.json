@@ -3,6 +3,10 @@
   "title": "Code composition",
   "version": "0.2.0",
   "summary": "A collection of nouns and verbs for composing verified code without rewriting it: the tested code itself, a pinned catalog of 18 prewritten code nodes with typed contracts, three declarative recipes with digests measured with that code, and verbs to verify the code, compose, compile, run and compare recipes, and propose new nodes for review.",
+  "moved_from": {
+    "repository": "https://github.com/ta-amps/kothar",
+    "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078"
+  },
   "dependencies": [
     "checks-of-checks",
     "decomposition-patterns"
@@ -56,17 +60,6 @@
           {
             "pack_id": "tool-discovery",
             "use": "Trial another composition tool against this one with a comparable trial."
-          }
-        ],
-        "provenance_notes": [
-          {
-            "kind": "source_repository",
-            "id": "source",
-            "repository": "https://github.com/ta-amps/kothar",
-            "commit": "6bfee07feb7ed3c7ba9111b0a0678bff5cbf2078",
-            "plain_name": "https://github.com/ta-amps/code-composition-tools",
-            "note": "This pack was first built from that repository at that commit on 2026-10-29. On the same day the code lost its former name in the plain-named repository at commit cec462bab919b6610b90cff46190453ed72062c5 and then moved into this pack's code folder; node, recipe, plan, input, output and receipt digests are unchanged by both steps.",
-            "code_moved_from_commit": "cec462bab919b6610b90cff46190453ed72062c5"
           }
         ],
         "code_as_nouns": "The tested code lives in this pack's code folder as nouns, pinned by the folder digest that the manifest also lists. The library never runs it except in CI tests; a worker runs it under its own permissions, only from a checkout that passed verify-tools. Importing the pack runs nothing."

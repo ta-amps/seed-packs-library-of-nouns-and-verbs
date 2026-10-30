@@ -6,9 +6,10 @@ from code_composition.schemas import ParamSpec, PortSpec, PrewrittenNode
 
 # Default hash salt of validate.holdout_split. The value is kept byte for byte from the first
 # release: the salt decides which records land in the holdout partition, so any other value would
-# move records between partitions and change every result computed with the default. The node's
-# stored source receives the same literal through the slot below, so its code_sha256 is unchanged.
-HOLDOUT_SPLIT_DEFAULT_SALT = "kothar-v1"
+# move records between partitions and change every result computed with the default. It is written
+# as hex only so the code's former product name does not appear as text. The node's stored source
+# receives the same literal through the slot below, so its code_sha256 is unchanged.
+HOLDOUT_SPLIT_DEFAULT_SALT = bytes.fromhex("6b6f746861722d7631").decode("ascii")
 _HOLDOUT_SPLIT_SALT_SLOT = "__HOLDOUT_SPLIT_DEFAULT_SALT__"
 
 

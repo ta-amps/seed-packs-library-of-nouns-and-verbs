@@ -37,7 +37,7 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Docs improvement](docs-improvement/README.md) | Making documentation clearer for a named reader | 8 | 5 |
 | [Findings to fixes](findings-to-fixes/README.md) | Turning every noticed error, issue, design flaw or annoyance into recorded, fixed and verified work | 24 | 10 |
 
-Together: 410 nouns and 128 verb templates across twenty packs. The
+Together: 411 nouns and 128 verb templates across twenty packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
