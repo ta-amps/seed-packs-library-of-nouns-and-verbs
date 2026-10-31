@@ -128,7 +128,8 @@ class LibraryChecks(unittest.TestCase):
                      "decomposition-patterns", "taste-palettes", "harness-onboarding-e2e", "security-review",
                      "cost-optimization", "docs-improvement", "benchmark-scores", "visual-rendering",
                      "public-good-kits", "freshness-checks", "findings-to-fixes",
-                     "meta-are-scenario-matrix", "sira-self-learning-rag", "partner-compute-cascade"):
+                     "meta-are-scenario-matrix", "sira-self-learning-rag", "partner-compute-cascade",
+                     "combinatorial-niche-spider"):
             self.assertIn(pack, PACKS)
 
     def test_scenario_matrix_sira_rag_and_partner_cascade_have_code_and_distinct_review(self):
@@ -136,6 +137,7 @@ class LibraryChecks(unittest.TestCase):
             "meta-are-scenario-matrix": "digest-reusable-nouns-and-verbs",
             "sira-self-learning-rag": "verify-dgmh-proposal-independently",
             "partner-compute-cascade": "route-fireworks-multilora-and-rubric",
+            "combinatorial-niche-spider": "review-eight-axis-admissions",
         }
         for pack, review_slug in expected_review_verbs.items():
             manifest = IDX.docs[pack]["manifest.json"]

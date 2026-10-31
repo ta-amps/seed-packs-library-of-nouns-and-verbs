@@ -1,0 +1,29 @@
+name: combinatorial-niche-spider
+
+on:
+  push:
+    paths:
+      - "packs/combinatorial-niche-spider/**"
+      - ".github/workflows/combinatorial-niche-spider.yml"
+  pull_request:
+    paths:
+      - "packs/combinatorial-niche-spider/**"
+      - ".github/workflows/combinatorial-niche-spider.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run combinatorial-niche-spider unit tests
+        working-directory: packs/combinatorial-niche-spider/code
+        run: |
+          make check
+          python3 -c "import niche_spider"

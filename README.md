@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds seventy-nine proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds eighty proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -99,10 +99,11 @@ activated**, and no worker has run them yet.
 | [Meta ARE scenario matrix](packs/meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate Tasks and Task Objects, with tested code |
 | [SIRA self-learning RAG](packs/sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code |
 | [Partner compute cascade](packs/partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts, with tested code |
+| [Combinatorial niche spider](packs/combinatorial-niche-spider/README.md) | Minting combinatorial multi-domain search cells, advancing non-repeating page cursors, expanding a persistent BFS spider frontier, refreshing star-surge movers and HTTP 404 rot, and scoring candidates on 8 separate 0-100 axes with query-family yield benchmarks, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1510
-nouns and 487 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1520
+nouns and 490 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

@@ -1,0 +1,624 @@
+{
+  "pack_id": "combinatorial-niche-spider",
+  "title": "Combinatorial niche spider",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for combinatorial multi-domain niche-cell forging, page-cursor coverage ledgers, persistent BFS spider frontiers, purposeful refresh for movers and 404 rot, bounded multi-wave follow-up proposals and 8-axis candidate evaluation with query-family yield benchmarks.",
+  "dependencies": [
+    "tool-discovery",
+    "freshness-checks",
+    "evaluation-design",
+    "sira-self-learning-rag"
+  ],
+  "boundaries": [
+    "Follow-up wave verbs and spider sweeps remain inert TaskSpec proposals for Tessera queues; the pack never creates an independent scheduler or auto-activates cron jobs.",
+    "Curated repository admission into reusable Seed Packs requires an independent reviewer whose worker_id and key_id both differ from the curator.",
+    "Standard-library code executes offline against deterministic fixtures without unauthenticated rate-limit abuse or live API calls.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for combinatorial niche forging, BFS spidering, refresh tracking and 8-axis evaluation",
+      "value": {
+        "lets_workers": "Cross domain facets with intents, angles, technology stacks, industry verticals and cross-domain hybrids into page-tracked search cells, expand qualifying discoveries breadth-first across authors, forks and outbound README links up to progressive depth caps, re-verify older entries to detect star-surge movers and 404 gone rot, score candidates on 8 separate 0-100 axes with negative-term false-positive guards, retire noisy <5 percent yield wave families and gate curated admissions through an independent reviewer.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "combinatorial-niche-spider.mint-niche-cells-and-paths"
+            },
+            "when": "Mint combinatorial search cells across facets, intents, angles, stacks, verticals, cross-domain hybrids and custom phrases with rotating license, radar, star-band and in-readme paths."
+          },
+          {
+            "verb": {
+              "$verb": "combinatorial-niche-spider.sweep-cells-and-spider-frontier"
+            },
+            "when": "Advance uncovered cell page cursors, traverse BFS spider edges, refresh longest-unchecked entries for movers and 404 rot, and emit bounded Wave 1-3 follow-up verb proposals."
+          },
+          {
+            "verb": {
+              "$verb": "combinatorial-niche-spider.review-eight-axis-admissions"
+            },
+            "when": "Score candidates on 8 separate 0-100 axes, benchmark query-family yield, retire noisy wave tracks and independently review open-license admissions."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.no-competing-scheduler-or-auto-cron"
+          },
+          {
+            "$pin": "guardrail.negative-guards-and-noise-retirement"
+          },
+          {
+            "$pin": "guardrail.curator-never-self-approves"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.niche-spider"
+        },
+        "worked_example": "Synthetic 5-domain bundle (OCR+AI, Blender/3D, privacy tools, Three.js/WebGPU and 2 custom phrases) recomputed in test_niche_spider.py: mints 133 combinatorial cells, advances page cursor 1->2, unlocks spider depth 4 at run 16, enqueues 2 outbound edges and 2 bounded wave proposals while filtering generic topic 'react', rejects a 1,900-star low-level-design interview false positive, detects 1 star-surge mover and 1 HTTP 404 gone repo, retires a 2.5 percent yield broad_wave family, blocks self-approval (409) and admits MIT-licensed clinic-tools/intake-ocr-workbench under independent review."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.no-competing-scheduler-or-auto-cron"
+        ],
+        [
+          "requires_noun",
+          "guardrail.negative-guards-and-noise-retirement"
+        ],
+        [
+          "requires_noun",
+          "guardrail.curator-never-self-approves"
+        ],
+        [
+          "requires_noun",
+          "spec.niche-spider-axes-and-gates"
+        ],
+        [
+          "requires_noun",
+          "rules.cursor-spider-and-refresh"
+        ],
+        [
+          "requires_noun",
+          "tool.niche-spider"
+        ],
+        [
+          "requires_noun",
+          "template.niche-spider-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.no-competing-scheduler-or-auto-cron",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: spider waves emit inert TaskSpec proposals rather than running an independent scheduler",
+      "category_reason": "Preserves Tessera as the single task and schedule authority.",
+      "value": {
+        "rule": "Harvested facets and spider frontier expansions emit bounded follow-up verb proposals with auto_enqueued=False; activating a recurring sweep requires an explicit authorized schedule on Tessera.",
+        "how_it_is_checked": "advance_spider_frontier_and_waves sets auto_enqueued=False on every proposed wave verb and performs zero network calls."
+      }
+    },
+    {
+      "slug": "guardrail.negative-guards-and-noise-retirement",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: block off-topic interview-prep collisions and auto-retire query families below 5 percent yield",
+      "category_reason": "Prevents broad wave expansion from polluting domain leaderboards with generic software or interview prep repos.",
+      "value": {
+        "rule": "Search queries attach negative guards (-interview -leetcode -homework), generic topics (react, typescript, alibaba, interview) are excluded from wave spawning, and query families with >= 10 hits and < 5 percent on-topic yield are retired.",
+        "how_it_is_checked": "score_candidate_axes zeros composite score on false-positive phrases and benchmark_query_families flags retired_for_noise."
+      }
+    },
+    {
+      "slug": "guardrail.curator-never-self-approves",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: curated repository admission into reusable Seed Packs requires a distinct reviewer",
+      "category_reason": "Prevents single-agent hallucination or license-blind promotion.",
+      "value": {
+        "rule": "Both reviewer_worker_id and reviewer_key_id must differ from the curator, and admitted candidates must pass on_topic, freeness >= 85 and usefulness >= 65.",
+        "how_it_is_checked": "verify_curated_admission_independently returns status_code 409 when worker or key IDs collide."
+      }
+    },
+    {
+      "slug": "spec.niche-spider-axes-and-gates",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: 8-axis 0-100 repository evaluation, BFS spider depth progression and query-family yield thresholds",
+      "category_reason": "Defines transparent multi-axis evaluation rather than one opaque blended score.",
+      "value": {
+        "axes_0_to_100": [
+          "relevance",
+          "popularity",
+          "commonality",
+          "usefulness",
+          "value",
+          "freeness",
+          "activity",
+          "rarity"
+        ],
+        "spider_progression": {
+          "base_depth": 2,
+          "runs_per_depth_unlock": 8,
+          "max_depth": 8,
+          "max_pages_per_cell": 5,
+          "max_waves_per_run": 3
+        },
+        "refresh_track": {
+          "batch_limit_per_run": 18,
+          "star_surge_mover_min": 5,
+          "gone_http_status": 404
+        },
+        "yield_benchmarks": {
+          "champion_min_yield": 0.6,
+          "retire_below_yield": 0.05,
+          "min_hits_to_retire": 10
+        },
+        "admission_thresholds": {
+          "min_freeness_score": 85.0,
+          "min_usefulness_score": 65.0
+        }
+      }
+    },
+    {
+      "slug": "rules.cursor-spider-and-refresh",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic page-cursor advancement, anti-stall synonym mutation and rotating 8-path domain sweep rule",
+      "category_reason": "Zero-model procedure ensuring every sweep covers fresh ground while re-verifying aging entries.",
+      "value": {
+        "rotating_paths": [
+          "base_grid",
+          "license_free",
+          "new_repo_radar",
+          "star_band_middle",
+          "in_readme_deep",
+          "awesome_list",
+          "dataset_benchmark",
+          "active_unknowns"
+        ],
+        "rotating_spdx": [
+          "MIT",
+          "Apache-2.0",
+          "BSD-3-Clause",
+          "CC0-1.0"
+        ],
+        "anti_stall_synonyms": {
+          "template": "boilerplate",
+          "editor": "studio",
+          "toolkit": "toolbox",
+          "framework": "workbench",
+          "generator": "synthesizer"
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.niche-spider",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library combinatorial niche forge, BFS spider simulator and 8-axis evaluator",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "combinatorial niche spider",
+        "code": {
+          "$code": "combinatorial-niche-spider"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m niche_spider --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Mints combinatorial search cells across facets, intents, angles, stacks, 16 industry verticals, platforms, cross-domain hybrids and injected phrases.",
+          "Tracks per-cell page cursors (1..5), advances a depth-capped BFS spider frontier (depth 2..8), proposes bounded Wave 1-3 follow-up verbs and triggers synonym mutations on zero-find stalls.",
+          "Re-verifies longest-unchecked entries to surface star-surge movers and HTTP 404 gone rot.",
+          "Scores candidates on 8 separate 0-100 axes, benchmarks query-family yield and enforces distinct-reviewer admission."
+        ],
+        "does_not": [
+          "Call live GitHub APIs during import/build, bypass API rate limits, activate cron jobs on its own or self-approve admissions."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.niche-spider-axes-and-gates"
+        ]
+      ]
+    },
+    {
+      "slug": "template.niche-spider-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: combinatorial niche spider, refresh and 8-axis evaluation receipt",
+      "value": {
+        "describes": "a deterministic summary receipt of minted combinatorial cells, spider frontier progression, refresh movers/gone, query-family noise retirement and distinct-reviewer admissions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "domain_count",
+            "minted_cells",
+            "first_cell_next_cursor",
+            "allowed_spider_depth",
+            "enqueued_edges",
+            "proposed_wave_verbs",
+            "on_topic_candidates",
+            "movers_detected",
+            "gone_detected",
+            "retired_noisy_families",
+            "self_approval_blocked",
+            "distinct_review_admitted"
+          ],
+          "properties": {
+            "domain_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minted_cells": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "first_cell_next_cursor": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "allowed_spider_depth": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "enqueued_edges": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "proposed_wave_verbs": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "on_topic_candidates": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "movers_detected": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "gone_detected": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "retired_noisy_families": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "self_approval_blocked": {
+              "type": "boolean"
+            },
+            "distinct_review_admitted": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "example": {
+          "domain_count": 5,
+          "minted_cells": 133,
+          "first_cell_next_cursor": 2,
+          "allowed_spider_depth": 4,
+          "enqueued_edges": 2,
+          "proposed_wave_verbs": 2,
+          "on_topic_candidates": 1,
+          "movers_detected": 1,
+          "gone_detected": 1,
+          "retired_noisy_families": [
+            "broad_wave"
+          ],
+          "self_approval_blocked": true,
+          "distinct_review_admitted": [
+            "clinic-tools/intake-ocr-workbench"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "example.niche-spider-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 5-domain niche forge, spider frontier, refresh observations and query logs",
+      "category_reason": "Synthetic fixture recomputed by test_niche_spider.py.",
+      "value": {
+        "domains": [
+          "ocr-and-document-ai",
+          "blender-and-3d",
+          "privacy-tools",
+          "threejs-and-webgpu"
+        ],
+        "custom_phrases": [
+          "retro game preservation",
+          "open source satellite tools"
+        ],
+        "max_intents": 2,
+        "max_angles": 1,
+        "max_verticals": 1,
+        "completed_runs": 16,
+        "frontier_queue": [
+          {
+            "edge_type": "author_repos",
+            "target": "author:clinic-tools",
+            "depth": 2,
+            "from_repo": "clinic-tools/intake-ocr-workbench"
+          }
+        ],
+        "visited_targets": [],
+        "candidates": [
+          {
+            "repo": "clinic-tools/intake-ocr-workbench",
+            "description": "Offline handwritten intake OCR toolkit and table layout parser for community clinics",
+            "topics": [
+              "intake-ocr",
+              "table-extraction",
+              "react"
+            ],
+            "domain_terms": [
+              "intake",
+              "ocr",
+              "table"
+            ],
+            "readme_outbound_repos": [
+              "clinic-tools/form-redactor"
+            ],
+            "stars": 8,
+            "forks": 2,
+            "age_days": 6,
+            "days_since_push": 1,
+            "independent_query_hits": 3,
+            "license": "MIT",
+            "has_docs_or_templates": true,
+            "depth": 1
+          },
+          {
+            "repo": "prep-org/low-level-design-interview",
+            "description": "Low-level design interview preparation and leetcode solutions",
+            "topics": [
+              "interview"
+            ],
+            "domain_terms": [
+              "intake",
+              "ocr"
+            ],
+            "readme_outbound_repos": [],
+            "stars": 1900,
+            "forks": 410,
+            "age_days": 400,
+            "days_since_push": 30,
+            "independent_query_hits": 1,
+            "license": "MIT",
+            "has_docs_or_templates": true,
+            "depth": 1
+          }
+        ],
+        "known_repos": [
+          {
+            "repo": "clinic-tools/intake-ocr-workbench",
+            "stars": 2,
+            "pushed_at": "2026-10-25",
+            "last_checked_epoch": 1.0
+          },
+          {
+            "repo": "old-org/vanished-kit",
+            "stars": 5,
+            "pushed_at": "2026-09-01",
+            "last_checked_epoch": 2.0
+          }
+        ],
+        "fresh_observations": {
+          "clinic-tools/intake-ocr-workbench": {
+            "http_status": 200,
+            "stars": 8,
+            "pushed_at": "2026-10-31"
+          },
+          "old-org/vanished-kit": {
+            "http_status": 404
+          }
+        },
+        "query_logs": [
+          {
+            "family": "license_free",
+            "query": "\"intake\" \"OCR\" license:MIT -interview",
+            "hits": 10,
+            "on_topic_hits": 8
+          },
+          {
+            "family": "broad_wave",
+            "query": "topic:design",
+            "hits": 40,
+            "on_topic_hits": 1
+          }
+        ],
+        "shows": "Synthetic multi-domain discovery sweep demonstrating combinatorial cell generation, BFS spider edge expansion, refresh mover/404 detection, false-positive interview filtering, noisy wave retirement and independent admission review.",
+        "source": "Synthetic. Written for this pack; every repository name and metric is made up."
+      }
+    },
+    {
+      "slug": "example.niche-spider-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed combinatorial niche spider and 8-axis evaluation receipt",
+      "category_reason": "Synthetic receipt verified by test_niche_spider.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.niche-spider-receipt"
+        },
+        "instance": {
+          "domain_count": 5,
+          "minted_cells": 133,
+          "first_cell_next_cursor": 2,
+          "allowed_spider_depth": 4,
+          "enqueued_edges": 2,
+          "proposed_wave_verbs": 2,
+          "on_topic_candidates": 1,
+          "movers_detected": 1,
+          "gone_detected": 1,
+          "retired_noisy_families": [
+            "broad_wave"
+          ],
+          "self_approval_blocked": true,
+          "distinct_review_admitted": [
+            "clinic-tools/intake-ocr-workbench"
+          ]
+        },
+        "shows": "Recomputes exact cell count, page cursor step, spider depth unlock, mover/404 detection, noisy family retirement and distinct-reviewer admission.",
+        "source": "Synthetic. Recomputed directly from example.niche-spider-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.niche-spider-bundle"
+        ],
+        [
+          "verifies",
+          "template.niche-spider-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "mint-niche-cells-and-paths",
+      "kind": "verb.generate_seed",
+      "title": "Mint combinatorial search cells and rotating 8-path query plans across domains",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Cross domain facets with intents, angles, stacks, industry verticals, platforms, cross-domain hybrids and injected phrases, attaching negative false-positive guards and page-1 cursors.",
+      "outcome": "SHA-256-pinned combinatorial cell catalog and rotating path set.",
+      "ready_outcome": "niche_cells_minted",
+      "pinned": [
+        "spec.niche-spider-axes-and-gates",
+        "rules.cursor-spider-and-refresh",
+        "tool.niche-spider",
+        "guardrail.negative-guards-and-noise-retirement"
+      ],
+      "slots": [
+        {
+          "name": "domain_seed_spec",
+          "category": "noun.skill_pack",
+          "description": "Pin of selected domain seeds and optional custom injected phrases."
+        }
+      ],
+      "produces": [
+        {
+          "name": "cell_catalog_receipt",
+          "template": "template.niche-spider-receipt"
+        }
+      ],
+      "steps": [
+        "Cross each domain's facets against intents, angles, technology stacks, industry verticals and cross-domain hybrids.",
+        "Attach negative guard terms (-interview -leetcode -homework) and initialize page_cursor=1..5."
+      ],
+      "acceptance": [
+        {
+          "id": "deterministic-cell-catalog",
+          "check": "mint_combinatorial_niche_catalog reproduces catalog_sha256 and cell_count with zero duplicate cell IDs.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "sweep-cells-and-spider-frontier",
+      "kind": "verb.distill_reflex",
+      "title": "Advance uncovered cell cursors, traverse BFS spider frontier, refresh movers and propose follow-up waves",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Advance cell page cursors without repeating covered ground, traverse outbound author/fork/README links up to unlocked depth, re-verify longest-unchecked repos for movers and 404 rot, and emit bounded Wave 1-3 follow-up verb proposals.",
+      "outcome": "Updated coverage ledger, spider frontier queue, refresh mover/404 report and inert follow-up wave proposals.",
+      "ready_outcome": "spider_and_refresh_completed",
+      "pinned": [
+        "spec.niche-spider-axes-and-gates",
+        "rules.cursor-spider-and-refresh",
+        "tool.niche-spider",
+        "guardrail.no-competing-scheduler-or-auto-cron"
+      ],
+      "slots": [
+        {
+          "name": "sweep_observations",
+          "category": "noun.eval_run",
+          "description": "Pin of current frontier queue, known repo timestamps and sweep observations."
+        }
+      ],
+      "produces": [
+        {
+          "name": "spider_refresh_receipt",
+          "template": "template.niche-spider-receipt"
+        }
+      ],
+      "steps": [
+        "Advance cell page cursors (1..5), process up to frontier_batch_size unvisited BFS nodes within allowed_spider_depth and enqueue outbound edges from on-topic finds.",
+        "Re-check longest-unchecked entries to surface star-surge movers and HTTP 404 gone repos, and emit inert Wave 1-3 proposals with generic topics filtered."
+      ],
+      "acceptance": [
+        {
+          "id": "non-repeating-cursor-and-inert-waves",
+          "check": "Every proposed wave verb has auto_enqueued == False, generic stoplist topics are excluded and HTTP 404 entries are flagged in gone_repos.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "combinatorial-niche-spider.mint-niche-cells-and-paths"
+      ]
+    },
+    {
+      "slug": "review-eight-axis-admissions",
+      "kind": "verb.verify_gate",
+      "title": "Score candidates on 8 axes, benchmark query-family yield and independently review admissions",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Score candidates separately on relevance, popularity, commonality, usefulness, value, freeness, activity and rarity, retire query families below 5 percent on-topic yield, and require a distinct reviewer before admitting open-licensed tools.",
+      "outcome": "Conforming 8-axis evaluation, query-family benchmark and distinct-reviewer admission receipt.",
+      "ready_outcome": "eight_axis_admissions_reviewed",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.niche-spider-axes-and-gates",
+        "tool.niche-spider",
+        "template.niche-spider-receipt",
+        "guardrail.negative-guards-and-noise-retirement",
+        "guardrail.curator-never-self-approves"
+      ],
+      "slots": [
+        {
+          "name": "candidate_and_query_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of candidate observations and query-family hit logs."
+        }
+      ],
+      "produces": [
+        {
+          "name": "admission_receipt",
+          "template": "template.niche-spider-receipt"
+        }
+      ],
+      "steps": [
+        "Compute all 8 separate 0-100 axis scores and zero composite scores on off-topic interview-prep or bare-demo collisions.",
+        "Benchmark query-family on-topic yield, flag families < 5 percent for retirement, reject self-approval (409) and admit only open-licensed on-topic tools verified by a distinct reviewer."
+      ],
+      "acceptance": [
+        {
+          "id": "eight-axes-and-distinct-reviewer-verified",
+          "check": "Self-approval returns 409 and distinct-reviewer receipt conforms to template.niche-spider-receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "combinatorial-niche-spider.sweep-cells-and-spider-frontier"
+      ]
+    }
+  ]
+}

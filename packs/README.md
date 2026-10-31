@@ -95,8 +95,9 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Meta ARE scenario matrix](meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate Tasks and Task Objects, with tested code | 10 | 3 |
 | [SIRA self-learning RAG](sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code | 10 | 3 |
 | [Partner compute cascade](partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts, with tested code | 10 | 3 |
+| [Combinatorial niche spider](combinatorial-niche-spider/README.md) | Minting combinatorial multi-domain search cells, advancing non-repeating page cursors, expanding a persistent BFS spider frontier, refreshing star-surge movers and HTTP 404 rot, and scoring candidates on 8 separate 0-100 axes with query-family yield benchmarks, with tested code | 10 | 3 |
 
-Together: 1510 nouns and 487 verb templates across seventy-nine packs. The
+Together: 1520 nouns and 490 verb templates across eighty packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
