@@ -1,0 +1,34 @@
+# Checks for the Meta ARE scenario matrix pack's code. Standard library only: nothing is installed.
+name: meta-are-scenario-matrix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/meta-are-scenario-matrix/**"
+      - ".github/workflows/meta-are-scenario-matrix.yml"
+  pull_request:
+    paths:
+      - "packs/meta-are-scenario-matrix/**"
+      - ".github/workflows/meta-are-scenario-matrix.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/meta-are-scenario-matrix/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python

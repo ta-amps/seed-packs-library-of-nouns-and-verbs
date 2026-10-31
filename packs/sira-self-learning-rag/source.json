@@ -1,0 +1,525 @@
+{
+  "pack_id": "sira-self-learning-rag",
+  "title": "SIRA self-learning RAG",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier.",
+  "dependencies": [
+    "hybrid-retrieval-context-knapsack",
+    "lora-memory-and-shimming",
+    "retrieval-triggers-and-reuse"
+  ],
+  "boundaries": [
+    "DGM-H self-improvement proposals never self-verify: proposer_worker_id and proposer_key_id must differ from the verifier before any owner review.",
+    "Compiled edge shim rules stay deterministic, zero-model and strictly under the 2.0 ms latency budget.",
+    "Offline SIRA enrichment and benchmark artifacts never mutate evaluator controls or widen visibility beyond surface_only.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for single-shot SIRA pack enrichment, RA-RFT structural analogy retrieval, MR-Search sub-2ms shim compilation and DGM-H verified proposals",
+      "value": {
+        "lets_workers": "Enrich Task Objects and Seed Packs offline with corpus-discriminative vocabulary, I/O signatures and predictive query expansions so multi-round exploratory search collapses into one single-shot retrieval, match structural problem isomorphisms across surface domains, compile execution-report reflections into sub-2ms deterministic edge shims and gate bounded DGM-H proposals through an independent verifier.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "sira-self-learning-rag.enrich-corpus-and-analogy-frames"
+            },
+            "when": "Extract discriminative vocabulary, I/O type signatures, predictive query expansions and 12 structural isomorphism frames across the pack library."
+          },
+          {
+            "verb": {
+              "$verb": "sira-self-learning-rag.compile-sub2ms-shim-rules"
+            },
+            "when": "Reflect over prior Task execution reports (went_right, went_wrong, unknowns, latency and token burn) to emit deterministic < 2 ms routing and pruning rules."
+          },
+          {
+            "verb": {
+              "$verb": "sira-self-learning-rag.verify-dgmh-proposal-independently"
+            },
+            "when": "Check bounded DGM-H retrieval improvement proposals with a distinct verifier worker and key before owner review."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.dgmh-proposer-never-verifies-own-patch"
+          },
+          {
+            "$pin": "guardrail.edge-shim-stays-deterministic-under-2ms"
+          },
+          {
+            "$pin": "guardrail.never-mutate-holdout-or-evaluator-controls"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.sira-rag"
+        },
+        "worked_example": "Synthetic 4-pack pharmacy cross-domain query bundle recomputed in test_sira_rag.py: baseline surface lexical search misses (audio-loudness-gate), single-shot SIRA + RA-RFT retrieves two-step-kit-review via independent-two-step-review isomorphism, compiles 1 deterministic shim rule, rejects self-verification and approves independent verification."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.dgmh-proposer-never-verifies-own-patch"
+        ],
+        [
+          "requires_noun",
+          "guardrail.edge-shim-stays-deterministic-under-2ms"
+        ],
+        [
+          "requires_noun",
+          "guardrail.never-mutate-holdout-or-evaluator-controls"
+        ],
+        [
+          "requires_noun",
+          "spec.sira-rartf-dgmh"
+        ],
+        [
+          "requires_noun",
+          "rules.isomorphism-and-shim-gates"
+        ],
+        [
+          "requires_noun",
+          "tool.sira-rag"
+        ],
+        [
+          "requires_noun",
+          "template.sira-analogy-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.dgmh-proposer-never-verifies-own-patch",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: DGM-H self-improvement proposals require an independent verifier worker and key",
+      "category_reason": "Enforces separation of duties on self-learning RAG updates so no worker promotes its own retrieval or shim changes.",
+      "value": {
+        "rule": "Every DGM-H proposal requires verification by a worker whose worker_id and key_id both differ from the proposer before entering owner review.",
+        "how_it_is_checked": "DgmHIndependentVerifier.verify_proposal returns status 409 and rejected whenever proposer_worker_id == verifier_worker_id or proposer_key_id == verifier_key_id."
+      }
+    },
+    {
+      "slug": "guardrail.edge-shim-stays-deterministic-under-2ms",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: compiled edge shim rules execute deterministically in under 2.0 milliseconds",
+      "category_reason": "Keeps pre-inference routing, context pruning and guardrail injection negligible on the critical path.",
+      "value": {
+        "rule": "Compiled edge shim rules invoke zero neural models and evaluate in strictly less than 2.0 milliseconds per query.",
+        "how_it_is_checked": "evaluate_shim records wall-clock latency_ms and DgmHIndependentVerifier rejects any rule >= 2.0 ms."
+      }
+    },
+    {
+      "slug": "guardrail.never-mutate-holdout-or-evaluator-controls",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: retrieval enrichment and reflection never alter holdout queries or evaluator gates",
+      "category_reason": "Prevents Goodhart reward hacking when reflecting over execution reports.",
+      "value": {
+        "rule": "Self-improvement proposals may update predictive query expansions and shim trigger terms only while mutates_evaluator_controls stays false and holdout_regressions == 0.",
+        "how_it_is_checked": "DgmHIndependentVerifier checks mutates_evaluator_controls is false, holdout_regressions == 0 and holdout_mrr_delta > 0."
+      }
+    },
+    {
+      "slug": "spec.sira-rartf-dgmh",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: SIRA offline enrichment, 12 RA-RFT isomorphism frames and 60-query benchmark",
+      "category_reason": "Defines single-shot retrieval targets, structural frames and DGM-H verification fields.",
+      "value": {
+        "core_isomorphism_frames": [
+          "split-sensitive-vs-public",
+          "exclusive-lease-fencing",
+          "independent-two-step-review",
+          "cas-promotion",
+          "zero-token-memoized-reuse"
+        ],
+        "total_structural_frames": 12,
+        "benchmark_query_count": 60,
+        "target_search_rounds": 1.0,
+        "shim_latency_ceiling_ms": 2.0
+      }
+    },
+    {
+      "slug": "rules.isomorphism-and-shim-gates",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic SIRA enrichment, RA-RFT hybrid fusion and DGM-H verification rules",
+      "category_reason": "Zero-call indexing, scoring and verification rules for single-shot cross-domain Seed Pack retrieval.",
+      "value": {
+        "enrichment_stages": [
+          "corpus-discriminative TF-IDF specificity extraction (df <= 40% of packs)",
+          "slot/produces/verb_kind I/O type signature extraction",
+          "offline concept-bridge predictive query expansion",
+          "12-frame RA-RFT structural problem-isomorphism vectorization"
+        ],
+        "dgm_h_checks": [
+          "proposer_worker_id != verifier_worker_id",
+          "proposer_key_id != verifier_key_id",
+          "mutates_evaluator_controls == false",
+          "visibility_scope == surface_only",
+          "holdout_regressions == 0 and holdout_mrr_delta > 0",
+          "measured_shim_latency_ms < 2.0"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.sira-rag",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: SiraNounEnricher, RaRftAnalogyIndex, MR-Search shim compiler and DGM-H verifier",
+      "category_reason": "Tested Python standard-library package pinned by path, file count and digest.",
+      "value": {
+        "name": "SIRA self-learning RAG",
+        "code": {
+          "$code": "sira-self-learning-rag"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m sira_rag benchmark --packs-dir ../../.. --out BENCHMARK.json",
+          "python -m sira_rag worked-example --input BUNDLE.json"
+        ],
+        "does": [
+          "Enriches Seed Packs and Task Objects offline with discriminative vocabulary, I/O signatures and predictive query expansions.",
+          "Indexes 12 RA-RFT structural problem-isomorphism frames for single-shot cross-domain analogical retrieval.",
+          "Compiles Task execution reports into < 2 ms deterministic shim rules and verifies bounded DGM-H proposals via an independent verifier."
+        ],
+        "does_not": [
+          "Allow self-approval of DGM-H proposals, mutate benchmark holdouts or exceed the 2.0 ms shim latency ceiling."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.sira-rartf-dgmh"
+        ]
+      ]
+    },
+    {
+      "slug": "template.sira-analogy-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: single-shot SIRA + RA-RFT retrieval, shim compilation and DGM-H verification receipt",
+      "value": {
+        "describes": "top-1 pack before and after SIRA + RA-RFT enrichment, compiled shim count and independent DGM-H verification verdicts",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "baseline_top1",
+            "sira_rartf_top1",
+            "compiled_shim_count",
+            "self_verification_rejected",
+            "distinct_verification_approved"
+          ],
+          "properties": {
+            "baseline_top1": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sira_rartf_top1": {
+              "type": "string",
+              "minLength": 1
+            },
+            "compiled_shim_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "self_verification_rejected": {
+              "type": "boolean"
+            },
+            "distinct_verification_approved": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "baseline_top1": "audio-loudness-gate",
+          "sira_rartf_top1": "two-step-kit-review",
+          "compiled_shim_count": 1,
+          "self_verification_rejected": true,
+          "distinct_verification_approved": true
+        }
+      }
+    },
+    {
+      "slug": "example.sira-analogy-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: cross-domain pharmacy separation-of-duties query across four synthetic Seed Packs",
+      "category_reason": "Synthetic 4-pack analogical retrieval and DGM-H reflection bundle recomputed by test_sira_rag.py.",
+      "value": {
+        "query": "Hospital compounding pharmacy requires independent pharmacists from separate shifts so nobody signs off their own syringe batch",
+        "structural_frames": [
+          "independent-two-step-review"
+        ],
+        "mini_packs": [
+          {
+            "pack_id": "budget-table-summary",
+            "title": "Budget table summary",
+            "summary": "A collection of nouns and verbs for summarizing city budget tables.",
+            "nouns": [
+              {
+                "slug": "pack",
+                "category": "noun.skill_pack",
+                "role": "pack",
+                "title": "Budget pack"
+              }
+            ],
+            "verbs": [
+              {
+                "slug": "summarize",
+                "kind": "verb.situate",
+                "title": "Summarize budget",
+                "outcome": "Table"
+              }
+            ]
+          },
+          {
+            "pack_id": "two-step-kit-review",
+            "title": "Two-step kit review",
+            "summary": "A collection of nouns and verbs for drafting and reviewing public-good kits.",
+            "nouns": [
+              {
+                "slug": "guardrail.distinct",
+                "category": "noun.skill_pack",
+                "role": "guardrail",
+                "title": "Guardrail: drafter cannot self-approve"
+              }
+            ],
+            "verbs": [
+              {
+                "slug": "review-kit",
+                "kind": "verb.verify_gate",
+                "review": "distinct_reviewer",
+                "title": "Verify kit with distinct reviewer",
+                "outcome": "Independent approval receipt"
+              }
+            ]
+          },
+          {
+            "pack_id": "audio-loudness-gate",
+            "title": "Audio loudness gate",
+            "summary": "A collection of nouns and verbs for checking broadcast LUFS loudness.",
+            "nouns": [
+              {
+                "slug": "spec",
+                "category": "noun.benchmark_suite",
+                "role": "spec",
+                "title": "LUFS spec"
+              }
+            ],
+            "verbs": [
+              {
+                "slug": "check-lufs",
+                "kind": "verb.verify_gate",
+                "title": "Check LUFS",
+                "outcome": "LUFS report"
+              }
+            ]
+          },
+          {
+            "pack_id": "folder-hash-mover",
+            "title": "Folder hash mover",
+            "summary": "A collection of nouns and verbs for moving large folders safely by hash.",
+            "nouns": [
+              {
+                "slug": "rules",
+                "category": "noun.reflex_procedure",
+                "role": "rules",
+                "title": "Move rules"
+              }
+            ],
+            "verbs": [
+              {
+                "slug": "move",
+                "kind": "verb.ingest",
+                "title": "Move files",
+                "outcome": "Hash manifest"
+              }
+            ]
+          }
+        ],
+        "episodes": [
+          {
+            "episode_id": "EP-01",
+            "query": "independent pharmacists separate shifts sign off separation of duties",
+            "target_pack_id": "two-step-kit-review",
+            "structural_frame": "independent-two-step-review",
+            "baseline_rounds": 4,
+            "exploratory_tokens": 2400,
+            "single_shot_tokens": 410,
+            "went_wrong": [
+              "Surface title lacked pharmacy vocabulary; needed structural frame match."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "slug": "example.sira-analogy-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: single-shot analogical retrieval lift and DGM-H distinct-verifier check",
+      "category_reason": "Deterministic output conforming to template.sira-analogy-receipt.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.sira-analogy-receipt"
+        },
+        "instance": {
+          "baseline_top1": "audio-loudness-gate",
+          "sira_rartf_top1": "two-step-kit-review",
+          "compiled_shim_count": 1,
+          "self_verification_rejected": true,
+          "distinct_verification_approved": true
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.sira-analogy-bundle"
+        ],
+        [
+          "verifies",
+          "template.sira-analogy-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "enrich-corpus-and-analogy-frames",
+      "kind": "verb.generate_seed",
+      "title": "Enrich Seed Packs offline with SIRA discriminative terms and RA-RFT isomorphism frames",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Extract corpus-discriminative vocabulary, slot/output type signatures, predictive query expansions and 12 structural isomorphism frames so multi-round search collapses into one single-shot retrieval.",
+      "outcome": "SHA-256-pinned SIRA + RA-RFT index supporting sub-2ms single-shot cross-domain retrieval.",
+      "ready_outcome": "sira_analogy_index_built",
+      "pinned": [
+        "spec.sira-rartf-dgmh",
+        "rules.isomorphism-and-shim-gates",
+        "tool.sira-rag",
+        "guardrail.never-mutate-holdout-or-evaluator-controls"
+      ],
+      "slots": [
+        {
+          "name": "pack_corpus",
+          "category": "noun.skill_pack",
+          "description": "Pin of Seed Pack corpus to enrich offline."
+        }
+      ],
+      "produces": [
+        {
+          "name": "analogy_receipt",
+          "template": "template.sira-analogy-receipt"
+        }
+      ],
+      "steps": [
+        "Run SiraNounEnricher.enrich_corpus across the input Seed Packs to compute discriminative TF-IDF terms, I/O signatures and predictive query expansions.",
+        "Build RaRftAnalogyIndex across all 12 structural problem-isomorphism frames."
+      ],
+      "acceptance": [
+        {
+          "id": "all-packs-enriched-with-sha256-and-frames",
+          "check": "Every pack receives a deterministic enrichment_sha256 and single-shot retrieval completes in < 2.0 ms.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "compile-sub2ms-shim-rules",
+      "kind": "verb.distill_reflex",
+      "title": "Compile Task execution-report reflections into deterministic sub-2ms edge shim rules",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Reflect over execution reports (went_right, went_wrong, unknowns, latency and token burn) to emit zero-model < 2 ms routing, context-pruning and failure-guardrail shims.",
+      "outcome": "Deterministic edge shim rule set hashed with SHA-256 and verified under the 2.0 ms latency ceiling.",
+      "ready_outcome": "edge_shims_compiled",
+      "pinned": [
+        "spec.sira-rartf-dgmh",
+        "rules.isomorphism-and-shim-gates",
+        "tool.sira-rag",
+        "guardrail.edge-shim-stays-deterministic-under-2ms"
+      ],
+      "slots": [
+        {
+          "name": "execution_episodes",
+          "category": "noun.eval_run",
+          "description": "Pin of prior Task execution reports with went_right and went_wrong notes."
+        }
+      ],
+      "produces": [
+        {
+          "name": "shim_receipt",
+          "template": "template.sira-analogy-receipt"
+        }
+      ],
+      "steps": [
+        "Compile multi-round miss and failure episodes into high-specificity trigger rules and context-pruning directives.",
+        "Measure evaluate_shim wall-clock latency to confirm < 2.0 ms execution."
+      ],
+      "acceptance": [
+        {
+          "id": "shim-rules-deterministic-and-under-2ms",
+          "check": "Every compiled shim rule carries a rule_sha256 and evaluates in < 2.0 ms with zero model calls.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "sira-self-learning-rag.enrich-corpus-and-analogy-frames"
+      ]
+    },
+    {
+      "slug": "verify-dgmh-proposal-independently",
+      "kind": "verb.verify_gate",
+      "title": "Verify bounded DGM-H self-improvement proposals with an independent verifier",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Gate bounded retrieval and shim improvement proposals by checking proposer != verifier, zero holdout regressions, positive MRR lift and surface_only visibility.",
+      "outcome": "Conforming verification receipt rejecting self-approval (409) and approving only independently verified non-regressing proposals for owner review.",
+      "ready_outcome": "dgmh_proposal_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.sira-rartf-dgmh",
+        "rules.isomorphism-and-shim-gates",
+        "tool.sira-rag",
+        "template.sira-analogy-receipt",
+        "guardrail.dgmh-proposer-never-verifies-own-patch"
+      ],
+      "slots": [
+        {
+          "name": "proposal_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of quarantined DGM-H proposal and holdout benchmark metrics."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verification_receipt",
+          "template": "template.sira-analogy-receipt"
+        }
+      ],
+      "steps": [
+        "Verify proposer_worker_id != verifier_worker_id and proposer_key_id != verifier_key_id.",
+        "Confirm mutates_evaluator_controls is false, visibility_scope is surface_only, holdout_regressions == 0 and shim latency < 2.0 ms."
+      ],
+      "acceptance": [
+        {
+          "id": "proposer-distinct-from-verifier-and-non-regressing",
+          "check": "Self-verification is rejected and distinct-actor verification validates against template.sira-analogy-receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "sira-self-learning-rag.compile-sub2ms-shim-rules"
+      ]
+    }
+  ]
+}

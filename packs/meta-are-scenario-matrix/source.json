@@ -1,0 +1,509 @@
+{
+  "pack_id": "meta-are-scenario-matrix",
+  "title": "Meta ARE scenario matrix",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating stratified Latin-hypercube or 10^12 addressable tuples, and digesting safe trajectories into candidate Tasks and Task Objects.",
+  "dependencies": [
+    "decomposition-patterns",
+    "public-good-kits",
+    "user-acceptance-testing"
+  ],
+  "boundaries": [
+    "Synthetic scenario episodes and digested candidates remain quarantined proposals until an authorized owner reviews and admits them.",
+    "High-PII offline airgap situations block unsplit cloud compute tiers deterministically; mixed private-and-public situations require explicit lane partitioning.",
+    "Every digested Task and Task Object preserves an explicit human_only boundary for safety, care, legal judgment and final release.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for 1,000x1,000x1,000x1,000 dynamic scenario generation, stakeholder boundary gating and Task/Task-Object digestion",
+      "value": {
+        "lets_workers": "Generate 1,000 Gaia2-style dynamic situations across 25 public-good and technical domains, pair them with 1,000 decomposition and compute strategies, 1,000 operator harness personas and 1,000 multi-position stakeholders, evaluate 1,000-cell Latin-hypercube sweeps or O(1) lookups across 10^12 tuples, and digest approved trajectories into SHA-256-pinned candidate Tasks and Task Objects.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "meta-are-scenario-matrix.generate-four-axis-catalog"
+            },
+            "when": "Materialize or extend the 1,000 environments, 1,000 methods, 1,000 personas and 1,000 stakeholders."
+          },
+          {
+            "verb": {
+              "$verb": "meta-are-scenario-matrix.evaluate-stakeholder-episodes"
+            },
+            "when": "Run a 1,000-cell 4D Latin-hypercube sweep or bounded slice and apply stakeholder block and lane-partition gates."
+          },
+          {
+            "verb": {
+              "$verb": "meta-are-scenario-matrix.digest-reusable-nouns-and-verbs"
+            },
+            "when": "Rank and hash approved trajectories into candidate Tasks (verbs) and Task Objects (nouns) with explicit human_only boundaries."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.block-unsplit-pii-cloud-egress"
+          },
+          {
+            "$pin": "guardrail.preserve-human-only-care-and-judgment"
+          },
+          {
+            "$pin": "guardrail.synthetic-sweep-is-not-field-deployment"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.scenario-matrix"
+        },
+        "worked_example": "Synthetic 3-tuple episode bundle recomputed in test_scenario_matrix.py: blocks unsplit cloud inference on ENV-0001 offline shelter PII, partitions ENV-0002 mixed shelter intake into private local and public donor lanes, and approves ENV-0084 public municipal budget audit under verify-cascade."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.block-unsplit-pii-cloud-egress"
+        ],
+        [
+          "requires_noun",
+          "guardrail.preserve-human-only-care-and-judgment"
+        ],
+        [
+          "requires_noun",
+          "guardrail.synthetic-sweep-is-not-field-deployment"
+        ],
+        [
+          "requires_noun",
+          "spec.four-axis-matrix"
+        ],
+        [
+          "requires_noun",
+          "rules.stakeholder-digestion"
+        ],
+        [
+          "requires_noun",
+          "tool.scenario-matrix"
+        ],
+        [
+          "requires_noun",
+          "template.matrix-digest"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.block-unsplit-pii-cloud-egress",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: block cloud compute tiers on offline airgap or unsplit high-PII situations",
+      "category_reason": "Prevents raw sensitive intake, clinical or legal records from crossing into external model endpoints.",
+      "value": {
+        "rule": "Any episode with offline_airgap connectivity or high_pii_local_only sensitivity without explicit lane splitting and PII redaction is deterministically blocked before digestion.",
+        "how_it_is_checked": "evaluate_and_digest_episode checks connectivity, sensitivity and privacy_boundary first and emits verdict blocked."
+      }
+    },
+    {
+      "slug": "guardrail.preserve-human-only-care-and-judgment",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every digested candidate carries an explicit human_only boundary",
+      "category_reason": "Keeps crisis follow-up, eligibility rulings, legal advice and release sign-off strictly with accountable people.",
+      "value": {
+        "rule": "Digested Task and Task-Object candidates always carry a non-empty domain-specific human_only boundary and surface_only visibility.",
+        "how_it_is_checked": "evaluate_and_digest_episode stamps human_only and visibility_scope surface_only on every digested noun and verb."
+      }
+    },
+    {
+      "slug": "guardrail.synthetic-sweep-is-not-field-deployment",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: never present synthetic 1,000-episode sweeps as live field outcomes or admitted packs",
+      "category_reason": "Maintains honest evidence separation between local deterministic matrix sweeps and real partner operations.",
+      "value": {
+        "rule": "Scenario matrix digests record mode local_verified or worker_llm_extended explicitly and keep digested candidates quarantined until owner admission.",
+        "how_it_is_checked": "run_latin_hypercube_sweep_1000 stamps mode and status:quarantined on emitted digests."
+      }
+    },
+    {
+      "slug": "spec.four-axis-matrix",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: 1,000x1,000x1,000x1,000 scenario matrix axes and 4D Latin-hypercube sweep",
+      "category_reason": "Defines deterministic axis cardinalities, bijective 10^12 tuple indexing and stratified sweep invariants.",
+      "value": {
+        "axes": {
+          "environments": {
+            "count": 1000,
+            "id_range": "ENV-0001..ENV-1000",
+            "factorization": "25 domains x 10 Gaia2 operational constraints x 4 sensitivity/connectivity regimes"
+          },
+          "methods": {
+            "count": 1000,
+            "id_range": "METH-0001..METH-1000",
+            "factorization": "5 topologies x 5 privacy boundaries x 40 valid (compute_tier, verification_gate) pairs"
+          },
+          "personas": {
+            "count": 1000,
+            "id_range": "PERS-0001..PERS-1000",
+            "factorization": "5 skill levels x 5 agent harnesses x 5 communication styles x 8 risk/accessibility profiles"
+          },
+          "stakeholders": {
+            "count": 1000,
+            "id_range": "STKH-0001..STKH-1000",
+            "factorization": "10 stakeholder positions x 10 institutional mandates x 5 strictness tiers x 2 authority scopes"
+          }
+        },
+        "addressable_tuples": 1000000000000,
+        "default_lhs_episodes": 1000,
+        "verb_lifecycle": "claim-do-report"
+      }
+    },
+    {
+      "slug": "rules.stakeholder-digestion",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Stakeholder evaluation and Task/Task-Object digestion rules",
+      "category_reason": "Zero-call deterministic rules mapping (env, method, persona, stakeholder) tuples to verdicts and candidate pins.",
+      "value": {
+        "verdicts": [
+          "approved_direct",
+          "approved_partitioned",
+          "blocked"
+        ],
+        "veto_checks": [
+          "cloud_tier_cannot_run_in_offline_airgap",
+          "unsplit_cloud_egress_on_high_pii_data",
+          "stakeholder_veto_cloud_on_high_pii_airgap",
+          "mixed_or_regulated_data_missing_private_public_split",
+          "missing_distinct_reviewer_two_step_gate",
+          "method_latency_exceeds_operator_or_situational_budget"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.scenario-matrix",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: 1,000-scenario matrix generator, 10^12 tuple resolver and stakeholder digester",
+      "category_reason": "Tested Python standard-library package pinned by path, file count and digest.",
+      "value": {
+        "name": "Meta ARE scenario matrix",
+        "code": {
+          "$code": "meta-are-scenario-matrix"
+        },
+        "runtime": "Python 3.10 or later, standard library only, with optional worker llm_extender callback.",
+        "commands": [
+          "python -m scenario_matrix sweep --seed 20261031 --out DIGEST.json",
+          "python -m scenario_matrix expand --global-index 42000123999",
+          "python -m scenario_matrix worked-example --input BUNDLE.json"
+        ],
+        "does": [
+          "Generates 1,000 indexed environments, 1,000 methods, 1,000 operator personas and 1,000 stakeholders deterministically.",
+          "Evaluates 1,000-cell 4D Latin-hypercube sweeps covering every index 0001..1000 on all 4 axes and resolves arbitrary tuples in [0, 10^12 - 1] in O(1).",
+          "Applies stakeholder privacy, offline, latency and two-step review gates and digests approved episodes into SHA-256-hashed candidate Tasks and Task Objects."
+        ],
+        "does_not": [
+          "Enqueue tasks automatically, widen visibility beyond surface_only or claim synthetic sweeps are field deployments."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.four-axis-matrix"
+        ]
+      ]
+    },
+    {
+      "slug": "template.matrix-digest",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: stakeholder-gated scenario matrix evaluation and digested candidate summary",
+      "value": {
+        "describes": "deterministic verdicts, block reasons and digested Task and Task-Object slugs across evaluated 4-axis scenario tuples",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evaluated_count",
+            "verdicts",
+            "approved_count",
+            "blocked_count",
+            "blocked_reasons",
+            "digested_verbs",
+            "digested_nouns"
+          ],
+          "properties": {
+            "evaluated_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "verdicts": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "approved_direct",
+                  "approved_partitioned",
+                  "blocked"
+                ]
+              }
+            },
+            "approved_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "blocked_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "blocked_reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "digested_verbs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "digested_nouns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "example": {
+          "evaluated_count": 3,
+          "verdicts": [
+            "blocked",
+            "approved_partitioned",
+            "approved_direct"
+          ],
+          "approved_count": 2,
+          "blocked_count": 1,
+          "blocked_reasons": [
+            "cloud_tier_cannot_run_in_offline_airgap",
+            "unsplit_cloud_egress_on_high_pii_data"
+          ],
+          "digested_verbs": [
+            "rural-shelter-intake.map-reduce-split",
+            "municipal-budget-audit.verify-cascade"
+          ],
+          "digested_nouns": [
+            "rural-shelter-intake.distinct-reviewer-two-step",
+            "municipal-budget-audit.deterministic-schema-and-hash"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "example.matrix-episode-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: three 4-axis scenario tuples spanning offline PII, mixed shelter intake and public budget audit",
+      "category_reason": "Synthetic scenario tuple bundle recomputed by test_scenario_matrix.py.",
+      "value": {
+        "tuples": [
+          {
+            "env_id": "ENV-0001",
+            "method_id": "METH-0020",
+            "persona_id": "PERS-0001",
+            "stakeholder_id": "STKH-0208"
+          },
+          {
+            "env_id": "ENV-0002",
+            "method_id": "METH-0255",
+            "persona_id": "PERS-0245",
+            "stakeholder_id": "STKH-0412"
+          },
+          {
+            "env_id": "ENV-0084",
+            "method_id": "METH-0407",
+            "persona_id": "PERS-0615",
+            "stakeholder_id": "STKH-0520"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "example.matrix-digest",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed stakeholder verdicts, block reasons and digested Nouns and Verbs",
+      "category_reason": "Deterministic output conforming to template.matrix-digest.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.matrix-digest"
+        },
+        "instance": {
+          "evaluated_count": 3,
+          "verdicts": [
+            "blocked",
+            "approved_partitioned",
+            "approved_direct"
+          ],
+          "approved_count": 2,
+          "blocked_count": 1,
+          "blocked_reasons": [
+            "cloud_tier_cannot_run_in_offline_airgap",
+            "unsplit_cloud_egress_on_high_pii_data"
+          ],
+          "digested_verbs": [
+            "rural-shelter-intake.map-reduce-split",
+            "municipal-budget-audit.verify-cascade"
+          ],
+          "digested_nouns": [
+            "rural-shelter-intake.distinct-reviewer-two-step",
+            "municipal-budget-audit.deterministic-schema-and-hash"
+          ]
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.matrix-episode-bundle"
+        ],
+        [
+          "verifies",
+          "template.matrix-digest"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "generate-four-axis-catalog",
+      "kind": "verb.generate_seed",
+      "title": "Generate 1,000 environments, 1,000 methods, 1,000 personas and 1,000 stakeholders",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Deterministically generate all four 1,000-item scenario axes (ENV-0001..ENV-1000, METH-0001..METH-1000, PERS-0001..PERS-1000, STKH-0001..STKH-1000) with SHA-256 content digests.",
+      "outcome": "Verified 4x1,000 scenario catalog covering 25 domains, 5 topologies, 6 compute tiers, 5 harnesses and 10 stakeholder roles.",
+      "ready_outcome": "four_axis_catalog_generated",
+      "pinned": [
+        "spec.four-axis-matrix",
+        "tool.scenario-matrix",
+        "guardrail.synthetic-sweep-is-not-field-deployment"
+      ],
+      "slots": [
+        {
+          "name": "seed_config",
+          "category": "noun.benchmark_suite",
+          "description": "Pin of seed and optional slice configuration."
+        }
+      ],
+      "produces": [
+        {
+          "name": "catalog_digest",
+          "template": "template.matrix-digest"
+        }
+      ],
+      "steps": [
+        "Run generate_environments_1000, generate_methods_1000, generate_personas_1000 and generate_stakeholders_1000.",
+        "Verify all 4,000 SHA-256 digests are unique and every environment names an explicit human_only boundary."
+      ],
+      "acceptance": [
+        {
+          "id": "all-four-axes-reach-1000-unique-digests",
+          "check": "Each of the four axes produces 1,000 records with 1,000 distinct SHA-256 digests.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "evaluate-stakeholder-episodes",
+      "kind": "verb.verify_gate",
+      "title": "Evaluate a 1,000-cell 4D Latin-hypercube sweep under multi-position stakeholder gates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Pair all 1,000 environments, methods, personas and stakeholders via a seeded 4D Latin-hypercube bijection and apply privacy, offline, two-step review and latency gates.",
+      "outcome": "Deterministic episode verdicts separating approved_direct, approved_partitioned and blocked trajectories.",
+      "ready_outcome": "stakeholder_episodes_evaluated",
+      "pinned": [
+        "spec.four-axis-matrix",
+        "rules.stakeholder-digestion",
+        "tool.scenario-matrix",
+        "guardrail.block-unsplit-pii-cloud-egress"
+      ],
+      "slots": [
+        {
+          "name": "episode_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of tuple coordinates or Latin-hypercube seed specification."
+        }
+      ],
+      "produces": [
+        {
+          "name": "episode_verdicts",
+          "template": "template.matrix-digest"
+        }
+      ],
+      "steps": [
+        "Run run_latin_hypercube_sweep_1000 or run_worked_example across the requested tuple set.",
+        "Verify every offline_airgap or unsplit high_pii_local_only cloud trajectory is blocked."
+      ],
+      "acceptance": [
+        {
+          "id": "offline-and-pii-cloud-leaks-blocked",
+          "check": "evaluate_and_digest_episode blocks cloud tiers in offline_airgap and unsplit high_pii_local_only regimes.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "meta-are-scenario-matrix.generate-four-axis-catalog"
+      ]
+    },
+    {
+      "slug": "digest-reusable-nouns-and-verbs",
+      "kind": "verb.distill_reflex",
+      "title": "Digest approved scenario trajectories into candidate Tasks and Task Objects",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Aggregate approved and lane-partitioned trajectories across 25 domains into SHA-256-pinned candidate Tasks (verbs) and Task Objects (nouns) with human_only boundaries.",
+      "outcome": "Conforming matrix digest listing top reusable Task and Task-Object candidates ready for distinct human or worker review.",
+      "ready_outcome": "candidates_digested",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.four-axis-matrix",
+        "rules.stakeholder-digestion",
+        "tool.scenario-matrix",
+        "template.matrix-digest",
+        "guardrail.preserve-human-only-care-and-judgment"
+      ],
+      "slots": [
+        {
+          "name": "evaluated_sweep",
+          "category": "noun.eval_run",
+          "description": "Pin of stakeholder-evaluated scenario sweep."
+        }
+      ],
+      "produces": [
+        {
+          "name": "digested_candidates",
+          "template": "template.matrix-digest"
+        }
+      ],
+      "steps": [
+        "Aggregate approved_direct and approved_partitioned episodes by Task and Task-Object slug.",
+        "Verify every digested candidate carries surface_only visibility, a SHA-256 content hash and an explicit human_only boundary."
+      ],
+      "acceptance": [
+        {
+          "id": "digested-candidates-conform-and-preserve-human-boundary",
+          "check": "Output validates against template.matrix-digest and preserves human_only boundaries.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "meta-are-scenario-matrix.evaluate-stakeholder-episodes"
+      ]
+    }
+  ]
+}

@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds seventy-five proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds seventy-nine proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -95,10 +95,14 @@ activated**, and no worker has run them yet.
 | [LoRA memory and shimming](packs/lora-memory-and-shimming/README.md) | Compiling post-cutoff task objects into leakage-checked LoRA pairs, routing between revocable prompt shims and weight updates, and gating promotion on paired bootstrap CIs, with tested code |
 | [Hybrid retrieval context knapsack](packs/hybrid-retrieval-context-knapsack/README.md) | Fusing BM25 and dense cosine rankings via RRF (k=60), stripping untrusted prompt injections, pruning MinHash near-duplicates and solving a 0/1 token-budget context knapsack, with tested code |
 | [Leakage-safe regime backtesting](packs/leakage-safe-regime-backtesting/README.md) | Synthetic and historical statistical validation hygiene with purged walk-forward splits, causal volatility-regime Rank IC/ICIR, turnover drag and multiple-testing deflation, never as financial advice, with tested code |
+| [Scene and cognitive video QA](packs/scene-and-cognitive-video-qa/README.md) | Multi-frame shot dwell and text-crossfade transition checks, static-slide Ken Burns zoom stability, reading-speed and split-attention prose conflict checks, desktop web-journey provenance and widescreen frosted-caption geometry, with tested code |
+| [Meta ARE scenario matrix](packs/meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate Tasks and Task Objects, with tested code |
+| [SIRA self-learning RAG](packs/sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code |
+| [Partner compute cascade](packs/partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1470
-nouns and 473 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1510
+nouns and 487 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

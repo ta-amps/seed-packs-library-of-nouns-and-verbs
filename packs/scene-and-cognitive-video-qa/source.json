@@ -1,0 +1,718 @@
+{
+  "pack_id": "scene-and-cognitive-video-qa",
+  "title": "Scene and cognitive video QA",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for multi-frame scene, transition, camera-zoom stability, reading-speed and split-attention cognitive-load, live desktop web-journey provenance, and widescreen lower-band frosted-caption geometry checks.",
+  "dependencies": [
+    "frame-by-frame-video-qa",
+    "audio-and-narration-qa",
+    "video-qa",
+    "findings-to-fixes"
+  ],
+  "boundaries": [
+    "Every multi-frame and cognitive QA report binds to the exact SHA-256 of the rendered video inspected.",
+    "Automated dwell, zoom-drift, cognitive-overlap, journey-provenance and caption-band checks catch structural defects; a human viewer still judges narrative clarity and visual craft.",
+    "Standard-library code executes locally without network calls, browser launches or remote model APIs.",
+    "Importing the pack writes nothing, enqueues nothing and activates nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for multi-frame scene, transition, slide stability and cognitive-load video QA",
+      "value": {
+        "lets_workers": "Evaluate groups of frames across scene cuts for sub-second flash shots and ghosting text-over-text crossfades, block unmotivated Ken Burns zoom or pan drift on static slides and terminals, measure on-screen reading speed and split-attention prose conflicts against concurrent speech and captions, verify authentic desktop web-journey provenance from landing page through click navigation without submitting live forms, and check burned-in frosted-glass rounded-pill captions centered in the widescreen lower horizontal space.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "scene-and-cognitive-video-qa.audit-shot-dwell-and-transitions"
+            },
+            "when": "Check multi-frame shot durations and text-bearing transition overlaps across cuts."
+          },
+          {
+            "verb": {
+              "$verb": "scene-and-cognitive-video-qa.audit-camera-and-slide-stability"
+            },
+            "when": "Check static slides, cards, terminals and browser captures for unmotivated Ken Burns zoom or pan drift."
+          },
+          {
+            "verb": {
+              "$verb": "scene-and-cognitive-video-qa.audit-reading-and-cognitive-load"
+            },
+            "when": "Check stage text dwell speed, disallowed must_read escapes and split-attention prose conflicts against speech."
+          },
+          {
+            "verb": {
+              "$verb": "scene-and-cognitive-video-qa.audit-web-journey-and-captions"
+            },
+            "when": "Verify desktop website landing-and-click provenance plus centered frosted-glass lower-band captions."
+          },
+          {
+            "verb": {
+              "$verb": "scene-and-cognitive-video-qa.compile-scene-cognitive-report"
+            },
+            "when": "Bind all five multi-frame and cognitive checks into one digest-pinned QA report."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.exact-video-digest"
+          },
+          {
+            "$pin": "guardrail.no-live-form-submit"
+          },
+          {
+            "$pin": "guardrail.lock-static-slides-one-to-one"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.scene-cognitive-qa"
+        },
+        "worked_example": "Synthetic three-shot explainer bundle recomputed by test_scene_cognitive_qa.py: catches a 0.80 s flash section card, an 8-frame text-over-text crossfade, a 2.8 percent Ken Burns zoom drift on a static hero slide, a 19-word stage sentence competing with unrelated narration, a cropped 980 px mid-page web card with no landing click, and an un-rounded native fullscreen caption box sitting 19 px off the lower-band vertical center."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.exact-video-digest"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-live-form-submit"
+        ],
+        [
+          "requires_noun",
+          "guardrail.lock-static-slides-one-to-one"
+        ],
+        [
+          "requires_noun",
+          "spec.scene-cognitive-gates"
+        ],
+        [
+          "requires_noun",
+          "rules.frosted-caption-pill"
+        ],
+        [
+          "requires_noun",
+          "tool.scene-cognitive-qa"
+        ],
+        [
+          "requires_noun",
+          "template.scene-cognitive-qa-report"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.exact-video-digest",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: bind every multi-frame and cognitive QA report to the exact video SHA-256",
+      "category_reason": "Prevents stale storyboard or pre-caption measurements from certifying a re-encoded video.",
+      "value": {
+        "rule": "Every scene, transition, camera-stability and caption-band measurement names the 64-hex SHA-256 of the exact encoded MP4 inspected.",
+        "how_it_is_checked": "compile_scene_cognitive_report and template.scene-cognitive-qa-report enforce a 64-hex media_sha256."
+      }
+    },
+    {
+      "slug": "guardrail.no-live-form-submit",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: live website recordings show landing and typing without ever submitting synthetic forms",
+      "category_reason": "Prevents demo captures from polluting live intake queues.",
+      "value": {
+        "rule": "Website recordings navigate from the real landing page to the target route and type synthetic text into inputs for illustration only, clearing without submitting.",
+        "how_it_is_checked": "evaluate_live_web_journey_provenance emits a blocker finding if form_submitted is true."
+      }
+    },
+    {
+      "slug": "guardrail.lock-static-slides-one-to-one",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: keep static slides, typographic cards and terminals locked at 1:1 scale unless zooming to a named focal target",
+      "category_reason": "Eliminates unmotivated Ken Burns scale drift that softens rasterized text.",
+      "value": {
+        "rule": "Static slides, section cards, typographic quotes, terminals and full-window browser captures hold scale=1.000 and 0 px pan drift unless an explicit focal target justifies a camera move.",
+        "how_it_is_checked": "evaluate_camera_and_slide_stability flags scale drift >= 0.003 or pan drift > 2.0 px on static scene kinds without has_focal_target."
+      }
+    },
+    {
+      "slug": "spec.scene-cognitive-gates",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: multi-frame shot dwell, transition ghosting, slide stability, reading speed, cognitive overlap, web provenance and caption-band gates",
+      "category_reason": "Defines deterministic pass, warn and fail thresholds across multi-frame and cognitive checks.",
+      "value": {
+        "dwell_and_transitions": {
+          "min_shot_s": 1.6,
+          "warn_text_shot_s": 2.0,
+          "max_text_crossfade_frames": 4,
+          "fps": 30
+        },
+        "slide_stability": {
+          "min_unmotivated_zoom": 0.003,
+          "max_pan_drift_px": 2.0
+        },
+        "cognitive_load": {
+          "words_per_s_max": 3.5,
+          "base_orient_s": 0.45,
+          "prose_escape_min_words": 6,
+          "conflict_min_words": 12,
+          "min_lexical_overlap": 0.35
+        },
+        "web_provenance": {
+          "min_desktop_width_px": 1280,
+          "require_browser_chrome": true,
+          "require_entry_landing_and_click": true,
+          "allow_form_submit": false
+        },
+        "caption_band": {
+          "frame_width_px": 1920,
+          "band_top_y": 932,
+          "band_bottom_y": 1080,
+          "expected_center_x": 960.0,
+          "expected_center_y": 1006.0,
+          "center_tolerance_px": 3.0,
+          "min_horizontal_margin_px": 24.0,
+          "min_rounded_radius_px": 12.0,
+          "max_lines": 2,
+          "max_chars_per_line": 42
+        }
+      }
+    },
+    {
+      "slug": "rules.frosted-caption-pill",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic widescreen lower-band frosted-glass caption pill layout and clause-wrapping rule",
+      "category_reason": "Zero-call geometry and linguistic line-breaking procedure for burned-in widescreen captions.",
+      "value": {
+        "band_y_px": [
+          932,
+          1080
+        ],
+        "pill_center_px": [
+          960,
+          1006
+        ],
+        "rounded_radius_px": 18,
+        "backdrop_blur_sigma_px": 10.0,
+        "specular_border_px": 1.5,
+        "max_lines": 2,
+        "max_chars_per_line": 42,
+        "bridge_cue_gap_s": 0.2,
+        "disable_fullscreen_native_track": true,
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.scene-cognitive-qa",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library multi-frame scene, transition and cognitive-load video QA analyzer",
+      "category_reason": "Tested Python standard-library package pinned by path, file count and digest.",
+      "value": {
+        "name": "scene and cognitive video QA",
+        "code": {
+          "$code": "scene-and-cognitive-video-qa"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m scene_cognitive_qa --bundle OBSERVATIONS.json"
+        ],
+        "does": [
+          "Evaluates multi-frame shot dwell and blocks > 4-frame text-over-text crossfades.",
+          "Flags unmotivated Ken Burns zoom or pan drift on static slides, cards, terminals and browser captures.",
+          "Checks stage reading speed, disallowed must_read=False escapes, and split-attention prose conflicts against concurrent speech.",
+          "Verifies authentic >= 1280 px desktop website landing-to-click journeys and centered frosted-glass lower-band captions."
+        ],
+        "does_not": [
+          "Call remote APIs, launch browsers, modify media files or replace human editorial review."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.scene-cognitive-gates"
+        ]
+      ]
+    },
+    {
+      "slug": "template.scene-cognitive-qa-report",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: digest-pinned multi-frame scene and cognitive video QA report",
+      "value": {
+        "describes": "a consolidated multi-frame scene, transition, camera-stability, cognitive-load, web-provenance and frosted-caption QA report",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "media_sha256",
+            "min_shot_s",
+            "flash_shots",
+            "ghost_transitions",
+            "drifting_static_scenes",
+            "unreadable_items",
+            "cognitive_conflicts",
+            "unconvincing_journeys",
+            "caption_center_offset_x_px",
+            "caption_center_offset_y_px",
+            "overall_verdict"
+          ],
+          "properties": {
+            "media_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "min_shot_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "flash_shots": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ghost_transitions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "drifting_static_scenes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unreadable_items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "cognitive_conflicts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unconvincing_journeys": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "caption_center_offset_x_px": {
+              "type": "number",
+              "minimum": 0
+            },
+            "caption_center_offset_y_px": {
+              "type": "number",
+              "minimum": 0
+            },
+            "overall_verdict": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "warn",
+                "fail"
+              ]
+            }
+          }
+        },
+        "example": {
+          "media_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "min_shot_s": 0.8,
+          "flash_shots": 1,
+          "ghost_transitions": 1,
+          "drifting_static_scenes": 1,
+          "unreadable_items": 2,
+          "cognitive_conflicts": 1,
+          "unconvincing_journeys": 1,
+          "caption_center_offset_x_px": 0.0,
+          "caption_center_offset_y_px": 19.0,
+          "overall_verdict": "fail"
+        }
+      }
+    },
+    {
+      "slug": "example.scene-cognitive-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic multi-frame shot list, zoom track, competing prose, cropped web card and off-center caption band",
+      "category_reason": "Synthetic fixture recomputed by test_scene_cognitive_qa.py.",
+      "value": {
+        "media_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "shots": [
+          {
+            "id": "sec1",
+            "start_s": 0.0,
+            "end_s": 0.8,
+            "has_stage_text": true
+          },
+          {
+            "id": "shot01",
+            "start_s": 0.8,
+            "end_s": 4.97,
+            "has_stage_text": true
+          },
+          {
+            "id": "shot02",
+            "start_s": 4.97,
+            "end_s": 10.67,
+            "has_stage_text": true
+          }
+        ],
+        "transitions": [
+          {
+            "from_shot": "shot01",
+            "to_shot": "shot02",
+            "kind": "crossfade",
+            "frames": 8
+          }
+        ],
+        "scene_tracks": [
+          {
+            "id": "shot02-static-hero",
+            "scene_kind": "static_slide",
+            "has_focal_target": false,
+            "samples": [
+              {
+                "t_s": 4.97,
+                "scale": 1.0,
+                "tx_px": 0.0,
+                "ty_px": 0.0
+              },
+              {
+                "t_s": 10.67,
+                "scale": 1.028,
+                "tx_px": 0.0,
+                "ty_px": 0.0
+              }
+            ]
+          }
+        ],
+        "text_items": [
+          {
+            "id": "sec1-card",
+            "text": "Part one introduces the community service queue and volunteer worker loop",
+            "start_s": 0.0,
+            "end_s": 0.8,
+            "must_read": true
+          },
+          {
+            "id": "competing-prose",
+            "text": "Synthetic held-out cases run through a local adapter checkpoint on twenty-four validation benchmarks before any reviewer promotes a candidate",
+            "start_s": 5.0,
+            "end_s": 9.5,
+            "must_read": true
+          }
+        ],
+        "speech_cues": [
+          {
+            "id": "c1",
+            "text": "Unused token capacity helps community organizations finish plain-language intake packets.",
+            "start_s": 5.0,
+            "end_s": 9.4
+          }
+        ],
+        "journeys": [
+          {
+            "id": "ngo-intake-card",
+            "viewport_width_px": 980,
+            "has_browser_chrome": false,
+            "shows_entry_landing": false,
+            "shows_click_transition": false,
+            "navigated_urls": [
+              "https://example.org/intake"
+            ],
+            "form_submitted": false
+          }
+        ],
+        "caption_band": {
+          "burned_into_video": false,
+          "uses_native_track_in_fullscreen": true,
+          "has_frosted_glass_pill": false,
+          "rounded_radius_px": 0.0,
+          "pill_center_x": 960.0,
+          "pill_center_y": 987.0,
+          "pill_top_y": 918.0,
+          "pill_bottom_y": 976.0,
+          "pill_left_x": 420.0,
+          "pill_right_x": 1500.0
+        },
+        "caption_cues": [
+          {
+            "id": "c1",
+            "text": "Unused token capacity helps community organizations finish\npackets."
+          }
+        ],
+        "shows": "Synthetic defective cut bundle combining fast flash cards, text-over-text crossfades, static-slide Ken Burns drift, competing stage prose, a narrow mid-page web card and off-center fullscreen native captions.",
+        "source": "Synthetic. Written for this pack; every identifier, URL and timestamp is made up."
+      }
+    },
+    {
+      "slug": "example.qa-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed multi-frame scene and cognitive QA report",
+      "category_reason": "Synthetic QA report verified by test_scene_cognitive_qa.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.scene-cognitive-qa-report"
+        },
+        "instance": {
+          "media_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "min_shot_s": 0.8,
+          "flash_shots": 1,
+          "ghost_transitions": 1,
+          "drifting_static_scenes": 1,
+          "unreadable_items": 2,
+          "cognitive_conflicts": 1,
+          "unconvincing_journeys": 1,
+          "caption_center_offset_x_px": 0.0,
+          "caption_center_offset_y_px": 19.0,
+          "overall_verdict": "fail"
+        },
+        "shows": "All six classes of multi-frame and cognitive defects are flagged deterministically and roll up to overall_verdict fail.",
+        "source": "Synthetic. Recomputed directly from example.scene-cognitive-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.scene-cognitive-bundle"
+        ],
+        [
+          "verifies",
+          "template.scene-cognitive-qa-report"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "audit-shot-dwell-and-transitions",
+      "kind": "verb.verify_gate",
+      "title": "Audit multi-frame shot dwell and text-bearing transition overlaps",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Check shot durations across scene cuts for flash cards shorter than 1.6 s and flag crossfades longer than 4 frames between text-bearing shots.",
+      "outcome": "Shot cadence statistics, flash-shot findings and ghosting transition findings.",
+      "ready_outcome": "dwell_and_transitions_audited",
+      "pinned": [
+        "spec.scene-cognitive-gates",
+        "tool.scene-cognitive-qa",
+        "guardrail.exact-video-digest"
+      ],
+      "slots": [
+        {
+          "name": "shot_and_transition_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the storyboard shot spans and cut/crossfade list."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads local storyboard JSON and frame spans only."
+      ],
+      "produces": [
+        {
+          "name": "dwell_metrics",
+          "template": "template.scene-cognitive-qa-report"
+        }
+      ],
+      "steps": [
+        "Evaluate every shot window against min_shot_s (1.60 s) and warn_text_shot_s (2.00 s).",
+        "Flag crossfade or dissolve transitions exceeding 4 frames when both adjacent shots display text."
+      ],
+      "acceptance": [
+        {
+          "id": "flash-and-ghost-checked",
+          "check": "evaluate_shot_dwell_and_transitions reproduces min_shot_s, flash_shots and ghost_transitions.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "audit-camera-and-slide-stability",
+      "kind": "verb.verify_gate",
+      "title": "Audit static slides, cards and terminals for unmotivated Ken Burns zoom or pan drift",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Inspect multi-frame scale and translation trajectories on static slides, typographic cards, section cards, terminals and browser captures, flagging drift when no focal target is declared.",
+      "outcome": "Per-scene scale and translation drift counts and findings.",
+      "ready_outcome": "slide_stability_audited",
+      "pinned": [
+        "spec.scene-cognitive-gates",
+        "tool.scene-cognitive-qa",
+        "guardrail.lock-static-slides-one-to-one"
+      ],
+      "slots": [
+        {
+          "name": "scene_camera_tracks",
+          "category": "noun.eval_run",
+          "description": "Pin of measured or authored multi-frame camera scale and pan samples."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads local camera trajectory observations without network calls."
+      ],
+      "produces": [
+        {
+          "name": "stability_metrics",
+          "template": "template.scene-cognitive-qa-report"
+        }
+      ],
+      "steps": [
+        "Compute scale range and Euclidean translation drift across each scene's multi-frame samples.",
+        "Flag static scene kinds without has_focal_target whose scale drifts >= 0.003 or pan drifts > 2.0 px."
+      ],
+      "acceptance": [
+        {
+          "id": "ken-burns-drift-checked",
+          "check": "evaluate_camera_and_slide_stability reproduces drifting_static_scenes.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "audit-reading-and-cognitive-load",
+      "kind": "verb.verify_gate",
+      "title": "Audit on-screen reading speed and split-attention prose conflicts against narration",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Verify every stage text span stays up for at least 0.45 s plus words/3.5, reject must_read=False escapes on prose >= 6 words, and flag >= 12-word stage sentences that diverge lexically from concurrent speech.",
+      "outcome": "Unreadable item count, cognitive conflict count, peak words-per-second and timestamped findings.",
+      "ready_outcome": "cognitive_load_audited",
+      "pinned": [
+        "spec.scene-cognitive-gates",
+        "tool.scene-cognitive-qa"
+      ],
+      "slots": [
+        {
+          "name": "stage_text_and_speech",
+          "category": "noun.scene_recipe",
+          "description": "Pin of on-screen text items and timed speech/caption cues."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Evaluates local text spans and WebVTT/narration cues."
+      ],
+      "produces": [
+        {
+          "name": "cognitive_metrics",
+          "template": "template.scene-cognitive-qa-report"
+        }
+      ],
+      "steps": [
+        "Check every stage text item for positive duration, disallowed must_read=False prose escapes, and dwell >= 0.45 + words/3.5 s.",
+        "Compute content-word overlap between >= 12-word stage prose and overlapping narration cues, flagging overlap < 0.35."
+      ],
+      "acceptance": [
+        {
+          "id": "reading-and-split-attention-checked",
+          "check": "evaluate_reading_speed_and_cognitive_load reproduces unreadable_items and cognitive_conflicts.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "audit-web-journey-and-captions",
+      "kind": "verb.verify_gate",
+      "title": "Audit desktop website click-through provenance and widescreen frosted-caption geometry",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Verify web captures show >= 1280 px desktop browser chrome, landing-page entry and click navigation without live form submission, and check burned-in frosted-glass captions centered at (960, 1006) in the y=932..1080 lower band.",
+      "outcome": "Web-journey provenance findings, caption centroid offsets and line-break hygiene findings.",
+      "ready_outcome": "journey_and_captions_audited",
+      "pinned": [
+        "spec.scene-cognitive-gates",
+        "rules.frosted-caption-pill",
+        "tool.scene-cognitive-qa",
+        "guardrail.no-live-form-submit"
+      ],
+      "slots": [
+        {
+          "name": "journeys_and_caption_band",
+          "category": "noun.eval_run",
+          "description": "Pin of recorded web journeys, lower-band caption geometry and wrapped cues."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Inspects local capture metadata and rendered caption geometry."
+      ],
+      "produces": [
+        {
+          "name": "journey_and_caption_metrics",
+          "template": "template.scene-cognitive-qa-report"
+        }
+      ],
+      "steps": [
+        "Run evaluate_live_web_journey_provenance to verify >= 1280 px viewport, browser chrome, homepage-to-route click navigation and form_submitted == False.",
+        "Run evaluate_frosted_caption_geometry to verify burned-in frosted-glass rounded pills centered at (960, 1006) +/- 3 px with zero native fullscreen ::cue leak and zero 1-word orphans."
+      ],
+      "acceptance": [
+        {
+          "id": "provenance-and-caption-geometry-checked",
+          "check": "evaluate_live_web_journey_provenance and evaluate_frosted_caption_geometry reproduce unconvincing_journeys and centroid offsets.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "compile-scene-cognitive-report",
+      "kind": "verb.verify_gate",
+      "title": "Compile the consolidated multi-frame scene and cognitive video QA report",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Combine shot dwell, transition ghosting, static-slide zoom stability, reading-speed and split-attention load, web-journey provenance and frosted-caption geometry into one digest-pinned QA report.",
+      "outcome": "A conforming scene-cognitive QA report bound to media_sha256.",
+      "ready_outcome": "scene_cognitive_report_compiled",
+      "pinned": [
+        "template.scene-cognitive-qa-report",
+        "guardrail.exact-video-digest"
+      ],
+      "slots": [
+        {
+          "name": "dwell_metrics",
+          "category": "noun.eval_run",
+          "description": "Pin of shot dwell and transition metrics."
+        },
+        {
+          "name": "stability_metrics",
+          "category": "noun.eval_run",
+          "description": "Pin of camera and static-slide stability metrics."
+        },
+        {
+          "name": "cognitive_metrics",
+          "category": "noun.eval_run",
+          "description": "Pin of reading speed and cognitive-load metrics."
+        },
+        {
+          "name": "journey_and_caption_metrics",
+          "category": "noun.eval_run",
+          "description": "Pin of web-journey provenance and frosted-caption geometry metrics."
+        }
+      ],
+      "produces": [
+        {
+          "name": "qa_report",
+          "template": "template.scene-cognitive-qa-report"
+        }
+      ],
+      "steps": [
+        "Verify every upstream check names the same 64-hex media_sha256.",
+        "Roll up fail, warn and pass verdicts into a conforming template.scene-cognitive-qa-report."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-report-schema",
+          "check": "Output passes schema_errors against template.scene-cognitive-qa-report.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "scene-and-cognitive-video-qa.audit-shot-dwell-and-transitions",
+        "scene-and-cognitive-video-qa.audit-camera-and-slide-stability",
+        "scene-and-cognitive-video-qa.audit-reading-and-cognitive-load",
+        "scene-and-cognitive-video-qa.audit-web-journey-and-captions"
+      ]
+    }
+  ]
+}

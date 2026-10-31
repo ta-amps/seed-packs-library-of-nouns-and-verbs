@@ -91,8 +91,12 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [LoRA memory and shimming](lora-memory-and-shimming/README.md) | Compiling post-cutoff task objects into leakage-checked LoRA pairs, routing between revocable prompt shims and weight updates, and gating promotion on paired bootstrap CIs, with tested code | 10 | 3 |
 | [Hybrid retrieval context knapsack](hybrid-retrieval-context-knapsack/README.md) | Fusing BM25 and dense cosine rankings via RRF (k=60), stripping untrusted prompt injections, pruning MinHash near-duplicates and solving a 0/1 token-budget context knapsack, with tested code | 10 | 3 |
 | [Leakage-safe regime backtesting](leakage-safe-regime-backtesting/README.md) | Synthetic and historical statistical validation hygiene with purged walk-forward splits, causal volatility-regime Rank IC/ICIR, turnover drag and multiple-testing deflation, never as financial advice, with tested code | 10 | 3 |
+| [Scene and cognitive video QA](scene-and-cognitive-video-qa/README.md) | Multi-frame shot dwell and text-crossfade transition checks, static-slide Ken Burns zoom stability, reading-speed and split-attention prose conflict checks, desktop web-journey provenance and widescreen frosted-caption geometry, with tested code | 10 | 5 |
+| [Meta ARE scenario matrix](meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate Tasks and Task Objects, with tested code | 10 | 3 |
+| [SIRA self-learning RAG](sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code | 10 | 3 |
+| [Partner compute cascade](partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts, with tested code | 10 | 3 |
 
-Together: 1470 nouns and 473 verb templates across seventy-five packs. The
+Together: 1510 nouns and 487 verb templates across seventy-nine packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 

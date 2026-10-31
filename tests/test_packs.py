@@ -127,8 +127,22 @@ class LibraryChecks(unittest.TestCase):
         for pack in ("repo-review", "video-showcase", "tool-discovery", "evaluation-design", "checks-of-checks",
                      "decomposition-patterns", "taste-palettes", "harness-onboarding-e2e", "security-review",
                      "cost-optimization", "docs-improvement", "benchmark-scores", "visual-rendering",
-                     "public-good-kits", "freshness-checks", "findings-to-fixes"):
+                     "public-good-kits", "freshness-checks", "findings-to-fixes",
+                     "meta-are-scenario-matrix", "sira-self-learning-rag", "partner-compute-cascade"):
             self.assertIn(pack, PACKS)
+
+    def test_scenario_matrix_sira_rag_and_partner_cascade_have_code_and_distinct_review(self):
+        expected_review_verbs = {
+            "meta-are-scenario-matrix": "digest-reusable-nouns-and-verbs",
+            "sira-self-learning-rag": "verify-dgmh-proposal-independently",
+            "partner-compute-cascade": "route-fireworks-multilora-and-rubric",
+        }
+        for pack, review_slug in expected_review_verbs.items():
+            manifest = IDX.docs[pack]["manifest.json"]
+            self.assertIn("code", manifest, pack)
+            self.assertGreaterEqual(manifest["code"]["files"], 10, pack)
+            brief = task(f"{pack}.{review_slug}")["brief"]
+            self.assertEqual(brief["review"]["required"], "distinct_reviewer", pack)
 
     def test_packs_are_plain_english_collections(self):
         for pack in PACKS:
