@@ -257,6 +257,24 @@ human-sensitive handling; health checks for languages other than Python and for 
 output formats; and pixel-level comparison of screenshots that differ only in antialiasing, which the
 regression watch leaves to a pinned capture setup and a person.
 
+## 11. Video composition QA, harness feeds, ecosystem search, LoRA shimming and statistical hygiene
+
+Added October 30, 2026, with tested code in every pack: frame-level UI occlusion and audio-narration
+QA alongside 3D perspective camera trajectories, encapsulated open agent harness feeds, task and
+task-object ecosystem indexing, post-cutoff LoRA vs shim routing, token-budget context knapsack
+packing and non-advisory statistical validation hygiene.
+
+| Step | Pack and verb | Status | Noun kinds | Verb kinds | Proposes |
+| --- | --- | --- | --- | --- | --- |
+| Every-frame detectors plus UI mask occlusion checks | [Frame-by-frame video QA](../packs/frame-by-frame-video-qa/README.md): sample-frames, run-detectors, segment-ui-masks, cluster-and-report, draw-review-sample, label-review-sample (human), compute-precision | Added now; the code is tested | benchmark_suite (spec), reflex_procedure (safe areas), code_node (frame QA), scene_recipe (templates), eval_run (examples) | ingest, verify_gate, compile_dag | fix verbs per confirmed finding |
+| Loudness, sidechain pumping, edit clicks, speaking WPM and ASR CER | [Audio and narration QA](../packs/audio-and-narration-qa/README.md): measure-loudness-and-peaks, audit-ducking-and-clicks, check-pacing-and-caption-sync, gate-narration-asr-cer, compile-narration-qa-report | Added now; the code is tested | benchmark_suite (spec), reflex_procedure (rules), code_node (audio QA), scene_recipe (report schema), eval_run (examples) | verify_gate, compile_dag | narration re-takes or mix fixes |
+| 1x3 and 2x2 3D hub trajectories, safe bands and zero double-exposure cuts | [Parametric 3D video composer](../packs/parametric-3d-video-composer/README.md): plan-hub-camera-trajectory, layout-browser-and-verify-safe-band, validate-transitions-and-curves, compile-composition-check | Added now; the code is tested | motion_profile (camera spec), reflex_procedure (layout rules), code_node (composer), scene_recipe (check schema), eval_run (examples) | solve_draft, verify_gate, compile_dag | stage render tasks |
+| Encapsulated Agent Harnesses Feed with HarnessTax and Pareto selection | [Agent harness feeds](../packs/agent-harness-feeds/README.md): probe-harness-sources, normalize-harness-benchmarks, recheck-harness-freshness, encapsulate-harness-feed, select-harness-for-task | Added now; the code is tested | feed_source (encapsulating feed), model_spec (harness profiles), public_source, eval_run (matrix), seed_hypothesis (schedule, Pareto), code_node | fetch_feed, benchmark_harness, recheck_fragility, verify_gate, situate | normalize-harness-benchmarks on drift |
+| Repository metadata decomposed into searchable tasks and task objects | [Hackathon ecosystem index](../packs/hackathon-ecosystem-index/README.md): decompose-repo-catalog, search-hybrid-rrf, verify-catalog-hygiene | Added now; the code is tested | benchmark_suite (spec), reflex_procedure (decomposition rules), code_node (indexer), scene_recipe (schemas), eval_run (examples) | ingest, situate, verify_gate | prior-art surveys |
+| Post-cutoff LoRA pairs, shim routing and paired bootstrap gates | [LoRA memory and shimming](../packs/lora-memory-and-shimming/README.md): route-shim-or-lora, compile-lora-pairs, evaluate-bootstrap-gate | Added now; the code is tested | benchmark_suite (gates), reflex_procedure (pair rules), code_node (compiler/router), scene_recipe (gate schema), eval_run (examples) | situate, distill_reflex, verify_gate | holdout refresh |
+| Hybrid BM25 + dense RRF, MinHash dedup, injection stripping and 0/1 knapsack | [Hybrid retrieval context knapsack](../packs/hybrid-retrieval-context-knapsack/README.md): fuse-hybrid-rrf, sanitize-and-dedup-chunks, pack-token-knapsack | Added now; the code is tested | benchmark_suite (RRF/knapsack spec), reflex_procedure (sanitization), code_node (packer), scene_recipe (receipt), eval_run (examples) | situate, verify_gate, compile_dag | corpus cleanup |
+| Non-advisory purged walk-forward splits, regime Rank IC, turnover and DSR | [Leakage-safe regime backtesting](../packs/leakage-safe-regime-backtesting/README.md): build-purged-splits, score-regime-ic-and-turnover, deflate-multiple-testing | Added now; the code is tested | benchmark_suite (hygiene spec), reflex_procedure (formulas), code_node (auditor), scene_recipe (receipt), eval_run (synthetic panel) | compile_dag, benchmark_harness, verify_gate | feature leakage fixes |
+
 ## Work that supports every goal
 
 [Repository review](../packs/repo-review/README.md), [Decomposition patterns](../packs/decomposition-patterns/README.md),

@@ -1,0 +1,4078 @@
+{
+  "pack_id": "frame-by-frame-video-qa",
+  "title": "Frame-by-frame video QA",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for inspecting every frame of an encoded video with nine deterministic computer-vision detectors and UI region masks: cut-off content and windows, overlapping text and callout chips, small text at 1080p and phone width, transitions and double exposures, freezes and fast text motion, caption collisions, contrast ratios, layered edge spill, and UI control occlusions, clustered into annotated findings with seeded human precision review.",
+  "dependencies": [
+    "video-review",
+    "findings-to-fixes"
+  ],
+  "boundaries": [
+    "Every measurement and finding binds to the SHA-256 of the exact video bytes inspected.",
+    "Detectors propose findings and evidence crops; a person or independent reviewer labels true versus false positives and decides what to fix.",
+    "Optional local OCR and local Meta SAM mask adapters run offline on local weights only and fall back deterministically to OpenCV connected components when absent.",
+    "The code writes only under the explicit output folder outside the seed-pack library and never uploads media or calls remote APIs.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for inspecting every frame of an encoded video with nine deterministic computer-vision detectors and UI region masks",
+      "value": {
+        "lets_workers": "Decode and sample every frame of an encoded cut, run nine deterministic computer-vision detectors plus UI control mask occlusion checks, cluster nearby frame hits into shot-indexed findings with annotated PNG crops and findings-to-fixes records, draw a seeded stratified sample for independent review, and compute per-detector Wilson precision.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.sample-frames"
+            },
+            "when": "Decode the cut once and write temporal arrays and spatial frame measurements to a digest-pinned cache."
+          },
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.run-detectors"
+            },
+            "when": "Run the nine visual detectors over the cached frame measurements and WebVTT cues."
+          },
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.segment-ui-masks"
+            },
+            "when": "Segment UI buttons, inputs and panels via connected components or local SAM masks and flag caption or callout occlusions."
+          },
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.cluster-findings"
+            },
+            "when": "Bridge frame hits into shot-indexed findings, annotated PNG crops, timeline charts and findings-to-fixes records."
+          },
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.draw-review-sample"
+            },
+            "when": "Draw a seeded stratified sample of findings covering every firing detector."
+          },
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.label-review-sample"
+            },
+            "when": "An independent reviewer labels each sampled finding as true_positive or false_positive."
+          },
+          {
+            "verb": {
+              "$verb": "frame-by-frame-video-qa.compute-precision"
+            },
+            "when": "Compute per-detector and overall precision with 95 percent Wilson intervals."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.exact-video-bytes"
+          },
+          {
+            "$pin": "guardrail.offline-deterministic-detectors"
+          },
+          {
+            "$pin": "guardrail.precision-by-independent-sample"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.frame-qa"
+        },
+        "worked_example": "Synthetic 90-frame 1080p fixture recomputed by the test suite: left-edge clipped text, 14 px tiny text, 1.7:1 low-contrast text, a single white flash frame at frame 45, and a 0.67 s black run from frame 60 to 79, clustered into deterministic findings with a seeded review sample and Wilson precision summary."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.exact-video-bytes"
+        ],
+        [
+          "requires_noun",
+          "guardrail.offline-deterministic-detectors"
+        ],
+        [
+          "requires_noun",
+          "guardrail.precision-by-independent-sample"
+        ],
+        [
+          "requires_noun",
+          "spec.detectors"
+        ],
+        [
+          "requires_noun",
+          "spec.ui-masks"
+        ],
+        [
+          "requires_noun",
+          "questions"
+        ],
+        [
+          "requires_noun",
+          "rules.safe-areas"
+        ],
+        [
+          "requires_noun",
+          "tool.frame-qa"
+        ],
+        [
+          "requires_noun",
+          "template.findings"
+        ],
+        [
+          "requires_noun",
+          "template.review-labels"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.exact-video-bytes",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: bind every frame cache, hit list and finding to the video SHA-256",
+      "category_reason": "A reusable rule every verb in this pack follows, with a deterministic check.",
+      "value": {
+        "rule": "Every frame cache, detector hit file, clustered finding set and annotated crop records the SHA-256 of the encoded video file it inspected. Clustering or reporting refuses to combine hit lists from different bytes.",
+        "how_it_is_checked": "analyze_cut and the cluster command compare video_sha256 across cache metadata, hit files and probed video bytes before emitting findings."
+      }
+    },
+    {
+      "slug": "guardrail.offline-deterministic-detectors",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: local offline execution with deterministic model-free fallback",
+      "category_reason": "A reusable rule keeping frame inspection reproducible and network-free.",
+      "value": {
+        "rule": "Frame inspection never calls remote APIs or downloads weights at runtime. RapidOCR and local Meta SAM mask adapters run only when locally installed, and connected-component vision detectors provide a complete deterministic baseline.",
+        "how_it_is_checked": "Two runs on fresh caches produce byte-identical findings.json and frames.jsonl.gz streams, verified in test_clips.py and test_ui_masks.py."
+      }
+    },
+    {
+      "slug": "guardrail.precision-by-independent-sample",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: detector precision is measured on a seeded sample labelled by a reviewer",
+      "category_reason": "Separates automated detector hits from confirmed defects.",
+      "value": {
+        "rule": "Automated visual detectors trade recall against false alarms on stylized layouts. A seeded stratified sample across firing detectors is labelled by a human or independent reviewer before quoting precision.",
+        "how_it_is_checked": "draw_sample selects at least one finding per firing detector with an explicit random seed, and precision computes Wilson 95 percent intervals from labelled rows only."
+      }
+    },
+    {
+      "slug": "spec.detectors",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Detector specification: sampling cadence, safe areas, nine visual detectors and clustering rules",
+      "category_reason": "Defines the exact thresholds, questions and severity mapping that the frame-by-frame QA suite evaluates.",
+      "value": {
+        "spec": {
+          "format": "frame-qa.spec.v1",
+          "sampling": {
+            "temporal_every_frames": 1,
+            "spatial_every_frames": 2,
+            "why_every_second_frame": "Text is detected and measured on every second frame, 15 times a second at 30 fps: a text layout that lasts two frames (67 ms) is always sampled, and anything shorter is a flash that the transition detector, which reads every frame, reports. Edges, panels and border bands are measured on every frame.",
+            "thumb_width_px": 320,
+            "panel_scale": 2
+          },
+          "text": {
+            "engine": "auto",
+            "box_thresh": 0.5,
+            "min_line_px": 6,
+            "cap_em": 0.71,
+            "font_size_rule": "Estimated font size is the line's cap or ascender height divided by 0.71, the median cap-to-em ratio measured on IBM Plex Sans, Space Grotesk and JetBrains Mono from 12 to 72 px (range 0.67 to 0.77). A line with only x-height letters reads about 25 percent small, so such a line takes its neighbour's size when the two share a block.",
+            "reference_height_px": 1080
+          },
+          "safe_areas": {
+            "title_safe_share": 0.05,
+            "action_safe_share": 0.035,
+            "touch_px": 2,
+            "rule": "Title-safe keeps text 5 percent in from every edge and action-safe keeps any content 3.5 percent in, of the frame's width for the sides and of its height for the top and bottom."
+          },
+          "detectors": {
+            "cut_off_content": {
+              "questions": [
+                "Does any text touch or run off a frame edge?",
+                "Is any text inside the 3.5 percent action-safe margin?",
+                "Is any text inside the 5 percent title-safe margin?",
+                "Does interface content run off a frame edge, by edges crossing the frame's outermost pixels?"
+              ],
+              "thresholds": {
+                "border_step_levels": 24,
+                "ui_min_crossings": 10,
+                "ui_min_band_density": 0.03,
+                "min_duration_s": 0.2
+              },
+              "severity": {
+                "text_at_edge": "major when it lasts 0.5 s or more, else minor",
+                "text_in_action_margin": "minor",
+                "text_in_title_margin": "note",
+                "ui_off_edge": "note"
+              }
+            },
+            "cut_off_windows": {
+              "questions": [
+                "Does a window, card or panel reach the frame edge, so part of it is outside the frame?",
+                "Is text inside that panel cut by the same edge?"
+              ],
+              "thresholds": {
+                "min_area_share": 0.01,
+                "min_side_px": 60,
+                "rect_min": 0.88,
+                "flat_std": 2.5,
+                "step_levels": 6,
+                "edge_tolerance_px": 10,
+                "min_duration_s": 0.3
+              },
+              "severity": {
+                "panel_at_edge": "minor",
+                "panel_at_edge_with_cut_text": "major"
+              }
+            },
+            "overlaps": {
+              "questions": [
+                "Do two text lines overlap each other?",
+                "Does a callout chip or label cover part of a line of page text?"
+              ],
+              "thresholds": {
+                "text_overlap_min_share": 0.1,
+                "text_overlap_major_share": 0.3,
+                "duplicate_iou": 0.85,
+                "chip_min_overlap_px": 2,
+                "chip_major_share": 0.25,
+                "chip_max_area_share": 0.03,
+                "chip_color_step": 12,
+                "min_duration_s": 0.2
+              },
+              "severity": {
+                "text_on_text": "major from 30 percent of the smaller line, else minor",
+                "chip_covers_text": "major from 25 percent of the covered line's height, else minor"
+              }
+            },
+            "small_text": {
+              "questions": [
+                "Is any text smaller than 24 px at 1080p?",
+                "Is any text smaller than 16 px at 1080p?",
+                "Would any text be smaller than 12 px on a 390 px wide phone screen?"
+              ],
+              "thresholds": {
+                "min_font_px": 24,
+                "major_font_px": 16,
+                "phone_width_px": 390,
+                "min_phone_px": 12,
+                "min_glyphs": 2,
+                "min_duration_s": 0.2
+              },
+              "severity": {
+                "under_16_px": "major",
+                "under_24_px": "minor",
+                "under_12_px_on_phone": "note"
+              }
+            },
+            "transitions": {
+              "questions": [
+                "Where are the hard cuts and the dissolves?",
+                "Does a dissolve blend two text-heavy frames into a double exposure?",
+                "Is there a flash frame: one or two frames unlike both neighbours?",
+                "Is there a jump cut inside a shot: an abrupt change with the same layout either side?",
+                "Are there black or blank frames?"
+              ],
+              "thresholds": {
+                "change_level": 3.0,
+                "change_share": 0.003,
+                "cut_level": 12.0,
+                "cut_share": 0.4,
+                "dissolve_min_frames": 3,
+                "dissolve_max_frames": 60,
+                "blend_max_residual": 0.12,
+                "blend_max_error": 0.25,
+                "blend_min_share": 0.002,
+                "blend_min_distinct": 0.2,
+                "text_heavy_share": 0.02,
+                "text_ghost_overlap": 0.15,
+                "flash_max_frames": 2,
+                "flash_min_level": 12.0,
+                "flash_return_share": 0.25,
+                "jump_same_layout_share": 0.6,
+                "jump_min_changed_share": 0.01,
+                "black_max_luma": 16,
+                "black_max_p99": 40,
+                "blank_max_std": 1.5,
+                "blank_max_step": 6
+              },
+              "severity": {
+                "double_exposure": "major from 6 frames, else minor",
+                "flash_frame": "major",
+                "jump_cut": "minor when the frame jumps, note when an element pops in",
+                "black_or_blank": "major from 0.5 s, minor for a shorter run, note at the very start or end",
+                "cut_or_dissolve": "note"
+              }
+            },
+            "freezes_and_motion": {
+              "questions": [
+                "Is the picture frozen for more than 1.5 s?",
+                "Does the content stay still, apart from a camera drift, for more than 1.5 s?",
+                "Does text move fast enough to hurt reading while it is on screen?",
+                "Is there a sudden spike in motion speed?"
+              ],
+              "thresholds": {
+                "freeze_max_level": 0.12,
+                "freeze_min_s": 1.5,
+                "still_lag_frames": 15,
+                "still_change_level": 24,
+                "still_max_changed_share": 0.004,
+                "still_min_s": 1.5,
+                "still_minor_s": 6.0,
+                "text_speed_minor_px": 3.0,
+                "text_speed_major_px": 8.0,
+                "text_motion_min_s": 0.3,
+                "spike_ratio": 4.0,
+                "spike_min_px": 4.0,
+                "shift_min_response": 0.3,
+                "shift_min_gain": 0.5
+              },
+              "severity": {
+                "freeze": "minor from 1.5 s, major from 4 s",
+                "near_static": "note, minor from 6 s",
+                "text_motion": "minor from 3 px a frame, major from 8 px a frame",
+                "motion_spike": "minor"
+              }
+            },
+            "caption_collisions": {
+              "questions": [
+                "While a caption cue shows, is there text or proof in the bottom 18 percent of the frame?",
+                "Does that text sit where the player draws the caption?"
+              ],
+              "thresholds": {
+                "band_share": 0.18,
+                "caption_font_share": 0.045,
+                "char_em": 0.52,
+                "line_gap_em": 1.25,
+                "min_glyphs": 2,
+                "min_duration_s": 0.2
+              },
+              "severity": {
+                "under_caption_box": "major",
+                "in_band_beside_caption": "minor"
+              }
+            },
+            "contrast": {
+              "questions": [
+                "Is any text below 4.5 to 1 against its background, or below 3 to 1 when it is 24 px or larger?",
+                "Is any text below 2 to 1?"
+              ],
+              "thresholds": {
+                "normal_min": 4.5,
+                "large_min": 3.0,
+                "large_font_px": 24,
+                "major_below": 2.0,
+                "min_glyphs": 3,
+                "min_line_px": 8,
+                "min_duration_s": 0.2
+              },
+              "severity": {
+                "below_2": "major",
+                "below_minimum": "minor"
+              }
+            },
+            "layered_edges": {
+              "questions": [
+                "Is the frame busy: dense edges at three scales at once?",
+                "Does content cross a panel's boundary, spilling out of its container?"
+              ],
+              "thresholds": {
+                "canny_low": 50,
+                "canny_high": 150,
+                "busy_density": [
+                  0.07,
+                  0.1,
+                  0.14
+                ],
+                "busy_min_s": 1.0,
+                "spill_min_px": 8,
+                "spill_min_share": 0.1,
+                "spill_major_share": 0.25,
+                "min_duration_s": 0.2
+              },
+              "severity": {
+                "busy_frame": "note",
+                "spill": "minor, major from 25 percent outside"
+              }
+            }
+          },
+          "clustering": {
+            "max_gap_frames": 4,
+            "match_iou": 0.3,
+            "rule": "Hits of one detector and kind on nearby frames whose boxes overlap by at least 0.3 IoU are one finding; a gap of up to 4 frames is bridged."
+          },
+          "severity_scale": {
+            "levels": [
+              "blocker",
+              "major",
+              "minor",
+              "note"
+            ],
+            "findings_to_fixes": {
+              "blocker": "P1",
+              "major": "P2",
+              "minor": "P3",
+              "note": "none"
+            },
+            "source": "the video review pack's severity guide"
+          }
+        },
+        "severity_guide": {
+          "$pin": "video-review:severity-guide"
+        },
+        "finding_template": {
+          "$pin": "findings-to-fixes:template.finding"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "video-review:severity-guide"
+        ],
+        [
+          "requires_noun",
+          "findings-to-fixes:template.finding"
+        ]
+      ]
+    },
+    {
+      "slug": "spec.ui-masks",
+      "category": "noun.model_spec",
+      "role": "spec",
+      "title": "UI region mask specification: connected-component segmentation and optional local Meta SAM adapter",
+      "category_reason": "Records the segmentation model identifier, offline loading rules and UI occlusion thresholds.",
+      "value": {
+        "default_backend": "connected_components",
+        "optional_sam_model_id": "facebook/sam-vit-base",
+        "local_files_only": true,
+        "roles_classified": [
+          "panel",
+          "card",
+          "button",
+          "input",
+          "badge"
+        ],
+        "thresholds": {
+          "min_area_px": 320,
+          "min_side_px": 16,
+          "max_frame_share": 0.88,
+          "min_cover_share": 0.15,
+          "major_cover_share": 0.35,
+          "interactive_button_major_share": 0.25
+        },
+        "hit_kinds": [
+          "caption_obscures_ui",
+          "callout_obscures_ui"
+        ]
+      }
+    },
+    {
+      "slug": "questions",
+      "category": "noun.benchmark_suite",
+      "role": "checklist",
+      "title": "Inspection question bank across the nine frame-by-frame detectors",
+      "category_reason": "Enumerates the concrete visual QA questions each detector answers with frame numbers and pixel boxes.",
+      "value": {
+        "series": [
+          {
+            "detector": "cut_off_content",
+            "questions": [
+              "Does any text touch or run off a frame edge?",
+              "Is any text inside the 3.5 percent action-safe margin?",
+              "Is any text inside the 5 percent title-safe margin?",
+              "Does interface content run off a frame edge, by edges crossing the frame's outermost pixels?"
+            ]
+          },
+          {
+            "detector": "cut_off_windows",
+            "questions": [
+              "Does a window, card or panel reach the frame edge, so part of it is outside the frame?",
+              "Is text inside that panel cut by the same edge?"
+            ]
+          },
+          {
+            "detector": "overlaps",
+            "questions": [
+              "Do two text lines overlap each other?",
+              "Does a callout chip or label cover part of a line of page text?"
+            ]
+          },
+          {
+            "detector": "small_text",
+            "questions": [
+              "Is any text smaller than 24 px at 1080p?",
+              "Is any text smaller than 16 px at 1080p?",
+              "Would any text be smaller than 12 px on a 390 px wide phone screen?"
+            ]
+          },
+          {
+            "detector": "transitions",
+            "questions": [
+              "Where are the hard cuts and the dissolves?",
+              "Does a dissolve blend two text-heavy frames into a double exposure?",
+              "Is there a flash frame: one or two frames unlike both neighbours?",
+              "Is there a jump cut inside a shot: an abrupt change with the same layout either side?",
+              "Are there black or blank frames?"
+            ]
+          },
+          {
+            "detector": "freezes_and_motion",
+            "questions": [
+              "Is the picture frozen for more than 1.5 s?",
+              "Does the content stay still, apart from a camera drift, for more than 1.5 s?",
+              "Does text move fast enough to hurt reading while it is on screen?",
+              "Is there a sudden spike in motion speed?"
+            ]
+          },
+          {
+            "detector": "caption_collisions",
+            "questions": [
+              "While a caption cue shows, is there text or proof in the bottom 18 percent of the frame?",
+              "Does that text sit where the player draws the caption?"
+            ]
+          },
+          {
+            "detector": "contrast",
+            "questions": [
+              "Is any text below 4.5 to 1 against its background, or below 3 to 1 when it is 24 px or larger?",
+              "Is any text below 2 to 1?"
+            ]
+          },
+          {
+            "detector": "layered_edges",
+            "questions": [
+              "Is the frame busy: dense edges at three scales at once?",
+              "Does content cross a panel's boundary, spilling out of its container?"
+            ]
+          }
+        ],
+        "spec": {
+          "$pin": "spec.detectors"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "spec.detectors"
+        ]
+      ]
+    },
+    {
+      "slug": "rules.safe-areas",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Safe-area, caption-band and phone-width legibility constants",
+      "category_reason": "Zero-call geometric constants mapping frame dimensions to safe margins, caption keep-out bands and phone legibility.",
+      "value": {
+        "title_safe_share": 0.05,
+        "action_safe_share": 0.035,
+        "caption_band_share": 0.18,
+        "phone_width_px": 390,
+        "reference_height_px": 1080,
+        "model_calls": 0,
+        "spec": {
+          "$pin": "spec.detectors"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "spec.detectors"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.frame-qa",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: frame-by-frame video QA and UI mask occlusion analyzer",
+      "category_reason": "Tested Python package pinned by path, file count and SHA-256 digest.",
+      "value": {
+        "name": "frame-by-frame video QA",
+        "code": {
+          "$code": "frame-by-frame-video-qa"
+        },
+        "runtime": "Python 3.10 or later with numpy, opencv-python-headless and imageio-ffmpeg; optional rapidocr-onnxruntime for OCR text boxes and optional local facebook/sam-vit-base checkpoint for SAM UI masks.",
+        "commands": [
+          "python -m frame_qa film --dir FILM_FOLDER --out OUT",
+          "python -m frame_qa run --video CUT.mp4 [--vtt CUT.vtt] --out OUT",
+          "python -m frame_qa sample --video CUT.mp4 --cache DIR",
+          "python -m frame_qa detect --video CUT.mp4 --cache DIR [--detector NAME] --out hits.json",
+          "python -m frame_qa cluster --cache DIR --hits hits.json --label L --out findings.json",
+          "python -m frame_qa review-sample --findings findings.json --size 20 --seed 1 --out sample.json",
+          "python -m frame_qa precision --labels labels.json",
+          "python -m frame_qa spec --help",
+          "python -m frame_qa synth --out DIR"
+        ],
+        "ui_masks_module": "frame_qa.ui_masks (segment_ui_regions, SamMaskAdapter, detect_ui_mask_occlusions)",
+        "does": [
+          "Decodes every frame via FFmpeg and measures temporal luminance, motion shifts, blend residuals, text boxes, contrast, panels and edge densities.",
+          "Runs nine deterministic detectors and clusters frame hits across short gaps into shot-indexed findings with PNG crops and timeline charts.",
+          "Segments UI buttons, inputs, cards and panels via connected components or an optional local Meta SAM mask adapter to catch caption and callout occlusions.",
+          "Draws seeded stratified review samples and computes Wilson 95 percent precision intervals from reviewer labels."
+        ],
+        "does_not": [
+          "Call remote APIs, download weights over the network, upload media or write inside the seed-pack library.",
+          "Approve a cut for release; human reviewers weigh findings and style intent."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.detectors"
+        ],
+        [
+          "verifies",
+          "spec.ui-masks"
+        ]
+      ]
+    },
+    {
+      "slug": "template.findings",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: frame-by-frame QA findings report across one or more cuts",
+      "value": {
+        "describes": "a deterministic frame-by-frame QA report binding per-cut video digests, shot lists, transition events, clustered detector findings, annotated crop digests and optional review precision",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "tool",
+            "spec_digest",
+            "spec_overrides",
+            "noticed_at",
+            "cuts",
+            "top",
+            "review"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "const": "frame-qa.findings.v1"
+            },
+            "tool": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "version"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "spec_digest": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "spec_overrides": {
+              "type": "boolean"
+            },
+            "noticed_at": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "cuts": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "video",
+                  "captions",
+                  "engine",
+                  "frames",
+                  "spatial_frames",
+                  "transitions",
+                  "shots",
+                  "storyboard",
+                  "counts",
+                  "findings",
+                  "meta"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "video": {
+                    "type": "object"
+                  },
+                  "captions": {
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "engine": {
+                    "type": "object"
+                  },
+                  "frames": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "spatial_frames": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "transitions": {
+                    "type": "object"
+                  },
+                  "shots": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "storyboard": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "counts": {
+                    "type": "object"
+                  },
+                  "findings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "cut",
+                        "detector",
+                        "kind",
+                        "severity",
+                        "priority",
+                        "question",
+                        "frame_start",
+                        "frame_end",
+                        "t_start",
+                        "t_end",
+                        "duration_s",
+                        "intervals_s",
+                        "frames_hit",
+                        "rep_frame",
+                        "rep_t",
+                        "box",
+                        "union_box",
+                        "detail",
+                        "summary",
+                        "shot",
+                        "storyboard_shot",
+                        "frame_width",
+                        "frame_height",
+                        "text_boxes",
+                        "text",
+                        "image",
+                        "image_path",
+                        "image_sha256",
+                        "record"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "cut": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "detector": {
+                          "type": "string",
+                          "enum": [
+                            "cut_off_content",
+                            "cut_off_windows",
+                            "overlaps",
+                            "small_text",
+                            "transitions",
+                            "freezes_and_motion",
+                            "caption_collisions",
+                            "contrast",
+                            "layered_edges"
+                          ]
+                        },
+                        "kind": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "severity": {
+                          "type": "string",
+                          "enum": [
+                            "blocker",
+                            "major",
+                            "minor",
+                            "note"
+                          ]
+                        },
+                        "priority": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "P1",
+                            "P2",
+                            "P3",
+                            null
+                          ]
+                        },
+                        "question": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "frame_start": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "frame_end": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "t_start": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "t_end": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "duration_s": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "intervals_s": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "minItems": 2,
+                            "maxItems": 2,
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "frames_hit": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "rep_frame": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "rep_t": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "box": {
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "items": {
+                            "type": "integer"
+                          }
+                        },
+                        "union_box": {
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "items": {
+                            "type": "integer"
+                          }
+                        },
+                        "detail": {
+                          "type": "object"
+                        },
+                        "summary": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "shot": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "storyboard_shot": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "frame_width": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "frame_height": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "text_boxes": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "text": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "image": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "image_path": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "image_sha256": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "record": {
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "meta": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "top": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "review": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.review-labels",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: labelled review sample for detector precision",
+      "value": {
+        "describes": "a seeded stratified sample of frame-by-frame QA findings labelled by an independent reviewer as true_positive or false_positive",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "reviewer",
+            "independent",
+            "seed",
+            "rows"
+          ],
+          "properties": {
+            "format": {
+              "type": "string",
+              "const": "frame-qa.review-labels.v1"
+            },
+            "reviewer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "independent": {
+              "type": "boolean"
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rows": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "cut",
+                  "detector",
+                  "kind",
+                  "severity",
+                  "t_start",
+                  "t_end",
+                  "image",
+                  "summary",
+                  "label",
+                  "actionable",
+                  "note"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "cut": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "detector": {
+                    "type": "string",
+                    "enum": [
+                      "cut_off_content",
+                      "cut_off_windows",
+                      "overlaps",
+                      "small_text",
+                      "transitions",
+                      "freezes_and_motion",
+                      "caption_collisions",
+                      "contrast",
+                      "layered_edges"
+                    ]
+                  },
+                  "kind": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "blocker",
+                      "major",
+                      "minor",
+                      "note"
+                    ]
+                  },
+                  "t_start": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "t_end": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "image": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "true_positive",
+                      "false_positive",
+                      null
+                    ]
+                  },
+                  "actionable": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.measurements",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 90-frame 1080p temporal and spatial measurement cache",
+      "category_reason": "Synthetic frame measurement trace on which the test suite recomputes detector hits and clustered findings.",
+      "value": {
+        "width": 1920,
+        "height": 1080,
+        "fps": 30.0,
+        "frames": 90,
+        "quiet_border": {
+          "left": {
+            "crossings": 0,
+            "per_1000px": 0.0,
+            "action_band_density": 0.0,
+            "title_band_density": 0.0
+          },
+          "top": {
+            "crossings": 0,
+            "per_1000px": 0.0,
+            "action_band_density": 0.0,
+            "title_band_density": 0.0
+          },
+          "right": {
+            "crossings": 0,
+            "per_1000px": 0.0,
+            "action_band_density": 0.0,
+            "title_band_density": 0.0
+          },
+          "bottom": {
+            "crossings": 0,
+            "per_1000px": 0.0,
+            "action_band_density": 0.0,
+            "title_band_density": 0.0
+          }
+        },
+        "temporal": {
+          "diff": [
+            0.0,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            28.0,
+            28.0,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            25.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            25.0,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4
+          ],
+          "changed": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "luma_mean": [
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            250.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0,
+            128.0
+          ],
+          "luma_std": [
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            1.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0,
+            30.0
+          ],
+          "luma_p99": [
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            255.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0,
+            235.0
+          ],
+          "still_change": [
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08,
+            0.08
+          ],
+          "shift_x": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shift_y": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "shift_response": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "aligned_gain": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "blend_error": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "blend_share": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "blend_distinct": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "records": [
+          {
+            "i": 10,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 12,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 14,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 16,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 18,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 20,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 22,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 24,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 26,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          },
+          {
+            "i": 28,
+            "edges": [
+              0.02,
+              0.03,
+              0.04
+            ],
+            "grad_p999": 40.0,
+            "border": {
+              "left": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "top": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "right": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              },
+              "bottom": {
+                "crossings": 0,
+                "per_1000px": 0.0,
+                "action_band_density": 0.0,
+                "title_band_density": 0.0
+              }
+            },
+            "text": [
+              {
+                "box": [
+                  0,
+                  220,
+                  340,
+                  252
+                ],
+                "det": [
+                  0,
+                  216,
+                  344,
+                  256
+                ],
+                "cap_px": 19.9,
+                "font_px": 28.0,
+                "xh_px": 14.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 11.0,
+                "edge_clipped": [
+                  "left"
+                ],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  360,
+                  520,
+                  374
+                ],
+                "det": [
+                  196,
+                  356,
+                  524,
+                  378
+                ],
+                "cap_px": 9.9,
+                "font_px": 14.0,
+                "xh_px": 7.1,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#222222",
+                "bg": "#f4f0e8",
+                "contrast": 10.0,
+                "edge_clipped": [],
+                "score": 1.0
+              },
+              {
+                "box": [
+                  200,
+                  480,
+                  620,
+                  514
+                ],
+                "det": [
+                  196,
+                  476,
+                  624,
+                  518
+                ],
+                "cap_px": 21.3,
+                "font_px": 30.0,
+                "xh_px": 15.3,
+                "stroke_px": 3.0,
+                "glyphs": 10,
+                "fg": "#9a9a9a",
+                "bg": "#b5b5b5",
+                "contrast": 1.7,
+                "edge_clipped": [],
+                "score": 1.0
+              }
+            ],
+            "panels": [],
+            "chips": [],
+            "det_raw": [],
+            "motion": null
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "spec.detectors"
+        ]
+      ]
+    },
+    {
+      "slug": "example.findings",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: clustered findings and seeded review sample IDs recomputed from example.measurements",
+      "category_reason": "Exact deterministic detector output verified by test_pack.py.",
+      "value": {
+        "video": "demo.mp4",
+        "noticed_at": "2026-10-30",
+        "findings": [
+          {
+            "id": "demo-CUT-001",
+            "detector": "cut_off_content",
+            "kind": "text_at_edge",
+            "severity": "major",
+            "t_start": 0.333,
+            "t_end": 1.0,
+            "summary": "Text touches the left frame edge (0 px), so it is likely cut."
+          },
+          {
+            "id": "demo-SML-001",
+            "detector": "small_text",
+            "kind": "under_12_px_on_phone",
+            "severity": "note",
+            "t_start": 0.333,
+            "t_end": 1.0,
+            "summary": "3 of 3 text lines would be under 12 px on a 390 px phone; the largest failing line is 30 px at 1080p."
+          },
+          {
+            "id": "demo-SML-002",
+            "detector": "small_text",
+            "kind": "under_16_px",
+            "severity": "major",
+            "t_start": 0.333,
+            "t_end": 1.0,
+            "summary": "Text is about 14 px at 1080p, under 16 px (2.8 px on a 390 px phone)."
+          },
+          {
+            "id": "demo-CON-001",
+            "detector": "contrast",
+            "kind": "below_2",
+            "severity": "major",
+            "t_start": 0.333,
+            "t_end": 1.0,
+            "summary": "Text contrast is 1.70 to 1 (#9a9a9a on #b5b5b5), under 2 to 1."
+          },
+          {
+            "id": "demo-TRN-001",
+            "detector": "transitions",
+            "kind": "black_frames",
+            "severity": "major",
+            "t_start": 2.0,
+            "t_end": 2.667,
+            "summary": "0.67 s of black frames."
+          }
+        ],
+        "sample_ids": [
+          "demo-CUT-001",
+          "demo-SML-001",
+          "demo-TRN-001",
+          "demo-CON-001"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.measurements"
+        ],
+        [
+          "requires_noun",
+          "tool.frame-qa"
+        ]
+      ]
+    },
+    {
+      "slug": "example.review-labels",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example review labels: independent labels and Wilson precision for the sampled findings",
+      "category_reason": "Conforming review-labels instance with recomputed per-detector and overall Wilson precision.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.review-labels"
+        },
+        "instance": {
+          "format": "frame-qa.review-labels.v1",
+          "reviewer": "independent-qa-reviewer",
+          "independent": true,
+          "seed": 1,
+          "rows": [
+            {
+              "id": "demo-CUT-001",
+              "cut": "demo",
+              "detector": "cut_off_content",
+              "kind": "text_at_edge",
+              "severity": "major",
+              "t_start": 0.333,
+              "t_end": 1.0,
+              "image": null,
+              "summary": "Text touches the left frame edge (0 px), so it is likely cut.",
+              "label": "true_positive",
+              "actionable": true,
+              "note": "Verified on synthetic frame fixture."
+            },
+            {
+              "id": "demo-SML-001",
+              "cut": "demo",
+              "detector": "small_text",
+              "kind": "under_12_px_on_phone",
+              "severity": "note",
+              "t_start": 0.333,
+              "t_end": 1.0,
+              "image": null,
+              "summary": "3 of 3 text lines would be under 12 px on a 390 px phone; the largest failing line is 30 px at 1080p.",
+              "label": "true_positive",
+              "actionable": true,
+              "note": "Verified on synthetic frame fixture."
+            },
+            {
+              "id": "demo-TRN-001",
+              "cut": "demo",
+              "detector": "transitions",
+              "kind": "black_frames",
+              "severity": "major",
+              "t_start": 2.0,
+              "t_end": 2.667,
+              "image": null,
+              "summary": "0.67 s of black frames.",
+              "label": "false_positive",
+              "actionable": false,
+              "note": "Intentional stylised card contrast."
+            },
+            {
+              "id": "demo-CON-001",
+              "cut": "demo",
+              "detector": "contrast",
+              "kind": "below_2",
+              "severity": "major",
+              "t_start": 0.333,
+              "t_end": 1.0,
+              "image": null,
+              "summary": "Text contrast is 1.70 to 1 (#9a9a9a on #b5b5b5), under 2 to 1.",
+              "label": "false_positive",
+              "actionable": false,
+              "note": "Intentional stylised card contrast."
+            }
+          ]
+        },
+        "precision": {
+          "labelled": 4,
+          "unlabelled": 0,
+          "detectors": {
+            "cut_off_content": {
+              "labelled": 1,
+              "true_positive": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "wilson_95": [
+                0.207,
+                1.0
+              ],
+              "actionable": 1
+            },
+            "small_text": {
+              "labelled": 1,
+              "true_positive": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "wilson_95": [
+                0.207,
+                1.0
+              ],
+              "actionable": 1
+            },
+            "transitions": {
+              "labelled": 1,
+              "true_positive": 0,
+              "false_positive": 1,
+              "precision": 0.0,
+              "wilson_95": [
+                0.0,
+                0.793
+              ],
+              "actionable": 0
+            },
+            "contrast": {
+              "labelled": 1,
+              "true_positive": 0,
+              "false_positive": 1,
+              "precision": 0.0,
+              "wilson_95": [
+                0.0,
+                0.793
+              ],
+              "actionable": 0
+            }
+          },
+          "overall": {
+            "labelled": 4,
+            "true_positive": 2,
+            "precision": 0.5,
+            "wilson_95": [
+              0.15,
+              0.85
+            ],
+            "actionable": 2
+          }
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.findings"
+        ],
+        [
+          "verifies",
+          "template.review-labels"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "sample-frames",
+      "kind": "verb.ingest",
+      "title": "Decode and measure every frame of a cut into a digest-pinned cache",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Decode an encoded video cut locally with FFmpeg, hash its exact bytes, measure temporal differences, luminance, camera shift and blend fit on every frame, and measure text boxes, panels, chips and edge densities on spatial frames.",
+      "outcome": "A local measurement cache pinned to the video SHA-256.",
+      "ready_outcome": "frames_sampled",
+      "pinned": [
+        "spec.detectors",
+        "tool.frame-qa",
+        "guardrail.exact-video-bytes"
+      ],
+      "slots": [
+        {
+          "name": "video_cut",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the encoded video cut metadata and file digest."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only local video files and writes only to a local cache directory outside the pack library."
+      ],
+      "produces": [
+        {
+          "name": "frame_cache_summary",
+          "template": "template.findings"
+        }
+      ],
+      "steps": [
+        "Run python -m frame_qa sample on the local video cut into a dedicated cache directory outside the seed-pack library.",
+        "Record the video SHA-256, frame count, spatial frame count and sampling digest in the returned noun."
+      ],
+      "acceptance": [
+        {
+          "id": "digest-pinned",
+          "check": "meta.json records the exact SHA-256 of the input video bytes and sampling_digest of spec.detectors.",
+          "method": "deterministic"
+        },
+        {
+          "id": "every-frame-read",
+          "check": "Temporal arrays have length equal to the decoded frame count.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "run-detectors",
+      "kind": "verb.verify_gate",
+      "title": "Run the nine frame-by-frame visual QA detectors on cached measurements",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Evaluate cut-off content, cut-off windows, overlaps, small text, transitions, freezes and motion, caption collisions, contrast and layered edges against the cached frame measurements and optional WebVTT captions.",
+      "outcome": "A digest-bound list of frame-level detector hits with pixel boxes and severities.",
+      "ready_outcome": "detectors_evaluated",
+      "pinned": [
+        "spec.detectors",
+        "questions",
+        "rules.safe-areas",
+        "tool.frame-qa"
+      ],
+      "slots": [
+        {
+          "name": "frame_cache_summary",
+          "category": "noun.eval_run",
+          "description": "Pin of the sampled frame cache summary for the cut."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads cached measurements and local WebVTT files without network calls."
+      ],
+      "produces": [
+        {
+          "name": "detector_hits",
+          "template": "template.findings"
+        }
+      ],
+      "steps": [
+        "Run python -m frame_qa detect against the cut cache and optional WebVTT sidecar.",
+        "Keep every hit with its detector name, kind, frame index, pixel box and measured detail."
+      ],
+      "acceptance": [
+        {
+          "id": "all-nine-detectors-covered",
+          "check": "The detector list equals the nine detectors in spec.detectors unless narrowed explicitly.",
+          "method": "deterministic"
+        },
+        {
+          "id": "same-video-digest",
+          "check": "hits.json carries the exact video_sha256 recorded in the cache metadata.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frame-by-frame-video-qa.sample-frames"
+      ]
+    },
+    {
+      "slug": "segment-ui-masks",
+      "kind": "verb.verify_gate",
+      "title": "Segment UI controls and check for caption or callout mask occlusions",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Segment buttons, inputs, badges, cards and panels via OpenCV connected components or an optional local Meta SAM checkpoint, and check whether caption boxes or callout chips obscure interactive UI regions.",
+      "outcome": "Segmented UI region masks and any caption_obscures_ui or callout_obscures_ui hits.",
+      "ready_outcome": "ui_masks_checked",
+      "pinned": [
+        "spec.ui-masks",
+        "tool.frame-qa",
+        "guardrail.offline-deterministic-detectors"
+      ],
+      "slots": [
+        {
+          "name": "frame_cache_summary",
+          "category": "noun.eval_run",
+          "description": "Pin of the sampled frames and active caption or callout overlay boxes."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Uses connected components or local_files_only SAM weights; never contacts remote servers."
+      ],
+      "produces": [
+        {
+          "name": "ui_mask_findings",
+          "template": "template.findings"
+        }
+      ],
+      "steps": [
+        "Segment representative spatial frames with SamMaskAdapter or segment_ui_regions.",
+        "Run detect_ui_mask_occlusions against active caption cue boxes and callout chips and record covered_share for each hit."
+      ],
+      "acceptance": [
+        {
+          "id": "backend-recorded",
+          "check": "Output states whether connected_components or local sam:facebook/sam-vit-base produced the regions.",
+          "method": "deterministic"
+        },
+        {
+          "id": "thresholds-enforced",
+          "check": "Every reported occlusion has covered_share at or above min_cover_share in spec.ui-masks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frame-by-frame-video-qa.sample-frames"
+      ]
+    },
+    {
+      "slug": "cluster-findings",
+      "kind": "verb.verify_gate",
+      "title": "Cluster frame hits into shot-indexed findings with crops and timelines",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Bridge nearby frame hits of the same detector and kind across up to four frames when boxes overlap by at least 0.3 IoU, render annotated PNG evidence frames and detector timeline charts, and attach findings-to-fixes records.",
+      "outcome": "A conforming frame-qa.findings.v1 report with annotated frame digests.",
+      "ready_outcome": "findings_clustered",
+      "pinned": [
+        "spec.detectors",
+        "tool.frame-qa",
+        "template.findings"
+      ],
+      "slots": [
+        {
+          "name": "detector_hits",
+          "category": "noun.eval_run",
+          "description": "Pin of the frame-level detector hits for the cut."
+        }
+      ],
+      "produces": [
+        {
+          "name": "findings_report",
+          "template": "template.findings"
+        }
+      ],
+      "steps": [
+        "Cluster hits with cluster_hits and map each cluster to its shot boundary and optional storyboard row.",
+        "Render annotated PNG crops and timeline charts outside the library and validate findings.json against template.findings."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-findings-schema",
+          "check": "The output document passes schema_errors against template.findings.",
+          "method": "deterministic"
+        },
+        {
+          "id": "actionable-records-valid",
+          "check": "Every finding above note carries a record conforming to findings-to-fixes:template.finding.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frame-by-frame-video-qa.run-detectors"
+      ]
+    },
+    {
+      "slug": "draw-review-sample",
+      "kind": "verb.probe_source",
+      "title": "Draw a seeded stratified sample of findings for reviewer labelling",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Select at least one finding from every detector that fired and allocate remaining slots by detector share using an explicit random seed so independent reviewers inspect a reproducible sample.",
+      "outcome": "An unlabelled review sample listing finding IDs, timestamps, crops and summaries.",
+      "ready_outcome": "review_sample_drawn",
+      "pinned": [
+        "tool.frame-qa",
+        "guardrail.precision-by-independent-sample"
+      ],
+      "slots": [
+        {
+          "name": "findings_report",
+          "category": "noun.eval_run",
+          "description": "Pin of the clustered findings report."
+        }
+      ],
+      "produces": [
+        {
+          "name": "review_sample",
+          "template": "template.review-labels"
+        }
+      ],
+      "steps": [
+        "Run python -m frame_qa review-sample with an explicit seed and sample size.",
+        "Keep label and actionable fields null so the reviewer fills them independently."
+      ],
+      "acceptance": [
+        {
+          "id": "every-firing-detector-sampled",
+          "check": "Every detector with at least one finding appears in the sample when size >= firing detectors.",
+          "method": "deterministic"
+        },
+        {
+          "id": "seeded-reproducibility",
+          "check": "Running draw_sample twice with the same findings, size and seed yields identical IDs.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frame-by-frame-video-qa.cluster-findings"
+      ]
+    },
+    {
+      "slug": "label-review-sample",
+      "kind": "verb.vote_judge",
+      "title": "Label sampled findings as true_positive or false_positive",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A person inspects the annotated frame crop and video span for each sampled finding, labels whether the detector hit is a true_positive or false_positive, and marks whether it requires a fix.",
+      "outcome": "A labelled review sample conforming to template.review-labels.",
+      "ready_outcome": "review_sample_labelled",
+      "pinned": [
+        "template.review-labels",
+        "guardrail.precision-by-independent-sample"
+      ],
+      "slots": [
+        {
+          "name": "review_sample",
+          "category": "noun.eval_run",
+          "description": "Pin of the unlabelled stratified review sample."
+        }
+      ],
+      "produces": [
+        {
+          "name": "review_labels",
+          "template": "template.review-labels"
+        }
+      ],
+      "steps": [
+        "Inspect each sampled frame crop and surrounding shot context.",
+        "Set label to true_positive or false_positive, set actionable true or false, and add a brief note."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-review-labels-schema",
+          "check": "The labelled document passes schema_errors against template.review-labels.",
+          "method": "deterministic"
+        },
+        {
+          "id": "human-reviewer-named",
+          "check": "reviewer is non-empty and independent records whether the reviewer authored the cut.",
+          "method": "judgment"
+        }
+      ],
+      "follows": [
+        "frame-by-frame-video-qa.draw-review-sample"
+      ]
+    },
+    {
+      "slug": "compute-precision",
+      "kind": "verb.verify_gate",
+      "title": "Compute per-detector and overall Wilson precision from review labels",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compute true-positive counts, point precision, 95 percent Wilson score intervals and actionable counts per detector and overall from a labelled review sample.",
+      "outcome": "A deterministic precision summary attached to the QA report.",
+      "ready_outcome": "precision_computed",
+      "pinned": [
+        "tool.frame-qa",
+        "template.review-labels"
+      ],
+      "slots": [
+        {
+          "name": "review_labels",
+          "category": "noun.eval_run",
+          "description": "Pin of the reviewer-labelled sample."
+        }
+      ],
+      "produces": [
+        {
+          "name": "precision_summary",
+          "template": "template.review-labels"
+        }
+      ],
+      "steps": [
+        "Validate the input against template.review-labels.",
+        "Run python -m frame_qa precision and record per-detector and overall Wilson 95 percent intervals."
+      ],
+      "acceptance": [
+        {
+          "id": "recomputed-exactly",
+          "check": "frame_qa.review.precision on the labelled rows equals the recorded precision summary.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frame-by-frame-video-qa.label-review-sample"
+      ]
+    }
+  ]
+}

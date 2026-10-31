@@ -1,0 +1,35 @@
+# Checks for the audio and narration QA pack's code, run when that pack or this workflow changes.
+# Standard library only: nothing is installed.
+name: audio-and-narration-qa
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/audio-and-narration-qa/**"
+      - ".github/workflows/audio-and-narration-qa.yml"
+  pull_request:
+    paths:
+      - "packs/audio-and-narration-qa/**"
+      - ".github/workflows/audio-and-narration-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/audio-and-narration-qa/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile and run every test
+        run: make check PYTHON=python

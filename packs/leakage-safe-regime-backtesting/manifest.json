@@ -1,0 +1,158 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "leakage-safe-regime-backtesting",
+  "title": "Leakage-safe regime backtesting",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for synthetic and historical statistical validation hygiene using purged and embargoed expanding-window walk-forward splits, volatility-regime Rank IC and ICIR, turnover cost accounting and multiple-testing deflation, strictly never as financial, investment or trading advice.",
+  "license": "MIT",
+  "store": "seedpack.leakage-safe-regime-backtesting",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "dd8aad146590f35232204a536c7c20afa1f6cc9274fc99ed1b161a2680062d39"
+    },
+    {
+      "path": "source.json",
+      "sha256": "c89f36a5dc5777cc42b5eaef7603346db89091eb37fdec7ca3075fcd9240b82f"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "8cfcaec516d4e458a8df6142f1d5c032af54d750334bb7fe4997ba87bcc6473c"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "623290701762d0713b17c7a7881aef5e77135da6a606be007ee7556dfc022e90"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "504f237ae1322fba5898570f4c1bfbbcb5942f8c295f603f78d88887167628e7"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.guardrail.statistical-hygiene-never-advice",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "019fe5f1e646e780619c8cb35f0cc095fdc2da0da288ec30fc0699ba93f8d72f"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.guardrail.purge-label-horizons",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "d3af46afbdfa13bb3d399ba69350fe6a0da5158c1810c223137eaa5b3cacb3cc"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.guardrail.deflate-trial-multiplicity",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "34a086552e027f2352d95c7db1681f2d98baf6e4a8083901413d644bc6053fc9"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.spec.walk-forward-hygiene",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "0fd746ca03fa5e947aa7c603d016834b0fd2e5b01501feb533207198f31828a6"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.rules.regime-and-turnover",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "96d984a319a81ae8c046d59d8dc8a847af371f7d499a96cfe70857c9f9c5c37e"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.tool.regime-backtest",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "d3b51db978db4589e0b707b44954bbbc3c6566da2e2d64e95de469cd4f7bee50"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.template.validation-receipt",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "c4745f9ce7619c879ceff0b38c29e83be2f996fa5983d0639e0ccc19c6b71037"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.example.synthetic-panel",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "df846da9e1f413244ea9c2a4664706ad216fabfff0c4dfe7f8019b3f8735e7f9"
+    },
+    {
+      "key": "leakage-safe-regime-backtesting.v0.1.0.example.validation-receipt",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "fe5a4858ddf3912e8b2a71a1dc2b4fdf3687ef90427b89646c72cd8b339e45ca"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "leakage-safe-regime-backtesting.build-purged-splits",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:leakage-safe-regime-backtesting:build-purged-splits:a7f9ea218e4bd181383fde4bc176c57de1507d80e31f996fcca30e4cb52a300e",
+      "report_shape_sha256": "e587190ac9e0fa5e33540beab7422657b0462f193af4322af46eb58c2648620f"
+    },
+    {
+      "template_id": "leakage-safe-regime-backtesting.score-regime-ic-and-turnover",
+      "kind": "verb.benchmark_harness",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:leakage-safe-regime-backtesting:score-regime-ic-and-turnover:0754b5a0bce640fee6045e4f4b43cb8cd94044f8ff2785c9a86201857533df88",
+      "report_shape_sha256": "450d3d3d3a3faea506b5d923d79bd2a5770ce81e00d1425e9ca0dbf1888bfe0b"
+    },
+    {
+      "template_id": "leakage-safe-regime-backtesting.deflate-multiple-testing",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:leakage-safe-regime-backtesting:deflate-multiple-testing:72bf8ac0aa5a011df201ff8d9ad1c39dff416b6c9fd78da52fb87b3c2a1e8459",
+      "report_shape_sha256": "61eb03018d2af36bd0395852e6f0f8e3bcbabf5fdf107c439d4e0dad32c1ea87"
+    }
+  ],
+  "code": {
+    "path": "packs/leakage-safe-regime-backtesting/code",
+    "files": 10,
+    "sha256": "ee9c48164139495b558284c9bb53becaa11368ec34875a8f171909f74c547c73",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "checked-data-analysis",
+      "keys": []
+    },
+    {
+      "pack_id": "evaluation-design",
+      "keys": []
+    },
+    {
+      "pack_id": "measured-claims",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Strictly statistical validation hygiene on synthetic or historical panel series: never financial, investment or trading advice.",
+    "No orders, trades, position recommendations or brokerage connections exist anywhere in this pack.",
+    "Training folds must purge forward-label horizon overlaps before test windows and enforce embargo buffers.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

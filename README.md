@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds sixty-seven proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds seventy-five proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -87,10 +87,18 @@ activated**, and no worker has run them yet.
 | [Edge and corner cases](packs/edge-and-corner-cases/README.md) | Finding edge and corner cases on purpose: input, interface, video and API catalogs, every expected result written before anything runs, a tested seeded generator of labelled cases, inputs stored escaped and every failure kept as its own regression test |
 | [Regression watch](packs/regression-watch/README.md) | Watching for regressions against baselines a person accepted: screenshots by hash, metrics with tolerances, API shapes and video QA numbers measured again on every change, every mismatch rerun twice so flaky checks are told apart from real regressions |
 | [Codebase health review](packs/codebase-health-review/README.md) | Reviewing a codebase's health at one commit: TODO ages from git blame, swallowed exceptions, untested error paths, flaky tests, dependency drift, unpinned versions, oversized modules, duplicated code, docs drift and secrets reported by place only, with tested code and no single score |
+| [Frame-by-frame video QA](packs/frame-by-frame-video-qa/README.md) | Frame-by-frame video quality checks with 12 deterministic detectors, connected-component UI masks and optional local SAM occlusion checks, with tested code |
+| [Audio and narration QA](packs/audio-and-narration-qa/README.md) | ITU-R BS.1770-4 loudness and true-peak gating, sidechain pause-pumping and edit-point click checks, speaking WPM pacing, WebVTT caption-pause alignment and ASR CER gating, with tested code |
+| [Parametric 3D video composer](packs/parametric-3d-video-composer/README.md) | Planning 1x3 and 2x2 3D perspective hub camera trajectories, verifying browser chrome safe areas and lower caption bands, and blocking text-on-text double-exposure crossfades, with tested code |
+| [Agent harness feeds](packs/agent-harness-feeds/README.md) | Continuously probing, normalizing and encapsulating an Agent Harnesses Feed across Harness Square, OpenCode, Pi and Muse Code with HarnessTax and Pareto rankings, with tested code |
+| [Hackathon ecosystem index](packs/hackathon-ecosystem-index/README.md) | Decomposing public AI repository metadata and READMEs into searchable task and task-object signatures and serving hybrid BM25 plus facet Reciprocal Rank Fusion retrieval, with tested code |
+| [LoRA memory and shimming](packs/lora-memory-and-shimming/README.md) | Compiling post-cutoff task objects into leakage-checked LoRA pairs, routing between revocable prompt shims and weight updates, and gating promotion on paired bootstrap CIs, with tested code |
+| [Hybrid retrieval context knapsack](packs/hybrid-retrieval-context-knapsack/README.md) | Fusing BM25 and dense cosine rankings via RRF (k=60), stripping untrusted prompt injections, pruning MinHash near-duplicates and solving a 0/1 token-budget context knapsack, with tested code |
+| [Leakage-safe regime backtesting](packs/leakage-safe-regime-backtesting/README.md) | Synthetic and historical statistical validation hygiene with purged walk-forward splits, causal volatility-regime Rank IC/ICIR, turnover drag and multiple-testing deflation, never as financial advice, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1380
-nouns and 440 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1470
+nouns and 473 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
