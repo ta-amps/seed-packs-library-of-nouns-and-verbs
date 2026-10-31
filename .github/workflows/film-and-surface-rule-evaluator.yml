@@ -1,0 +1,27 @@
+name: film-and-surface-rule-evaluator
+
+on:
+  push:
+    paths:
+      - "packs/film-and-surface-rule-evaluator/**"
+      - ".github/workflows/film-and-surface-rule-evaluator.yml"
+  pull_request:
+    paths:
+      - "packs/film-and-surface-rule-evaluator/**"
+      - ".github/workflows/film-and-surface-rule-evaluator.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packs/film-and-surface-rule-evaluator/code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: make check

@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds eighty proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds ninety-six proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -100,10 +100,26 @@ activated**, and no worker has run them yet.
 | [SIRA self-learning RAG](packs/sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code |
 | [Partner compute cascade](packs/partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts, with tested code |
 | [Combinatorial niche spider](packs/combinatorial-niche-spider/README.md) | Minting combinatorial multi-domain search cells, advancing non-repeating page cursors, expanding a persistent BFS spider frontier, refreshing star-surge movers and HTTP 404 rot, and scoring candidates on 8 separate 0-100 axes with query-family yield benchmarks, with tested code |
+| [Agent capability and tier firewall](packs/agent-capability-and-tier-firewall/README.md) | Enforcing scoped effect ceilings, credential and high-entropy secret redaction, and model data-tier routing guards that block non-public payloads from training or contributor endpoints before dispatch, with tested code |
+| [Agent config supply chain scanner](packs/agent-config-supply-chain-scanner/README.md) | Scanning repository agent definitions, rule files, MCP configs, and self-editing memory files for hidden Trojan Unicode, unapproved hook or server escalation, built-in name shadowing, and authority spoofing, with tested standard-library Python code, with tested code |
+| [Brainstorm chunking and situation miner](packs/brainstorm-chunking-and-situation-miner/README.md) | Deduplicating noisy raw notes, chunking unstructured text into content-addressed records, and clustering real-world situations into candidate seed-pack categories, with tested standard-library Python code, with tested code |
+| [Coding session trace distiller](packs/coding-session-trace-distiller/README.md) | Mining sanitized multi-hour AI coding session JSONL transcripts into reusable failure tombstones, tool-error loops, verified fix recipes, and prompt-shim candidates, with tested standard-library Python code, with tested code |
+| [Configuration grids and bounds](packs/configuration-grids-and-bounds/README.md) | Declarative multi-dimensional configuration grids, runtime parameter clamping, verified cell lifecycles, contextual regime selection, saturated boundary auto-expansion and AST magic-literal gates, with tested code |
+| [Declarative chart and diagram SVG](packs/declarative-chart-and-diagram-svg/README.md) | Compiling structured data tables and component message traces into publication-grade accessible SVGs (confidence-interval forest plots, progression bars, and edge-packet diagrams) with deterministic WCAG contrast and label-collision checks, with tested code |
+| [Execution hooks and verifiers](packs/execution-hooks-and-verifiers/README.md) | Compiling four-stage portable execution hooks across coding harnesses, enforcing pre-tool safety and spend guards, running topological pre-submit verifier DAGs, auditing verifier mutation sensitivity and extracting dead-end negative tombstones, with tested code |
+| [Film and surface rule evaluator](packs/film-and-surface-rule-evaluator/README.md) | Evaluating declarative film and surface rule nouns, blocking forbidden synthetic or non-functional stamps, scoring frosted-pill caption centering and dual-channel cognitive load, repointing dead repository links to SHA-256-pinned source mirrors and verifying llms.txt parity against MCP tools, with tested code |
+| [Grep, string and format rules](packs/grep-string-and-format-rules/README.md) | Aho-Corasick literal scanning, portable grep rules, Unicode and entropy security checks and strict JSON and copy formatting, with tested code |
+| [Loops schedules and heuristics](packs/loops-schedules-and-heuristics/README.md) | Inert window-keyed schedule compilation, fragility half-life urgency ranking, AIMD claim pacing, UCB1 anti-stall bandit loops, seven-tier compute resource cascades and six advice-only swappable learners, with tested code |
+| [Multimodal mask and transcript alignment](packs/multimodal-mask-and-transcript-alignment/README.md) | Aligning image segmentation masks, speech-to-text word timings, and layout safe zones across multimodal media pipelines, with tested standard-library Python code, with tested code |
+| [Portable agent persona compiler](packs/portable-agent-persona-compiler/README.md) | Compiling portable agent role definitions across coding harnesses, scoring delegation descriptions, separating routing from permissions, and stripping accuracy-degrading persona fluff, with tested standard-library Python code, with tested code |
+| [Probabilistic filters and sketches](packs/probabilistic-filters-and-sketches/README.md) | Cache-line blocked Bloom filters, deletable Cuckoo filters, static Xor filters, multi-probe LSH and streaming sketches, with tested code |
+| [Social video reframe and hooks](packs/social-video-reframe-and-hooks/README.md) | Planning vertical 9:16 and square 1:1 video cutdowns from 16:9 demos with subject-safe crop trajectories, hook-beat scoring, caption-band reflow, and claim-preservation gates, backed by standard-library Python code, with tested code |
+| [Submission rubric and readiness audit](packs/submission-rubric-and-readiness-audit/README.md) | Auditing engineering repositories against weighted evaluation rubrics covering problem specificity, verified open-weight and multimodal model usage, modular source and CI depth, and live deployment plus video walkthrough completeness, with tested standard-library Python code, with tested code |
+| [Trigger and shim rules](packs/trigger-and-shim-rules/README.md) | Three-tier trigger compilation with Role-Filler Frame isomorphism, conversation-aware submodular context-shim knapsacks, step-slicing HarnessTax break-even routing and privacy-safe compatibility matching, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1520
-nouns and 490 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1706
+nouns and 545 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

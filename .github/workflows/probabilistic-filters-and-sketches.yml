@@ -1,0 +1,29 @@
+name: probabilistic-filters-and-sketches
+
+on:
+  push:
+    paths:
+      - "packs/probabilistic-filters-and-sketches/**"
+      - ".github/workflows/probabilistic-filters-and-sketches.yml"
+  pull_request:
+    paths:
+      - "packs/probabilistic-filters-and-sketches/**"
+      - ".github/workflows/probabilistic-filters-and-sketches.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run probabilistic-filters-and-sketches unit tests
+        working-directory: packs/probabilistic-filters-and-sketches/code
+        run: |
+          make check
+          python3 -c "import probabilistic_sketches"

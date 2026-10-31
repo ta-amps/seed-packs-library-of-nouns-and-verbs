@@ -1,0 +1,274 @@
+{
+  "grid_id": "loops-schedules-and-heuristics-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "constants": {
+    "hex_radix": 16,
+    "digest_slice_chars": 8,
+    "round_digits": 6,
+    "decay_base": 0.5,
+    "unpulled_ucb_bonus": 1000.0,
+    "tokens_per_cost_unit": 1000.0,
+    "split_modulus": 10,
+    "holdout_buckets": 2,
+    "bradley_terry_iterations": 25,
+    "bradley_terry_pseudo_wins": 0.5,
+    "allowed_training_licenses": ["MIT", "Apache-2.0", "BSD-3-Clause", "CC0-1.0"],
+    "privacy_rank": {
+      "public": 0,
+      "internal": 1,
+      "confidential": 2
+    },
+    "mutation_operators": [
+      "broaden_synonyms_and_aliases",
+      "decompose_orthogonal_subqueries",
+      "invert_exclusion_constraints"
+    ],
+    "compute_tiers": [
+      {
+        "tier_id": "0_code_shim",
+        "requires_deterministic": true,
+        "capability_rank": 1,
+        "max_context_tokens": 1000000,
+        "default_tpm_headroom": 10000000,
+        "max_privacy_tier": "confidential",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.0
+      },
+      {
+        "tier_id": "1_local_edge_small",
+        "requires_deterministic": false,
+        "capability_rank": 2,
+        "max_context_tokens": 16384,
+        "default_tpm_headroom": 120000,
+        "max_privacy_tier": "confidential",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.0001
+      },
+      {
+        "tier_id": "2_free_dual_t4_batch",
+        "requires_deterministic": false,
+        "capability_rank": 3,
+        "max_context_tokens": 32768,
+        "default_tpm_headroom": 80000,
+        "max_privacy_tier": "internal",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.0002
+      },
+      {
+        "tier_id": "3_serverless_gpu_credit",
+        "requires_deterministic": false,
+        "capability_rank": 4,
+        "max_context_tokens": 65536,
+        "default_tpm_headroom": 250000,
+        "max_privacy_tier": "confidential",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.0008
+      },
+      {
+        "tier_id": "4_fast_lora_credit",
+        "requires_deterministic": false,
+        "capability_rank": 4,
+        "max_context_tokens": 65536,
+        "default_tpm_headroom": 300000,
+        "max_privacy_tier": "confidential",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.0012
+      },
+      {
+        "tier_id": "5_high_tpm_open_weights",
+        "requires_deterministic": false,
+        "capability_rank": 5,
+        "max_context_tokens": 131072,
+        "default_tpm_headroom": 800000,
+        "max_privacy_tier": "confidential",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.0025
+      },
+      {
+        "tier_id": "6_frontier_escalate",
+        "requires_deterministic": false,
+        "capability_rank": 6,
+        "max_context_tokens": 262144,
+        "default_tpm_headroom": 500000,
+        "max_privacy_tier": "confidential",
+        "contributor_training": false,
+        "cost_per_1k_tokens_usd": 0.015
+      }
+    ]
+  },
+  "parameters": [
+    {
+      "name": "base_cadence_seconds",
+      "param_type": "integer_range",
+      "low": 60,
+      "high": 86400,
+      "step": 60,
+      "default": 3600
+    },
+    {
+      "name": "max_cadence_seconds",
+      "param_type": "integer_range",
+      "low": 3600,
+      "high": 604800,
+      "step": 3600,
+      "default": 86400
+    },
+    {
+      "name": "due_window_width_seconds",
+      "param_type": "integer_range",
+      "low": 30,
+      "high": 1800,
+      "step": 30,
+      "default": 300
+    },
+    {
+      "name": "max_jitter_seconds",
+      "param_type": "integer_range",
+      "low": 0,
+      "high": 900,
+      "step": 30,
+      "default": 120
+    },
+    {
+      "name": "max_jitter_fraction",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 0.25,
+      "step": 0.05,
+      "default": 0.10
+    },
+    {
+      "name": "backoff_multiplier",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "name": "aimd_target_latency_ms",
+      "param_type": "float_range",
+      "low": 100.0,
+      "high": 5000.0,
+      "step": 100.0,
+      "default": 800.0
+    },
+    {
+      "name": "aimd_ewma_alpha",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.90,
+      "step": 0.10,
+      "default": 0.40
+    },
+    {
+      "name": "aimd_add_step",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 4,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "name": "aimd_mult_factor",
+      "param_type": "float_range",
+      "low": 0.25,
+      "high": 0.80,
+      "step": 0.05,
+      "default": 0.50
+    },
+    {
+      "name": "aimd_max_concurrency",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 64,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "name": "bayes_prior_strength",
+      "param_type": "float_range",
+      "low": 1.0,
+      "high": 20.0,
+      "step": 1.0,
+      "default": 4.0
+    },
+    {
+      "name": "bayes_prior_mean",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.90,
+      "step": 0.05,
+      "default": 0.50
+    },
+    {
+      "name": "ucb_exploration_c",
+      "param_type": "float_range",
+      "low": 0.25,
+      "high": 4.0,
+      "step": 0.25,
+      "default": 1.50
+    },
+    {
+      "name": "stall_wave_limit",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "name": "learner_min_uplift",
+      "param_type": "float_range",
+      "low": 0.01,
+      "high": 0.25,
+      "step": 0.01,
+      "default": 0.04
+    },
+    {
+      "name": "learner_min_samples",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 50,
+      "step": 2,
+      "default": 4
+    },
+    {
+      "name": "learner_token_tax_weight",
+      "param_type": "float_range",
+      "low": 0.01,
+      "high": 0.50,
+      "step": 0.01,
+      "default": 0.10
+    },
+    {
+      "name": "decomposition_per_slice_tax",
+      "param_type": "float_range",
+      "low": 0.01,
+      "high": 0.20,
+      "step": 0.01,
+      "default": 0.03
+    },
+    {
+      "name": "scent_brevity_target_words",
+      "param_type": "integer_range",
+      "low": 6,
+      "high": 40,
+      "step": 2,
+      "default": 16
+    }
+  ],
+  "constraints": [],
+  "regime_defaults": {
+    "bursty_interactive_pool": {
+      "aimd_target_latency_ms": 500.0,
+      "stall_wave_limit": 2
+    },
+    "overnight_batch_sweep": {
+      "aimd_target_latency_ms": 1500.0,
+      "stall_wave_limit": 4
+    }
+  }
+}

@@ -1,0 +1,459 @@
+{
+  "pack_id": "configuration-grids-and-bounds",
+  "title": "Configuration grids and bounds",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for declarative multi-dimensional configuration grids, runtime parameter clamping, verified cell lifecycles, contextual regime selection, saturated boundary auto-expansion and AST magic-literal gates.",
+  "dependencies": [
+    "evaluation-design",
+    "checks-of-checks",
+    "wiring-and-conformance-checks"
+  ],
+  "boundaries": [
+    "Promoting a configuration cell requires an independent verifier whose worker_id and key_id both differ from the proposer; unverified cells never promote.",
+    "Boundary auto-expansion proposes a next-generation NodeGrid spec noun rather than mutating running production configs.",
+    "ZeroHardcodedValuesAstGate parses Python ASTs statically and never imports or executes untrusted code.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for multi-dimensional configuration grids, verified cell lifecycles, boundary auto-expansion and zero-magic-literal AST gates",
+      "value": {
+        "lets_workers": "Replace hardcoded magic constants with externalized multi-dimensional NodeGrid specifications, clamp runtime inputs with ParameterBounds, advance cells through GridLedger only after independent verification, resolve optimal cells per workload regime via OperationCostLedger, expand saturated range endpoints into a new grid generation and enforce zero hardcoded numbers mechanically with ZeroHardcodedValuesAstGate.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "configuration-grids-and-bounds.enumerate-and-clamp-grid"
+            },
+            "when": "Declare tunable choice, integer_range, float_range and boolean axes with cross-parameter constraints, clamp runtime inputs and enumerate applicable cells."
+          },
+          {
+            "verb": {
+              "$verb": "configuration-grids-and-bounds.scan-zero-magic-literals-ast"
+            },
+            "when": "Scan operational Python functions and classes via AST to reject inline numeric magic literals beyond canonical mathematical identities."
+          },
+          {
+            "verb": {
+              "$verb": "configuration-grids-and-bounds.verify-and-promote-regime-cell"
+            },
+            "when": "Independently verify evaluated cell metrics, promote the cell for its workload regime and auto-expand saturated grid boundaries into generation+1."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.no-unverified-or-self-approved-cell-promotion"
+          },
+          {
+            "$pin": "guardrail.zero-inline-magic-literals"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.config-grids"
+        },
+        "worked_example": "Synthetic 4-axis context-shim and retrieval tuning grid recomputed in test_config_grids.py: enumerates 72 represented cells and 48 applicable cells under the deletes-require-cuckoo constraint, blocks proposer self-verification (409), promotes a distinct-verifier cell, resolves verified_ledger_optimum for mutable_spider_frontier, expands saturated shim_max_chars (2400->4800) and probe_radius_bits (2->4) into generation 2, passes clean AST code and flags inline magic literal 1800."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.no-unverified-or-self-approved-cell-promotion"
+        ],
+        [
+          "requires_noun",
+          "guardrail.zero-inline-magic-literals"
+        ],
+        [
+          "requires_noun",
+          "spec.grid-lifecycle-and-ast-identities"
+        ],
+        [
+          "requires_noun",
+          "rules.regime-resolution-and-auto-expansion"
+        ],
+        [
+          "requires_noun",
+          "tool.config-grids"
+        ],
+        [
+          "requires_noun",
+          "template.config-grids-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.no-unverified-or-self-approved-cell-promotion",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: configuration cells cannot skip lifecycle states or promote without a distinct verifier",
+      "category_reason": "Prevents unverified tuning cells or single-worker self-approvals from entering regime selection.",
+      "value": {
+        "rule": "Every cell progresses sequentially through represented -> applicable -> proposed -> dispatched -> evaluated -> verified -> promoted, and transitioning to verified requires worker_id and key_id distinct from the proposer.",
+        "how_it_is_checked": "GridLedger.transition returns status_code 409 on lifecycle skips, constraint-violating cells or matching proposer/verifier identities."
+      }
+    },
+    {
+      "slug": "guardrail.zero-inline-magic-literals",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: operational functions and classes forbid inline magic numeric scalars",
+      "category_reason": "Forces behavioral thresholds, capacities, timeouts and budgets into externalized configuration grids.",
+      "value": {
+        "rule": "Only canonical mathematical identities (-1, 0, 1, -1.0, 0.0, 1.0, booleans) may appear inline inside operational Python callables; all other numeric scalars fail AST verification.",
+        "how_it_is_checked": "ZeroHardcodedValuesAstGate.scan_paths parses ASTs statically and reports file, line, column and offending literal."
+      }
+    },
+    {
+      "slug": "spec.grid-lifecycle-and-ast-identities",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: NodeGrid axis types, 7-state GridLedger lifecycle and AST identity allowlist",
+      "category_reason": "Defines deterministic bounds clamping, lifecycle state transitions and AST conformance criteria.",
+      "value": {
+        "axis_types": [
+          "choice",
+          "integer_range",
+          "float_range",
+          "boolean"
+        ],
+        "lifecycle_states": [
+          "represented",
+          "applicable",
+          "proposed",
+          "dispatched",
+          "evaluated",
+          "verified",
+          "promoted"
+        ],
+        "allowed_int_identities": [
+          -1,
+          0,
+          1
+        ],
+        "allowed_float_identities": [
+          -1.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "slug": "rules.regime-resolution-and-auto-expansion",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Contextual workload-regime cell lookup and saturated-axis boundary auto-expansion rule",
+      "category_reason": "Zero-model procedure choosing verified lowest-cost cells per regime and expanding ceilings when empirical optima hit range endpoints.",
+      "value": {
+        "resolution_priority": [
+          "verified_ledger_optimum",
+          "regime_default"
+        ],
+        "boundary_expansion_rule": "When a verified optimum equals high, multiply high by expansion_factor and increment generation; when it equals positive low, divide low by expansion_factor.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.config-grids",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library NodeGrid, GridLedger, OperationCostLedger and ZeroHardcodedValuesAstGate",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "configuration grids and bounds",
+        "code": {
+          "$code": "configuration-grids-and-bounds"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m config_grids --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Clamps runtime parameters via ParameterBounds and enumerates represented vs constraint-applicable NodeGrid cells.",
+          "Enforces 7-step GridLedger cell progression with distinct-verifier 409 checks and contextual OperationCostLedger regime selection.",
+          "Expands saturated range boundaries into generation+1 and scans Python ASTs via ZeroHardcodedValuesAstGate."
+        ],
+        "does_not": [
+          "Execute scanned source code, mutate live deployed workers directly or promote unverified cells."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.grid-lifecycle-and-ast-identities"
+        ]
+      ]
+    },
+    {
+      "slug": "template.config-grids-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: configuration grid enumeration, ledger promotion, auto-expansion and AST gate receipt",
+      "value": {
+        "describes": "a deterministic receipt of represented/applicable grid counts, distinct-verifier promotion, contextual regime lookup, boundary auto-expansion and AST magic-literal checks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "represented_cells",
+            "applicable_cells",
+            "self_verify_blocked",
+            "promoted_state",
+            "resolved_source",
+            "next_grid_generation",
+            "expanded_axes",
+            "clean_ast_passed",
+            "magic_ast_violations"
+          ],
+          "properties": {
+            "represented_cells": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "applicable_cells": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "self_verify_blocked": {
+              "type": "boolean"
+            },
+            "promoted_state": {
+              "type": "string"
+            },
+            "resolved_source": {
+              "type": "string"
+            },
+            "next_grid_generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "expanded_axes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "clean_ast_passed": {
+              "type": "boolean"
+            },
+            "magic_ast_violations": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "example": {
+          "represented_cells": 72,
+          "applicable_cells": 48,
+          "self_verify_blocked": true,
+          "promoted_state": "promoted",
+          "resolved_source": "verified_ledger_optimum",
+          "next_grid_generation": 2,
+          "expanded_axes": [
+            "shim_max_chars:high->4800",
+            "probe_radius_bits:high->4"
+          ],
+          "clean_ast_passed": true,
+          "magic_ast_violations": 1
+        }
+      }
+    },
+    {
+      "slug": "example.config-grids-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 4-axis grid candidate, distinct verifier identities and AST code samples",
+      "category_reason": "Synthetic fixture recomputed by test_config_grids.py.",
+      "value": {
+        "regime": "mutable_spider_frontier",
+        "candidate_cell": {
+          "shim_max_chars": 2400,
+          "probe_radius_bits": 2,
+          "filter_strategy": "cuckoo",
+          "support_deletes": true
+        },
+        "proposer_worker_id": "worker-tuner-a",
+        "proposer_key_id": "tsk_tuner_a",
+        "verifier_worker_id": "worker-reviewer-b",
+        "verifier_key_id": "tsk_reviewer_b",
+        "metrics": {
+          "quality_score": 0.98,
+          "cost_units": 0.14
+        },
+        "clean_code_sample": "def normalize_flag(items: list[str], cell: dict[str, int]) -> int:\n    if len(items) == 0:\n        return 0\n    return 1 if len(items) <= cell['max_items'] else -1\n",
+        "magic_literal_sample": "def bad_cap(text: str) -> str:\n    return text[:1800]\n",
+        "shows": "Synthetic configuration grid candidate saturating two upper bounds, tested against self-verification refusal, distinct-reviewer promotion and AST magic-literal scanning.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.config-grids-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed configuration grid, ledger promotion, auto-expansion and AST receipt",
+      "category_reason": "Synthetic receipt verified by test_config_grids.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.config-grids-receipt"
+        },
+        "instance": {
+          "represented_cells": 72,
+          "applicable_cells": 48,
+          "self_verify_blocked": true,
+          "promoted_state": "promoted",
+          "resolved_source": "verified_ledger_optimum",
+          "next_grid_generation": 2,
+          "expanded_axes": [
+            "shim_max_chars:high->4800",
+            "probe_radius_bits:high->4"
+          ],
+          "clean_ast_passed": true,
+          "magic_ast_violations": 1
+        },
+        "shows": "Recomputes exact cell counts, 409 self-verify block, regime resolution, generation-2 boundary expansion and AST violation count.",
+        "source": "Synthetic. Recomputed directly from example.config-grids-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.config-grids-bundle"
+        ],
+        [
+          "verifies",
+          "template.config-grids-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "enumerate-and-clamp-grid",
+      "kind": "verb.generate_seed",
+      "title": "Declare multi-dimensional configuration axes, clamp runtime inputs and enumerate applicable cells",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Load declarative NodeParameter axes and cross-parameter constraints, clamp out-of-range inputs with ParameterBounds and partition represented vs applicable grid cells.",
+      "outcome": "Clamped configuration cells and applicable grid catalog.",
+      "ready_outcome": "grid_enumerated",
+      "pinned": [
+        "spec.grid-lifecycle-and-ast-identities",
+        "rules.regime-resolution-and-auto-expansion",
+        "tool.config-grids"
+      ],
+      "slots": [
+        {
+          "name": "grid_declaration",
+          "category": "noun.skill_pack",
+          "description": "Pin of externalized JSON grid axis and constraint specification."
+        }
+      ],
+      "produces": [
+        {
+          "name": "grid_enumeration_receipt",
+          "template": "template.config-grids-receipt"
+        }
+      ],
+      "steps": [
+        "Parse choice, integer_range, float_range and boolean axes into ParameterBounds.",
+        "Enumerate Cartesian cells and filter constraint-violating combinations."
+      ],
+      "acceptance": [
+        {
+          "id": "applicable-subset-deterministic",
+          "check": "NodeGrid.enumerate_cells reproduces represented and applicable counts deterministically.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "scan-zero-magic-literals-ast",
+      "kind": "verb.verify_gate",
+      "title": "Scan operational Python ASTs to reject hardcoded non-identity numeric literals",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Parse Python source ASTs statically and fail closed if any numeric scalar outside (-1, 0, 1, -1.0, 0.0, 1.0) appears inside operational functions or methods.",
+      "outcome": "Deterministic AST conformance verdict with file, line and column diagnostics.",
+      "ready_outcome": "ast_conformance_checked",
+      "pinned": [
+        "spec.grid-lifecycle-and-ast-identities",
+        "guardrail.zero-inline-magic-literals",
+        "tool.config-grids"
+      ],
+      "slots": [
+        {
+          "name": "target_code_noun",
+          "category": "noun.code_node",
+          "description": "Pin of Python source files governed by configuration grids."
+        }
+      ],
+      "produces": [
+        {
+          "name": "ast_gate_receipt",
+          "template": "template.config-grids-receipt"
+        }
+      ],
+      "steps": [
+        "Parse Python ASTs without importing or executing modules.",
+        "Flag any non-identity integer or float constant inside FunctionDef or AsyncFunctionDef bodies."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-magic-literals",
+          "check": "ZeroHardcodedValuesAstGate passes clean grid-injected code and flags hardcoded numeric caps.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "configuration-grids-and-bounds.enumerate-and-clamp-grid"
+      ]
+    },
+    {
+      "slug": "verify-and-promote-regime-cell",
+      "kind": "verb.verify_gate",
+      "title": "Independently verify evaluated cell metrics, promote regime optimum and auto-expand saturated bounds",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Verify evaluated GridLedger metrics with a distinct reviewer, promote the cell into OperationCostLedger for its workload regime and emit a generation+1 NodeGrid when an empirical optimum hits an axis boundary.",
+      "outcome": "Verified GridLedger promotion receipt and optional expanded-generation NodeGrid spec.",
+      "ready_outcome": "regime_cell_promoted",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.grid-lifecycle-and-ast-identities",
+        "rules.regime-resolution-and-auto-expansion",
+        "guardrail.no-unverified-or-self-approved-cell-promotion",
+        "tool.config-grids",
+        "template.config-grids-receipt"
+      ],
+      "slots": [
+        {
+          "name": "evaluated_cell_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of evaluated grid cell metrics and proposer/verifier identities."
+        }
+      ],
+      "produces": [
+        {
+          "name": "promotion_and_expansion_receipt",
+          "template": "template.config-grids-receipt"
+        }
+      ],
+      "steps": [
+        "Reject self-verification (409) when verifier worker_id or key_id matches the proposer.",
+        "Promote independently verified cells into OperationCostLedger and expand saturated range endpoints into generation+1."
+      ],
+      "acceptance": [
+        {
+          "id": "distinct-verifier-and-auto-expansion",
+          "check": "Self-verification returns 409, distinct verification reaches promoted and saturated bounds increment generation.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "configuration-grids-and-bounds.scan-zero-magic-literals-ast"
+      ]
+    }
+  ]
+}

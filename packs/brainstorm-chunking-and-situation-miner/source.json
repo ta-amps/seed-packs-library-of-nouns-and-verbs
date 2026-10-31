@@ -1,0 +1,759 @@
+{
+  "pack_id": "brainstorm-chunking-and-situation-miner",
+  "title": "Brainstorm chunking and situation miner",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for deduplicating noisy raw notes, chunking unstructured text into content-addressed records, and clustering real-world situations into candidate seed-pack categories, with tested standard-library Python code.",
+  "boundaries": [
+    "Inline or block clipboard repeats are collapsed losslessy while unique epilogues and preambles stay intact.",
+    "Every emitted chunk is pinned by a deterministic UTF-8 SHA-256 digest and raw block occurrence count.",
+    "Mined situations and category gap rankings remain backlog proposals until human review.",
+    "Workers create nouns and propose verbs; importing this pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for deduplicating noisy raw notes and mining seed-pack situations",
+      "value": {
+        "lets_workers": "Collapse accidental multi-paste repeats in raw notes, split canonical text into SHA-256-addressed chunks, extract actor-problem-constraint situations, and rank candidate seed-pack categories by unmet demand.",
+        "not_for": "Deleting original user notes or admitting new seed packs without human review.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "brainstorm-chunking-and-situation-miner.deduplicate-raw-notes"
+            },
+            "when": "First: split inline or block repeats and collapse duplicates."
+          },
+          {
+            "verb": {
+              "$verb": "brainstorm-chunking-and-situation-miner.chunk-canonical-notes"
+            },
+            "when": "Segment deduplicated blocks into content-addressed chunks."
+          },
+          {
+            "verb": {
+              "$verb": "brainstorm-chunking-and-situation-miner.extract-real-world-situations"
+            },
+            "when": "Distill chunks into concrete actor-problem-constraint situations."
+          },
+          {
+            "verb": {
+              "$verb": "brainstorm-chunking-and-situation-miner.score-category-coverage-gaps"
+            },
+            "when": "Rank candidate categories against existing pack counts."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.preserve-unique-passages"
+          },
+          {
+            "$pin": "guardrail.content-addressed-chunks"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.brainstorm-miner"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.preserve-unique-passages"
+        ],
+        [
+          "requires_noun",
+          "guardrail.content-addressed-chunks"
+        ],
+        [
+          "requires_noun",
+          "rules.shingle-dedup-and-gap-math"
+        ],
+        [
+          "requires_noun",
+          "tool.brainstorm-miner"
+        ],
+        [
+          "requires_noun",
+          "template.category-gap-report"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: split tandem repeats first, hash canonical chunks, then score category gaps",
+      "category_reason": "Shared four-step procedure governing raw-note intake and situation clustering.",
+      "value": {
+        "lifecycle": [
+          "deduplicate-raw-notes locates left-maximal 6-word repeat anchors to split inline pastes before Jaccard collapse.",
+          "chunk-canonical-notes splits unique blocks on headings and weighted rubric lines with SHA-256 digests.",
+          "extract-real-world-situations binds each chunk to an operational actor, problem, and constraint.",
+          "score-category-coverage-gaps computes demand_score / (1 + existing_pack_count) and runs mining-checks."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.preserve-unique-passages",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: never drop unique trailing or interleaved passages during paste collapse",
+      "value": {
+        "rule": "Tandem paste splitting cuts at both repeat starts and the end of the final matched span so trailing unique notes remain separate blocks.",
+        "how_it_is_checked": "split_repeated_pastes adds p + match_len cuts and unit tests verify unique epilogue retention."
+      }
+    },
+    {
+      "slug": "guardrail.content-addressed-chunks",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every mined situation cites a SHA-256-addressed chunk",
+      "value": {
+        "rule": "No situation or category gap score is emitted without source_chunk_id and 64-hex source_chunk_sha256.",
+        "how_it_is_checked": "mining-checks enforces 64-hex SHA-256 digests on raw notes and chunks."
+      }
+    },
+    {
+      "slug": "rules.shingle-dedup-and-gap-math",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic rules for inline paste splitting, 5-word shingle Jaccard, and gap scoring",
+      "value": {
+        "inline_paste_split": "6-word lowercase anchor tuples with left-maximal extension >= 16 words mark paste boundaries even without blank lines.",
+        "near_duplicate_rule": "Blocks with normalized 5-word shingle Jaccard >= 0.85 collapse into the earliest canonical block.",
+        "gap_score_formula": "gap_score = round(demand_score / (1 + existing_pack_count), 4)."
+      }
+    },
+    {
+      "slug": "template.dedup-summary",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: raw-note paste deduplication summary",
+      "value": {
+        "describes": "block counts, compression ratio, and canonical digests after paste collapse",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "raw_sha256",
+            "raw_block_count",
+            "unique_block_count",
+            "compression_ratio"
+          ],
+          "properties": {
+            "raw_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "raw_block_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "unique_block_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "compression_ratio": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 32
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.content-chunk",
+      "category": "noun.public_source",
+      "role": "template",
+      "title": "Template: content-addressed semantic note chunk",
+      "value": {
+        "describes": "one deduplicated section chunk with SHA-256 digest and token estimate",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "chunk_id",
+            "title",
+            "text_sha256",
+            "byte_length",
+            "token_estimate"
+          ],
+          "properties": {
+            "chunk_id": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "text_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "byte_length": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "token_estimate": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.situation-record",
+      "category": "noun.seed_hypothesis",
+      "role": "template",
+      "title": "Template: real-world situation linked to a source chunk",
+      "value": {
+        "describes": "an operational situation naming actor, trigger problem, constraint, and candidate category",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "situation_id",
+            "source_chunk_id",
+            "source_chunk_sha256",
+            "category_id",
+            "actor",
+            "problem",
+            "constraint"
+          ],
+          "properties": {
+            "situation_id": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "source_chunk_id": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "source_chunk_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "category_id": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
+            },
+            "actor": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 200
+            },
+            "problem": {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 300
+            },
+            "constraint": {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 300
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.category-gap-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: ranked seed-pack category gap report",
+      "value": {
+        "describes": "ranked category demand and coverage gap scores backed by content-addressed chunks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "raw_sha256",
+            "compression_ratio",
+            "ranked_category_gaps"
+          ],
+          "properties": {
+            "raw_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "compression_ratio": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 32
+            },
+            "ranked_category_gaps": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "category_id",
+                  "demand_score",
+                  "existing_pack_count",
+                  "gap_score"
+                ],
+                "properties": {
+                  "category_id": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 80
+                  },
+                  "demand_score": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "existing_pack_count": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "gap_score": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "mining-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for brainstorm chunking and category gap reports",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every brainstorm chunking and situation mining report must pass.",
+        "deterministic_checks": [
+          {
+            "id": "raw-digest-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "raw_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "Every mining report pins the SHA-256 digest of the raw input notes."
+          },
+          {
+            "id": "chunks-have-hashes",
+            "rule": {
+              "rule": "each_has",
+              "path": "chunks",
+              "fields": [
+                "chunk_id",
+                "title",
+                "text_sha256"
+              ],
+              "min": 1
+            },
+            "why": "Every emitted chunk carries a stable identifier, title, and SHA-256 digest."
+          },
+          {
+            "id": "gaps-have-scores",
+            "rule": {
+              "rule": "each_has",
+              "path": "ranked_category_gaps",
+              "fields": [
+                "category_id",
+                "gap_score"
+              ],
+              "min": 1
+            },
+            "why": "Candidate categories must carry explicit numeric gap scores."
+          },
+          {
+            "id": "hosts-local",
+            "rule": {
+              "rule": "hosts_local_only",
+              "path": "$"
+            },
+            "why": "Local mining fixtures must not embed external network endpoints."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-mined-report",
+            "label": "known_good",
+            "finding": {
+              "raw_sha256": "67ece36218fe62d947bc0025a60c3162091a3d984377dc3769dd56799d5fc3e5",
+              "compression_ratio": "14:1",
+              "chunks": [
+                {
+                  "chunk_id": "chunk.impact",
+                  "title": "Impact",
+                  "text_sha256": "34de1e98f4333b10043f63cbee6e2a54b5e82dac687a39c89746954a539b7650"
+                }
+              ],
+              "ranked_category_gaps": [
+                {
+                  "category_id": "cat.submission-rubric-and-repo-readiness",
+                  "gap_score": 4.5
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-missing-chunk-digest",
+            "label": "known_bad",
+            "finding": {
+              "raw_sha256": "67ece36218fe62d947bc0025a60c3162091a3d984377dc3769dd56799d5fc3e5",
+              "chunks": [
+                {
+                  "chunk_id": "chunk.impact",
+                  "title": "Impact",
+                  "text_sha256": ""
+                }
+              ],
+              "ranked_category_gaps": [
+                {
+                  "category_id": "cat.submission-rubric-and-repo-readiness",
+                  "gap_score": 4.5
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-external-url",
+            "label": "known_bad",
+            "finding": {
+              "raw_sha256": "67ece36218fe62d947bc0025a60c3162091a3d984377dc3769dd56799d5fc3e5",
+              "chunks": [
+                {
+                  "chunk_id": "chunk.impact",
+                  "title": "See https://tracker.example.org/notes",
+                  "text_sha256": "34de1e98f4333b10043f63cbee6e2a54b5e82dac687a39c89746954a539b7650"
+                }
+              ],
+              "ranked_category_gaps": [
+                {
+                  "category_id": "cat.submission-rubric-and-repo-readiness",
+                  "gap_score": 4.5
+                }
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "good-mined-report": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-missing-chunk-digest": {
+            "verdict": "fail",
+            "failed_checks": [
+              "chunks-have-hashes"
+            ]
+          },
+          "bad-external-url": {
+            "verdict": "fail",
+            "failed_checks": [
+              "hosts-local"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.brainstorm-miner",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: brainstorm_miner standard-library CLI and library",
+      "value": {
+        "name": "brainstorm_miner",
+        "code": {
+          "$code": "brainstorm-chunking-and-situation-miner"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m brainstorm_miner dedup RAW_NOTES.txt",
+          "python3 -m brainstorm_miner chunk RAW_NOTES.txt",
+          "python3 -m brainstorm_miner mine RAW_NOTES.txt [--near-dup-threshold 0.85]"
+        ],
+        "does": [
+          "Splits inline concatenated multi-pastes and collapses exact and 5-word shingle near-duplicates.",
+          "Emits SHA-256-addressed chunks, real-world situations, and ranked category gap scores."
+        ],
+        "does_not": [
+          "Make network requests, invoke external models, or overwrite the input notes file."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.shingle-dedup-and-gap-math"
+        ]
+      ]
+    },
+    {
+      "slug": "source.broder-shingling",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "Broder (1997): On the resemblance and containment of documents",
+      "value": {
+        "url": "https://doi.org/10.1109/SEQUEN.1997.666900",
+        "checked_on": "2026-10-31",
+        "provides": "Word-shingle Jaccard resemblance and containment foundations for near-duplicate detection."
+      }
+    },
+    {
+      "slug": "source.rfc6234-sha256",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "IETF RFC 6234: US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)",
+      "value": {
+        "url": "https://datatracker.ietf.org/doc/html/rfc6234",
+        "checked_on": "2026-10-31",
+        "provides": "SHA-256 digest specification used to address canonical blocks and chunks."
+      }
+    },
+    {
+      "slug": "example.paste-collapse-gap-report",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: synthetic 14:1 paste collapse and category gap report",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.category-gap-report"
+        },
+        "instance": {
+          "raw_sha256": "67ece36218fe62d947bc0025a60c3162091a3d984377dc3769dd56799d5fc3e5",
+          "compression_ratio": "14:1",
+          "ranked_category_gaps": [
+            {
+              "category_id": "cat.submission-rubric-and-repo-readiness",
+              "demand_score": 9.0,
+              "existing_pack_count": 1,
+              "gap_score": 4.5
+            }
+          ]
+        },
+        "shows": "Fourteen repeated rubric pastes collapsed cleanly to one canonical block before gap scoring.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "deduplicate-raw-notes",
+      "kind": "verb.ingest",
+      "title": "Split inline or block clipboard repeats and collapse duplicates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run brainstorm_miner dedup on a local raw-notes file to split inline concatenated repeats and collapse exact and near-duplicate blocks.",
+      "outcome": "A deduplication summary recording block counts, compression ratio, and canonical SHA-256 digests.",
+      "ready_outcome": "notes_deduplicated",
+      "pinned": [
+        "guardrail.preserve-unique-passages",
+        "rules.shingle-dedup-and-gap-math",
+        "tool.brainstorm-miner"
+      ],
+      "slots": [
+        {
+          "name": "raw_notes_file",
+          "category": "noun.public_source",
+          "description": "Local raw notes file inside the workspace."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the local notes file inside the workspace."
+      ],
+      "produces": [
+        {
+          "name": "dedup_summary",
+          "template": "template.dedup-summary"
+        }
+      ],
+      "steps": [
+        "Run python3 -m brainstorm_miner dedup on the local raw-notes file.",
+        "Confirm unique preambles and trailing notes remain preserved as distinct canonical blocks.",
+        "Record raw_sha256, raw_block_count, unique_block_count, and compression_ratio."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Summary validates against template.dedup-summary.",
+          "method": "deterministic"
+        },
+        {
+          "id": "non-empty-blocks",
+          "check": "unique_block_count is at least 1 for non-empty input.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "chunk-canonical-notes",
+      "kind": "verb.ingest",
+      "title": "Segment canonical deduplicated blocks into SHA-256-addressed chunks",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Segment canonical note blocks by headings and weighted rubric sections into content-addressed chunks.",
+      "outcome": "Content-addressed chunks ready for situation mining.",
+      "ready_outcome": "notes_chunked",
+      "pinned": [
+        "guardrail.content-addressed-chunks",
+        "tool.brainstorm-miner"
+      ],
+      "slots": [
+        {
+          "name": "dedup_summary",
+          "category": "noun.eval_run",
+          "description": "Pin of the deduplication summary."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Operates on the local canonical note text only."
+      ],
+      "produces": [
+        {
+          "name": "chunk",
+          "template": "template.content-chunk",
+          "max": 40
+        }
+      ],
+      "steps": [
+        "Run python3 -m brainstorm_miner chunk on the deduplicated input.",
+        "Verify every emitted chunk carries a unique chunk_id and 64-hex text_sha256."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Every chunk validates against template.content-chunk.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-valid",
+          "check": "Every text_sha256 is 64 lowercase hex characters.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "brainstorm-chunking-and-situation-miner.deduplicate-raw-notes"
+      ]
+    },
+    {
+      "slug": "extract-real-world-situations",
+      "kind": "verb.situate",
+      "title": "Extract real-world actor, problem, and constraint situations from chunks",
+      "claimant": "agent",
+      "summary": "Map content-addressed chunks into structured real-world situations naming the actor, trigger problem, constraint, and candidate category.",
+      "outcome": "Structured situation hypotheses citing source chunk digests.",
+      "ready_outcome": "situations_extracted",
+      "pinned": [
+        "guardrail.content-addressed-chunks",
+        "tool.brainstorm-miner"
+      ],
+      "slots": [
+        {
+          "name": "chunks",
+          "category": "noun.public_source",
+          "description": "Pins of content-addressed chunks.",
+          "many": true,
+          "max": 40
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "situation",
+          "template": "template.situation-record",
+          "max": 30
+        }
+      ],
+      "steps": [
+        "Inspect each pinned chunk and identify the concrete actor, operational problem, and verification constraint.",
+        "Bind every situation record to its exact source_chunk_id and source_chunk_sha256."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Every situation validates against template.situation-record.",
+          "method": "deterministic"
+        },
+        {
+          "id": "chunk-hash-linked",
+          "check": "source_chunk_sha256 matches one of the input chunk pins.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "brainstorm-chunking-and-situation-miner.chunk-canonical-notes"
+      ]
+    },
+    {
+      "slug": "score-category-coverage-gaps",
+      "kind": "verb.compile_dag",
+      "title": "Rank candidate seed-pack categories by demand and coverage gap",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Aggregate situation demand per category, divide by one plus existing pack count, and verify the ranked report against mining-checks.",
+      "outcome": "A ranked category gap report passing all deterministic checks.",
+      "ready_outcome": "gaps_scored",
+      "pinned": [
+        "mining-checks",
+        "rules.shingle-dedup-and-gap-math",
+        "tool.brainstorm-miner"
+      ],
+      "slots": [
+        {
+          "name": "dedup_summary",
+          "category": "noun.eval_run",
+          "description": "Pin of deduplication summary."
+        },
+        {
+          "name": "situations",
+          "category": "noun.seed_hypothesis",
+          "description": "Pins of extracted situations.",
+          "many": true,
+          "max": 30
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "gap_report",
+          "template": "template.category-gap-report"
+        }
+      ],
+      "steps": [
+        "Compute gap_score = round(demand_score / (1 + existing_pack_count), 4) for each candidate category.",
+        "Sort categories by gap_score descending and run mining-checks before returning."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Report validates against template.category-gap-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "checks-pass",
+          "check": "Report passes mining-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "brainstorm-chunking-and-situation-miner.extract-real-world-situations"
+      ]
+    }
+  ]
+}

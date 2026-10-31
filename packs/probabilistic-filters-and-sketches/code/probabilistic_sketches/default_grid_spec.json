@@ -1,0 +1,158 @@
+{
+  "grid_id": "probabilistic-filters-and-sketches-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "parameters": [
+    {
+      "name": "filter_strategy",
+      "param_type": "choice",
+      "choices": ["blocked_bloom", "cuckoo", "static_xor"],
+      "default": "cuckoo"
+    },
+    {
+      "name": "support_deletes",
+      "param_type": "boolean",
+      "default": true
+    },
+    {
+      "name": "fingerprint_bits",
+      "param_type": "integer_range",
+      "low": 8,
+      "high": 16,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "name": "simhash_probe_radius_bits",
+      "param_type": "integer_range",
+      "low": 0,
+      "high": 2,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "name": "contamination_jaccard_threshold",
+      "param_type": "float_range",
+      "low": 0.3,
+      "high": 0.9,
+      "step": 0.1,
+      "default": 0.5
+    }
+  ],
+  "constraints": [
+    {
+      "id": "deletes-require-cuckoo",
+      "when": { "support_deletes": true },
+      "require_in": { "filter_strategy": ["cuckoo"] }
+    }
+  ],
+  "regime_defaults": {
+    "one_sided_read_shield": {
+      "filter_strategy": "blocked_bloom",
+      "support_deletes": false,
+      "fingerprint_bits": 8,
+      "simhash_probe_radius_bits": 1,
+      "contamination_jaccard_threshold": 0.5
+    },
+    "mutable_spider_frontier": {
+      "filter_strategy": "cuckoo",
+      "support_deletes": true,
+      "fingerprint_bits": 12,
+      "simhash_probe_radius_bits": 1,
+      "contamination_jaccard_threshold": 0.5
+    },
+    "immutable_edge_lookup": {
+      "filter_strategy": "static_xor",
+      "support_deletes": false,
+      "fingerprint_bits": 8,
+      "simhash_probe_radius_bits": 1,
+      "contamination_jaccard_threshold": 0.5
+    }
+  },
+  "hash_constants": {
+    "digest_algorithm": "blake2b",
+    "digest_bytes": 32,
+    "word_bytes": 8,
+    "bits_per_byte": 8,
+    "hex_radix": 16,
+    "hash64_bits": 64
+  },
+  "blocked_bloom": {
+    "num_blocks": 64,
+    "block_bits": 512,
+    "num_hashes": 6,
+    "poisson_tail_terms": 48,
+    "poisson_lambda_cutoff": 20.0,
+    "round_digits": 6
+  },
+  "cuckoo_filter": {
+    "bucket_power": 9,
+    "bucket_size": 4,
+    "fingerprint_bits": 12,
+    "max_kicks": 500,
+    "target_load_factor": 0.85,
+    "min_bucket_power": 2,
+    "header_field_bits": 32
+  },
+  "xor_filter": {
+    "fingerprint_bits": 8,
+    "num_segments": 3,
+    "size_multiplier": 1.23,
+    "segment_padding": 4,
+    "min_segment_length": 4,
+    "base_seed": 104729,
+    "max_seed_retries": 64,
+    "round_digits": 3
+  },
+  "simhash_lsh": {
+    "total_bits": 128,
+    "hex_chars": 32,
+    "num_bands": 8,
+    "band_bits": 16,
+    "band_hex_chars": 4,
+    "exact_radius_bits": 0,
+    "single_bit_radius": 1,
+    "double_bit_radius": 2,
+    "default_probe_radius_bits": 1,
+    "max_two_bit_probes": 64,
+    "shingle_char_width": 4,
+    "simhash_digest_bytes": 16,
+    "benchmark_distances": [8, 12, 16, 20, 24],
+    "benchmark_trials_per_distance": 250,
+    "benchmark_seed": 42,
+    "round_digits": 4
+  },
+  "minhash_lsh": {
+    "shingle_words": 3,
+    "num_bands": 16,
+    "rows_per_band": 4,
+    "mersenne_prime_exp": 61,
+    "coeff_seed": 7919,
+    "contamination_jaccard_threshold": 0.5,
+    "round_digits": 4
+  },
+  "streaming_sketch": {
+    "cms_depth": 4,
+    "cms_width": 512,
+    "hk_depth": 2,
+    "hk_width": 256,
+    "hk_fingerprint_bits": 16,
+    "hk_decay_base": 1.08,
+    "hk_top_k": 5,
+    "coin_resolution_bits": 30,
+    "hll_precision": 8,
+    "hll_alpha_16": 0.673,
+    "hll_alpha_32": 0.697,
+    "hll_alpha_64": 0.709,
+    "hll_alpha_inf_numer": 0.7213,
+    "hll_alpha_inf_denom": 1.079,
+    "hll_linear_counting_factor": 2.5,
+    "hll_small_registers_16": 16,
+    "hll_small_registers_32": 32,
+    "hll_small_registers_64": 64,
+    "round_digits": 2
+  },
+  "formatting": {
+    "json_indent": 2
+  }
+}

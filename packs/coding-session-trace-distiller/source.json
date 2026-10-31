@@ -1,0 +1,948 @@
+{
+  "pack_id": "coding-session-trace-distiller",
+  "title": "Coding session trace distiller",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for mining sanitized multi-hour AI coding session JSONL transcripts into reusable failure tombstones, tool-error loops, verified fix recipes, and prompt-shim candidates, with tested standard-library Python code.",
+  "boundaries": [
+    "Every transcript is scrubbed for credentials, personal email addresses, and workstation home paths before mining.",
+    "An edit without both an earlier failing check and a later passing check is never recorded as a verified fix recipe.",
+    "Prompt shims remain candidate proposals until an owner reviews and admits them.",
+    "Workers create nouns and propose verbs; importing this pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for distilling coding session JSONL traces into verified operational knowledge",
+      "value": {
+        "lets_workers": "Scrub raw coding-session JSONL transcripts locally, detect repeated tool-error loops, extract dead-end failure tombstones, isolate fix recipes verified by passing checks, and draft bounded prompt-shim candidates.",
+        "not_for": "Training model weights, grading individual engineers, or exporting unredacted transcripts.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "coding-session-trace-distiller.redact-session-trace"
+            },
+            "when": "First: scrub secrets, personal addresses, and home paths from local JSONL."
+          },
+          {
+            "verb": {
+              "$verb": "coding-session-trace-distiller.mine-error-loops-and-tombstones"
+            },
+            "when": "Find repeated tool-call failure streaks and abandoned approaches."
+          },
+          {
+            "verb": {
+              "$verb": "coding-session-trace-distiller.extract-verified-fix-recipes"
+            },
+            "when": "Isolate failing-check to edit to passing-check sequences."
+          },
+          {
+            "verb": {
+              "$verb": "coding-session-trace-distiller.draft-prompt-shim-candidates"
+            },
+            "when": "Turn preventable loops and tombstones into scoped guard instructions."
+          },
+          {
+            "verb": {
+              "$verb": "coding-session-trace-distiller.compile-distillation-report"
+            },
+            "when": "Combine counts, tombstones, verified fixes, and shims into one checked report."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.redact-before-distill"
+          },
+          {
+            "$pin": "guardrail.verified-fix-needs-check"
+          },
+          {
+            "$pin": "guardrail.shims-stay-proposals"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.session-distiller"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.redact-before-distill"
+        ],
+        [
+          "requires_noun",
+          "guardrail.verified-fix-needs-check"
+        ],
+        [
+          "requires_noun",
+          "guardrail.shims-stay-proposals"
+        ],
+        [
+          "requires_noun",
+          "rules.trace-redaction-and-loops"
+        ],
+        [
+          "requires_noun",
+          "tool.session-distiller"
+        ],
+        [
+          "requires_noun",
+          "template.distillation-report"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: sanitize first, then separate dead ends from verified fixes",
+      "category_reason": "Reusable multi-step procedure governing every verb in the pack.",
+      "value": {
+        "lifecycle": [
+          "redact-session-trace normalizes paths and strips credentials and personal addresses before any analysis.",
+          "mine-error-loops-and-tombstones groups consecutive failures with matching tool and normalized error signature.",
+          "extract-verified-fix-recipes pairs failing verification runs with subsequent edits and passing verification runs.",
+          "draft-prompt-shim-candidates writes concise precondition guards backed by loop or tombstone identifiers.",
+          "compile-distillation-report validates the combined report against deterministic record checks."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.redact-before-distill",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: sanitize credentials, addresses, and home paths before mining",
+      "value": {
+        "rule": "No raw session transcript line enters a tombstone, fix recipe, or shim candidate prior to deterministic credential, email, and workstation-path scrubbing.",
+        "how_it_is_checked": "session_distiller.redact_session runs first and records redaction_counts plus sanitized_events_sha256."
+      }
+    },
+    {
+      "slug": "guardrail.verified-fix-needs-check",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: a fix recipe requires a failing check followed by an edit and passing check",
+      "value": {
+        "rule": "Edits lacking either an earlier failing check or a subsequent passing check are classified as unverified_edits and excluded from verified_fix_recipes.",
+        "how_it_is_checked": "extract_verified_fix_recipes enforces the three-stage state transition deterministically."
+      }
+    },
+    {
+      "slug": "guardrail.shims-stay-proposals",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: mined prompt shims remain unactivated candidate proposals",
+      "value": {
+        "rule": "Mined prompt-shim candidates never mutate active system prompts automatically; each records supporting loop ids for human review.",
+        "how_it_is_checked": "Every candidate carries status candidate_proposal and supporting_loop_ids."
+      }
+    },
+    {
+      "slug": "rules.trace-redaction-and-loops",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic rules for error-signature normalization, loop streaks, and fix gating",
+      "value": {
+        "error_normalization": "Take the first non-empty error line, replace line numbers with 'line N' and hex pointers with '0xADDR'.",
+        "loop_threshold": "Two or more unbroken failures of the same tool with identical normalized error signature form a loop; wasted_steps = repeat_count - 1.",
+        "fix_state_machine": "failing_check -> one or more non-reverted file edits -> passing_check."
+      }
+    },
+    {
+      "slug": "template.sanitized-trace",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: sanitized session trace digest and redaction counters",
+      "value": {
+        "describes": "a scrubbed coding-session JSONL summary with redaction counters and event digest",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "session_id",
+            "event_count",
+            "sanitized_events_sha256",
+            "redaction_counts"
+          ],
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "event_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "sanitized_events_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "redaction_counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "secrets_redacted",
+                "emails_redacted",
+                "paths_normalized"
+              ],
+              "properties": {
+                "secrets_redacted": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "emails_redacted": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "paths_normalized": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.failure-tombstone",
+      "category": "noun.negative_tombstone",
+      "role": "template",
+      "title": "Template: coding-session failure tombstone",
+      "value": {
+        "describes": "a dead-end tool loop or abandoned coding branch that future workers should skip",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tombstone_id",
+            "source_kind",
+            "tool",
+            "target",
+            "symptom",
+            "wasted_attempts",
+            "avoid_rule"
+          ],
+          "properties": {
+            "tombstone_id": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 40
+            },
+            "source_kind": {
+              "type": "string",
+              "enum": [
+                "tool_error_loop",
+                "abandoned_branch"
+              ]
+            },
+            "tool": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "symptom": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "wasted_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "avoid_rule": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.verified-fix-recipe",
+      "category": "noun.recovery_playbook",
+      "role": "template",
+      "title": "Template: verified coding fix recipe backed by failing and passing checks",
+      "value": {
+        "describes": "a fix recipe linking a failing check signature, modified files, and passing verification command",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "recipe_id",
+            "verification_status",
+            "failure_step",
+            "failing_command",
+            "failure_signature",
+            "files_modified",
+            "verification_step",
+            "verification_command"
+          ],
+          "properties": {
+            "recipe_id": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 40
+            },
+            "verification_status": {
+              "type": "string",
+              "const": "verified_by_passing_check"
+            },
+            "failure_step": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "failing_command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "failure_signature": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "files_modified": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            },
+            "verification_step": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "verification_command": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.prompt-shim-candidate",
+      "category": "noun.prompt_shim",
+      "role": "template",
+      "title": "Template: candidate prompt shim distilled from recurring session loops",
+      "value": {
+        "describes": "a scoped precondition guard proposed from observed session loops or tombstones",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "shim_id",
+            "target_tool",
+            "when_trigger",
+            "guard_instruction",
+            "supporting_loop_ids",
+            "wasted_steps_preventable"
+          ],
+          "properties": {
+            "shim_id": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 40
+            },
+            "target_tool": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "when_trigger": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "guard_instruction": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "supporting_loop_ids": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "wasted_steps_preventable": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.distillation-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: complete coding-session distillation report",
+      "value": {
+        "describes": "the combined counts, loops, tombstones, verified fixes, and shim candidates for one session",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "session_id",
+            "event_count",
+            "sanitized_events_sha256",
+            "counts"
+          ],
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "event_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "sanitized_events_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "counts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "tool_error_loops",
+                "failure_tombstones",
+                "verified_fix_recipes",
+                "unverified_edits_rejected",
+                "prompt_shim_candidates"
+              ],
+              "properties": {
+                "tool_error_loops": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "failure_tombstones": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "verified_fix_recipes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "unverified_edits_rejected": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "prompt_shim_candidates": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "distillation-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic record checks for distilled session reports",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every distilled coding-session report must satisfy before review.",
+        "deterministic_checks": [
+          {
+            "id": "digest-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "sanitized_events_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "Every report pins the SHA-256 digest of the sanitized JSONL event stream."
+          },
+          {
+            "id": "home-paths-scrubbed",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "/home/[a-z0-9_]+"
+            },
+            "why": "Workstation home directories must be normalized to <HOME> before distillation."
+          },
+          {
+            "id": "fixes-have-steps",
+            "rule": {
+              "rule": "each_has",
+              "path": "verified_fix_recipes",
+              "fields": [
+                "recipe_id",
+                "failing_command",
+                "verification_command"
+              ],
+              "min": 1
+            },
+            "why": "Each verified fix names both its failing reproduction command and passing check."
+          },
+          {
+            "id": "hosts-local",
+            "rule": {
+              "rule": "hosts_local_only",
+              "path": "$"
+            },
+            "why": "Synthetic and local session reports must not embed external host endpoints."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-distilled-report",
+            "label": "known_good",
+            "finding": {
+              "session_id": "synth-session-01",
+              "event_count": 6,
+              "sanitized_events_sha256": "4b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c",
+              "verified_fix_recipes": [
+                {
+                  "recipe_id": "FIX-1a2b3c4d5e",
+                  "failing_command": "python3 -m unittest",
+                  "verification_command": "python3 -m unittest"
+                }
+              ],
+              "note": "Tested locally against http://127.0.0.1:8000 health check in <HOME>/repo."
+            }
+          },
+          {
+            "id": "bad-unscrubbed-home-path",
+            "label": "known_bad",
+            "finding": {
+              "session_id": "synth-session-02",
+              "event_count": 4,
+              "sanitized_events_sha256": "4b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c",
+              "verified_fix_recipes": [
+                {
+                  "recipe_id": "FIX-1a2b3c4d5e",
+                  "failing_command": "pytest /home/devuser/project/tests",
+                  "verification_command": "pytest <HOME>/project/tests"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-missing-verification-cmd",
+            "label": "known_bad",
+            "finding": {
+              "session_id": "synth-session-03",
+              "event_count": 3,
+              "sanitized_events_sha256": "4b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c",
+              "verified_fix_recipes": [
+                {
+                  "recipe_id": "FIX-9999999999",
+                  "failing_command": "python3 -m unittest",
+                  "verification_command": ""
+                }
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "good-distilled-report": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-unscrubbed-home-path": {
+            "verdict": "fail",
+            "failed_checks": [
+              "home-paths-scrubbed"
+            ]
+          },
+          "bad-missing-verification-cmd": {
+            "verdict": "fail",
+            "failed_checks": [
+              "fixes-have-steps"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.session-distiller",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: session_distiller standard-library CLI and library",
+      "value": {
+        "name": "session_distiller",
+        "code": {
+          "$code": "coding-session-trace-distiller"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m session_distiller redact SESSION.jsonl",
+          "python3 -m session_distiller distill SESSION.jsonl [--session-id ID] [--min-loop-repeats 2]"
+        ],
+        "does": [
+          "Scrubs bearer tokens, API keys, private key blocks, personal emails, and home paths.",
+          "Finds consecutive tool-error streaks, dead-end tombstones, verified fix recipes, and candidate prompt shims."
+        ],
+        "does_not": [
+          "Open network sockets, call models, or mutate the input transcript."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.trace-redaction-and-loops"
+        ]
+      ]
+    },
+    {
+      "slug": "source.jsonlines-spec",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "JSON Lines specification (jsonlines.org)",
+      "value": {
+        "url": "https://jsonlines.org/",
+        "checked_on": "2026-10-31",
+        "provides": "Line-delimited UTF-8 JSON record framing used by coding-agent session transcripts."
+      }
+    },
+    {
+      "slug": "source.otel-gen-ai",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "OpenTelemetry Semantic Conventions for Generative AI",
+      "value": {
+        "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+        "checked_on": "2026-10-31",
+        "provides": "Standard span and event concepts for tool invocations, errors, and token accounting."
+      }
+    },
+    {
+      "slug": "example.verified-fix",
+      "category": "noun.recovery_playbook",
+      "role": "example",
+      "title": "Worked example: synthetic verified fix recipe from a 6-step coding trace",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.verified-fix-recipe"
+        },
+        "instance": {
+          "recipe_id": "FIX-8f21c04b9a",
+          "verification_status": "verified_by_passing_check",
+          "failure_step": 1,
+          "failing_command": "python3 -m unittest",
+          "failure_signature": "KeyError: 'timeout' in <HOME>/work/cfg.py",
+          "files_modified": [
+            "<HOME>/work/cfg.py"
+          ],
+          "verification_step": 6,
+          "verification_command": "python3 -m unittest"
+        },
+        "shows": "A synthetic fix recipe accepted only after step 6 exited zero on the failing suite from step 1.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "redact-session-trace",
+      "kind": "verb.ingest",
+      "title": "Scrub credentials, personal addresses, and home paths from a local session JSONL",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run session_distiller redact on a local coding-session JSONL transcript and record redaction counters plus the sanitized event stream digest.",
+      "outcome": "A sanitized trace summary with SHA-256 digest and redaction counts.",
+      "ready_outcome": "trace_redacted",
+      "pinned": [
+        "guardrail.redact-before-distill",
+        "rules.trace-redaction-and-loops",
+        "tool.session-distiller"
+      ],
+      "slots": [
+        {
+          "name": "raw_trace_locator",
+          "category": "noun.public_source",
+          "description": "Local workspace locator of the raw JSONL transcript."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the local JSONL transcript inside the assigned workspace."
+      ],
+      "produces": [
+        {
+          "name": "sanitized_trace",
+          "template": "template.sanitized-trace"
+        }
+      ],
+      "steps": [
+        "Run python3 -m session_distiller redact on the local JSONL file inside the workspace.",
+        "Confirm zero unredacted credential prefixes or /home/<user> paths remain in the output.",
+        "Record redaction_counts and sanitized_events_sha256 against template.sanitized-trace."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Output validates against template.sanitized-trace.",
+          "method": "deterministic"
+        },
+        {
+          "id": "paths-normalized",
+          "check": "No raw workstation home prefix remains in sanitized output.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "mine-error-loops-and-tombstones",
+      "kind": "verb.problemize",
+      "title": "Extract tool-error loops and failure tombstones from a sanitized trace",
+      "claimant": "agent",
+      "summary": "Group consecutive tool-call failures and abandoned branches from a sanitized coding trace into failure tombstones.",
+      "outcome": "Failure tombstones naming each repeated error loop or abandoned approach.",
+      "ready_outcome": "tombstones_mined",
+      "pinned": [
+        "rules.trace-redaction-and-loops",
+        "tool.session-distiller"
+      ],
+      "slots": [
+        {
+          "name": "sanitized_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the sanitized session trace."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Operates on the sanitized local transcript only."
+      ],
+      "produces": [
+        {
+          "name": "tombstone",
+          "template": "template.failure-tombstone",
+          "max": 20
+        }
+      ],
+      "steps": [
+        "Verify the sanitized_trace pin and run session_distiller distill on the scrubbed JSONL.",
+        "Emit one failure tombstone per unique repeated tool-error loop or abandoned session branch.",
+        "Keep wasted_attempts exact so downstream review sees real loop cost."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Every tombstone validates against template.failure-tombstone.",
+          "method": "deterministic"
+        },
+        {
+          "id": "backed-by-steps",
+          "check": "Each tombstone corresponds to at least two repeated errors or an explicit abandoned marker.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "coding-session-trace-distiller.redact-session-trace"
+      ]
+    },
+    {
+      "slug": "extract-verified-fix-recipes",
+      "kind": "verb.distill_reflex",
+      "title": "Extract fix recipes verified by failing-then-passing check runs",
+      "claimant": "agent",
+      "summary": "Isolate coding fixes proven by an observed failing check, file modification, and subsequent passing check while rejecting untested edits.",
+      "outcome": "Verified fix recipes separated cleanly from unverified edits.",
+      "ready_outcome": "fixes_extracted",
+      "pinned": [
+        "guardrail.verified-fix-needs-check",
+        "rules.trace-redaction-and-loops",
+        "tool.session-distiller"
+      ],
+      "slots": [
+        {
+          "name": "sanitized_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the sanitized session trace."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the scrubbed trace in the local workspace."
+      ],
+      "produces": [
+        {
+          "name": "fix_recipe",
+          "template": "template.verified-fix-recipe",
+          "max": 20
+        }
+      ],
+      "steps": [
+        "Run extract_verified_fix_recipes via session_distiller on the scrubbed trace.",
+        "Keep only transitions with a recorded failing command, non-reverted edit, and passing check command.",
+        "Leave untested edits in run_notes rather than promoting them to recipes."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Every fix recipe validates against template.verified-fix-recipe.",
+          "method": "deterministic"
+        },
+        {
+          "id": "step-order-valid",
+          "check": "verification_step is strictly greater than failure_step.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "coding-session-trace-distiller.redact-session-trace"
+      ]
+    },
+    {
+      "slug": "draft-prompt-shim-candidates",
+      "kind": "verb.distill_reflex",
+      "title": "Draft bounded prompt-shim candidates from recurring error loops",
+      "claimant": "agent",
+      "summary": "Convert recurring tool-error loops and dead-end tombstones into concise precondition guards that remain candidate proposals.",
+      "outcome": "Candidate prompt shims linked to supporting loop or tombstone identifiers.",
+      "ready_outcome": "shims_drafted",
+      "pinned": [
+        "guardrail.shims-stay-proposals",
+        "tool.session-distiller"
+      ],
+      "slots": [
+        {
+          "name": "tombstones",
+          "category": "noun.negative_tombstone",
+          "description": "Pins of mined failure tombstones.",
+          "many": true,
+          "max": 20
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "shim_candidate",
+          "template": "template.prompt-shim-candidate",
+          "max": 10
+        }
+      ],
+      "steps": [
+        "Verify the pinned tombstones and group matching tool failure signatures.",
+        "Write one concise when_trigger and guard_instruction per recurring failure mode.",
+        "Keep every shim marked as a proposal for owner review; never mutate live harness settings."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Every shim validates against template.prompt-shim-candidate.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cites-tombstones",
+          "check": "supporting_loop_ids is non-empty for every candidate.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "coding-session-trace-distiller.mine-error-loops-and-tombstones"
+      ]
+    },
+    {
+      "slug": "compile-distillation-report",
+      "kind": "verb.compile_dag",
+      "title": "Compile the checked session distillation report",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Combine sanitized event digest, loop counts, tombstones, verified fix recipes, and shim candidates into one report checked against distillation-checks.",
+      "outcome": "A distillation report passing all deterministic record checks.",
+      "ready_outcome": "distillation_compiled",
+      "pinned": [
+        "distillation-checks",
+        "guardrail.redact-before-distill",
+        "guardrail.verified-fix-needs-check"
+      ],
+      "slots": [
+        {
+          "name": "sanitized_trace",
+          "category": "noun.eval_run",
+          "description": "Pin of the sanitized trace."
+        },
+        {
+          "name": "tombstones",
+          "category": "noun.negative_tombstone",
+          "description": "Pins of mined tombstones.",
+          "many": true,
+          "max": 20,
+          "required": false
+        },
+        {
+          "name": "fix_recipes",
+          "category": "noun.recovery_playbook",
+          "description": "Pins of verified fix recipes.",
+          "many": true,
+          "max": 20,
+          "required": false
+        },
+        {
+          "name": "shim_candidates",
+          "category": "noun.prompt_shim",
+          "description": "Pins of candidate prompt shims.",
+          "many": true,
+          "max": 10,
+          "required": false
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "report",
+          "template": "template.distillation-report"
+        }
+      ],
+      "steps": [
+        "Verify all input pins share the same sanitized session digest.",
+        "Assemble counts for loops, tombstones, verified fixes, rejected unverified edits, and shim candidates.",
+        "Run distillation-checks before returning the report."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Report validates against template.distillation-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "record-checks-pass",
+          "check": "Report passes every rule in distillation-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "coding-session-trace-distiller.mine-error-loops-and-tombstones",
+        "coding-session-trace-distiller.extract-verified-fix-recipes",
+        "coding-session-trace-distiller.draft-prompt-shim-candidates"
+      ]
+    }
+  ]
+}

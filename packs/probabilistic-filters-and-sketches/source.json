@@ -1,0 +1,568 @@
+{
+  "pack_id": "probabilistic-filters-and-sketches",
+  "title": "Probabilistic filters and sketches",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for cache-line blocked Bloom filters, deletable Cuckoo filters, static Xor filters, multi-probe LSH and streaming sketches.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "evaluation-design",
+    "wiring-and-conformance-checks"
+  ],
+  "boundaries": [
+    "BlockedBloomFilter, CuckooFilter and StaticXorFingerprintFilter act strictly as one-sided membership shields: negative checks guarantee absence for static/unevicted keys, while positive checks still require exact downstream verification when collisions matter.",
+    "CuckooFilter deletions apply only to keys previously inserted into the filter; deleting uninserted keys can create false negatives.",
+    "All bit-widths, hash counts, bucket capacities, probe radii and sketch dimensions resolve from externalized configuration grid specs and pass ZeroHardcodedValuesAstGate.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for cache-line blocked Bloom filters, deletable Cuckoo filters, static Xor filters, multi-probe LSH and streaming sketches",
+      "value": {
+        "lets_workers": "Shield expensive storage and network reads with cache-line BlockedBloomFilter bitsets, prune gone 404 spider targets in O(1) with CuckooFilter, pack static edge tables into ~9-10 bits per key with StaticXorFingerprintFilter, recover near-duplicate recall across 128-bit SimHash bands with MultiProbeSimHashLshExpander, detect holdout contamination with MinHashLshDecontaminator and summarize Zipfian streams with ConservativeCountMinHeavyKeeperHll.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "probabilistic-filters-and-sketches.build-and-query-membership-filters"
+            },
+            "when": "Construct grid-governed BlockedBloomFilter, CuckooFilter or StaticXorFingerprintFilter structures for read shielding, O(1) target deletion or static graph membership."
+          },
+          {
+            "verb": {
+              "$verb": "probabilistic-filters-and-sketches.expand-multiprobe-lsh-and-decontaminate"
+            },
+            "when": "Expand 128-bit SimHash bands with 1-bit and budgeted 2-bit multi-probe neighbors and screen candidate corpora against evaluation holdouts via banded MinHash LSH."
+          },
+          {
+            "verb": {
+              "$verb": "probabilistic-filters-and-sketches.verify-sketch-bounds-and-ast-conformance"
+            },
+            "when": "Independently verify ConservativeCountMinHeavyKeeperHll summaries, SimHash recall curves, filter false-negative guarantees and ZeroHardcodedValuesAstGate conformance."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.one-sided-membership-and-safe-cuckoo-delete"
+          },
+          {
+            "$pin": "guardrail.zero-inline-sketch-magic-literals"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.probabilistic-sketches"
+        },
+        "worked_example": "Synthetic filter, multi-probe LSH, holdout decontamination and streaming sketch bundle recomputed in test_probabilistic_sketches.py: verifies 0% false negatives on unioned BlockedBloomFilter shards, O(1) 404 CuckooFilter deletion with 56-char base64 round-trip, 9.936 bits/key StaticXorFingerprintFilter over 1,000 static edges, 136-key 1-bit SimHash multi-probe recall recovery (0.18 -> 0.788 at Hamming distance 24 and 100% Pigeonhole recovery), holdout contamination detection and HeavyKeeper/HLL stream summarization."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.one-sided-membership-and-safe-cuckoo-delete"
+        ],
+        [
+          "requires_noun",
+          "guardrail.zero-inline-sketch-magic-literals"
+        ],
+        [
+          "requires_noun",
+          "spec.filter-lsh-and-sketch-grid"
+        ],
+        [
+          "requires_noun",
+          "rules.multiprobe-recall-and-sketch-selection"
+        ],
+        [
+          "requires_noun",
+          "tool.probabilistic-sketches"
+        ],
+        [
+          "requires_noun",
+          "template.probabilistic-sketches-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.one-sided-membership-and-safe-cuckoo-delete",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: membership filters never delete uninserted keys and require Cuckoo strategy when deletions are enabled",
+      "category_reason": "Prevents silent false negatives from deleting absent fingerprints or using append-only Bloom/Xor filters on mutable sets.",
+      "value": {
+        "rule": "Use BlockedBloomFilter or StaticXorFingerprintFilter only for append-only or immutable sets, require CuckooFilter whenever O(1) deletion of gone 404 items is enabled and delete only previously inserted targets.",
+        "how_it_is_checked": "Grid constraint deletes-require-cuckoo rejects non-Cuckoo delete regimes, and unit tests verify 0% false negatives across remaining live keys after 404 pruning."
+      }
+    },
+    {
+      "slug": "guardrail.zero-inline-sketch-magic-literals",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: filter bit-widths, hash counts, probe budgets and sketch dimensions forbid hardcoded inline scalars",
+      "category_reason": "Keeps every probabilistic structure parameterized by externalized configuration grids.",
+      "value": {
+        "rule": "Operational Python functions and classes in probabilistic_sketches may only inline canonical mathematical identities (-1, 0, 1, -1.0, 0.0, 1.0); all bit-widths, bucket sizes, kick limits, radices and thresholds resolve from default_grid_spec.json.",
+        "how_it_is_checked": "ZeroHardcodedValuesAstGate.scan_paths statically scans every module in probabilistic_sketches during make check."
+      }
+    },
+    {
+      "slug": "spec.filter-lsh-and-sketch-grid",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: BlockedBloom, Cuckoo, StaticXor, 128-bit Multi-Probe SimHash, MinHash LSH and CMS/HeavyKeeper/HLL invariants",
+      "category_reason": "Defines deterministic hashing, peeling, multi-probe expansion and sketch error invariants.",
+      "value": {
+        "structures": [
+          "BlockedBloomFilter",
+          "CuckooFilter",
+          "StaticXorFingerprintFilter",
+          "MultiProbeSimHashLshExpander",
+          "MinHashLshDecontaminator",
+          "ConservativeCountMinHeavyKeeperHll"
+        ],
+        "simhash_total_bits": 128,
+        "simhash_bands": 8,
+        "simhash_exact_keys": 8,
+        "simhash_one_bit_multiprobe_keys": 136,
+        "xor_target_bits_per_key_range": [
+          9.0,
+          10.5
+        ]
+      }
+    },
+    {
+      "slug": "rules.multiprobe-recall-and-sketch-selection",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Regime selection across probabilistic filters, multi-probe SimHash radii and streaming sketches",
+      "category_reason": "Zero-model procedure matching workload mutability and recall requirements to deterministic probabilistic structures.",
+      "value": {
+        "regime_mapping": {
+          "one_sided_read_shield": "BlockedBloomFilter",
+          "mutable_spider_frontier": "CuckooFilter + HyperLogLog",
+          "immutable_edge_lookup": "StaticXorFingerprintFilter",
+          "paraphrase_candidate_lookup": "MultiProbeSimHashLshExpander",
+          "holdout_decontamination": "MinHashLshDecontaminator",
+          "zipfian_telemetry_stream": "ConservativeCountMinHeavyKeeperHll"
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.probabilistic-sketches",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library probabilistic filters, multi-probe LSH expanders and streaming sketches",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "probabilistic filters and sketches",
+        "code": {
+          "$code": "probabilistic-filters-and-sketches"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m probabilistic_sketches --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Implements BlockedBloomFilter with Kirsch-Mitzenmacher double hashing, bitwise union combination and theoretical/empirical FPR estimation.",
+          "Implements CuckooFilter with partial-key cuckoo hashing, O(1) delete and compact base64 serialization plus StaticXorFingerprintFilter with 3-wise hypergraph peeling.",
+          "Implements MultiProbeSimHashLshExpander (136 0/1-bit + budgeted 2-bit probe keys), MinHashLshDecontaminator and ConservativeCountMinHeavyKeeperHll verified by ZeroHardcodedValuesAstGate."
+        ],
+        "does_not": [
+          "Perform network I/O, mutate live services or inline hardcoded numeric thresholds."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.filter-lsh-and-sketch-grid"
+        ]
+      ]
+    },
+    {
+      "slug": "template.probabilistic-sketches-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: probabilistic filter, multi-probe SimHash recall, holdout decontamination and sketch receipt",
+      "value": {
+        "describes": "a deterministic receipt of BlockedBloom, Cuckoo and StaticXor membership checks, 128-bit SimHash multi-probe recall metrics, MinHash holdout decontamination and CMS/HeavyKeeper/HLL summaries",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "bloom_zero_false_negatives",
+            "bloom_theoretical_fpr",
+            "cuckoo_live_present",
+            "cuckoo_deleted_absent",
+            "cuckoo_base64_chars",
+            "xor_zero_false_negatives",
+            "xor_bits_per_key",
+            "simhash_exact_probe_keys",
+            "simhash_1bit_probe_keys",
+            "simhash_pigeonhole_exact_hit",
+            "simhash_pigeonhole_1bit_hit",
+            "simhash_target_exact_recall",
+            "simhash_target_1bit_recall",
+            "contaminated_candidate_ids",
+            "clean_candidate_ids",
+            "heavy_hitter_top_key",
+            "heavy_hitter_cms_estimate",
+            "hll_distinct_estimate"
+          ],
+          "properties": {
+            "bloom_zero_false_negatives": {
+              "type": "boolean"
+            },
+            "bloom_theoretical_fpr": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "cuckoo_live_present": {
+              "type": "boolean"
+            },
+            "cuckoo_deleted_absent": {
+              "type": "boolean"
+            },
+            "cuckoo_base64_chars": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "xor_zero_false_negatives": {
+              "type": "boolean"
+            },
+            "xor_bits_per_key": {
+              "type": "number",
+              "minimum": 1.0
+            },
+            "simhash_exact_probe_keys": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "simhash_1bit_probe_keys": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "simhash_pigeonhole_exact_hit": {
+              "type": "boolean"
+            },
+            "simhash_pigeonhole_1bit_hit": {
+              "type": "boolean"
+            },
+            "simhash_target_exact_recall": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "simhash_target_1bit_recall": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "contaminated_candidate_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "clean_candidate_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "heavy_hitter_top_key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "heavy_hitter_cms_estimate": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "hll_distinct_estimate": {
+              "type": "number",
+              "minimum": 0.0
+            }
+          }
+        },
+        "example": {
+          "bloom_zero_false_negatives": true,
+          "bloom_theoretical_fpr": 0.0,
+          "cuckoo_live_present": true,
+          "cuckoo_deleted_absent": true,
+          "cuckoo_base64_chars": 56,
+          "xor_zero_false_negatives": true,
+          "xor_bits_per_key": 9.936,
+          "simhash_exact_probe_keys": 8,
+          "simhash_1bit_probe_keys": 136,
+          "simhash_pigeonhole_exact_hit": false,
+          "simhash_pigeonhole_1bit_hit": true,
+          "simhash_target_exact_recall": 0.18,
+          "simhash_target_1bit_recall": 0.788,
+          "contaminated_candidate_ids": [
+            "cand-contaminated"
+          ],
+          "clean_candidate_ids": [
+            "cand-clean"
+          ],
+          "heavy_hitter_top_key": "verb:verify-gate",
+          "heavy_hitter_cms_estimate": 40,
+          "hll_distinct_estimate": 4.03
+        }
+      }
+    },
+    {
+      "slug": "example.probabilistic-sketches-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic filter shards, 404 Cuckoo targets, 1,000 Xor edges, LSH pairs and stream events",
+      "category_reason": "Synthetic fixture recomputed by test_probabilistic_sketches.py.",
+      "value": {
+        "bloom_shard_a": [
+          "record:alpha-01",
+          "record:alpha-02",
+          "record:alpha-03"
+        ],
+        "bloom_shard_b": [
+          "record:beta-01",
+          "record:beta-02",
+          "record:beta-03"
+        ],
+        "cuckoo_items": [
+          "https://example.invalid/repo/alpha-1",
+          "https://example.invalid/repo/alpha-2",
+          "https://example.invalid/repo/gone-404",
+          "https://example.invalid/repo/beta-3"
+        ],
+        "cuckoo_gone_items": [
+          "https://example.invalid/repo/gone-404"
+        ],
+        "static_edge_prefix": "dag-edge",
+        "static_edge_count": 1000,
+        "simhash_distances": [
+          8,
+          16,
+          24
+        ],
+        "simhash_trials": 250,
+        "simhash_seed": 42,
+        "simhash_report_distance": 24,
+        "holdout_docs": [
+          {
+            "id": "holdout-q1",
+            "text": "Compute deterministic cache line blocked bloom filter false positive probability under kirsch mitzenmacher double hashing"
+          }
+        ],
+        "candidate_docs": [
+          {
+            "id": "cand-contaminated",
+            "text": "Compute deterministic cache line blocked bloom filter false positive probability under kirsch mitzenmacher hashing"
+          },
+          {
+            "id": "cand-clean",
+            "text": "Balanced caption line breaking avoids orphan words and trailing prepositions across narrow viewport cards"
+          }
+        ],
+        "stream_events": [
+          {
+            "key": "verb:verify-gate",
+            "count": 40
+          },
+          {
+            "key": "verb:probe-source",
+            "count": 12
+          },
+          {
+            "key": "verb:ingest-doc",
+            "count": 3
+          },
+          {
+            "key": "verb:compile-dag",
+            "count": 1
+          }
+        ],
+        "shows": "Synthetic filter, multi-probe LSH, holdout decontamination and streaming sketch workload.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.probabilistic-sketches-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed probabilistic filter, multi-probe LSH and streaming sketch receipt",
+      "category_reason": "Synthetic receipt verified by test_probabilistic_sketches.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.probabilistic-sketches-receipt"
+        },
+        "instance": {
+          "bloom_zero_false_negatives": true,
+          "bloom_theoretical_fpr": 0.0,
+          "cuckoo_live_present": true,
+          "cuckoo_deleted_absent": true,
+          "cuckoo_base64_chars": 56,
+          "xor_zero_false_negatives": true,
+          "xor_bits_per_key": 9.936,
+          "simhash_exact_probe_keys": 8,
+          "simhash_1bit_probe_keys": 136,
+          "simhash_pigeonhole_exact_hit": false,
+          "simhash_pigeonhole_1bit_hit": true,
+          "simhash_target_exact_recall": 0.18,
+          "simhash_target_1bit_recall": 0.788,
+          "contaminated_candidate_ids": [
+            "cand-contaminated"
+          ],
+          "clean_candidate_ids": [
+            "cand-clean"
+          ],
+          "heavy_hitter_top_key": "verb:verify-gate",
+          "heavy_hitter_cms_estimate": 40,
+          "hll_distinct_estimate": 4.03
+        },
+        "shows": "Recomputes exact 0% false-negative filter guarantees, O(1) Cuckoo deletion, 9.936 bits/key static Xor compactness, 136-key SimHash multi-probe recall lift, holdout contamination hit and CMS/HeavyKeeper/HLL counts.",
+        "source": "Synthetic. Recomputed directly from example.probabilistic-sketches-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.probabilistic-sketches-bundle"
+        ],
+        [
+          "verifies",
+          "template.probabilistic-sketches-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "build-and-query-membership-filters",
+      "kind": "verb.generate_seed",
+      "title": "Construct BlockedBloom, Cuckoo and StaticXor membership filters from grid specifications",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Build cache-line BlockedBloomFilter bitsets with bitwise union combination, mutable CuckooFilter tables supporting O(1) 404 target deletion and compact StaticXorFingerprintFilter tables for static edge sets.",
+      "outcome": "Serialized filter artifacts and deterministic membership metrics.",
+      "ready_outcome": "filters_constructed",
+      "pinned": [
+        "spec.filter-lsh-and-sketch-grid",
+        "rules.multiprobe-recall-and-sketch-selection",
+        "guardrail.one-sided-membership-and-safe-cuckoo-delete",
+        "tool.probabilistic-sketches"
+      ],
+      "slots": [
+        {
+          "name": "input_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of candidate key shards, mutable frontier items and static graph edges."
+        }
+      ],
+      "produces": [
+        {
+          "name": "filter_receipt",
+          "template": "template.probabilistic-sketches-receipt"
+        }
+      ],
+      "steps": [
+        "Load grid dimensions from default_grid_spec.json without inline magic numbers.",
+        "Construct BlockedBloomFilter, CuckooFilter and StaticXorFingerprintFilter instances and verify zero false negatives on live keys."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-false-negatives-and-cuckoo-delete",
+          "check": "All live inserted keys test positive across BlockedBloom, Cuckoo and StaticXor filters and deleted 404 keys test absent.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "expand-multiprobe-lsh-and-decontaminate",
+      "kind": "verb.probe_source",
+      "title": "Expand 128-bit SimHash multi-probe LSH keys and screen corpora for holdout contamination",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Generate 8 exact band keys plus 128 single-bit and budgeted two-bit SimHash multi-probe neighbors to prevent Pigeonhole recall drop, and screen candidate documents against evaluation holdouts using banded MinHash LSH.",
+      "outcome": "Multi-probe SimHash recall benchmark and holdout decontamination report.",
+      "ready_outcome": "lsh_and_decontamination_checked",
+      "pinned": [
+        "spec.filter-lsh-and-sketch-grid",
+        "rules.multiprobe-recall-and-sketch-selection",
+        "tool.probabilistic-sketches"
+      ],
+      "slots": [
+        {
+          "name": "corpus_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of SimHash distance benchmark settings and holdout/candidate document pairs."
+        }
+      ],
+      "produces": [
+        {
+          "name": "lsh_decontamination_receipt",
+          "template": "template.probabilistic-sketches-receipt"
+        }
+      ],
+      "steps": [
+        "Expand 128-bit 8-band SimHash signatures into 136 exact+1-bit probe keys and measure recall across Hamming distances.",
+        "Index holdout evaluation texts with k-word MinHash LSH bands and flag candidate documents exceeding the Jaccard contamination threshold."
+      ],
+      "acceptance": [
+        {
+          "id": "multiprobe-recall-and-holdout-screen",
+          "check": "1-bit multi-probe recovers 100% of 1-flip-per-band Pigeonhole cases and MinHash LSH flags near-duplicate holdout leaks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "probabilistic-filters-and-sketches.build-and-query-membership-filters"
+      ]
+    },
+    {
+      "slug": "verify-sketch-bounds-and-ast-conformance",
+      "kind": "verb.verify_gate",
+      "title": "Independently verify streaming sketch accuracy, worked-example receipts and AST magic-literal gates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Verify ConservativeCountMinHeavyKeeperHll heavy-hitter and HyperLogLog cardinality estimates, recompute worked-example receipts and confirm ZeroHardcodedValuesAstGate passes every operational Python module.",
+      "outcome": "Independent deterministic verification receipt for filters, LSH expanders and sketches.",
+      "ready_outcome": "sketches_and_ast_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.filter-lsh-and-sketch-grid",
+        "guardrail.one-sided-membership-and-safe-cuckoo-delete",
+        "guardrail.zero-inline-sketch-magic-literals",
+        "tool.probabilistic-sketches",
+        "template.probabilistic-sketches-receipt"
+      ],
+      "slots": [
+        {
+          "name": "sketch_eval_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of streaming sketch workload and filter/LSH evaluation bundle."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verified_sketch_receipt",
+          "template": "template.probabilistic-sketches-receipt"
+        }
+      ],
+      "steps": [
+        "Recompute Conservative-Update Count-Min, HeavyKeeper top-K and HyperLogLog linear-counting/harmonic-mean estimates.",
+        "Run ZeroHardcodedValuesAstGate over all operational modules and verify zero inline magic literals."
+      ],
+      "acceptance": [
+        {
+          "id": "ast-and-receipt-recomputation",
+          "check": "ZeroHardcodedValuesAstGate reports zero violations and run_bundle reproduces the exact template-conforming receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "probabilistic-filters-and-sketches.expand-multiprobe-lsh-and-decontaminate"
+      ]
+    }
+  ]
+}

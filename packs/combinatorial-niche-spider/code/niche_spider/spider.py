@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Iterable
+
+from .compact_frontier import (
+    CompactSpiderFrontier,
+    compress_frontier_sketch,
+    load_frontier_grid_spec,
+)
 
 GENERIC_TOPIC_STOPLIST: frozenset[str] = frozenset({
     "react",
@@ -41,6 +47,8 @@ def advance_spider_frontier_and_waves(
     completed_runs: int,
     frontier_batch_size: int = 10,
     max_waves: int = 3,
+    frontier_mode: str = "set",
+    compact_frontier: CompactSpiderFrontier | None = None,
 ) -> dict[str, Any]:
     """Process a BFS frontier slice, enqueue outbound edges and propose bounded follow-up wave specs.
 
@@ -49,16 +57,32 @@ def advance_spider_frontier_and_waves(
     """
     allowed_depth = compute_allowed_spider_depth(completed_runs)
     visited = set(visited_targets)
+    use_compact = frontier_mode == "compact_cuckoo"
+    sketch: CompactSpiderFrontier | None = None
+    if use_compact:
+        if compact_frontier is not None:
+            sketch = compact_frontier
+            for v_item in visited:
+                if not sketch.contains(str(v_item)):
+                    sketch.insert(str(v_item))
+        else:
+            sketch = CompactSpiderFrontier(capacity=max(1, len(visited) + len(frontier_queue)))
+            for v_item in visited:
+                sketch.insert(str(v_item))
+
     remaining_frontier: list[dict[str, Any]] = []
     processed_nodes: list[dict[str, Any]] = []
 
     for node in frontier_queue:
         target = str(node["target"])
         depth = int(node.get("depth", 1))
-        if target in visited:
+        already_seen = sketch.contains(target) if (use_compact and sketch is not None) else (target in visited)
+        if already_seen:
             continue
         if len(processed_nodes) < frontier_batch_size and depth <= allowed_depth:
             visited.add(target)
+            if use_compact and sketch is not None:
+                sketch.insert(target)
             processed_nodes.append(node)
         else:
             remaining_frontier.append(node)
@@ -84,7 +108,8 @@ def advance_spider_frontier_and_waves(
             for linked in find.get("readme_outbound_repos", []):
                 candidates.append({"edge_type": "readme_link", "target": f"repo:{linked}", "depth": next_depth, "from_repo": repo})
             for edge in candidates:
-                if edge["target"] not in visited and all(n["target"] != edge["target"] for n in remaining_frontier):
+                seen_edge = sketch.contains(edge["target"]) if (use_compact and sketch is not None) else (edge["target"] in visited)
+                if not seen_edge and all(n["target"] != edge["target"] for n in remaining_frontier):
                     remaining_frontier.append(edge)
                     enqueued_edges += 1
 
@@ -113,7 +138,7 @@ def advance_spider_frontier_and_waves(
         for src, dst in SYNONYM_MUTATIONS.items():
             stalled_mutations.append(f"{src}->{dst.strip()}")
 
-    return {
+    result: dict[str, Any] = {
         "allowed_spider_depth": allowed_depth,
         "processed_frontier_count": len(processed_nodes),
         "enqueued_edge_count": enqueued_edges,
@@ -124,6 +149,50 @@ def advance_spider_frontier_and_waves(
         "frontier_queue": remaining_frontier,
         "visited_targets": sorted(visited),
     }
+    if use_compact and sketch is not None:
+        packed_b64 = sketch.to_base64()
+        result["frontier_mode"] = "compact_cuckoo"
+        result["compact_frontier_base64"] = packed_b64
+        result["compact_frontier_bytes"] = len(sketch.to_bytes())
+        result["compact_frontier_cardinality"] = sketch.estimate_cardinality()
+    return result
+
+
+def sweep_spider_frontier(
+    *,
+    qualifying_finds: list[dict[str, Any]],
+    frontier_queue: list[dict[str, Any]],
+    visited_targets: set[str] | None = None,
+    gone_targets: Iterable[str] = (),
+    completed_runs: int = 0,
+    frontier_mode: str = "compact_cuckoo",
+    compact_frontier: CompactSpiderFrontier | None = None,
+) -> dict[str, Any]:
+    """Sweep spider frontier with opt-in compact_cuckoo mode and O(1) 404 gone target deletion."""
+    vis = set(visited_targets or ())
+    sketch = compact_frontier
+    pruned_gone = 0
+    if frontier_mode == "compact_cuckoo":
+        if sketch is None:
+            sketch = CompactSpiderFrontier(capacity=max(1, len(vis) + len(frontier_queue)))
+            for item in vis:
+                sketch.insert(str(item))
+        for gone in gone_targets:
+            if sketch.remove_gone(str(gone)):
+                pruned_gone += 1
+            vis.discard(str(gone))
+            vis.discard(f"repo:{gone}")
+    out = advance_spider_frontier_and_waves(
+        qualifying_finds=qualifying_finds,
+        frontier_queue=frontier_queue,
+        visited_targets=vis,
+        completed_runs=completed_runs,
+        frontier_mode=frontier_mode,
+        compact_frontier=sketch,
+    )
+    if frontier_mode == "compact_cuckoo":
+        out["pruned_gone_count"] = pruned_gone
+    return out
 
 
 def evaluate_refresh_and_movers(

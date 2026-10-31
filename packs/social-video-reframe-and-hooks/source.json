@@ -1,0 +1,1009 @@
+{
+  "pack_id": "social-video-reframe-and-hooks",
+  "title": "Social video reframe and hooks",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for planning vertical 9:16 and square 1:1 video cutdowns from 16:9 demos with subject-safe crop trajectories, hook-beat scoring, caption-band reflow, and claim-preservation gates, backed by standard-library Python code.",
+  "boundaries": [
+    "Critical regions wider than the target crop window switch to pillarbox_inset rather than clipping silently.",
+    "No cutdown is marked ready_for_render if a headline claim loses any required qualifier or its evidence timestamp.",
+    "Workers plan trajectories and editorial cuts locally; this pack never uploads or publishes media."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for reframing 16:9 demos into hook-first, claim-preserving social cutdowns",
+      "value": {
+        "lets_workers": "Plan smooth 9:16, 1:1, and 4:5 crop trajectories from 16:9 subject keyframes, score opening hook beats, reflow captions into safe zones under reading-speed caps, and enforce claim-qualifier preservation.",
+        "not_for": "Uploading videos to external social networks or inventing unmeasured product claims.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "social-video-reframe-and-hooks.plan-subject-crop-trajectory"
+            },
+            "when": "Compute stabilized crop keyframes and pillarbox fallbacks."
+          },
+          {
+            "verb": {
+              "$verb": "social-video-reframe-and-hooks.score-opening-hook-beats"
+            },
+            "when": "Rank concrete outcome beats and reject splash intros."
+          },
+          {
+            "verb": {
+              "$verb": "social-video-reframe-and-hooks.reflow-safe-zone-captions"
+            },
+            "when": "Wrap timed captions into safe vertical bands under 18 CPS."
+          },
+          {
+            "verb": {
+              "$verb": "social-video-reframe-and-hooks.audit-claim-preservation"
+            },
+            "when": "Check that retained claims keep qualifiers and evidence beats."
+          },
+          {
+            "verb": {
+              "$verb": "social-video-reframe-and-hooks.compile-cutdown-plan"
+            },
+            "when": "Assemble the checked cutdown plan for local rendering."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.no-silent-subject-clip"
+          },
+          {
+            "$pin": "guardrail.preserve-claim-qualifiers"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.social-reframe"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-silent-subject-clip"
+        ],
+        [
+          "requires_noun",
+          "guardrail.preserve-claim-qualifiers"
+        ],
+        [
+          "requires_noun",
+          "rules.reframe-and-hooks"
+        ],
+        [
+          "requires_noun",
+          "tool.social-reframe"
+        ],
+        [
+          "requires_noun",
+          "template.cutdown-plan"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: subject-safe framing, concrete hook selection, and claim-faithful editing",
+      "value": {
+        "lifecycle": [
+          "plan-subject-crop-trajectory stabilizes horizontal/vertical panning with deadbands and velocity limits.",
+          "score-opening-hook-beats selects an opening beat <= 5s showing concrete motion or output rather than title cards.",
+          "reflow-safe-zone-captions wraps lines <= 32 chars inside vertical safe zones and checks reading speed <= 18 CPS.",
+          "audit-claim-preservation blocks edits that keep a metric while cutting its benchmark scope or caveat.",
+          "compile-cutdown-plan emits one deterministic JSON cutdown plan."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.no-silent-subject-clip",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: wide UI tables or code blocks switch to pillarbox inset instead of clipping",
+      "value": {
+        "rule": "Whenever a subject or critical region exceeds the target crop width, framing_mode switches to pillarbox_inset and records the clip violation explicitly.",
+        "how_it_is_checked": "plan_crop_trajectory checks every critical region against [crop_x, crop_x + crop_w]."
+      }
+    },
+    {
+      "slug": "guardrail.preserve-claim-qualifiers",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: shortened cutdowns keep every qualifier and evidence timestamp of spoken claims",
+      "value": {
+        "rule": "If a cutdown caption states a headline metric, every required qualifier for that claim must remain present in the cutdown captions and its evidence timestamp must lie inside retained segments.",
+        "how_it_is_checked": "check_claim_preservation verifies substring presence and segment timestamp containment."
+      }
+    },
+    {
+      "slug": "rules.reframe-and-hooks",
+      "category": "noun.motion_profile",
+      "role": "rules",
+      "title": "Geometry, pan stabilization, hook scoring, and caption safe-band parameters",
+      "value": {
+        "crop_sizes_from_1920x1080": {
+          "9:16": [
+            608,
+            1080
+          ],
+          "1:1": [
+            1080,
+            1080
+          ],
+          "4:5": [
+            864,
+            1080
+          ]
+        },
+        "pan_deadband_px": 36.0,
+        "max_pan_px_per_sec": 420.0,
+        "safe_vertical_bands": {
+          "9:16": [
+            0.14,
+            0.78
+          ],
+          "1:1": [
+            0.1,
+            0.86
+          ],
+          "4:5": [
+            0.12,
+            0.82
+          ]
+        },
+        "caption_limits": {
+          "max_lines": 2,
+          "max_chars_per_line": 32,
+          "max_chars_per_sec": 18.0
+        }
+      }
+    },
+    {
+      "slug": "template.crop-trajectory",
+      "category": "noun.motion_profile",
+      "role": "template",
+      "title": "Template: subject-safe crop trajectory plan",
+      "value": {
+        "describes": "a velocity-clamped crop keyframe sequence with explicit pillarbox fallbacks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "aspect",
+            "source_size",
+            "crop_size",
+            "all_subjects_safe",
+            "keyframes"
+          ],
+          "properties": {
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "9:16",
+                "1:1",
+                "4:5"
+              ]
+            },
+            "source_size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 2
+              }
+            },
+            "crop_size": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 2
+              }
+            },
+            "all_subjects_safe": {
+              "type": "boolean"
+            },
+            "keyframes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "time_s",
+                  "crop_x",
+                  "crop_y",
+                  "crop_w",
+                  "crop_h",
+                  "framing_mode"
+                ],
+                "properties": {
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "crop_x": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "crop_y": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "crop_w": {
+                    "type": "integer",
+                    "minimum": 2
+                  },
+                  "crop_h": {
+                    "type": "integer",
+                    "minimum": 2
+                  },
+                  "framing_mode": {
+                    "type": "string",
+                    "enum": [
+                      "pan_crop",
+                      "pillarbox_inset"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.hook-ranking",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: ranked opening hook beat candidates",
+      "value": {
+        "describes": "scored opening beats ranked by visual change, audio clarity, and concrete outcome presence",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_hook_seconds",
+            "candidates"
+          ],
+          "properties": {
+            "max_hook_seconds": {
+              "type": "number",
+              "minimum": 1.0,
+              "maximum": 15.0
+            },
+            "candidates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "beat_id",
+                  "start_s",
+                  "end_s",
+                  "hook_score",
+                  "eligible_opening_hook"
+                ],
+                "properties": {
+                  "beat_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "hook_score": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0
+                  },
+                  "eligible_opening_hook": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.caption-reflow",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: safe-zone two-line caption reflow plan",
+      "value": {
+        "describes": "timed two-line caption cues anchored inside vertical safe margins",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "aspect",
+            "all_cues_valid",
+            "cues"
+          ],
+          "properties": {
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "9:16",
+                "1:1",
+                "4:5"
+              ]
+            },
+            "all_cues_valid": {
+              "type": "boolean"
+            },
+            "cues": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "cue_id",
+                  "start_s",
+                  "end_s",
+                  "lines",
+                  "chars_per_sec",
+                  "anchor_y_frac",
+                  "valid"
+                ],
+                "properties": {
+                  "cue_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "start_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "end_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "lines": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    }
+                  },
+                  "chars_per_sec": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "anchor_y_frac": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0
+                  },
+                  "valid": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.claim-audit",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: cutdown claim-preservation audit",
+      "value": {
+        "describes": "audit confirming every retained claim keeps all required qualifiers and its visual evidence timestamp",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_preservation_passed",
+            "claims_checked",
+            "violations"
+          ],
+          "properties": {
+            "claim_preservation_passed": {
+              "type": "boolean"
+            },
+            "claims_checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "violations": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.cutdown-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: unified social cutdown plan",
+      "value": {
+        "describes": "a complete render-ready cutdown plan combining crop keyframes, hook choice, safe captions, and claim audit",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "aspect",
+            "ready_for_render",
+            "selected_hook_beat_id",
+            "claim_preservation_passed",
+            "keyframes"
+          ],
+          "properties": {
+            "aspect": {
+              "type": "string",
+              "enum": [
+                "9:16",
+                "1:1",
+                "4:5"
+              ]
+            },
+            "ready_for_render": {
+              "type": "boolean"
+            },
+            "selected_hook_beat_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "claim_preservation_passed": {
+              "type": "boolean"
+            },
+            "keyframes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2000,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "time_s",
+                  "crop_x",
+                  "crop_y",
+                  "crop_w",
+                  "crop_h",
+                  "framing_mode"
+                ],
+                "properties": {
+                  "time_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "crop_x": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "crop_y": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "crop_w": {
+                    "type": "integer",
+                    "minimum": 2
+                  },
+                  "crop_h": {
+                    "type": "integer",
+                    "minimum": 2
+                  },
+                  "framing_mode": {
+                    "type": "string",
+                    "enum": [
+                      "pan_crop",
+                      "pillarbox_inset"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "cutdown-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for social video cutdown plans",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every short-form cutdown plan must pass before rendering.",
+        "deterministic_checks": [
+          {
+            "id": "valid-aspect",
+            "rule": {
+              "rule": "enum",
+              "path": "aspect",
+              "values": [
+                "9:16",
+                "1:1",
+                "4:5"
+              ]
+            },
+            "why": "Target aspect ratio must be one of the supported social frame shapes."
+          },
+          {
+            "id": "claims-preserved",
+            "rule": {
+              "rule": "enum",
+              "path": "claim_preservation_passed",
+              "values": [
+                true
+              ]
+            },
+            "why": "Cutdowns that drop a claim's required qualifiers or evidence beat cannot proceed."
+          },
+          {
+            "id": "has-keyframes",
+            "rule": {
+              "rule": "each_has",
+              "path": "keyframes",
+              "fields": [
+                "framing_mode",
+                "crop_w",
+                "crop_h"
+              ],
+              "min": 1
+            },
+            "why": "At least one explicit crop keyframe with dimensions and framing mode is required."
+          },
+          {
+            "id": "no-dropped-qualifiers",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "violations",
+              "pattern": "dropped_qualifier"
+            },
+            "why": "Recorded qualifier-drop violations block cutdown readiness."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-9x16-cutdown",
+            "label": "known_good",
+            "finding": {
+              "aspect": "9:16",
+              "claim_preservation_passed": true,
+              "keyframes": [
+                {
+                  "time_s": 0.0,
+                  "crop_w": 608,
+                  "crop_h": 1080,
+                  "framing_mode": "pan_crop"
+                }
+              ],
+              "violations": []
+            }
+          },
+          {
+            "id": "bad-dropped-qualifier",
+            "label": "known_bad",
+            "finding": {
+              "aspect": "9:16",
+              "claim_preservation_passed": false,
+              "keyframes": [
+                {
+                  "time_s": 0.0,
+                  "crop_w": 608,
+                  "crop_h": 1080,
+                  "framing_mode": "pan_crop"
+                }
+              ],
+              "violations": [
+                "dropped_qualifier:warm_cache"
+              ]
+            }
+          },
+          {
+            "id": "bad-unsupported-aspect",
+            "label": "known_bad",
+            "finding": {
+              "aspect": "21:9",
+              "claim_preservation_passed": true,
+              "keyframes": [
+                {
+                  "time_s": 0.0,
+                  "crop_w": 608,
+                  "crop_h": 1080,
+                  "framing_mode": "pan_crop"
+                }
+              ],
+              "violations": []
+            }
+          }
+        ],
+        "expected": {
+          "good-9x16-cutdown": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-dropped-qualifier": {
+            "verdict": "fail",
+            "failed_checks": [
+              "claims-preserved",
+              "no-dropped-qualifiers"
+            ]
+          },
+          "bad-unsupported-aspect": {
+            "verdict": "fail",
+            "failed_checks": [
+              "valid-aspect"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.social-reframe",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: social_reframe standard-library CLI and planner",
+      "value": {
+        "name": "social_reframe",
+        "code": {
+          "$code": "social-video-reframe-and-hooks"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m social_reframe plan SPEC.json --aspect 9:16|1:1|4:5"
+        ],
+        "does": [
+          "Plans deadband-stabilized, velocity-clamped crop windows with pillarbox fallback.",
+          "Scores opening hook beats, reflows two-line safe-zone captions, and audits claim qualifier preservation."
+        ],
+        "does_not": [
+          "Transcode video files, call external APIs, or upload media."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.reframe-and-hooks"
+        ]
+      ]
+    },
+    {
+      "slug": "source.w3c-ttml-captions",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "W3C Timed Text Markup Language 2 (TTML2) Recommendation",
+      "value": {
+        "url": "https://www.w3.org/TR/ttml2/",
+        "checked_on": "2026-10-31",
+        "provides": "Timed-text region placement and line-wrapping conventions for readable captions."
+      }
+    },
+    {
+      "slug": "source.itu-bt709",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "ITU-R BT.709 Parameter values for the HDTV standards",
+      "value": {
+        "url": "https://www.itu.int/rec/R-REC-BT.709",
+        "checked_on": "2026-10-31",
+        "provides": "16:9 1920x1080 square-pixel reference geometry from which 9:16 and 1:1 crops derive."
+      }
+    },
+    {
+      "slug": "example.cutdown-plan",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: synthetic 9:16 cutdown plan preserving qualifiers",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.cutdown-plan"
+        },
+        "instance": {
+          "aspect": "9:16",
+          "ready_for_render": true,
+          "selected_hook_beat_id": "beat-live-result",
+          "claim_preservation_passed": true,
+          "keyframes": [
+            {
+              "time_s": 0.0,
+              "crop_x": 656,
+              "crop_y": 0,
+              "crop_w": 608,
+              "crop_h": 1080,
+              "framing_mode": "pan_crop"
+            }
+          ]
+        },
+        "shows": "A synthetic 9:16 cutdown opening on the verified demo result while keeping benchmark qualifiers intact.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-subject-crop-trajectory",
+      "kind": "verb.solve_draft",
+      "title": "Plan a stabilized 9:16 or 1:1 crop trajectory from 16:9 keyframes",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run social_reframe on 16:9 subject bounding boxes and critical regions to produce deadband-stabilized crop keyframes with pillarbox fallback on wide tables.",
+      "outcome": "A crop trajectory plan with explicit framing modes.",
+      "ready_outcome": "trajectory_planned",
+      "pinned": [
+        "guardrail.no-silent-subject-clip",
+        "rules.reframe-and-hooks",
+        "tool.social-reframe"
+      ],
+      "slots": [
+        {
+          "name": "timeline_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the 16:9 timeline keyframe specification."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads local timeline JSON only."
+      ],
+      "produces": [
+        {
+          "name": "trajectory",
+          "template": "template.crop-trajectory"
+        }
+      ],
+      "steps": [
+        "Verify the timeline_spec pin and run plan_crop_trajectory for the requested aspect ratio.",
+        "Confirm every crop window stays within source frame bounds and switches to pillarbox_inset when a critical region exceeds crop width."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Output validates against template.crop-trajectory.",
+          "method": "deterministic"
+        },
+        {
+          "id": "within-bounds",
+          "check": "crop_x + crop_w <= source_width for every keyframe.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "score-opening-hook-beats",
+      "kind": "verb.situate",
+      "title": "Score and select non-filler opening hook beats",
+      "claimant": "agent",
+      "summary": "Score candidate timeline beats by visual change, audio clarity, and concrete outcome visibility while disqualifying splash cards and throat-clearing intros.",
+      "outcome": "Ranked opening hook candidates with eligibility flags.",
+      "ready_outcome": "hooks_scored",
+      "pinned": [
+        "rules.reframe-and-hooks",
+        "tool.social-reframe"
+      ],
+      "slots": [
+        {
+          "name": "timeline_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the 16:9 timeline specification."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "hook_ranking",
+          "template": "template.hook-ranking"
+        }
+      ],
+      "steps": [
+        "Evaluate each candidate beat with score_hook_beats under max_hook_seconds.",
+        "Disqualify filler openings even when audio clarity is high."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Output validates against template.hook-ranking.",
+          "method": "deterministic"
+        },
+        {
+          "id": "sorted-descending",
+          "check": "Candidates are ordered by descending hook_score.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "reflow-safe-zone-captions",
+      "kind": "verb.solve_draft",
+      "title": "Reflow timed captions into vertical safe zones under reading-speed limits",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Wrap timed transcript cues into at most two lines inside vertical safe bands and flag cues exceeding 18 characters per second.",
+      "outcome": "A safe-zone caption reflow plan.",
+      "ready_outcome": "captions_reflowed",
+      "pinned": [
+        "rules.reframe-and-hooks",
+        "tool.social-reframe"
+      ],
+      "slots": [
+        {
+          "name": "timeline_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the 16:9 timeline specification."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "caption_plan",
+          "template": "template.caption-reflow"
+        }
+      ],
+      "steps": [
+        "Run reflow_captions for the target aspect ratio.",
+        "Shift cues to the upper safe anchor whenever lower_band_occupied is true."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Output validates against template.caption-reflow.",
+          "method": "deterministic"
+        },
+        {
+          "id": "safe-band-honored",
+          "check": "Every anchor_y_frac lies inside the aspect's safe vertical band.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "audit-claim-preservation",
+      "kind": "verb.verify_gate",
+      "title": "Verify retained claims keep required qualifiers and visual evidence timestamps",
+      "claimant": "agent",
+      "summary": "Check every source claim referenced in the cutdown captions to confirm none of its required caveats or evidence timestamps were edited out.",
+      "outcome": "A claim-preservation audit verdict.",
+      "ready_outcome": "claims_audited",
+      "pinned": [
+        "guardrail.preserve-claim-qualifiers",
+        "tool.social-reframe"
+      ],
+      "slots": [
+        {
+          "name": "timeline_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the source timeline and claims."
+        },
+        {
+          "name": "caption_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the reflowed cutdown captions."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "claim_audit",
+          "template": "template.claim-audit"
+        }
+      ],
+      "steps": [
+        "Run check_claim_preservation over source_claims, retained_segments, and cutdown captions.",
+        "Record every missing qualifier or trimmed evidence timestamp in violations."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Output validates against template.claim-audit.",
+          "method": "deterministic"
+        },
+        {
+          "id": "zero-unrecorded-drops",
+          "check": "claim_preservation_passed is true iff violations is empty.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "social-video-reframe-and-hooks.reflow-safe-zone-captions"
+      ]
+    },
+    {
+      "slug": "compile-cutdown-plan",
+      "kind": "verb.compile_dag",
+      "title": "Compile the checked social cutdown plan",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Combine crop keyframes, top eligible hook beat, safe-zone captions, and claim-preservation verdict into one checked cutdown plan.",
+      "outcome": "A cutdown plan validated against cutdown-checks.",
+      "ready_outcome": "cutdown_compiled",
+      "pinned": [
+        "cutdown-checks",
+        "guardrail.no-silent-subject-clip",
+        "guardrail.preserve-claim-qualifiers"
+      ],
+      "slots": [
+        {
+          "name": "trajectory",
+          "category": "noun.motion_profile",
+          "description": "Pin of the crop trajectory."
+        },
+        {
+          "name": "hook_ranking",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the hook ranking."
+        },
+        {
+          "name": "caption_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the caption plan."
+        },
+        {
+          "name": "claim_audit",
+          "category": "noun.eval_run",
+          "description": "Pin of the claim audit."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "cutdown_plan",
+          "template": "template.cutdown-plan"
+        }
+      ],
+      "steps": [
+        "Verify all four component pins and select the highest-scoring eligible opening hook.",
+        "Set ready_for_render true only when an eligible hook exists, all_cues_valid is true, and claim_preservation_passed is true.",
+        "Validate against cutdown-checks before returning."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Plan validates against template.cutdown-plan.",
+          "method": "deterministic"
+        },
+        {
+          "id": "cutdown-checks-pass",
+          "check": "Plan passes cutdown-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "social-video-reframe-and-hooks.plan-subject-crop-trajectory",
+        "social-video-reframe-and-hooks.score-opening-hook-beats",
+        "social-video-reframe-and-hooks.audit-claim-preservation"
+      ]
+    }
+  ]
+}

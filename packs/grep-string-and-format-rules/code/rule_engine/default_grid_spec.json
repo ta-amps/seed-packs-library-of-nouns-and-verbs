@@ -1,0 +1,223 @@
+{
+  "grid_id": "grep-string-and-format-rules-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "parameters": [
+    {
+      "name": "caption_max_chars_per_line",
+      "param_type": "integer_range",
+      "low": 24,
+      "high": 72,
+      "step": 6,
+      "default": 42
+    },
+    {
+      "name": "caption_max_lines",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "name": "entropy_bits_threshold",
+      "param_type": "float_range",
+      "low": 3.5,
+      "high": 4.8,
+      "step": 0.1,
+      "default": 4.0
+    },
+    {
+      "name": "word_boundary_literals",
+      "param_type": "boolean",
+      "default": true
+    },
+    {
+      "name": "strict_duplicate_json_keys",
+      "param_type": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "single-line-caption-wider-minimum",
+      "when": { "caption_max_lines": 1 },
+      "require_in": { "caption_max_chars_per_line": [42, 48, 54, 60, 66, 72] }
+    }
+  ],
+  "regime_defaults": {
+    "public_repo_audit": {
+      "caption_max_chars_per_line": 42,
+      "caption_max_lines": 2,
+      "entropy_bits_threshold": 4.0,
+      "word_boundary_literals": true,
+      "strict_duplicate_json_keys": true
+    },
+    "narrow_card_caption": {
+      "caption_max_chars_per_line": 36,
+      "caption_max_lines": 2,
+      "entropy_bits_threshold": 4.0,
+      "word_boundary_literals": true,
+      "strict_duplicate_json_keys": true
+    }
+  },
+  "grep_rules": {
+    "secret_prefixes": [
+      "ghp_",
+      "github_pat_",
+      "tsk_",
+      "tan_",
+      "hmk_",
+      "AKIA",
+      "sk-"
+    ],
+    "secret_min_total_len": 20,
+    "akia_prefix": "AKIA",
+    "akia_exact_len": 20,
+    "mask_prefix_chars": 4,
+    "outbound_effect_words": [
+      "email",
+      "emails",
+      "post",
+      "posts",
+      "publish",
+      "publishes",
+      "tweet",
+      "tweets",
+      "push",
+      "pushes",
+      "deploy",
+      "deploys",
+      "merge",
+      "merges",
+      "send",
+      "sends",
+      "contact",
+      "contacts",
+      "notify",
+      "ping",
+      "pings",
+      "subscribe",
+      "subscribes",
+      "sign up",
+      "log in",
+      "buy",
+      "buys",
+      "purchase",
+      "purchases",
+      "open an issue",
+      "open a pull request",
+      "file an issue",
+      "public_commons",
+      "unrestricted"
+    ],
+    "negation_cues": [
+      "do not",
+      "don't",
+      "never",
+      "no",
+      "not",
+      "nothing",
+      "nobody",
+      "without",
+      "instead of",
+      "refuse",
+      "refuses",
+      "refused",
+      "refusing",
+      "cannot"
+    ],
+    "accusatory_terms": [
+      "fraudulent",
+      "corrupt",
+      "maliciously",
+      "incompetent",
+      "scam",
+      "deceptive scheme",
+      "guilty of"
+    ],
+    "blocked_visible_stamps": [
+      "SYNTHETIC EXAMPLE",
+      "AI-generated voice",
+      "local run",
+      "planned",
+      "not running",
+      "coming soon"
+    ],
+    "home_path_replacement": "<HOME>/"
+  },
+  "unicode_security": {
+    "trojan_bidi_ranges": [
+      [8234, 8238],
+      [8294, 8297],
+      [1564, 1564]
+    ],
+    "zero_width_ranges": [
+      [8203, 8207],
+      [8288, 8292]
+    ],
+    "mid_text_bom_codepoint": 65279,
+    "variation_selector_ranges": [
+      [65024, 65039],
+      [917760, 917999]
+    ],
+    "tag_block_range": [917504, 917631],
+    "tag_ascii_range": [917536, 917630],
+    "tag_base_offset": 917504,
+    "hex_format_width": 4,
+    "entropy_min_token_len": 20,
+    "entropy_min_char_classes": 3,
+    "entropy_bits_threshold": 4.0,
+    "entropy_round_digits": 4,
+    "exempt_hex_min_len": 32,
+    "exempt_hex_max_len": 64,
+    "mask_prefix_chars": 4,
+    "blocked_name_sha256": [
+      "5ad1e0970bfbf79b3906a248df23a0f6d0be4da8299efd256ac51019a6df290e"
+    ]
+  },
+  "formatter": {
+    "ieee754_safe_int_bits": 53,
+    "em_dash_codepoint": 8212,
+    "em_dash_replacement": " -- ",
+    "caption_max_chars_per_line": 42,
+    "caption_max_lines": 2,
+    "caption_min_words_per_line": 2,
+    "clause_break_bonus": 6,
+    "dangling_end_words": [
+      "a",
+      "an",
+      "the",
+      "of",
+      "in",
+      "to",
+      "for",
+      "on",
+      "at",
+      "by",
+      "with",
+      "from",
+      "and",
+      "or",
+      "but",
+      "nor",
+      "as",
+      "into",
+      "onto"
+    ],
+    "html_entities": [
+      "&mdash;",
+      "&ndash;",
+      "&rarr;",
+      "&larr;",
+      "&nbsp;",
+      "&amp;",
+      "&quot;",
+      "&apos;",
+      "&lt;",
+      "&gt;",
+      "&hellip;"
+    ],
+    "json_indent": 2
+  }
+}

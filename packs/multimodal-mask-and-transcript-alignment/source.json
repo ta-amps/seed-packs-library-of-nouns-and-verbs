@@ -1,0 +1,602 @@
+{
+  "pack_id": "multimodal-mask-and-transcript-alignment",
+  "title": "Multimodal mask and transcript alignment",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for aligning image segmentation masks, speech-to-text word timings, and layout safe zones across multimodal media pipelines, with tested standard-library Python code.",
+  "boundaries": [
+    "Caption and callout overlays must keep mask and HUD area intrusion at or below max_intrusion (default 0.05) or mark occlusion_conflict.",
+    "Audio-visual lead or lag exceeding max_drift_ms (default 250 ms) sets ready_for_render to false.",
+    "Word timestamps with end_s < start_s are rejected before layout routing.",
+    "Workers create nouns and propose verbs; importing this pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for aligning segmentation masks, speech word timings, and layout safe zones",
+      "value": {
+        "lets_workers": "Normalize pixel or polygon segmentation masks, group ASR word timings into caption utterances, check audio-visual cue drift in milliseconds, and select non-occluding layout safe zones.",
+        "not_for": "Fabricating speech transcripts or overriding occlusion conflicts silently.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "multimodal-mask-and-transcript-alignment.normalize-masks-and-utterances"
+            },
+            "when": "First: normalize mask boxes and group word timings into utterances."
+          },
+          {
+            "verb": {
+              "$verb": "multimodal-mask-and-transcript-alignment.audit-audiovisual-cue-drift"
+            },
+            "when": "Check millisecond sync between spoken object cues and mask onset."
+          },
+          {
+            "verb": {
+              "$verb": "multimodal-mask-and-transcript-alignment.route-non-occluding-safe-zones"
+            },
+            "when": "Assign each utterance to the highest-priority non-occluding safe zone."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.non-occluding-captions"
+          },
+          {
+            "$pin": "guardrail.av-drift-budget"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.multimodal-align"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.non-occluding-captions"
+        ],
+        [
+          "requires_noun",
+          "guardrail.av-drift-budget"
+        ],
+        [
+          "requires_noun",
+          "rules.mask-intrusion-and-sync-math"
+        ],
+        [
+          "requires_noun",
+          "tool.multimodal-align"
+        ],
+        [
+          "requires_noun",
+          "template.alignment-report"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: normalize coordinates, verify A/V cue drift, then route safe zones",
+      "category_reason": "Shared geometric and temporal procedure for multimodal layout alignment.",
+      "value": {
+        "lifecycle": [
+          "normalize-masks-and-utterances converts pixel or polygon masks to [0..1] boxes and groups words by pause/length.",
+          "audit-audiovisual-cue-drift computes (word_start_s - mask_onset_s) * 1000 for matched labels.",
+          "route-non-occluding-safe-zones picks the highest-priority zone with intrusion <= max_intrusion and runs alignment-checks."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.non-occluding-captions",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: reroute captions away from segmented subjects and HUD exclusions",
+      "value": {
+        "rule": "Any candidate safe zone whose intersection area divided by zone area exceeds max_intrusion (default 0.05) is disqualified if a cleaner zone exists, or flagged with occlusion_conflict=true.",
+        "how_it_is_checked": "align_multimodal_timeline evaluates mask_intrusion_ratio across all active masks and HUD boxes."
+      }
+    },
+    {
+      "slug": "guardrail.av-drift-budget",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: block render readiness when spoken cues drift beyond 250 ms from mask onset",
+      "value": {
+        "rule": "When abs(av_offset_ms) > max_drift_ms, av_drift_violations increments and ready_for_render becomes false.",
+        "how_it_is_checked": "align_multimodal_timeline records every av_sync_events entry with drift_exceeded."
+      }
+    },
+    {
+      "slug": "rules.mask-intrusion-and-sync-math",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic formulas for box IoU, polygon Shoelace area, intrusion ratio, and A/V offset",
+      "value": {
+        "intrusion_ratio": "intersection_area(zone_box, mask_box) / area(zone_box).",
+        "polygon_conversion": "Tight [min_x, min_y, max_x - min_x, max_y - min_y] box plus half-sum Shoelace area.",
+        "av_offset_ms": "round((word_start_s - first_mask_onset_s) * 1000.0, 2)."
+      }
+    },
+    {
+      "slug": "template.normalized-timeline",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: normalized multimodal mask and utterance timeline",
+      "value": {
+        "describes": "utterance spans and [0..1] normalized mask frames for one media clip",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "clip_id",
+            "utterance_count",
+            "mask_frame_count"
+          ],
+          "properties": {
+            "clip_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "utterance_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mask_frame_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.alignment-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: checked multimodal safe-zone and sync alignment report",
+      "value": {
+        "describes": "safe-zone placements, intrusion ratios, A/V drift counts, and render-readiness flag",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "clip_id",
+            "alignment_plan_sha256",
+            "occlusion_conflicts",
+            "av_drift_violations",
+            "ready_for_render",
+            "placements"
+          ],
+          "properties": {
+            "clip_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "alignment_plan_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "occlusion_conflicts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "av_drift_violations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ready_for_render": {
+              "type": "boolean"
+            },
+            "placements": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "utterance_id",
+                  "selected_zone_id",
+                  "selected_bbox",
+                  "max_intrusion_ratio",
+                  "occlusion_conflict"
+                ],
+                "properties": {
+                  "utterance_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "selected_zone_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "selected_bbox": {
+                    "type": "array",
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "max_intrusion_ratio": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "occlusion_conflict": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "alignment-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for multimodal alignment reports",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every multimodal mask and transcript alignment report must pass.",
+        "deterministic_checks": [
+          {
+            "id": "plan-digest-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "alignment_plan_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "Every alignment report pins the SHA-256 digest of its placement schedule."
+          },
+          {
+            "id": "placements-complete",
+            "rule": {
+              "rule": "each_has",
+              "path": "placements",
+              "fields": [
+                "utterance_id",
+                "selected_zone_id",
+                "selected_bbox"
+              ],
+              "min": 1
+            },
+            "why": "Every utterance placement names its utterance_id, selected_zone_id, and bounding box."
+          },
+          {
+            "id": "hosts-local",
+            "rule": {
+              "rule": "hosts_local_only",
+              "path": "$"
+            },
+            "why": "Alignment reports operate on local media timelines without external hosts."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-alignment-report",
+            "label": "known_good",
+            "finding": {
+              "clip_id": "synth-clip-01",
+              "alignment_plan_sha256": "f0e1d2c3b4a5968778695a4b3c2d1e0ff0e1d2c3b4a5968778695a4b3c2d1e0f",
+              "ready_for_render": true,
+              "placements": [
+                {
+                  "utterance_id": "utt.001",
+                  "selected_zone_id": "top_band",
+                  "selected_bbox": [
+                    0.08,
+                    0.08,
+                    0.84,
+                    0.14
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-missing-zone",
+            "label": "known_bad",
+            "finding": {
+              "clip_id": "synth-clip-02",
+              "alignment_plan_sha256": "f0e1d2c3b4a5968778695a4b3c2d1e0ff0e1d2c3b4a5968778695a4b3c2d1e0f",
+              "ready_for_render": false,
+              "placements": [
+                {
+                  "utterance_id": "utt.001",
+                  "selected_zone_id": "",
+                  "selected_bbox": []
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-missing-sha",
+            "label": "known_bad",
+            "finding": {
+              "clip_id": "synth-clip-03",
+              "alignment_plan_sha256": "not-a-sha",
+              "ready_for_render": true,
+              "placements": [
+                {
+                  "utterance_id": "utt.001",
+                  "selected_zone_id": "bottom_band",
+                  "selected_bbox": [
+                    0.08,
+                    0.78,
+                    0.84,
+                    0.14
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "good-alignment-report": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-missing-zone": {
+            "verdict": "fail",
+            "failed_checks": [
+              "placements-complete"
+            ]
+          },
+          "bad-missing-sha": {
+            "verdict": "fail",
+            "failed_checks": [
+              "plan-digest-pinned"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.multimodal-align",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: multimodal_align standard-library CLI and library",
+      "value": {
+        "name": "multimodal_align",
+        "code": {
+          "$code": "multimodal-mask-and-transcript-alignment"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m multimodal_align align TIMELINE.json [--max-drift-ms 250] [--max-intrusion 0.05]"
+        ],
+        "does": [
+          "Normalizes bounding-box and polygon segmentation masks and groups word timestamps into utterances.",
+          "Computes mask intrusion ratios, routes non-occluding caption safe zones, and flags A/V sync drift."
+        ],
+        "does_not": [
+          "Transcode media files, invoke neural weights, or open network connections."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.mask-intrusion-and-sync-math"
+        ]
+      ]
+    },
+    {
+      "slug": "source.w3c-webvtt",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "W3C WebVTT: The Web Video Text Tracks Format",
+      "value": {
+        "url": "https://www.w3.org/TR/webvtt1/",
+        "checked_on": "2026-10-31",
+        "provides": "Cue timing, region box, and viewport safe-area positioning semantics for timed captions."
+      }
+    },
+    {
+      "slug": "source.itu-bt1359",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "ITU-R BT.1359-1: Relative timing of sound and vision for broadcasting",
+      "value": {
+        "url": "https://www.itu.int/rec/R-REC-BT.1359/",
+        "checked_on": "2026-10-31",
+        "provides": "Perceptual audio-visual lead and lag detectability thresholds informing drift gates."
+      }
+    },
+    {
+      "slug": "example.safe-zone-reroute",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: synthetic caption reroute from occluded bottom_band to top_band",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.alignment-report"
+        },
+        "instance": {
+          "clip_id": "synth-valve-demo",
+          "alignment_plan_sha256": "f0e1d2c3b4a5968778695a4b3c2d1e0ff0e1d2c3b4a5968778695a4b3c2d1e0f",
+          "occlusion_conflicts": 0,
+          "av_drift_violations": 0,
+          "ready_for_render": true,
+          "placements": [
+            {
+              "utterance_id": "utt.001",
+              "selected_zone_id": "top_band",
+              "selected_bbox": [
+                0.08,
+                0.08,
+                0.84,
+                0.14
+              ],
+              "max_intrusion_ratio": 0.0,
+              "occlusion_conflict": false
+            }
+          ]
+        },
+        "shows": "A foreground mask occupying [0.10, 0.70, 0.80, 0.25] triggers a clean reroute to top_band with zero intrusion.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "normalize-masks-and-utterances",
+      "kind": "verb.ingest",
+      "title": "Normalize pixel or polygon masks and group word timings into utterances",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Convert pixel or polygon mask coordinates to normalized [0..1] boxes, validate monotonic word timings, and group words into bounded utterances.",
+      "outcome": "A normalized multimodal timeline summary.",
+      "ready_outcome": "timeline_normalized",
+      "pinned": [
+        "rules.mask-intrusion-and-sync-math",
+        "tool.multimodal-align"
+      ],
+      "slots": [
+        {
+          "name": "raw_timeline",
+          "category": "noun.public_source",
+          "description": "Local JSON timeline of masks and word timings."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the local timeline JSON inside the workspace."
+      ],
+      "produces": [
+        {
+          "name": "normalized_timeline",
+          "template": "template.normalized-timeline"
+        }
+      ],
+      "steps": [
+        "Validate every word has end_s >= start_s and flag tokens below min_word_confidence.",
+        "Convert polygon or pixel masks into [0..1] bounding boxes relative to frame_width and frame_height."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Summary validates against template.normalized-timeline.",
+          "method": "deterministic"
+        },
+        {
+          "id": "timings-monotonic",
+          "check": "Zero negative-duration word spans pass validation.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "audit-audiovisual-cue-drift",
+      "kind": "verb.verify_gate",
+      "title": "Measure millisecond drift between spoken object cues and segmented mask onset",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Match spoken tokens against segmented mask labels and verify audio-visual offset stays within max_drift_ms.",
+      "outcome": "Audio-visual drift measurements integrated into an alignment report.",
+      "ready_outcome": "drift_audited",
+      "pinned": [
+        "guardrail.av-drift-budget",
+        "rules.mask-intrusion-and-sync-math",
+        "tool.multimodal-align"
+      ],
+      "slots": [
+        {
+          "name": "normalized_timeline",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the normalized timeline."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "drift_report",
+          "template": "template.alignment-report"
+        }
+      ],
+      "steps": [
+        "Compute av_offset_ms = round((word_start_s - mask_onset_s) * 1000.0, 2) for each matched cue.",
+        "Mark ready_for_render false whenever abs(av_offset_ms) exceeds max_drift_ms."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Report validates against template.alignment-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "drift-gated",
+          "check": "av_drift_violations > 0 implies ready_for_render is false.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "multimodal-mask-and-transcript-alignment.normalize-masks-and-utterances"
+      ]
+    },
+    {
+      "slug": "route-non-occluding-safe-zones",
+      "kind": "verb.compile_dag",
+      "title": "Select non-occluding safe zones per utterance and verify alignment checks",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Score all candidate safe zones against active segmentation masks and HUD exclusions, select the optimal anchor per utterance, and run alignment-checks.",
+      "outcome": "A checked multimodal alignment report ready for downstream rendering.",
+      "ready_outcome": "zones_routed",
+      "pinned": [
+        "alignment-checks",
+        "guardrail.non-occluding-captions",
+        "rules.mask-intrusion-and-sync-math",
+        "tool.multimodal-align"
+      ],
+      "slots": [
+        {
+          "name": "normalized_timeline",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the normalized timeline."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "alignment_report",
+          "template": "template.alignment-report"
+        }
+      ],
+      "steps": [
+        "Run python3 -m multimodal_align align on the timeline and record selected_zone_id and max_intrusion_ratio per utterance.",
+        "Confirm the emitted report passes alignment-checks before returning."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Report validates against template.alignment-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "checks-pass",
+          "check": "Report passes alignment-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "multimodal-mask-and-transcript-alignment.audit-audiovisual-cue-drift"
+      ]
+    }
+  ]
+}

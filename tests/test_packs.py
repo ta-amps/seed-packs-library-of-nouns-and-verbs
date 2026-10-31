@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 45)
+        self.assertEqual(summary["worked_examples"], 54)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -129,7 +129,15 @@ class LibraryChecks(unittest.TestCase):
                      "cost-optimization", "docs-improvement", "benchmark-scores", "visual-rendering",
                      "public-good-kits", "freshness-checks", "findings-to-fixes",
                      "meta-are-scenario-matrix", "sira-self-learning-rag", "partner-compute-cascade",
-                     "combinatorial-niche-spider"):
+                     "combinatorial-niche-spider", "configuration-grids-and-bounds",
+                     "probabilistic-filters-and-sketches", "grep-string-and-format-rules",
+                     "trigger-and-shim-rules", "execution-hooks-and-verifiers",
+                     "loops-schedules-and-heuristics", "film-and-surface-rule-evaluator",
+                     "agent-capability-and-tier-firewall", "agent-config-supply-chain-scanner",
+                     "brainstorm-chunking-and-situation-miner", "coding-session-trace-distiller",
+                     "declarative-chart-and-diagram-svg", "multimodal-mask-and-transcript-alignment",
+                     "portable-agent-persona-compiler", "social-video-reframe-and-hooks",
+                     "submission-rubric-and-readiness-audit"):
             self.assertIn(pack, PACKS)
 
     def test_scenario_matrix_sira_rag_and_partner_cascade_have_code_and_distinct_review(self):
@@ -138,6 +146,13 @@ class LibraryChecks(unittest.TestCase):
             "sira-self-learning-rag": "verify-dgmh-proposal-independently",
             "partner-compute-cascade": "route-fireworks-multilora-and-rubric",
             "combinatorial-niche-spider": "review-eight-axis-admissions",
+            "configuration-grids-and-bounds": "verify-and-promote-regime-cell",
+            "probabilistic-filters-and-sketches": "verify-sketch-bounds-and-ast-conformance",
+            "grep-string-and-format-rules": "verify-strict-json-copy-and-ast-gate",
+            "trigger-and-shim-rules": "route-regime-and-match-which-fits",
+            "execution-hooks-and-verifiers": "audit-verifier-mutation-sensitivity",
+            "loops-schedules-and-heuristics": "evaluate-swappable-learner-advisors",
+            "film-and-surface-rule-evaluator": "review-film-and-surface-readiness",
         }
         for pack, review_slug in expected_review_verbs.items():
             manifest = IDX.docs[pack]["manifest.json"]

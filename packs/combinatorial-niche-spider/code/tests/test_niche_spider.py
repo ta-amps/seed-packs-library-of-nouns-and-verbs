@@ -7,13 +7,16 @@ from pathlib import Path
 import unittest
 
 from niche_spider import (
+    CompactSpiderFrontier,
     advance_cell_page_cursor,
     advance_spider_frontier_and_waves,
     benchmark_query_families,
     build_rotating_domain_paths,
+    compress_frontier_sketch,
     evaluate_refresh_and_movers,
     mint_combinatorial_niche_catalog,
     score_candidate_axes,
+    sweep_spider_frontier,
     verify_curated_admission_independently,
 )
 from niche_spider.__main__ import run_bundle
@@ -116,6 +119,53 @@ class NicheSpiderTests(unittest.TestCase):
             scored_candidates=[],
         )
         self.assertEqual(blocked["status_code"], 409)
+
+    def test_compact_cuckoo_hll_frontier_2000_repos_compression_and_404_delete(self) -> None:
+        targets = [f"repo:community-org-{i:04d}/specialized-niche-workbench-{i:04d}" for i in range(2000)]
+        gone = [f"community-org-{i:04d}/specialized-niche-workbench-{i:04d}" for i in range(50)]
+        stats = compress_frontier_sketch(targets, gone_targets=gone)
+
+        self.assertEqual(stats["item_count"], 2000)
+        self.assertEqual(stats["pruned_gone_count"], 50)
+        self.assertEqual(stats["active_count"], 1950)
+        self.assertGreater(stats["byte_reduction_ratio"], 10.0)
+        self.assertGreater(stats["base64_reduction_ratio"], 10.0)
+        self.assertGreater(stats["estimated_cardinality"], 1700.0)
+        self.assertLess(stats["estimated_cardinality"], 2300.0)
+
+        restored_b64 = CompactSpiderFrontier.from_base64(stats["sketch_base64"])
+        restored_hex = CompactSpiderFrontier.from_hex(stats["sketch_hex"])
+        self.assertEqual(restored_b64.count, 1950)
+        self.assertEqual(restored_hex.count, 1950)
+        self.assertTrue(all(restored_b64.contains(t) for t in targets[50:]))
+        self.assertGreaterEqual(sum(1 for t in targets[:50] if not restored_b64.contains(t)), 49)
+
+        swept = sweep_spider_frontier(
+            qualifying_finds=[
+                {
+                    "repo": "clinic-tools/intake-ocr",
+                    "depth": 1,
+                    "forks": 3,
+                    "readme_outbound_repos": ["clinic-tools/table-layout"],
+                    "topics": ["intake-ocr"],
+                    "on_topic": True,
+                }
+            ],
+            frontier_queue=[
+                {"target": targets[100], "depth": 1},
+                {"target": "repo:new-org/fresh-gem", "depth": 1},
+            ],
+            visited_targets=set(),
+            gone_targets=["community-org-0060/specialized-niche-workbench-0060"],
+            completed_runs=8,
+            frontier_mode="compact_cuckoo",
+            compact_frontier=restored_b64,
+        )
+        self.assertEqual(swept["frontier_mode"], "compact_cuckoo")
+        self.assertEqual(swept["pruned_gone_count"], 1)
+        # targets[100] was already in restored_b64 so only repo:new-org/fresh-gem is processed
+        self.assertEqual(swept["processed_frontier_count"], 1)
+        self.assertGreater(swept["enqueued_edge_count"], 0)
 
 
 if __name__ == "__main__":

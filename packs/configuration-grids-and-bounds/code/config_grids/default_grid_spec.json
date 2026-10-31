@@ -1,0 +1,58 @@
+{
+  "grid_id": "context-shim-and-retrieval-tuning-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "http_conflict_status": 409,
+  "http_ok_status": 200,
+  "sha256_prefix_chars": 16,
+  "parameters": [
+    {
+      "name": "shim_max_chars",
+      "param_type": "integer_range",
+      "low": 600,
+      "high": 2400,
+      "step": 600,
+      "default": 1200
+    },
+    {
+      "name": "probe_radius_bits",
+      "param_type": "integer_range",
+      "low": 0,
+      "high": 2,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "name": "filter_strategy",
+      "param_type": "choice",
+      "choices": ["blocked_bloom", "cuckoo", "binary_fuse"],
+      "default": "binary_fuse"
+    },
+    {
+      "name": "support_deletes",
+      "param_type": "boolean",
+      "default": false
+    }
+  ],
+  "constraints": [
+    {
+      "id": "deletes-require-cuckoo",
+      "when": { "support_deletes": true },
+      "require_in": { "filter_strategy": ["cuckoo"] }
+    }
+  ],
+  "regime_defaults": {
+    "immutable_edge_lookup": {
+      "shim_max_chars": 1200,
+      "probe_radius_bits": 1,
+      "filter_strategy": "binary_fuse",
+      "support_deletes": false
+    },
+    "mutable_spider_frontier": {
+      "shim_max_chars": 1800,
+      "probe_radius_bits": 1,
+      "filter_strategy": "cuckoo",
+      "support_deletes": true
+    }
+  }
+}

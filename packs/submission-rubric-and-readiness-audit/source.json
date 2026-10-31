@@ -1,0 +1,568 @@
+{
+  "pack_id": "submission-rubric-and-readiness-audit",
+  "title": "Submission rubric and readiness audit",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for auditing engineering repositories against weighted evaluation rubrics covering problem specificity, verified open-weight and multimodal model usage, modular source and CI depth, and live deployment plus video walkthrough completeness, with tested standard-library Python code.",
+  "boundaries": [
+    "Model and SDK mentions in README prose receive zero tooling points unless corroborated in code or config files.",
+    "Live deployment links receive full completeness credit only when paired with an HTTP 200 + SHA-256 probe receipt.",
+    "Audit scores guide pre-release engineering remediation and never claim official judging authority.",
+    "Workers create nouns and propose verbs; importing this pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for weighted repository readiness and rubric auditing",
+      "value": {
+        "lets_workers": "Inventory a local repository checkout, separate wired open-weight and multimodal code integrations from prose claims, check tests, CI, Dockerfiles, live endpoint receipts, and video links, and rank fixes by recoverable points.",
+        "not_for": "Replacing human judges or fabricating live endpoint receipts without probing.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "submission-rubric-and-readiness-audit.inventory-repository-evidence"
+            },
+            "when": "First: collect file tree, imports, commit counts, and probe receipts."
+          },
+          {
+            "verb": {
+              "$verb": "submission-rubric-and-readiness-audit.verify-model-and-depth-signals"
+            },
+            "when": "Cross-check README claims against actual source and CI artifacts."
+          },
+          {
+            "verb": {
+              "$verb": "submission-rubric-and-readiness-audit.score-weighted-readiness-rubric"
+            },
+            "when": "Compute weighted pillar points, blockers, and prioritized remediations."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.code-evidence-over-prose"
+          },
+          {
+            "$pin": "guardrail.live-url-needs-probe-receipt"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.rubric-audit"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.code-evidence-over-prose"
+        ],
+        [
+          "requires_noun",
+          "guardrail.live-url-needs-probe-receipt"
+        ],
+        [
+          "requires_noun",
+          "rules.weighted-four-pillar-rubric"
+        ],
+        [
+          "requires_noun",
+          "tool.rubric-audit"
+        ],
+        [
+          "requires_noun",
+          "template.readiness-scorecard"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: inventory code and receipts first, then score weighted pillars and rank fixes",
+      "category_reason": "Shared three-stage audit workflow across repository readiness checks.",
+      "value": {
+        "lifecycle": [
+          "inventory-repository-evidence scans README, source modules, tests, workflows, containers, and HTTP probe receipts.",
+          "verify-model-and-depth-signals diffs README model claims against source imports and config files.",
+          "score-weighted-readiness-rubric totals pillar scores on a 0.0 to 10.0 scale and sorts remediations by recoverable points."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.code-evidence-over-prose",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: model families named only in README prose earn zero tooling credit",
+      "value": {
+        "rule": "Model or adapter claims in documentation that lack matching imports or config artifacts are flagged in unverified_prose_claims as blockers.",
+        "how_it_is_checked": "audit_repository_manifest computes readme_families - code_families deterministically."
+      }
+    },
+    {
+      "slug": "guardrail.live-url-needs-probe-receipt",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: full live-endpoint credit requires an HTTP 200 + SHA-256 probe receipt",
+      "value": {
+        "rule": "Citing an unverified URL in README.md earns partial documentation credit only and emits a missing-receipt blocker.",
+        "how_it_is_checked": "rubric-checks blocks submission_ready when verified_live_urls is empty."
+      }
+    },
+    {
+      "slug": "rules.weighted-four-pillar-rubric",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic 30/25/20/25 weighted readiness rubric and remediation ranking",
+      "value": {
+        "pillar_weights": "impact_specificity 30% (3.0 pts), verified_open_weight_and_multimodal_models 25% (2.5 pts), modular_source_tests_ci_depth 20% (2.0 pts), live_endpoint_and_video_completeness 25% (2.5 pts).",
+        "remediation_order": "Sort missing items descending by recoverable_points so teams fix the largest gaps first."
+      }
+    },
+    {
+      "slug": "template.repo-manifest",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: local repository evidence manifest",
+      "value": {
+        "describes": "scanned file paths, commit counts, and probe receipts for one repository",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo_id",
+            "files",
+            "commits_in_window"
+          ],
+          "properties": {
+            "repo_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "files": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 5000,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 260
+              }
+            },
+            "commits_in_window": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.readiness-scorecard",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: weighted repository readiness scorecard",
+      "value": {
+        "describes": "weighted pillar points, readiness tier, verified URLs, blockers, and ranked remediations",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repo_id",
+            "audit_fingerprint_sha256",
+            "total_points",
+            "max_points",
+            "readiness_tier",
+            "verified_live_urls",
+            "blockers"
+          ],
+          "properties": {
+            "repo_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "audit_fingerprint_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "total_points": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "max_points": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "readiness_tier": {
+              "type": "string",
+              "enum": [
+                "submission_ready",
+                "needs_targeted_fixes",
+                "incomplete"
+              ]
+            },
+            "verified_live_urls": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "blockers": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "rubric-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for repository readiness scorecards",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every repository readiness scorecard must pass.",
+        "deterministic_checks": [
+          {
+            "id": "fingerprint-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "audit_fingerprint_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "Every scorecard pins a 64-hex SHA-256 audit fingerprint."
+          },
+          {
+            "id": "tier-valid",
+            "rule": {
+              "rule": "enum",
+              "path": "readiness_tier",
+              "values": [
+                "submission_ready",
+                "needs_targeted_fixes",
+                "incomplete"
+              ]
+            },
+            "why": "readiness_tier must use one of the three defined readiness states."
+          },
+          {
+            "id": "ready-has-verified-url",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "readiness_tier",
+                "equals": "submission_ready"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "verified_live_urls",
+                "min": 1
+              }
+            },
+            "why": "A repository cannot be marked submission_ready without a verified live URL."
+          },
+          {
+            "id": "hosts-local",
+            "rule": {
+              "rule": "hosts_local_only",
+              "path": "$"
+            },
+            "why": "Synthetic scorecards must reference loopback or .invalid test endpoints only."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-ready-scorecard",
+            "label": "known_good",
+            "finding": {
+              "repo_id": "synth-inspection-repo",
+              "audit_fingerprint_sha256": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+              "total_points": 9.5,
+              "readiness_tier": "submission_ready",
+              "verified_live_urls": [
+                "https://demo.invalid/health"
+              ]
+            }
+          },
+          {
+            "id": "bad-ready-without-live-url",
+            "label": "known_bad",
+            "finding": {
+              "repo_id": "synth-missing-live",
+              "audit_fingerprint_sha256": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+              "total_points": 7.5,
+              "readiness_tier": "submission_ready",
+              "verified_live_urls": []
+            }
+          },
+          {
+            "id": "bad-invalid-tier",
+            "label": "known_bad",
+            "finding": {
+              "repo_id": "synth-bad-tier",
+              "audit_fingerprint_sha256": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+              "total_points": 5.0,
+              "readiness_tier": "guaranteed_winner",
+              "verified_live_urls": []
+            }
+          }
+        ],
+        "expected": {
+          "good-ready-scorecard": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-ready-without-live-url": {
+            "verdict": "fail",
+            "failed_checks": [
+              "ready-has-verified-url"
+            ]
+          },
+          "bad-invalid-tier": {
+            "verdict": "fail",
+            "failed_checks": [
+              "tier-valid"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.rubric-audit",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: rubric_audit standard-library CLI and library",
+      "value": {
+        "name": "rubric_audit",
+        "code": {
+          "$code": "submission-rubric-and-readiness-audit"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m rubric_audit audit MANIFEST.json",
+          "python3 -m rubric_audit score-directory REPO_DIR [--probes PROBES.json] [--commits-in-window N]"
+        ],
+        "does": [
+          "Audits problem specificity, wired open-weight and multimodal code usage, modular tests/CI/Dockerfiles, and live/video evidence.",
+          "Ranks missing items by recoverable rubric points."
+        ],
+        "does_not": [
+          "Open outbound sockets, mutate repository files, or certify official contest results."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.weighted-four-pillar-rubric"
+        ]
+      ]
+    },
+    {
+      "slug": "source.openssf-scorecard",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "OpenSSF Scorecard checks documentation",
+      "value": {
+        "url": "https://github.com/ossf/scorecard",
+        "checked_on": "2026-10-31",
+        "provides": "Automated repository health check patterns for CI workflows, tests, and pinned artifacts."
+      }
+    },
+    {
+      "slug": "source.spdx-spec",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "SPDX Specification v2.3 repository and package metadata",
+      "value": {
+        "url": "https://spdx.github.io/spdx-spec/v2.3/",
+        "checked_on": "2026-10-31",
+        "provides": "Deterministic file-level manifest and checksum conventions for software audits."
+      }
+    },
+    {
+      "slug": "example.ready-scorecard",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: synthetic 10.0-point evidence-backed readiness scorecard",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.readiness-scorecard"
+        },
+        "instance": {
+          "repo_id": "synth-multimodal-ops",
+          "audit_fingerprint_sha256": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+          "total_points": 10.0,
+          "max_points": 10.0,
+          "readiness_tier": "submission_ready",
+          "verified_live_urls": [
+            "http://127.0.0.1:8080/health"
+          ],
+          "blockers": []
+        },
+        "shows": "A repository earning full readiness credit only after code imports, tests, CI, Dockerfile, live receipt, and walkthrough link are verified.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "inventory-repository-evidence",
+      "kind": "verb.ingest",
+      "title": "Scan local repository files, imports, commit counts, and probe receipts",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Build a deterministic manifest of local files, source/config blobs, active-window commit counts, and recorded HTTP probe receipts.",
+      "outcome": "A structured repository manifest ready for rubric auditing.",
+      "ready_outcome": "manifest_built",
+      "pinned": [
+        "tool.rubric-audit"
+      ],
+      "slots": [
+        {
+          "name": "repo_locator",
+          "category": "noun.public_source",
+          "description": "Local checkout directory locator."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the local repository directory and local probe receipt JSON."
+      ],
+      "produces": [
+        {
+          "name": "manifest",
+          "template": "template.repo-manifest"
+        }
+      ],
+      "steps": [
+        "Run build_manifest_from_directory via rubric_audit on the local repository path.",
+        "Exclude .git, .venv, node_modules, and build caches from file counts."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Manifest validates against template.repo-manifest.",
+          "method": "deterministic"
+        },
+        {
+          "id": "files-non-empty",
+          "check": "files contains at least one tracked path.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "verify-model-and-depth-signals",
+      "kind": "verb.verify_gate",
+      "title": "Cross-check README model claims against wired source imports and CI depth",
+      "claimant": "agent",
+      "summary": "Compare README model/SDK mentions against actual source and config files while verifying modular packages, tests, CI workflows, and container definitions.",
+      "outcome": "Verified model families, prose-only claim flags, and engineering depth counts.",
+      "ready_outcome": "signals_verified",
+      "pinned": [
+        "guardrail.code-evidence-over-prose",
+        "rules.weighted-four-pillar-rubric",
+        "tool.rubric-audit"
+      ],
+      "slots": [
+        {
+          "name": "manifest",
+          "category": "noun.eval_run",
+          "description": "Pin of the repository manifest."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "partial_scorecard",
+          "template": "template.readiness-scorecard"
+        }
+      ],
+      "steps": [
+        "Run rubric_audit on the pinned manifest to compare readme_families with code_families.",
+        "Flag any prose-only model claim in blockers and withhold tooling points until wired in code."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Output validates against template.readiness-scorecard.",
+          "method": "deterministic"
+        },
+        {
+          "id": "prose-claims-flagged",
+          "check": "Unwired model families appear in blockers.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "submission-rubric-and-readiness-audit.inventory-repository-evidence"
+      ]
+    },
+    {
+      "slug": "score-weighted-readiness-rubric",
+      "kind": "verb.compile_dag",
+      "title": "Compute final weighted rubric score, blockers, and ranked remediations",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Combine all four weighted rubric pillars, check HTTP 200 + SHA-256 live endpoint receipts and walkthrough links, and verify the scorecard against rubric-checks.",
+      "outcome": "A checked readiness scorecard with prioritized remediation steps.",
+      "ready_outcome": "readiness_scored",
+      "pinned": [
+        "rubric-checks",
+        "guardrail.live-url-needs-probe-receipt",
+        "rules.weighted-four-pillar-rubric",
+        "tool.rubric-audit"
+      ],
+      "slots": [
+        {
+          "name": "manifest",
+          "category": "noun.eval_run",
+          "description": "Pin of the repository manifest."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "scorecard",
+          "template": "template.readiness-scorecard"
+        }
+      ],
+      "steps": [
+        "Run python3 -m rubric_audit audit on the manifest and compute total_points out of 10.0.",
+        "Verify the resulting scorecard passes rubric-checks before returning."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Scorecard validates against template.readiness-scorecard.",
+          "method": "deterministic"
+        },
+        {
+          "id": "rubric-checks-pass",
+          "check": "Scorecard passes rubric-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "submission-rubric-and-readiness-audit.verify-model-and-depth-signals"
+      ]
+    }
+  ]
+}

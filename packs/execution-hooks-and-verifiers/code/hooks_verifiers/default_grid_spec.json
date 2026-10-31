@@ -1,0 +1,129 @@
+{
+  "grid_id": "execution-hooks-and-verifiers-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "constants": {
+    "hex_radix": 16,
+    "digest_slice_chars": 12,
+    "tombstone_prefix_chars": 12,
+    "sha256_hex_length": 64,
+    "round_digits": 6,
+    "hook_stages": ["pre_claim", "pre_tool", "post_step", "pre_submit"],
+    "supported_harnesses": ["claude_code", "muse_code", "opencode", "pi_coding_agent"],
+    "anonymous_key_prefixes": ["tan_", "anon_"],
+    "bash_deny_regexes": {
+      "bypass_permissions_flag": "--dangerously-skip-permissions",
+      "dotenv_secret_read": "(^|[\\s/\"'])\\.env(\\b|\\.[A-Za-z0-9_-]+)",
+      "printenv_secret_dump": "\\b(printenv|export\\s+-p)\\b|^\\s*env\\s*$",
+      "git_force_update": "\\bgit\\s+\\S*\\s*(--force|-f|--force-with-lease)\\b|\\b--force\\b",
+      "destructive_rm_rf": "\\brm\\s+(-[A-Za-z]*r[A-Za-z]*f|-[A-Za-z]*f[A-Za-z]*r|--recursive\\s+--force)\\b"
+    },
+    "rewrite_rules": {
+      "inline_csp_style": {
+        "pattern": "style\\s*=\\s*\\{\\{",
+        "hint": "Move inline style={{ object declarations into an external stylesheet class to satisfy strict Content-Security-Policy."
+      },
+      "browser_web_storage": {
+        "pattern": "\\b(localStorage|sessionStorage)\\b",
+        "hint": "Replace browser localStorage or sessionStorage calls with explicit state props or governed record storage."
+      }
+    }
+  },
+  "parameters": [
+    {
+      "name": "approved_spend_cap_usd",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 50.0,
+      "step": 0.5,
+      "default": 2.0
+    },
+    {
+      "name": "hygiene_violation_decision",
+      "param_type": "choice",
+      "choices": ["rewrite_hint", "deny"],
+      "default": "rewrite_hint"
+    },
+    {
+      "name": "bootstrap_resamples",
+      "param_type": "integer_range",
+      "low": 100,
+      "high": 1000,
+      "step": 100,
+      "default": 200
+    },
+    {
+      "name": "bootstrap_lower_quantile",
+      "param_type": "float_range",
+      "low": 0.01,
+      "high": 0.10,
+      "step": 0.005,
+      "default": 0.025
+    },
+    {
+      "name": "min_mean_delta",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 0.25,
+      "step": 0.01,
+      "default": 0.05
+    },
+    {
+      "name": "min_delta_ci_lower",
+      "param_type": "float_range",
+      "low": -0.05,
+      "high": 0.20,
+      "step": 0.01,
+      "default": 0.01
+    },
+    {
+      "name": "max_clean_fp_rate",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 0.10,
+      "step": 0.01,
+      "default": 0.0
+    },
+    {
+      "name": "min_trusted_kill_rate",
+      "param_type": "float_range",
+      "low": 0.50,
+      "high": 1.0,
+      "step": 0.05,
+      "default": 0.90
+    },
+    {
+      "name": "min_non_trivial_kill_rate",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 0.50,
+      "step": 0.05,
+      "default": 0.01
+    },
+    {
+      "name": "enforce_disable_bypass_permissions",
+      "param_type": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "bypass-permissions-always-disabled",
+      "when": { "enforce_disable_bypass_permissions": false },
+      "require_in": { "hygiene_violation_decision": ["deny"] }
+    }
+  ],
+  "regime_defaults": {
+    "strict_pre_release": {
+      "approved_spend_cap_usd": 0.5,
+      "hygiene_violation_decision": "deny",
+      "min_trusted_kill_rate": 0.95
+    },
+    "interactive_authoring": {
+      "approved_spend_cap_usd": 2.0,
+      "hygiene_violation_decision": "rewrite_hint",
+      "min_trusted_kill_rate": 0.90
+    }
+  }
+}
