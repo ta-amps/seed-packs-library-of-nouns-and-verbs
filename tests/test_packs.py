@@ -177,7 +177,7 @@ class LibraryChecks(unittest.TestCase):
 
     def test_daily_refresh_packs_have_unactivated_schedules(self):
         schedules = [r for p in PACKS for r in IDX.docs[p]["nouns.json"]["records"] if r["value"]["role"] == "schedule_proposal"]
-        self.assertEqual({r["value"]["pack"] for r in schedules}, {"tool-discovery", "benchmark-scores", "freshness-checks"})
+        self.assertEqual({r["value"]["pack"] for r in schedules}, {"tool-discovery", "benchmark-scores", "freshness-checks", "agent-harness-feeds"})
         for item in schedules:
             self.assertEqual(item["value"]["activation"], "not_activated")
             self.assertIn("No scheduler is activated", item["value"]["activation_path"])

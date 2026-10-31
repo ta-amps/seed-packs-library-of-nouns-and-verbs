@@ -1,0 +1,17 @@
+# Frame-by-frame computer-vision QA for an encoded video. Pinned packages in requirements.txt.
+[project]
+name = "frame-by-frame-video-qa"
+version = "0.1.0"
+description = "Sample every frame of a video, run nine detectors (cut-off content and windows, overlaps, small text, transitions, freezes and motion, caption collisions, contrast, layered edges), join hits into findings, draw each one and report."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "ta-amps" }]
+dependencies = [
+    "numpy==2.2.6",
+    "opencv-python-headless==5.0.0.93",
+    "imageio-ffmpeg==0.6.0",
+]
+
+[project.optional-dependencies]
+ocr = ["onnxruntime==1.23.2", "rapidocr-onnxruntime==1.4.4"]

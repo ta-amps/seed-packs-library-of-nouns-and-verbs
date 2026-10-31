@@ -1,0 +1,154 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "hybrid-retrieval-context-knapsack",
+  "title": "Hybrid retrieval context knapsack",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for fusing BM25 and dense cosine rankings via Reciprocal Rank Fusion (k=60), stripping untrusted prompt injections, pruning MinHash near-duplicates and packing context into a strict token budget via 0/1 dynamic-programming knapsack.",
+  "license": "MIT",
+  "store": "seedpack.hybrid-retrieval-context-knapsack",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "3ea09fd3966757ccee58a6ea9d727162fd014661953fdc2fe73824b66fd83db9"
+    },
+    {
+      "path": "source.json",
+      "sha256": "715174cae7618829afef296d007b8a7a684f3ac1d8d5800122a73014a609b3d4"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "59a771ef3936eb3d312a121af6596140df8e551bb5e286fbda25bcea4ee2c0c1"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "1d99988aeb905a3494f5d87f8764e2685d7dd1d645c66464ea7c6b3ece83c766"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "14a393ced757a4abd8c54590d7177e5e97b50ad1909381cfd933f4846c57a1ae"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.guardrail.strip-untrusted-directives",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "bf42230544c6505bc0aa08ecccf043b5e59afc721e77ad046b0ce0400877b0c5"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.guardrail.strict-token-ceiling",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "0eff4498ef7e5c68d12fe0e2c41ecbee3f1bc127b29490d94b7ba8ff0e60fd13"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.guardrail.penalize-redundant-chunks",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "73f2e2421939abf74864a65e0a4615f7e363fef207524f20c7806bbc56590d7f"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.spec.rrf-and-knapsack",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "406572ce72a2ecd57a17bd0549d3b6e165104b58fcd9c478e6959cb449fdea9c"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.rules.sanitization-and-minhash",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "4c428276b7d2a982a61d9061fcfa43035351d927ddaee871723f56e2fce3f439"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.tool.context-knapsack",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "15503c49133eb7fa357d0e465e3641af167f401e50e15426bee26f34d48c9cc8"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.template.packed-context",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "f32c5f422a1383fe46600f2be39bfd4cc4869d1ca6847b967e9f6f2cec012d94"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.example.retrieval-candidates",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "1e32ebf77038430f319cad73eaad2a2e6d7b69271b9c159f8a2217c13654847d"
+    },
+    {
+      "key": "hybrid-retrieval-context-knapsack.v0.1.0.example.packed-context",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "36d850433ebfa713d6f74aadbfc7eb7c18ee3b204fab7b75447840fd57aaeb07"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "hybrid-retrieval-context-knapsack.fuse-hybrid-rrf",
+      "kind": "verb.situate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:hybrid-retrieval-context-knapsack:fuse-hybrid-rrf:57ba188fd2081d74f5df5656261f8a96105ef642b5894e5c2ddd6eecc4534ac3",
+      "report_shape_sha256": "d7845d2931bf9f4dbd769dcfe3c0695e1a4dedae3e23ad70e66144cc237e8693"
+    },
+    {
+      "template_id": "hybrid-retrieval-context-knapsack.sanitize-and-dedup-chunks",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:hybrid-retrieval-context-knapsack:sanitize-and-dedup-chunks:b10667bdb2101161e2b5eefee7856409dac7feb83acc75e5ca97a7838ea35144",
+      "report_shape_sha256": "629d88e9b2dce8dff8d2e1632b84feef1ca19d838e47f57266ad1747c3d42775"
+    },
+    {
+      "template_id": "hybrid-retrieval-context-knapsack.pack-token-knapsack",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:hybrid-retrieval-context-knapsack:pack-token-knapsack:54f9624991e6bf30f71676f514041dfe4393e8c5988951a6880a02e36104ce1a",
+      "report_shape_sha256": "2331f1062f8b082d1190c3bfdb7ced9d44926b78bb45d4df9e413fa19fe19d3b"
+    }
+  ],
+  "code": {
+    "path": "packs/hybrid-retrieval-context-knapsack/code",
+    "files": 11,
+    "sha256": "f957200448e2f022d5292670740e1cc8663eae0e13c1332057a3ad4a6060e66e",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "retrieval-triggers-and-reuse",
+      "keys": []
+    },
+    {
+      "pack_id": "security-review",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Untrusted retrieved text never overrides system or developer instructions and has injection directives redacted before packing.",
+    "Packed context strictly obeys the integer token_budget ceiling via exact 0/1 knapsack rather than unbounded top-k concatenation.",
+    "Synthetic retrieval fixtures are test inputs only and never represent live corpus claims.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

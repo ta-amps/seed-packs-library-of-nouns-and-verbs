@@ -1,0 +1,168 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "audio-and-narration-qa",
+  "title": "Audio and narration QA",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for deterministic audio, mix and narration quality checks: ITU-R BS.1770-4 gated loudness and 4x oversampled true peak, sidechain pause-pumping detection, edit-point click impulse detection, speaking WPM pacing, WebVTT caption-pause alignment, and ASR Character Error Rate gating.",
+  "license": "MIT",
+  "store": "seedpack.audio-and-narration-qa",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "80a03ac7596f51af13de2fb45413e1e309cce5a915d66ba09a90b844be8e5d71"
+    },
+    {
+      "path": "source.json",
+      "sha256": "57ef2813dbd5ccf8a250f8aeeac10b30deaf1ad376078a00e567d28feb99efd3"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "f83e5edcf1acf2685c495cf7abe908d35ce2e04898ab82f48cd3e47e7e98bf71"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "8a43a9f0dd7c1fba6050aa45f28a95204ce67ac479a2dfe34a64867a01ef21e4"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "audio-and-narration-qa.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "2b64cfd14657ee0c4f54c84ddc6648afb30f6320ad7b6393eddeafec74b12473"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.guardrail.exact-audio-digest",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "8bf63ed218755f4858aa02af2670d233309d0a278d329f0a827ace3c5ddfdc98"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.guardrail.hold-across-short-pauses",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "2f235400dd4ceb63691cca8de55fc85217d06a8d2d9a6c4957630259c0c4a4af"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.guardrail.metrics-not-creative-approval",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "94a30e4cd4dc1b55a93a076c1c4ffee2cb19af0a1a15981db627332f9cfc10f4"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.spec.audio-narration-gates",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "b6c50cd6c99a156a30cfb48120ed1033de27a9170e8532d006483de49701f2c5"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.rules.hold-ducking-envelope",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "7e8fe42bc4ec04cca78e3cdf1736faad4b17d55383d457697143eee00249919d"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.tool.audio-narration-qa",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "8dac07b1eac8aef5236d9a9c2b6b96baff011a7530939d98cc8ef18ec7622f8b"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.template.narration-qa-report",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "9dd8b98939360e15346e7de49db2afe25b2c169cb04fbe265d510bdd9fa52cd6"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.example.narration-cut",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "5be4cb2dc446515169b2e2f0c81209579dc44c4bea54bdc3b21630b6a3afbeaf"
+    },
+    {
+      "key": "audio-and-narration-qa.v0.1.0.example.qa-report",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "17c551ebe0cc56d89170e8fbc59c08442ebdecc3d5603bd59ad281ad9978c0f8"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "audio-and-narration-qa.measure-loudness-and-peaks",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:audio-and-narration-qa:measure-loudness-and-peaks:4e8d8b39f348bd992dddf9fd5869c329fde1674dbc9f62ff3ebfb74979d0af26",
+      "report_shape_sha256": "f380a4638914633cb738065e05072b383966a6added9ee75127bda11602a5410"
+    },
+    {
+      "template_id": "audio-and-narration-qa.audit-ducking-and-clicks",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:audio-and-narration-qa:audit-ducking-and-clicks:2a1679a4d4a4f64d0d67151ab56a384d7e91083eaab4eae740247502595bd491",
+      "report_shape_sha256": "b0d965fc612e91f022fd863dc9b2c95a0eed29ffde96110d5624f15a363c4501"
+    },
+    {
+      "template_id": "audio-and-narration-qa.check-pacing-and-caption-sync",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:audio-and-narration-qa:check-pacing-and-caption-sync:259ce86c126f2cef97aa173e1ea8a6f4bffe9f30e9708af80829f9271449361e",
+      "report_shape_sha256": "338ab77ac79d2515bf6a9fe7fe897bc1b6a3ad17a5208ae80d0821fed87aae18"
+    },
+    {
+      "template_id": "audio-and-narration-qa.gate-narration-asr-cer",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:audio-and-narration-qa:gate-narration-asr-cer:b5c9065e9305d88522fe0ced4388ed277562ab999672df3da6af62ae1d6a97ac",
+      "report_shape_sha256": "6df0d3287fc380b60550256c8cbfa63ce253f85af3fe8110e642d0affff93cfb"
+    },
+    {
+      "template_id": "audio-and-narration-qa.compile-narration-qa-report",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:audio-and-narration-qa:compile-narration-qa-report:fab56c23eaa87589ec7b1dc40392b7d464e2d039d3e9cb33db09635525ee01e2",
+      "report_shape_sha256": "159af521f57f0442463a7aa6b0dc7e6a1bcaaaa2dbd503e97428c3339681a4bd"
+    }
+  ],
+  "code": {
+    "path": "packs/audio-and-narration-qa/code",
+    "files": 10,
+    "sha256": "d54a4a6f316cb14030b6ac49b39a23f28cd9fc41608a397986afde8f8a20f2ba",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "video-qa",
+      "keys": []
+    },
+    {
+      "pack_id": "findings-to-fixes",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Every measurement binds to the exact SHA-256 of the audio or video file inspected.",
+    "Automated loudness, click, ducking and CER checks catch technical defects; a human listener judges vocal warmth, prosody and musicality.",
+    "Standard-library code executes locally without network calls or remote model APIs.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

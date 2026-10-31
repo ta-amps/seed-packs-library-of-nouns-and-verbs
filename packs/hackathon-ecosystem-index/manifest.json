@@ -1,0 +1,143 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "hackathon-ecosystem-index",
+  "title": "Hackathon ecosystem index",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for decomposing public AI repository metadata and READMEs into searchable Task (verb) and Task Object (noun) signatures and serving hybrid Okapi BM25 plus facet and stack Reciprocal Rank Fusion (k=60) retrieval.",
+  "license": "MIT",
+  "store": "seedpack.hackathon-ecosystem-index",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "ea524e874b7ac213b259cfe981165499f9c4b5d07b324d6f309c282c487aef41"
+    },
+    {
+      "path": "source.json",
+      "sha256": "cd0bee81d00cc29b30dacf705aa73fa7374feb8749ec34d62fae113b99db59c7"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "5ce57407f5d611dee611a067dd5f4debf7941e25cdf963604e6ab40519e26d1a"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "066b3b2f0d0685f0e670728e6ab5ffc61896890db44314f6958889d997117177"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "55523a424966fcd7f6de9c790e7631f1d06ccc34576e6dceac3b0bfc9f194669"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.guardrail.candidate-unverified-only",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "83231823b13c41118e409b2dd366bbd933cc9ca88a9082ef396053cd734bf266"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.guardrail.static-metadata-no-exec",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "0cee99c4244607a72f340e6e3076da63f0066297b27dfac411d437009a4f9167"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.spec.decomposition-and-rrf",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "ef038a7ef7dcbd286fb7c525787ba7ece61f59ecfc2e3407b716101501e17121"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.tool.ecosystem-index",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "b7221421a622cc14ad7404e96feb54f3b7124548280eecf99dd1c93b3d1b9e58"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.template.catalog-record",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "a19b4ff2870bb843a858b8e4e04afc8255d1ea272ac8d4f7901d65d2c46de7d6"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.template.search-response",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "e59aa650cdf7d5f6f6a45fa8e077b2ea2510c2d120368e8bf194d423097b06a7"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.example.raw-repo-scans",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "a6983df519436dc70a7fc79df7bfd89206b7ec45f20cc4d1f80e5318c051c83e"
+    },
+    {
+      "key": "hackathon-ecosystem-index.v0.1.0.example.search-results",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "298c9c1183d23ffd9c2e92e6f4f5eba73d39e2ad66576badced88e53f4a1b76c"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "hackathon-ecosystem-index.decompose-repo-catalog",
+      "kind": "verb.ingest",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:hackathon-ecosystem-index:decompose-repo-catalog:c3354e09e68722d88adbe521323c25c3f2bac3fe1c5f665f28ee7f2b47bfc4ce",
+      "report_shape_sha256": "efa1b1c6dde61a6ff7cd7db9b6d0924ee0b97e09b2b8c59421e9f445420e703d"
+    },
+    {
+      "template_id": "hackathon-ecosystem-index.verify-catalog-hygiene",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:hackathon-ecosystem-index:verify-catalog-hygiene:1e7264d9e1d471dcd6bc40266226163a953bbf21bfdf8db5a7d39ce11133331b",
+      "report_shape_sha256": "fa028d52093a9b9545a1067d0a2a9e7ed8cb8a75a85ba1ef59e714235671c316"
+    },
+    {
+      "template_id": "hackathon-ecosystem-index.search-ecosystem-rrf",
+      "kind": "verb.situate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:hackathon-ecosystem-index:search-ecosystem-rrf:4e92d079ea8eda65552618eee46a96235e91657be87b5daa455cb4fcc65e92ad",
+      "report_shape_sha256": "c6436001b8e85957514f97a78f66a61dd3073b8c816b523eb4dcbcaa86674e09"
+    }
+  ],
+  "code": {
+    "path": "packs/hackathon-ecosystem-index/code",
+    "files": 9,
+    "sha256": "c65260db4ab9aee5d3dcc43e138126aabf026d94e666b62d47f7a0a0b920e6c7",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "tool-discovery",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Every decomposed task signature is marked candidate_unverified with explicit scan provenance; README prose never proves runtime behavior.",
+    "Indexing reads static metadata and README summaries without executing third-party repository code.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

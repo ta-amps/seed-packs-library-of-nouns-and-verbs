@@ -1,0 +1,952 @@
+{
+  "pack_id": "agent-harness-feeds",
+  "title": "Agent harness feeds",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for continuously researching, benchmarking and encapsulating updates on open agent harnesses (Harness Square / Harness2, OpenCode, Pi and Muse Code) with HarnessTax token overhead, cost-per-verified-task, Terminal-Bench and SWE-bench normalization, MCP tool reliability, freshness decay and Pareto selection.",
+  "dependencies": [
+    "benchmark-scores",
+    "freshness-checks"
+  ],
+  "boundaries": [
+    "feed.agent-harnesses encapsulates child profiles, sources, benchmarks and Pareto recommendations by SHA-256 digest without granting execution authority.",
+    "schedule.harness-feed-scan is not_activated with authority: none; only an authorized schedule service may enqueue recurring refreshes.",
+    "Synthetic benchmark numbers in worked examples test normalization and Pareto math and are never presented as live leaderboard results.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for continuously researching, benchmarking and encapsulating updates on open agent harnesses",
+      "value": {
+        "lets_workers": "Probe public release streams for Harness Square / Harness2, OpenCode, Pi and Muse Code, normalize Terminal-Bench and SWE-bench runs with HarnessTax token overhead, cost-per-verified-task and MCP reliability Wilson intervals, apply release-aware freshness decay, seal child task objects into a single encapsulated Feed digest, and select Pareto-optimal harnesses under explicit task constraints.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "agent-harness-feeds.probe-harness-sources"
+            },
+            "when": "Fetch upstream release tags and benchmark disclosures for the four tracked harnesses."
+          },
+          {
+            "verb": {
+              "$verb": "agent-harness-feeds.normalize-harness-benchmarks"
+            },
+            "when": "Compute HarnessTax, cost-per-verified-task and MCP reliability intervals."
+          },
+          {
+            "verb": {
+              "$verb": "agent-harness-feeds.recheck-harness-freshness"
+            },
+            "when": "Evaluate exponential age and missed-release decay across profiles and scores."
+          },
+          {
+            "verb": {
+              "$verb": "agent-harness-feeds.encapsulate-harness-feed"
+            },
+            "when": "Seal updated child objects into feed.agent-harnesses with a canonical SHA-256 digest."
+          },
+          {
+            "verb": {
+              "$verb": "agent-harness-feeds.select-harness-for-task"
+            },
+            "when": "Rank non-dominated Pareto harnesses under token, cost and MCP reliability constraints."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.honest-harness-tax"
+          },
+          {
+            "$pin": "guardrail.encapsulated-feed-pins"
+          },
+          {
+            "$pin": "guardrail.unactivated-schedule-boundary"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.harness-feeds"
+        },
+        "encapsulated_feed": {
+          "$pin": "feed.agent-harnesses"
+        },
+        "worked_example": "Synthetic 4-harness evaluation across Harness Square / Harness2, OpenCode, Pi and Muse Code recomputed in test_harness_feeds.py: identifies [harness-square, muse-code, pi] on the Pareto frontier and seals 7 child task objects into a canonical SHA-256 feed digest."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.honest-harness-tax"
+        ],
+        [
+          "requires_noun",
+          "guardrail.encapsulated-feed-pins"
+        ],
+        [
+          "requires_noun",
+          "guardrail.unactivated-schedule-boundary"
+        ],
+        [
+          "requires_noun",
+          "feed.agent-harnesses"
+        ],
+        [
+          "requires_noun",
+          "schedule.harness-feed-scan"
+        ],
+        [
+          "requires_noun",
+          "tool.harness-feeds"
+        ],
+        [
+          "requires_noun",
+          "template.feed-snapshot"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.honest-harness-tax",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: report HarnessTax token overhead and cost-per-verified-task alongside raw accuracy",
+      "category_reason": "Prevents bloated retry loops from masking token and latency overhead behind headline solve rates.",
+      "value": {
+        "rule": "Every normalized harness benchmark reports HarnessTax ((total_harness_tokens - raw_task_tokens) / raw_task_tokens), cost_per_verified_task_usd and MCP tool call reliability alongside solve_rate, and requires model_id, harness_version, suite_id and timeout_s for setup_complete.",
+        "how_it_is_checked": "normalize_harness_benchmark computes all four dimensions and marks incomplete disclosures setup_complete: false so pareto_frontier excludes them."
+      }
+    },
+    {
+      "slug": "guardrail.encapsulated-feed-pins",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: the Feed task object encapsulates child profiles, sources, benchmarks and recommendations by digest",
+      "category_reason": "Ensures consumers read a consistent, order-independent snapshot across all tracked harnesses.",
+      "value": {
+        "rule": "feed.agent-harnesses pins every child profile, source, benchmark matrix and Pareto recommendation and records encapsulate_feed's canonical SHA-256 digest.",
+        "how_it_is_checked": "test_harness_feeds.py recomputes encapsulate_feed in forward and reversed child order and asserts byte-identical feed_digest_sha256."
+      }
+    },
+    {
+      "slug": "guardrail.unactivated-schedule-boundary",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: schedule proposals carry zero authority until activated by an authorized service",
+      "category_reason": "Preserves Tessera's single-authority scheduling boundary.",
+      "value": {
+        "rule": "schedule.harness-feed-scan remains activation: not_activated and authority: none; importing or reading the pack starts no cron or background poller.",
+        "how_it_is_checked": "tests/test_packs.py verifies activation == not_activated and allowed enqueue verb categories."
+      }
+    },
+    {
+      "slug": "profile.harness-square",
+      "category": "noun.model_spec",
+      "role": "profile",
+      "title": "Harness profile: Harness Square / Harness2",
+      "category_reason": "Captures the loop architecture, sandbox model and MCP capabilities of an agent harness.",
+      "value": {
+        "harness_id": "harness-square",
+        "display_name": "Harness Square / Harness2",
+        "loop_architecture": "Typed two-stage task graph with isolated sandbox execution, explicit context checkpoints and deterministic verification gates.",
+        "mcp_support": "Native stdio and streamable HTTP MCP client with schema pinning and retry budgets.",
+        "strengths": [
+          "High multi-file verification discipline",
+          "Deterministic tool receipt capture"
+        ]
+      }
+    },
+    {
+      "slug": "profile.opencode",
+      "category": "noun.model_spec",
+      "role": "profile",
+      "title": "Harness profile: OpenCode",
+      "category_reason": "Captures the terminal coding loop, provider routing and MCP capabilities of OpenCode.",
+      "value": {
+        "harness_id": "opencode",
+        "display_name": "OpenCode",
+        "loop_architecture": "Terminal-first coding agent CLI and TUI with provider-agnostic model routing, LSP diagnostics and session diffs.",
+        "mcp_support": "Configurable local and remote MCP server tools alongside shell and patch primitives.",
+        "strengths": [
+          "Fast interactive terminal workflow",
+          "Broad open-weight and hosted model compatibility"
+        ]
+      }
+    },
+    {
+      "slug": "profile.pi",
+      "category": "noun.model_spec",
+      "role": "profile",
+      "title": "Harness profile: Pi",
+      "category_reason": "Captures the minimal low-HarnessTax loop and on-demand MCP bridge architecture of Pi.",
+      "value": {
+        "harness_id": "pi",
+        "display_name": "Pi",
+        "loop_architecture": "Minimalist low-overhead coding harness emphasizing lean system prompts, direct bash/edit primitives and low HarnessTax.",
+        "mcp_support": "Lightweight skill and MCP bridge extensions on demand so idle tools do not bloat prompt tokens.",
+        "strengths": [
+          "Lowest prompt token HarnessTax",
+          "Transparent single-loop control"
+        ]
+      }
+    },
+    {
+      "slug": "profile.muse-code",
+      "category": "noun.model_spec",
+      "role": "profile",
+      "title": "Harness profile: Muse Code",
+      "category_reason": "Captures the multi-pass plan-and-review editing loop and MCP capabilities of Muse Code.",
+      "value": {
+        "harness_id": "muse-code",
+        "display_name": "Muse Code",
+        "loop_architecture": "Collaborative multi-pass repository editing and review harness pairing plan synthesis with patch verification.",
+        "mcp_support": "Structured MCP tool invocation with workspace-scoped read/write boundaries.",
+        "strengths": [
+          "Structured diff review",
+          "Multi-pass repository refactoring"
+        ]
+      }
+    },
+    {
+      "slug": "source.open-harness-releases",
+      "category": "noun.public_source",
+      "role": "source_catalog",
+      "title": "Public release and benchmark channels for Harness Square / Harness2, OpenCode, Pi and Muse Code",
+      "category_reason": "Lists upstream public release feeds and benchmark boards monitored for harness updates.",
+      "value": {
+        "watched_targets": [
+          {
+            "harness_id": "harness-square",
+            "channel": "public git tags and benchmark manifests"
+          },
+          {
+            "harness_id": "opencode",
+            "channel": "https://github.com/sst/opencode/releases"
+          },
+          {
+            "harness_id": "pi",
+            "channel": "public CLI package releases and minimal-agent benchmarks"
+          },
+          {
+            "harness_id": "muse-code",
+            "channel": "public release notes and repository evaluation harness"
+          }
+        ],
+        "benchmark_boards": [
+          "Terminal-Bench",
+          "SWE-bench Verified"
+        ],
+        "checked_on": "2026-10-30"
+      }
+    },
+    {
+      "slug": "benchmark.normalized-matrix",
+      "category": "noun.eval_run",
+      "role": "benchmark_matrix",
+      "synthetic": true,
+      "title": "Synthetic normalized benchmark matrix across Harness Square / Harness2, OpenCode, Pi and Muse Code",
+      "category_reason": "Normalized evaluation run recording solve_rate, HarnessTax, cost_per_verified_task_usd and MCP reliability.",
+      "value": {
+        "synthetic_fixture": true,
+        "suite_id": "terminal-and-swe-synthetic-100",
+        "normalized_runs": [
+          {
+            "harness_id": "harness-square",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "model_id": "llama-open-coder-syn",
+            "harness_version": "2.1.0-syn",
+            "setup_complete": true,
+            "solve_rate": 0.71,
+            "solve_rate_wilson_95": [
+              0.6146,
+              0.7899
+            ],
+            "cost_per_verified_task_usd": 0.88,
+            "harness_tax_ratio": 0.34,
+            "harness_tax_multiplier": 1.34,
+            "mcp_reliability": 0.98,
+            "mcp_reliability_wilson_95": [
+              0.9497,
+              0.9922
+            ]
+          },
+          {
+            "harness_id": "opencode",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "model_id": "llama-open-coder-syn",
+            "harness_version": "0.14.0-syn",
+            "setup_complete": true,
+            "solve_rate": 0.67,
+            "solve_rate_wilson_95": [
+              0.5731,
+              0.7544
+            ],
+            "cost_per_verified_task_usd": 0.85,
+            "harness_tax_ratio": 0.48,
+            "harness_tax_multiplier": 1.48,
+            "mcp_reliability": 0.94,
+            "mcp_reliability_wilson_95": [
+              0.8981,
+              0.9653
+            ]
+          },
+          {
+            "harness_id": "pi",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "model_id": "llama-open-coder-syn",
+            "harness_version": "0.9.2-syn",
+            "setup_complete": true,
+            "solve_rate": 0.68,
+            "solve_rate_wilson_95": [
+              0.5834,
+              0.7633
+            ],
+            "cost_per_verified_task_usd": 0.56,
+            "harness_tax_ratio": 0.14,
+            "harness_tax_multiplier": 1.14,
+            "mcp_reliability": 0.955,
+            "mcp_reliability_wilson_95": [
+              0.9167,
+              0.9761
+            ]
+          },
+          {
+            "harness_id": "muse-code",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "model_id": "llama-open-coder-syn",
+            "harness_version": "1.3.0-syn",
+            "setup_complete": true,
+            "solve_rate": 0.69,
+            "solve_rate_wilson_95": [
+              0.5937,
+              0.7722
+            ],
+            "cost_per_verified_task_usd": 0.85,
+            "harness_tax_ratio": 0.41,
+            "harness_tax_multiplier": 1.41,
+            "mcp_reliability": 0.965,
+            "mcp_reliability_wilson_95": [
+              0.9295,
+              0.9829
+            ]
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "profile.harness-square"
+        ],
+        [
+          "requires_noun",
+          "profile.opencode"
+        ],
+        [
+          "requires_noun",
+          "profile.pi"
+        ],
+        [
+          "requires_noun",
+          "profile.muse-code"
+        ]
+      ]
+    },
+    {
+      "slug": "recommendation.pareto-selection",
+      "category": "noun.eval_run",
+      "role": "recommendation",
+      "synthetic": true,
+      "title": "Pareto frontier and constrained harness selection recomputed from benchmark.normalized-matrix",
+      "category_reason": "Records non-dominated Pareto frontier IDs and utility-ranked harness choices.",
+      "value": {
+        "pareto_frontier": [
+          "harness-square",
+          "muse-code",
+          "pi"
+        ],
+        "selected_harness_id": "pi",
+        "ranked": [
+          {
+            "harness_id": "pi",
+            "utility": 0.9485,
+            "on_pareto_frontier": true,
+            "solve_rate": 0.68,
+            "cost_per_verified_task_usd": 0.56,
+            "harness_tax_ratio": 0.14,
+            "mcp_reliability": 0.955
+          },
+          {
+            "harness_id": "harness-square",
+            "utility": 0.9316,
+            "on_pareto_frontier": true,
+            "solve_rate": 0.71,
+            "cost_per_verified_task_usd": 0.88,
+            "harness_tax_ratio": 0.34,
+            "mcp_reliability": 0.98
+          },
+          {
+            "harness_id": "muse-code",
+            "utility": 0.8982,
+            "on_pareto_frontier": true,
+            "solve_rate": 0.69,
+            "cost_per_verified_task_usd": 0.85,
+            "harness_tax_ratio": 0.41,
+            "mcp_reliability": 0.965
+          },
+          {
+            "harness_id": "opencode",
+            "utility": 0.859,
+            "on_pareto_frontier": false,
+            "solve_rate": 0.67,
+            "cost_per_verified_task_usd": 0.85,
+            "harness_tax_ratio": 0.48,
+            "mcp_reliability": 0.94
+          }
+        ],
+        "rejected": []
+      },
+      "relations": [
+        [
+          "derives_from",
+          "benchmark.normalized-matrix"
+        ]
+      ]
+    },
+    {
+      "slug": "feed.agent-harnesses",
+      "category": "noun.feed_source",
+      "role": "encapsulated_feed",
+      "synthetic": true,
+      "title": "Encapsulated Feed task object: open agent harnesses, release streams, normalized benchmarks and Pareto rankings",
+      "category_reason": "Encapsulates child profiles, release sources, benchmark matrices and Pareto recommendations into one digest-verified feed object.",
+      "value": {
+        "feed_id": "feed.agent-harnesses",
+        "as_of_date": "2026-10-30",
+        "child_count": 7,
+        "encapsulated_digest_sha256": "a1e81a386c4b85567647e340371f0fff210d9197af3ace5e0003fcfb4e5613ec",
+        "encapsulated_children": {
+          "profiles": [
+            {
+              "$pin": "profile.harness-square"
+            },
+            {
+              "$pin": "profile.opencode"
+            },
+            {
+              "$pin": "profile.pi"
+            },
+            {
+              "$pin": "profile.muse-code"
+            }
+          ],
+          "sources": [
+            {
+              "$pin": "source.open-harness-releases"
+            }
+          ],
+          "benchmarks": [
+            {
+              "$pin": "benchmark.normalized-matrix"
+            }
+          ],
+          "recommendations": [
+            {
+              "$pin": "recommendation.pareto-selection"
+            }
+          ]
+        },
+        "child_digests": {
+          "profiles": [
+            {
+              "slug": "profile.harness-square",
+              "sha256": "b8eafa32e60897b2e3912021604028c0c98a8daea14ccbaabc7476d5a739b156",
+              "harness_id": "harness-square"
+            },
+            {
+              "slug": "profile.muse-code",
+              "sha256": "4ac66ba65ef05e7faf9508c8870edb77c9dd4aebd4f0c82bff676c895d622dcc",
+              "harness_id": "muse-code"
+            },
+            {
+              "slug": "profile.opencode",
+              "sha256": "019d45261dcef81a6bc8c1fb85a58defa6b9465ee9a433c333f6f7e475e29a45",
+              "harness_id": "opencode"
+            },
+            {
+              "slug": "profile.pi",
+              "sha256": "d0cf1cecb62c66b091d15a6e65f0ef49671a2541b6685922c62a6042f3cb7d56",
+              "harness_id": "pi"
+            }
+          ],
+          "sources": [
+            {
+              "slug": "source.open-harness-releases",
+              "sha256": "d78d9f775ae04cc12863743547f3ba915015d78008506c145276160048fc332d"
+            }
+          ],
+          "benchmarks": [
+            {
+              "slug": "benchmark.normalized-matrix",
+              "sha256": "87d86e91593702df4100446c570e9e0e50b63f04855438a159f592cef51fef6b",
+              "harness_id": "matrix"
+            }
+          ],
+          "recommendations": [
+            {
+              "slug": "recommendation.pareto-selection",
+              "sha256": "8ad4c7572da6c4aeed44f72ccf8deecaa031da1494b2605bd0db2c1783e5a7c0"
+            }
+          ]
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "source.open-harness-releases"
+        ],
+        [
+          "corroborates",
+          "benchmark.normalized-matrix"
+        ],
+        [
+          "corroborates",
+          "recommendation.pareto-selection"
+        ]
+      ]
+    },
+    {
+      "slug": "schedule.harness-feed-scan",
+      "category": "noun.seed_hypothesis",
+      "role": "schedule_proposal",
+      "title": "Proposed daily agent harness feed scan and freshness check (not activated)",
+      "category_reason": "A schedule proposal is stored as a seed hypothesis, following the library's unactivated schedule precedent.",
+      "value": {
+        "activation": "not_activated",
+        "authority": "none",
+        "requires_authorized_service": true,
+        "activation_path": "Recurring execution needs Tessera's flag-gated schedule support, which is being designed now. No scheduler is activated by this pack, and a schedule noun cannot authorize work by itself.",
+        "cadence": {
+          "every": "P1D",
+          "at_utc": "07:30",
+          "start": null,
+          "stop": null,
+          "start_reason": "Set by the owner when an authorized schedule adapter exists."
+        },
+        "enqueues": [
+          {
+            "$verb": "agent-harness-feeds.probe-harness-sources"
+          },
+          {
+            "$verb": "agent-harness-feeds.recheck-harness-freshness"
+          },
+          {
+            "$verb": "agent-harness-feeds.encapsulate-harness-feed"
+          }
+        ],
+        "per_window": {
+          "max_sources": 8,
+          "max_fetches": 16,
+          "max_outstanding": 1,
+          "max_runtime_seconds": 600
+        },
+        "enqueue_identity": "SHA-256 of the schedule key, its version and the window start, so duplicate ticks never create duplicate tasks.",
+        "missed_windows": "Skip missed windows; never catch up more than one window.",
+        "follow_up": "recheck-harness-freshness proposes normalize-harness-benchmarks when new release tags or benchmark trials arrive; an authorized requester enqueues those.",
+        "feed": {
+          "$pin": "feed.agent-harnesses"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "feed.agent-harnesses"
+        ]
+      ]
+    },
+    {
+      "slug": "tool.harness-feeds",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: agent harness feed normalizer, Pareto ranker and digest encapsulator",
+      "category_reason": "Tested Python standard-library package pinned by path, file count and digest.",
+      "value": {
+        "name": "agent harness feeds",
+        "code": {
+          "$code": "agent-harness-feeds"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m harness_feeds normalize --input RAW_RUNS.json",
+          "python -m harness_feeds rank --input NORMALIZED.json [--max-cost-usd 1.25] [--min-mcp-reliability 0.92]",
+          "python -m harness_feeds freshness --observed YYYY-MM-DD --as-of YYYY-MM-DD [--missed-releases N]",
+          "python -m harness_feeds encapsulate --bundle-json BUNDLE.json"
+        ],
+        "does": [
+          "Computes HarnessTax token overhead, cost-per-verified-task and Wilson 95 percent intervals.",
+          "Finds non-dominated Pareto frontiers and ranks harnesses under budget, HarnessTax and MCP reliability constraints.",
+          "Computes exponential freshness decay and deterministic SHA-256 encapsulated feed digests."
+        ],
+        "does_not": [
+          "Activate a scheduler, scrape private endpoints, execute arbitrary untrusted harness binaries or fabricate live leaderboard claims."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.feed-snapshot"
+        ]
+      ]
+    },
+    {
+      "slug": "template.feed-snapshot",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: encapsulated agent harness feed snapshot summary",
+      "value": {
+        "describes": "an encapsulated agent harness feed summary recording child count, canonical SHA-256 feed digest, Pareto frontier IDs and recommended harness",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "feed_id",
+            "as_of_date",
+            "child_count",
+            "encapsulated_digest_sha256",
+            "pareto_frontier",
+            "selected_harness_id"
+          ],
+          "properties": {
+            "feed_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "as_of_date": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "child_count": {
+              "type": "integer",
+              "minimum": 4
+            },
+            "encapsulated_digest_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "pareto_frontier": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "selected_harness_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "example": {
+          "feed_id": "feed.agent-harnesses",
+          "as_of_date": "2026-10-30",
+          "child_count": 7,
+          "encapsulated_digest_sha256": "a1e81a386c4b85567647e340371f0fff210d9197af3ace5e0003fcfb4e5613ec",
+          "pareto_frontier": [
+            "harness-square",
+            "muse-code",
+            "pi"
+          ],
+          "selected_harness_id": "pi"
+        }
+      }
+    },
+    {
+      "slug": "example.raw-harness-runs",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic raw benchmark runs for Harness Square / Harness2, OpenCode, Pi and Muse Code",
+      "category_reason": "Synthetic trial inputs from which test_harness_feeds.py recomputes normalization, Pareto frontier and feed digest.",
+      "value": {
+        "runs": [
+          {
+            "harness_id": "harness-square",
+            "harness_version": "2.1.0-syn",
+            "model_id": "llama-open-coder-syn",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "timeout_s": 900,
+            "total_tasks": 100,
+            "verified_successes": 71,
+            "total_cost_usd": 62.48,
+            "total_harness_tokens": 1340000,
+            "raw_task_tokens": 1000000,
+            "mcp_calls_succeeded": 196,
+            "mcp_calls_total": 200
+          },
+          {
+            "harness_id": "opencode",
+            "harness_version": "0.14.0-syn",
+            "model_id": "llama-open-coder-syn",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "timeout_s": 900,
+            "total_tasks": 100,
+            "verified_successes": 67,
+            "total_cost_usd": 56.95,
+            "total_harness_tokens": 1480000,
+            "raw_task_tokens": 1000000,
+            "mcp_calls_succeeded": 188,
+            "mcp_calls_total": 200
+          },
+          {
+            "harness_id": "pi",
+            "harness_version": "0.9.2-syn",
+            "model_id": "llama-open-coder-syn",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "timeout_s": 900,
+            "total_tasks": 100,
+            "verified_successes": 68,
+            "total_cost_usd": 38.08,
+            "total_harness_tokens": 1140000,
+            "raw_task_tokens": 1000000,
+            "mcp_calls_succeeded": 191,
+            "mcp_calls_total": 200
+          },
+          {
+            "harness_id": "muse-code",
+            "harness_version": "1.3.0-syn",
+            "model_id": "llama-open-coder-syn",
+            "suite_id": "terminal-and-swe-synthetic-100",
+            "timeout_s": 900,
+            "total_tasks": 100,
+            "verified_successes": 69,
+            "total_cost_usd": 58.65,
+            "total_harness_tokens": 1410000,
+            "raw_task_tokens": 1000000,
+            "mcp_calls_succeeded": 193,
+            "mcp_calls_total": 200
+          }
+        ]
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "probe-harness-sources",
+      "kind": "verb.fetch_feed",
+      "title": "Probe public release streams and changelogs for tracked agent harnesses",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Read public release tags, changelogs and benchmark manifest digests for Harness Square / Harness2, OpenCode, Pi and Muse Code without posting or modifying anything upstream.",
+      "outcome": "Observed release versions, commit digests and timestamped source records.",
+      "ready_outcome": "harness_sources_probed",
+      "pinned": [
+        "source.open-harness-releases",
+        "guardrail.unactivated-schedule-boundary"
+      ],
+      "slots": [
+        {
+          "name": "source_catalog",
+          "category": "noun.public_source",
+          "description": "Pin of the public harness release source catalog."
+        }
+      ],
+      "network": [
+        "read_only",
+        "Conditional GET with ETag or If-Modified-Since against allowlisted public release endpoints only; do not write or authenticate."
+      ],
+      "produces": [
+        {
+          "name": "release_observations",
+          "template": "template.feed-snapshot"
+        }
+      ],
+      "steps": [
+        "Fetch release tags and dates for each target in source.open-harness-releases using read-only GET requests.",
+        "Record version strings, commit hashes and missed-release counts since the current feed snapshot."
+      ],
+      "acceptance": [
+        {
+          "id": "four-harnesses-checked",
+          "check": "Observations cover harness-square, opencode, pi and muse-code or record an explicit fetch error.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "normalize-harness-benchmarks",
+      "kind": "verb.benchmark_harness",
+      "title": "Normalize Terminal-Bench and SWE-bench trials with HarnessTax and MCP reliability",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compute HarnessTax token overhead, cost-per-verified-task, solve rate Wilson 95 percent intervals, MCP tool call reliability and setup completeness across harness trials.",
+      "outcome": "A normalized benchmark matrix ready for Pareto ranking.",
+      "ready_outcome": "benchmarks_normalized",
+      "pinned": [
+        "tool.harness-feeds",
+        "guardrail.honest-harness-tax"
+      ],
+      "slots": [
+        {
+          "name": "raw_harness_runs",
+          "category": "noun.eval_run",
+          "description": "Pin of raw benchmark trial counts, token totals, costs and MCP tool call counts."
+        }
+      ],
+      "produces": [
+        {
+          "name": "normalized_matrix",
+          "template": "template.feed-snapshot"
+        }
+      ],
+      "steps": [
+        "Run python -m harness_feeds normalize on the raw trial records.",
+        "Flag any run missing model_id, harness_version, suite_id or timeout_s as setup_complete: false."
+      ],
+      "acceptance": [
+        {
+          "id": "tax-and-wilson-exact",
+          "check": "normalize_harness_benchmark reproduces solve_rate, harness_tax_ratio, cost_per_verified_task_usd and mcp_reliability.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-harness-feeds.probe-harness-sources"
+      ]
+    },
+    {
+      "slug": "recheck-harness-freshness",
+      "kind": "verb.recheck_fragility",
+      "title": "Recheck freshness decay and release drift across harness profiles and benchmarks",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Evaluate exponential age decay and missed-release penalties on each harness profile and benchmark matrix, marking aging or stale entries for re-evaluation.",
+      "outcome": "Freshness scores and staleness flags per harness.",
+      "ready_outcome": "freshness_rechecked",
+      "pinned": [
+        "tool.harness-feeds",
+        "feed.agent-harnesses"
+      ],
+      "slots": [
+        {
+          "name": "current_feed",
+          "category": "noun.feed_source",
+          "description": "Pin of the current encapsulated harness feed."
+        }
+      ],
+      "produces": [
+        {
+          "name": "freshness_report",
+          "template": "template.feed-snapshot"
+        }
+      ],
+      "steps": [
+        "Run compute_freshness_decay for each child profile and benchmark observation date against as_of_date.",
+        "Propose normalize-harness-benchmarks whenever status is aging or stale."
+      ],
+      "acceptance": [
+        {
+          "id": "decay-recomputed",
+          "check": "compute_freshness_decay reproduces freshness_score and status for every entry.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-harness-feeds.probe-harness-sources"
+      ]
+    },
+    {
+      "slug": "encapsulate-harness-feed",
+      "kind": "verb.verify_gate",
+      "title": "Encapsulate child profiles, sources, benchmarks and recommendations into one Feed digest",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Verify all four required open harness profiles are present, compute individual child SHA-256 digests, and seal them into a canonical encapsulated Feed snapshot.",
+      "outcome": "A conforming feed-snapshot summary and updated feed.agent-harnesses record.",
+      "ready_outcome": "harness_feed_encapsulated",
+      "pinned": [
+        "tool.harness-feeds",
+        "template.feed-snapshot",
+        "guardrail.encapsulated-feed-pins"
+      ],
+      "slots": [
+        {
+          "name": "normalized_matrix",
+          "category": "noun.eval_run",
+          "description": "Pin of the normalized benchmark matrix."
+        },
+        {
+          "name": "pareto_recommendation",
+          "category": "noun.eval_run",
+          "description": "Pin of the Pareto frontier recommendation."
+        }
+      ],
+      "produces": [
+        {
+          "name": "feed_snapshot",
+          "template": "template.feed-snapshot"
+        }
+      ],
+      "steps": [
+        "Run encapsulate_feed over the four harness profiles, release sources, normalized matrix and Pareto recommendation.",
+        "Validate the snapshot summary against template.feed-snapshot."
+      ],
+      "acceptance": [
+        {
+          "id": "order-independent-digest",
+          "check": "encapsulate_feed produces the exact encapsulated_digest_sha256 regardless of input list order.",
+          "method": "deterministic"
+        },
+        {
+          "id": "matches-feed-schema",
+          "check": "Output passes schema_errors against template.feed-snapshot.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-harness-feeds.normalize-harness-benchmarks",
+        "agent-harness-feeds.recheck-harness-freshness"
+      ]
+    },
+    {
+      "slug": "select-harness-for-task",
+      "kind": "verb.situate",
+      "title": "Select a Pareto-optimal agent harness under cost, HarnessTax and MCP floors",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Filter normalized harness benchmarks by setup completeness, cost ceiling, HarnessTax ceiling and MCP reliability floor, compute the four-objective Pareto frontier, and return the ranked recommendation.",
+      "outcome": "Selected harness ID, Pareto frontier list, ranked utilities and rejection reasons.",
+      "ready_outcome": "harness_selected",
+      "pinned": [
+        "feed.agent-harnesses",
+        "tool.harness-feeds",
+        "guardrail.honest-harness-tax"
+      ],
+      "slots": [
+        {
+          "name": "feed_snapshot",
+          "category": "noun.feed_source",
+          "description": "Pin of the encapsulated agent harness feed."
+        }
+      ],
+      "produces": [
+        {
+          "name": "harness_selection",
+          "template": "template.feed-snapshot"
+        }
+      ],
+      "steps": [
+        "Run select_harness with the requester's max_cost_per_verified_usd, max_harness_tax_ratio and min_mcp_reliability.",
+        "Record both ranked eligible harnesses and explicit rejection reasons for filtered candidates."
+      ],
+      "acceptance": [
+        {
+          "id": "pareto-consistent",
+          "check": "select_harness reproduces pareto_frontier, selected_harness_id and rejected reasons.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-harness-feeds.encapsulate-harness-feed"
+      ]
+    }
+  ]
+}

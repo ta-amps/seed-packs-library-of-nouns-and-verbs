@@ -1,0 +1,647 @@
+{
+  "pack_id": "parametric-3d-video-composer",
+  "title": "Parametric 3D video composer",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for planning parametric 3D Product Hub camera trajectories, realistic browser window and tab chrome layouts, upper-stage safe areas (x: 96..1824, y: 72..820) with dedicated lower caption bands (y: 836..1080), zero-double-exposure transitions, and subtle aura and edge-packet curves.",
+  "dependencies": [
+    "video-motion",
+    "frame-by-frame-video-qa"
+  ],
+  "boundaries": [
+    "Stage cards, browser windows and callouts stay inside x: 96..1824, y: 72..820; y: 836..1080 is reserved exclusively for captions.",
+    "Text-bearing shots transition only via 3D camera moves, clean cuts or dips to slate, never text-on-text crossfades.",
+    "Standard-library planner verifies coordinates before rendering and calls no remote APIs.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for planning parametric 3D Product Hub camera trajectories, realistic browser window and tab chrome layouts, and zero-double-exposure transitions",
+      "value": {
+        "lets_workers": "Plan 1x3 and 2x2 Product Hub 3D perspective camera zoom-in and zoom-out trajectories, compute desktop browser chrome geometry inside x: 96..1824, y: 72..820, verify zero collisions with the dedicated lower caption band y: 836..1080, reject text-on-text crossfades, and evaluate subtle Bezier edge-packet and aura glow curves.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "parametric-3d-video-composer.plan-hub-camera-trajectory"
+            },
+            "when": "Generate overview, pillar focus, bridge zoom-out and finale hub camera poses."
+          },
+          {
+            "verb": {
+              "$verb": "parametric-3d-video-composer.layout-browser-and-verify-safe-band"
+            },
+            "when": "Compute browser tab and omnibox chrome and check safe-stage and caption-band boundaries."
+          },
+          {
+            "verb": {
+              "$verb": "parametric-3d-video-composer.validate-transitions-and-curves"
+            },
+            "when": "Block double-exposure dissolves and generate clamped aura and edge-packet curves."
+          },
+          {
+            "verb": {
+              "$verb": "parametric-3d-video-composer.compile-composition-check"
+            },
+            "when": "Write a verified pre-render composition check noun."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.dedicated-caption-band"
+          },
+          {
+            "$pin": "guardrail.zero-double-exposure"
+          },
+          {
+            "$pin": "guardrail.clamped-subtle-auras"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.parametric-composer"
+        },
+        "worked_example": "Synthetic 1x3 Product Hub scene recomputed by test_composer.py: 19.7 s C2-continuous camera trajectory across 11 segments, a 1600x700 browser window with 3 tabs inside x: 96..1824, y: 72..820, captions isolated in y: 836..1080, and camera-move transitions with zero double exposures."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.dedicated-caption-band"
+        ],
+        [
+          "requires_noun",
+          "guardrail.zero-double-exposure"
+        ],
+        [
+          "requires_noun",
+          "guardrail.clamped-subtle-auras"
+        ],
+        [
+          "requires_noun",
+          "spec.product-hub-camera"
+        ],
+        [
+          "requires_noun",
+          "rules.stage-and-browser-layout"
+        ],
+        [
+          "requires_noun",
+          "rules.transitions-and-auras"
+        ],
+        [
+          "requires_noun",
+          "tool.parametric-composer"
+        ],
+        [
+          "requires_noun",
+          "template.composition-check"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.dedicated-caption-band",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: stage UI stays inside y: 72..820 and captions stay inside y: 836..1080",
+      "category_reason": "Eliminates caption-over-proof collisions structurally at layout time.",
+      "value": {
+        "rule": "On a 1920x1080 canvas, all stage cards, browser chrome and callouts remain inside x: 96..1824, y: 72..820, leaving a 16 px gutter above the dedicated lower caption band y: 836..1080.",
+        "how_it_is_checked": "verify_safe_area_and_caption_band emits a blocker caption_band_collision for any non-caption element intersecting y: 836..1080."
+      }
+    },
+    {
+      "slug": "guardrail.zero-double-exposure",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: forbid crossfades and dissolves between shots containing text or UI chrome",
+      "category_reason": "Prevents ghosted overlapping text during transitions.",
+      "value": {
+        "rule": "Adjacent shots that both display text or UI chrome transition only via 3D camera moves, hard cuts or dips to clean slate.",
+        "how_it_is_checked": "validate_zero_double_exposure flags crossfade, dissolve or alpha_blend transitions between text-bearing shots as blocker violations."
+      }
+    },
+    {
+      "slug": "guardrail.clamped-subtle-auras",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: clamp card aura opacity at or below 0.22 and fade edge packets to zero at borders",
+      "category_reason": "Keeps visual emphasis refined without neon glare or clipped particles.",
+      "value": {
+        "rule": "Focused card aura opacity never exceeds 0.22, and quadratic Bezier edge packets multiply opacity by 4*u*(1-u) so endpoints fade cleanly to 0.0.",
+        "how_it_is_checked": "compute_card_aura and interpolate_edge_packet enforce ceiling clamping and endpoint zeroing."
+      }
+    },
+    {
+      "slug": "spec.product-hub-camera",
+      "category": "noun.motion_profile",
+      "role": "spec",
+      "title": "Motion profile: 1x3 and 2x2 Product Hub 3D perspective camera trajectory",
+      "category_reason": "Specifies camera pose sequence, focal projection and C2 quintic easing.",
+      "value": {
+        "supported_grids": [
+          "1x3",
+          "2x2"
+        ],
+        "choreography_sequence": [
+          "overview",
+          "zoom_in",
+          "pillar_focus",
+          "bridge_zoom_out",
+          "bridge_hold",
+          "finale_zoom_out",
+          "finale_hub"
+        ],
+        "easing": "quintic_smootherstep_6u5_minus_15u4_plus_10u3",
+        "default_fov_deg": 45.0,
+        "stage_center_xy": [
+          960.0,
+          446.0
+        ]
+      }
+    },
+    {
+      "slug": "rules.stage-and-browser-layout",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Layout rules: 1080p upper safe stage, lower caption band and desktop browser chrome",
+      "category_reason": "Deterministic pixel coordinate contract for programmatic video scenes.",
+      "value": {
+        "canvas_px": [
+          1920,
+          1080
+        ],
+        "safe_stage_box": [
+          96,
+          72,
+          1824,
+          820
+        ],
+        "gutter_y_px": [
+          820,
+          836
+        ],
+        "caption_band_box": [
+          0,
+          836,
+          1920,
+          1080
+        ],
+        "browser_defaults": {
+          "min_size_px": [
+            480,
+            240
+          ],
+          "tab_bar_height_px": 42,
+          "toolbar_height_px": 40,
+          "border_px": 2,
+          "chrome_font_px": 18
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "rules.transitions-and-auras",
+      "category": "noun.motion_profile",
+      "role": "rules",
+      "title": "Transition and curve rules: zero double exposures, clamped card auras and Bezier packets",
+      "category_reason": "Defines allowed transition types and parametric accent curves.",
+      "value": {
+        "allowed_text_transitions": [
+          "hard_cut",
+          "camera_move",
+          "dip_to_slate"
+        ],
+        "forbidden_text_transitions": [
+          "crossfade",
+          "dissolve",
+          "alpha_blend"
+        ],
+        "aura_ceiling_opacity": 0.22,
+        "packet_envelope": "4*u*(1-u)"
+      }
+    },
+    {
+      "slug": "tool.parametric-composer",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: parametric 3D camera, browser layout and transition verifier",
+      "category_reason": "Tested Python standard-library package pinned by path, file count and digest.",
+      "value": {
+        "name": "parametric 3D video composer",
+        "code": {
+          "$code": "parametric-3d-video-composer"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m parametric_composer trajectory --grid 1x3",
+          "python -m parametric_composer browser --box 160 96 1760 796 --tabs Overview Runs Evidence",
+          "python -m parametric_composer verify --scene-json SCENE.json"
+        ],
+        "does": [
+          "Plans 1x3 and 2x2 Product Hub 3D perspective camera trajectories and projects 3D stage coordinates.",
+          "Calculates desktop browser chrome rects and verifies x: 96..1824, y: 72..820 safe-stage and y: 836..1080 caption-band separation.",
+          "Validates zero text-on-text double exposures and evaluates Bezier edge-packet and aura curves."
+        ],
+        "does_not": [
+          "Run a browser, encode MP4 files, call remote APIs or approve post-render visual quality without frame inspection."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.product-hub-camera"
+        ],
+        [
+          "verifies",
+          "rules.stage-and-browser-layout"
+        ]
+      ]
+    },
+    {
+      "slug": "template.composition-check",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: verified 3D camera, browser layout and transition composition check",
+      "value": {
+        "describes": "a pre-render verification summary recording Product Hub trajectory timing, browser viewport bounds, safe-area compliance and zero-double-exposure transition checks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "grid_mode",
+            "trajectory_duration_s",
+            "segment_count",
+            "browser_viewport_box",
+            "layout_valid",
+            "layout_violation_count",
+            "transitions_valid",
+            "transition_violation_count"
+          ],
+          "properties": {
+            "grid_mode": {
+              "type": "string",
+              "enum": [
+                "1x3",
+                "2x2"
+              ]
+            },
+            "trajectory_duration_s": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3600
+            },
+            "segment_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "browser_viewport_box": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "integer"
+              }
+            },
+            "layout_valid": {
+              "type": "boolean"
+            },
+            "layout_violation_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "transitions_valid": {
+              "type": "boolean"
+            },
+            "transition_violation_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "example": {
+          "grid_mode": "1x3",
+          "trajectory_duration_s": 21.0,
+          "segment_count": 13,
+          "browser_viewport_box": [
+            162,
+            178,
+            1758,
+            794
+          ],
+          "layout_valid": true,
+          "layout_violation_count": 0,
+          "transitions_valid": true,
+          "transition_violation_count": 0
+        }
+      }
+    },
+    {
+      "slug": "example.hub-scene-spec",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 1x3 Product Hub scene with browser window and camera-move transitions",
+      "category_reason": "Synthetic scene specification recomputed by test_composer.py.",
+      "value": {
+        "grid_mode": "1x3",
+        "pillar_ids": [
+          "nouns-store",
+          "verbs-queue",
+          "surface-gate"
+        ],
+        "browser_outer_box": [
+          160,
+          96,
+          1760,
+          796
+        ],
+        "browser_tabs": [
+          "Product Hub",
+          "Queue",
+          "Audit"
+        ],
+        "elements": [
+          {
+            "id": "browser-shell",
+            "role": "browser",
+            "box": [
+              160,
+              96,
+              1760,
+              796
+            ]
+          },
+          {
+            "id": "caption-01",
+            "role": "caption",
+            "box": [
+              240,
+              868,
+              1680,
+              956
+            ]
+          }
+        ],
+        "shots": [
+          {
+            "id": "hub-open",
+            "has_text": true,
+            "has_ui_chrome": true
+          },
+          {
+            "id": "pillar-nouns",
+            "has_text": true,
+            "has_ui_chrome": true
+          },
+          {
+            "id": "pillar-verbs",
+            "has_text": true,
+            "has_ui_chrome": true
+          }
+        ],
+        "transitions": [
+          {
+            "from_shot": "hub-open",
+            "to_shot": "pillar-nouns",
+            "kind": "camera_move",
+            "duration_s": 0.9
+          },
+          {
+            "from_shot": "pillar-nouns",
+            "to_shot": "pillar-verbs",
+            "kind": "camera_move",
+            "duration_s": 0.9
+          }
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "spec.product-hub-camera"
+        ]
+      ]
+    },
+    {
+      "slug": "example.composition-check",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed pre-render composition check",
+      "category_reason": "Deterministic verification output validated against template.composition-check.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.composition-check"
+        },
+        "instance": {
+          "grid_mode": "1x3",
+          "trajectory_duration_s": 21.0,
+          "segment_count": 13,
+          "browser_viewport_box": [
+            162,
+            178,
+            1758,
+            794
+          ],
+          "layout_valid": true,
+          "layout_violation_count": 0,
+          "transitions_valid": true,
+          "transition_violation_count": 0
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.hub-scene-spec"
+        ],
+        [
+          "verifies",
+          "template.composition-check"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-hub-camera-trajectory",
+      "kind": "verb.compile_dag",
+      "title": "Plan a 1x3 or 2x2 Product Hub 3D camera trajectory",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compute overview, pillar zoom-in, pillar focus, bridge zoom-out and finale hub 3D camera poses with quintic smootherstep easing and pinhole screen projections.",
+      "outcome": "A timed 3D camera trajectory and world-space pillar card boxes.",
+      "ready_outcome": "camera_trajectory_planned",
+      "pinned": [
+        "spec.product-hub-camera",
+        "tool.parametric-composer"
+      ],
+      "slots": [
+        {
+          "name": "hub_config",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the grid mode and pillar identifiers."
+        }
+      ],
+      "produces": [
+        {
+          "name": "trajectory_plan",
+          "template": "template.composition-check"
+        }
+      ],
+      "steps": [
+        "Run plan_product_hub_trajectory for the requested 1x3 or 2x2 grid.",
+        "Project overview card corners with project_point_3d to confirm all cards sit inside x: 96..1824, y: 72..820."
+      ],
+      "acceptance": [
+        {
+          "id": "c2-continuous-segments",
+          "check": "Adjacent segments share exact boundary poses and quintic easing derivatives vanish at endpoints.",
+          "method": "deterministic"
+        },
+        {
+          "id": "overview-inside-safe-stage",
+          "check": "Projected overview pillar boxes fall within STAGE_SAFE_BOX.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "layout-browser-and-verify-safe-band",
+      "kind": "verb.verify_gate",
+      "title": "Compute browser chrome layout and verify safe-stage and caption-band bounds",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Calculate desktop browser window, traffic-light controls, tab strip, omnibox and inner viewport coordinates, and check every stage and caption box against x: 96..1824, y: 72..820 and y: 836..1080.",
+      "outcome": "Browser chrome rects and safe-area / caption-band collision verification.",
+      "ready_outcome": "stage_layout_verified",
+      "pinned": [
+        "rules.stage-and-browser-layout",
+        "tool.parametric-composer",
+        "guardrail.dedicated-caption-band"
+      ],
+      "slots": [
+        {
+          "name": "scene_elements",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the browser chrome config and scene element boxes."
+        }
+      ],
+      "produces": [
+        {
+          "name": "layout_verification",
+          "template": "template.composition-check"
+        }
+      ],
+      "steps": [
+        "Compute tab strip, omnibox and viewport boxes with compute_browser_chrome_layout.",
+        "Run verify_safe_area_and_caption_band across all stage elements and captions."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-caption-collisions",
+          "check": "valid is true and violations is empty when stage items stay in y: 72..820 and captions stay in y: 836..1080.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "validate-transitions-and-curves",
+      "kind": "verb.verify_gate",
+      "title": "Validate zero-double-exposure transitions and evaluate aura and packet curves",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Check every shot-to-shot transition to reject text-on-text crossfades or dissolves, and compute clamped card aura opacities and quadratic Bezier edge-packet trajectories.",
+      "outcome": "Transition validation result and sampled accent curve parameters.",
+      "ready_outcome": "transitions_validated",
+      "pinned": [
+        "rules.transitions-and-auras",
+        "tool.parametric-composer",
+        "guardrail.zero-double-exposure",
+        "guardrail.clamped-subtle-auras"
+      ],
+      "slots": [
+        {
+          "name": "shot_transitions",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the shot list and transition sequence."
+        }
+      ],
+      "produces": [
+        {
+          "name": "transition_verification",
+          "template": "template.composition-check"
+        }
+      ],
+      "steps": [
+        "Run validate_zero_double_exposure on the shot list and transition sequence.",
+        "Evaluate compute_card_aura and interpolate_edge_packet for focused pillar cards and inter-card connectors."
+      ],
+      "acceptance": [
+        {
+          "id": "no-text-crossfades",
+          "check": "No crossfade, dissolve or alpha_blend connects two shots with text or UI chrome.",
+          "method": "deterministic"
+        },
+        {
+          "id": "aura-clamped",
+          "check": "Every sampled aura opacity is <= 0.22 and edge-packet endpoint opacities equal 0.0.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "compile-composition-check",
+      "kind": "verb.verify_gate",
+      "title": "Compile the pre-render 3D composition verification summary",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Combine the Product Hub trajectory, browser viewport geometry, safe-area layout check and zero-double-exposure transition check into a conforming composition check report.",
+      "outcome": "A conforming composition check noun ready before rendering.",
+      "ready_outcome": "composition_check_compiled",
+      "pinned": [
+        "template.composition-check",
+        "tool.parametric-composer"
+      ],
+      "slots": [
+        {
+          "name": "trajectory_plan",
+          "category": "noun.motion_profile",
+          "description": "Pin of the camera trajectory plan."
+        },
+        {
+          "name": "layout_verification",
+          "category": "noun.eval_run",
+          "description": "Pin of the safe-area and browser layout check."
+        },
+        {
+          "name": "transition_verification",
+          "category": "noun.eval_run",
+          "description": "Pin of the transition validation check."
+        }
+      ],
+      "produces": [
+        {
+          "name": "composition_check",
+          "template": "template.composition-check"
+        }
+      ],
+      "steps": [
+        "Assemble grid_mode, trajectory_duration_s, segment_count, browser_viewport_box, layout_valid and transitions_valid.",
+        "Validate the record against template.composition-check."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-composition-schema",
+          "check": "Output passes schema_errors against template.composition-check.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "parametric-3d-video-composer.plan-hub-camera-trajectory",
+        "parametric-3d-video-composer.layout-browser-and-verify-safe-band",
+        "parametric-3d-video-composer.validate-transitions-and-curves"
+      ]
+    }
+  ]
+}

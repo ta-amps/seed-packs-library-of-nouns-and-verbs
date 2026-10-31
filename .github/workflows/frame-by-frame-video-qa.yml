@@ -1,0 +1,45 @@
+# Checks for the frame-by-frame video QA pack's code, run when that pack, the sources its tests read,
+# or this workflow changes. Installs pinned wheels from requirements.txt with --no-deps.
+name: frame-by-frame-video-qa
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packs/frame-by-frame-video-qa/**"
+      - "packs/video-review/source.json"
+      - "packs/findings-to-fixes/source.json"
+      - ".github/workflows/frame-by-frame-video-qa.yml"
+  pull_request:
+    paths:
+      - "packs/frame-by-frame-video-qa/**"
+      - "packs/video-review/source.json"
+      - "packs/findings-to-fixes/source.json"
+      - ".github/workflows/frame-by-frame-video-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  code:
+    # Compile with warnings as errors, then run detector, UI mask, pack agreement and synthetic FFmpeg/OCR clip tests.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    defaults:
+      run:
+        working-directory: packs/frame-by-frame-video-qa/code
+    env:
+      FRAME_QA_REQUIRE_FFMPEG: "1"
+      FRAME_QA_REQUIRE_OCR: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pinned headless CV, FFmpeg and OCR dependencies
+        run: make install PYTHON=python
+      - name: Compile and run every test
+        run: make check PYTHON=python

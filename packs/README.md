@@ -83,8 +83,16 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Edge and corner cases](edge-and-corner-cases/README.md) | Finding edge and corner cases on purpose: input, interface, video and API catalogs, every expected result written before anything runs, a tested seeded generator of labelled cases, inputs stored escaped and every failure kept as its own regression test | 27 | 7 |
 | [Regression watch](regression-watch/README.md) | Watching for regressions against baselines a person accepted: screenshots by hash, metrics with tolerances, API shapes and video QA numbers measured again on every change, every mismatch rerun twice so flaky checks are told apart from real regressions | 22 | 7 |
 | [Codebase health review](codebase-health-review/README.md) | Reviewing a codebase's health at one commit: TODO ages from git blame, swallowed exceptions, untested error paths, flaky tests, dependency drift, unpinned versions, oversized modules, duplicated code, docs drift and secrets reported by place only, with tested code and no single score | 22 | 8 |
+| [Frame-by-frame video QA](frame-by-frame-video-qa/README.md) | Frame-by-frame video quality checks with 12 deterministic detectors, connected-component UI masks and optional local SAM occlusion checks, with tested code | 14 | 7 |
+| [Audio and narration QA](audio-and-narration-qa/README.md) | ITU-R BS.1770-4 loudness and true-peak gating, sidechain pause-pumping and edit-point click checks, speaking WPM pacing, WebVTT caption-pause alignment and ASR CER gating, with tested code | 10 | 5 |
+| [Parametric 3D video composer](parametric-3d-video-composer/README.md) | Planning 1x3 and 2x2 3D perspective hub camera trajectories, verifying browser chrome safe areas and lower caption bands, and blocking text-on-text double-exposure crossfades, with tested code | 11 | 4 |
+| [Agent harness feeds](agent-harness-feeds/README.md) | Continuously probing, normalizing and encapsulating an Agent Harnesses Feed across Harness Square, OpenCode, Pi and Muse Code with HarnessTax and Pareto rankings, with tested code | 16 | 5 |
+| [Hackathon ecosystem index](hackathon-ecosystem-index/README.md) | Decomposing public AI repository metadata and READMEs into searchable task and task-object signatures and serving hybrid BM25 plus facet Reciprocal Rank Fusion retrieval, with tested code | 9 | 3 |
+| [LoRA memory and shimming](lora-memory-and-shimming/README.md) | Compiling post-cutoff task objects into leakage-checked LoRA pairs, routing between revocable prompt shims and weight updates, and gating promotion on paired bootstrap CIs, with tested code | 10 | 3 |
+| [Hybrid retrieval context knapsack](hybrid-retrieval-context-knapsack/README.md) | Fusing BM25 and dense cosine rankings via RRF (k=60), stripping untrusted prompt injections, pruning MinHash near-duplicates and solving a 0/1 token-budget context knapsack, with tested code | 10 | 3 |
+| [Leakage-safe regime backtesting](leakage-safe-regime-backtesting/README.md) | Synthetic and historical statistical validation hygiene with purged walk-forward splits, causal volatility-regime Rank IC/ICIR, turnover drag and multiple-testing deflation, never as financial advice, with tested code | 10 | 3 |
 
-Together: 1380 nouns and 440 verb templates across sixty-seven packs. The
+Together: 1470 nouns and 473 verb templates across seventy-five packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
