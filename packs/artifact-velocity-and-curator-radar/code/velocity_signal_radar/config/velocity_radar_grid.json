@@ -1,0 +1,317 @@
+{
+  "grid_id": "velocity_signal_radar_grid",
+  "schema_version": "1.0.0",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "float_round_digits": 4,
+  "score_scale_milli": 1000,
+  "http_ok_status": 200,
+  "http_conflict_status": 409,
+  "simhash_bit_width": 64,
+  "simhash_hex_nibbles": 16,
+  "lsh_band_count": 4,
+  "lsh_nibbles_per_band": 4,
+  "default_shingle_size": 2,
+  "bits_per_byte": 8,
+  "seconds_per_day": 86400,
+  "high_priority": 82,
+  "default_priority": 68,
+  "low_priority": 54,
+  "default_complexity_milli": 780,
+  "demo_complexity_milli": 840,
+  "allow_authenticated_wall_scraping": false,
+  "prohibited_wall_hosts": [
+    "facebook.com",
+    "www.facebook.com",
+    "m.facebook.com",
+    "web.facebook.com",
+    "instagram.com",
+    "www.instagram.com",
+    "linkedin.com",
+    "www.linkedin.com",
+    "threads.net",
+    "www.threads.net"
+  ],
+  "sanctioned_upstream_hosts": [
+    "api.github.com",
+    "github.com",
+    "raw.githubusercontent.com",
+    "hn.algolia.com",
+    "news.ycombinator.com",
+    "huggingface.co"
+  ],
+  "permissive_spdx_licenses": [
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "MPL-2.0",
+    "0BSD",
+    "Unlicense"
+  ],
+  "hype_marker_phrases": [
+    "star to unlock",
+    "coming soon waitlist",
+    "curated awesome list only",
+    "airdrop",
+    "token presale",
+    "100x guaranteed"
+  ],
+  "quickstart_command_prefixes": [
+    "pip install",
+    "uv add",
+    "uvx ",
+    "uv run",
+    "npx ",
+    "npm install",
+    "pnpm add",
+    "cargo install",
+    "cargo run",
+    "docker run",
+    "docker compose",
+    "git clone",
+    "python -m",
+    "python3 -m",
+    "go install",
+    "brew install"
+  ],
+  "rubric_axes": [
+    "velocity_momentum",
+    "quickstart_reproducibility",
+    "code_and_architecture_substance",
+    "license_and_reuse_clarity",
+    "cross_source_corroboration",
+    "curator_lens_alignment"
+  ],
+  "scoring_normalization": {
+    "stars_per_day_ceiling": 120.0,
+    "hn_points_ceiling": 250.0,
+    "hf_upvotes_ceiling": 100.0,
+    "corroboration_sources_ceiling": 3.0,
+    "healthy_fork_ratio_ceiling": 0.18,
+    "min_substance_repo_kb": 25.0,
+    "substantial_repo_kb": 400.0,
+    "no_license_penalty_milli": 180,
+    "empty_or_tiny_repo_penalty_milli": 260,
+    "hype_phrase_penalty_milli": 240,
+    "missing_quickstart_penalty_milli": 140,
+    "archive_enrichment_bonus_milli": 45
+  },
+  "parameters": [
+    {
+      "name": "radar_regime",
+      "param_type": "choice",
+      "choices": [
+        "balanced_breakout_radar",
+        "rapid_velocity_triage",
+        "strict_substance_audit",
+        "compact_local_first"
+      ],
+      "default": "balanced_breakout_radar"
+    },
+    {
+      "name": "lookback_window_days",
+      "param_type": "integer_range",
+      "low": 7,
+      "high": 45,
+      "step": 7,
+      "default": 28
+    },
+    {
+      "name": "min_breakout_score_milli",
+      "param_type": "integer_range",
+      "low": 450,
+      "high": 850,
+      "step": 100,
+      "default": 550
+    },
+    {
+      "name": "simhash_hamming_dedup_max",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 10,
+      "step": 4,
+      "default": 6
+    },
+    {
+      "name": "max_proposals_per_artifact",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "name": "require_permissive_license",
+      "param_type": "boolean",
+      "default": false
+    }
+  ],
+  "constraints": [
+    {
+      "id": "strict_substance_requires_high_floor_and_license",
+      "when": {
+        "radar_regime": "strict_substance_audit"
+      },
+      "require_in": {
+        "min_breakout_score_milli": [650, 750, 850],
+        "require_permissive_license": [true]
+      }
+    },
+    {
+      "id": "rapid_triage_uses_tight_window",
+      "when": {
+        "radar_regime": "rapid_velocity_triage"
+      },
+      "require_in": {
+        "lookback_window_days": [7, 14, 21]
+      }
+    }
+  ],
+  "regime_defaults": {
+    "balanced_breakout_radar": {
+      "radar_regime": "balanced_breakout_radar",
+      "lookback_window_days": 28,
+      "min_breakout_score_milli": 550,
+      "simhash_hamming_dedup_max": 6,
+      "max_proposals_per_artifact": 4,
+      "require_permissive_license": false
+    },
+    "rapid_velocity_triage": {
+      "radar_regime": "rapid_velocity_triage",
+      "lookback_window_days": 14,
+      "min_breakout_score_milli": 450,
+      "simhash_hamming_dedup_max": 6,
+      "max_proposals_per_artifact": 3,
+      "require_permissive_license": false
+    },
+    "strict_substance_audit": {
+      "radar_regime": "strict_substance_audit",
+      "lookback_window_days": 28,
+      "min_breakout_score_milli": 650,
+      "simhash_hamming_dedup_max": 6,
+      "max_proposals_per_artifact": 4,
+      "require_permissive_license": true
+    },
+    "compact_local_first": {
+      "radar_regime": "compact_local_first",
+      "lookback_window_days": 35,
+      "min_breakout_score_milli": 550,
+      "simhash_hamming_dedup_max": 6,
+      "max_proposals_per_artifact": 4,
+      "require_permissive_license": true
+    }
+  },
+  "regime_rubric_weights": {
+    "balanced_breakout_radar": {
+      "velocity_momentum": 0.24,
+      "quickstart_reproducibility": 0.22,
+      "code_and_architecture_substance": 0.20,
+      "license_and_reuse_clarity": 0.12,
+      "cross_source_corroboration": 0.12,
+      "curator_lens_alignment": 0.10
+    },
+    "rapid_velocity_triage": {
+      "velocity_momentum": 0.36,
+      "quickstart_reproducibility": 0.18,
+      "code_and_architecture_substance": 0.14,
+      "license_and_reuse_clarity": 0.08,
+      "cross_source_corroboration": 0.14,
+      "curator_lens_alignment": 0.10
+    },
+    "strict_substance_audit": {
+      "velocity_momentum": 0.12,
+      "quickstart_reproducibility": 0.26,
+      "code_and_architecture_substance": 0.28,
+      "license_and_reuse_clarity": 0.18,
+      "cross_source_corroboration": 0.10,
+      "curator_lens_alignment": 0.06
+    },
+    "compact_local_first": {
+      "velocity_momentum": 0.16,
+      "quickstart_reproducibility": 0.26,
+      "code_and_architecture_substance": 0.22,
+      "license_and_reuse_clarity": 0.16,
+      "cross_source_corroboration": 0.08,
+      "curator_lens_alignment": 0.12
+    }
+  },
+  "curator_lenses": [
+    {
+      "lens_id": "practical_dev_security_and_fullstack",
+      "keywords": ["security", "checklist", "audit", "firewall", "guardrail", "sandbox", "lint", "auth", "pii", "redaction", "cli", "deploy"],
+      "inspired_by_handles": ["PHfreecoder"]
+    },
+    {
+      "lens_id": "self_hosted_ai_automation_and_workflows",
+      "keywords": ["automation", "workflow", "n8n", "self-hosted", "browser", "playwright", "webhook", "orchestration", "cron", "pipeline", "voice"],
+      "inspired_by_handles": ["fusin.automation"]
+    },
+    {
+      "lens_id": "agent_mcp_and_tool_protocols",
+      "keywords": ["mcp", "model-context-protocol", "agent", "tool-calling", "harness", "skill", "a2a", "durable", "queue"],
+      "inspired_by_handles": ["PHfreecoder", "fusin.automation"]
+    },
+    {
+      "lens_id": "visual_geospatial_and_interactive_tooling",
+      "keywords": ["3d", "render", "motion", "video", "canvas", "webgl", "threejs", "geospatial", "map", "shader", "interactive", "svg"],
+      "inspired_by_handles": ["chriiske"]
+    },
+    {
+      "lens_id": "compact_local_and_edge_inference",
+      "keywords": ["local", "offline", "cpu", "rust", "onnx", "gguf", "quantized", "edge", "zero-dependency", "lightweight", "ocr"],
+      "inspired_by_handles": ["PHfreecoder", "chriiske"]
+    }
+  ],
+  "capability_facet_rules": [
+    {
+      "facet_id": "agent_mcp_tool_protocols",
+      "keywords": ["mcp", "model-context-protocol", "agent", "harness", "tool-use", "skill"]
+    },
+    {
+      "facet_id": "durable_task_queues_and_orchestration",
+      "keywords": ["queue", "durable", "workflow", "n8n", "automation", "scheduler", "worker", "lease"]
+    },
+    {
+      "facet_id": "ocr_document_intelligence",
+      "keywords": ["ocr", "pdf", "document", "markdown", "table-extraction", "layout", "anydoc"]
+    },
+    {
+      "facet_id": "pii_redaction_and_privacy",
+      "keywords": ["pii", "redaction", "privacy", "security", "secret", "firewall", "guardrail"]
+    },
+    {
+      "facet_id": "three_d_rendering_and_visual_motion",
+      "keywords": ["3d", "gaussian", "mesh", "render", "motion", "video", "shader", "geospatial", "webgl"]
+    },
+    {
+      "facet_id": "voice_audio_synthesis_and_asr",
+      "keywords": ["voice", "tts", "asr", "speech", "audio", "whisper", "realtime-audio"]
+    },
+    {
+      "facet_id": "runs_on_small_4gb_laptop",
+      "keywords": ["rust", "cli", "cpu", "offline", "lightweight", "zero-dep", "embedded", "sqlite", "onnx"]
+    },
+    {
+      "facet_id": "kubernetes_production_ready",
+      "keywords": ["kubernetes", "k8s", "helm", "docker", "opentelemetry", "grpc", "postgres", "distributed"]
+    }
+  ],
+  "forbidden_domain_tokens": [
+    "real_estate",
+    "realestate",
+    "mortgage",
+    "healthcare",
+    "hospitality",
+    "ecommerce",
+    "fintech",
+    "insurance",
+    "dentist",
+    "restaurant",
+    "super_seed_pack",
+    "superseedpack",
+    "super_meta_seed"
+  ]
+}

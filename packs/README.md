@@ -128,8 +128,9 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Autonomous DAG stem-cell and answer generalizer](autonomous-dag-and-answer-generalizer/README.md) | Compiling tasks (things to do) and task objects across seven Kahn-wave DAG profiles, lifting discrete decision forks into answer manifolds, vaporizing ephemeral CLI harness workspaces, recovering from canary blueprint drift and computing causal Shapley step credits, with tested code | 9 | 3 |
 | [Hybrid memory matrices and durable task queues](hybrid-memory-and-durable-task-queues/README.md) | Inline-lease durable task queues, zero-sweeper crash reclamation, maker != checker verification, content-addressed step and rating idempotency, ADaPT decompose-on-failure with shared-prefix batch coalescing and zero-OOM subspace memory matrix rotating-layer iterative training, with tested code | 9 | 3 |
 | [Capability ontology and benchmark seeds](capability-ontology-and-benchmark-seeds/README.md) | Polyhierarchical capability and niche ontology graphs, typed AI tool, MCP server, feed and OSS release intelligence cards, durable queue and hackathon radar matrices, multi-axis Pareto benchmarks, root ecosystem seed catalogs and bounded multi-generation seed digestion, with tested code | 13 | 5 |
+| [Emerging artifact velocity and curator radar](artifact-velocity-and-curator-radar/README.md) | Harvesting sanctioned public velocity signals on brand-new open-source repositories, coalescing duplicates via 64-bit shingle SimHash, separating runnable engineering substance from star-farming hype, matching curator-lens heuristics without credential-gated wall scraping, cross-linking existing seed archives and proposing bounded verification, adapter and demo tasks, with tested code | 10 | 4 |
 
-Together: 1850 nouns and 592 verb templates across one hundred and twelve packs. The
+Together: 1860 nouns and 596 verb templates across one hundred and thirteen packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 

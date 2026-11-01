@@ -1,0 +1,2240 @@
+{
+  "pack_id": "artifact-velocity-and-curator-radar",
+  "title": "Emerging artifact velocity and curator radar",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for harvesting sanctioned public velocity signals on brand-new open-source repositories, separating runnable engineering substance from star-farming hype, matching curator-lens heuristics, cross-linking existing seed archives without blind duplication, and proposing bounded verification, adapter and demo tasks.",
+  "dependencies": [
+    "capability-ontology-and-benchmark-seeds",
+    "freshness-checks"
+  ],
+  "boundaries": [
+    "allow_authenticated_wall_scraping is locked to false; workers never scrape credential-gated social walls or bypass robots.txt or authentication checks.",
+    "Curator reference URLs act strictly as declarative public cross-post search lenses and human or agent canonical repository intake references.",
+    "Follow-up tasks are emitted strictly as bounded proposals with maximum_automatically_enqueued_children: 0 and never create a competing scheduler or task authority.",
+    "Importing the pack writes nothing, enqueues nothing and executes no third-party repository code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for sanctioned breakout repository discovery, anti-hype velocity scoring and bounded task enrichment",
+      "value": {
+        "lets_workers": "Harvest sanctioned public repository creation and discussion signals across GitHub Search REST API, Hacker News Algolia Show HN, Hugging Face Daily Papers and Atom/RSS release streams, coalesce duplicates via canonical github:<owner>/<repo> keys and 64-bit shingle SimHash, apply curator-lens topic heuristics without scraping credential-gated walls, cross-link existing seed archives without duplication, filter star-farming hype, and emit bounded verification, ontology-linking, adapter and demo task proposals for worker models such as muse-spark-open, muse-spark-1.3, muse-wonder-1.0 and Muse-Glimmer-30B.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "artifact-velocity-and-curator-radar.harvest-and-normalize-upstream-velocity-signals"
+            },
+            "when": "Collect sanctioned public velocity signals and refuse any credential-gated wall URL."
+          },
+          {
+            "verb": {
+              "$verb": "artifact-velocity-and-curator-radar.deduplicate-and-score-breakout-utility"
+            },
+            "when": "Coalesce multi-source sightings via 64-bit SimHash and score runnable utility vs hype."
+          },
+          {
+            "verb": {
+              "$verb": "artifact-velocity-and-curator-radar.verify-quickstart-and-extract-architecture-card"
+            },
+            "when": "Extract runnable quickstart commands, SPDX license, runtime footprints and polyhierarchical capability ontology links."
+          },
+          {
+            "verb": {
+              "$verb": "artifact-velocity-and-curator-radar.emit-bounded-enrichment-and-demo-proposals"
+            },
+            "when": "Propose bounded +1 hop verification, ontology-mapping, MCP/skill adapter and runnable demo tasks."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.sanctioned-public-apis-no-wall-scraping"
+          },
+          {
+            "$pin": "guardrail.substance-over-star-farming-and-single-authority"
+          }
+        ],
+        "templates": [
+          {
+            "$pin": "template.velocity-signal-dossier"
+          },
+          {
+            "$pin": "template.radar-evaluation-receipt"
+          },
+          {
+            "$pin": "capability-ontology-and-benchmark-seeds:template.intelligence-card"
+          }
+        ],
+        "catalog": {
+          "$pin": "catalog.curator-lens-and-upstream-radar-feeds"
+        },
+        "rubric": {
+          "$pin": "rubric.breakout-utility-and-hype-filter"
+        },
+        "tool": {
+          "$pin": "tool.velocity-signal-radar"
+        },
+        "worked_example": "Synthetic 6-signal multi-source bundle in example.velocity-radar-bundle recomputed byte-for-byte in test_velocity_signal_radar.py: coalesces GitHub + Show HN sightings, enriches an archived OCR repo without duplication, filters an unlicensed waitlist hype repo, refuses a direct facebook.com wall scrape probe with sanctioned_public_api_or_search_lens_only, and emits 6 bounded task proposals."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "capability-ontology-and-benchmark-seeds:pack",
+          "Extends polyhierarchical capability ontology seeds with sanctioned upstream breakout discovery and anti-hype velocity triage."
+        ],
+        [
+          "requires_noun",
+          "guardrail.sanctioned-public-apis-no-wall-scraping"
+        ],
+        [
+          "requires_noun",
+          "guardrail.substance-over-star-farming-and-single-authority"
+        ],
+        [
+          "requires_noun",
+          "template.velocity-signal-dossier"
+        ],
+        [
+          "requires_noun",
+          "catalog.curator-lens-and-upstream-radar-feeds"
+        ],
+        [
+          "requires_noun",
+          "rubric.breakout-utility-and-hype-filter"
+        ],
+        [
+          "requires_noun",
+          "tool.velocity-signal-radar"
+        ],
+        [
+          "requires_noun",
+          "template.radar-evaluation-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.sanctioned-public-apis-no-wall-scraping",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: sanctioned public APIs and canonical repository intake only -- zero credential-gated wall scraping",
+      "category_reason": "Enforces strict authentication, robots.txt and platform boundary compliance across all discovery workers.",
+      "value": {
+        "allow_authenticated_wall_scraping": false,
+        "rule": "Workers discover emerging repositories exclusively through sanctioned public APIs (GitHub REST Search API, Hacker News Algolia API, Hugging Face Daily Papers and Spaces API, public RSS/Atom release feeds), public search indices and explicit human or agent canonical github.com/<owner>/<repo> link intake; direct scraping of credential-gated social walls (including facebook.com, instagram.com, linkedin.com and threads.net) is strictly prohibited.",
+        "how_it_is_checked": "validate_sanctioned_source_url fails closed with ValueError('sanctioned_public_api_or_search_lens_only') on every prohibited wall host and non-HTTPS URL, verified across all 7 curator reference URLs in test_07."
+      }
+    },
+    {
+      "slug": "guardrail.substance-over-star-farming-and-single-authority",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: separate runnable open-source substance from star-farming hype without creating a rival scheduler",
+      "category_reason": "Prevents empty waitlist shells from polluting capability indices and preserves single-authority task scheduling.",
+      "value": {
+        "rule": "Every candidate repository is scored across runnable quickstarts, SPDX license clarity, repository code substance and cross-source corroboration before generating bounded task proposals, and all follow-up work is emitted as non-self-enqueuing proposals (auto_enqueue_permitted: false, maximum_automatically_enqueued_children: 0).",
+        "how_it_is_checked": "score_breakout_dossier penalizes unlicensed, tiny and hype-marker repositories below min_breakout_score_milli, and emit_bounded_verb_proposals emits zero proposals for rejected candidates."
+      }
+    },
+    {
+      "slug": "template.velocity-signal-dossier",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: normalized repository velocity, quickstart, license, capability-facet and curator-lens dossier",
+      "category_reason": "Typed JSON Schema pinning all fields required to evaluate an emerging open-source repository and map it into capability ontologies.",
+      "value": {
+        "describes": "a normalized, SimHash-deduplicated velocity and engineering substance dossier for a brand-new or archive-linked open-source repository",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "canonical_repo_key",
+            "canonical_repo_url",
+            "created_at_iso",
+            "age_days",
+            "stars",
+            "forks",
+            "stars_per_day",
+            "fork_ratio",
+            "corroborated_channels",
+            "spdx_license",
+            "permissive_license",
+            "primary_language",
+            "quickstart_commands",
+            "runtime_footprints",
+            "capability_facet_ids",
+            "curator_lens_ids",
+            "simhash64_hex",
+            "lsh_bands",
+            "already_in_seed_archive",
+            "linked_archive_key",
+            "axis_scores",
+            "utility_score_milli",
+            "hype_penalty_milli",
+            "breakout_score_milli",
+            "passes_breakout_gate",
+            "problem_solved",
+            "integration_hooks",
+            "demo_potential"
+          ],
+          "properties": {
+            "canonical_repo_key": {
+              "type": "string",
+              "minLength": 3
+            },
+            "canonical_repo_url": {
+              "type": "string",
+              "minLength": 10
+            },
+            "created_at_iso": {
+              "type": "string",
+              "minLength": 10
+            },
+            "age_days": {
+              "type": "number",
+              "minimum": 0
+            },
+            "stars": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "forks": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "stars_per_day": {
+              "type": "number",
+              "minimum": 0
+            },
+            "fork_ratio": {
+              "type": "number",
+              "minimum": 0
+            },
+            "corroborated_channels": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "spdx_license": {
+              "type": "string",
+              "minLength": 1
+            },
+            "permissive_license": {
+              "type": "boolean"
+            },
+            "primary_language": {
+              "type": "string",
+              "minLength": 1
+            },
+            "quickstart_commands": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "runtime_footprints": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "capability_facet_ids": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "curator_lens_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "simhash64_hex": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{16}$"
+            },
+            "lsh_bands": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "string"
+              }
+            },
+            "already_in_seed_archive": {
+              "type": "boolean"
+            },
+            "linked_archive_key": {
+              "type": "string"
+            },
+            "axis_scores": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "velocity_momentum",
+                "quickstart_reproducibility",
+                "code_and_architecture_substance",
+                "license_and_reuse_clarity",
+                "cross_source_corroboration",
+                "curator_lens_alignment"
+              ],
+              "properties": {
+                "velocity_momentum": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "quickstart_reproducibility": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "code_and_architecture_substance": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "license_and_reuse_clarity": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "cross_source_corroboration": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "curator_lens_alignment": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "utility_score_milli": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "hype_penalty_milli": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "breakout_score_milli": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "passes_breakout_gate": {
+              "type": "boolean"
+            },
+            "problem_solved": {
+              "type": "string",
+              "minLength": 1
+            },
+            "integration_hooks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "demo_potential": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "example": {
+          "canonical_repo_key": "github:synth-forge/mcp-preflight-guard",
+          "canonical_repo_url": "https://github.com/synth-forge/mcp-preflight-guard",
+          "created_at_iso": "2026-10-22T08:00:00Z",
+          "age_days": 10.1667,
+          "stars": 985,
+          "forks": 92,
+          "stars_per_day": 96.8849,
+          "fork_ratio": 0.0934,
+          "corroborated_channels": [
+            "github_search_rest",
+            "hn_algolia_show_hn"
+          ],
+          "spdx_license": "MIT",
+          "permissive_license": true,
+          "primary_language": "Rust",
+          "quickstart_commands": [
+            "cargo install mcp-preflight-guard",
+            "npx mcp-preflight-guard --check ."
+          ],
+          "runtime_footprints": [
+            "cli_or_single_command_runner",
+            "runs_on_small_4gb_laptop"
+          ],
+          "capability_facet_ids": [
+            "agent_mcp_tool_protocols",
+            "pii_redaction_and_privacy",
+            "runs_on_small_4gb_laptop"
+          ],
+          "curator_lens_ids": [
+            "agent_mcp_and_tool_protocols",
+            "compact_local_and_edge_inference",
+            "practical_dev_security_and_fullstack"
+          ],
+          "simhash64_hex": "47d19d5197a28d53",
+          "lsh_bands": [
+            "b0:47d1",
+            "b1:9d51",
+            "b2:97a2",
+            "b3:8d53"
+          ],
+          "already_in_seed_archive": false,
+          "linked_archive_key": "",
+          "axis_scores": {
+            "velocity_momentum": 0.9723,
+            "quickstart_reproducibility": 1.0,
+            "code_and_architecture_substance": 0.7594,
+            "license_and_reuse_clarity": 1.0,
+            "cross_source_corroboration": 0.6667,
+            "curator_lens_alignment": 1.0
+          },
+          "utility_score_milli": 905,
+          "hype_penalty_milli": 0,
+          "breakout_score_milli": 905,
+          "passes_breakout_gate": true,
+          "problem_solved": "Zero-dependency Rust CLI and MCP server running preflight security, PII redaction and capability firewall checks in 8ms on a 4GB laptop.",
+          "integration_hooks": [
+            "http_json_or_webhook_endpoint",
+            "mcp_tool_server_or_client",
+            "reproducible_cli_invocation"
+          ],
+          "demo_potential": "high_interactive_or_cli_demo"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "capability-ontology-and-benchmark-seeds:template.intelligence-card",
+          "Specializes capability intelligence cards for early-stage repository velocity triage before full head-to-head benchmarking."
+        ]
+      ]
+    },
+    {
+      "slug": "catalog.curator-lens-and-upstream-radar-feeds",
+      "category": "noun.public_source",
+      "role": "source_catalog",
+      "title": "Catalog: sanctioned upstream velocity APIs and declarative curator-lens heuristics",
+      "category_reason": "Pairs sanctioned public discovery APIs with topic-lens heuristics inspired by technical curators while prohibiting credential-gated wall scraping.",
+      "value": {
+        "allow_authenticated_wall_scraping": false,
+        "worker_model_targets": [
+          "muse-spark-open",
+          "muse-spark-1.3",
+          "muse-wonder-1.0",
+          "Muse-Glimmer-30B"
+        ],
+        "sanctioned_upstream_apis": [
+          {
+            "channel_id": "github_search_rest",
+            "endpoint_template": "https://api.github.com/search/repositories?q=created:>YYYY-MM-DD+stars:>N&sort=stars&order=desc",
+            "required_headers": [
+              "User-Agent",
+              "Accept: application/json"
+            ],
+            "captures": "Brand-new repositories created within the trailing 14-45 day NodeGrid window with SPDX license, topics, size_kb and star/fork counts."
+          },
+          {
+            "channel_id": "hn_algolia_show_hn",
+            "endpoint_template": "https://hn.algolia.com/api/v1/search_by_date?query=github.com&tags=story",
+            "required_headers": [
+              "User-Agent",
+              "Accept: application/json"
+            ],
+            "captures": "Show HN launches and technical discussions linking canonical github.com/<owner>/<repo> URLs with point and comment velocity."
+          },
+          {
+            "channel_id": "huggingface_daily_papers",
+            "endpoint_template": "https://huggingface.co/api/daily_papers",
+            "required_headers": [
+              "User-Agent",
+              "Accept: application/json"
+            ],
+            "captures": "Newly released research implementations and trending Spaces exposing canonical githubRepo links and community upvotes."
+          },
+          {
+            "channel_id": "public_rss_atom_releases",
+            "endpoint_template": "https://github.com/<owner>/<repo>/releases.atom",
+            "required_headers": [
+              "User-Agent"
+            ],
+            "captures": "Sanctioned Atom release feeds for tracked open-source repositories."
+          }
+        ],
+        "curator_lens_watchlist": [
+          {
+            "curator_id": "curator_phfreecoder",
+            "reference_url": "https://www.facebook.com/PHfreecoder",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "practical_dev_security_and_fullstack",
+            "focus_heuristics": [
+              "Preflight security, secret/PII redaction and readiness checklists",
+              "Full-stack developer CLI utilities and MCP tool servers with immediate local verification"
+            ]
+          },
+          {
+            "curator_id": "curator_fusin_automation",
+            "reference_url": "https://www.facebook.com/fusin.automation/",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "self_hosted_ai_automation_and_workflows",
+            "focus_heuristics": [
+              "Self-hosted open-source AI workflow automation and n8n companion nodes",
+              "Browser Playwright agents, webhook orchestrators and realtime voice pipelines"
+            ]
+          },
+          {
+            "curator_id": "curator_chriiske",
+            "reference_url": "https://www.facebook.com/chriiske",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "visual_geospatial_and_interactive_tooling",
+            "focus_heuristics": [
+              "Geospatial, WebGL/3D shader and interactive visual Python/JS libraries",
+              "Deterministic procedural rendering and visual developer inspection tools"
+            ]
+          },
+          {
+            "curator_id": "curator_profile_61557569443676",
+            "reference_url": "https://www.facebook.com/profile.php?id=61557569443676",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "agent_mcp_and_tool_protocols",
+            "focus_heuristics": [
+              "Emerging open-source AI coding harnesses, MCP servers and multi-agent tool bridges"
+            ]
+          },
+          {
+            "curator_id": "curator_profile_61590627770961",
+            "reference_url": "https://www.facebook.com/profile.php?id=61590627770961",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "compact_local_and_edge_inference",
+            "focus_heuristics": [
+              "Compact local-first ONNX/Rust/CPU inference utilities, OCR parsers and 4GB-laptop tools"
+            ]
+          },
+          {
+            "curator_id": "curator_profile_61590350949771",
+            "reference_url": "https://www.facebook.com/profile.php?id=61590350949771",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "self_hosted_ai_automation_and_workflows",
+            "focus_heuristics": [
+              "Open-source developer productivity automations, structured extractors and API connectors"
+            ]
+          },
+          {
+            "curator_id": "curator_profile_61595079431278",
+            "reference_url": "https://www.facebook.com/profile.php?id=61595079431278",
+            "authenticated_wall_scraping_prohibited": true,
+            "intake_mode": "public_crosspost_search_lens_and_canonical_repo_link_intake_only",
+            "lens_id": "visual_geospatial_and_interactive_tooling",
+            "focus_heuristics": [
+              "Runnable demo-ready multimodal, voice, video and creative open-source repositories"
+            ]
+          }
+        ],
+        "checked_on": "2026-11-01"
+      }
+    },
+    {
+      "slug": "rubric.breakout-utility-and-hype-filter",
+      "category": "noun.benchmark_suite",
+      "role": "rubric",
+      "title": "Rubric: 6-axis breakout utility and anti-hype filter under NodeGrid regimes",
+      "category_reason": "Defines deterministic axis normalization and hype-penalty deductions separating runnable open-source tools from empty star-farmed repos.",
+      "value": {
+        "scale_milli": 1000,
+        "axes": [
+          {
+            "axis_id": "velocity_momentum",
+            "measures": "Stars per day relative to repository age combined with Hacker News point and Hugging Face upvote velocity."
+          },
+          {
+            "axis_id": "quickstart_reproducibility",
+            "measures": "Presence of concrete CLI install and verification commands (pip, uvx, npx, cargo, docker, python3 -m) in README."
+          },
+          {
+            "axis_id": "code_and_architecture_substance",
+            "measures": "Non-trivial repository code footprint (size_kb) paired with healthy fork-to-star engagement ratio."
+          },
+          {
+            "axis_id": "license_and_reuse_clarity",
+            "measures": "Permissive SPDX open-source license (MIT, Apache-2.0, BSD, ISC, MPL-2.0) vs unlicensed or ambiguous terms."
+          },
+          {
+            "axis_id": "cross_source_corroboration",
+            "measures": "Independent sightings across GitHub Search, Hacker News Algolia and Hugging Face Daily Papers."
+          },
+          {
+            "axis_id": "curator_lens_alignment",
+            "measures": "Alignment with practical security, self-hosted automation, MCP agent protocol, visual interactive or compact local runtime lenses."
+          }
+        ],
+        "anti_hype_penalties": [
+          "no_license_penalty_milli when SPDX license is NONE or NOASSERTION",
+          "empty_or_tiny_repo_penalty_milli when repo_size_kb falls below min_substance_repo_kb",
+          "hype_phrase_penalty_milli when summary or README contains waitlist/presale/star-farming phrases",
+          "missing_quickstart_penalty_milli when zero runnable install or invocation commands are documented"
+        ]
+      },
+      "relations": [
+        [
+          "derives_from",
+          "capability-ontology-and-benchmark-seeds:rubric.multi-axis-pareto-and-demo-benchmark",
+          "Feeds filtered high-substance repository candidates into downstream head-to-head Pareto benchmarking."
+        ]
+      ]
+    },
+    {
+      "slug": "tool.velocity-signal-radar",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library velocity signal normalizer, 64-bit SimHash deduplicator, hype filter and proposal emitter",
+      "category_reason": "Tested zero-dependency Python 3.10+ package pinned by path, file count and SHA-256.",
+      "value": {
+        "name": "velocity signal radar",
+        "code": {
+          "$code": "artifact-velocity-and-curator-radar"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m velocity_signal_radar --self-test",
+          "python3 -m velocity_signal_radar --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Enforces sanctioned HTTPS public source validation and fails closed with sanctioned_public_api_or_search_lens_only on credential-gated social walls.",
+          "Coalesces multi-source sightings via canonical github:<owner>/<repo> keys and 64-bit word-shingle SimHash + 4-band LSH while cross-linking existing seed archives.",
+          "Scores 6 utility axes and anti-hype penalties under NodeGrid + GridLedger regimes, emits bounded +1 hop task proposals and enforces ZeroHardcodedValuesAstGate plus DomainAgnosticNamingGate."
+        ],
+        "does_not": [
+          "Scrape credential-gated Facebook/social walls, bypass robots.txt, auto-enqueue tasks, create custom SuperSeedPack classes or execute untrusted code."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rubric.breakout-utility-and-hype-filter"
+        ]
+      ]
+    },
+    {
+      "slug": "template.radar-evaluation-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: deterministic velocity radar coalescing, anti-hype triage and bounded proposal receipt",
+      "value": {
+        "describes": "a deterministic receipt recording active NodeGrid cell, coalesced repository dossiers, refused wall-scrape probes, filtered hype keys, bounded follow-up proposals and SHA-256 receipt digest",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "grid_cell_id",
+            "radar_regime",
+            "allow_authenticated_wall_scraping",
+            "total_coalesced_repositories",
+            "admitted_breakout_keys",
+            "filtered_hype_or_incomplete_keys",
+            "refused_wall_or_unsanctioned_sources",
+            "top_breakout_repo_key",
+            "dossiers",
+            "bounded_verb_proposals",
+            "receipt_sha256"
+          ],
+          "properties": {
+            "grid_cell_id": {
+              "type": "string",
+              "minLength": 5
+            },
+            "radar_regime": {
+              "type": "string",
+              "minLength": 3
+            },
+            "allow_authenticated_wall_scraping": {
+              "type": "boolean"
+            },
+            "total_coalesced_repositories": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "admitted_breakout_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "filtered_hype_or_incomplete_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "refused_wall_or_unsanctioned_sources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "signal_id",
+                  "source_url",
+                  "reason"
+                ],
+                "properties": {
+                  "signal_id": {
+                    "type": "string"
+                  },
+                  "source_url": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "top_breakout_repo_key": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "dossiers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "canonical_repo_key",
+                  "canonical_repo_url",
+                  "created_at_iso",
+                  "age_days",
+                  "stars",
+                  "forks",
+                  "stars_per_day",
+                  "fork_ratio",
+                  "corroborated_channels",
+                  "spdx_license",
+                  "permissive_license",
+                  "primary_language",
+                  "quickstart_commands",
+                  "runtime_footprints",
+                  "capability_facet_ids",
+                  "curator_lens_ids",
+                  "simhash64_hex",
+                  "lsh_bands",
+                  "already_in_seed_archive",
+                  "linked_archive_key",
+                  "axis_scores",
+                  "utility_score_milli",
+                  "hype_penalty_milli",
+                  "breakout_score_milli",
+                  "passes_breakout_gate",
+                  "problem_solved",
+                  "integration_hooks",
+                  "demo_potential"
+                ],
+                "properties": {
+                  "canonical_repo_key": {
+                    "type": "string",
+                    "minLength": 3
+                  },
+                  "canonical_repo_url": {
+                    "type": "string",
+                    "minLength": 10
+                  },
+                  "created_at_iso": {
+                    "type": "string",
+                    "minLength": 10
+                  },
+                  "age_days": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "stars": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "forks": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "stars_per_day": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fork_ratio": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "corroborated_channels": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "spdx_license": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "permissive_license": {
+                    "type": "boolean"
+                  },
+                  "primary_language": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "quickstart_commands": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "runtime_footprints": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "capability_facet_ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "curator_lens_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "simhash64_hex": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{16}$"
+                  },
+                  "lsh_bands": {
+                    "type": "array",
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "already_in_seed_archive": {
+                    "type": "boolean"
+                  },
+                  "linked_archive_key": {
+                    "type": "string"
+                  },
+                  "axis_scores": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "velocity_momentum",
+                      "quickstart_reproducibility",
+                      "code_and_architecture_substance",
+                      "license_and_reuse_clarity",
+                      "cross_source_corroboration",
+                      "curator_lens_alignment"
+                    ],
+                    "properties": {
+                      "velocity_momentum": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "quickstart_reproducibility": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "code_and_architecture_substance": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "license_and_reuse_clarity": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "cross_source_corroboration": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "curator_lens_alignment": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    }
+                  },
+                  "utility_score_milli": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "hype_penalty_milli": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "breakout_score_milli": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "passes_breakout_gate": {
+                    "type": "boolean"
+                  },
+                  "problem_solved": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "integration_hooks": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "demo_potential": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            },
+            "bounded_verb_proposals": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "task_id",
+                  "proposal_kind",
+                  "tier",
+                  "verb_kind",
+                  "parent_task_id",
+                  "source_task_id",
+                  "generation_depth",
+                  "priority",
+                  "complexity_milli",
+                  "target_repo_key",
+                  "title",
+                  "prompt",
+                  "facet_axes",
+                  "search_hints",
+                  "auto_enqueue_permitted"
+                ],
+                "properties": {
+                  "task_id": {
+                    "type": "string"
+                  },
+                  "proposal_kind": {
+                    "type": "string"
+                  },
+                  "tier": {
+                    "type": "string"
+                  },
+                  "verb_kind": {
+                    "type": "string"
+                  },
+                  "parent_task_id": {
+                    "type": "string"
+                  },
+                  "source_task_id": {
+                    "type": "string"
+                  },
+                  "generation_depth": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "priority": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "complexity_milli": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "target_repo_key": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "prompt": {
+                    "type": "string"
+                  },
+                  "facet_axes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "search_hints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "auto_enqueue_permitted": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "receipt_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "example": {
+          "grid_cell_id": "velocity_signal_radar_grid@g1:9b52b42a2019eaf9",
+          "radar_regime": "balanced_breakout_radar",
+          "allow_authenticated_wall_scraping": false,
+          "total_coalesced_repositories": 4,
+          "admitted_breakout_keys": [
+            "github:acme-open-syn/anydoc-layout-syn",
+            "github:synth-forge/mcp-preflight-guard",
+            "github:synth-forge/openflow-n8n-voice-bridge"
+          ],
+          "filtered_hype_or_incomplete_keys": [
+            "github:synth-hype/100x-ai-waitlist-shell"
+          ],
+          "refused_wall_or_unsanctioned_sources": [
+            {
+              "signal_id": "sig_fb_wall_refused_06",
+              "source_url": "https://www.facebook.com/PHfreecoder",
+              "reason": "sanctioned_public_api_or_search_lens_only"
+            }
+          ],
+          "top_breakout_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+          "dossiers": [
+            {
+              "canonical_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+              "canonical_repo_url": "https://github.com/acme-open-syn/anydoc-layout-syn",
+              "created_at_iso": "2026-09-12T10:00:00Z",
+              "age_days": 50.0833,
+              "stars": 1120,
+              "forks": 118,
+              "stars_per_day": 22.3627,
+              "fork_ratio": 0.1054,
+              "corroborated_channels": [
+                "huggingface_daily_papers"
+              ],
+              "spdx_license": "MIT",
+              "permissive_license": true,
+              "primary_language": "Python",
+              "quickstart_commands": [
+                "pip install anydoc-layout-syn",
+                "python3 -m anydoc_layout_syn --verify sample.pdf"
+              ],
+              "runtime_footprints": [
+                "runs_on_small_4gb_laptop"
+              ],
+              "capability_facet_ids": [
+                "ocr_document_intelligence",
+                "runs_on_small_4gb_laptop"
+              ],
+              "curator_lens_ids": [
+                "compact_local_and_edge_inference"
+              ],
+              "simhash64_hex": "4d11b16d22e3cfea",
+              "lsh_bands": [
+                "b0:4d11",
+                "b1:b16d",
+                "b2:22e3",
+                "b3:cfea"
+              ],
+              "already_in_seed_archive": true,
+              "linked_archive_key": "recent_public_source_experiment_seedpack_syn_v1",
+              "axis_scores": {
+                "velocity_momentum": 1.0,
+                "quickstart_reproducibility": 1.0,
+                "code_and_architecture_substance": 0.7803,
+                "license_and_reuse_clarity": 1.0,
+                "cross_source_corroboration": 0.3333,
+                "curator_lens_alignment": 1.0
+              },
+              "utility_score_milli": 921,
+              "hype_penalty_milli": 0,
+              "breakout_score_milli": 921,
+              "passes_breakout_gate": true,
+              "problem_solved": "Offline ONNX layout-preserving OCR and table-to-markdown parser for scanned PDFs.",
+              "integration_hooks": [
+                "reproducible_cli_invocation"
+              ],
+              "demo_potential": "high_interactive_or_cli_demo"
+            },
+            {
+              "canonical_repo_key": "github:synth-forge/mcp-preflight-guard",
+              "canonical_repo_url": "https://github.com/synth-forge/mcp-preflight-guard",
+              "created_at_iso": "2026-10-22T08:00:00Z",
+              "age_days": 10.1667,
+              "stars": 985,
+              "forks": 92,
+              "stars_per_day": 96.8849,
+              "fork_ratio": 0.0934,
+              "corroborated_channels": [
+                "github_search_rest",
+                "hn_algolia_show_hn"
+              ],
+              "spdx_license": "MIT",
+              "permissive_license": true,
+              "primary_language": "Rust",
+              "quickstart_commands": [
+                "cargo install mcp-preflight-guard",
+                "npx mcp-preflight-guard --check ."
+              ],
+              "runtime_footprints": [
+                "cli_or_single_command_runner",
+                "runs_on_small_4gb_laptop"
+              ],
+              "capability_facet_ids": [
+                "agent_mcp_tool_protocols",
+                "pii_redaction_and_privacy",
+                "runs_on_small_4gb_laptop"
+              ],
+              "curator_lens_ids": [
+                "agent_mcp_and_tool_protocols",
+                "compact_local_and_edge_inference",
+                "practical_dev_security_and_fullstack"
+              ],
+              "simhash64_hex": "47d19d5197a28d53",
+              "lsh_bands": [
+                "b0:47d1",
+                "b1:9d51",
+                "b2:97a2",
+                "b3:8d53"
+              ],
+              "already_in_seed_archive": false,
+              "linked_archive_key": "",
+              "axis_scores": {
+                "velocity_momentum": 0.9723,
+                "quickstart_reproducibility": 1.0,
+                "code_and_architecture_substance": 0.7594,
+                "license_and_reuse_clarity": 1.0,
+                "cross_source_corroboration": 0.6667,
+                "curator_lens_alignment": 1.0
+              },
+              "utility_score_milli": 905,
+              "hype_penalty_milli": 0,
+              "breakout_score_milli": 905,
+              "passes_breakout_gate": true,
+              "problem_solved": "Zero-dependency Rust CLI and MCP server running preflight security, PII redaction and capability firewall checks in 8ms on a 4GB laptop.",
+              "integration_hooks": [
+                "http_json_or_webhook_endpoint",
+                "mcp_tool_server_or_client",
+                "reproducible_cli_invocation"
+              ],
+              "demo_potential": "high_interactive_or_cli_demo"
+            },
+            {
+              "canonical_repo_key": "github:synth-forge/openflow-n8n-voice-bridge",
+              "canonical_repo_url": "https://github.com/synth-forge/openflow-n8n-voice-bridge",
+              "created_at_iso": "2026-10-18T14:00:00Z",
+              "age_days": 13.9167,
+              "stars": 740,
+              "forks": 76,
+              "stars_per_day": 53.1735,
+              "fork_ratio": 0.1027,
+              "corroborated_channels": [
+                "github_search_rest"
+              ],
+              "spdx_license": "Apache-2.0",
+              "permissive_license": true,
+              "primary_language": "Python",
+              "quickstart_commands": [
+                "uvx openflow-n8n-voice-bridge --selftest",
+                "docker compose up -d"
+              ],
+              "runtime_footprints": [
+                "cli_or_single_command_runner",
+                "self_hosted_container"
+              ],
+              "capability_facet_ids": [
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "kubernetes_production_ready",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "curator_lens_ids": [
+                "agent_mcp_and_tool_protocols",
+                "self_hosted_ai_automation_and_workflows"
+              ],
+              "simhash64_hex": "75d9a181b9b80d5d",
+              "lsh_bands": [
+                "b0:75d9",
+                "b1:a181",
+                "b2:b9b8",
+                "b3:0d5d"
+              ],
+              "already_in_seed_archive": false,
+              "linked_archive_key": "",
+              "axis_scores": {
+                "velocity_momentum": 1.0,
+                "quickstart_reproducibility": 1.0,
+                "code_and_architecture_substance": 0.7853,
+                "license_and_reuse_clarity": 1.0,
+                "cross_source_corroboration": 0.3333,
+                "curator_lens_alignment": 1.0
+              },
+              "utility_score_milli": 877,
+              "hype_penalty_milli": 0,
+              "breakout_score_milli": 877,
+              "passes_breakout_gate": true,
+              "problem_solved": "Self-hosted AI workflow automation bridge connecting n8n webhooks, browser Playwright steps and realtime voice ASR.",
+              "integration_hooks": [
+                "http_json_or_webhook_endpoint",
+                "mcp_tool_server_or_client",
+                "reproducible_cli_invocation",
+                "workflow_automation_node"
+              ],
+              "demo_potential": "high_interactive_or_cli_demo"
+            },
+            {
+              "canonical_repo_key": "github:synth-hype/100x-ai-waitlist-shell",
+              "canonical_repo_url": "https://github.com/synth-hype/100x-ai-waitlist-shell",
+              "created_at_iso": "2026-10-29T00:00:00Z",
+              "age_days": 3.5,
+              "stars": 1500,
+              "forks": 4,
+              "stars_per_day": 428.5714,
+              "fork_ratio": 0.0027,
+              "corroborated_channels": [
+                "github_search_rest"
+              ],
+              "spdx_license": "NONE",
+              "permissive_license": false,
+              "primary_language": "Markdown",
+              "quickstart_commands": [],
+              "runtime_footprints": [
+                "runs_on_small_4gb_laptop"
+              ],
+              "capability_facet_ids": [
+                "ocr_document_intelligence"
+              ],
+              "curator_lens_ids": [],
+              "simhash64_hex": "c71af673ae8f22d0",
+              "lsh_bands": [
+                "b0:c71a",
+                "b1:f673",
+                "b2:ae8f",
+                "b3:22d0"
+              ],
+              "already_in_seed_archive": false,
+              "linked_archive_key": "",
+              "axis_scores": {
+                "velocity_momentum": 1.0,
+                "quickstart_reproducibility": 0.0,
+                "code_and_architecture_substance": 0.0125,
+                "license_and_reuse_clarity": 0.0,
+                "cross_source_corroboration": 0.3333,
+                "curator_lens_alignment": 0.0
+              },
+              "utility_score_milli": 282,
+              "hype_penalty_milli": 820,
+              "breakout_score_milli": 0,
+              "passes_breakout_gate": false,
+              "problem_solved": "Star to unlock coming soon waitlist 100x guaranteed token presale curated awesome list only.",
+              "integration_hooks": [
+                "library_import_adapter"
+              ],
+              "demo_potential": "blocked_pending_license_or_quickstart"
+            }
+          ],
+          "bounded_verb_proposals": [
+            {
+              "task_id": "radar_github_acme_open_syn_anydoc_layout_syn_0_c0d9f0c9",
+              "proposal_kind": "verify_quickstart",
+              "tier": "public_general",
+              "verb_kind": "worker_self_directed",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 82,
+              "complexity_milli": 780,
+              "target_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+              "title": "Verify clean-room quickstart and license receipt for https://github.com/acme-open-syn/anydoc-layout-syn",
+              "prompt": "Execute clean-room quickstart verification for https://github.com/acme-open-syn/anydoc-layout-syn (MIT), record exact exit codes and runtime footprint across ['runs_on_small_4gb_laptop'].",
+              "facet_axes": [
+                "ocr_document_intelligence",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "compact_local_and_edge_inference",
+                "github:acme-open-syn/anydoc-layout-syn",
+                "ocr_document_intelligence",
+                "python",
+                "runs_on_small_4gb_laptop"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_acme_open_syn_anydoc_layout_syn_1_c0d9f0c9",
+              "proposal_kind": "link_capability_ontology",
+              "tier": "public_general",
+              "verb_kind": "meta_generator",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 68,
+              "complexity_milli": 780,
+              "target_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+              "title": "Map github:acme-open-syn/anydoc-layout-syn into polyhierarchical capability ontology facets",
+              "prompt": "Attach github:acme-open-syn/anydoc-layout-syn to polyhierarchical capability facets ['ocr_document_intelligence', 'runs_on_small_4gb_laptop'] with typed I/O port contract signature and benchmark comparators.",
+              "facet_axes": [
+                "ocr_document_intelligence",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "compact_local_and_edge_inference",
+                "github:acme-open-syn/anydoc-layout-syn",
+                "ocr_document_intelligence",
+                "python",
+                "runs_on_small_4gb_laptop"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_mcp_preflight_guard_0_5dc53bfe",
+              "proposal_kind": "verify_quickstart",
+              "tier": "public_general",
+              "verb_kind": "worker_self_directed",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 82,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/mcp-preflight-guard",
+              "title": "Verify clean-room quickstart and license receipt for https://github.com/synth-forge/mcp-preflight-guard",
+              "prompt": "Execute clean-room quickstart verification for https://github.com/synth-forge/mcp-preflight-guard (MIT), record exact exit codes and runtime footprint across ['cli_or_single_command_runner', 'runs_on_small_4gb_laptop'].",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "pii_redaction_and_privacy",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "compact_local_and_edge_inference",
+                "github:synth-forge/mcp-preflight-guard",
+                "pii_redaction_and_privacy",
+                "practical_dev_security_and_fullstack",
+                "runs_on_small_4gb_laptop",
+                "rust"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_mcp_preflight_guard_1_5dc53bfe",
+              "proposal_kind": "link_capability_ontology",
+              "tier": "public_general",
+              "verb_kind": "meta_generator",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 68,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/mcp-preflight-guard",
+              "title": "Map github:synth-forge/mcp-preflight-guard into polyhierarchical capability ontology facets",
+              "prompt": "Attach github:synth-forge/mcp-preflight-guard to polyhierarchical capability facets ['agent_mcp_tool_protocols', 'pii_redaction_and_privacy', 'runs_on_small_4gb_laptop'] with typed I/O port contract signature and benchmark comparators.",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "pii_redaction_and_privacy",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "compact_local_and_edge_inference",
+                "github:synth-forge/mcp-preflight-guard",
+                "pii_redaction_and_privacy",
+                "practical_dev_security_and_fullstack",
+                "runs_on_small_4gb_laptop",
+                "rust"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_openflow_n8n_voice_bridge_0_f9230d0f",
+              "proposal_kind": "verify_quickstart",
+              "tier": "public_general",
+              "verb_kind": "worker_self_directed",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 82,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/openflow-n8n-voice-bridge",
+              "title": "Verify clean-room quickstart and license receipt for https://github.com/synth-forge/openflow-n8n-voice-bridge",
+              "prompt": "Execute clean-room quickstart verification for https://github.com/synth-forge/openflow-n8n-voice-bridge (Apache-2.0), record exact exit codes and runtime footprint across ['cli_or_single_command_runner', 'self_hosted_container'].",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "kubernetes_production_ready",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "github:synth-forge/openflow-n8n-voice-bridge",
+                "kubernetes_production_ready",
+                "python",
+                "self_hosted_ai_automation_and_workflows",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_openflow_n8n_voice_bridge_1_f9230d0f",
+              "proposal_kind": "link_capability_ontology",
+              "tier": "public_general",
+              "verb_kind": "meta_generator",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 68,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/openflow-n8n-voice-bridge",
+              "title": "Map github:synth-forge/openflow-n8n-voice-bridge into polyhierarchical capability ontology facets",
+              "prompt": "Attach github:synth-forge/openflow-n8n-voice-bridge to polyhierarchical capability facets ['agent_mcp_tool_protocols', 'durable_task_queues_and_orchestration', 'kubernetes_production_ready', 'voice_audio_synthesis_and_asr'] with typed I/O port contract signature and benchmark comparators.",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "kubernetes_production_ready",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "github:synth-forge/openflow-n8n-voice-bridge",
+                "kubernetes_production_ready",
+                "python",
+                "self_hosted_ai_automation_and_workflows",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "auto_enqueue_permitted": false
+            }
+          ],
+          "receipt_sha256": "597f369386ddcaa74f9122b64b0f864efc55044e3b574fec6c519c378f5fafa1"
+        }
+      }
+    },
+    {
+      "slug": "example.velocity-radar-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Synthetic worked example input: 6 upstream velocity signals across GitHub, Show HN, Hugging Face, hype shell and refused wall probe",
+      "category_reason": "Deterministic synthetic input exercising multi-source coalescing, archive cross-linking, hype filtering and wall-scrape refusal.",
+      "value": {
+        "synthetic_fixture": true,
+        "bundle": {
+          "radar_regime": "balanced_breakout_radar",
+          "reference_utc_iso": "2026-11-01T12:00:00Z",
+          "parent_task_id": "seed_velocity_radar_root_01",
+          "generation_depth": 0,
+          "cell_overrides": {
+            "max_proposals_per_artifact": 2
+          },
+          "known_archive_repos": {
+            "acme-open-syn/anydoc-layout-syn": "recent_public_source_experiment_seedpack_syn_v1"
+          },
+          "signals": [
+            {
+              "signal_id": "sig_gh_mcp_guard_01",
+              "source_channel": "github_search_rest",
+              "source_url": "https://api.github.com/search/repositories?q=created:%3E2026-10-04",
+              "repository_url": "https://github.com/synth-forge/mcp-preflight-guard",
+              "created_at_iso": "2026-10-22T08:00:00Z",
+              "stars": 960,
+              "forks": 88,
+              "hn_points": 0,
+              "hf_upvotes": 0,
+              "repo_size_kb": 420,
+              "spdx_license": "MIT",
+              "primary_language": "Rust",
+              "topics": [
+                "mcp",
+                "security",
+                "checklist",
+                "cli",
+                "pii",
+                "sandbox"
+              ],
+              "summary_text": "Zero-dependency Rust CLI and MCP server running preflight security, PII redaction and capability firewall checks in 8ms on a 4GB laptop.",
+              "readme_excerpt": "# mcp-preflight-guard\nInstall and verify:\n`cargo install mcp-preflight-guard`\n`npx mcp-preflight-guard --check .`\nExposes stdio and streamable HTTP MCP endpoints.",
+              "curator_lens_hint": "practical_dev_security_and_fullstack"
+            },
+            {
+              "signal_id": "sig_hn_mcp_guard_02",
+              "source_channel": "hn_algolia_show_hn",
+              "source_url": "https://hn.algolia.com/api/v1/search_by_date?query=github.com&tags=show_hn",
+              "repository_url": "https://github.com/synth-forge/mcp-preflight-guard.git",
+              "created_at_iso": "2026-10-22T08:00:00Z",
+              "stars": 985,
+              "forks": 92,
+              "hn_points": 214,
+              "hf_upvotes": 0,
+              "repo_size_kb": 420,
+              "spdx_license": "MIT",
+              "primary_language": "Rust",
+              "topics": [
+                "mcp",
+                "security",
+                "cli"
+              ],
+              "summary_text": "Show HN: Zero-dependency Rust CLI and MCP server running preflight security and PII checks.",
+              "readme_excerpt": "`cargo install mcp-preflight-guard`",
+              "curator_lens_hint": ""
+            },
+            {
+              "signal_id": "sig_gh_flow_companion_03",
+              "source_channel": "github_search_rest",
+              "source_url": "https://api.github.com/search/repositories?q=created:%3E2026-10-04",
+              "repository_url": "https://github.com/synth-forge/openflow-n8n-voice-bridge",
+              "created_at_iso": "2026-10-18T14:00:00Z",
+              "stars": 740,
+              "forks": 76,
+              "hn_points": 95,
+              "hf_upvotes": 64,
+              "repo_size_kb": 580,
+              "spdx_license": "Apache-2.0",
+              "primary_language": "Python",
+              "topics": [
+                "automation",
+                "workflow",
+                "n8n",
+                "self-hosted",
+                "voice",
+                "mcp"
+              ],
+              "summary_text": "Self-hosted AI workflow automation bridge connecting n8n webhooks, browser Playwright steps and realtime voice ASR.",
+              "readme_excerpt": "# openflow-n8n-voice-bridge\n`uvx openflow-n8n-voice-bridge --selftest`\n`docker compose up -d`",
+              "curator_lens_hint": "self_hosted_ai_automation_and_workflows"
+            },
+            {
+              "signal_id": "sig_hf_archive_anydoc_04",
+              "source_channel": "huggingface_daily_papers",
+              "source_url": "https://huggingface.co/api/daily_papers",
+              "repository_url": "https://github.com/acme-open-syn/anydoc-layout-syn",
+              "created_at_iso": "2026-09-12T10:00:00Z",
+              "stars": 1120,
+              "forks": 118,
+              "hn_points": 80,
+              "hf_upvotes": 88,
+              "repo_size_kb": 390,
+              "spdx_license": "MIT",
+              "primary_language": "Python",
+              "topics": [
+                "ocr",
+                "pdf",
+                "document",
+                "markdown",
+                "onnx"
+              ],
+              "summary_text": "Offline ONNX layout-preserving OCR and table-to-markdown parser for scanned PDFs.",
+              "readme_excerpt": "`pip install anydoc-layout-syn`\n`python3 -m anydoc_layout_syn --verify sample.pdf`",
+              "curator_lens_hint": "compact_local_and_edge_inference"
+            },
+            {
+              "signal_id": "sig_gh_hype_farm_05",
+              "source_channel": "github_search_rest",
+              "source_url": "https://api.github.com/search/repositories?q=created:%3E2026-10-04",
+              "repository_url": "https://github.com/synth-hype/100x-ai-waitlist-shell",
+              "created_at_iso": "2026-10-29T00:00:00Z",
+              "stars": 1500,
+              "forks": 4,
+              "hn_points": 0,
+              "hf_upvotes": 0,
+              "repo_size_kb": 4,
+              "spdx_license": "NONE",
+              "primary_language": "Markdown",
+              "topics": [
+                "ai"
+              ],
+              "summary_text": "Star to unlock coming soon waitlist 100x guaranteed token presale curated awesome list only.",
+              "readme_excerpt": "Coming soon! Star this repo to join the waitlist.",
+              "curator_lens_hint": ""
+            },
+            {
+              "signal_id": "sig_fb_wall_refused_06",
+              "source_channel": "direct_social_wall_probe",
+              "source_url": "https://www.facebook.com/PHfreecoder",
+              "repository_url": "https://github.com/synth-forge/mcp-preflight-guard",
+              "created_at_iso": "2026-10-25T00:00:00Z",
+              "stars": 100,
+              "forks": 10,
+              "hn_points": 0,
+              "hf_upvotes": 0,
+              "repo_size_kb": 100,
+              "spdx_license": "MIT",
+              "primary_language": "Rust",
+              "topics": [],
+              "summary_text": "Unsanctioned direct wall scrape probe that must fail closed.",
+              "readme_excerpt": "",
+              "curator_lens_hint": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "slug": "example.velocity-radar-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Synthetic worked example output: recomputed velocity radar dossiers, hype rejections and bounded task proposals",
+      "category_reason": "Byte-for-byte deterministic output of evaluate_radar_bundle(bundle) verified in test_17.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.radar-evaluation-receipt"
+        },
+        "instance": {
+          "grid_cell_id": "velocity_signal_radar_grid@g1:9b52b42a2019eaf9",
+          "radar_regime": "balanced_breakout_radar",
+          "allow_authenticated_wall_scraping": false,
+          "total_coalesced_repositories": 4,
+          "admitted_breakout_keys": [
+            "github:acme-open-syn/anydoc-layout-syn",
+            "github:synth-forge/mcp-preflight-guard",
+            "github:synth-forge/openflow-n8n-voice-bridge"
+          ],
+          "filtered_hype_or_incomplete_keys": [
+            "github:synth-hype/100x-ai-waitlist-shell"
+          ],
+          "refused_wall_or_unsanctioned_sources": [
+            {
+              "signal_id": "sig_fb_wall_refused_06",
+              "source_url": "https://www.facebook.com/PHfreecoder",
+              "reason": "sanctioned_public_api_or_search_lens_only"
+            }
+          ],
+          "top_breakout_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+          "dossiers": [
+            {
+              "canonical_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+              "canonical_repo_url": "https://github.com/acme-open-syn/anydoc-layout-syn",
+              "created_at_iso": "2026-09-12T10:00:00Z",
+              "age_days": 50.0833,
+              "stars": 1120,
+              "forks": 118,
+              "stars_per_day": 22.3627,
+              "fork_ratio": 0.1054,
+              "corroborated_channels": [
+                "huggingface_daily_papers"
+              ],
+              "spdx_license": "MIT",
+              "permissive_license": true,
+              "primary_language": "Python",
+              "quickstart_commands": [
+                "pip install anydoc-layout-syn",
+                "python3 -m anydoc_layout_syn --verify sample.pdf"
+              ],
+              "runtime_footprints": [
+                "runs_on_small_4gb_laptop"
+              ],
+              "capability_facet_ids": [
+                "ocr_document_intelligence",
+                "runs_on_small_4gb_laptop"
+              ],
+              "curator_lens_ids": [
+                "compact_local_and_edge_inference"
+              ],
+              "simhash64_hex": "4d11b16d22e3cfea",
+              "lsh_bands": [
+                "b0:4d11",
+                "b1:b16d",
+                "b2:22e3",
+                "b3:cfea"
+              ],
+              "already_in_seed_archive": true,
+              "linked_archive_key": "recent_public_source_experiment_seedpack_syn_v1",
+              "axis_scores": {
+                "velocity_momentum": 1.0,
+                "quickstart_reproducibility": 1.0,
+                "code_and_architecture_substance": 0.7803,
+                "license_and_reuse_clarity": 1.0,
+                "cross_source_corroboration": 0.3333,
+                "curator_lens_alignment": 1.0
+              },
+              "utility_score_milli": 921,
+              "hype_penalty_milli": 0,
+              "breakout_score_milli": 921,
+              "passes_breakout_gate": true,
+              "problem_solved": "Offline ONNX layout-preserving OCR and table-to-markdown parser for scanned PDFs.",
+              "integration_hooks": [
+                "reproducible_cli_invocation"
+              ],
+              "demo_potential": "high_interactive_or_cli_demo"
+            },
+            {
+              "canonical_repo_key": "github:synth-forge/mcp-preflight-guard",
+              "canonical_repo_url": "https://github.com/synth-forge/mcp-preflight-guard",
+              "created_at_iso": "2026-10-22T08:00:00Z",
+              "age_days": 10.1667,
+              "stars": 985,
+              "forks": 92,
+              "stars_per_day": 96.8849,
+              "fork_ratio": 0.0934,
+              "corroborated_channels": [
+                "github_search_rest",
+                "hn_algolia_show_hn"
+              ],
+              "spdx_license": "MIT",
+              "permissive_license": true,
+              "primary_language": "Rust",
+              "quickstart_commands": [
+                "cargo install mcp-preflight-guard",
+                "npx mcp-preflight-guard --check ."
+              ],
+              "runtime_footprints": [
+                "cli_or_single_command_runner",
+                "runs_on_small_4gb_laptop"
+              ],
+              "capability_facet_ids": [
+                "agent_mcp_tool_protocols",
+                "pii_redaction_and_privacy",
+                "runs_on_small_4gb_laptop"
+              ],
+              "curator_lens_ids": [
+                "agent_mcp_and_tool_protocols",
+                "compact_local_and_edge_inference",
+                "practical_dev_security_and_fullstack"
+              ],
+              "simhash64_hex": "47d19d5197a28d53",
+              "lsh_bands": [
+                "b0:47d1",
+                "b1:9d51",
+                "b2:97a2",
+                "b3:8d53"
+              ],
+              "already_in_seed_archive": false,
+              "linked_archive_key": "",
+              "axis_scores": {
+                "velocity_momentum": 0.9723,
+                "quickstart_reproducibility": 1.0,
+                "code_and_architecture_substance": 0.7594,
+                "license_and_reuse_clarity": 1.0,
+                "cross_source_corroboration": 0.6667,
+                "curator_lens_alignment": 1.0
+              },
+              "utility_score_milli": 905,
+              "hype_penalty_milli": 0,
+              "breakout_score_milli": 905,
+              "passes_breakout_gate": true,
+              "problem_solved": "Zero-dependency Rust CLI and MCP server running preflight security, PII redaction and capability firewall checks in 8ms on a 4GB laptop.",
+              "integration_hooks": [
+                "http_json_or_webhook_endpoint",
+                "mcp_tool_server_or_client",
+                "reproducible_cli_invocation"
+              ],
+              "demo_potential": "high_interactive_or_cli_demo"
+            },
+            {
+              "canonical_repo_key": "github:synth-forge/openflow-n8n-voice-bridge",
+              "canonical_repo_url": "https://github.com/synth-forge/openflow-n8n-voice-bridge",
+              "created_at_iso": "2026-10-18T14:00:00Z",
+              "age_days": 13.9167,
+              "stars": 740,
+              "forks": 76,
+              "stars_per_day": 53.1735,
+              "fork_ratio": 0.1027,
+              "corroborated_channels": [
+                "github_search_rest"
+              ],
+              "spdx_license": "Apache-2.0",
+              "permissive_license": true,
+              "primary_language": "Python",
+              "quickstart_commands": [
+                "uvx openflow-n8n-voice-bridge --selftest",
+                "docker compose up -d"
+              ],
+              "runtime_footprints": [
+                "cli_or_single_command_runner",
+                "self_hosted_container"
+              ],
+              "capability_facet_ids": [
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "kubernetes_production_ready",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "curator_lens_ids": [
+                "agent_mcp_and_tool_protocols",
+                "self_hosted_ai_automation_and_workflows"
+              ],
+              "simhash64_hex": "75d9a181b9b80d5d",
+              "lsh_bands": [
+                "b0:75d9",
+                "b1:a181",
+                "b2:b9b8",
+                "b3:0d5d"
+              ],
+              "already_in_seed_archive": false,
+              "linked_archive_key": "",
+              "axis_scores": {
+                "velocity_momentum": 1.0,
+                "quickstart_reproducibility": 1.0,
+                "code_and_architecture_substance": 0.7853,
+                "license_and_reuse_clarity": 1.0,
+                "cross_source_corroboration": 0.3333,
+                "curator_lens_alignment": 1.0
+              },
+              "utility_score_milli": 877,
+              "hype_penalty_milli": 0,
+              "breakout_score_milli": 877,
+              "passes_breakout_gate": true,
+              "problem_solved": "Self-hosted AI workflow automation bridge connecting n8n webhooks, browser Playwright steps and realtime voice ASR.",
+              "integration_hooks": [
+                "http_json_or_webhook_endpoint",
+                "mcp_tool_server_or_client",
+                "reproducible_cli_invocation",
+                "workflow_automation_node"
+              ],
+              "demo_potential": "high_interactive_or_cli_demo"
+            },
+            {
+              "canonical_repo_key": "github:synth-hype/100x-ai-waitlist-shell",
+              "canonical_repo_url": "https://github.com/synth-hype/100x-ai-waitlist-shell",
+              "created_at_iso": "2026-10-29T00:00:00Z",
+              "age_days": 3.5,
+              "stars": 1500,
+              "forks": 4,
+              "stars_per_day": 428.5714,
+              "fork_ratio": 0.0027,
+              "corroborated_channels": [
+                "github_search_rest"
+              ],
+              "spdx_license": "NONE",
+              "permissive_license": false,
+              "primary_language": "Markdown",
+              "quickstart_commands": [],
+              "runtime_footprints": [
+                "runs_on_small_4gb_laptop"
+              ],
+              "capability_facet_ids": [
+                "ocr_document_intelligence"
+              ],
+              "curator_lens_ids": [],
+              "simhash64_hex": "c71af673ae8f22d0",
+              "lsh_bands": [
+                "b0:c71a",
+                "b1:f673",
+                "b2:ae8f",
+                "b3:22d0"
+              ],
+              "already_in_seed_archive": false,
+              "linked_archive_key": "",
+              "axis_scores": {
+                "velocity_momentum": 1.0,
+                "quickstart_reproducibility": 0.0,
+                "code_and_architecture_substance": 0.0125,
+                "license_and_reuse_clarity": 0.0,
+                "cross_source_corroboration": 0.3333,
+                "curator_lens_alignment": 0.0
+              },
+              "utility_score_milli": 282,
+              "hype_penalty_milli": 820,
+              "breakout_score_milli": 0,
+              "passes_breakout_gate": false,
+              "problem_solved": "Star to unlock coming soon waitlist 100x guaranteed token presale curated awesome list only.",
+              "integration_hooks": [
+                "library_import_adapter"
+              ],
+              "demo_potential": "blocked_pending_license_or_quickstart"
+            }
+          ],
+          "bounded_verb_proposals": [
+            {
+              "task_id": "radar_github_acme_open_syn_anydoc_layout_syn_0_c0d9f0c9",
+              "proposal_kind": "verify_quickstart",
+              "tier": "public_general",
+              "verb_kind": "worker_self_directed",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 82,
+              "complexity_milli": 780,
+              "target_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+              "title": "Verify clean-room quickstart and license receipt for https://github.com/acme-open-syn/anydoc-layout-syn",
+              "prompt": "Execute clean-room quickstart verification for https://github.com/acme-open-syn/anydoc-layout-syn (MIT), record exact exit codes and runtime footprint across ['runs_on_small_4gb_laptop'].",
+              "facet_axes": [
+                "ocr_document_intelligence",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "compact_local_and_edge_inference",
+                "github:acme-open-syn/anydoc-layout-syn",
+                "ocr_document_intelligence",
+                "python",
+                "runs_on_small_4gb_laptop"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_acme_open_syn_anydoc_layout_syn_1_c0d9f0c9",
+              "proposal_kind": "link_capability_ontology",
+              "tier": "public_general",
+              "verb_kind": "meta_generator",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 68,
+              "complexity_milli": 780,
+              "target_repo_key": "github:acme-open-syn/anydoc-layout-syn",
+              "title": "Map github:acme-open-syn/anydoc-layout-syn into polyhierarchical capability ontology facets",
+              "prompt": "Attach github:acme-open-syn/anydoc-layout-syn to polyhierarchical capability facets ['ocr_document_intelligence', 'runs_on_small_4gb_laptop'] with typed I/O port contract signature and benchmark comparators.",
+              "facet_axes": [
+                "ocr_document_intelligence",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "compact_local_and_edge_inference",
+                "github:acme-open-syn/anydoc-layout-syn",
+                "ocr_document_intelligence",
+                "python",
+                "runs_on_small_4gb_laptop"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_mcp_preflight_guard_0_5dc53bfe",
+              "proposal_kind": "verify_quickstart",
+              "tier": "public_general",
+              "verb_kind": "worker_self_directed",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 82,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/mcp-preflight-guard",
+              "title": "Verify clean-room quickstart and license receipt for https://github.com/synth-forge/mcp-preflight-guard",
+              "prompt": "Execute clean-room quickstart verification for https://github.com/synth-forge/mcp-preflight-guard (MIT), record exact exit codes and runtime footprint across ['cli_or_single_command_runner', 'runs_on_small_4gb_laptop'].",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "pii_redaction_and_privacy",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "compact_local_and_edge_inference",
+                "github:synth-forge/mcp-preflight-guard",
+                "pii_redaction_and_privacy",
+                "practical_dev_security_and_fullstack",
+                "runs_on_small_4gb_laptop",
+                "rust"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_mcp_preflight_guard_1_5dc53bfe",
+              "proposal_kind": "link_capability_ontology",
+              "tier": "public_general",
+              "verb_kind": "meta_generator",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 68,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/mcp-preflight-guard",
+              "title": "Map github:synth-forge/mcp-preflight-guard into polyhierarchical capability ontology facets",
+              "prompt": "Attach github:synth-forge/mcp-preflight-guard to polyhierarchical capability facets ['agent_mcp_tool_protocols', 'pii_redaction_and_privacy', 'runs_on_small_4gb_laptop'] with typed I/O port contract signature and benchmark comparators.",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "pii_redaction_and_privacy",
+                "runs_on_small_4gb_laptop"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "compact_local_and_edge_inference",
+                "github:synth-forge/mcp-preflight-guard",
+                "pii_redaction_and_privacy",
+                "practical_dev_security_and_fullstack",
+                "runs_on_small_4gb_laptop",
+                "rust"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_openflow_n8n_voice_bridge_0_f9230d0f",
+              "proposal_kind": "verify_quickstart",
+              "tier": "public_general",
+              "verb_kind": "worker_self_directed",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 82,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/openflow-n8n-voice-bridge",
+              "title": "Verify clean-room quickstart and license receipt for https://github.com/synth-forge/openflow-n8n-voice-bridge",
+              "prompt": "Execute clean-room quickstart verification for https://github.com/synth-forge/openflow-n8n-voice-bridge (Apache-2.0), record exact exit codes and runtime footprint across ['cli_or_single_command_runner', 'self_hosted_container'].",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "kubernetes_production_ready",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "github:synth-forge/openflow-n8n-voice-bridge",
+                "kubernetes_production_ready",
+                "python",
+                "self_hosted_ai_automation_and_workflows",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "auto_enqueue_permitted": false
+            },
+            {
+              "task_id": "radar_github_synth_forge_openflow_n8n_voice_bridge_1_f9230d0f",
+              "proposal_kind": "link_capability_ontology",
+              "tier": "public_general",
+              "verb_kind": "meta_generator",
+              "parent_task_id": "seed_velocity_radar_root_01",
+              "source_task_id": "seed_velocity_radar_root_01",
+              "generation_depth": 1,
+              "priority": 68,
+              "complexity_milli": 780,
+              "target_repo_key": "github:synth-forge/openflow-n8n-voice-bridge",
+              "title": "Map github:synth-forge/openflow-n8n-voice-bridge into polyhierarchical capability ontology facets",
+              "prompt": "Attach github:synth-forge/openflow-n8n-voice-bridge to polyhierarchical capability facets ['agent_mcp_tool_protocols', 'durable_task_queues_and_orchestration', 'kubernetes_production_ready', 'voice_audio_synthesis_and_asr'] with typed I/O port contract signature and benchmark comparators.",
+              "facet_axes": [
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "kubernetes_production_ready",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "search_hints": [
+                "agent_mcp_and_tool_protocols",
+                "agent_mcp_tool_protocols",
+                "durable_task_queues_and_orchestration",
+                "github:synth-forge/openflow-n8n-voice-bridge",
+                "kubernetes_production_ready",
+                "python",
+                "self_hosted_ai_automation_and_workflows",
+                "voice_audio_synthesis_and_asr"
+              ],
+              "auto_enqueue_permitted": false
+            }
+          ],
+          "receipt_sha256": "597f369386ddcaa74f9122b64b0f864efc55044e3b574fec6c519c378f5fafa1"
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.velocity-radar-bundle",
+          "Computed deterministically from example.velocity-radar-bundle by evaluate_radar_bundle."
+        ],
+        [
+          "verifies",
+          "rubric.breakout-utility-and-hype-filter"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "harvest-and-normalize-upstream-velocity-signals",
+      "kind": "verb.fetch_feed",
+      "title": "Harvest and normalize sanctioned public repository velocity signals while refusing credential-gated walls",
+      "claimant": "agent",
+      "model_use": "none",
+      "network": [
+        "read_only",
+        "Read-only HTTPS requests with explicit User-Agent and Accept: application/json against sanctioned public APIs when permitted by the worker harness; offline fixture evaluation uses zero network."
+      ],
+      "summary": "Collect recent repository sightings from sanctioned public APIs (GitHub Search REST API, Hacker News Algolia Show HN, Hugging Face Daily Papers and Atom release feeds), enforce sanctioned_public_api_or_search_lens_only URL checks and normalize canonical github:<owner>/<repo> records.",
+      "outcome": "Sanctioned normalized upstream velocity signals and explicit refusal records for any prohibited social wall URL.",
+      "ready_outcome": "upstream_signals_normalized",
+      "pinned": [
+        "guardrail.sanctioned-public-apis-no-wall-scraping",
+        "catalog.curator-lens-and-upstream-radar-feeds",
+        "tool.velocity-signal-radar"
+      ],
+      "slots": [
+        {
+          "name": "raw_signal_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of raw upstream public API sightings, reference UTC timestamp and optional known archive map."
+        }
+      ],
+      "produces": [
+        {
+          "name": "radar_harvest_receipt",
+          "template": "template.radar-evaluation-receipt"
+        }
+      ],
+      "steps": [
+        "Clamp lookback_window_days and simhash_hamming_dedup_max from the active NodeGrid cell.",
+        "Validate every source_url and repository_url via validate_sanctioned_source_url, refusing credential-gated social walls and normalizing canonical github:<owner>/<repo> keys."
+      ],
+      "acceptance": [
+        {
+          "id": "sanctioned-https-sources-only",
+          "check": "validate_sanctioned_source_url rejects all prohibited wall hosts with sanctioned_public_api_or_search_lens_only and canonicalize_repository_key normalizes repository URLs deterministically.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "deduplicate-and-score-breakout-utility",
+      "kind": "verb.benchmark_harness",
+      "title": "Coalesce multi-source sightings via 64-bit SimHash and score breakout utility vs star-farming hype",
+      "claimant": "agent",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "summary": "Coalesce duplicate repository sightings across GitHub, Hacker News and Hugging Face using canonical keys and 64-bit shingle SimHash, cross-link existing seed archives without blind duplication, and score 6 utility axes minus anti-hype penalties.",
+      "outcome": "Ranked VelocitySignalDossier records separating high-substance breakout tools from unlicensed or hype-shell repositories.",
+      "ready_outcome": "breakout_utility_scored",
+      "pinned": [
+        "guardrail.substance-over-star-farming-and-single-authority",
+        "rubric.breakout-utility-and-hype-filter",
+        "template.velocity-signal-dossier",
+        "tool.velocity-signal-radar"
+      ],
+      "slots": [
+        {
+          "name": "normalized_signal_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of sanctioned upstream sightings and target radar_regime."
+        }
+      ],
+      "produces": [
+        {
+          "name": "scored_velocity_dossier",
+          "template": "template.velocity-signal-dossier"
+        }
+      ],
+      "steps": [
+        "Compute 64-bit word-shingle SimHash digests and 4-band LSH prefixes, coalescing multi-channel sightings onto canonical github:<owner>/<repo> entries.",
+        "Compute 6 rubric axis scores and deduct anti-hype penalties for missing licenses, tiny code footprints, waitlist hype phrases or missing quickstarts."
+      ],
+      "acceptance": [
+        {
+          "id": "simhash-dedup-and-hype-separation",
+          "check": "normalize_and_coalesce_signals coalesces multi-source sightings and score_breakout_dossier filters hype-shell candidates while admitting verified OSS tools.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "artifact-velocity-and-curator-radar.harvest-and-normalize-upstream-velocity-signals"
+      ]
+    },
+    {
+      "slug": "verify-quickstart-and-extract-architecture-card",
+      "kind": "verb.probe_source",
+      "title": "Verify quickstart commands, SPDX license and runtime footprint and map into capability ontology facets",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Extract deterministic quickstart commands, SPDX license compatibility, runtime footprints (4GB laptop, CLI, container, Kubernetes) and integration hooks, linking each admitted repository into capability-ontology-and-benchmark-seeds facets.",
+      "outcome": "Architecture-verified velocity dossier linked to polyhierarchical capability ontology facets and curator lenses.",
+      "ready_outcome": "architecture_card_extracted",
+      "pinned": [
+        "template.velocity-signal-dossier",
+        "capability-ontology-and-benchmark-seeds:ontology.polyhierarchical-capability-graph",
+        "capability-ontology-and-benchmark-seeds:template.intelligence-card",
+        "tool.velocity-signal-radar"
+      ],
+      "slots": [
+        {
+          "name": "candidate_dossier_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of scored repository dossiers for quickstart and ontology facet extraction."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verified_velocity_dossier",
+          "template": "template.velocity-signal-dossier"
+        }
+      ],
+      "steps": [
+        "Extract runnable CLI install and verification commands from README excerpts and classify SPDX license compatibility.",
+        "Map repository capabilities onto polyhierarchical ontology facet IDs and runtime footprints (runs_on_small_4gb_laptop, cli_or_single_command_runner, kubernetes_production_ready)."
+      ],
+      "acceptance": [
+        {
+          "id": "quickstart-and-ontology-facet-extraction",
+          "check": "extract_quickstart_commands and match_capability_facets populate non-empty facet IDs, footprints and integration hooks matching template.velocity-signal-dossier.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "artifact-velocity-and-curator-radar.deduplicate-and-score-breakout-utility"
+      ]
+    },
+    {
+      "slug": "emit-bounded-enrichment-and-demo-proposals",
+      "kind": "verb.expand_seed",
+      "title": "Emit bounded verification, ontology-linking, adapter and runnable demo task proposals",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Generate bounded generation_depth + 1 task proposals (quickstart verification, capability-ontology linking, typed MCP/skill adapter synthesis and deterministic component demo creation) for admitted breakout repositories without automatic enqueueing.",
+      "outcome": "Bounded follow-up task proposals preserving parent_task_id, source_task_id, facet_axes and search_hints with auto_enqueue_permitted: false.",
+      "ready_outcome": "enrichment_proposals_emitted",
+      "pinned": [
+        "guardrail.substance-over-star-farming-and-single-authority",
+        "template.velocity-signal-dossier",
+        "template.radar-evaluation-receipt",
+        "tool.velocity-signal-radar"
+      ],
+      "slots": [
+        {
+          "name": "admitted_dossiers_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of admitted velocity dossiers and parent lineage identifiers."
+        }
+      ],
+      "produces": [
+        {
+          "name": "radar_proposal_receipt",
+          "template": "template.radar-evaluation-receipt"
+        }
+      ],
+      "steps": [
+        "Clamp max_proposals_per_artifact from the active NodeGrid cell and skip any repository where passes_breakout_gate is false.",
+        "Emit bounded +1 hop proposals carrying parent_task_id, source_task_id, facet_axes, search_hints and auto_enqueue_permitted: false."
+      ],
+      "acceptance": [
+        {
+          "id": "bounded-non-enqueuing-proposals",
+          "check": "emit_bounded_verb_proposals caps output at max_proposals_per_artifact, increments generation_depth by 1 and sets auto_enqueue_permitted to false on every proposal.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "artifact-velocity-and-curator-radar.verify-quickstart-and-extract-architecture-card"
+      ]
+    }
+  ]
+}

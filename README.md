@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds one hundred and twelve proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds one hundred and thirteen proposed seed packs. Each is a
 collection of nouns (task objects: knowledge, templates, tool cards and examples) and verbs (durable tasks, things to do that an
 authorized worker can claim from a durable task queue), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -132,10 +132,11 @@ activated**, and no worker has run them yet.
 | [Autonomous DAG stem-cell and answer generalizer](packs/autonomous-dag-and-answer-generalizer/README.md) | Compiling tasks (things to do) and task objects across seven Kahn-wave DAG profiles, lifting discrete decision forks into answer manifolds, vaporizing ephemeral CLI harness workspaces, recovering from canary blueprint drift and computing causal Shapley step credits, with tested code |
 | [Hybrid memory matrices and durable task queues](packs/hybrid-memory-and-durable-task-queues/README.md) | Inline-lease durable task queues, zero-sweeper crash reclamation, maker != checker verification, content-addressed step and rating idempotency, ADaPT decompose-on-failure with shared-prefix batch coalescing and zero-OOM subspace memory matrix rotating-layer iterative training, with tested code |
 | [Capability ontology and benchmark seeds](packs/capability-ontology-and-benchmark-seeds/README.md) | Polyhierarchical capability and niche ontology graphs, typed AI tool, MCP server, feed and OSS release intelligence cards, durable queue and hackathon radar matrices, multi-axis Pareto benchmarks, root ecosystem seed catalogs and bounded multi-generation seed digestion, with tested code |
+| [Emerging artifact velocity and curator radar](packs/artifact-velocity-and-curator-radar/README.md) | Harvesting sanctioned public velocity signals on brand-new open-source repositories, coalescing duplicates via 64-bit shingle SimHash, separating runnable engineering substance from star-farming hype, matching curator-lens heuristics without credential-gated wall scraping, cross-linking existing seed archives and proposing bounded verification, adapter and demo tasks, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1850
-nouns and 592 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1860
+nouns and 596 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
