@@ -1,0 +1,180 @@
+{
+  "schema": "ta-amps.constructible-node-default-grid.v1",
+  "generation": 1,
+  "sha_digest_hex_chars": 16,
+  "decimal_round_digits": 4,
+  "json_indent": 2,
+  "fresh_resource_max_age_hours": 6.0,
+  "plan_k_candidates": 4,
+  "capability_spinout_quorum": 3,
+  "persona_pass_floor": 0.72,
+  "token_distillation_trigger": 64,
+  "latency_budget_ms": 2000.0,
+  "token_budget": 1024,
+  "stage_presets": {
+    "minimal_cli_harness_delegate": [
+      "s01_ingest_envelope_and_contracts",
+      "s04_exact_and_signature_cache_probe",
+      "s13_cli_harness_workspace_materialization",
+      "s15_contract_schema_verification",
+      "s16_multi_persona_vector_panel",
+      "s20_immutable_trace_and_receipt"
+    ],
+    "full_20_stage_frontier_supernode": [
+      "s01_ingest_envelope_and_contracts",
+      "s02_interrogate_5w1h_and_time",
+      "s03_profile_state_and_context",
+      "s04_exact_and_signature_cache_probe",
+      "s05_keyword_and_fresh_resource_trigger",
+      "s06_hydrate_tools_blocks_and_priors",
+      "s07_verify_block_io_compatibility",
+      "s08_plan_k_candidate_strategies",
+      "s09_decide_reuse_modify_compose_or_build",
+      "s10_resolve_code_placement_target",
+      "s11_execute_deterministic_waterfall_rung",
+      "s12_reprofile_intermediate_state",
+      "s13_cli_harness_workspace_materialization",
+      "s14_bounded_repair_and_fallback_loop",
+      "s15_contract_schema_verification",
+      "s16_multi_persona_vector_panel",
+      "s17_propose_cheaper_distillation_path",
+      "s18_enqueue_background_capability_spinout",
+      "s19_grid_ledger_evidence_update",
+      "s20_immutable_trace_and_receipt"
+    ]
+  },
+  "waterfall_rungs": [
+    {
+      "id": "rung_0_exact_cache",
+      "weight": 1.0,
+      "deterministic": true,
+      "estimated_tokens": 0
+    },
+    {
+      "id": "rung_1_keyword_fresh_context",
+      "weight": 0.94,
+      "deterministic": true,
+      "estimated_tokens": 0
+    },
+    {
+      "id": "rung_2_typed_code_blocks",
+      "weight": 0.88,
+      "deterministic": true,
+      "estimated_tokens": 0
+    },
+    {
+      "id": "rung_3_hybrid_analytical",
+      "weight": 0.61,
+      "deterministic": false,
+      "estimated_tokens": 220
+    },
+    {
+      "id": "rung_4_cli_harness_grid",
+      "weight": 0.35,
+      "deterministic": false,
+      "estimated_tokens": 340
+    }
+  ],
+  "harness_cells": {
+    "opencode_structured_builder": {
+      "cli": "opencode",
+      "pinned_version": "2.1.2",
+      "model_id": "llama3.2:3b",
+      "allowed_tools": ["read", "write", "bash_readonly", "json_schema_check"],
+      "workspace_files": ["OPENCODE_CONTRACT.md", "input_envelope.json", "output_schema.json"]
+    },
+    "pi_fast_delegator": {
+      "cli": "pi",
+      "pinned_version": "0.73.1",
+      "model_id": "llama3.2:3b",
+      "allowed_tools": ["read", "json_emit"],
+      "workspace_files": ["TASK_BRIEF.md", "input_envelope.json"]
+    },
+    "codex_verifier_cell": {
+      "cli": "codex",
+      "pinned_version": "0.164.0",
+      "model_id": "qwen2.5-coder:7b",
+      "allowed_tools": ["read", "diff_audit", "test_runner"],
+      "workspace_files": ["AGENTS_CELL.md", "input_envelope.json"]
+    }
+  },
+  "keyword_triggers": [
+    {
+      "rule_id": "kw_fresh_calibration_feed",
+      "keywords": ["hazard", "percentile", "cohort", "drift", "updated"],
+      "resource_id": "res.fresh-calibration-feed",
+      "age_hours": 2.5,
+      "drift_multiplier": 1.08
+    },
+    {
+      "rule_id": "kw_longitudinal_series",
+      "keywords": ["trend", "trajectory", "slope", "inflection", "longitudinal"],
+      "resource_id": "res.epoch-window-priors",
+      "age_hours": 4.0,
+      "drift_multiplier": 1.0
+    }
+  ],
+  "strategy_priors": {
+    "reuse": 0.96,
+    "compose": 0.85,
+    "modify": 0.67,
+    "build_new": 0.44
+  },
+  "placement_targets": {
+    "reuse": "ephemeral_verified_block_runner",
+    "compose": "ephemeral_typed_dag_composer",
+    "modify": "ephemeral_adapter_patch_slot",
+    "build_new": "quarantined_capability_synthesis_slot"
+  },
+  "persona_panel": {
+    "domain_accuracy_auditor": {
+      "correctness": 0.45,
+      "latency_score": 0.05,
+      "cost_efficiency": 0.05,
+      "token_economy": 0.05,
+      "safety_compliance": 0.25,
+      "reusability": 0.15
+    },
+    "latency_sre_reviewer": {
+      "correctness": 0.2,
+      "latency_score": 0.45,
+      "cost_efficiency": 0.15,
+      "token_economy": 0.1,
+      "safety_compliance": 0.05,
+      "reusability": 0.05
+    },
+    "finops_token_economist": {
+      "correctness": 0.15,
+      "latency_score": 0.1,
+      "cost_efficiency": 0.35,
+      "token_economy": 0.3,
+      "safety_compliance": 0.05,
+      "reusability": 0.05
+    },
+    "security_boundary_guardian": {
+      "correctness": 0.2,
+      "latency_score": 0.05,
+      "cost_efficiency": 0.05,
+      "token_economy": 0.05,
+      "safety_compliance": 0.55,
+      "reusability": 0.1
+    },
+    "architecture_reuse_steward": {
+      "correctness": 0.2,
+      "latency_score": 0.05,
+      "cost_efficiency": 0.1,
+      "token_economy": 0.1,
+      "safety_compliance": 0.1,
+      "reusability": 0.45
+    }
+  },
+  "banned_domain_terms": [
+    "real_estate",
+    "realestate",
+    "mortgage",
+    "healthcare",
+    "fintech",
+    "ecommerce",
+    "hospitality"
+  ]
+}

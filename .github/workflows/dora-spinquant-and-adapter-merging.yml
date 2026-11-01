@@ -1,0 +1,22 @@
+name: dora-spinquant-and-adapter-merging
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run dora-spinquant-and-adapter-merging unit tests
+        working-directory: packs/dora-spinquant-and-adapter-merging/code
+        run: |
+          make check
+          python3 -c "import adapter_quant_and_merge"

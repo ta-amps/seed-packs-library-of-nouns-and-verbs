@@ -1,0 +1,156 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "execution-hooks-and-verifiers",
+  "title": "Execution hooks and verifiers",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for compiling four-stage portable execution hooks across coding harnesses, enforcing pre-tool safety and spend guards, running topological pre-submit verifier DAGs, auditing verifier mutation sensitivity and extracting dead-end negative tombstones.",
+  "license": "MIT",
+  "store": "seedpack.execution-hooks-and-verifiers",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "509146a1e2d2d9f1aeb8b36f9386805f3c261b3f1f7c3782300440562508093e"
+    },
+    {
+      "path": "source.json",
+      "sha256": "428cac4509964d8e80d241d9184780262918d8cb31793f45d77bb53e5836dedd"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "f90b2f6b27dd1971abfe9a7b3fb971e148e0f6bb5e68942499046db10f8a44f0"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "7c73fec9796a9fefba12a901e038819dc8f56b4aa9ff47e6a2ba24b2972966d7"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "6f61a03ec9807d9e0d77a1ceccd051b8da7afa7b1951ba4fe37a271e2eb98652"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.guardrail.no-permission-bypass-or-secret-exposure",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "58607012bf7a7962f064f0bab5180ef9b4554b28f4dadc224ce3985fbb2a94bd"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.guardrail.distinct-principals-and-mutation-audited-verifiers",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "548005a49408484048d24d31a92986236b889574727cf8c85730ee7f6dd15f82"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.spec.four-stage-hooks-and-verifier-dag",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "0e23b021c1cd59016acef871d8004192d297d388f25ff8136a9df0175668d6c1"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.rules.mutation-gate-and-tombstone-normalization",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "3493099a381cc1102a618bb61b36af995aaef5bf0cc7c31881ef65f4e28af430"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.tool.hooks-verifiers",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "93071de4648072ba4b5aaab5b0e3f4c1be4e4edf4e6365d0f9e1154119edf29c"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.template.hooks-verifiers-receipt",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "563d60bde10ed23d057581826fc88cf0289aa56fd2bfc5887ff819bcaf75d90e"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.example.hooks-verifiers-bundle",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "fbf223517347883aec450fce9aef3ae7c8b9646c65210cee3b8a7613116f2a7e"
+    },
+    {
+      "key": "execution-hooks-and-verifiers.v0.1.0.example.hooks-verifiers-receipt",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "9b2e3e40a3ae0bf75e1729f9ac8e0b141ede9e8c73fe3dee46fe40a93e84018f"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "execution-hooks-and-verifiers.compile-portable-hooks-and-guard-tools",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:execution-hooks-and-verifiers:compile-portable-hooks-and-guard-tools:29436cbfe4d42c9140a9eba01ada499f9f9605b8ab6601020f9cb6a42a1cdc8e",
+      "report_shape_sha256": "1ed7862f2940ecb822fbeedb41175a74846d1aae1896d9dc4e2450c158423144"
+    },
+    {
+      "template_id": "execution-hooks-and-verifiers.execute-verifier-dag-and-tombstones",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:execution-hooks-and-verifiers:execute-verifier-dag-and-tombstones:81dbb55b0df09440a6263460b0635668afef96550b820b08b83803e83b82bcb2",
+      "report_shape_sha256": "3e76ec94bc3da752a6035da095b7b940c64086e7ce68be186da41351011e1588"
+    },
+    {
+      "template_id": "execution-hooks-and-verifiers.audit-verifier-mutation-sensitivity",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:execution-hooks-and-verifiers:audit-verifier-mutation-sensitivity:841c4d2a05b3a59700899058c534ec1b8c298d8cd61904af6e2711e4fb8eb752",
+      "report_shape_sha256": "b54263a9da7b0e28ed3326c411da38fa67c39988ac8c191bd2bedffacab591eb"
+    }
+  ],
+  "code": {
+    "path": "packs/execution-hooks-and-verifiers/code",
+    "files": 12,
+    "sha256": "b122b9f2671bdc46facb7259ac97e7f6b9f36112acd4205bb856372cf313c4a4",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "configuration-grids-and-bounds",
+      "keys": []
+    },
+    {
+      "pack_id": "checks-of-checks",
+      "keys": []
+    },
+    {
+      "pack_id": "wiring-and-conformance-checks",
+      "keys": []
+    },
+    {
+      "pack_id": "agent-capability-and-tier-firewall",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Compiled harness configs enforce disable_bypass_permissions true and never weaken host sandboxes.",
+    "Multi-principal publication checks refuse anonymous keys and require distinct drafter and reviewer principals.",
+    "Verifiers that fail clean positive twins or miss synthetic mutations are classified reject or revise before gating work.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

@@ -1,0 +1,724 @@
+{
+  "pack_id": "agent-capability-and-tier-firewall",
+  "title": "Agent capability and tier firewall",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for enforcing scoped effect ceilings, credential and high-entropy secret redaction, and model data-tier routing guards that block non-public payloads from training or contributor endpoints before dispatch.",
+  "boundaries": [
+    "Any unknown effect_class, unknown data_sensitivity, or unknown endpoint_tier fails closed with verdict 'block'.",
+    "Enabling contributor_mode downgrades effective_endpoint_tier to contributor_shared, permitting public data only.",
+    "Human owners author capability policies; workers evaluate requests against pinned policies without widening grants."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for gating agent effects, scrubbing secrets, and enforcing model data-tier boundaries",
+      "value": {
+        "lets_workers": "Check tool actions against ordered effect ceilings and path/store allowlists, scrub credentials and high-entropy secrets without corrupting SHA-256 hashes, and block internal or confidential payloads from training or contributor model tiers.",
+        "not_for": "Replacing OS kernel sandboxes or granting new credentials to workers.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "agent-capability-and-tier-firewall.author-capability-tier-policy"
+            },
+            "when": "A human owner sets effect ceilings, store allowlists, and tier bounds."
+          },
+          {
+            "verb": {
+              "$verb": "agent-capability-and-tier-firewall.scan-payload-for-secrets"
+            },
+            "when": "Scrub credentials and PII from candidate payloads locally."
+          },
+          {
+            "verb": {
+              "$verb": "agent-capability-and-tier-firewall.evaluate-pre-dispatch-gate"
+            },
+            "when": "Run the combined effect, secret, and data-tier firewall before execution."
+          },
+          {
+            "verb": {
+              "$verb": "agent-capability-and-tier-firewall.quarantine-blocked-dispatch"
+            },
+            "when": "Record a tombstone whenever a dispatch is blocked."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.fail-closed-effect-lattice"
+          },
+          {
+            "$pin": "guardrail.no-private-data-to-training-tiers"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.tier-firewall"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.fail-closed-effect-lattice"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-private-data-to-training-tiers"
+        ],
+        [
+          "requires_noun",
+          "rules.lattice-and-tier-matrix"
+        ],
+        [
+          "requires_noun",
+          "tool.tier-firewall"
+        ],
+        [
+          "requires_noun",
+          "template.dispatch-decision"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: three-gate pre-dispatch evaluation (capability, secret scan, data tier)",
+      "value": {
+        "lifecycle": [
+          "author-capability-tier-policy pins the owner's effect ceiling and store/path scope.",
+          "scan-payload-for-secrets inspects outbound JSON and masks credentials while preserving hex commit/content hashes.",
+          "evaluate-pre-dispatch-gate combines effect ceiling, secret status, and endpoint retention tier into allow or block.",
+          "quarantine-blocked-dispatch turns blocked attempts into tombstones so workers do not retry forbidden routes."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.fail-closed-effect-lattice",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: actions exceeding max_effect_class, path prefixes, or destructive bans fail closed",
+      "value": {
+        "rule": "Every action is ordered on none(0) < read(1) < write-internal(2) < write-repo(3) < public(4); exceeding max_effect_class, escaping relative path prefixes, or matching destructive shell/SQL patterns blocks immediately.",
+        "how_it_is_checked": "check_effect_ceiling evaluates rank, PurePosixPath traversal, store allowlists, and DESTRUCTIVE_CMD_RE."
+      }
+    },
+    {
+      "slug": "guardrail.no-private-data-to-training-tiers",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: internal, confidential, and secret payloads never route to training or contributor tiers",
+      "value": {
+        "rule": "Endpoints in trains_on_inputs or contributor_shared accept data_sensitivity='public' only; enterprise_no_train accepts up to 'internal'; zero_retention_isolated accepts up to 'confidential'; 'secret' is blocked from all external endpoints.",
+        "how_it_is_checked": "check_model_tier_routing enforces ENDPOINT_TRAINING_TIERS and contributor_mode override."
+      }
+    },
+    {
+      "slug": "rules.lattice-and-tier-matrix",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic effect lattice, Shannon entropy rule, and endpoint data-tier matrix",
+      "value": {
+        "effect_order": {
+          "none": 0,
+          "read": 1,
+          "write-internal": 2,
+          "write-repo": 3,
+          "public": 4
+        },
+        "endpoint_max_sensitivity": {
+          "trains_on_inputs": "public",
+          "contributor_shared": "public",
+          "enterprise_no_train": "internal",
+          "zero_retention_isolated": "confidential"
+        },
+        "entropy_rule": "Tokens >= 26 chars with lowercase, uppercase, and digits and Shannon entropy >= 4.25 bits/char are masked unless 32..64-char hexadecimal digests."
+      }
+    },
+    {
+      "slug": "template.firewall-policy",
+      "category": "noun.shim_provision",
+      "role": "template",
+      "title": "Template: scoped worker capability and data-tier policy",
+      "value": {
+        "describes": "an owner-authored policy pinning maximum effect class, store/path allowlists, and redaction behavior",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_id",
+            "max_effect_class",
+            "allow_dispatch_after_redaction"
+          ],
+          "properties": {
+            "policy_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "max_effect_class": {
+              "type": "string",
+              "enum": [
+                "none",
+                "read",
+                "write-internal",
+                "write-repo",
+                "public"
+              ]
+            },
+            "allowed_stores": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            },
+            "allowed_path_prefixes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 100,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "allow_dispatch_after_redaction": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.secret-scan-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: outbound payload secret and PII scan report",
+      "value": {
+        "describes": "result of scanning and scrubbing an outbound payload prior to dispatch",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "clean",
+            "finding_count",
+            "sanitized_payload"
+          ],
+          "properties": {
+            "clean": {
+              "type": "boolean"
+            },
+            "finding_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sanitized_payload": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.dispatch-decision",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: pre-dispatch capability and data-tier firewall decision",
+      "value": {
+        "describes": "auditable allow or block decision produced before a tool or model request executes",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "verdict",
+            "allowed",
+            "reasons",
+            "effective_endpoint_tier",
+            "sanitized_payload"
+          ],
+          "properties": {
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "block"
+              ]
+            },
+            "allowed": {
+              "type": "boolean"
+            },
+            "reasons": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 32,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "effective_endpoint_tier": {
+              "type": "string",
+              "enum": [
+                "trains_on_inputs",
+                "contributor_shared",
+                "enterprise_no_train",
+                "zero_retention_isolated"
+              ]
+            },
+            "sanitized_payload": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.blocked-tombstone",
+      "category": "noun.negative_tombstone",
+      "role": "template",
+      "title": "Template: blocked dispatch tombstone",
+      "value": {
+        "describes": "tombstone recording a blocked capability or model-tier route so workers do not repeat it",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tombstone_id",
+            "blocking_reasons",
+            "avoid_rule"
+          ],
+          "properties": {
+            "tombstone_id": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 40
+            },
+            "blocking_reasons": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "avoid_rule": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "firewall-decision-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for pre-dispatch firewall decision receipts",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every pre-dispatch firewall decision receipt must satisfy.",
+        "deterministic_checks": [
+          {
+            "id": "valid-verdict",
+            "rule": {
+              "rule": "enum",
+              "path": "verdict",
+              "values": [
+                "allow",
+                "block"
+              ]
+            },
+            "why": "Every firewall evaluation terminates in an explicit allow or block verdict."
+          },
+          {
+            "id": "block-has-reasons",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "equals": "block"
+              },
+              "then": {
+                "rule": "min_items",
+                "path": "reasons",
+                "min": 1
+              }
+            },
+            "why": "Blocked dispatches must record at least one machine-readable blocking reason."
+          },
+          {
+            "id": "no-raw-private-key",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "sanitized_payload",
+              "pattern": "BEGIN PRIVATE KEY"
+            },
+            "why": "Sanitized payloads stored in receipts must never retain raw private key headers."
+          },
+          {
+            "id": "tier-recorded",
+            "rule": {
+              "rule": "enum",
+              "path": "effective_endpoint_tier",
+              "values": [
+                "trains_on_inputs",
+                "contributor_shared",
+                "enterprise_no_train",
+                "zero_retention_isolated"
+              ]
+            },
+            "why": "The effective endpoint retention tier (after contributor-mode override) is mandatory."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-blocked-contributor-leak",
+            "label": "known_good",
+            "finding": {
+              "verdict": "block",
+              "reasons": [
+                "sensitivity_confidential_blocked_for_endpoint_tier_contributor_shared"
+              ],
+              "effective_endpoint_tier": "contributor_shared",
+              "sanitized_payload": {
+                "prompt": "Summarize internal incident postmortem [REDACTED:CREDENTIAL]."
+              }
+            }
+          },
+          {
+            "id": "good-allowed-enterprise-read",
+            "label": "known_good",
+            "finding": {
+              "verdict": "allow",
+              "reasons": [],
+              "effective_endpoint_tier": "enterprise_no_train",
+              "sanitized_payload": {
+                "prompt": "Explain HTTP 409 compare-and-set semantics."
+              }
+            }
+          },
+          {
+            "id": "bad-block-without-reason",
+            "label": "known_bad",
+            "finding": {
+              "verdict": "block",
+              "reasons": [],
+              "effective_endpoint_tier": "trains_on_inputs",
+              "sanitized_payload": {
+                "prompt": "Blocked silently."
+              }
+            }
+          },
+          {
+            "id": "bad-unknown-tier",
+            "label": "known_bad",
+            "finding": {
+              "verdict": "allow",
+              "reasons": [],
+              "effective_endpoint_tier": "mystery_cloud_tier",
+              "sanitized_payload": {
+                "prompt": "Hello."
+              }
+            }
+          }
+        ],
+        "expected": {
+          "good-blocked-contributor-leak": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "good-allowed-enterprise-read": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-block-without-reason": {
+            "verdict": "fail",
+            "failed_checks": [
+              "block-has-reasons"
+            ]
+          },
+          "bad-unknown-tier": {
+            "verdict": "fail",
+            "failed_checks": [
+              "tier-recorded"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.tier-firewall",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: tier_firewall standard-library pre-dispatch evaluator",
+      "value": {
+        "name": "tier_firewall",
+        "code": {
+          "$code": "agent-capability-and-tier-firewall"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m tier_firewall evaluate REQUEST.json --policy POLICY.json"
+        ],
+        "does": [
+          "Enforces effect-class ceilings, path traversal bans, store allowlists, and destructive command blocks.",
+          "Redacts credentials, SSNs, and high-entropy tokens while preserving hex SHA-256 digests.",
+          "Blocks internal, confidential, or secret payloads from training or contributor model tiers."
+        ],
+        "does_not": [
+          "Make network calls, store raw secrets in receipts, or widen caller permissions."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.lattice-and-tier-matrix"
+        ]
+      ]
+    },
+    {
+      "slug": "source.owasp-llm-top10",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "OWASP Top 10 for Large Language Model Applications (Sensitive Information Disclosure & Excessive Agency)",
+      "value": {
+        "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+        "checked_on": "2026-10-31",
+        "provides": "Threat taxonomy for Sensitive Information Disclosure (LLM02) and Excessive Agency (LLM06)."
+      }
+    },
+    {
+      "slug": "source.nist-sp800-53",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "NIST SP 800-53 Rev. 5 Security and Privacy Controls (AC-6 Least Privilege & SC-4 Information Flow)",
+      "value": {
+        "url": "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
+        "checked_on": "2026-10-31",
+        "provides": "Least-privilege capability ceilings and information-flow enforcement across security tiers."
+      }
+    },
+    {
+      "slug": "example.blocked-contributor-dispatch",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: synthetic blocked dispatch when contributor mode is active on confidential data",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.dispatch-decision"
+        },
+        "instance": {
+          "verdict": "block",
+          "allowed": false,
+          "reasons": [
+            "sensitivity_confidential_blocked_for_endpoint_tier_contributor_shared"
+          ],
+          "effective_endpoint_tier": "contributor_shared",
+          "sanitized_payload": {
+            "prompt": "Review internal architecture notes."
+          }
+        },
+        "shows": "Contributor mode downgrades a zero-retention endpoint to contributor_shared and blocks confidential context.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "author-capability-tier-policy",
+      "kind": "verb.problemize",
+      "title": "Author a scoped worker capability ceiling and model-tier policy",
+      "claimant": "human",
+      "model_use": "none",
+      "summary": "A human owner defines the maximum effect class, permitted stores and relative path prefixes, and whether redacted payloads may proceed.",
+      "outcome": "A pinned firewall policy for worker runs in that scope.",
+      "ready_outcome": "policy_authored",
+      "pinned": [
+        "guardrail.fail-closed-effect-lattice",
+        "guardrail.no-private-data-to-training-tiers",
+        "rules.lattice-and-tier-matrix"
+      ],
+      "slots": [],
+      "network": "none",
+      "produces": [
+        {
+          "name": "policy",
+          "template": "template.firewall-policy"
+        }
+      ],
+      "steps": [
+        "Set max_effect_class to the narrowest level the workflow requires (read or write-internal by default).",
+        "List explicit allowed_stores and relative allowed_path_prefixes."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Policy validates against template.firewall-policy.",
+          "method": "deterministic"
+        },
+        {
+          "id": "least-privilege",
+          "check": "max_effect_class is justified for the assigned task scope.",
+          "method": "judgment"
+        }
+      ]
+    },
+    {
+      "slug": "scan-payload-for-secrets",
+      "kind": "verb.verify_gate",
+      "title": "Scan and redact credentials and PII from an outbound payload",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run tier_firewall's deterministic scanner over a candidate payload to mask API tokens, private key headers, SSNs, and high-entropy secrets.",
+      "outcome": "A secret scan report carrying the sanitized payload.",
+      "ready_outcome": "payload_scanned",
+      "pinned": [
+        "rules.lattice-and-tier-matrix",
+        "tool.tier-firewall"
+      ],
+      "slots": [
+        {
+          "name": "policy",
+          "category": "noun.shim_provision",
+          "description": "Pin of the firewall policy."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "scan_report",
+          "template": "template.secret-scan-report"
+        }
+      ],
+      "steps": [
+        "Run scan_and_redact_payload locally on the candidate outbound payload.",
+        "Verify 64-character hexadecimal content digests remain intact while secret tokens are masked."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Scan report validates against template.secret-scan-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "clean-consistent",
+          "check": "clean is true iff finding_count == 0.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-capability-and-tier-firewall.author-capability-tier-policy"
+      ]
+    },
+    {
+      "slug": "evaluate-pre-dispatch-gate",
+      "kind": "verb.verify_gate",
+      "title": "Evaluate effect ceiling, secret status, and model data-tier routing before dispatch",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run python3 -m tier_firewall evaluate on a candidate action and model endpoint against the pinned policy, returning an auditable allow or block decision.",
+      "outcome": "A pre-dispatch firewall decision validated against firewall-decision-checks.",
+      "ready_outcome": "dispatch_evaluated",
+      "pinned": [
+        "firewall-decision-checks",
+        "guardrail.fail-closed-effect-lattice",
+        "guardrail.no-private-data-to-training-tiers",
+        "tool.tier-firewall"
+      ],
+      "slots": [
+        {
+          "name": "policy",
+          "category": "noun.shim_provision",
+          "description": "Pin of the active firewall policy."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Executes local standard-library tier_firewall CLI only; never contacts external endpoints."
+      ],
+      "produces": [
+        {
+          "name": "decision",
+          "template": "template.dispatch-decision"
+        }
+      ],
+      "steps": [
+        "Run tier_firewall evaluate locally with the candidate request and pinned policy.",
+        "Check the returned decision against firewall-decision-checks before proceeding."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Decision validates against template.dispatch-decision.",
+          "method": "deterministic"
+        },
+        {
+          "id": "decision-checks-pass",
+          "check": "Decision passes firewall-decision-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-capability-and-tier-firewall.author-capability-tier-policy"
+      ]
+    },
+    {
+      "slug": "quarantine-blocked-dispatch",
+      "kind": "verb.recover_fault",
+      "title": "Record a failure tombstone for a blocked capability or model-tier attempt",
+      "claimant": "agent",
+      "summary": "Convert a blocked pre-dispatch decision into a reusable tombstone naming the violated ceiling or data-tier rule so workers switch to a compliant route.",
+      "outcome": "A blocked-dispatch tombstone.",
+      "ready_outcome": "block_quarantined",
+      "pinned": [
+        "guardrail.no-private-data-to-training-tiers"
+      ],
+      "slots": [
+        {
+          "name": "decision",
+          "category": "noun.eval_run",
+          "description": "Pin of the blocked dispatch decision."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "tombstone",
+          "template": "template.blocked-tombstone"
+        }
+      ],
+      "steps": [
+        "Verify the pinned decision has verdict 'block' and non-empty reasons.",
+        "Write an avoid_rule stating which lower-effect action or higher-isolation endpoint tier is required instead."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Tombstone validates against template.blocked-tombstone.",
+          "method": "deterministic"
+        },
+        {
+          "id": "reasons-copied",
+          "check": "blocking_reasons matches the blocked decision's reasons.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-capability-and-tier-firewall.evaluate-pre-dispatch-gate"
+      ]
+    }
+  ]
+}

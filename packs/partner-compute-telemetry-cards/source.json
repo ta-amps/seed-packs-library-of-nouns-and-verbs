@@ -1,0 +1,339 @@
+{
+  "pack_id": "partner-compute-telemetry-cards",
+  "title": "Partner compute telemetry cards",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for building and validating honest partner compute telemetry cards for Modal, Baseten and Fireworks AI from cascade records, showing measured numbers only on live credentialed runs with provider request ids and 64-hex receipts, and rendering CSP-safe HTML.",
+  "dependencies": [
+    "partner-compute-cascade",
+    "configuration-grids-and-bounds"
+  ],
+  "boundaries": [
+    "Offline checks carry zero cost, throughput, latency, speedup or accuracy claims and state plainly that no provider account was connected yet.",
+    "Cards never display credit dollar amounts, partner logos, partner_since badges or forbidden status-stamp words.",
+    "Admitting rendered partner telemetry cards requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for building and validating honest partner compute telemetry cards for Modal, Baseten and Fireworks AI from cascade records, showing measured numbers only on live credentialed runs with provider request ids and 64-hex receipts, and rendering CSP-safe HTML",
+      "value": {
+        "lets_workers": "Build Modal, Baseten and Fireworks AI telemetry cards from a partner_compute_cascade.json record, enforce strict separation between offline_check and live_run claims, render escaped class-only HTML compatible with strict style-src 'self' policies, and independently audit every card.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "partner-compute-telemetry-cards.build-cards"
+            },
+            "when": "Build provider telemetry cards and escaped class-only HTML from a partner compute cascade record."
+          },
+          {
+            "verb": {
+              "$verb": "partner-compute-telemetry-cards.verify-cards"
+            },
+            "when": "Independently validate 64-hex receipts, live-run evidence requirements, offline claim bans and CSP-safe HTML."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.no-unmeasured-numbers-logos-or-credits-on-cards"
+          },
+          {
+            "$pin": "guardrail.distinct-reviewer-on-telemetry-cards"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.telemetry-cards"
+        },
+        "worked_example": "Sample three-provider cascade record checked in test_cards.py: unset credentials produce three offline_check cards with zero numeric claim fields, live_run mode fails validation until measured_at, provider_request_ids and measured values are present, and render_html escapes script tags with zero inline style attributes.",
+        "provenance_notes": [
+          "Designed for the Agora /deploy/#partners and Eranos telemetry surfaces using strict style-src 'self' CSP rules and Herma multi-LoRA routing receipts."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.no-unmeasured-numbers-logos-or-credits-on-cards"
+        ],
+        [
+          "requires_noun",
+          "guardrail.distinct-reviewer-on-telemetry-cards"
+        ],
+        [
+          "requires_noun",
+          "rules.card-honesty-and-csp"
+        ],
+        [
+          "requires_noun",
+          "tool.telemetry-cards"
+        ],
+        [
+          "requires_noun",
+          "template.partner-telemetry-card-bundle"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.no-unmeasured-numbers-logos-or-credits-on-cards",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: offline telemetry cards carry zero numeric performance claims, credit amounts, logos or stamp words",
+      "category_reason": "Prevents local contract rehearsals from looking like live cloud benchmark numbers or endorsements.",
+      "value": {
+        "rule": "Partner telemetry cards switch to live_run only when mode is live_measured with credentials, measured_at, provider_request_ids and a 64-hex receipt, and never carry credit_usd, logo, partner_since or stamp words.",
+        "how_it_is_checked": "telemetry_cards.validate rejects numeric claim keys on offline_check cards, missing live evidence on live_run cards, forbidden fields and stamp words."
+      }
+    },
+    {
+      "slug": "guardrail.distinct-reviewer-on-telemetry-cards",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: partner telemetry card bundles require an independent reviewer before display",
+      "category_reason": "Ensures a second worker checks claim honesty and HTML escaping before surface rendering.",
+      "value": {
+        "rule": "The worker verifying partner telemetry cards against cascade receipts cannot share worker_id or key_id with the card builder.",
+        "how_it_is_checked": "partner-compute-telemetry-cards.verify-cards sets review to distinct_reviewer."
+      }
+    },
+    {
+      "slug": "rules.card-honesty-and-csp",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Card honesty and strict-CSP HTML rendering rules for Modal, Baseten and Fireworks AI",
+      "category_reason": "Deterministic mapping from cascade records to offline_check or live_run cards.",
+      "value": {
+        "modes": [
+          "offline_check",
+          "live_run"
+        ],
+        "providers": [
+          "modal",
+          "baseten",
+          "fireworks"
+        ],
+        "live_run_needs": [
+          "measured_at",
+          "provider_request_ids",
+          "measured",
+          "receipt"
+        ],
+        "never": [
+          "credit amounts",
+          "logos",
+          "stamp words",
+          "numbers on offline checks",
+          "inline style attributes"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.telemetry-cards",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library partner compute telemetry card builder, validator and CSP-safe HTML renderer",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path, file count and SHA-256.",
+      "value": {
+        "name": "telemetry cards",
+        "code": {
+          "$code": "partner-compute-telemetry-cards"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "make -C packs/partner-compute-telemetry-cards/code check"
+        ],
+        "does": [
+          "Builds Modal, Baseten and Fireworks AI cards from partner_compute_cascade.json records.",
+          "Validates 64-hex receipts, live_run evidence completeness, offline numeric-claim bans and stamp-word bans.",
+          "Renders escaped HTML using CSS classes only with zero inline style attributes."
+        ],
+        "does_not": [
+          "Call cloud provider APIs, display credit balances or emit unescaped HTML."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.card-honesty-and-csp"
+        ]
+      ]
+    },
+    {
+      "slug": "template.partner-telemetry-card-bundle",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: validated partner compute telemetry card bundle and CSP-safe HTML check receipt",
+      "value": {
+        "describes": "a three-provider telemetry card bundle with validation and strict-CSP HTML check results",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "providers",
+            "card_count",
+            "validation_error_count",
+            "inline_style_count",
+            "ast_violation_count"
+          ],
+          "properties": {
+            "providers": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "string"
+              }
+            },
+            "card_count": {
+              "type": "integer",
+              "const": 3
+            },
+            "validation_error_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "inline_style_count": {
+              "type": "integer",
+              "const": 0
+            },
+            "ast_violation_count": {
+              "type": "integer",
+              "const": 0
+            }
+          }
+        },
+        "example": {
+          "providers": [
+            "modal",
+            "baseten",
+            "fireworks"
+          ],
+          "card_count": 3,
+          "validation_error_count": 0,
+          "inline_style_count": 0,
+          "ast_violation_count": 0
+        }
+      }
+    },
+    {
+      "slug": "example.oct31-offline-cascade-cards",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: three offline-check telemetry cards built from a sample cascade record",
+      "category_reason": "Example cascade fixture checked deterministically by test_cards.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.partner-telemetry-card-bundle"
+        },
+        "instance": {
+          "providers": [
+            "modal",
+            "baseten",
+            "fireworks"
+          ],
+          "card_count": 3,
+          "validation_error_count": 0,
+          "inline_style_count": 0,
+          "ast_violation_count": 0
+        },
+        "shows": "All three providers render honest offline_check status lines, 64-hex cascade receipts, runnable commands and escaped class-only HTML.",
+        "source": "Checked in packs/partner-compute-telemetry-cards/code against partner_compute_cascade.sample.json."
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.partner-telemetry-card-bundle"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "build-cards",
+      "kind": "verb.compile_dag",
+      "title": "Build partner telemetry cards and CSP-safe HTML from a cascade record",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Build Modal, Baseten and Fireworks AI telemetry cards from a partner_compute_cascade.json record, validate every card and render escaped class-only HTML.",
+      "outcome": "Validated partner telemetry cards JSON and CSP-safe HTML bundle.",
+      "ready_outcome": "cards_built",
+      "pinned": [
+        "rules.card-honesty-and-csp",
+        "guardrail.no-unmeasured-numbers-logos-or-credits-on-cards",
+        "tool.telemetry-cards"
+      ],
+      "slots": [
+        {
+          "name": "cascade_record",
+          "category": "noun.eval_run",
+          "description": "Pin of the partner_compute_cascade.json record."
+        }
+      ],
+      "produces": [
+        {
+          "name": "card_bundle",
+          "template": "template.partner-telemetry-card-bundle"
+        }
+      ],
+      "steps": [
+        "Run cards_from_cascade(record) to derive one card per configured provider.",
+        "Run validate(card) and render_html(card) on every card and confirm zero validation errors and zero inline styles."
+      ],
+      "acceptance": [
+        {
+          "id": "every-card-valid-and-escaped",
+          "check": "validate(card) returns an empty list for every card and rendered HTML contains zero style= attributes.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "verify-cards",
+      "kind": "verb.verify_gate",
+      "title": "Independently verify partner telemetry card honesty rules, receipts and HTML escaping",
+      "claimant": "agent",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "summary": "Verify with a distinct reviewer that offline cards carry zero numeric claims, live cards carry provider request ids and timestamps, and rendered HTML passes CSP and escaping checks.",
+      "outcome": "Independent partner telemetry card audit receipt.",
+      "ready_outcome": "cards_verified",
+      "pinned": [
+        "rules.card-honesty-and-csp",
+        "guardrail.no-unmeasured-numbers-logos-or-credits-on-cards",
+        "guardrail.distinct-reviewer-on-telemetry-cards",
+        "tool.telemetry-cards",
+        "template.partner-telemetry-card-bundle"
+      ],
+      "slots": [
+        {
+          "name": "candidate_card_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of the candidate telemetry card bundle to verify."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verified_card_bundle",
+          "template": "template.partner-telemetry-card-bundle"
+        }
+      ],
+      "steps": [
+        "Re-run validate(card) and negative honesty checks for forbidden claim fields, credit amounts, logos and stamp words.",
+        "Confirm reviewer worker_id and key_id differ from the card builder."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-honesty-or-csp-violations",
+          "check": "validation_error_count is 0, inline_style_count is 0 and ast_violation_count is 0 under a distinct reviewer.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "partner-compute-telemetry-cards.build-cards"
+      ]
+    }
+  ]
+}

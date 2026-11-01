@@ -1,0 +1,689 @@
+{
+  "pack_id": "declarative-chart-and-diagram-svg",
+  "title": "Declarative chart and diagram SVG",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for compiling structured data tables and component message traces into publication-grade accessible SVGs (confidence-interval forest plots, progression bars, and edge-packet diagrams) with deterministic WCAG contrast and label-collision checks.",
+  "boundaries": [
+    "Every emitted SVG is pure static XML with role='img', <title>, and <desc>; <script>, <foreignObject>, and event attributes are forbidden.",
+    "Progression bars anchor at zero; signed comparisons use confidence-interval forest plots with an explicit null reference.",
+    "Figures failing WCAG contrast or label-collision checks exit non-zero and are never marked ready."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for compiling accessible, collision-free SVG charts and message diagrams",
+      "value": {
+        "lets_workers": "Turn validated numeric tables and component message sequences into accessible SVG forest plots, progression bars, and edge-packet diagrams verified for WCAG contrast and zero label collisions.",
+        "not_for": "Interactive browser dashboards, executing embedded scripts, or fabricating unmeasured error bars.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "declarative-chart-and-diagram-svg.specify-declarative-figure"
+            },
+            "when": "Map source numbers or trace steps into a typed figure spec."
+          },
+          {
+            "verb": {
+              "$verb": "declarative-chart-and-diagram-svg.compile-accessible-svg"
+            },
+            "when": "Render deterministic SVG markup with diagram_svg."
+          },
+          {
+            "verb": {
+              "$verb": "declarative-chart-and-diagram-svg.audit-svg-contrast-and-collisions"
+            },
+            "when": "Verify XML safety, WCAG contrast, and label bounding boxes."
+          },
+          {
+            "verb": {
+              "$verb": "declarative-chart-and-diagram-svg.revise-colliding-or-faint-layout"
+            },
+            "when": "Widen spacing or darken palette slots if any check fails."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.static-accessible-svg"
+          },
+          {
+            "$pin": "guardrail.wcag-and-zero-collisions"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.diagram-svg"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.static-accessible-svg"
+        ],
+        [
+          "requires_noun",
+          "guardrail.wcag-and-zero-collisions"
+        ],
+        [
+          "requires_noun",
+          "rules.svg-layout-and-contrast"
+        ],
+        [
+          "requires_noun",
+          "tool.diagram-svg"
+        ],
+        [
+          "requires_noun",
+          "template.compiled-svg-bundle"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: declarative data spec to audited static SVG",
+      "value": {
+        "lifecycle": [
+          "specify-declarative-figure validates chart_kind, units, intervals, or message endpoints.",
+          "compile-accessible-svg produces deterministic SVG XML and conservative text bounding boxes.",
+          "audit-svg-contrast-and-collisions enforces XML well-formedness, script ban, WCAG 4.5/3.0 contrast, and zero label overlap.",
+          "revise-colliding-or-faint-layout adjusts spacing or palette colors when audited checks fail."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.static-accessible-svg",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: every SVG carries role='img', title, desc, and zero executable markup",
+      "value": {
+        "rule": "Generated SVGs must parse cleanly via ElementTree, expose non-empty <title> and <desc> referenced by aria-labelledby, and contain zero <script>, <foreignObject>, <iframe>, or on* event attributes.",
+        "how_it_is_checked": "audit_svg_document walks every XML element and attribute deterministically."
+      }
+    },
+    {
+      "slug": "guardrail.wcag-and-zero-collisions",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: text meets 4.5:1 contrast, marks meet 3.0:1, and labels never collide",
+      "value": {
+        "rule": "Foreground text and muted annotations require >= 4.5:1 contrast against background, graphical marks require >= 3.0:1, and pairwise estimated text bounding boxes must have zero overlap.",
+        "how_it_is_checked": "diagram_svg computes linearized sRGB luminance ratios and O(N^2) padded rectangle intersections."
+      }
+    },
+    {
+      "slug": "rules.svg-layout-and-contrast",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic layout geometry, sRGB contrast formula, and text bbox estimation",
+      "value": {
+        "chart_kinds": [
+          "forest_plot",
+          "progression_bars",
+          "edge_packet_diagram"
+        ],
+        "text_bbox_width_formula": "len(text) * font_size * 0.58 with 1.0px collision padding",
+        "contrast_thresholds": {
+          "text_aa": 4.5,
+          "graphical_marks": 3.0
+        }
+      }
+    },
+    {
+      "slug": "template.figure-spec",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: declarative SVG chart or edge-packet specification",
+      "value": {
+        "describes": "a declarative JSON specification for forest_plot, progression_bars, or edge_packet_diagram",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "chart_kind",
+            "title"
+          ],
+          "properties": {
+            "chart_kind": {
+              "type": "string",
+              "enum": [
+                "forest_plot",
+                "progression_bars",
+                "edge_packet_diagram"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "column_spacing": {
+              "type": "integer",
+              "minimum": 190,
+              "maximum": 600
+            },
+            "nodes": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  }
+                }
+              }
+            },
+            "packets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 60,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "from",
+                  "to",
+                  "label"
+                ],
+                "properties": {
+                  "from": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "to": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "ok",
+                      "error"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.svg-audit",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: deterministic SVG accessibility, contrast, and collision audit",
+      "value": {
+        "describes": "audit receipt verifying XML safety, WCAG contrast ratios, and zero label collisions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "passed",
+            "xml_well_formed",
+            "label_count",
+            "collision_count",
+            "text_contrast_ratio"
+          ],
+          "properties": {
+            "passed": {
+              "type": "boolean"
+            },
+            "xml_well_formed": {
+              "type": "boolean"
+            },
+            "label_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "collision_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "text_contrast_ratio": {
+              "type": "number",
+              "minimum": 1.0,
+              "maximum": 21.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.compiled-svg-bundle",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: compiled accessible SVG document and audit digest",
+      "value": {
+        "describes": "an audited SVG document paired with its SHA-256 digest and passed check summary",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "chart_kind",
+            "svg_sha256",
+            "audit_passed",
+            "svg_markup"
+          ],
+          "properties": {
+            "chart_kind": {
+              "type": "string",
+              "enum": [
+                "forest_plot",
+                "progression_bars",
+                "edge_packet_diagram"
+              ]
+            },
+            "svg_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "audit_passed": {
+              "type": "boolean"
+            },
+            "svg_markup": {
+              "type": "string",
+              "minLength": 40,
+              "maxLength": 24000
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "palette-contrast-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "WCAG 2.1 contrast check fixture for default and faint palettes",
+      "value": {
+        "fixture_kind": "contrast_ratio",
+        "purpose": "Verify the default SVG palette's text, muted text, and graphical marks against #FFFFFF.",
+        "thresholds": {
+          "normal_text": 4.5,
+          "large_text": 3.0
+        },
+        "pairs": [
+          {
+            "id": "body-text-on-white",
+            "foreground": "#111827",
+            "background": "#FFFFFF"
+          },
+          {
+            "id": "muted-text-on-white",
+            "foreground": "#374151",
+            "background": "#FFFFFF"
+          },
+          {
+            "id": "primary-mark-on-white",
+            "foreground": "#1D4ED8",
+            "background": "#FFFFFF"
+          },
+          {
+            "id": "faint-gray-rejected",
+            "foreground": "#D0D0D0",
+            "background": "#FFFFFF"
+          }
+        ],
+        "expected": {
+          "body-text-on-white": {
+            "ratio": 17.74,
+            "normal_text": true,
+            "large_text": true
+          },
+          "muted-text-on-white": {
+            "ratio": 10.31,
+            "normal_text": true,
+            "large_text": true
+          },
+          "primary-mark-on-white": {
+            "ratio": 6.7,
+            "normal_text": true,
+            "large_text": true
+          },
+          "faint-gray-rejected": {
+            "ratio": 1.54,
+            "normal_text": false,
+            "large_text": false
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.diagram-svg",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: diagram_svg standard-library SVG compiler and auditor",
+      "value": {
+        "name": "diagram_svg",
+        "code": {
+          "$code": "declarative-chart-and-diagram-svg"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m diagram_svg render SPEC.json",
+          "python3 -m diagram_svg render SPEC.json --audit-json"
+        ],
+        "does": [
+          "Renders forest_plot, progression_bars, and edge_packet_diagram specs to accessible SVG.",
+          "Audits XML safety, WCAG 2.1 sRGB contrast ratios, and pairwise text label collisions."
+        ],
+        "does_not": [
+          "Fetch external web fonts, execute scripts, or open network connections."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.svg-layout-and-contrast"
+        ]
+      ]
+    },
+    {
+      "slug": "source.w3c-svg2",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "W3C Scalable Vector Graphics (SVG) 2 Candidate Recommendation",
+      "value": {
+        "url": "https://www.w3.org/TR/SVG2/",
+        "checked_on": "2026-10-31",
+        "provides": "SVG element structure, viewBox geometry, markers, and accessible title/desc semantics."
+      }
+    },
+    {
+      "slug": "source.w3c-wcag21-contrast",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "W3C Web Content Accessibility Guidelines (WCAG) 2.1 Contrast (Minimum & Non-text)",
+      "value": {
+        "url": "https://www.w3.org/TR/WCAG21/#contrast-minimum",
+        "checked_on": "2026-10-31",
+        "provides": "Relative luminance formula and 4.5:1 text / 3.0:1 graphical object contrast thresholds."
+      }
+    },
+    {
+      "slug": "example.edge-packet-spec",
+      "category": "noun.scene_recipe",
+      "role": "example",
+      "title": "Worked example: synthetic 3-node lease and CAS write packet diagram spec",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.figure-spec"
+        },
+        "instance": {
+          "chart_kind": "edge_packet_diagram",
+          "title": "Worker Lease and CAS Store Sequence",
+          "description": "Four-step packet trace across Worker, Queue, and CAS Store.",
+          "column_spacing": 210,
+          "nodes": [
+            {
+              "id": "worker",
+              "label": "Worker"
+            },
+            {
+              "id": "queue",
+              "label": "Task Queue"
+            },
+            {
+              "id": "store",
+              "label": "CAS Store"
+            }
+          ],
+          "packets": [
+            {
+              "from": "worker",
+              "to": "queue",
+              "label": "1. claim(lease)",
+              "status": "ok"
+            },
+            {
+              "from": "worker",
+              "to": "store",
+              "label": "2. put(v=0)",
+              "status": "ok"
+            },
+            {
+              "from": "worker",
+              "to": "queue",
+              "label": "3. submit(report)",
+              "status": "ok"
+            }
+          ]
+        },
+        "shows": "A declarative sequence diagram spec that compiles with zero collisions and 17.74:1 text contrast.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "specify-declarative-figure",
+      "kind": "verb.solve_draft",
+      "title": "Draft a declarative SVG chart or edge-packet specification from pinned data",
+      "claimant": "agent",
+      "summary": "Map a pinned table or component trace into a schema-valid forest_plot, progression_bars, or edge_packet_diagram JSON specification.",
+      "outcome": "A declarative figure specification ready for deterministic compilation.",
+      "ready_outcome": "figure_specified",
+      "pinned": [
+        "rules.svg-layout-and-contrast"
+      ],
+      "slots": [
+        {
+          "name": "source_data",
+          "category": "noun.eval_run",
+          "description": "Pin of the measured data or trace to visualize."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "figure_spec",
+          "template": "template.figure-spec"
+        }
+      ],
+      "steps": [
+        "Verify the source_data pin and copy numbers or message steps without inventing unmeasured intervals.",
+        "Choose forest_plot for signed intervals, progression_bars for non-negative totals, or edge_packet_diagram for component flows."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Specification validates against template.figure-spec.",
+          "method": "deterministic"
+        },
+        {
+          "id": "faithful-numbers",
+          "check": "Every plotted number or step comes from source_data.",
+          "method": "judgment"
+        }
+      ]
+    },
+    {
+      "slug": "compile-accessible-svg",
+      "kind": "verb.compile_dag",
+      "title": "Compile a declarative specification into an accessible SVG bundle",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run diagram_svg render --audit-json on a declarative figure specification to produce static accessible SVG markup and its SHA-256 digest.",
+      "outcome": "A compiled SVG bundle that passed audit_svg_document.",
+      "ready_outcome": "svg_compiled",
+      "pinned": [
+        "guardrail.static-accessible-svg",
+        "guardrail.wcag-and-zero-collisions",
+        "tool.diagram-svg"
+      ],
+      "slots": [
+        {
+          "name": "figure_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the declarative figure specification."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Runs local standard-library diagram_svg compiler only."
+      ],
+      "produces": [
+        {
+          "name": "svg_bundle",
+          "template": "template.compiled-svg-bundle"
+        }
+      ],
+      "steps": [
+        "Run python3 -m diagram_svg render --audit-json on the pinned figure_spec.",
+        "Confirm audit.passed is true and record svg_sha256 plus svg_markup."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Bundle validates against template.compiled-svg-bundle.",
+          "method": "deterministic"
+        },
+        {
+          "id": "audit-passed",
+          "check": "audit_passed is true.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "declarative-chart-and-diagram-svg.specify-declarative-figure"
+      ]
+    },
+    {
+      "slug": "audit-svg-contrast-and-collisions",
+      "kind": "verb.verify_gate",
+      "title": "Audit an SVG figure for XML safety, WCAG contrast, and label collisions",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run audit_svg_document to verify ElementTree XML validity, role='img' accessibility, zero scripts, WCAG 4.5/3.0 contrast, and zero colliding text boxes.",
+      "outcome": "A deterministic SVG audit receipt.",
+      "ready_outcome": "svg_audited",
+      "pinned": [
+        "palette-contrast-checks",
+        "guardrail.static-accessible-svg",
+        "guardrail.wcag-and-zero-collisions",
+        "tool.diagram-svg"
+      ],
+      "slots": [
+        {
+          "name": "svg_bundle",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the compiled SVG bundle."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "svg_audit",
+          "template": "template.svg-audit"
+        }
+      ],
+      "steps": [
+        "Parse svg_markup with ElementTree and run diagram_svg's safety, contrast, and bbox collision checks.",
+        "Record exact label_count, collision_count, and text_contrast_ratio."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Audit validates against template.svg-audit.",
+          "method": "deterministic"
+        },
+        {
+          "id": "zero-collisions",
+          "check": "collision_count == 0 and text_contrast_ratio >= 4.5 when passed is true.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "declarative-chart-and-diagram-svg.compile-accessible-svg"
+      ]
+    },
+    {
+      "slug": "revise-colliding-or-faint-layout",
+      "kind": "verb.recover_fault",
+      "title": "Revise figure spacing or palette colors after a contrast or collision failure",
+      "claimant": "agent",
+      "summary": "Adjust column_spacing, shorten verbose edge labels, or replace low-contrast hex colors so a failed figure spec passes diagram_svg's audit.",
+      "outcome": "A revised declarative figure specification that compiles cleanly.",
+      "ready_outcome": "layout_revised",
+      "pinned": [
+        "guardrail.wcag-and-zero-collisions",
+        "rules.svg-layout-and-contrast",
+        "tool.diagram-svg"
+      ],
+      "slots": [
+        {
+          "name": "failed_spec",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the figure spec that failed audit."
+        },
+        {
+          "name": "svg_audit",
+          "category": "noun.eval_run",
+          "description": "Pin of the failing SVG audit receipt."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Re-runs local diagram_svg audit to confirm the fix."
+      ],
+      "produces": [
+        {
+          "name": "revised_spec",
+          "template": "template.figure-spec"
+        }
+      ],
+      "steps": [
+        "Inspect svg_audit for colliding label pairs or low-contrast palette slots.",
+        "Increase column_spacing or darken foreground colors without altering underlying data values, then re-verify with diagram_svg."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Revised spec validates against template.figure-spec.",
+          "method": "deterministic"
+        },
+        {
+          "id": "recheck-passes",
+          "check": "diagram_svg render --audit-json passes on revised_spec.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "declarative-chart-and-diagram-svg.audit-svg-contrast-and-collisions"
+      ]
+    }
+  ]
+}

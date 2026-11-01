@@ -1,0 +1,227 @@
+{
+ "kind": "wire-contract",
+ "id": "film-frame.v6",
+ "version": 1,
+ "owner": "Claude Design (design lead)",
+ "created_at": "2026-10-31T23:55:00Z",
+ "status": "canonical",
+ "why": "Five different caption and band numbers were in use (Claude Design 0/240; Antigravity prod-v6 stage y=0..908 with cy=960; seed pack scene-and-cognitive-video-qa band 932..1080 with cy=1006; the design-ideas note's 840 stage; the master prompt v6). This file is the one source. Every renderer and checker reads these numbers instead of keeping its own.",
+ "frame": {
+  "output_px": [
+   1920,
+   1080
+  ],
+  "fps": 30,
+  "hairline": {
+   "y": [
+    0,
+    4
+   ],
+   "base": "#11161F",
+   "progress_fill": "#2A5DB0",
+   "progress": "width = 1920 * t / duration, updated every frame",
+   "chapter_ticks": {
+    "width_px": 2,
+    "color": "rgba(245,242,234,0.6)",
+    "at": "each VTT chapter start"
+   },
+   "rule": "The only thing above the stage. No title bar, no labels."
+  },
+  "stage": {
+   "y": [
+    4,
+    924
+   ],
+   "size_px": [
+    1920,
+    920
+   ],
+   "rule": "Real footage or the designed title and end cards only. Nothing from the band may enter it."
+  },
+  "band": {
+   "y": [
+    924,
+    1080
+   ],
+   "height_px": 156,
+   "fill": "#11161F",
+   "ambient_option": "Variant only: the stage's bottom 156 px blurred 60 px at 18% luminance under the pill. Solid fill is the default."
+  }
+ },
+ "caption_pill": {
+  "render": "Burned into eranos-{cut}.mp4. A caption-free master ships as eranos-{cut}-clean.mp4.",
+  "center_px": [
+   960,
+   1002
+  ],
+  "center_tolerance_px": 2,
+  "font": {
+   "family": "IBM Plex Sans",
+   "weight": 500,
+   "size_px": 38,
+   "line_height_px": 42,
+   "color": "#F8F6F0",
+   "shadow": "0 1px 0 rgba(0,0,0,0.35)",
+   "tracking_em": -0.005,
+   "features": "kern, liga; curly quotes; real ellipsis"
+  },
+  "box": {
+   "radius_px": 18,
+   "padding_px": {
+    "y": 12,
+    "x": 32
+   },
+   "fill": "linear-gradient(180deg, rgba(17,22,31,0.80), rgba(24,31,44,0.86))",
+   "backdrop_blur_px": 10,
+   "rim": "1.5px solid rgba(245,242,234,0.22)",
+   "min_width_px": 360,
+   "max_text_width_px": 860,
+   "one_line": {
+    "height_px": 66,
+    "y": [
+     969,
+     1035
+    ]
+   },
+   "two_lines": {
+    "height_px": 108,
+    "y": [
+     948,
+     1056
+    ]
+   },
+   "clearance_to_band_edges_px": 24,
+   "contrast_text_on_fill": ">= 15:1 (#F8F6F0 on the composite over #11161F)"
+  },
+  "lines": {
+   "max_lines": 2,
+   "max_chars_per_line": 42,
+   "breaking": [
+    "Prefer one line when the text fits.",
+    "Two lines: break at the strongest clause boundary (after . ; : , or before and/but/so/or/because/which/that), then choose the break that makes the two lines most equal in width.",
+    "Never leave one long line and an orphan word; the shorter line is at least 60% of the longer.",
+    "Never end a line on an article, preposition or conjunction ('a', 'the', 'of', 'to', 'and'...).",
+    "Never split a protected name or number: 'Muse Glimmer', 'Muse Spark', 'Muse Code', 'Llama 3.2', 'claim · do · report', '12 to 51 percent'."
+   ]
+  },
+  "timing": {
+   "max_cps": 17,
+   "min_cue_s": 1.0,
+   "max_cue_s": 6.0,
+   "lead_frames": 2,
+   "linger_frames": 6,
+   "bridge_gap_s": 0.5,
+   "bridge_rule": "If the gap to the next cue is 0.5 s or less (this covers the 0.14 s minimum in the master prompt), the pill stays on: the old text fades out over 3 frames and the new text fades in over 4; the pill resizes over 6 frames. The pill never blinks.",
+   "reading_budget": "0.5 + words/3.0 seconds <= time the cue is fully visible (lead, linger and bridging included).",
+   "max_linger_s": 1.5,
+   "linger_rule": "Out-time is speech end + 6 frames, extended up to 1.5 s when the reading budget needs it, never into the next cue's lead. The narration leaves that pause after fast lines."
+  },
+  "transitions": {
+   "appear_frames": 5,
+   "disappear_frames": 5,
+   "translate": "none"
+  }
+ },
+ "web_player": {
+  "captions_on": "<source> = eranos-{cut}.mp4 (burned-in); <track kind=captions default> stays in the DOM with track.mode = 'hidden'",
+  "captions_off": "<source> = eranos-{cut}-clean.mp4; track.mode = 'disabled'",
+  "never": "track.mode = 'showing', including on fullscreenchange",
+  "swap": "Keep currentTime and play/pause state when swapping files.",
+  "tests_already_enforcing": "agora tests/test_viewer_browser.py, tests/test_build_site.py"
+ },
+ "footage": {
+  "browser": "Real Google Chrome, light theme, clean profile, bookmarks bar hidden, no extensions, native classic scrollbar visible",
+  "device_scale_factor": 1.5,
+  "window_css_px": [
+   1280,
+   613
+  ],
+  "window_device_px": [
+   1920,
+   920
+  ],
+  "page_viewport_css_px_approx": [
+   1280,
+   540
+  ],
+  "chrome": "The browser's own tab strip and address bar stay visible; nothing drawn on top. The real URL and title are what the viewer reads.",
+  "placement": "Full bleed at (0, 4). No drawn frame, shadow, rounding, scaling or grading.",
+  "scrollbar": "Visible on the right edge. Pages style it in brand colors (thumb #8A8476 on #EDE8DC track, 12 px).",
+  "page_design_rule": "Anything the film holds on must fit 1280 x 540 CSS px. On /requests/:id each band is at most 460 CSS px tall."
+ },
+ "pacing": {
+  "camera_scale": 1.0,
+  "camera_drift_px": 0.0,
+  "ken_burns": "never, on anything",
+  "min_shot_s": 1.8,
+  "flash_cut_floor_s": 1.5,
+  "reading_budget": "every on-screen text group: 0.5 + words/3.0 <= seconds it is fully visible",
+  "callout_max_words_while_narrating": 8,
+  "callout_rule": "Prefer the page's own status banners. A film callout, if any, echoes the spoken keywords and has at most 8 words.",
+  "clearance_px": 24,
+  "clearance_rule": "At least 24 px between any callout, badge or pointer element and any window, card, frame or band edge.",
+  "scroll_max_css_px_per_s": 800,
+  "hold_after_scroll_s": 2.0,
+  "pointer": "Visible, 600-900 px/s, eased, 150-250 ms dwell before a click, the page's own hover and press states only."
+ },
+ "guide_figure_option": {
+  "zone_px": {
+   "x": [
+    48,
+    168
+   ],
+   "y": [
+    932,
+    1072
+   ]
+  },
+  "size_px": [
+   120,
+   140
+  ],
+  "stroke": "#F5F2EA, 5 px",
+  "rule": "Stays in the band, left of the pill, >= 24 px from it; the pill stays centered at x 960. Laser dot aims at the edge of a real element the caption names.",
+  "status": "option, owner idea; at most 6 points in the 3:00 cut and 2 in the 0:60"
+ },
+ "supersedes": [
+  {
+   "source": "Claude Design film-system.json v5d",
+   "was": "band 0/240, stage 1920x840, plate 42/54 px radius 20 at (960,960)",
+   "now": "this file"
+  },
+  {
+   "source": "Antigravity prod-v6 cut",
+   "was": "stage y=0..908, caption cy=960",
+   "now": "stage y=4..924, cy=1002"
+  },
+  {
+   "source": "seed pack scene-and-cognitive-video-qa rules.frosted-caption-pill / spec.scene-cognitive-gates",
+   "was": "band 932..1080, center (960,1006) +/-3, bridge 0.2 s, dwell 1.6 s, reading 0.45 + words/3.5",
+   "now": "band 924..1080, center (960,1002) +/-2, bridge 0.5 s, dwell 1.8 s, reading 0.5 + words/3.0"
+  },
+  {
+   "source": "Claude Code storyboard v5 rules",
+   "was": "reading 0.4 + words/3.3, R1 text segments >= 1.2 s, frame 0/240",
+   "now": "reading 0.5 + words/3.0, min shot 1.8 s, frame 4/920/156"
+  },
+  {
+   "source": "DESIGN_IDEAS_AND_SURFACE_BLUEPRINTS_FOR_CLAUDE.md section 2.3",
+   "was": "1920x840 stage, band 160-216 px, radius 12",
+   "now": "this file"
+  }
+ ],
+ "checker_grid": {
+  "reading_base_s": 0.5,
+  "reading_words_per_s": 3.0,
+  "seam_tol_s": 0.001,
+  "float_tol_s": 1e-06,
+  "duration_round_digits": 2,
+  "retired_name_sha256": [
+   "4322a6b237d4d0f47990bad6edf90913cd88d2a1a6a9698a756b73e4dfd69329",
+   "69fd2c2816beb92936922c206f10bc65d405f0924a2ee84ff7cd3b2f4acff1cc",
+   "9410a442dd664c9234966c5ecc0ff595431749474bc67b7e2ce5ccaaed7793ec",
+   "9ae6e9127e6c5ae2b198b44d8931676ab102aaba02fef0b70b5ff9429f888df2",
+   "d488476689bd8ff0424956c989ae7508815f2821f9524dfd3ea5aea931911978"
+  ]
+ }
+}

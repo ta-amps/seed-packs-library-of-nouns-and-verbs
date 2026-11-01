@@ -1,0 +1,205 @@
+{
+  "grid_id": "trigger-and-shim-rules-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "constants": {
+    "hex_radix": 16,
+    "digest_slice_chars": 8,
+    "round_digits": 6,
+    "decay_base": 0.5,
+    "chars_per_token": 4,
+    "min_stem_length": 4,
+    "min_token_length": 2,
+    "role_frame_slots": ["verb_frame", "object_slot", "error_code_slot"],
+    "stem_suffixes": ["ing", "ed", "es", "er", "ly", "tion", "s"],
+    "privacy_rank": {
+      "public": 0,
+      "internal": 1,
+      "confidential": 2
+    },
+    "concept_synonyms": {
+      "timeout": "deadline",
+      "timed": "deadline",
+      "stalled": "deadline",
+      "hung": "deadline",
+      "expired": "deadline",
+      "quota": "ratelimit",
+      "throttled": "ratelimit",
+      "backoff": "ratelimit",
+      "schema": "contract",
+      "validation": "contract",
+      "malformed": "contract",
+      "mismatch": "contract",
+      "fencing": "lease",
+      "lock": "lease",
+      "conflict": "lease",
+      "verify": "validate",
+      "check": "validate",
+      "acquire": "claim",
+      "renew": "claim"
+    }
+  },
+  "parameters": [
+    {
+      "name": "trigram_bitmask_width",
+      "param_type": "integer_range",
+      "low": 32,
+      "high": 128,
+      "step": 32,
+      "default": 64
+    },
+    {
+      "name": "char_ngram_size",
+      "param_type": "integer_range",
+      "low": 3,
+      "high": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "name": "tier1_min_trigram_overlap",
+      "param_type": "float_range",
+      "low": 0.05,
+      "high": 0.60,
+      "step": 0.05,
+      "default": 0.15
+    },
+    {
+      "name": "tier2_min_score",
+      "param_type": "float_range",
+      "low": 0.15,
+      "high": 0.75,
+      "step": 0.05,
+      "default": 0.30
+    },
+    {
+      "name": "frame_isomorphism_bonus",
+      "param_type": "float_range",
+      "low": 0.05,
+      "high": 0.50,
+      "step": 0.05,
+      "default": 0.30
+    },
+    {
+      "name": "tier3_direct_confidence_threshold",
+      "param_type": "float_range",
+      "low": 0.50,
+      "high": 0.95,
+      "step": 0.05,
+      "default": 0.72
+    },
+    {
+      "name": "tier3_shim_confidence_threshold",
+      "param_type": "float_range",
+      "low": 0.20,
+      "high": 0.80,
+      "step": 0.05,
+      "default": 0.35
+    },
+    {
+      "name": "token_budget",
+      "param_type": "integer_range",
+      "low": 60,
+      "high": 600,
+      "step": 20,
+      "default": 180
+    },
+    {
+      "name": "max_total_chars",
+      "param_type": "integer_range",
+      "low": 240,
+      "high": 2400,
+      "step": 120,
+      "default": 720
+    },
+    {
+      "name": "redundancy_alpha",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.90,
+      "step": 0.10,
+      "default": 0.60
+    },
+    {
+      "name": "knapsack_dp_scale",
+      "param_type": "integer_range",
+      "low": 100,
+      "high": 2000,
+      "step": 100,
+      "default": 1000
+    },
+    {
+      "name": "volatile_half_life_days_floor",
+      "param_type": "float_range",
+      "low": 3.0,
+      "high": 30.0,
+      "step": 1.0,
+      "default": 14.0
+    },
+    {
+      "name": "pointer_shim_token_cost",
+      "param_type": "integer_range",
+      "low": 8,
+      "high": 64,
+      "step": 8,
+      "default": 24
+    },
+    {
+      "name": "which_fits_freshness_weight",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.50,
+      "step": 0.05,
+      "default": 0.25
+    },
+    {
+      "name": "which_fits_tax_weight",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.50,
+      "step": 0.05,
+      "default": 0.30
+    },
+    {
+      "name": "which_fits_budget_weight",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.50,
+      "step": 0.05,
+      "default": 0.20
+    },
+    {
+      "name": "which_fits_churn_weight",
+      "param_type": "float_range",
+      "low": 0.10,
+      "high": 0.50,
+      "step": 0.05,
+      "default": 0.25
+    },
+    {
+      "name": "require_verified_governance",
+      "param_type": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "direct-threshold-at-least-shim",
+      "when": { "require_verified_governance": true },
+      "require_min_gap": ["tier3_direct_confidence_threshold", "tier3_shim_confidence_threshold"]
+    }
+  ],
+  "regime_defaults": {
+    "interactive_low_latency": {
+      "token_budget": 140,
+      "max_total_chars": 560,
+      "tier2_min_score": 0.35
+    },
+    "deep_audit_horizon": {
+      "token_budget": 300,
+      "max_total_chars": 1200,
+      "tier2_min_score": 0.25
+    }
+  }
+}

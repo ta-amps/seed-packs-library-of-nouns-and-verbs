@@ -1,0 +1,464 @@
+{
+  "pack_id": "partner-compute-cascade",
+  "title": "Partner compute cascade",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts.",
+  "dependencies": [
+    "cost-optimization",
+    "lora-memory-and-shimming",
+    "measured-claims"
+  ],
+  "boundaries": [
+    "Local dry-run receipts report mode local_verified explicitly and never masquerade as live cloud API runs when partner keys are absent.",
+    "Modal container sandboxes enforce block_network=true, zero forwarded host secrets and read-only pack mounts before checking untrusted bundles.",
+    "Baseten swarm workers verify lease TTL and monotonic fencing tokens pre-flight and pace requests strictly within <= 2,000,000 tokens per minute.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for tiered partner compute routing, Modal QLoRA and sandbox verification, Baseten 2M TPM swarms and Fireworks multi-LoRA rubric checks",
+      "value": {
+        "lets_workers": "Route public-good tasks across a 5-tier compute cascade starting at a zero-token sub-2ms edge shim, escalating through Fireworks AI specialist multi-LoRA adapters with Sinan Ozdemir distinct-adapter rubric checks, Baseten <= 2,000,000 TPM async token-bucket swarms with fenced lease checks, Modal isolated container sandboxes and serverless QLoRA runs on Meta Muse-Glimmer-30B or Llama-3.2-3B-Instruct, and frontier Meta Muse Spark escalation.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "partner-compute-cascade.validate-modal-qlora-and-sandbox"
+            },
+            "when": "Verify Modal sandbox isolation invariants, holdout-safe QLoRA trace formatting and peak GPU VRAM math before any training or container run."
+          },
+          {
+            "verb": {
+              "$verb": "partner-compute-cascade.pace-baseten-fenced-swarm"
+            },
+            "when": "Schedule parallel worker claims under <= 2,000,000 TPM sliding-window pacing with pre-flight fencing-token and lease-TTL gates."
+          },
+          {
+            "verb": {
+              "$verb": "partner-compute-cascade.route-fireworks-multilora-and-rubric"
+            },
+            "when": "Select a specialist LoRA drafter behind a sub-2ms edge shim and verify structured JSON outputs with a distinct rubric-verifier adapter."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.honest-local-vs-live-partner-receipts"
+          },
+          {
+            "$pin": "guardrail.fenced-lease-and-2m-tpm-ceiling"
+          },
+          {
+            "$pin": "guardrail.distinct-adapter-rubric-verification"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.partner-cascade"
+        },
+        "worked_example": "Synthetic Muse-Glimmer-30B QLoRA, sandbox and Fireworks statute-citation bundle recomputed in test_partner_cascade.py: confirms 19.702 GiB peak VRAM fits within 92% of A100-40GB, validates sandbox isolation, selects statute-citation-extractor-lora and passes distinct-adapter rubric verification."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.honest-local-vs-live-partner-receipts"
+        ],
+        [
+          "requires_noun",
+          "guardrail.fenced-lease-and-2m-tpm-ceiling"
+        ],
+        [
+          "requires_noun",
+          "guardrail.distinct-adapter-rubric-verification"
+        ],
+        [
+          "requires_noun",
+          "spec.five-tier-compute-cascade"
+        ],
+        [
+          "requires_noun",
+          "rules.partner-cascade-gates"
+        ],
+        [
+          "requires_noun",
+          "tool.partner-cascade"
+        ],
+        [
+          "requires_noun",
+          "template.cascade-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.honest-local-vs-live-partner-receipts",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: stamp local_verified vs live_api honestly on every partner compute receipt",
+      "category_reason": "Prevents local dry-run math or loopback mock tests from being mistaken for live Modal, Baseten, Fireworks or Meta API calls.",
+      "value": {
+        "rule": "Partner compute runners stamp mode local_verified whenever MODAL_TOKEN_ID, BASETEN_API_KEY, FIREWORKS_API_KEY or META_API_KEY are absent or uninvoked, and never fabricate live_api receipts.",
+        "how_it_is_checked": "run_full_cascade_report inspects credential presence and records mode local_verified explicitly."
+      }
+    },
+    {
+      "slug": "guardrail.fenced-lease-and-2m-tpm-ceiling",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: enforce <= 2,000,000 TPM sliding-window pacing and pre-flight lease fencing",
+      "category_reason": "Stops stale workers or burst fanout tasks from burning partner credits or tripping uncontrolled rate cascades.",
+      "value": {
+        "rule": "Swarm claims with stale fencing tokens or remaining lease TTL below min_safe_lease_seconds abort pre-flight with zero tokens burned, while active claims stay within <= 2,000,000 tokens per 60-second sliding window.",
+        "how_it_is_checked": "BasetenSwarmClient checks observe_fence and AsyncTokenBucket2M before dispatching and preserves HTTP 429 retry records in attempts."
+      }
+    },
+    {
+      "slug": "guardrail.distinct-adapter-rubric-verification",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: specialist LoRA drafters never verify their own rubric checklist",
+      "category_reason": "Applies Sinan Ozdemir multi-LoRA rubric verification so drafter errors, missing citations or PII leaks escalate safely.",
+      "value": {
+        "rule": "Structured specialist LoRA outputs require verification by a distinct verifier adapter checking required schema fields, grounded citations, zero PII patterns and a non-empty human_only boundary.",
+        "how_it_is_checked": "FireworksMultiLoraRouter.verify_rubric rejects drafter_adapter == verifier_adapter and escalates failed candidates."
+      }
+    },
+    {
+      "slug": "spec.five-tier-compute-cascade",
+      "category": "noun.model_spec",
+      "role": "spec",
+      "title": "Specification: 5-tier public-good compute cascade across edge shim, Fireworks, Baseten, Modal and Meta models",
+      "category_reason": "Documents tier ordering, partner credit envelopes ($100 x 3) and Meta open-weight model targets.",
+      "value": {
+        "cascade_tiers": [
+          "tier_0_edge_shim_memo (<2ms zero-token deterministic replay)",
+          "tier_1_fireworks_multilora (Llama-3.1-8B specialist drafters + Llama-3.3-70B rubric verifier)",
+          "tier_2_baseten_2m_tpm_swarm (<=2,000,000 TPM async token-bucket Llama-3.3-70B parallel workers)",
+          "tier_3_modal_qlora_and_sandbox (isolated container sandbox + Muse-Glimmer-30B / Llama-3.2-3B QLoRA)",
+          "tier_4_meta_muse_spark_frontier (novel multi-constraint escalation)"
+        ],
+        "partner_credit_budget_usd": {
+          "modal": 100,
+          "baseten": 100,
+          "fireworks_ai": 100
+        },
+        "baseten_tpm_ceiling": 2000000,
+        "edge_shim_latency_budget_ms": 2.0
+      }
+    },
+    {
+      "slug": "rules.partner-cascade-gates",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic VRAM, sandbox isolation, 2M TPM pacing and rubric escalation rules",
+      "category_reason": "Zero-call local checks executed before spending GPU time or API credits.",
+      "value": {
+        "modal_sandbox_invariants": [
+          "block_network == true",
+          "forward_host_secrets == false",
+          "read_only_pack_mount == true",
+          "timeout_seconds in [5, 600]"
+        ],
+        "qlora_trace_gates": [
+          "non-empty human_only boundary",
+          "no raw SSN or email PII pattern",
+          "4-gram Jaccard overlap < 0.35 against benchmark holdouts"
+        ],
+        "rubric_escalation_rule": "escalate_to_baseten_or_modal_tier on missing citations, PII pattern, missing human_only or self-verification",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.partner-cascade",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: Modal QLoRA and sandbox validator, Baseten 2M TPM swarm client and Fireworks multi-LoRA router",
+      "category_reason": "Tested Python standard-library package with optional Modal/HTTP runtime entrypoints pinned by path and digest.",
+      "value": {
+        "name": "Partner compute cascade",
+        "code": {
+          "$code": "partner-compute-cascade"
+        },
+        "runtime": "Python 3.10 or later, standard library only for dry-run verification, loopback 2M TPM swarm test and simulator; optional modal CLI and partner API keys for cloud execution.",
+        "commands": [
+          "python -m partner_cascade verify-all --out CASCADE.json",
+          "python partner_cascade/modal_qlora_and_sandbox.py --dry-run-validate",
+          "python -m partner_cascade worked-example --input BUNDLE.json"
+        ],
+        "does": [
+          "Validates Modal container sandbox isolation, holdout-safe QLoRA datasets and 4-bit NF4 VRAM budgets for Muse-Glimmer-30B and Llama-3.2-3B-Instruct.",
+          "Enforces <= 2,000,000 TPM sliding-window token pacing, HTTP 429 Retry-After backoff and pre-flight lease fencing across async worker claims.",
+          "Routes structured tasks behind a sub-2ms edge shim to Fireworks specialist LoRA adapters with distinct-adapter rubric checks."
+        ],
+        "does_not": [
+          "Fabricate live_api receipts when credentials are unset, forward host secrets into sandboxes or exceed authorized credit budgets."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.five-tier-compute-cascade"
+        ]
+      ]
+    },
+    {
+      "slug": "template.cascade-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: partner compute pre-flight and multi-LoRA rubric verification receipt",
+      "value": {
+        "describes": "honest verification mode, QLoRA peak VRAM fit, sandbox isolation validity, selected specialist LoRA adapter and rubric pass status",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "fits_within_92pct_vram",
+            "estimated_peak_vram_gib",
+            "sandbox_contract_valid",
+            "selected_adapter",
+            "rubric_passed"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "local_verified",
+                "live_api"
+              ]
+            },
+            "fits_within_92pct_vram": {
+              "type": "boolean"
+            },
+            "estimated_peak_vram_gib": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sandbox_contract_valid": {
+              "type": "boolean"
+            },
+            "selected_adapter": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rubric_passed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "mode": "local_verified",
+          "fits_within_92pct_vram": true,
+          "estimated_peak_vram_gib": 19.702,
+          "sandbox_contract_valid": true,
+          "selected_adapter": "statute-citation-extractor-lora",
+          "rubric_passed": true
+        }
+      }
+    },
+    {
+      "slug": "example.cascade-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: Muse-Glimmer-30B QLoRA config, isolated sandbox spec and housing statute citation check",
+      "category_reason": "Synthetic partner compute pre-flight bundle recomputed by test_partner_cascade.py.",
+      "value": {
+        "model_name": "Muse-Glimmer-30B",
+        "lora_rank": 32,
+        "lora_alpha": 64,
+        "seq_len": 4096,
+        "sandbox_spec": {
+          "block_network": true,
+          "forward_host_secrets": false,
+          "read_only_pack_mount": true,
+          "timeout_seconds": 120
+        },
+        "task_kind": "verb.situate",
+        "prompt": "Extract public municipal housing statute section citations with exact line numbers",
+        "schema_required": [
+          "citations",
+          "section_ids",
+          "human_only"
+        ],
+        "candidate_output": {
+          "citations": [
+            {
+              "section": "12-403(b)",
+              "page": 14
+            }
+          ],
+          "section_ids": [
+            "12-403(b)"
+          ],
+          "human_only": "Licensed municipal housing counsel verifies applicability before advising tenants."
+        }
+      }
+    },
+    {
+      "slug": "example.cascade-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed local_verified VRAM fit, sandbox check and rubric verdict",
+      "category_reason": "Deterministic output conforming to template.cascade-receipt.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.cascade-receipt"
+        },
+        "instance": {
+          "mode": "local_verified",
+          "fits_within_92pct_vram": true,
+          "estimated_peak_vram_gib": 19.702,
+          "sandbox_contract_valid": true,
+          "selected_adapter": "statute-citation-extractor-lora",
+          "rubric_passed": true
+        }
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.cascade-bundle"
+        ],
+        [
+          "verifies",
+          "template.cascade-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "validate-modal-qlora-and-sandbox",
+      "kind": "verb.verify_gate",
+      "title": "Validate Modal sandbox isolation, holdout-safe QLoRA traces and GPU VRAM fit",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Check isolated container sandbox flags, filter QLoRA training traces for PII and benchmark holdout overlap, and compute 4-bit NF4 peak VRAM before any GPU run.",
+      "outcome": "Deterministic pre-flight receipt confirming sandbox safety, holdout separation and GPU VRAM margin.",
+      "ready_outcome": "modal_preflight_validated",
+      "pinned": [
+        "spec.five-tier-compute-cascade",
+        "rules.partner-cascade-gates",
+        "tool.partner-cascade",
+        "guardrail.honest-local-vs-live-partner-receipts"
+      ],
+      "slots": [
+        {
+          "name": "cascade_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of QLoRA model configuration, trace batch and container sandbox spec."
+        }
+      ],
+      "produces": [
+        {
+          "name": "preflight_receipt",
+          "template": "template.cascade-receipt"
+        }
+      ],
+      "steps": [
+        "Run compute_qlora_vram_and_config, verify_sandbox_contract and format_traces_for_qlora on the input bundle.",
+        "Stamp mode local_verified when MODAL_TOKEN_ID is absent or dry-run validation is selected."
+      ],
+      "acceptance": [
+        {
+          "id": "vram-and-sandbox-contracts-verified",
+          "check": "Peak VRAM fits within 92% of target GPU memory and all four sandbox isolation flags hold.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "pace-baseten-fenced-swarm",
+      "kind": "verb.benchmark_harness",
+      "title": "Pace parallel fenced worker claims within Baseten's 2,000,000 TPM sliding window",
+      "claimant": "agent",
+      "model_use": "worker_allowance",
+      "network": [
+        "provider_destination",
+        "HTTPS calls go only to the worker's configured Baseten inference endpoint during live runs; loopback mock verification uses localhost only and contacts no external host."
+      ],
+      "summary": "Verify monotonic fencing tokens and remaining lease TTL pre-flight, then schedule async worker claims through a <= 2,000,000 TPM sliding-window token bucket with HTTP 429 backoff.",
+      "outcome": "Fenced swarm receipt recording peak sliding-window token rate, zero-token stale-fence aborts and preserved retry history.",
+      "ready_outcome": "fenced_swarm_paced",
+      "pinned": [
+        "spec.five-tier-compute-cascade",
+        "rules.partner-cascade-gates",
+        "tool.partner-cascade",
+        "guardrail.fenced-lease-and-2m-tpm-ceiling"
+      ],
+      "slots": [
+        {
+          "name": "swarm_claims",
+          "category": "noun.eval_run",
+          "description": "Pin of fenced worker claim batch and token budget parameters."
+        }
+      ],
+      "produces": [
+        {
+          "name": "swarm_receipt",
+          "template": "template.cascade-receipt"
+        }
+      ],
+      "steps": [
+        "Reject claims with stale fencing tokens or insufficient remaining lease TTL before reserving tokens.",
+        "Acquire sliding-window capacity under <= 2,000,000 TPM, reconcile actual usage and preserve any 429 retry records."
+      ],
+      "acceptance": [
+        {
+          "id": "two-million-tpm-and-fencing-enforced",
+          "check": "Peak 60-second window usage stays <= 2,000,000 tokens and stale-fenced claims burn zero tokens.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "partner-compute-cascade.validate-modal-qlora-and-sandbox"
+      ]
+    },
+    {
+      "slug": "route-fireworks-multilora-and-rubric",
+      "kind": "verb.verify_gate",
+      "title": "Route structured tasks behind a sub-2ms edge shim to specialist LoRAs with rubric checks",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Replay exact verified fingerprints in < 2 ms at zero token cost, select a Fireworks specialist LoRA drafter on cache miss and check candidate outputs with a distinct rubric verifier.",
+      "outcome": "Conforming cascade receipt naming the selected adapter, sub-2ms shim status and distinct-adapter rubric verdict.",
+      "ready_outcome": "multilora_rubric_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.five-tier-compute-cascade",
+        "rules.partner-cascade-gates",
+        "tool.partner-cascade",
+        "template.cascade-receipt",
+        "guardrail.distinct-adapter-rubric-verification"
+      ],
+      "slots": [
+        {
+          "name": "routing_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of structured prompt, required JSON fields and candidate specialist output."
+        }
+      ],
+      "produces": [
+        {
+          "name": "routing_receipt",
+          "template": "template.cascade-receipt"
+        }
+      ],
+      "steps": [
+        "Run FireworksMultiLoraRouter.route_request to check sub-2ms memo replay or pick a specialist drafter.",
+        "Run FireworksMultiLoraRouter.verify_rubric with a distinct verifier adapter and escalate any failed candidate."
+      ],
+      "acceptance": [
+        {
+          "id": "distinct-verifier-and-sub-2ms-shim",
+          "check": "Shim latency is < 2.0 ms, drafter != verifier and output validates against template.cascade-receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "partner-compute-cascade.pace-baseten-fenced-swarm"
+      ]
+    }
+  ]
+}

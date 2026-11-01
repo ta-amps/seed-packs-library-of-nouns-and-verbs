@@ -1,0 +1,595 @@
+{
+  "pack_id": "portable-agent-persona-compiler",
+  "title": "Portable agent persona compiler",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for compiling portable agent role definitions across coding harnesses, scoring delegation descriptions, separating routing from permissions, and stripping accuracy-degrading persona fluff, with tested standard-library Python code.",
+  "boundaries": [
+    "Hierarchy routes work only and never grants permissions; prose claiming undeclared shell, write, or network rights fails compilation.",
+    "Expert superlatives, novice framing, hobby backstories, and demographic attributes are stripped before compilation.",
+    "Every compiled prompt clamps drift_checkpoint_rounds to at most 8 conversational turns.",
+    "Workers create nouns and propose verbs; importing this pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for compiling portable, fluff-free agent roles across coding harnesses",
+      "value": {
+        "lets_workers": "Strip accuracy-degrading persona fluff, score subagent routing descriptions, enforce strict separation between routing prose and capability permissions, and compile one role definition into Claude Code, Codex, Cursor, Copilot, Gemini CLI, OpenCode, Roo Code, and Kiro formats.",
+        "not_for": "Role-play entertainment cards or granting elevated permissions through natural language.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "portable-agent-persona-compiler.strip-degrading-persona-fluff"
+            },
+            "when": "First: remove superlative, novice, hobby, and demographic filler."
+          },
+          {
+            "verb": {
+              "$verb": "portable-agent-persona-compiler.score-and-verify-role-contract"
+            },
+            "when": "Score routing description clarity and verify permission separation."
+          },
+          {
+            "verb": {
+              "$verb": "portable-agent-persona-compiler.compile-multi-harness-role-bundle"
+            },
+            "when": "Render deterministic target files and compatibility warnings."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.routing-never-authorizes"
+          },
+          {
+            "$pin": "guardrail.strip-empirical-degraders"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.persona-compiler"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.routing-never-authorizes"
+        ],
+        [
+          "requires_noun",
+          "guardrail.strip-empirical-degraders"
+        ],
+        [
+          "requires_noun",
+          "rules.fluff-and-target-mapping"
+        ],
+        [
+          "requires_noun",
+          "tool.persona-compiler"
+        ],
+        [
+          "requires_noun",
+          "template.compiled-role-bundle"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: strip degrading fluff, verify routing-permission separation, then compile targets",
+      "category_reason": "Shared three-step compilation pipeline across coding harnesses.",
+      "value": {
+        "lifecycle": [
+          "strip-degrading-persona-fluff removes non-operational backstory and demographic lines while keeping procedures.",
+          "score-and-verify-role-contract scores the delegation description on four criteria and rejects undeclared capability claims.",
+          "compile-multi-harness-role-bundle renders per-harness files, clamps 8-round checkpoints, and runs persona-bundle-checks."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.routing-never-authorizes",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: routing prose cannot grant shell, write, network, or override capabilities",
+      "value": {
+        "rule": "Any instruction claiming shell, write, network, or bypass authority absent from allowed_capabilities raises a deterministic error.",
+        "how_it_is_checked": "verify_permission_separation scans description, instructions, and handoff_notes before compilation."
+      }
+    },
+    {
+      "slug": "guardrail.strip-empirical-degraders",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: strip biographical, demographic, novice, and superlative role-play filler",
+      "value": {
+        "rule": "Operational worker prompts retain only task scope, tool contracts, procedures, output schemas, and <= 8-round drift checkpoints.",
+        "how_it_is_checked": "strip_degrading_fluff removes matching segments and persona-bundle-checks rejects unstripped filler."
+      }
+    },
+    {
+      "slug": "rules.fluff-and-target-mapping",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic rules for description scoring, 8-round checkpoints, and 8-harness compilation",
+      "value": {
+        "description_rubric": "0.30 trigger verb + 0.25 named artifact + 0.25 explicit scope boundary + 0.20 concise (10..75 words, zero fluff).",
+        "supported_targets": "claude_code, codex, cursor, vscode_copilot, gemini_cli, opencode, roo_code, kiro.",
+        "drift_checkpoint": "Clamp drift_checkpoint_rounds to min(8, requested_rounds)."
+      }
+    },
+    {
+      "slug": "template.role-lint-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: portable role fluff and permission-separation audit",
+      "value": {
+        "describes": "description rubric score, removed fluff count, and permission separation status",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "slug",
+            "description_score",
+            "fluff_removed_count",
+            "permission_separated"
+          ],
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            },
+            "description_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "fluff_removed_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "permission_separated": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.compiled-role-bundle",
+      "category": "noun.shim_provision",
+      "role": "template",
+      "title": "Template: multi-harness compiled agent role bundle",
+      "value": {
+        "describes": "compiled per-harness config paths, SHA-256 digests, warnings, and drift checkpoint budget",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "slug",
+            "bundle_sha256",
+            "drift_checkpoint_rounds",
+            "compiled_targets"
+          ],
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 64
+            },
+            "bundle_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "drift_checkpoint_rounds": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "compiled_targets": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 15,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "path",
+                  "content_sha256"
+                ],
+                "properties": {
+                  "target": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 40
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 200
+                  },
+                  "content_sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "persona-bundle-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for compiled multi-harness role bundles",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every compiled multi-harness role bundle must satisfy.",
+        "deterministic_checks": [
+          {
+            "id": "bundle-digest-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "bundle_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "Every compiled bundle pins a 64-hex SHA-256 digest across target outputs."
+          },
+          {
+            "id": "hobby-fluff-absent",
+            "rule": {
+              "rule": "pattern_absent",
+              "path": "$",
+              "pattern": "drinking espresso"
+            },
+            "why": "Irrelevant biographical fluff must be stripped from compiled outputs."
+          },
+          {
+            "id": "targets-have-digests",
+            "rule": {
+              "rule": "each_has",
+              "path": "compiled_targets",
+              "fields": [
+                "target",
+                "path",
+                "content_sha256"
+              ],
+              "min": 1
+            },
+            "why": "Each compiled harness artifact records target id, relative path, and content digest."
+          },
+          {
+            "id": "hosts-local",
+            "rule": {
+              "rule": "hosts_local_only",
+              "path": "$"
+            },
+            "why": "Role compilation bundles must not embed external URLs."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-compiled-bundle",
+            "label": "known_good",
+            "finding": {
+              "slug": "schema-diff-auditor",
+              "bundle_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+              "drift_checkpoint_rounds": 8,
+              "compiled_targets": [
+                {
+                  "target": "claude_code",
+                  "path": ".claude/agents/schema-diff-auditor.md",
+                  "content_sha256": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-unstripped-fluff",
+            "label": "known_bad",
+            "finding": {
+              "slug": "fluffy-agent",
+              "bundle_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+              "note": "In spare time enjoys drinking espresso.",
+              "compiled_targets": [
+                {
+                  "target": "claude_code",
+                  "path": ".claude/agents/fluffy-agent.md",
+                  "content_sha256": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-missing-target-digest",
+            "label": "known_bad",
+            "finding": {
+              "slug": "broken-agent",
+              "bundle_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+              "compiled_targets": [
+                {
+                  "target": "codex",
+                  "path": ".codex/agents/broken.toml",
+                  "content_sha256": ""
+                }
+              ]
+            }
+          }
+        ],
+        "expected": {
+          "good-compiled-bundle": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-unstripped-fluff": {
+            "verdict": "fail",
+            "failed_checks": [
+              "hobby-fluff-absent"
+            ]
+          },
+          "bad-missing-target-digest": {
+            "verdict": "fail",
+            "failed_checks": [
+              "targets-have-digests"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.persona-compiler",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: persona_compiler standard-library CLI and library",
+      "value": {
+        "name": "persona_compiler",
+        "code": {
+          "$code": "portable-agent-persona-compiler"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m persona_compiler lint SPEC.json",
+          "python3 -m persona_compiler compile SPEC.json [--targets claude_code,codex,opencode,...]"
+        ],
+        "does": [
+          "Strips empirically accuracy-degrading persona fluff and scores delegation descriptions.",
+          "Blocks undeclared permission leaks and compiles portable role specs across 8 coding harnesses."
+        ],
+        "does_not": [
+          "Mutate ~/.claude or workspace dotfiles directly, call external APIs, or grant runtime privileges."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.fluff-and-target-mapping"
+        ]
+      ]
+    },
+    {
+      "slug": "source.zheng-persona-accuracy",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "Zheng et al. (arXiv:2311.10054): When 'A Helpful Assistant' Is Not Really Helpful",
+      "value": {
+        "url": "https://arxiv.org/abs/2311.10054",
+        "checked_on": "2026-10-31",
+        "provides": "Empirical evaluation across 2,410 factual questions showing expert personas yield no accuracy gain."
+      }
+    },
+    {
+      "slug": "source.dearaujo-irrelevant-details",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "de Araujo et al. (arXiv:2508.19764) & Cao et al. (arXiv:2602.12285) on persona degradation",
+      "value": {
+        "url": "https://arxiv.org/abs/2508.19764",
+        "checked_on": "2026-10-31",
+        "provides": "Evidence that irrelevant persona details and demographic framing cause severe task degradation."
+      }
+    },
+    {
+      "slug": "source.li-instruction-drift",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "Li et al. (arXiv:2402.10962): Measuring and Controlling Instruction (In)Stability in Language Models",
+      "value": {
+        "url": "https://arxiv.org/abs/2402.10962",
+        "checked_on": "2026-10-31",
+        "provides": "Empirical finding that persona and instruction drift emerges within 8 dialogue rounds."
+      }
+    },
+    {
+      "slug": "example.compiled-schema-auditor",
+      "category": "noun.shim_provision",
+      "role": "example",
+      "title": "Worked example: synthetic read-only schema-diff-auditor compiled across 3 harnesses",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.compiled-role-bundle"
+        },
+        "instance": {
+          "slug": "schema-diff-auditor",
+          "bundle_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+          "drift_checkpoint_rounds": 8,
+          "compiled_targets": [
+            {
+              "target": "claude_code",
+              "path": ".claude/agents/schema-diff-auditor.md",
+              "content_sha256": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+            },
+            {
+              "target": "codex",
+              "path": ".codex/agents/schema-diff-auditor.toml",
+              "content_sha256": "fedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321"
+            },
+            {
+              "target": "opencode",
+              "path": ".opencode/agents/schema-diff-auditor.json",
+              "content_sha256": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+            }
+          ]
+        },
+        "shows": "One canonical read-only role compiled cleanly with 8-round drift checkpointing and explicit tool denials.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "strip-degrading-persona-fluff",
+      "kind": "verb.distill_reflex",
+      "title": "Strip superlative, novice, biographical, and demographic filler from instructions",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run strip_degrading_fluff via persona_compiler on a local role spec while preserving operational scope, tool rules, and output schemas.",
+      "outcome": "Cleaned operational instructions and a lint summary.",
+      "ready_outcome": "fluff_stripped",
+      "pinned": [
+        "guardrail.strip-empirical-degraders",
+        "rules.fluff-and-target-mapping",
+        "tool.persona-compiler"
+      ],
+      "slots": [
+        {
+          "name": "raw_role_spec",
+          "category": "noun.public_source",
+          "description": "Local JSON portable role specification."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the local JSON role specification."
+      ],
+      "produces": [
+        {
+          "name": "lint_report",
+          "template": "template.role-lint-report"
+        }
+      ],
+      "steps": [
+        "Run python3 -m persona_compiler lint on the local role spec JSON.",
+        "Confirm removed segments contain only non-operational persona filler."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Lint output validates against template.role-lint-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "procedures-preserved",
+          "check": "Operational sentences remain intact.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "score-and-verify-role-contract",
+      "kind": "verb.verify_gate",
+      "title": "Score delegation description and enforce routing-permission separation",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Score the routing description on trigger, artifact, boundary, and concision, and verify zero undeclared shell, write, or network claims appear in prose.",
+      "outcome": "A verified role lint report with permission_separated=true.",
+      "ready_outcome": "contract_verified",
+      "pinned": [
+        "guardrail.routing-never-authorizes",
+        "rules.fluff-and-target-mapping",
+        "tool.persona-compiler"
+      ],
+      "slots": [
+        {
+          "name": "raw_role_spec",
+          "category": "noun.public_source",
+          "description": "Local JSON portable role specification."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "verified_lint",
+          "template": "template.role-lint-report"
+        }
+      ],
+      "steps": [
+        "Evaluate score_delegation_description and verify_permission_separation on the spec.",
+        "Return blocked if permission_separated is false so undeclared capability claims never compile."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Report validates against template.role-lint-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "permissions-clean",
+          "check": "permission_separated is true for ready outcome.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "portable-agent-persona-compiler.strip-degrading-persona-fluff"
+      ]
+    },
+    {
+      "slug": "compile-multi-harness-role-bundle",
+      "kind": "verb.compile_dag",
+      "title": "Compile verified portable role spec into target harness artifacts",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compile the verified role spec across requested harness targets, clamp 8-round drift checkpoints, record unmapped-field warnings, and run persona-bundle-checks.",
+      "outcome": "A multi-harness compiled role bundle with SHA-256 digests.",
+      "ready_outcome": "bundle_compiled",
+      "pinned": [
+        "persona-bundle-checks",
+        "guardrail.routing-never-authorizes",
+        "guardrail.strip-empirical-degraders",
+        "tool.persona-compiler"
+      ],
+      "slots": [
+        {
+          "name": "verified_lint",
+          "category": "noun.eval_run",
+          "description": "Pin of the verified role lint report."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "bundle",
+          "template": "template.compiled-role-bundle"
+        }
+      ],
+      "steps": [
+        "Run python3 -m persona_compiler compile for the requested harness targets.",
+        "Confirm the compiled bundle passes persona-bundle-checks before returning."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Bundle validates against template.compiled-role-bundle.",
+          "method": "deterministic"
+        },
+        {
+          "id": "checks-pass",
+          "check": "Bundle passes persona-bundle-checks.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "portable-agent-persona-compiler.score-and-verify-role-contract"
+      ]
+    }
+  ]
+}

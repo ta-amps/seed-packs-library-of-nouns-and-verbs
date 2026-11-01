@@ -1,0 +1,125 @@
+{
+  "grid_id": "byte_latent_entropy_patch_grid.v1",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 12,
+  "float_round_digits": 4,
+  "parameters": [
+    {
+      "name": "global_entropy_threshold",
+      "param_type": "choice",
+      "choices": [2.2, 2.8, 3.4],
+      "default": 2.8
+    },
+    {
+      "name": "delta_spike_threshold",
+      "param_type": "choice",
+      "choices": [0.6, 0.9, 1.2],
+      "default": 0.9
+    },
+    {
+      "name": "min_patch_bytes",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 8,
+      "step": 2,
+      "default": 4
+    },
+    {
+      "name": "max_patch_bytes",
+      "param_type": "integer_range",
+      "low": 16,
+      "high": 64,
+      "step": 16,
+      "default": 32
+    },
+    {
+      "name": "context_order",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "name": "prior_concentration",
+      "param_type": "choice",
+      "choices": [0.1, 0.25, 0.5],
+      "default": 0.25
+    },
+    {
+      "name": "total_inspection_budget",
+      "param_type": "integer_range",
+      "low": 16,
+      "high": 256,
+      "step": 16,
+      "default": 64
+    },
+    {
+      "name": "min_slots_per_patch",
+      "param_type": "integer_range",
+      "low": 0,
+      "high": 2,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "constraints": [
+    {
+      "when": {
+        "min_patch_bytes": 8
+      },
+      "require_in": {
+        "max_patch_bytes": [32, 48, 64]
+      }
+    },
+    {
+      "when": {
+        "global_entropy_threshold": 2.2
+      },
+      "require_in": {
+        "delta_spike_threshold": [0.9, 1.2]
+      }
+    }
+  ],
+  "regime_defaults": {
+    "fine_grained_patch": {
+      "global_entropy_threshold": 2.2,
+      "delta_spike_threshold": 0.9,
+      "min_patch_bytes": 2,
+      "max_patch_bytes": 16,
+      "context_order": 2,
+      "prior_concentration": 0.25,
+      "total_inspection_budget": 64,
+      "min_slots_per_patch": 0
+    },
+    "balanced_entropy_patch": {
+      "global_entropy_threshold": 2.8,
+      "delta_spike_threshold": 0.9,
+      "min_patch_bytes": 4,
+      "max_patch_bytes": 32,
+      "context_order": 2,
+      "prior_concentration": 0.25,
+      "total_inspection_budget": 64,
+      "min_slots_per_patch": 0
+    },
+    "coarse_streaming_patch": {
+      "global_entropy_threshold": 3.4,
+      "delta_spike_threshold": 1.2,
+      "min_patch_bytes": 6,
+      "max_patch_bytes": 48,
+      "context_order": 2,
+      "prior_concentration": 0.25,
+      "total_inspection_budget": 96,
+      "min_slots_per_patch": 0
+    }
+  },
+  "constants": {
+    "byte_alphabet_size": 256,
+    "log_base_two": 2.0,
+    "fixed_stride_bytes": 8,
+    "min_context_observations": 2,
+    "round_digits": 4,
+    "json_indent": 2
+  }
+}

@@ -1,0 +1,397 @@
+{
+  "pack_id": "website-first-walkthrough-capture",
+  "title": "Website-first walkthrough capture",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for checking website-first walkthrough shot lists and generating deterministic browser recorder plans in the v6 capture window (1280x613 CSS px at device scale 1.5) with real surface hosts, take ids, request-band anchors, 1.8 s minimum shots, reading-speed holds, no status stamps and zero camera drift.",
+  "dependencies": [
+    "frosted-widescreen-captions",
+    "film-and-surface-rule-evaluator",
+    "configuration-grids-and-bounds"
+  ],
+  "boundaries": [
+    "Walkthrough footage shots record real pages at scale 1.000 with 0 px drift, visible browser chrome, take ids and zero credentials in URLs.",
+    "Overlay callouts never carry forbidden status stamps, retired names or 'proven' lifecycle claims and stay within 8 words while narration speaks.",
+    "Admitting a storyboard check and recorder plan requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for checking website-first walkthrough shot lists and generating deterministic browser recorder plans in the v6 capture window (1280x613 CSS px at device scale 1.5) with real surface hosts, take ids, request-band anchors, 1.8 s minimum shots, reading-speed holds, no status stamps and zero camera drift",
+      "value": {
+        "lets_workers": "Validate multi-cut walkthrough storyboards before recording (back-to-back shot seams, >= 1.8 s shots, permitted live hosts, zero URL credentials, request-page band anchors, reading-time budgets, stamp and retired-name blocks, camera scale 1.000) and emit deterministic browser recorder plans.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "website-first-walkthrough-capture.check-shot-list"
+            },
+            "when": "Independently check a walkthrough storyboard against all film-frame v6 footage, pacing, URL-hygiene and wording rules."
+          },
+          {
+            "verb": {
+              "$verb": "website-first-walkthrough-capture.plan-takes"
+            },
+            "when": "Compile a recorder capture plan for a cut with 1280x613 CSS px viewport, device scale 1.5, take ids and scroll/pointer bounds."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.real-pages-no-url-credentials-or-ken-burns"
+          },
+          {
+            "$pin": "guardrail.distinct-reviewer-on-shot-list"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.walkthrough-capture"
+        },
+        "worked_example": "Three-cut v3 storyboard (180 s, 60 s and 90 s technical cut) checked in test_walkthrough_capture.py: passes with zero errors, produces recorder steps at 1280x613 CSS px (device scale 1.5) anchored to #step-split..#step-ready, and blocks mutated flash cuts, stamp overlays, Ken Burns drift, off-site URLs, URL credentials and retired names.",
+        "provenance_notes": [
+          "Checks footage URLs against the live Eranos (eranos.ta-amps.workers.dev) and Agora (agora.ta-amps.workers.dev) Cloudflare Workers surfaces."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.real-pages-no-url-credentials-or-ken-burns"
+        ],
+        [
+          "requires_noun",
+          "guardrail.distinct-reviewer-on-shot-list"
+        ],
+        [
+          "requires_noun",
+          "spec.film-frame-v6-footage-and-pacing"
+        ],
+        [
+          "requires_noun",
+          "tool.walkthrough-capture"
+        ],
+        [
+          "requires_noun",
+          "template.storyboard-check-receipt"
+        ],
+        [
+          "requires_noun",
+          "template.walkthrough-capture-plan"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.real-pages-no-url-credentials-or-ken-burns",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: walkthrough footage stays on permitted live pages at scale 1.000 with zero credentials in URLs",
+      "category_reason": "Preserves authentic browser walkthroughs and enforces the access contract forbidding URL tokens.",
+      "value": {
+        "rule": "Footage shots use permitted live surface HTTPS hosts with take_ids, never place key/token/code/secret parameters in URLs, anchor request-status shots to #step-split..#step-ready, and hold camera scale 1.000 with 0 px drift.",
+        "how_it_is_checked": "walkthrough_capture.check_storyboard rejects off-site URLs, CREDENTIAL_IN_URL matches, missing anchors, camera scale != 1.0 or drift != 0.0."
+      }
+    },
+    {
+      "slug": "guardrail.distinct-reviewer-on-shot-list",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: walkthrough storyboard check receipts require an independent reviewer",
+      "category_reason": "Ensures shot-list hygiene is verified independently before browser capture begins.",
+      "value": {
+        "rule": "The worker checking a walkthrough storyboard before capture cannot share worker_id or key_id with the storyboard author.",
+        "how_it_is_checked": "website-first-walkthrough-capture.check-shot-list sets review to distinct_reviewer."
+      }
+    },
+    {
+      "slug": "spec.film-frame-v6-footage-and-pacing",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: film-frame v6 1280x613 CSS px capture window, 1.8 s shot floor and scroll/callout bounds",
+      "category_reason": "Defines deterministic browser capture geometry and pacing rules for real-page walkthroughs.",
+      "value": {
+        "window_css_px": [
+          1280,
+          613
+        ],
+        "device_scale_factor": 1.5,
+        "window_device_px": [
+          1920,
+          920
+        ],
+        "camera_scale": 1.0,
+        "camera_drift_px": 0.0,
+        "min_shot_s": 1.8,
+        "scroll_max_css_px_per_s": 800,
+        "hold_after_scroll_s": 2.0,
+        "callout_max_words_while_narrating": 8,
+        "request_page_anchors": [
+          "#step-split",
+          "#step-build",
+          "#step-review",
+          "#step-ready"
+        ]
+      }
+    },
+    {
+      "slug": "tool.walkthrough-capture",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library walkthrough storyboard checker and v6 browser recorder planner",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path, file count and SHA-256.",
+      "value": {
+        "name": "walkthrough capture",
+        "code": {
+          "$code": "website-first-walkthrough-capture"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "make -C packs/website-first-walkthrough-capture/code check"
+        ],
+        "does": [
+          "Checks multi-cut storyboards for shot seams, 1.8 s minimum shots, permitted hosts, URL credential bans, band anchors, reading budgets, stamp/retired-name bans and static camera scale.",
+          "Builds per-cut recorder capture plans with take_ids, URLs, anchors, 1280x613 CSS px window and scroll/pointer rules.",
+          "Verifies SHA-256 retired-name matching and ZeroHardcodedValuesAstGate conformance."
+        ],
+        "does_not": [
+          "Launch headless browsers on import, embed credentials in URLs or apply artificial zoom/pan effects."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.film-frame-v6-footage-and-pacing"
+        ]
+      ]
+    },
+    {
+      "slug": "template.storyboard-check-receipt",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: walkthrough storyboard pre-recording verification receipt",
+      "value": {
+        "describes": "a deterministic pre-recording check receipt over a multi-cut walkthrough storyboard",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_count",
+            "error_count",
+            "url_credential_hits",
+            "retired_name_hits",
+            "ast_violation_count"
+          ],
+          "properties": {
+            "cut_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "error_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "url_credential_hits": {
+              "type": "integer",
+              "const": 0
+            },
+            "retired_name_hits": {
+              "type": "integer",
+              "const": 0
+            },
+            "ast_violation_count": {
+              "type": "integer",
+              "const": 0
+            }
+          }
+        },
+        "example": {
+          "cut_count": 3,
+          "error_count": 0,
+          "url_credential_hits": 0,
+          "retired_name_hits": 0,
+          "ast_violation_count": 0
+        }
+      }
+    },
+    {
+      "slug": "template.walkthrough-capture-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: website-first browser recorder plan for a walkthrough cut",
+      "value": {
+        "describes": "an ordered browser capture plan with viewport dimensions, device scale, take ids and anchors",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cut_id",
+            "footage_step_count",
+            "window_css_px",
+            "device_scale_factor",
+            "all_shots_have_take_ids"
+          ],
+          "properties": {
+            "cut_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "footage_step_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "window_css_px": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer"
+              }
+            },
+            "device_scale_factor": {
+              "type": "number",
+              "const": 1.5
+            },
+            "all_shots_have_take_ids": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        },
+        "example": {
+          "cut_id": "film-3m-v6",
+          "footage_step_count": 18,
+          "window_css_px": [
+            1280,
+            613
+          ],
+          "device_scale_factor": 1.5,
+          "all_shots_have_take_ids": true
+        }
+      }
+    },
+    {
+      "slug": "example.storyboard-v3-check-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: three-cut storyboard v3 verified against v6 footage, anchor and pacing rules",
+      "category_reason": "Storyboard v3 fixture checked deterministically by test_walkthrough_capture.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.storyboard-check-receipt"
+        },
+        "instance": {
+          "cut_count": 3,
+          "error_count": 0,
+          "url_credential_hits": 0,
+          "retired_name_hits": 0,
+          "ast_violation_count": 0
+        },
+        "shows": "All three cuts (180 s, 60 s and 90 s technical cut) pass check_storyboard() with zero errors and produce valid 1280x613 CSS px capture plans.",
+        "source": "Checked in packs/website-first-walkthrough-capture/code against storyboard.v3.json."
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.storyboard-check-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "check-shot-list",
+      "kind": "verb.verify_gate",
+      "title": "Check a walkthrough shot list before browser recording",
+      "claimant": "agent",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "summary": "Verify with a distinct reviewer that a walkthrough storyboard has back-to-back shots >= 1.8 s, permitted live hosts, take ids, request-band anchors, reading-time holds, zero URL credentials and zero stamp or retired-name hits.",
+      "outcome": "Independent pre-recording storyboard check receipt.",
+      "ready_outcome": "shot_list_checked",
+      "pinned": [
+        "spec.film-frame-v6-footage-and-pacing",
+        "guardrail.real-pages-no-url-credentials-or-ken-burns",
+        "guardrail.distinct-reviewer-on-shot-list",
+        "tool.walkthrough-capture",
+        "template.storyboard-check-receipt"
+      ],
+      "slots": [
+        {
+          "name": "storyboard",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the candidate multi-cut storyboard JSON."
+        }
+      ],
+      "produces": [
+        {
+          "name": "storyboard_receipt",
+          "template": "template.storyboard-check-receipt"
+        }
+      ],
+      "steps": [
+        "Run check_storyboard(sb) across all cuts in the pinned storyboard.",
+        "Confirm zero error tuples, zero URL credential parameters and distinct reviewer identity."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-storyboard-errors",
+          "check": "check_storyboard(sb) returns zero errors and ast_violation_count is 0.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "plan-takes",
+      "kind": "verb.compile_dag",
+      "title": "Write the browser recorder capture plan for a walkthrough cut",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compile an ordered recorder plan for a checked cut using the 1280x613 CSS px window at device scale 1.5, take ids, anchors and v6 scroll/pointer bounds.",
+      "outcome": "Ordered browser recorder capture plan for the requested cut.",
+      "ready_outcome": "capture_plan_written",
+      "pinned": [
+        "spec.film-frame-v6-footage-and-pacing",
+        "guardrail.real-pages-no-url-credentials-or-ken-burns",
+        "tool.walkthrough-capture"
+      ],
+      "slots": [
+        {
+          "name": "storyboard",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the checked walkthrough storyboard."
+        }
+      ],
+      "params": {
+        "cut_id": {
+          "description": "Identifier of the cut inside the storyboard to plan.",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "default": "film-3m-v6"
+        }
+      },
+      "produces": [
+        {
+          "name": "capture_plan",
+          "template": "template.walkthrough-capture-plan"
+        }
+      ],
+      "steps": [
+        "Run capture_plan(sb, cut_id) to extract every footage shot with its take_ids, URL, anchor and minimum hold duration.",
+        "Verify every step carries window_css_px [1280, 613], device_scale_factor 1.5 and non-empty take_ids."
+      ],
+      "acceptance": [
+        {
+          "id": "complete-footage-take-plan",
+          "check": "Every footage shot in the cut has non-empty take_ids, a permitted HTTPS URL and window_css_px [1280, 613].",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "website-first-walkthrough-capture.check-shot-list"
+      ]
+    }
+  ]
+}

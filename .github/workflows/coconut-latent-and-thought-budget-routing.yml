@@ -1,0 +1,22 @@
+name: coconut-latent-and-thought-budget-routing
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run coconut-latent-and-thought-budget-routing unit tests
+        working-directory: packs/coconut-latent-and-thought-budget-routing/code
+        run: |
+          make check
+          python3 -c "import thought_budget_routing"

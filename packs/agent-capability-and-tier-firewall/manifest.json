@@ -1,0 +1,175 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "agent-capability-and-tier-firewall",
+  "title": "Agent capability and tier firewall",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for enforcing scoped effect ceilings, credential and high-entropy secret redaction, and model data-tier routing guards that block non-public payloads from training or contributor endpoints before dispatch.",
+  "license": "MIT",
+  "store": "seedpack.agent-capability-and-tier-firewall",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "c7f526dcfff40d0bc561174924c9b4fb7f9bd8fedbe967d1e5b2f747b483ac92"
+    },
+    {
+      "path": "source.json",
+      "sha256": "ccba8703005a5cb7678c5c82a54b57eb709b2479bc780da61f4bb263295c2223"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "66c546b5c475dec4afe49dbbe9877256f05c4269c3bcc4b4b003a8922a317b76"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "b3db848a3d5afc494fe8657e3fdadfd1af445257fc45f1c6420b117f227423db"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "baa27c484dd9605d94e3a72d73c0afb6f418b0b92779228bec16f8bc017641e7"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.method",
+      "category_id": "noun.skill_pack",
+      "role": "method",
+      "value_sha256": "911d6fa164fbb2bacade1a88ee8b6142b840baecbeaf1c5bc94acbeeb903dfbe"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.guardrail.fail-closed-effect-lattice",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "0b21c01dc63421ee939de96fd6d67d35ed1154566b3b2b701178810bfc1c9441"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.guardrail.no-private-data-to-training-tiers",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "e062dbdd680e285cf0bd45511a7f18cf6970ba67688e3096379700ba1d74434e"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.rules.lattice-and-tier-matrix",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "9649eeed7626d10616c0001d3dd2c3d67af3a97fa5af10f4dfa80027463043c3"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.template.firewall-policy",
+      "category_id": "noun.shim_provision",
+      "role": "template",
+      "value_sha256": "81b239d96f13f73616f65e6435557c01dc26c90dba544b97007ac376f3f1fcf9"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.template.secret-scan-report",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "3bcda47776891a58d0edffd5bf934e09c43d31ebfdc9f7badccf537943b478d6"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.template.dispatch-decision",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "f73e3f150889ca5daa25d9b6f7d228665bd8d2351c2d2b7814dc1aa40f3294e4"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.template.blocked-tombstone",
+      "category_id": "noun.negative_tombstone",
+      "role": "template",
+      "value_sha256": "4f6e076939ca3dfe653bae794cf68b842ccb5bcda6ab0aa7d682e7ddda267245"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.firewall-decision-checks",
+      "category_id": "noun.benchmark_suite",
+      "role": "record_checks",
+      "value_sha256": "47a50aa24b8860835dc2e9986e113ccfc222db8a3779b1ef234e1d511f3d652b"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.tool.tier-firewall",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "c054a01788575c473af8807de5b72db6182314d761f003ed46f5e50cd49d0baf"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.source.owasp-llm-top10",
+      "category_id": "noun.public_source",
+      "role": "source",
+      "value_sha256": "cbd80c56834915ed85ccc67de7441aafe4ac6e9e69fca9237c5d533ec08ed3ff"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.source.nist-sp800-53",
+      "category_id": "noun.public_source",
+      "role": "source",
+      "value_sha256": "0ed3d7a4f4f6c9493b3dc7d08e8efc72770044dd1d12bebe5c04b7fb4ba1636e"
+    },
+    {
+      "key": "agent-capability-and-tier-firewall.v0.1.0.example.blocked-contributor-dispatch",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "80098988a33e15383547a3064b399ad1dd0ba1eae66f63db821c75901deb6687"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "agent-capability-and-tier-firewall.author-capability-tier-policy",
+      "kind": "verb.problemize",
+      "claimant": "human",
+      "idempotency_key": "seedpack:agent-capability-and-tier-firewall:author-capability-tier-policy:a23a822f8ed27682315aed21e49b77157d74d04215f3c6191ae842f535940f22",
+      "report_shape_sha256": "2a3abd1fb20dedd82b5dd08496b63a3a5ba890637a1182201a456efea890973f"
+    },
+    {
+      "template_id": "agent-capability-and-tier-firewall.scan-payload-for-secrets",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:agent-capability-and-tier-firewall:scan-payload-for-secrets:7687ead3be5a81b36b10a798914d59de9597968774af8b9ef69ecbc8aaea1609",
+      "report_shape_sha256": "7bb624062e144499b8ca318ba2058d78f8cc47173a8f9bfea1eaabcbe4f6ed8d"
+    },
+    {
+      "template_id": "agent-capability-and-tier-firewall.evaluate-pre-dispatch-gate",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:agent-capability-and-tier-firewall:evaluate-pre-dispatch-gate:f3197db56ee16ecc2095e0a567880365f6f54b974682f74c9133c4d86e8a4a52",
+      "report_shape_sha256": "984eb95789064b0f68b3434397afa60326195a4e9933b6803e238a9b880c45c8"
+    },
+    {
+      "template_id": "agent-capability-and-tier-firewall.quarantine-blocked-dispatch",
+      "kind": "verb.recover_fault",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:agent-capability-and-tier-firewall:quarantine-blocked-dispatch:6bc524f85dfe3b9e0b517541d4180d01016a1298684e8debd4340d14df222f82",
+      "report_shape_sha256": "d6916ebf18559b9f057922375935b86d52faab095744a322ce389b9d2577f567"
+    }
+  ],
+  "code": {
+    "path": "packs/agent-capability-and-tier-firewall/code",
+    "files": 6,
+    "sha256": "165fcbfbb703477aaf68135c05441bf07df9eb59a581393b3d8214e08af6936e",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [],
+  "boundaries": [
+    "Any unknown effect_class, unknown data_sensitivity, or unknown endpoint_tier fails closed with verdict 'block'.",
+    "Enabling contributor_mode downgrades effective_endpoint_tier to contributor_shared, permitting public data only.",
+    "Human owners author capability policies; workers evaluate requests against pinned policies without widening grants."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

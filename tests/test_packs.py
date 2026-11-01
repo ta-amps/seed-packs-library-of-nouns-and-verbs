@@ -119,7 +119,7 @@ class LibraryChecks(unittest.TestCase):
         self.assertEqual(summary["packs"], len(PACKS))
         self.assertEqual(summary["nouns"], sum(len(IDX.docs[p]["nouns.json"]["records"]) for p in PACKS))
         self.assertEqual(summary["verbs"], sum(len(IDX.docs[p]["verbs.json"]["tasks"]) for p in PACKS))
-        self.assertEqual(summary["worked_examples"], 45)
+        self.assertEqual(summary["worked_examples"], 54)
         self.assertTrue(summary["offline_only"])
         self.assertIsNone(summary["live_evaluation"])
 
@@ -127,8 +127,51 @@ class LibraryChecks(unittest.TestCase):
         for pack in ("repo-review", "video-showcase", "tool-discovery", "evaluation-design", "checks-of-checks",
                      "decomposition-patterns", "taste-palettes", "harness-onboarding-e2e", "security-review",
                      "cost-optimization", "docs-improvement", "benchmark-scores", "visual-rendering",
-                     "public-good-kits", "freshness-checks", "findings-to-fixes"):
+                     "public-good-kits", "freshness-checks", "findings-to-fixes",
+                     "meta-are-scenario-matrix", "sira-self-learning-rag", "partner-compute-cascade",
+                     "combinatorial-niche-spider", "configuration-grids-and-bounds",
+                     "probabilistic-filters-and-sketches", "grep-string-and-format-rules",
+                     "trigger-and-shim-rules", "execution-hooks-and-verifiers",
+                     "loops-schedules-and-heuristics", "film-and-surface-rule-evaluator",
+                     "agent-capability-and-tier-firewall", "agent-config-supply-chain-scanner",
+                     "brainstorm-chunking-and-situation-miner", "coding-session-trace-distiller",
+                     "declarative-chart-and-diagram-svg", "multimodal-mask-and-transcript-alignment",
+                     "portable-agent-persona-compiler", "social-video-reframe-and-hooks",
+                     "submission-rubric-and-readiness-audit",
+                     "byte-latent-patch-and-entropy-chunker", "coconut-latent-and-thought-budget-routing",
+                     "dora-spinquant-and-adapter-merging", "faiss-ivf-pq-and-ann-index-cascade",
+                     "jepa-world-state-and-action-simulator", "rule-of-two-and-agent-guardrails",
+                     "seeded-defect-and-proof-carrying-review", "self-rewarding-and-iterative-dpo-flywheel"):
             self.assertIn(pack, PACKS)
+
+    def test_scenario_matrix_sira_rag_and_partner_cascade_have_code_and_distinct_review(self):
+        expected_review_verbs = {
+            "meta-are-scenario-matrix": "digest-reusable-nouns-and-verbs",
+            "sira-self-learning-rag": "verify-dgmh-proposal-independently",
+            "partner-compute-cascade": "route-fireworks-multilora-and-rubric",
+            "combinatorial-niche-spider": "review-eight-axis-admissions",
+            "configuration-grids-and-bounds": "verify-and-promote-regime-cell",
+            "probabilistic-filters-and-sketches": "verify-sketch-bounds-and-ast-conformance",
+            "grep-string-and-format-rules": "verify-strict-json-copy-and-ast-gate",
+            "trigger-and-shim-rules": "route-regime-and-match-which-fits",
+            "execution-hooks-and-verifiers": "audit-verifier-mutation-sensitivity",
+            "loops-schedules-and-heuristics": "evaluate-swappable-learner-advisors",
+            "film-and-surface-rule-evaluator": "review-film-and-surface-readiness",
+            "byte-latent-patch-and-entropy-chunker": "verify-lossless-patching-and-ast-gate",
+            "coconut-latent-and-thought-budget-routing": "verify-invariant-recall-and-ast-gate",
+            "dora-spinquant-and-adapter-merging": "verify-quantization-merge-and-ast-gate",
+            "faiss-ivf-pq-and-ann-index-cascade": "verify-ivf-pq-compression-and-recall-receipt",
+            "jepa-world-state-and-action-simulator": "verify-world-state-simulator-receipt",
+            "rule-of-two-and-agent-guardrails": "verify-bidirectional-vault-and-ast-gate",
+            "seeded-defect-and-proof-carrying-review": "audit-wilson-and-paired-bootstrap-intervals",
+            "self-rewarding-and-iterative-dpo-flywheel": "verify-preregistered-flywheel-promotion",
+        }
+        for pack, review_slug in expected_review_verbs.items():
+            manifest = IDX.docs[pack]["manifest.json"]
+            self.assertIn("code", manifest, pack)
+            self.assertGreaterEqual(manifest["code"]["files"], 10, pack)
+            brief = task(f"{pack}.{review_slug}")["brief"]
+            self.assertEqual(brief["review"]["required"], "distinct_reviewer", pack)
 
     def test_packs_are_plain_english_collections(self):
         for pack in PACKS:

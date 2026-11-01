@@ -1,0 +1,115 @@
+{
+  "grid_id": "dora-spinquant-and-adapter-merging-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "float_axis_round_digits": 6,
+  "parameters": [
+    {
+      "name": "quant_bits",
+      "param_type": "integer_range",
+      "low": 3,
+      "high": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "name": "quant_granularity",
+      "param_type": "choice",
+      "choices": ["per_row", "per_tensor"],
+      "default": "per_row"
+    },
+    {
+      "name": "enable_hadamard_rotation",
+      "param_type": "boolean",
+      "default": true
+    },
+    {
+      "name": "ties_trim_density",
+      "param_type": "float_range",
+      "low": 0.2,
+      "high": 0.8,
+      "step": 0.2,
+      "default": 0.5
+    },
+    {
+      "name": "max_cosine_for_static_merge",
+      "param_type": "float_range",
+      "low": 0.15,
+      "high": 0.45,
+      "step": 0.15,
+      "default": 0.3
+    },
+    {
+      "name": "max_sign_conflict_for_static_merge",
+      "param_type": "float_range",
+      "low": 0.15,
+      "high": 0.45,
+      "step": 0.15,
+      "default": 0.25
+    }
+  ],
+  "constraints": [
+    {
+      "id": "sub-5bit-requires-hadamard-rotation",
+      "when": { "quant_bits": 4 },
+      "require_in": { "enable_hadamard_rotation": [true] }
+    },
+    {
+      "id": "sub-4bit-requires-hadamard-rotation",
+      "when": { "quant_bits": 3 },
+      "require_in": { "enable_hadamard_rotation": [true] }
+    }
+  ],
+  "regime_defaults": {
+    "low_bit_edge_serving": {
+      "quant_bits": 4,
+      "quant_granularity": "per_row",
+      "enable_hadamard_rotation": true,
+      "ties_trim_density": 0.5,
+      "max_cosine_for_static_merge": 0.3,
+      "max_sign_conflict_for_static_merge": 0.25
+    },
+    "strict_multi_tenant_isolation": {
+      "quant_bits": 4,
+      "quant_granularity": "per_row",
+      "enable_hadamard_rotation": true,
+      "ties_trim_density": 0.4,
+      "max_cosine_for_static_merge": 0.15,
+      "max_sign_conflict_for_static_merge": 0.15
+    }
+  },
+  "numerics": {
+    "epsilon": 1e-12,
+    "round_digits": 6,
+    "kurtosis_gaussian_baseline": 3.0,
+    "digest_bytes": 32,
+    "word_bytes": 8,
+    "unit_modulus": 1000003
+  },
+  "spinquant": {
+    "butterfly_radix": 2,
+    "default_rotation_seed": 1729,
+    "default_quant_bits": 4,
+    "default_granularity": "per_row",
+    "synthetic_rows": 16,
+    "synthetic_cols": 64,
+    "synthetic_outlier_channels": 1,
+    "synthetic_outlier_scale": 32.0,
+    "synthetic_seed": 42
+  },
+  "dora": {
+    "default_lora_alpha": 8.0,
+    "default_lora_rank": 4
+  },
+  "ties_router": {
+    "default_trim_density": 0.5,
+    "default_scaling_lambda": 1.0,
+    "max_cosine_for_static_merge": 0.3,
+    "max_sign_conflict_for_static_merge": 0.25,
+    "min_overlap_elements": 2
+  },
+  "formatting": {
+    "json_indent": 2
+  }
+}

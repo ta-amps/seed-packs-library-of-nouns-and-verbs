@@ -1,0 +1,2460 @@
+{
+ "kind": "storyboard",
+ "id": "film-storyboard-v6",
+ "version": 3,
+ "created_at": "2026-11-01",
+ "author": "Claude Design (design lead)",
+ "summary": "Storyboard v3: Claude Code's merged v5 (owner direction through 19:30 ET, the food-pantry example, the title) aligned with master prompt v6 (the four-band /requests/:id page, v6 frame and pacing, website-first, the 45 s judge path and the 90 s technical cut). Every shot names its screen id, URL, anchor and take ids.",
+ "decisions": [
+  "Example: one real public example request (owner approved up to 3), the food pantry's weekly sign-up sheet clean-up (Claude Code D1). REQ-INTAKE-07 stays the judges' finished example and the film's fallback only if the real run is not finished by Nov 3, 12:00 PM ET.",
+  "The request page is recorded in the nonprofit's own view: the tab that sent the request keeps its request code in memory. The code is never filmed and never goes in a URL (Tessera's access contract).",
+  "S06 adds the sort-and-split beat (#step-split). To make room, S10 drops 'It does the busywork, and a person makes every decision about a person.' (keep it if the measured voice leaves time).",
+  "No partner claims in the 3:00 or 0:60. Partner beats exist only in the 90 s cut, gated on live receipts.",
+  "No act cards; title S00 2.8 s; end card with live screenshots in the door tiles.",
+  "Owner, Nov 1: 1-3 dedicated Eranos workers pick up tasks when no volunteer is free. Lines that say 'a volunteer's AI' are gated on the claim's worker kind, with honest fallbacks; the page labels every worker as a volunteer or as one of Eranos's own.",
+  "Owner, Nov 1: categorized feeds (PII projects on GitHub, new OCR LLM tools, ...) run, ranked and served by dedicated cloud workers. S15b shows them, gated on real scheduled runs."
+ ],
+ "rules": {
+  "min_shot_s": 1.8,
+  "read_base_s": 0.5,
+  "read_wps": 3.0,
+  "max_chars": 42,
+  "max_lines": 2,
+  "max_cps": 17.0,
+  "min_cue_s": 1.0,
+  "max_cue_s": 6.0,
+  "bridge_s": 0.5,
+  "max_linger_s": 1.5,
+  "callout_words": 8
+ },
+ "cuts": [
+  {
+   "id": "film-3m-v6",
+   "label": "3:00 film",
+   "duration": 180.0,
+   "band_split": "v6 4/920/156",
+   "frame": "notes/coordination-2026-10-31/claude-design-film-frame.v6.json",
+   "fit": {
+    "needed_s": 176.37,
+    "slack_s": 3.63
+   },
+   "totals": {
+    "words": 378,
+    "wpm": 143,
+    "shots": 21
+   },
+   "shots": [
+    {
+     "id": "S00",
+     "title": "Title",
+     "screen_id": null,
+     "url": null,
+     "anchor": null,
+     "action": "Title card (Film / FilmTitle; Claude Code v5/title/title-3m-v2.html): the Eranos home hero at film size, 'Spare tokens for good.' and the two doors. Music only, then a 12-frame dissolve into the browser.",
+     "v6_ref": null,
+     "v5_ref": "S00",
+     "take_ids": [],
+     "action_min_s": 2.8,
+     "quiet_weight": 0,
+     "source": "card",
+     "on_screen": [
+      {
+       "text": "Spare tokens for good.",
+       "must_read": true
+      },
+      {
+       "text": "My NGO needs help · I want to help",
+       "must_read": false,
+       "why": "repeated and held in S01-S02"
+      }
+     ],
+     "frame": {
+      "board": "FilmTitle"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "cut"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 2.8,
+     "start": 0.0,
+     "end": 2.8,
+     "cues": [],
+     "page": {
+      "url": null,
+      "screen_id": null,
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S01",
+     "title": "Arrive at Eranos",
+     "screen_id": "ER-01",
+     "url": "https://eranos.ta-amps.workers.dev/",
+     "anchor": null,
+     "action": "Ctrl+L in an empty tab, type the Eranos address at 11-13 characters a second, Enter. Home loads: the agent banner above the header, then the hero. Hold.",
+     "v6_ref": "S01",
+     "v5_ref": "S01",
+     "take_ids": [
+      "NF01-arrive"
+     ],
+     "action_min_s": 6.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "EranosHome"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "dissolve",
+      "frames": 12
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 8.65,
+     "start": 2.8,
+     "end": 11.623,
+     "cues": [
+      {
+       "id": "S01-1",
+       "text": "If your AI plan has tokens left|over at the end of the month…",
+       "line_id": "l01",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 3.15,
+       "end": 6.968,
+       "_check": {
+        "visible_s": 5.17,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 16.0
+       }
+      },
+      {
+       "id": "S01-2",
+       "text": "…Eranos puts them to work for nonprofits.",
+       "line_id": "l02",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 8.337,
+       "end": 10.942,
+       "_check": {
+        "visible_s": 2.87,
+        "needs_s": 2.83,
+        "words": 7,
+        "cps": 15.7
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/",
+      "screen_id": "ER-01",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S02",
+     "title": "Two doors",
+     "screen_id": "ER-01",
+     "url": "https://eranos.ta-amps.workers.dev/",
+     "anchor": null,
+     "action": "One wheel notch: the parallax layers move and both doors sit in view, 'My NGO needs help' left and 'I want to help' right. The pointer drifts to the left door.",
+     "v6_ref": "S02",
+     "v5_ref": "S02",
+     "take_ids": [
+      "NF01-arrive"
+     ],
+     "action_min_s": 3.0,
+     "quiet_weight": 1.5,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "EranosHome"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 3.0,
+     "start": 11.623,
+     "end": 14.882,
+     "cues": [
+      {
+       "id": "S02-1",
+       "text": "Spare tokens, for good.",
+       "line_id": "l03",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 11.973,
+       "end": 13.466,
+       "_check": {
+        "visible_s": 1.83,
+        "needs_s": 1.83,
+        "words": 4,
+        "cps": 15.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/",
+      "screen_id": "ER-01",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S03",
+     "title": "My NGO needs help",
+     "screen_id": "ER-02",
+     "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+     "anchor": null,
+     "action": "Click 'My NGO needs help'. /nonprofits loads on 'Tell us what your organization needs.' with the three steps in view.",
+     "v6_ref": "S03",
+     "v5_ref": "S03",
+     "take_ids": [
+      "NF02-ask"
+     ],
+     "action_min_s": 3.2,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "FlowPrototype",
+      "screen": "ask"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 3.47,
+     "start": 14.882,
+     "end": 18.525,
+     "cues": [
+      {
+       "id": "S03-1",
+       "text": "Say a small food pantry needs help.",
+       "line_id": "v5n01",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 15.232,
+       "end": 17.404,
+       "_check": {
+        "visible_s": 2.83,
+        "needs_s": 2.83,
+        "words": 7,
+        "cps": 16.1
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+      "screen_id": "ER-02",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S04",
+     "title": "The bounds",
+     "screen_id": "ER-02",
+     "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+     "anchor": null,
+     "action": "Pointer rests on 'We can't accept private information yet' (1.5 s). Hover the ⓘ on 'A reusable process' (tooltip 2 s), click it. 'How often?': Regularly · Every week.",
+     "v6_ref": "S03",
+     "v5_ref": "S04",
+     "take_ids": [
+      "NF02-ask"
+     ],
+     "action_min_s": 11.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "RequestForm"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 13.21,
+     "start": 18.525,
+     "end": 31.908,
+     "cues": [
+      {
+       "id": "S04-1",
+       "text": "First, the bounds:|no private information at this stage.",
+       "line_id": "v5n02",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 18.875,
+       "end": 22.893,
+       "_check": {
+        "visible_s": 4.42,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 13.9
+       }
+      },
+      {
+       "id": "S04-2",
+       "text": "They choose: information with sources, or|a reusable process their own agent runs.",
+       "line_id": "v5n03",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 23.293,
+       "end": 29.216,
+       "_check": {
+        "visible_s": 6.32,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 13.8
+       }
+      },
+      {
+       "id": "S04-3",
+       "text": "Once, or every week.",
+       "line_id": "v5n04",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 29.616,
+       "end": 30.849,
+       "_check": {
+        "visible_s": 1.83,
+        "needs_s": 1.83,
+        "words": 4,
+        "cps": 16.2
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+      "screen_id": "ER-02",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S05",
+     "title": "Describe it",
+     "screen_id": "ER-02",
+     "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+     "anchor": null,
+     "action": "Type the first clause live; 8-frame dissolve to the finished request. The live check under the box reads 'No names, emails, phone numbers or case details found'. Organization 'ta-amps team (example request)'.",
+     "v6_ref": "S03",
+     "v5_ref": "S05",
+     "take_ids": [
+      "NF02-ask"
+     ],
+     "action_min_s": 6.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.28,
+     "start": 31.908,
+     "end": 38.361,
+     "cues": [
+      {
+       "id": "S05-1",
+       "text": "Then the job, in plain words: a weekly|clean-up of their volunteer sign-up sheet.",
+       "line_id": "v5n05",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 32.258,
+       "end": 37.835,
+       "_check": {
+        "visible_s": 5.84,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 14.5
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+      "screen_id": "ER-02",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S06",
+     "title": "Send: the request's own page, sorted and split",
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+     "anchor": "#step-split",
+     "action": "Click 'Send request'. The page opens with its 'Save your request code' card; click 'I've saved it' and cut past it (the code is never filmed). Then the header and the progress strip; one smooth scroll (<= 800 CSS px/s) to #step-split: 'Your files stay with you' with the three parts of the process.",
+     "v6_ref": "S04",
+     "v5_ref": "S06",
+     "take_ids": [
+      "NF03-send"
+     ],
+     "action_min_s": 7.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "RequestStatusPage",
+      "moment": "sorted",
+      "view": "film"
+     },
+     "guide": "the 'Your files stay with you' card",
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": "Record in the tab that sent the request: it keeps the request code in memory, so the page speaks to the nonprofit ('you') and 'Yes, use it' needs no typing. Keep that tab for S06-S11 and don't reload. If it closes, type the code into band 4's masked field before the take. The code is never on screen or in the address bar.",
+     "page_status": "build",
+     "min_s": 9.68,
+     "start": 38.361,
+     "end": 48.214,
+     "cues": [
+      {
+       "id": "S06-1",
+       "text": "They press Send,|and the request gets its own page.",
+       "line_id": "v5n06",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 38.711,
+       "end": 42.109,
+       "_check": {
+        "visible_s": 3.85,
+        "needs_s": 3.83,
+        "words": 10,
+        "cps": 15.0
+       }
+      },
+      {
+       "id": "S06-2",
+       "text": "Their real sheet never leaves them.|Volunteers build it with made-up rows.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 42.564,
+       "end": 47.695,
+       "_check": {
+        "visible_s": 5.4,
+        "needs_s": 4.5,
+        "words": 12,
+        "cps": 14.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+      "screen_id": "ER-03",
+      "anchor": "#step-split",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S07",
+     "title": "A volunteer's AI picks it up",
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+     "anchor": "#step-build",
+     "action": "12-frame dissolve across the real wait with a '+N min' time tag. #step-build: the brief travels the edge to 'A volunteer's AI'; checklist rows turn Made. Click 'Show technical details': lease, declared model and receipts appear.",
+     "v6_ref": "S06",
+     "v5_ref": "S07",
+     "take_ids": [
+      "NF04-claimed"
+     ],
+     "action_min_s": 11.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [
+      {
+       "text": "+N min",
+       "must_read": true
+      }
+     ],
+     "frame": {
+      "board": "RequestStatusPage",
+      "moment": "making",
+      "view": "film"
+     },
+     "guide": "the 'A volunteer's AI' node",
+     "transition_in": {
+      "type": "dissolve",
+      "frames": 12,
+      "why": "real time skipped; the page's own times agree"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 11.32,
+     "start": 48.214,
+     "end": 59.706,
+     "cues": [
+      {
+       "id": "S07-1",
+       "text": "A volunteer's AI is making it now,|with tokens they weren't going to use.",
+       "line_id": "v5n07",
+       "new": false,
+       "gate": "the claim's worker kind is 'volunteer' (not one of Eranos's own workers)",
+       "fallback": "No volunteer was free, so one of Eranos's own workers picked it up.",
+       "start": 48.564,
+       "end": 53.348,
+       "_check": {
+        "visible_s": 5.19,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 15.3
+       }
+      },
+      {
+       "id": "S07-2",
+       "text": "Only one agent works on it at a time,|and every step gets a receipt.",
+       "line_id": "l05b",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 53.751,
+       "end": 58.188,
+       "_check": {
+        "visible_s": 5.5,
+        "needs_s": 5.5,
+        "words": 15,
+        "cps": 15.3
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+      "screen_id": "ER-03",
+      "anchor": "#step-build",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S08",
+     "title": "The other side: I want to help",
+     "screen_id": "ER-04",
+     "url": "https://eranos.ta-amps.workers.dev/help",
+     "anchor": null,
+     "action": "Switch to the second tab on /help. Click the banner's 'Copy for your agent' ('Copied'). One wheel notch to 'Open tasks'; the pointer rests on this request's task and its 'Copy for my agent'.",
+     "v6_ref": "S05",
+     "v5_ref": "S08",
+     "take_ids": [
+      "NF05-help"
+     ],
+     "action_min_s": 5.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "EranosHelp"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (real tab switch)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.13,
+     "start": 59.706,
+     "end": 66.009,
+     "cues": [
+      {
+       "id": "S08-1",
+       "text": "Anyone can help: pick an open task,|and hand it to your own AI agent.",
+       "line_id": "l06",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 60.056,
+       "end": 64.68,
+       "_check": {
+        "visible_s": 5.5,
+        "needs_s": 5.5,
+        "words": 15,
+        "cps": 14.9
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/help",
+      "screen_id": "ER-04",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S09",
+     "title": "A second volunteer checks it",
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+     "anchor": "#step-review",
+     "action": "Back on the request tab; '+N min'. Scroll to #step-review: the check card turns green, 'Checked by a different volunteer's AI · all checks passed'. The refusal card shows only if the run recorded one.",
+     "v6_ref": "S07",
+     "v5_ref": "S09",
+     "take_ids": [
+      "NF06-checked"
+     ],
+     "action_min_s": 9.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [
+      {
+       "text": "+N min",
+       "must_read": true
+      }
+     ],
+     "frame": {
+      "board": "RequestStatusPage",
+      "moment": "checking",
+      "view": "film"
+     },
+     "guide": "the green check card",
+     "transition_in": {
+      "type": "dissolve",
+      "frames": 12
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 9.69,
+     "start": 66.009,
+     "end": 75.872,
+     "cues": [
+      {
+       "id": "S09-1",
+       "text": "A different volunteer's agent reviews it.|The builder can never approve its own kit.",
+       "line_id": "l07",
+       "new": false,
+       "gate": "the checker's worker kind is 'volunteer'",
+       "fallback": "A different worker checks it. The builder can never approve its own kit.",
+       "start": 66.359,
+       "end": 72.182,
+       "_check": {
+        "visible_s": 6.22,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 14.4
+       }
+      },
+      {
+       "id": "S09-2",
+       "text": "Here, both agents run on Meta's models.",
+       "line_id": "l08",
+       "new": false,
+       "gate": "the run's receipts record a Meta model for both the maker and the checker",
+       "fallback": "Every step is recorded, so anyone can check it.",
+       "start": 72.582,
+       "end": 75.114,
+       "_check": {
+        "visible_s": 2.83,
+        "needs_s": 2.83,
+        "words": 7,
+        "cps": 15.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+      "screen_id": "ER-03",
+      "anchor": "#step-review",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S10",
+     "title": "Ready: the process and the decision",
+     "screen_id": "ER-03 → ER-06",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id> → /catalog/<kit-id>",
+     "anchor": "#step-ready",
+     "action": "#step-ready: 'Your process: Clean the volunteer sign-up sheet'. Click 'Open it →': the task object page shows '1 What it does · 2 Try it on practice rows · 3 Run it on your own sheet'. Back on the request page, click 'Yes, use it'.",
+     "v6_ref": "S08",
+     "v5_ref": "S10",
+     "take_ids": [
+      "NF07-result"
+     ],
+     "action_min_s": 12.0,
+     "quiet_weight": 1.5,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "RequestStatusPage",
+      "moment": "ready",
+      "view": "film"
+     },
+     "guide": "the 'Yes, use it' button",
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 12.0,
+     "start": 75.872,
+     "end": 88.131,
+     "cues": [
+      {
+       "id": "S10-1",
+       "text": "Back comes a process:|what it does, practice examples,",
+       "line_id": "l09",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 76.222,
+       "end": 80.132,
+       "_check": {
+        "visible_s": 4.16,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 13.8
+       }
+      },
+      {
+       "id": "S10-2",
+       "text": "and how to run it on their own files.",
+       "line_id": "l09",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 80.382,
+       "end": 82.928,
+       "_check": {
+        "visible_s": 3.5,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 14.5
+       }
+      },
+      {
+       "id": "S10-3",
+       "text": "Now the nonprofit has|a free, reviewed kit.",
+       "line_id": "l10",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 83.902,
+       "end": 86.781,
+       "_check": {
+        "visible_s": 3.17,
+        "needs_s": 3.17,
+        "words": 8,
+        "cps": 14.9
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id> → /catalog/<kit-id>",
+      "screen_id": "ER-03 → ER-06",
+      "anchor": "#step-ready",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S11",
+     "title": "Added to the shared library",
+     "screen_id": "ER-03 → ER-05",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id> → /catalog",
+     "anchor": "#step-ready",
+     "action": "The deliverable chips travel into the 'Shared library' box: 'Added to the shared library · 2 task objects · 1 task'. Click 'See it in the library →': the new process is listed first.",
+     "v6_ref": "S08/S13",
+     "v5_ref": "S11",
+     "take_ids": [
+      "NF08-library"
+     ],
+     "action_min_s": 6.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "RequestStatusPage",
+      "moment": "library",
+      "view": "film"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.36,
+     "start": 88.131,
+     "end": 94.664,
+     "cues": [
+      {
+       "id": "S11-1",
+       "text": "It joins a shared library, free for the|next nonprofit, with nothing to rebuild.",
+       "line_id": "v5n08",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 88.481,
+       "end": 94.144,
+       "_check": {
+        "visible_s": 5.93,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 14.1
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id> → /catalog",
+      "screen_id": "ER-03 → ER-05",
+      "anchor": "#step-ready",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S12",
+     "title": "Bridge to Agora",
+     "screen_id": "AG-01/how",
+     "url": "https://agora.ta-amps.workers.dev/how-it-works/",
+     "anchor": null,
+     "action": "Click 'How it works, on Agora ↗' in the header. Agora's How it works loads on its title.",
+     "v6_ref": "S10",
+     "v5_ref": "S13",
+     "take_ids": [
+      "NA01-how"
+     ],
+     "action_min_s": 5.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraHowItWorks"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (real click)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.28,
+     "start": 94.664,
+     "end": 101.117,
+     "cues": [
+      {
+       "id": "S12-1",
+       "text": "Now, the radically flexible architecture|that runs it, and can be repurposed.",
+       "line_id": "l11a",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 95.014,
+       "end": 100.591,
+       "_check": {
+        "visible_s": 5.84,
+        "needs_s": 4.5,
+        "words": 12,
+        "cps": 13.8
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/how-it-works/",
+      "screen_id": "AG-01/how",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S13",
+     "title": "Why: AI is smart, the way we use it is dumb",
+     "screen_id": "AG-01/how",
+     "url": "https://agora.ta-amps.workers.dev/how-it-works/#why",
+     "anchor": "#why",
+     "action": "One smooth scroll to #why. The three problems reveal as they are spoken; the full-width bar settles.",
+     "v6_ref": "S15/S11",
+     "v5_ref": "S14",
+     "take_ids": [
+      "NA01-how"
+     ],
+     "action_min_s": 14.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraHowItWorks"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 20.31,
+     "start": 101.117,
+     "end": 121.6,
+     "cues": [
+      {
+       "id": "S13-1",
+       "text": "AI is smart. The way we use|it is frustratingly dumb.",
+       "line_id": "l11b",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 101.467,
+       "end": 104.952,
+       "_check": {
+        "visible_s": 4.17,
+        "needs_s": 4.17,
+        "words": 11,
+        "cps": 15.2
+       }
+      },
+      {
+       "id": "S13-2",
+       "text": "It doesn't know what's new, it rewrites|what exists, and it needs babysitting.",
+       "line_id": "l11c",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 105.654,
+       "end": 111.057,
+       "_check": {
+        "visible_s": 5.8,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 14.4
+       }
+      },
+      {
+       "id": "S13-3",
+       "text": "And it can't split work|into pieces anyone can pick up.",
+       "line_id": "l11d",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 111.457,
+       "end": 114.928,
+       "_check": {
+        "visible_s": 4.17,
+        "needs_s": 4.17,
+        "words": 11,
+        "cps": 15.8
+       }
+      },
+      {
+       "id": "S13-4",
+       "text": "It isn't a new kind of model.|It's a new way to organize the work.",
+       "line_id": "l11e",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 115.644,
+       "end": 119.735,
+       "_check": {
+        "visible_s": 5.5,
+        "needs_s": 5.5,
+        "words": 15,
+        "cps": 16.1
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/how-it-works/#why",
+      "screen_id": "AG-01/how",
+      "anchor": "#why",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S14",
+     "title": "Verbs and nouns",
+     "screen_id": "AG-01/how",
+     "url": "https://agora.ta-amps.workers.dev/how-it-works/#map",
+     "anchor": "#map",
+     "action": "Scroll to #map: 'Verbs' and 'Nouns' are the largest words, glossed 'Tasks' and 'Task objects'. Hold; the pointer stays off the tiles.",
+     "v6_ref": "S11",
+     "v5_ref": "S15",
+     "take_ids": [
+      "NA01-how"
+     ],
+     "action_min_s": 9.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraHowItWorks"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 12.31,
+     "start": 121.6,
+     "end": 134.083,
+     "cues": [
+      {
+       "id": "S14-1",
+       "text": "Verbs are tasks: the smallest piece|of work a worker can claim, do and report.",
+       "line_id": "l12a",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 121.95,
+       "end": 127.354,
+       "_check": {
+        "visible_s": 5.8,
+        "needs_s": 5.5,
+        "words": 15,
+        "cps": 14.4
+       }
+      },
+      {
+       "id": "S14-2",
+       "text": "Task objects are nouns: knowledge,|code, models, data, results, receipts.",
+       "line_id": "l12b",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 127.754,
+       "end": 133.558,
+       "_check": {
+        "visible_s": 6.07,
+        "needs_s": 3.83,
+        "words": 10,
+        "cps": 12.6
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/how-it-works/#map",
+      "screen_id": "AG-01/how",
+      "anchor": "#map",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S15",
+     "title": "Underneath: Tessera and Herma",
+     "screen_id": "AG-01/how",
+     "url": "https://agora.ta-amps.workers.dev/how-it-works/#underneath",
+     "anchor": "#underneath",
+     "action": "Scroll to #underneath: any agent's harness → Herma → its model, with Tessera beneath. One message dot travels Tessera → Herma → the agent.",
+     "v6_ref": "S14",
+     "v5_ref": "S16",
+     "take_ids": [
+      "NA01-how"
+     ],
+     "action_min_s": 6.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraHowItWorks"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 7.54,
+     "start": 134.083,
+     "end": 141.796,
+     "cues": [
+      {
+       "id": "S15-1",
+       "text": "Tessera keeps the queue and the nouns.",
+       "line_id": "l12c",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 134.433,
+       "end": 137.252,
+       "_check": {
+        "visible_s": 3.07,
+        "needs_s": 2.83,
+        "words": 7,
+        "cps": 13.5
+       }
+      },
+      {
+       "id": "S15-2",
+       "text": "Herma, the shim,|brings the right ones to any agent.",
+       "line_id": "l12c",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 137.502,
+       "end": 141.139,
+       "_check": {
+        "visible_s": 3.9,
+        "needs_s": 3.83,
+        "words": 10,
+        "cps": 14.3
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/how-it-works/#underneath",
+      "screen_id": "AG-01/how",
+      "anchor": "#underneath",
+      "status": "build"
+     }
+    },
+    {
+     "id": "S15b",
+     "title": "Feeds: new tools, run and ranked",
+     "screen_id": "AG-feeds",
+     "url": "https://agora.ta-amps.workers.dev/feeds/",
+     "anchor": null,
+     "action": "Click 'Feeds' at the foot of How it works. /feeds/ lists its categories (PII tools on GitHub, OCR and document LLMs, memory systems, agent harnesses). Open one: the ranked table with last run time and receipts; type a need into 'Which fits?'.",
+     "v6_ref": "S16",
+     "v5_ref": null,
+     "take_ids": [
+      "NA06-feeds"
+     ],
+     "action_min_s": 6.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraFeeds"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": "Cut this shot (and give its time back to the others) if no feed category has a real scheduled run by the freeze.",
+     "note": null,
+     "page_status": "build",
+     "min_s": 7.67,
+     "start": 141.796,
+     "end": 149.639,
+     "cues": [
+      {
+       "id": "S15b-1",
+       "text": "New tools appear every week.|Feeds find them,",
+       "line_id": null,
+       "new": true,
+       "gate": "each category shown has a scheduled run with receipts in the last 24 h",
+       "fallback": null,
+       "start": 142.146,
+       "end": 145.413,
+       "_check": {
+        "visible_s": 3.52,
+        "needs_s": 3.17,
+        "words": 8,
+        "cps": 13.8
+       }
+      },
+      {
+       "id": "S15b-2",
+       "text": "and dedicated workers run,|rank and serve them.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 145.663,
+       "end": 149.112,
+       "_check": {
+        "visible_s": 3.72,
+        "needs_s": 3.17,
+        "words": 8,
+        "cps": 13.6
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/feeds/",
+      "screen_id": "AG-feeds",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S16",
+     "title": "Built on Meta's models",
+     "screen_id": "AG-04",
+     "url": "https://agora.ta-amps.workers.dev/learning/",
+     "anchor": null,
+     "action": "Click 'Results on Meta models'; /learning/ loads. Scroll to 'Measured results'; the pointer rests on Muse Glimmer, then Llama 3.2. No partner claims (see the 90 s cut).",
+     "v6_ref": "S17",
+     "v5_ref": "S17",
+     "take_ids": [
+      "NA02-meta"
+     ],
+     "action_min_s": 8.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 11.2,
+     "start": 149.639,
+     "end": 161.011,
+     "cues": [
+      {
+       "id": "S16-1",
+       "text": "On our made-up tests,|tuning lifted Muse Glimmer",
+       "line_id": "l13",
+       "new": false,
+       "gate": "/learning/ shows these measured results with their run receipts",
+       "fallback": "Meta's models do the work inside the workers.",
+       "start": 149.989,
+       "end": 155.808,
+       "_check": {
+        "visible_s": 6.07,
+        "needs_s": 3.17,
+        "words": 8,
+        "cps": 8.6
+       }
+      },
+      {
+       "id": "S16-2",
+       "text": "from 93 to 99 percent,|and Llama 3.2 from 12 to 51.",
+       "line_id": "l13",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 156.058,
+       "end": 159.799,
+       "_check": {
+        "visible_s": 4.5,
+        "needs_s": 4.5,
+        "words": 12,
+        "cps": 13.6
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/learning/",
+      "screen_id": "AG-04",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S17",
+     "title": "Use it for anything",
+     "screen_id": "AG-05",
+     "url": "https://agora.ta-amps.workers.dev/use-cases/",
+     "anchor": null,
+     "action": "Click 'Use cases'; one stop, held at least 4 s, on the use-case cards.",
+     "v6_ref": "S19",
+     "v5_ref": "S18",
+     "take_ids": [
+      "NA03-use-cases"
+     ],
+     "action_min_s": 4.5,
+     "quiet_weight": 1.5,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 4.5,
+     "start": 161.011,
+     "end": 165.771,
+     "cues": [
+      {
+       "id": "S17-1",
+       "text": "The same nouns and verbs|fit almost any project.",
+       "line_id": "l14a",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 161.361,
+       "end": 164.486,
+       "_check": {
+        "visible_s": 3.5,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 15.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/use-cases/",
+      "screen_id": "AG-05",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S18",
+     "title": "Made the same way",
+     "screen_id": "AG-05/film",
+     "url": "https://agora.ta-amps.workers.dev/film/made/",
+     "anchor": null,
+     "action": "Click 'How this film was made'; hold on the counts (tasks, task objects, workers, receipts) and the task table for this cut.",
+     "v6_ref": "S20",
+     "v5_ref": "S19",
+     "take_ids": [
+      "NA04-made"
+     ],
+     "action_min_s": 7.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraFilmMade"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 9.47,
+     "start": 165.771,
+     "end": 175.414,
+     "cues": [
+      {
+       "id": "S18-1",
+       "text": "This film was assembled|from nouns and verbs, claimed",
+       "line_id": "l11n",
+       "new": false,
+       "gate": "production-receipts.json says every_step_has_receipt: true for the run that made this file",
+       "fallback": "This film was made the same way, from nouns and verbs.",
+       "start": 166.121,
+       "end": 169.986,
+       "_check": {
+        "visible_s": 4.11,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 13.7
+       }
+      },
+      {
+       "id": "S18-2",
+       "text": "and finished by workers on Tessera,|with a receipt for every step.",
+       "line_id": "l11n",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 170.236,
+       "end": 174.892,
+       "_check": {
+        "visible_s": 4.92,
+        "needs_s": 4.5,
+        "words": 12,
+        "cps": 14.2
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/film/made/",
+      "screen_id": "AG-05/film",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "S19",
+     "title": "End card",
+     "screen_id": null,
+     "url": null,
+     "anchor": null,
+     "action": "End card (film-system.json end_card, v6): the mark, 'Spare tokens for good.' and two door tiles, each with a 16:10 live screenshot of that site's first screen above its real address. Hold to the last frame.",
+     "v6_ref": "S21",
+     "v5_ref": "S20",
+     "take_ids": [
+      "NA05-start"
+     ],
+     "action_min_s": 4.5,
+     "quiet_weight": 0.5,
+     "source": "card",
+     "on_screen": [
+      {
+       "text": "Spare tokens for good.",
+       "must_read": true
+      },
+      {
+       "text": "eranos.ta-amps.workers.dev · agora.ta-amps.workers.dev",
+       "must_read": false,
+       "why": "addresses are read at leisure on the held last frame"
+      }
+     ],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 4.5,
+     "start": 175.414,
+     "end": 180.0,
+     "cues": [
+      {
+       "id": "S19-1",
+       "text": "Start at Agora,|and point your agent at Eranos.",
+       "line_id": "l14",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 175.764,
+       "end": 178.903,
+       "_check": {
+        "visible_s": 3.5,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 15.0
+       }
+      }
+     ],
+     "page": {
+      "url": null,
+      "screen_id": null,
+      "anchor": null,
+      "status": "build"
+     }
+    }
+   ],
+   "checks": {
+    "errors": [],
+    "warnings": []
+   }
+  },
+  {
+   "id": "film-60s-v6",
+   "label": "0:60 film",
+   "duration": 60.0,
+   "band_split": "v6 4/920/156",
+   "frame": "notes/coordination-2026-10-31/claude-design-film-frame.v6.json",
+   "fit": {
+    "needed_s": 55.59,
+    "slack_s": 4.41
+   },
+   "totals": {
+    "words": 121,
+    "wpm": 151,
+    "shots": 9
+   },
+   "shots": [
+    {
+     "id": "T00",
+     "title": "Title",
+     "screen_id": null,
+     "url": null,
+     "anchor": null,
+     "action": "Title card, 0:60 variant: the hero headline only. Music only, then a 12-frame dissolve.",
+     "v6_ref": null,
+     "v5_ref": "T00",
+     "take_ids": [],
+     "action_min_s": 1.9,
+     "quiet_weight": 0,
+     "source": "card",
+     "on_screen": [
+      {
+       "text": "Spare tokens for good.",
+       "must_read": true
+      }
+     ],
+     "frame": {
+      "board": "FilmTitle"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "cut"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 1.9,
+     "start": 0.0,
+     "end": 1.9,
+     "cues": [],
+     "page": {
+      "url": null,
+      "screen_id": null,
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "T01",
+     "title": "Arrive and the two doors",
+     "screen_id": "ER-01",
+     "url": "https://eranos.ta-amps.workers.dev/",
+     "anchor": null,
+     "action": "Ctrl+L, type the address, Enter. Hold on the hero, then one wheel notch brings both doors into view.",
+     "v6_ref": "60s-1",
+     "v5_ref": "T01",
+     "take_ids": [
+      "NF01-arrive"
+     ],
+     "action_min_s": 9.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 10.42,
+     "start": 1.9,
+     "end": 12.908,
+     "cues": [
+      {
+       "id": "T01-1",
+       "text": "If your AI plan has tokens left|over at the end of the month…",
+       "line_id": "l01",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 2.25,
+       "end": 6.068,
+       "_check": {
+        "visible_s": 5.17,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 16.0
+       }
+      },
+      {
+       "id": "T01-2",
+       "text": "…Eranos puts them to work for nonprofits.|Spare tokens, for good.",
+       "line_id": "l02+l03",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 7.437,
+       "end": 11.974,
+       "_check": {
+        "visible_s": 4.8,
+        "needs_s": 4.17,
+        "words": 11,
+        "cps": 14.3
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/",
+      "screen_id": "ER-01",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "T02",
+     "title": "Ask, with bounds",
+     "screen_id": "ER-02",
+     "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+     "anchor": null,
+     "action": "Click 'My NGO needs help'; 'A reusable process'; 'Regularly · Every week'; type the first clause, dissolve to the finished request; the live check passes.",
+     "v6_ref": "60s-2",
+     "v5_ref": "T02",
+     "take_ids": [
+      "NF02-ask"
+     ],
+     "action_min_s": 6.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.1,
+     "start": 12.908,
+     "end": 19.596,
+     "cues": [
+      {
+       "id": "T02-1",
+       "text": "A food pantry asks for a reusable process,|every week, with nothing private.",
+       "line_id": "v5m01",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 13.258,
+       "end": 18.662,
+       "_check": {
+        "visible_s": 5.67,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 14.1
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/nonprofits",
+      "screen_id": "ER-02",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "T03",
+     "title": "Its own page; a volunteer's AI picks it up",
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+     "anchor": "#step-build",
+     "action": "Send. The page opens; '+N min' dissolve; #step-build: the brief travels to 'A volunteer's AI'.",
+     "v6_ref": "60s-3/4",
+     "v5_ref": "T03",
+     "take_ids": [
+      "NF03-send",
+      "NF04-claimed"
+     ],
+     "action_min_s": 6.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "dissolve",
+      "frames": 12
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.5,
+     "start": 19.596,
+     "end": 26.684,
+     "cues": [
+      {
+       "id": "T03-1",
+       "text": "A volunteer's AI is making it now,|with tokens they weren't going to use.",
+       "line_id": "v5n07",
+       "new": false,
+       "gate": "the claim's worker kind is 'volunteer'",
+       "fallback": "No volunteer was free, so one of Eranos's own workers picked it up.",
+       "start": 19.946,
+       "end": 24.73,
+       "_check": {
+        "visible_s": 5.17,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 15.3
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+      "screen_id": "ER-03",
+      "anchor": "#step-build",
+      "status": "build"
+     }
+    },
+    {
+     "id": "T04",
+     "title": "A second volunteer checks it",
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+     "anchor": "#step-review",
+     "action": "'+N min' dissolve; #step-review turns green.",
+     "v6_ref": "60s-5",
+     "v5_ref": "T04",
+     "take_ids": [
+      "NF06-checked"
+     ],
+     "action_min_s": 6.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "dissolve",
+      "frames": 12
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.52,
+     "start": 26.684,
+     "end": 33.792,
+     "cues": [
+      {
+       "id": "T04-1",
+       "text": "A different volunteer's agent reviews it.|The builder can never approve its own kit.",
+       "line_id": "l07",
+       "new": false,
+       "gate": "the checker's worker kind is 'volunteer'",
+       "fallback": "A different worker checks it. The builder can never approve its own kit.",
+       "start": 27.034,
+       "end": 32.857,
+       "_check": {
+        "visible_s": 6.09,
+        "needs_s": 5.17,
+        "words": 14,
+        "cps": 14.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id>",
+      "screen_id": "ER-03",
+      "anchor": "#step-review",
+      "status": "build"
+     }
+    },
+    {
+     "id": "T05",
+     "title": "The process, and the decision",
+     "screen_id": "ER-03 → ER-06",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id> → /catalog/<kit-id>",
+     "anchor": "#step-ready",
+     "action": "Open the process: three numbered steps. Back: 'Yes, use it'.",
+     "v6_ref": "60s-6",
+     "v5_ref": "T05",
+     "take_ids": [
+      "NF07-result"
+     ],
+     "action_min_s": 7.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 8.29,
+     "start": 33.792,
+     "end": 42.67,
+     "cues": [
+      {
+       "id": "T05-1",
+       "text": "Back comes a process:|what it does, practice examples,",
+       "line_id": "l09",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 34.142,
+       "end": 38.052,
+       "_check": {
+        "visible_s": 4.16,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 13.8
+       }
+      },
+      {
+       "id": "T05-2",
+       "text": "and how to run it on their own files.",
+       "line_id": "l09",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 38.302,
+       "end": 40.848,
+       "_check": {
+        "visible_s": 3.5,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 14.5
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id> → /catalog/<kit-id>",
+      "screen_id": "ER-03 → ER-06",
+      "anchor": "#step-ready",
+      "status": "build"
+     }
+    },
+    {
+     "id": "T06",
+     "title": "Into the shared library",
+     "screen_id": "ER-03 → ER-05",
+     "url": "https://eranos.ta-amps.workers.dev/catalog",
+     "anchor": "#step-ready",
+     "action": "The chips travel into the 'Shared library' box; 'See it in the library →'.",
+     "v6_ref": "60s-7",
+     "v5_ref": "T06",
+     "take_ids": [
+      "NF08-library"
+     ],
+     "action_min_s": 5.5,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 6.26,
+     "start": 42.67,
+     "end": 49.518,
+     "cues": [
+      {
+       "id": "T06-1",
+       "text": "It joins a shared library of tasks and|task objects, free for the next nonprofit.",
+       "line_id": "v5m02",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 43.02,
+       "end": 48.583,
+       "_check": {
+        "visible_s": 5.83,
+        "needs_s": 5.5,
+        "words": 15,
+        "cps": 14.6
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/catalog",
+      "screen_id": "ER-03 → ER-05",
+      "anchor": "#step-ready",
+      "status": "build"
+     }
+    },
+    {
+     "id": "T07",
+     "title": "Made the same way",
+     "screen_id": "AG-05/film",
+     "url": "https://agora.ta-amps.workers.dev/film/made/",
+     "anchor": null,
+     "action": "Agora /film/made/ for the 0:60 file: counts and receipts; hold.",
+     "v6_ref": "60s-8",
+     "v5_ref": "T07",
+     "take_ids": [
+      "NA04-made"
+     ],
+     "action_min_s": 4.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 5.47,
+     "start": 49.518,
+     "end": 55.576,
+     "cues": [
+      {
+       "id": "T07-1",
+       "text": "This film was made the same way,|with a receipt for every step.",
+       "line_id": "v5m03",
+       "new": false,
+       "gate": "production-receipts.json says every_step_has_receipt: true for the shipped 0:60 file",
+       "fallback": "Start at Agora to see how it works.",
+       "start": 49.868,
+       "end": 54.046,
+       "_check": {
+        "visible_s": 4.83,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 15.1
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/film/made/",
+      "screen_id": "AG-05/film",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "T08",
+     "title": "End card",
+     "screen_id": null,
+     "url": null,
+     "anchor": null,
+     "action": "The end card as in the 3:00; hold to the last frame.",
+     "v6_ref": "60s-8",
+     "v5_ref": "T08",
+     "take_ids": [
+      "NA05-start"
+     ],
+     "action_min_s": 3.5,
+     "quiet_weight": 0.5,
+     "source": "card",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 4.13,
+     "start": 55.576,
+     "end": 60.0,
+     "cues": [
+      {
+       "id": "T08-1",
+       "text": "Start at Agora,|and point your agent at Eranos.",
+       "line_id": "l14",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 55.926,
+       "end": 59.065,
+       "_check": {
+        "visible_s": 3.5,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 15.0
+       }
+      }
+     ],
+     "page": {
+      "url": null,
+      "screen_id": null,
+      "anchor": null,
+      "status": "build"
+     }
+    }
+   ],
+   "checks": {
+    "errors": [],
+    "warnings": []
+   }
+  },
+  {
+   "id": "technical-90s-v6",
+   "label": "90 s technical cut",
+   "duration": 90.0,
+   "band_split": "v6 4/920/156",
+   "frame": "notes/coordination-2026-10-31/claude-design-film-frame.v6.json",
+   "fit": {
+    "needed_s": 69.88,
+    "slack_s": 20.12
+   },
+   "totals": {
+    "words": 128,
+    "wpm": 139,
+    "shots": 6
+   },
+   "shots": [
+    {
+     "id": "X01",
+     "title": "The same request, technical details on",
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/<id>?details=technical",
+     "anchor": "#step-build",
+     "action": "Open the finished request with technical details: the lease, fencing token, declared harness and model, and receipts on each band. Scroll to #step-review and open 'Raw record'.",
+     "v6_ref": "E4",
+     "v5_ref": null,
+     "take_ids": [
+      "NX01-tech"
+     ],
+     "action_min_s": 10.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "RequestStatusPage",
+      "details": true
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 10.99,
+     "start": 0.0,
+     "end": 14.343,
+     "cues": [
+      {
+       "id": "X01-1",
+       "text": "Under the plain view, every step|is a task with a lease and a receipt.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 0.35,
+       "end": 4.961,
+       "_check": {
+        "visible_s": 5.5,
+        "needs_s": 5.5,
+        "words": 15,
+        "cps": 15.2
+       }
+      },
+      {
+       "id": "X01-2",
+       "text": "When the maker tried to approve|its own work, the queue refused it.",
+       "line_id": null,
+       "new": true,
+       "gate": "the run recorded a review.refused event with its receipt",
+       "fallback": "The maker can never approve its own work.",
+       "start": 5.87,
+       "end": 10.394,
+       "_check": {
+        "visible_s": 4.83,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 14.8
+       }
+      }
+     ],
+     "page": {
+      "url": "https://eranos.ta-amps.workers.dev/requests/<id>?details=technical",
+      "screen_id": "ER-03",
+      "anchor": "#step-build",
+      "status": "build"
+     }
+    },
+    {
+     "id": "X02",
+     "title": "Live wire: claim and the 409 guard",
+     "screen_id": "AG-02",
+     "url": "https://agora.ta-amps.workers.dev/studio/",
+     "anchor": null,
+     "action": "Studio, Terminal view: run 'Claim a task' (HTTP 200, lease), then 'Trigger 409 lease conflict' (HTTP 409). If the demo limit is hit, the honest wait-and-retry card shows instead of any simulated answer (F31-013).",
+     "v6_ref": "E4/S12",
+     "v5_ref": null,
+     "take_ids": [
+      "NX02-studio"
+     ],
+     "action_min_s": 12.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 12.0,
+     "start": 14.343,
+     "end": 29.697,
+     "cues": [
+      {
+       "id": "X02-1",
+       "text": "Here the queue answers live: one claim|wins, the second gets a conflict.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 14.693,
+       "end": 19.75,
+       "_check": {
+        "visible_s": 5.32,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 14.2
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/studio/",
+      "screen_id": "AG-02",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "X03",
+     "title": "Search finds what exists",
+     "screen_id": "AG-03",
+     "url": "https://agora.ta-amps.workers.dev/library/#explorer",
+     "anchor": null,
+     "action": "Search 'clean a volunteer sign-up sheet': the process from the film is the first hit, with 'reused, no new work'. The SIRA panel states its test: 60 queries we wrote, over 79 packs, run locally.",
+     "v6_ref": "E4-3",
+     "v5_ref": null,
+     "take_ids": [
+      "NX03-library"
+     ],
+     "action_min_s": 10.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 13.17,
+     "start": 29.697,
+     "end": 46.22,
+     "cues": [
+      {
+       "id": "X03-1",
+       "text": "The next request finds the same noun,|so nothing is built twice.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 30.047,
+       "end": 34.398,
+       "_check": {
+        "visible_s": 4.75,
+        "needs_s": 4.5,
+        "words": 12,
+        "cps": 14.7
+       }
+      },
+      {
+       "id": "X03-2",
+       "text": "On sixty test queries we wrote,|enriched search found",
+       "line_id": null,
+       "new": true,
+       "gate": "sira_rag_benchmark.json recall_at_1 >= 0.96, shown on the page with its query count",
+       "fallback": "Enriched search finds the right pack in one step.",
+       "start": 34.798,
+       "end": 38.575,
+       "_check": {
+        "visible_s": 4.03,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 14.0
+       }
+      },
+      {
+       "id": "X03-3",
+       "text": "the right pack first|ninety-seven times in a hundred.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 38.825,
+       "end": 42.516,
+       "_check": {
+        "visible_s": 3.96,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 14.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/library/#explorer",
+      "screen_id": "AG-03",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "X04",
+     "title": "1,000 made-up scenarios",
+     "screen_id": "AG-07",
+     "url": "https://agora.ta-amps.workers.dev/scenarios/",
+     "anchor": null,
+     "action": "The scenario explorer: 1,000 made-up scenarios sampled from 10^12 combinations, judged by written rules with no model calls. Filter 'blocked': the top reason is 'cloud tier cannot run offline'.",
+     "v6_ref": "E4-1",
+     "v5_ref": null,
+     "take_ids": [
+      "NX04-scenarios"
+     ],
+     "action_min_s": 10.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraScenarios"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 10.0,
+     "start": 46.22,
+     "end": 59.573,
+     "cues": [
+      {
+       "id": "X04-1",
+       "text": "A thousand made-up scenarios|test where the rules hold,",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 46.57,
+       "end": 50.684,
+       "_check": {
+        "visible_s": 4.36,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 13.9
+       }
+      },
+      {
+       "id": "X04-2",
+       "text": "and where work must stay local.",
+       "line_id": null,
+       "new": true,
+       "gate": null,
+       "fallback": null,
+       "start": 50.934,
+       "end": 53.077,
+       "_check": {
+        "visible_s": 2.5,
+        "needs_s": 2.5,
+        "words": 6,
+        "cps": 14.5
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/scenarios/",
+      "screen_id": "AG-07",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "X05",
+     "title": "Partners: Modal, Baseten, Fireworks",
+     "screen_id": "AG-06/AG-04",
+     "url": "https://agora.ta-amps.workers.dev/deploy/#partners",
+     "anchor": null,
+     "action": "Partner cards. Each card's status line comes from data: a live run shows its receipt; otherwise the card shows the commands and 'Last check: offline, no partner account connected'.",
+     "v6_ref": "E4-2",
+     "v5_ref": null,
+     "take_ids": [
+      "NX05-partners"
+     ],
+     "action_min_s": 9.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": {
+      "board": "AgoraPartners"
+     },
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": "Until a live partner receipt exists, this shot keeps the factual line above and shows the offline status; no throughput, cost or training claims.",
+     "note": null,
+     "page_status": "build",
+     "min_s": 9.0,
+     "start": 59.573,
+     "end": 71.927,
+     "cues": [
+      {
+       "id": "X05-1",
+       "text": "Agora lists the commands to run these|tasks on Modal, Baseten or Fireworks.",
+       "line_id": null,
+       "new": true,
+       "gate": "a live partner run receipt exists (partner_compute_cascade.json mode == live_measured)",
+       "fallback": null,
+       "start": 59.923,
+       "end": 65.14,
+       "_check": {
+        "visible_s": 5.48,
+        "needs_s": 4.83,
+        "words": 13,
+        "cps": 14.4
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/deploy/#partners",
+      "screen_id": "AG-06/AG-04",
+      "anchor": null,
+      "status": "build"
+     }
+    },
+    {
+     "id": "X06",
+     "title": "Meta's models, measured",
+     "screen_id": "AG-04",
+     "url": "https://agora.ta-amps.workers.dev/learning/",
+     "anchor": null,
+     "action": "Measured results on Meta models with their made-up-test labels; hold, then the end card.",
+     "v6_ref": "E4",
+     "v5_ref": null,
+     "take_ids": [
+      "NA02-meta",
+      "NA05-start"
+     ],
+     "action_min_s": 9.0,
+     "quiet_weight": 1.0,
+     "source": "footage",
+     "on_screen": [],
+     "frame": null,
+     "guide": null,
+     "transition_in": {
+      "type": "none (same take)"
+     },
+     "gate": null,
+     "note": null,
+     "page_status": "build",
+     "min_s": 14.72,
+     "start": 71.927,
+     "end": 90.0,
+     "cues": [
+      {
+       "id": "X06-1",
+       "text": "On our made-up tests,|tuning lifted Muse Glimmer",
+       "line_id": "l13",
+       "new": false,
+       "gate": "/learning/ shows these measured results with their run receipts",
+       "fallback": "Meta's models do the work inside the workers.",
+       "start": 72.277,
+       "end": 78.096,
+       "_check": {
+        "visible_s": 6.07,
+        "needs_s": 3.17,
+        "words": 8,
+        "cps": 8.6
+       }
+      },
+      {
+       "id": "X06-2",
+       "text": "from 93 to 99 percent,|and Llama 3.2 from 12 to 51.",
+       "line_id": "l13",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 78.346,
+       "end": 82.087,
+       "_check": {
+        "visible_s": 4.5,
+        "needs_s": 4.5,
+        "words": 12,
+        "cps": 13.6
+       }
+      },
+      {
+       "id": "X06-3",
+       "text": "Start at Agora,|and point your agent at Eranos.",
+       "line_id": "l14",
+       "new": false,
+       "gate": null,
+       "fallback": null,
+       "start": 82.866,
+       "end": 86.005,
+       "_check": {
+        "visible_s": 3.5,
+        "needs_s": 3.5,
+        "words": 9,
+        "cps": 15.0
+       }
+      }
+     ],
+     "page": {
+      "url": "https://agora.ta-amps.workers.dev/learning/",
+      "screen_id": "AG-04",
+      "anchor": null,
+      "status": "build"
+     }
+    }
+   ],
+   "checks": {
+    "errors": [],
+    "warnings": []
+   }
+  }
+ ],
+ "click_paths": [
+  {
+   "id": "judge-45s",
+   "label": "Judge quick tour (45 s, no video)",
+   "steps": [
+    {
+     "step": 1,
+     "screen_id": "AG-01",
+     "url": "https://agora.ta-amps.workers.dev/?tour=judge",
+     "do": "Read the first screen; click 'Try the nonprofit journey on Eranos →'.",
+     "seconds": 6
+    },
+    {
+     "step": 2,
+     "screen_id": "ER-02",
+     "url": "https://eranos.ta-amps.workers.dev/nonprofits?preset=intake&tour=judge",
+     "do": "The form is filled with the intake example. Either 'Send it (real, public)', which opens your own request page, shows its request code once, and waits honestly, or 'Skip: watch a finished request →'.",
+     "seconds": 8,
+     "honesty": "A judge's request is never shown as REQ-INTAKE-07."
+    },
+    {
+     "step": 3,
+     "screen_id": "ER-03",
+     "url": "https://eranos.ta-amps.workers.dev/requests/REQ-INTAKE-07?replay=1&tour=judge",
+     "do": "The finished example replays its four bands at reading speed (Show all skips ahead). Toggle 'Show technical details' to see leases, the 409 refusal and receipts. Click 'Open it →'.",
+     "seconds": 15
+    },
+    {
+     "step": 4,
+     "screen_id": "ER-06",
+     "url": "https://eranos.ta-amps.workers.dev/catalog/<kit-id>?tour=judge",
+     "do": "The task object page: what it does, try it, run it; the step map 'Agent drafts' vs 'Person only'; receipts. Click 'Test the queue live in Agora Studio →'.",
+     "seconds": 8
+    },
+    {
+     "step": 5,
+     "screen_id": "AG-02",
+     "url": "https://agora.ta-amps.workers.dev/studio/?tour=judge",
+     "do": "Run 'NGO auto-pickup' or 'Trigger 409 lease conflict' and read the real JSON. If the demo limit is hit, the card counts down to the retry time.",
+     "seconds": 8
+    }
+   ],
+   "strip": "Opt-in strip under the header on both sites when ?tour=judge is present: '45 s tour · 1 Agora · 2 Ask · 3 Watch · 4 The result · 5 Live queue' with the current step highlighted and a close button."
+  }
+ ],
+ "take_id_note": "NF01–NF09 and NA01–NA05 are Claude Code's Phase-2 take prefixes (storyboard v5 expected_final_take_ids). NA06-feeds and NX01–NX05 are new.",
+ "limits": "Times are estimates from the fitted voice model. After voicing, re-time captions to measured speech onsets and re-run the checks."
+}

@@ -1,0 +1,115 @@
+{
+  "grid_id": "jepa-world-state-and-action-simulator-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "float_axis_round_digits": 6,
+  "parameters": [
+    {
+      "name": "max_rollout_horizon",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 10,
+      "step": 2,
+      "default": 6
+    },
+    {
+      "name": "review_energy_threshold",
+      "param_type": "float_range",
+      "low": 0.1,
+      "high": 0.6,
+      "step": 0.1,
+      "default": 0.2
+    },
+    {
+      "name": "rollback_energy_threshold",
+      "param_type": "float_range",
+      "low": 0.5,
+      "high": 2.0,
+      "step": 0.5,
+      "default": 1.0
+    },
+    {
+      "name": "risk_energy_weight",
+      "param_type": "float_range",
+      "low": 0.5,
+      "high": 2.0,
+      "step": 0.5,
+      "default": 1.0
+    },
+    {
+      "name": "allow_irreversible_actions",
+      "param_type": "boolean",
+      "default": true
+    },
+    {
+      "name": "safety_regime",
+      "param_type": "choice",
+      "choices": ["strict_fenced", "exploratory_sandbox"],
+      "default": "strict_fenced"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "irreversible-actions-require-strict-fenced",
+      "when": { "allow_irreversible_actions": true },
+      "require_in": { "safety_regime": ["strict_fenced"] }
+    }
+  ],
+  "regime_defaults": {
+    "production_fenced_execution": {
+      "max_rollout_horizon": 6,
+      "review_energy_threshold": 0.2,
+      "rollback_energy_threshold": 1.0,
+      "risk_energy_weight": 1.0,
+      "allow_irreversible_actions": true,
+      "safety_regime": "strict_fenced"
+    },
+    "read_only_sandbox_planning": {
+      "max_rollout_horizon": 8,
+      "review_energy_threshold": 0.4,
+      "rollback_energy_threshold": 1.5,
+      "risk_energy_weight": 0.5,
+      "allow_irreversible_actions": false,
+      "safety_regime": "exploratory_sandbox"
+    }
+  },
+  "numerics": {
+    "epsilon": 1e-12,
+    "round_digits": 6,
+    "digest_chars": 16,
+    "latent_dim": 8,
+    "hash_modulus": 1000003
+  },
+  "predictor": {
+    "forbidden_write_taints": ["untrusted_input", "unverified_draft"],
+    "lease_scale_cap": 8.0,
+    "taint_scale_cap": 4.0,
+    "step_quota_pressure_weight": 0.25,
+    "step_taint_risk_weight": 0.35,
+    "irreversible_step_exposure": 0.3,
+    "invariant_breach_penalty": 5.0,
+    "low_quota_warning_floor": 0.15
+  },
+  "energy_gate": {
+    "quota_l2_weight": 2.0,
+    "lease_mismatch_weight": 1.5,
+    "digest_divergence_weight": 1.5,
+    "taint_escalation_weight": 2.0,
+    "invariant_breach_weight": 4.0,
+    "latent_l2_weight": 0.5,
+    "default_review_threshold": 0.2,
+    "default_rollback_threshold": 1.0
+  },
+  "rollout_planner": {
+    "default_max_horizon": 6,
+    "default_risk_weight": 1.0,
+    "goal_record_mismatch_weight": 3.0,
+    "goal_unreleased_lease_weight": 1.0,
+    "goal_remaining_taint_weight": 2.0,
+    "goal_quota_shortfall_weight": 2.5
+  },
+  "formatting": {
+    "json_indent": 2
+  }
+}

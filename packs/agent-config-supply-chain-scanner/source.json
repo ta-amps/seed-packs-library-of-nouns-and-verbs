@@ -1,0 +1,641 @@
+{
+  "pack_id": "agent-config-supply-chain-scanner",
+  "title": "Agent config supply chain scanner",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for scanning repository agent definitions, rule files, MCP configs, and self-editing memory files for hidden Trojan Unicode, unapproved hook or server escalation, built-in name shadowing, and authority spoofing, with tested standard-library Python code.",
+  "boundaries": [
+    "Repository agent, rule, and MCP files are scanned strictly as inert bytes and never executed during inspection.",
+    "Any critical or high finding (hidden Trojan/Tag Unicode, shell MCP pipes, permission bypass, hooks, shadowing, or spoofing) sets verdict to block.",
+    "Self-edited SOUL.md or memory diffs introducing override claims, shell pipes, hidden Unicode, or external URLs require human approval.",
+    "Workers create nouns and propose verbs; importing this pack writes nothing and enqueues nothing."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for defending coding harnesses against repository config supply-chain attacks",
+      "value": {
+        "lets_workers": "Inventory agent, rule, MCP, and persona memory files before repository use, detect Rules File Backdoor Unicode smuggling, block unapproved hooks and MCP servers, catch built-in subagent shadowing and authority spoofing, and gate self-editing memory diffs.",
+        "not_for": "Executing untrusted hooks or mutating repository dotfiles automatically.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "agent-config-supply-chain-scanner.scan-repo-agent-configs"
+            },
+            "when": "First: scan all discovered agent, rule, and MCP files in the checkout."
+          },
+          {
+            "verb": {
+              "$verb": "agent-config-supply-chain-scanner.gate-self-editing-memory-diff"
+            },
+            "when": "Before persisting any self-edited SOUL.md or memory update."
+          },
+          {
+            "verb": {
+              "$verb": "agent-config-supply-chain-scanner.quarantine-supply-chain-finding"
+            },
+            "when": "When a scan or memory diff returns block, record a failure tombstone."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.configs-are-executable-on-clone"
+          },
+          {
+            "$pin": "guardrail.diff-gate-evolving-memory"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.config-scanner"
+        }
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "method"
+        ],
+        [
+          "requires_noun",
+          "guardrail.configs-are-executable-on-clone"
+        ],
+        [
+          "requires_noun",
+          "guardrail.diff-gate-evolving-memory"
+        ],
+        [
+          "requires_noun",
+          "rules.five-supply-chain-vectors"
+        ],
+        [
+          "requires_noun",
+          "tool.config-scanner"
+        ],
+        [
+          "requires_noun",
+          "template.config-scan-report"
+        ]
+      ]
+    },
+    {
+      "slug": "method",
+      "category": "noun.skill_pack",
+      "role": "method",
+      "title": "Method: inventory inert bytes, scan five threat vectors, and quarantine blocks",
+      "category_reason": "Shared defensive inspection pipeline for untrusted repo configs and evolving memory.",
+      "value": {
+        "lifecycle": [
+          "scan-repo-agent-configs hashes every harness config file and checks all five supply-chain vectors.",
+          "gate-self-editing-memory-diff inspects unified diff additions on SOUL.md or memory files before write persistence.",
+          "quarantine-supply-chain-finding records a negative tombstone citing exact file paths and vectors."
+        ]
+      }
+    },
+    {
+      "slug": "guardrail.configs-are-executable-on-clone",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: scan .claude, .codex, .cursor, .github/agents, .kiro, .opencode, and MCP files as untrusted code",
+      "value": {
+        "rule": "Never open or trust a repository's agent or MCP configs in an interactive harness before config_scanner confirms verdict == 'clean'.",
+        "how_it_is_checked": "scan_repository_configs sets verdict='block' on any critical or high finding."
+      }
+    },
+    {
+      "slug": "guardrail.diff-gate-evolving-memory",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: block unreviewed persistence of poisoned self-editing persona memory",
+      "value": {
+        "rule": "Self-edited memory additions containing hidden Unicode, authority overrides, shell pipes, or new external URLs set approved_for_auto_persist=false.",
+        "how_it_is_checked": "diff_self_editing_memory inspects added lines deterministically."
+      }
+    },
+    {
+      "slug": "rules.five-supply-chain-vectors",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic detection signatures across five agent-config supply-chain vectors",
+      "value": {
+        "unicode_smuggling": "Bidi controls (U+202A..U+202E, U+2066..U+2069, U+061C), Unicode Tags (U+E0000..U+E007F with ASCII decode), and mid-file zero-width codepoints.",
+        "hook_and_mcp_escalation": "bypassPermissions/autoApprove flags, PreToolUse/PostToolUse/SessionStart hooks, shell-pipe MCP commands, and unpinned npx -y installs.",
+        "shadowing_and_spoofing": "Reserved slugs (explore, plan, general-purpose, bash, default, self, research, main) and CEO/CISO/override authority claims."
+      }
+    },
+    {
+      "slug": "template.config-scan-report",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: repository agent-config supply-chain scan report",
+      "value": {
+        "describes": "scanned config count, inventory SHA-256, verdict, and vector findings",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scanned_files_count",
+            "inventory_sha256",
+            "verdict",
+            "findings"
+          ],
+          "properties": {
+            "scanned_files_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "inventory_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "clean",
+                "review",
+                "block"
+              ]
+            },
+            "findings": {
+              "type": "array",
+              "maxItems": 500,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "vector",
+                  "severity",
+                  "path"
+                ],
+                "properties": {
+                  "vector": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 80
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": [
+                      "critical",
+                      "high",
+                      "medium"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 260
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.memory-diff-receipt",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: self-editing persona memory diff gate receipt",
+      "value": {
+        "describes": "before/after SHA-256 digests, added line count, and auto-persist approval flag",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file_label",
+            "before_sha256",
+            "after_sha256",
+            "added_line_count",
+            "approved_for_auto_persist"
+          ],
+          "properties": {
+            "file_label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "before_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "after_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "added_line_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "approved_for_auto_persist": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "template.supply-chain-tombstone",
+      "category": "noun.negative_tombstone",
+      "role": "template",
+      "title": "Template: quarantined supply-chain config tombstone",
+      "value": {
+        "describes": "a blocked repository config or poisoned memory update recorded as a tombstone",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tombstone_id",
+            "inventory_sha256",
+            "blocked_vectors",
+            "remediation_rule"
+          ],
+          "properties": {
+            "tombstone_id": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 40
+            },
+            "inventory_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "blocked_vectors": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80
+              }
+            },
+            "remediation_rule": {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "slug": "scanner-checks",
+      "category": "noun.benchmark_suite",
+      "role": "record_checks",
+      "title": "Deterministic checks for agent-config supply-chain scan reports",
+      "value": {
+        "fixture_kind": "finding_checks",
+        "purpose": "Deterministic checks every agent config supply-chain scan report must satisfy.",
+        "deterministic_checks": [
+          {
+            "id": "inventory-digest-pinned",
+            "rule": {
+              "rule": "pattern_present",
+              "path": "inventory_sha256",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "why": "Every scan report pins the SHA-256 digest of the discovered config file inventory."
+          },
+          {
+            "id": "verdict-valid",
+            "rule": {
+              "rule": "enum",
+              "path": "verdict",
+              "values": [
+                "clean",
+                "review",
+                "block"
+              ]
+            },
+            "why": "verdict must be clean, review, or block."
+          },
+          {
+            "id": "block-has-findings",
+            "rule": {
+              "rule": "when",
+              "if": {
+                "path": "verdict",
+                "equals": "block"
+              },
+              "then": {
+                "rule": "each_has",
+                "path": "findings",
+                "fields": [
+                  "vector",
+                  "severity",
+                  "path"
+                ],
+                "min": 1
+              }
+            },
+            "why": "Blocked scans must list at least one finding with vector, severity, and file path."
+          },
+          {
+            "id": "hosts-local",
+            "rule": {
+              "rule": "hosts_local_only",
+              "path": "$"
+            },
+            "why": "Synthetic scan fixtures must reference local paths or .invalid domains only."
+          }
+        ],
+        "golden_fixtures": [
+          {
+            "id": "good-blocked-scan",
+            "label": "known_good",
+            "finding": {
+              "scanned_files_count": 2,
+              "inventory_sha256": "99887766554433221100ffeeddccbbaa99887766554433221100ffeeddccbbaa",
+              "verdict": "block",
+              "findings": [
+                {
+                  "vector": "unicode_tag_smuggling",
+                  "severity": "critical",
+                  "path": ".cursor/rules/style.md"
+                }
+              ]
+            }
+          },
+          {
+            "id": "bad-block-without-findings",
+            "label": "known_bad",
+            "finding": {
+              "scanned_files_count": 1,
+              "inventory_sha256": "99887766554433221100ffeeddccbbaa99887766554433221100ffeeddccbbaa",
+              "verdict": "block",
+              "findings": []
+            }
+          },
+          {
+            "id": "bad-invalid-verdict",
+            "label": "known_bad",
+            "finding": {
+              "scanned_files_count": 1,
+              "inventory_sha256": "99887766554433221100ffeeddccbbaa99887766554433221100ffeeddccbbaa",
+              "verdict": "ignored",
+              "findings": []
+            }
+          }
+        ],
+        "expected": {
+          "good-blocked-scan": {
+            "verdict": "pass",
+            "failed_checks": []
+          },
+          "bad-block-without-findings": {
+            "verdict": "fail",
+            "failed_checks": [
+              "block-has-findings"
+            ]
+          },
+          "bad-invalid-verdict": {
+            "verdict": "fail",
+            "failed_checks": [
+              "verdict-valid"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "slug": "tool.config-scanner",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: config_scanner standard-library CLI and library",
+      "value": {
+        "name": "config_scanner",
+        "code": {
+          "$code": "agent-config-supply-chain-scanner"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m config_scanner scan REPO_DIR [--allow-mcp-commands CMD1,CMD2]",
+          "python3 -m config_scanner diff-memory BEFORE.md AFTER.md"
+        ],
+        "does": [
+          "Detects hidden Unicode Tag/bidi/zero-width injection, unapproved hooks, MCP shell escalation, name shadowing, and authority spoofing.",
+          "Diff-gates self-editing SOUL.md and memory files before persistence."
+        ],
+        "does_not": [
+          "Execute discovered hooks or MCP servers, open network sockets, or modify repository files."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "rules.five-supply-chain-vectors"
+        ]
+      ]
+    },
+    {
+      "slug": "source.trojan-source",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "Boucher & Anderson (arXiv:2111.00169): Trojan Source Invisible Vulnerabilities",
+      "value": {
+        "url": "https://arxiv.org/abs/2111.00169",
+        "checked_on": "2026-10-31",
+        "provides": "Bidirectional and invisible Unicode codepoint mechanics behind hidden source and rule-file attacks."
+      }
+    },
+    {
+      "slug": "source.nvd-cve-2025-54135",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "NIST NVD CVE-2025-54135: Unapproved MCP configuration command execution",
+      "value": {
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-54135",
+        "checked_on": "2026-10-31",
+        "provides": "Advisory detailing prompt-injected creation or mutation of harness MCP configuration files."
+      }
+    },
+    {
+      "slug": "source.unicode-tr36",
+      "category": "noun.public_source",
+      "role": "source",
+      "title": "Unicode Technical Report #36: Unicode Security Considerations",
+      "value": {
+        "url": "https://www.unicode.org/reports/tr36/",
+        "checked_on": "2026-10-31",
+        "provides": "Default-ignorable, tag, and non-visual codepoint classifications for security scanners."
+      }
+    },
+    {
+      "slug": "example.blocked-backdoor-scan",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example: synthetic blocked scan catching Unicode Tag smuggling and MCP shell pipe",
+      "synthetic": true,
+      "value": {
+        "conforms_to": {
+          "$pin": "template.config-scan-report"
+        },
+        "instance": {
+          "scanned_files_count": 2,
+          "inventory_sha256": "99887766554433221100ffeeddccbbaa99887766554433221100ffeeddccbbaa",
+          "verdict": "block",
+          "findings": [
+            {
+              "vector": "unicode_tag_smuggling",
+              "severity": "critical",
+              "path": ".cursor/rules/style.md"
+            },
+            {
+              "vector": "mcp_shell_execution",
+              "severity": "critical",
+              "path": ".cursor/mcp.json"
+            }
+          ]
+        },
+        "shows": "A repository checkout blocked before interactive harness load due to hidden Unicode Tag characters and a shell-piped MCP server.",
+        "source": "Synthetic. Written for this pack."
+      }
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "scan-repo-agent-configs",
+      "kind": "verb.verify_gate",
+      "title": "Inventory and scan repository agent, rule, and MCP files across five vectors",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run config_scanner scan on a local checkout to detect hidden Unicode, permission bypasses, lifecycle hooks, unapproved MCP servers, shadowing, and authority spoofing.",
+      "outcome": "A checked supply-chain scan report with clean, review, or block verdict.",
+      "ready_outcome": "configs_scanned",
+      "pinned": [
+        "scanner-checks",
+        "guardrail.configs-are-executable-on-clone",
+        "rules.five-supply-chain-vectors",
+        "tool.config-scanner"
+      ],
+      "slots": [
+        {
+          "name": "repo_checkout",
+          "category": "noun.public_source",
+          "description": "Local checkout directory to inspect."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads discovered config files as inert bytes inside the local checkout."
+      ],
+      "produces": [
+        {
+          "name": "scan_report",
+          "template": "template.config-scan-report"
+        }
+      ],
+      "steps": [
+        "Run python3 -m config_scanner scan on the local repository directory without executing any hooks or servers.",
+        "Verify the output passes scanner-checks before returning."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Scan report validates against template.config-scan-report.",
+          "method": "deterministic"
+        },
+        {
+          "id": "checks-pass",
+          "check": "Scan report passes scanner-checks.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "gate-self-editing-memory-diff",
+      "kind": "verb.verify_gate",
+      "title": "Audit self-edited SOUL.md or persona memory diffs before persistence",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run config_scanner diff-memory on baseline and candidate persona memory text to block silent override directives, shell snippets, hidden Unicode, or new external URLs.",
+      "outcome": "A memory diff receipt recording approved_for_auto_persist.",
+      "ready_outcome": "memory_diff_checked",
+      "pinned": [
+        "guardrail.diff-gate-evolving-memory",
+        "rules.five-supply-chain-vectors",
+        "tool.config-scanner"
+      ],
+      "slots": [
+        {
+          "name": "memory_pair",
+          "category": "noun.public_source",
+          "description": "Local baseline and candidate persona memory files."
+        }
+      ],
+      "network": [
+        "local_only",
+        "Reads only the local baseline and candidate memory files."
+      ],
+      "produces": [
+        {
+          "name": "diff_receipt",
+          "template": "template.memory-diff-receipt"
+        }
+      ],
+      "steps": [
+        "Run python3 -m config_scanner diff-memory on the before and after files.",
+        "Ensure approved_for_auto_persist is false whenever any risk vector appears in added lines."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Receipt validates against template.memory-diff-receipt.",
+          "method": "deterministic"
+        },
+        {
+          "id": "digests-recorded",
+          "check": "Both before_sha256 and after_sha256 are 64-hex digests.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "quarantine-supply-chain-finding",
+      "kind": "verb.recover_fault",
+      "title": "Record a failure tombstone for a blocked repository config or memory diff",
+      "claimant": "agent",
+      "summary": "Convert a blocked supply-chain scan report into a reusable failure tombstone naming the inventory digest, vectors, and remediation requirement.",
+      "outcome": "A quarantined supply-chain tombstone.",
+      "ready_outcome": "finding_quarantined",
+      "pinned": [
+        "guardrail.configs-are-executable-on-clone"
+      ],
+      "slots": [
+        {
+          "name": "scan_report",
+          "category": "noun.eval_run",
+          "description": "Pin of a blocked config scan report."
+        }
+      ],
+      "network": "none",
+      "produces": [
+        {
+          "name": "tombstone",
+          "template": "template.supply-chain-tombstone"
+        }
+      ],
+      "steps": [
+        "Verify the pinned scan_report has verdict 'block' and non-empty findings.",
+        "Record inventory_sha256, unique blocked_vectors, and a concrete remediation_rule."
+      ],
+      "acceptance": [
+        {
+          "id": "matches-template",
+          "check": "Tombstone validates against template.supply-chain-tombstone.",
+          "method": "deterministic"
+        },
+        {
+          "id": "vectors-non-empty",
+          "check": "blocked_vectors contains every unique vector from findings.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "agent-config-supply-chain-scanner.scan-repo-agent-configs"
+      ]
+    }
+  ]
+}

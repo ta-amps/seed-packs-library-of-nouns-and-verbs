@@ -1,0 +1,820 @@
+{
+  "pack_id": "execution-hooks-and-verifiers",
+  "title": "Execution hooks and verifiers",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for compiling four-stage portable execution hooks across coding harnesses, enforcing pre-tool safety and spend guards, running topological pre-submit verifier DAGs, auditing verifier mutation sensitivity and extracting dead-end negative tombstones.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "checks-of-checks",
+    "wiring-and-conformance-checks",
+    "agent-capability-and-tier-firewall"
+  ],
+  "boundaries": [
+    "Compiled harness configs enforce disable_bypass_permissions true and never weaken host sandboxes.",
+    "Multi-principal publication checks refuse anonymous keys and require distinct drafter and reviewer principals.",
+    "Verifiers that fail clean positive twins or miss synthetic mutations are classified reject or revise before gating work.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for compiling four-stage portable execution hooks across coding harnesses, enforcing pre-tool safety and spend guards, running topological pre-submit verifier DAGs, auditing verifier mutation sensitivity and extracting dead-end negative tombstones",
+      "value": {
+        "lets_workers": "Compile declarative pre_claim, pre_tool, post_step and pre_submit hook specifications across claude_code, muse_code, opencode and pi_coding_agent, intercept unsafe commands, secret reads, CSP or browser-storage anti-patterns and unapproved spend before execution, run topological pre_submit verifier DAGs, audit checks via synthetic twin mutations and record normalized negative_tombstone signatures.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "execution-hooks-and-verifiers.compile-portable-hooks-and-guard-tools"
+            },
+            "when": "Compile 4-stage hook specs across four agent harnesses and evaluate pre_tool calls into allow, deny or rewrite_hint."
+          },
+          {
+            "verb": {
+              "$verb": "execution-hooks-and-verifiers.execute-verifier-dag-and-tombstones"
+            },
+            "when": "Run topological pre_submit verifier DAGs and extract normalized negative_tombstone signatures from failed runs."
+          },
+          {
+            "verb": {
+              "$verb": "execution-hooks-and-verifiers.audit-verifier-mutation-sensitivity"
+            },
+            "when": "Audit candidate verifiers on clean positive twins and mutated negatives to classify trusted, revise or reject."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.no-permission-bypass-or-secret-exposure"
+          },
+          {
+            "$pin": "guardrail.distinct-principals-and-mutation-audited-verifiers"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.hooks-verifiers"
+        },
+        "worked_example": "Synthetic 4-harness hook compilation, 5-call pre_tool guard, 5-node topological verifier DAG and 3-verifier mutation audit recomputed in test_hooks_verifiers.py: enforces disable_bypass_permissions across all four harnesses, blocks skip-permissions, .env reads and over-budget spend with deny, flags inline style={{ with rewrite_hint, blocks self-attested multi-principal checks while skipping downstream bootstrap nodes, classifies strong/weak/overstrict verifiers into trusted/revise/reject and emits deterministic tombstone:6a5252264615."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.no-permission-bypass-or-secret-exposure"
+        ],
+        [
+          "requires_noun",
+          "guardrail.distinct-principals-and-mutation-audited-verifiers"
+        ],
+        [
+          "requires_noun",
+          "spec.four-stage-hooks-and-verifier-dag"
+        ],
+        [
+          "requires_noun",
+          "rules.mutation-gate-and-tombstone-normalization"
+        ],
+        [
+          "requires_noun",
+          "tool.hooks-verifiers"
+        ],
+        [
+          "requires_noun",
+          "template.hooks-verifiers-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.no-permission-bypass-or-secret-exposure",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: pre_tool hooks block permission-bypass flags, secret reads, destructive commands, contributor downgrades and unapproved spend",
+      "category_reason": "Stops destructive shell calls, secret leaks and unbudgeted spend before any tool executes.",
+      "value": {
+        "rule": "Every compiled harness configuration sets disable_bypass_permissions true, and pre_tool evaluation denies --dangerously-skip-permissions, .env reads, printenv dumps, destructive rm -rf or force flags, contributor-mode downgrades and spend exceeding approved_spend_cap_usd.",
+        "how_it_is_checked": "PortableHookCompiler.evaluate_pre_tool returns blocked true with decision deny or rewrite_hint."
+      }
+    },
+    {
+      "slug": "guardrail.distinct-principals-and-mutation-audited-verifiers",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: pre_submit gates enforce non-anonymous multi-principal attestation and Checks-of-Checks mutation sensitivity",
+      "category_reason": "Prevents self-approved submissions and rubber-stamp or broken verifiers.",
+      "value": {
+        "rule": "Multi-principal checks require distinct non-anonymous drafter and reviewer worker_id and key_id values, and verifiers with clean-twin false positives or insufficient mutation kill rates never classify as trusted.",
+        "how_it_is_checked": "ComposableVerifierDagAndMutationGate.execute_verifier_dag and audit_verifier_sensitivity enforce both invariants deterministically."
+      }
+    },
+    {
+      "slug": "spec.four-stage-hooks-and-verifier-dag",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: four lifecycle hook phases, four target harnesses and five built-in DAG verifier types",
+      "category_reason": "Defines portable hook mappings and deterministic topological verifier contracts.",
+      "value": {
+        "hook_phases": [
+          "pre_claim",
+          "pre_tool",
+          "post_step",
+          "pre_submit"
+        ],
+        "target_harnesses": [
+          "claude_code",
+          "muse_code",
+          "opencode",
+          "pi_coding_agent"
+        ],
+        "pre_tool_outcomes": [
+          "allow",
+          "deny",
+          "rewrite_hint"
+        ],
+        "verifier_types": [
+          "json_schema_conformance",
+          "sha256_pin_integrity",
+          "human_only_boundary_check",
+          "multi_principal_publication_check",
+          "paired_bootstrap_delta_check"
+        ]
+      }
+    },
+    {
+      "slug": "rules.mutation-gate-and-tombstone-normalization",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Checks-of-Checks mutation classification and dead-end negative_tombstone normalization rule",
+      "category_reason": "Zero-model procedure classifying verifier sensitivity and canonicalizing failure signatures.",
+      "value": {
+        "mutation_verdicts": [
+          "trusted",
+          "revise",
+          "reject"
+        ],
+        "tombstone_normalization": "Replace timestamps, hex digests and line numbers with canonical placeholders before SHA-256 hashing.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.hooks-verifiers",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library PortableHookCompiler and ComposableVerifierDagAndMutationGate",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "execution hooks and verifiers",
+        "code": {
+          "$code": "execution-hooks-and-verifiers"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m hooks_verifiers --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Compiles 4-stage hook specifications for claude_code, muse_code, opencode and pi_coding_agent with disable_bypass_permissions true.",
+          "Evaluates pre_tool calls into allow, deny or rewrite_hint across secret, destructive-command, CSP/storage and spend rules.",
+          "Runs topological pre_submit verifier DAGs, audits verifier mutation sensitivity and extracts normalized negative_tombstone digests."
+        ],
+        "does_not": [
+          "Execute untrusted shell commands, permit anonymous or single-principal approval or embed inline magic numbers."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.four-stage-hooks-and-verifier-dag"
+        ]
+      ]
+    },
+    {
+      "slug": "template.hooks-verifiers-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: portable hook compilation, pre_tool guard, topological verifier DAG, mutation gate and tombstone receipt",
+      "value": {
+        "describes": "a deterministic receipt of compiled harnesses, pre_tool guard verdicts, topological verifier DAG execution, Checks-of-Checks sensitivity classifications and normalized tombstone ID",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "compiled_harnesses",
+            "all_disable_bypass_permissions",
+            "pre_tool_decisions",
+            "valid_dag_passed",
+            "failing_dag_failed_verifiers",
+            "failing_dag_skipped_verifiers",
+            "mutation_audit_verdicts",
+            "tombstone_id"
+          ],
+          "properties": {
+            "compiled_harnesses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "all_disable_bypass_permissions": {
+              "type": "boolean"
+            },
+            "pre_tool_decisions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "safe_unit_test",
+                "skip_perms_flag",
+                "dotenv_read",
+                "inline_style_patch",
+                "over_budget_call"
+              ],
+              "properties": {
+                "safe_unit_test": {
+                  "type": "string"
+                },
+                "skip_perms_flag": {
+                  "type": "string"
+                },
+                "dotenv_read": {
+                  "type": "string"
+                },
+                "inline_style_patch": {
+                  "type": "string"
+                },
+                "over_budget_call": {
+                  "type": "string"
+                }
+              }
+            },
+            "valid_dag_passed": {
+              "type": "boolean"
+            },
+            "failing_dag_failed_verifiers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "failing_dag_skipped_verifiers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "mutation_audit_verdicts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "strong_schema_verifier",
+                "weak_partial_verifier",
+                "overstrict_broken_verifier"
+              ],
+              "properties": {
+                "strong_schema_verifier": {
+                  "type": "string"
+                },
+                "weak_partial_verifier": {
+                  "type": "string"
+                },
+                "overstrict_broken_verifier": {
+                  "type": "string"
+                }
+              }
+            },
+            "tombstone_id": {
+              "type": "string",
+              "pattern": "^tombstone:[0-9a-f]{12}$"
+            }
+          }
+        },
+        "example": {
+          "compiled_harnesses": [
+            "claude_code",
+            "muse_code",
+            "opencode",
+            "pi_coding_agent"
+          ],
+          "all_disable_bypass_permissions": true,
+          "pre_tool_decisions": {
+            "safe_unit_test": "allow",
+            "skip_perms_flag": "deny",
+            "dotenv_read": "deny",
+            "inline_style_patch": "rewrite_hint",
+            "over_budget_call": "deny"
+          },
+          "valid_dag_passed": true,
+          "failing_dag_failed_verifiers": [
+            "multi_principal_gate"
+          ],
+          "failing_dag_skipped_verifiers": [
+            "bootstrap_gate"
+          ],
+          "mutation_audit_verdicts": {
+            "strong_schema_verifier": "trusted",
+            "weak_partial_verifier": "revise",
+            "overstrict_broken_verifier": "reject"
+          },
+          "tombstone_id": "tombstone:6a5252264615"
+        }
+      }
+    },
+    {
+      "slug": "example.hooks-verifiers-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 4-stage hook spec, pre_tool probes, 5-node Verifier DAG and synthetic twin mutations",
+      "category_reason": "Synthetic fixture recomputed by test_hooks_verifiers.py.",
+      "value": {
+        "hook_spec": {
+          "stages": {
+            "pre_claim": [
+              "verify_worker_budget_and_lease"
+            ],
+            "pre_tool": [
+              "enforce_pre_tool_guard"
+            ],
+            "post_step": [
+              "emit_step_receipt_or_tombstone"
+            ],
+            "pre_submit": [
+              "execute_topological_verifier_dag"
+            ]
+          }
+        },
+        "pre_tool_calls": [
+          {
+            "call_id": "safe_unit_test",
+            "command": "python3 -m unittest",
+            "estimated_spend_usd": 0.1
+          },
+          {
+            "call_id": "skip_perms_flag",
+            "command": "runner --dangerously-skip-permissions"
+          },
+          {
+            "call_id": "dotenv_read",
+            "file_path": "secrets/.env"
+          },
+          {
+            "call_id": "inline_style_patch",
+            "content_patch": "<div style={{ margin: 0 }} />"
+          },
+          {
+            "call_id": "over_budget_call",
+            "command": "python3 run_eval.py",
+            "estimated_spend_usd": 9.5
+          }
+        ],
+        "verifier_dag": [
+          {
+            "id": "schema_gate",
+            "verifier_type": "json_schema_conformance",
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "verdict",
+                "score"
+              ],
+              "properties": {
+                "verdict": {
+                  "type": "string",
+                  "enum": [
+                    "ready"
+                  ]
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0.8,
+                  "maximum": 1.0
+                }
+              }
+            }
+          },
+          {
+            "id": "pin_gate",
+            "depends_on": [
+              "schema_gate"
+            ],
+            "verifier_type": "sha256_pin_integrity"
+          },
+          {
+            "id": "human_boundary_gate",
+            "depends_on": [
+              "schema_gate"
+            ],
+            "verifier_type": "human_only_boundary_check"
+          },
+          {
+            "id": "multi_principal_gate",
+            "depends_on": [
+              "pin_gate",
+              "human_boundary_gate"
+            ],
+            "verifier_type": "multi_principal_publication_check"
+          },
+          {
+            "id": "bootstrap_gate",
+            "depends_on": [
+              "multi_principal_gate"
+            ],
+            "verifier_type": "paired_bootstrap_delta_check"
+          }
+        ],
+        "valid_submission": {
+          "payload": {
+            "verdict": "ready",
+            "score": 0.94
+          },
+          "pins": [
+            {
+              "key": "contract.1",
+              "artifact_value": {
+                "record": "verified-contract-v1"
+              },
+              "declared_sha256": "620cf41f5c97944023def81c9966bae3f527cbc29a087d26dd4a802e09765bf9"
+            }
+          ],
+          "human_only": false,
+          "claimant": "agent",
+          "model_calls": 0,
+          "drafter_worker_id": "worker-drafter-a",
+          "drafter_key_id": "tsk_drafter_a",
+          "reviewer_worker_id": "worker-reviewer-b",
+          "reviewer_key_id": "tsk_reviewer_b",
+          "baseline_scores": [
+            0.7,
+            0.72,
+            0.69,
+            0.71,
+            0.68
+          ],
+          "candidate_scores": [
+            0.83,
+            0.85,
+            0.81,
+            0.84,
+            0.82
+          ]
+        },
+        "failing_submission": {
+          "approach_label": "self_attested_candidate",
+          "payload": {
+            "verdict": "ready",
+            "score": 0.94
+          },
+          "pins": [
+            {
+              "key": "contract.1",
+              "artifact_value": {
+                "record": "verified-contract-v1"
+              },
+              "declared_sha256": "620cf41f5c97944023def81c9966bae3f527cbc29a087d26dd4a802e09765bf9"
+            }
+          ],
+          "human_only": false,
+          "claimant": "agent",
+          "model_calls": 0,
+          "drafter_worker_id": "worker-drafter-a",
+          "drafter_key_id": "tsk_drafter_a",
+          "reviewer_worker_id": "worker-drafter-a",
+          "reviewer_key_id": "tsk_drafter_a",
+          "baseline_scores": [
+            0.7,
+            0.72,
+            0.69,
+            0.71,
+            0.68
+          ],
+          "candidate_scores": [
+            0.83,
+            0.85,
+            0.81,
+            0.84,
+            0.82
+          ]
+        },
+        "sensitivity_audits": [
+          {
+            "audit_id": "strong_schema_verifier",
+            "verifier_node": {
+              "id": "strong",
+              "verifier_type": "json_schema_conformance",
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "verdict",
+                  "score"
+                ],
+                "properties": {
+                  "verdict": {
+                    "type": "string",
+                    "enum": [
+                      "ready"
+                    ]
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0.8,
+                    "maximum": 1.0
+                  }
+                }
+              }
+            },
+            "clean_twins": [
+              {
+                "payload": {
+                  "verdict": "ready",
+                  "score": 0.85
+                }
+              },
+              {
+                "payload": {
+                  "verdict": "ready",
+                  "score": 0.95
+                }
+              }
+            ],
+            "mutated_negatives": [
+              {
+                "payload": {
+                  "verdict": "broken",
+                  "score": 0.9
+                }
+              },
+              {
+                "payload": {
+                  "verdict": "ready",
+                  "score": 0.2
+                }
+              }
+            ]
+          },
+          {
+            "audit_id": "weak_partial_verifier",
+            "verifier_node": {
+              "id": "weak",
+              "verifier_type": "json_schema_conformance",
+              "schema": {
+                "type": "object",
+                "required": [
+                  "verdict"
+                ],
+                "properties": {
+                  "verdict": {
+                    "type": "string",
+                    "enum": [
+                      "ready"
+                    ]
+                  }
+                }
+              }
+            },
+            "clean_twins": [
+              {
+                "payload": {
+                  "verdict": "ready",
+                  "score": 0.85
+                }
+              }
+            ],
+            "mutated_negatives": [
+              {
+                "payload": {
+                  "verdict": "broken",
+                  "score": 0.9
+                }
+              },
+              {
+                "payload": {
+                  "verdict": "ready",
+                  "score": -9.0
+                }
+              }
+            ]
+          },
+          {
+            "audit_id": "overstrict_broken_verifier",
+            "verifier_node": {
+              "id": "overstrict",
+              "verifier_type": "json_schema_conformance",
+              "schema": {
+                "type": "object",
+                "required": [
+                  "score"
+                ],
+                "properties": {
+                  "score": {
+                    "type": "number",
+                    "minimum": 0.99
+                  }
+                }
+              }
+            },
+            "clean_twins": [
+              {
+                "payload": {
+                  "verdict": "ready",
+                  "score": 0.85
+                }
+              }
+            ],
+            "mutated_negatives": [
+              {
+                "payload": {
+                  "verdict": "broken",
+                  "score": 0.1
+                }
+              }
+            ]
+          }
+        ],
+        "shows": "Synthetic 4-harness hook compilation, pre_tool safety/hygiene/spend probes, 5-node Verifier DAG and Checks-of-Checks mutation audits.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.hooks-verifiers-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed portable hooks, pre_tool decisions, Verifier DAG, mutation audits and tombstone receipt",
+      "category_reason": "Synthetic receipt verified by test_hooks_verifiers.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.hooks-verifiers-receipt"
+        },
+        "instance": {
+          "compiled_harnesses": [
+            "claude_code",
+            "muse_code",
+            "opencode",
+            "pi_coding_agent"
+          ],
+          "all_disable_bypass_permissions": true,
+          "pre_tool_decisions": {
+            "safe_unit_test": "allow",
+            "skip_perms_flag": "deny",
+            "dotenv_read": "deny",
+            "inline_style_patch": "rewrite_hint",
+            "over_budget_call": "deny"
+          },
+          "valid_dag_passed": true,
+          "failing_dag_failed_verifiers": [
+            "multi_principal_gate"
+          ],
+          "failing_dag_skipped_verifiers": [
+            "bootstrap_gate"
+          ],
+          "mutation_audit_verdicts": {
+            "strong_schema_verifier": "trusted",
+            "weak_partial_verifier": "revise",
+            "overstrict_broken_verifier": "reject"
+          },
+          "tombstone_id": "tombstone:6a5252264615"
+        },
+        "shows": "Recomputes 4-harness configs, pre_tool allow/deny/rewrite_hint decisions, DAG failure propagation, trusted/revise/reject mutation classifications and tombstone digest.",
+        "source": "Synthetic. Recomputed directly from example.hooks-verifiers-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.hooks-verifiers-bundle"
+        ],
+        [
+          "verifies",
+          "template.hooks-verifiers-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "compile-portable-hooks-and-guard-tools",
+      "kind": "verb.compile_dag",
+      "title": "Compile four-stage portable execution hooks and enforce pre_tool safety, hygiene and spend guards",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Translate declarative pre_claim, pre_tool, post_step and pre_submit hook specs into configs for four coding harnesses with disable_bypass_permissions true and evaluate pre_tool calls.",
+      "outcome": "Portable harness configurations and deterministic pre_tool verdicts.",
+      "ready_outcome": "hooks_compiled_and_checked",
+      "pinned": [
+        "spec.four-stage-hooks-and-verifier-dag",
+        "guardrail.no-permission-bypass-or-secret-exposure",
+        "tool.hooks-verifiers"
+      ],
+      "slots": [
+        {
+          "name": "hook_and_tool_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of declarative 4-stage hook specification and candidate pre_tool calls."
+        }
+      ],
+      "produces": [
+        {
+          "name": "hook_compilation_receipt",
+          "template": "template.hooks-verifiers-receipt"
+        }
+      ],
+      "steps": [
+        "Compile 4-stage hook definitions across claude_code, muse_code, opencode and pi_coding_agent with disable_bypass_permissions true.",
+        "Evaluate pre_tool invocations and return allow, deny or rewrite_hint across secret, destructive-command, CSP/storage and spend rules."
+      ],
+      "acceptance": [
+        {
+          "id": "bypass-disabled-and-unsafe-calls-blocked",
+          "check": "PortableHookCompiler sets disable_bypass_permissions true across all four harnesses and blocks unsafe pre_tool calls.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "execute-verifier-dag-and-tombstones",
+      "kind": "verb.verify_gate",
+      "title": "Execute topological pre_submit verifier DAGs and extract dead-end negative tombstones",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Order pre_submit verifiers topologically, enforce schema, SHA-256 pin, human_only, multi-principal and paired bootstrap checks, and emit normalized negative_tombstone digests when checks fail.",
+      "outcome": "Topological Verifier DAG verdict and normalized negative_tombstone record.",
+      "ready_outcome": "verifier_dag_evaluated",
+      "pinned": [
+        "spec.four-stage-hooks-and-verifier-dag",
+        "rules.mutation-gate-and-tombstone-normalization",
+        "guardrail.distinct-principals-and-mutation-audited-verifiers",
+        "tool.hooks-verifiers"
+      ],
+      "slots": [
+        {
+          "name": "submission_and_dag",
+          "category": "noun.eval_run",
+          "description": "Pin of topological verifier DAG and candidate submission payload."
+        }
+      ],
+      "produces": [
+        {
+          "name": "dag_verification_receipt",
+          "template": "template.hooks-verifiers-receipt"
+        }
+      ],
+      "steps": [
+        "Sort verifier nodes via Kahn topological ordering, rejecting cycles and skipping downstream dependents on upstream failure.",
+        "Normalize failed pre_submit or post_step diagnostics into deterministic negative_tombstone digests."
+      ],
+      "acceptance": [
+        {
+          "id": "topological-dag-and-tombstone-deterministic",
+          "check": "ComposableVerifierDagAndMutationGate blocks self-attested principals, skips downstream dependents and reproduces tombstone digests.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "execution-hooks-and-verifiers.compile-portable-hooks-and-guard-tools"
+      ]
+    },
+    {
+      "slug": "audit-verifier-mutation-sensitivity",
+      "kind": "verb.verify_gate",
+      "title": "Audit pre_submit verifiers against clean positive twins and mutated negative payloads",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Run candidate verifiers on clean twin payloads and synthetic negative mutations to classify each check into trusted, revise or reject.",
+      "outcome": "Checks-of-Checks mutation sensitivity verdict.",
+      "ready_outcome": "verifier_sensitivity_audited",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.four-stage-hooks-and-verifier-dag",
+        "rules.mutation-gate-and-tombstone-normalization",
+        "guardrail.distinct-principals-and-mutation-audited-verifiers",
+        "tool.hooks-verifiers",
+        "template.hooks-verifiers-receipt"
+      ],
+      "slots": [
+        {
+          "name": "verifier_twin_suite",
+          "category": "noun.eval_run",
+          "description": "Pin of candidate verifier specifications, clean positive twins and synthetic negative mutations."
+        }
+      ],
+      "produces": [
+        {
+          "name": "mutation_audit_receipt",
+          "template": "template.hooks-verifiers-receipt"
+        }
+      ],
+      "steps": [
+        "Measure clean-twin false-positive rate and synthetic mutation kill rate for each verifier.",
+        "Classify verifiers exceeding max_clean_fp_rate as reject, partial-kill checks as revise and high-kill clean checks as trusted."
+      ],
+      "acceptance": [
+        {
+          "id": "mutation-gate-classifies-all-three-bands",
+          "check": "audit_verifier_sensitivity classifies clean high-kill checks as trusted, partial checks as revise and false-positive checks as reject.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "execution-hooks-and-verifiers.execute-verifier-dag-and-tombstones"
+      ]
+    }
+  ]
+}

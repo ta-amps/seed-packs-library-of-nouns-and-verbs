@@ -1,0 +1,461 @@
+{
+  "pack_id": "frosted-widescreen-captions",
+  "title": "Frosted widescreen captions",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for planning, wrapping, rendering and checking burned-in widescreen film captions in a 156 px lower band (y 924-1080) with a frosted pill centered at (960, 1002), clause-then-balance line breaks, small-gap cue bridging and reading-time checks.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "scene-and-cognitive-video-qa"
+  ],
+  "boundaries": [
+    "Caption pills stay inside the 156 px lower band (y 924-1080) centered at (960, 1002) with at least 24 px edge clearance and never intrude into the stage (y 4-924).",
+    "Web players keep native caption tracks in hidden or disabled mode rather than drawing a second browser box over burned-in pills.",
+    "Admitting a film caption check receipt requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for planning, wrapping, rendering and checking burned-in widescreen film captions in a 156 px lower band (y 924-1080) with a frosted pill centered at (960, 1002), clause-then-balance line breaks, small-gap cue bridging and reading-time checks",
+      "value": {
+        "lets_workers": "Split narration lines into two-line 42-character caption cues at clause boundaries, bridge gaps up to 0.5 s so the frosted pill never blinks, render deterministic 1920x156 SVG caption bands centered at (960, 1002), and check reading-time budgets (0.5 + words/3.0 s).",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "frosted-widescreen-captions.plan-cues"
+            },
+            "when": "Split narration lines into clause-balanced cues of at most 2 lines and 42 characters per line with bridged visibility spans."
+          },
+          {
+            "verb": {
+              "$verb": "frosted-widescreen-captions.render-band"
+            },
+            "when": "Render deterministic 1920x156 SVG caption band frames with the frosted pill centered at (960, 1002)."
+          },
+          {
+            "verb": {
+              "$verb": "frosted-widescreen-captions.check-cues"
+            },
+            "when": "Independently check a cut's caption cues against film-frame v6 line, CPS, clearance and reading-time rules."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.never-native-caption-box-over-burned-pill"
+          },
+          {
+            "$pin": "guardrail.distinct-reviewer-on-caption-gate"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.frosted-captions"
+        },
+        "worked_example": "Made-up narration cues recomputed in test_captions.py: clause-then-balance wrapping protects model names and avoids trailing articles/prepositions, 0.3 s gaps bridge cleanly without blinking, two-line pills hold 108 px height centered at y=1002 with 24 px band clearance, and deterministic SVG output escapes XML entities."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.never-native-caption-box-over-burned-pill"
+        ],
+        [
+          "requires_noun",
+          "guardrail.distinct-reviewer-on-caption-gate"
+        ],
+        [
+          "requires_noun",
+          "spec.film-frame-v6-caption-band"
+        ],
+        [
+          "requires_noun",
+          "rules.clause-then-balance-wrapping"
+        ],
+        [
+          "requires_noun",
+          "tool.frosted-captions"
+        ],
+        [
+          "requires_noun",
+          "template.caption-cue-plan"
+        ],
+        [
+          "requires_noun",
+          "template.caption-band-check-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.never-native-caption-box-over-burned-pill",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: never render a native browser caption box over burned-in frosted caption pills",
+      "category_reason": "Prevents double-caption visual collisions in widescreen film playback.",
+      "value": {
+        "rule": "Films use the burned-in frosted pill inside y 924-1080 while the web video player keeps textTrack.mode in hidden or disabled, never showing.",
+        "how_it_is_checked": "frame_v6.json specifies web_player track modes and geometry.py verifies inside_band clearance."
+      }
+    },
+    {
+      "slug": "guardrail.distinct-reviewer-on-caption-gate",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: caption timing and geometry gate receipts require an independent reviewer",
+      "category_reason": "Separates cue generation from final film-frame v6 timing and clearance sign-off.",
+      "value": {
+        "rule": "The worker verifying caption line bounds, reading-speed holds and band clearance cannot share worker_id or key_id with the cue planner.",
+        "how_it_is_checked": "frosted-widescreen-captions.check-cues sets review to distinct_reviewer."
+      }
+    },
+    {
+      "slug": "spec.film-frame-v6-caption-band",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: film-frame v6 156 px lower band, (960, 1002) frosted pill geometry and timing bounds",
+      "category_reason": "Canonical widescreen frame and caption-pill dimensions shared by renderers and checkers.",
+      "value": {
+        "output_px": [
+          1920,
+          1080
+        ],
+        "fps": 30,
+        "stage_y": [
+          4,
+          924
+        ],
+        "band_y": [
+          924,
+          1080
+        ],
+        "pill_center_px": [
+          960,
+          1002
+        ],
+        "center_tolerance_px": 2,
+        "clearance_to_band_edges_px": 24,
+        "max_lines": 2,
+        "max_chars_per_line": 42,
+        "max_cps": 17,
+        "bridge_gap_s": 0.5,
+        "reading_base_s": 0.5,
+        "reading_words_per_s": 3.0
+      }
+    },
+    {
+      "slug": "rules.clause-then-balance-wrapping",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Clause-then-balance two-line caption wrapping and cue-bridging procedure",
+      "category_reason": "Deterministic zero-model scoring for readable two-line breaks and blink-free cue spans.",
+      "value": {
+        "max_lines": 2,
+        "max_chars_per_line": 42,
+        "scores": {
+          "sentence_end": -20,
+          "comma": -14,
+          "before_conjunction": -8,
+          "line_ends_on_article_or_preposition": 40,
+          "split_protected_name": 100,
+          "shorter_line_under_40_percent": 25
+        },
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.frosted-captions",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library frosted widescreen caption wrapper, timing checker and SVG band renderer",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path, file count and SHA-256.",
+      "value": {
+        "name": "frosted captions",
+        "code": {
+          "$code": "frosted-widescreen-captions"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m frosted_captions wrap TEXT",
+          "python3 -m frosted_captions check CUES.json",
+          "python3 -m frosted_captions svg TEXT"
+        ],
+        "does": [
+          "Wraps and splits narration cues into balanced 2x42 lines without splitting protected model names or stranding articles.",
+          "Computes lead, linger and 0.5 s bridged visibility spans and checks reading budgets (0.5 + words/3.0 s).",
+          "Computes pill bounding boxes centered at (960, 1002) and renders deterministic 1920x156 SVG bands."
+        ],
+        "does_not": [
+          "Mutate video files directly, rely on external font engines or invoke models."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.film-frame-v6-caption-band"
+        ]
+      ]
+    },
+    {
+      "slug": "template.caption-cue-plan",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: wrapped caption cue plan and SVG band render manifest",
+      "value": {
+        "describes": "a planned list of wrapped caption cues with bridged visibility spans and SVG band dimensions",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cue_count",
+            "max_observed_lines",
+            "max_observed_line_chars",
+            "band_height_px",
+            "pill_center_px"
+          ],
+          "properties": {
+            "cue_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_observed_lines": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            },
+            "max_observed_line_chars": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 42
+            },
+            "band_height_px": {
+              "type": "integer",
+              "const": 156
+            },
+            "pill_center_px": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "example": {
+          "cue_count": 2,
+          "max_observed_lines": 2,
+          "max_observed_line_chars": 38,
+          "band_height_px": 156,
+          "pill_center_px": [
+            960,
+            1002
+          ]
+        }
+      }
+    },
+    {
+      "slug": "template.caption-band-check-receipt",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: film-frame v6 caption cue timing, line-wrap and band-clearance receipt",
+      "value": {
+        "describes": "a deterministic verification receipt for caption line limits, reading-time spans and pill band clearance",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "error_count",
+            "warning_count",
+            "inside_band",
+            "guide_figure_clear",
+            "ast_violation_count"
+          ],
+          "properties": {
+            "error_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "warning_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "inside_band": {
+              "type": "boolean"
+            },
+            "guide_figure_clear": {
+              "type": "boolean"
+            },
+            "ast_violation_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "example": {
+          "error_count": 0,
+          "warning_count": 0,
+          "inside_band": true,
+          "guide_figure_clear": true,
+          "ast_violation_count": 0
+        }
+      }
+    },
+    {
+      "slug": "example.v6-caption-check-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: made-up two-line caption cues checked for v6 band clearance, bridging and SVG determinism",
+      "category_reason": "Made-up example recomputed by test_captions.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.caption-band-check-receipt"
+        },
+        "instance": {
+          "error_count": 0,
+          "warning_count": 0,
+          "inside_band": true,
+          "guide_figure_clear": true,
+          "ast_violation_count": 0
+        },
+        "shows": "Two-line pill height 108 px centers at (960, 1002) with 24 px band clearance, clears the (48, 932, 120, 140) guide zone and passes reading-speed checks.",
+        "source": "Made-up example cues checked in packs/frosted-widescreen-captions/code."
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.caption-band-check-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "plan-cues",
+      "kind": "verb.solve_draft",
+      "title": "Cut narration into caption cues and wrap lines at clause boundaries",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Split narration lines into two-line 42-character caption cues using clause-then-balance scoring and compute bridged visibility spans.",
+      "outcome": "Wrapped caption cue plan with bridged visibility spans.",
+      "ready_outcome": "cues_planned",
+      "pinned": [
+        "spec.film-frame-v6-caption-band",
+        "rules.clause-then-balance-wrapping",
+        "tool.frosted-captions"
+      ],
+      "slots": [
+        {
+          "name": "narration_lines",
+          "category": "noun.scene_recipe",
+          "description": "Pin of timed narration lines to split and wrap into caption cues."
+        }
+      ],
+      "produces": [
+        {
+          "name": "cue_plan",
+          "template": "template.caption-cue-plan"
+        }
+      ],
+      "steps": [
+        "Split overlong narration lines at clause boundaries with split_cues() and wrap each cue with wrap_balanced().",
+        "Compute lead, linger and 0.5 s gap-bridged visibility spans via visible_spans()."
+      ],
+      "acceptance": [
+        {
+          "id": "fits-two-lines-and-reading-time",
+          "check": "Every cue fits at most 2 lines of 42 characters and remains visible for at least 0.5 + words/3.0 seconds.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "render-band",
+      "kind": "verb.compile_dag",
+      "title": "Render deterministic 1920x156 SVG caption band frames with centered frosted pills",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Render escaped, deterministic SVG frames for the 156 px lower band with the frosted pill centered at (960, 1002).",
+      "outcome": "Rendered SVG caption band manifest.",
+      "ready_outcome": "band_rendered",
+      "pinned": [
+        "spec.film-frame-v6-caption-band",
+        "guardrail.never-native-caption-box-over-burned-pill",
+        "tool.frosted-captions"
+      ],
+      "slots": [
+        {
+          "name": "cue_plan",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the wrapped caption cue plan."
+        }
+      ],
+      "produces": [
+        {
+          "name": "rendered_band_plan",
+          "template": "template.caption-cue-plan"
+        }
+      ],
+      "steps": [
+        "Compute pill_box(lines) centered at (960, 1002) and verify 24 px clearance inside y 924-1080.",
+        "Render deterministic escaped SVG markup via band_svg()."
+      ],
+      "acceptance": [
+        {
+          "id": "pill-centered-and-clear",
+          "check": "Pill center is within 2 px of (960, 1002), inside_band(box) is true and XML special characters are escaped.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frosted-widescreen-captions.plan-cues"
+      ]
+    },
+    {
+      "slug": "check-cues",
+      "kind": "verb.verify_gate",
+      "title": "Check a cut's caption cues against film-frame v6 timing and geometry rules",
+      "claimant": "agent",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "summary": "Verify with a distinct reviewer that a cut's caption cues produce zero errors from check(), keep 24 px band clearance and pass AST magic-literal checks.",
+      "outcome": "Independent film-frame v6 caption verification receipt.",
+      "ready_outcome": "cues_checked",
+      "pinned": [
+        "spec.film-frame-v6-caption-band",
+        "rules.clause-then-balance-wrapping",
+        "guardrail.never-native-caption-box-over-burned-pill",
+        "guardrail.distinct-reviewer-on-caption-gate",
+        "tool.frosted-captions",
+        "template.caption-band-check-receipt"
+      ],
+      "slots": [
+        {
+          "name": "candidate_cues",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the candidate caption cue list and film duration."
+        }
+      ],
+      "produces": [
+        {
+          "name": "caption_check_receipt",
+          "template": "template.caption-band-check-receipt"
+        }
+      ],
+      "steps": [
+        "Run check(cues, film_end) and inside_band() across every cue in the cut.",
+        "Confirm zero error-severity findings and distinct reviewer identity."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-caption-errors",
+          "check": "error_count from check() is 0, inside_band is true and ast_violation_count is 0.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "frosted-widescreen-captions.render-band"
+      ]
+    }
+  ]
+}

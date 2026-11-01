@@ -1,0 +1,396 @@
+{
+  "pack_id": "request-status-ui",
+  "title": "Request status UI",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for rendering an event-driven request status page (/requests/:id) from receipt-backed event envelopes, mapping snapshot payloads, holding replay steps at human reading speed and keeping waiting states and dedicated-worker attributions honest.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "public-good-kits"
+  ],
+  "boundaries": [
+    "Every strip state, status pill, band and story line derives deterministically from receipted events rather than decorative timers.",
+    "Plain views omit raw worker ids, request ids, SHA-256 digests and HTTP status codes while keeping dedicated workers distinct from volunteers.",
+    "Admitting a request status view receipt requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for rendering an event-driven request status page (/requests/:id) from receipt-backed event envelopes, mapping snapshot payloads, holding replay steps at human reading speed and keeping waiting states and dedicated-worker attributions honest",
+      "value": {
+        "lets_workers": "Map snapshot payloads into ordered request-status events, reduce events into a six-step progress strip, four workflow bands, shared-library counts of task objects and tasks (things to do), and two-voice plain copy, schedule Replay holds at reading speed, and check Python/JavaScript parity.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "request-status-ui.derive-events"
+            },
+            "when": "Derive ordered, receipt-linked request-status events from a request snapshot payload and validate sequence and digest invariants."
+          },
+          {
+            "verb": {
+              "$verb": "request-status-ui.check-view"
+            },
+            "when": "Independently check Python and JavaScript view-model parity, plain-view hygiene and reading-speed replay holds."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.plain-view-hygiene-and-honest-worker-labels"
+          },
+          {
+            "$pin": "guardrail.distinct-reviewer-on-status-view"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.request-status-ui"
+        },
+        "worked_example": "Made-up intake request snapshot and 11-event sequence recomputed in test_request_status_ui.py and js_parity.mjs: Python and JavaScript ports agree byte-for-byte on two fixtures, plain story lines carry zero raw ids or hashes, and every Replay step holds for at least max(2.0, 0.5 + words/3.0) seconds plus 1.0 s on band transitions.",
+        "provenance_notes": [
+          "Generalizes the Eranos /requests/:id event-driven request status UI contract (https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn, drafted as eranos-request-status-ui)."
+        ]
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.plain-view-hygiene-and-honest-worker-labels"
+        ],
+        [
+          "requires_noun",
+          "guardrail.distinct-reviewer-on-status-view"
+        ],
+        [
+          "requires_noun",
+          "spec.request-status-events-v1"
+        ],
+        [
+          "requires_noun",
+          "tool.request-status-ui"
+        ],
+        [
+          "requires_noun",
+          "template.request-event-list"
+        ],
+        [
+          "requires_noun",
+          "template.request-view-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.plain-view-hygiene-and-honest-worker-labels",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: plain request views hide internal identifiers and never call a dedicated worker a volunteer",
+      "category_reason": "Protects non-technical requesters from internal jargon while keeping worker attribution truthful.",
+      "value": {
+        "rule": "Plain request views never expose raw worker ids, request ids, SHA-256 hashes or HTTP codes, show the self-check refusal card only when review.refused occurred, and never label a dedicated team worker as a volunteer.",
+        "how_it_is_checked": "test_request_status_ui.py checks plain_line outputs against identifier patterns, refusal-event presence and dedicated-worker attribution."
+      }
+    },
+    {
+      "slug": "guardrail.distinct-reviewer-on-status-view",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: request status view parity receipts require an independent reviewer",
+      "category_reason": "Keeps UI contract verification independent of the worker that derived the event stream.",
+      "value": {
+        "rule": "The worker checking request-status Python/JavaScript parity and reading-speed replay schedules cannot share worker_id or key_id with the event producer.",
+        "how_it_is_checked": "request-status-ui.check-view sets review to distinct_reviewer."
+      }
+    },
+    {
+      "slug": "spec.request-status-events-v1",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: fifteen request-status event types, four workflow bands and reading-speed replay floor",
+      "category_reason": "Defines deterministic event envelope types, strip steps and minimum replay hold formulas.",
+      "value": {
+        "event_types": [
+          "request.received",
+          "request.split",
+          "part.queued",
+          "part.claimed",
+          "part.heartbeat",
+          "part.released",
+          "part.object_made",
+          "part.submitted",
+          "review.claimed",
+          "review.refused",
+          "review.verdict",
+          "person.signoff",
+          "request.ready",
+          "person.decision",
+          "library.added"
+        ],
+        "strip": [
+          "Sent",
+          "Sorted",
+          "Being made",
+          "Being checked",
+          "Ready",
+          "In the library"
+        ],
+        "bands": [
+          "step-split",
+          "step-build",
+          "step-review",
+          "step-ready"
+        ],
+        "voices": [
+          "you",
+          "public"
+        ],
+        "replay_floor": {
+          "min_hold_s": 2.0,
+          "base_s": 0.5,
+          "words_per_s": 3.0,
+          "band_change_bonus_s": 1.0
+        }
+      }
+    },
+    {
+      "slug": "tool.request-status-ui",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library Python and dependency-free JavaScript request status view model",
+      "category_reason": "Tested Python 3.10+ package and ES module pinned by path, file count and SHA-256.",
+      "value": {
+        "name": "request status ui",
+        "code": {
+          "$code": "request-status-ui"
+        },
+        "runtime": "Python 3.10+ standard library and Node ES modules for parity checks.",
+        "commands": [
+          "make -C packs/request-status-ui/code check"
+        ],
+        "does": [
+          "Reduces ordered request events into progress strip states, status pills, four workflow bands, shared-library task objects and tasks (things to do) counts, and plain story copy.",
+          "Derives validated event lists from snapshot payloads and computes reading-speed replay schedules.",
+          "Verifies 1:1 parity between Python and JavaScript reducers plus ZeroHardcodedValuesAstGate conformance."
+        ],
+        "does_not": [
+          "Poll network endpoints, store browser credentials or animate progress without receipted events."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.request-status-events-v1"
+        ]
+      ]
+    },
+    {
+      "slug": "template.request-event-list",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: ordered request-status event stream derived from a request snapshot",
+      "value": {
+        "describes": "an ordered list of receipt-linked request-status events for a single request id",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "request_id",
+            "event_count",
+            "validation_problem_count",
+            "has_refusal_event",
+            "deliverable_count"
+          ],
+          "properties": {
+            "request_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "event_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "validation_problem_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "has_refusal_event": {
+              "type": "boolean"
+            },
+            "deliverable_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "example": {
+          "request_id": "REQ-INTAKE-07",
+          "event_count": 9,
+          "validation_problem_count": 0,
+          "has_refusal_event": true,
+          "deliverable_count": 2
+        }
+      }
+    },
+    {
+      "slug": "template.request-view-receipt",
+      "category": "noun.eval_run",
+      "role": "template",
+      "title": "Template: request status view parity, plain-copy hygiene and replay-hold check receipt",
+      "value": {
+        "describes": "a deterministic check receipt for Python/JS reducer parity, plain-view hygiene and replay hold floors",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "js_python_parity",
+            "fixtures_checked",
+            "plain_view_leak_count",
+            "min_replay_hold_s",
+            "ast_violation_count"
+          ],
+          "properties": {
+            "js_python_parity": {
+              "type": "boolean"
+            },
+            "fixtures_checked": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "plain_view_leak_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "min_replay_hold_s": {
+              "type": "number",
+              "minimum": 2.0
+            },
+            "ast_violation_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "example": {
+          "js_python_parity": true,
+          "fixtures_checked": 2,
+          "plain_view_leak_count": 0,
+          "min_replay_hold_s": 2.83,
+          "ast_violation_count": 0
+        }
+      }
+    },
+    {
+      "slug": "example.req-intake-07-view-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example: made-up intake request snapshot mapped to events and checked across Python and JavaScript",
+      "category_reason": "Made-up example verified deterministically by test_request_status_ui.py and js_parity.mjs.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.request-view-receipt"
+        },
+        "instance": {
+          "js_python_parity": true,
+          "fixtures_checked": 2,
+          "plain_view_leak_count": 0,
+          "min_replay_hold_s": 2.83,
+          "ast_violation_count": 0
+        },
+        "shows": "Two made-up fixtures (intake request with self-check refusal and dedicated-worker fallback) reduce identically in Python and JavaScript with zero identifier leaks.",
+        "source": "Made-up example fixtures checked in packs/request-status-ui/code."
+      },
+      "relations": [
+        [
+          "verifies",
+          "template.request-view-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "derive-events",
+      "kind": "verb.ingest",
+      "title": "Derive ordered request-status events from a snapshot payload",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Map a GET /api/requests/:id snapshot payload into strictly increasing request-status events and validate event types, receipts and single-request-id invariants.",
+      "outcome": "Validated request-status event stream summary.",
+      "ready_outcome": "events_derived",
+      "pinned": [
+        "spec.request-status-events-v1",
+        "guardrail.plain-view-hygiene-and-honest-worker-labels",
+        "tool.request-status-ui"
+      ],
+      "slots": [
+        {
+          "name": "snapshot_payload",
+          "category": "noun.eval_run",
+          "description": "Pin of the request snapshot record to convert into ordered status events."
+        }
+      ],
+      "produces": [
+        {
+          "name": "event_list",
+          "template": "template.request-event-list"
+        }
+      ],
+      "steps": [
+        "Run from_snapshot on the pinned request snapshot payload to emit strictly ordered request-status events.",
+        "Run validate on the derived event list to verify event types, 64-hex receipts and request_id consistency."
+      ],
+      "acceptance": [
+        {
+          "id": "valid-event-sequence",
+          "check": "validate(events) returns zero problems and sequence numbers strictly increase from 1.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "check-view",
+      "kind": "verb.verify_gate",
+      "title": "Check the request page view model, plain-copy rules and replay reading speed",
+      "claimant": "agent",
+      "model_use": "none",
+      "review": "distinct_reviewer",
+      "summary": "Verify with a distinct reviewer that Python and JavaScript reducers agree on request fixtures, plain copy leaks no raw identifiers and Replay holds never drop below reading time.",
+      "outcome": "Independent request-status view parity and replay timing receipt.",
+      "ready_outcome": "view_checked",
+      "pinned": [
+        "spec.request-status-events-v1",
+        "guardrail.plain-view-hygiene-and-honest-worker-labels",
+        "guardrail.distinct-reviewer-on-status-view",
+        "tool.request-status-ui",
+        "template.request-view-receipt"
+      ],
+      "slots": [
+        {
+          "name": "event_list",
+          "category": "noun.scene_recipe",
+          "description": "Pin of the derived request-status event list."
+        }
+      ],
+      "produces": [
+        {
+          "name": "view_receipt",
+          "template": "template.request-view-receipt"
+        }
+      ],
+      "steps": [
+        "Compare Python and JavaScript reduce() outputs across the event stream in both requester and public voices.",
+        "Verify zero raw ids/hashes in plain story copy, honest volunteer vs dedicated-worker labels and reading-speed floors in replay_schedule()."
+      ],
+      "acceptance": [
+        {
+          "id": "js-python-parity-and-reading-floor",
+          "check": "Python and JavaScript outputs match 1:1, plain_view_leak_count is 0 and every replay hold is at least max(2.0, 0.5 + words/3.0) seconds.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "request-status-ui.derive-events"
+      ]
+    }
+  ]
+}

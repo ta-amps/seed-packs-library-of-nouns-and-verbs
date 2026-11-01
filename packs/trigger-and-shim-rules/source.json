@@ -1,0 +1,717 @@
+{
+  "pack_id": "trigger-and-shim-rules",
+  "title": "Trigger and shim rules",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for three-tier trigger compilation with Role-Filler Frame isomorphism, conversation-aware submodular context-shim knapsacks, step-slicing HarnessTax break-even routing and privacy-safe compatibility matching.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "retrieval-triggers-and-reuse",
+    "hybrid-retrieval-context-knapsack",
+    "lora-memory-and-shimming"
+  ],
+  "boundaries": [
+    "Quarantined or unverified provisions are blocked at Tier 3 before context injection.",
+    "Contributor-training memory entries are refused whenever workload data privacy is non-public.",
+    "Packed shim provisions obey strict integer token and character ceilings via exact dynamic programming.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for three-tier trigger compilation with Role-Filler Frame isomorphism, conversation-aware submodular context-shim knapsacks, step-slicing HarnessTax break-even routing and privacy-safe compatibility matching",
+      "value": {
+        "lets_workers": "Compile deterministic three-tier triggers with trigram bitmasks, anti-trigger vetoes and Role-Filler Frame isomorphism, deduplicate conversation provisions via versioned markers before solving a redundancy-penalized integer knapsack, compute step-slicing HarnessTax break-even rates across four intervention regimes and score memory or harness entries via Pareto compatibility matching.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "trigger-and-shim-rules.evaluate-three-tier-triggers"
+            },
+            "when": "Filter candidate rules through trigram bitmasks, anti-trigger vetoes, Role-Filler Frame similarity and verified governance lenses."
+          },
+          {
+            "verb": {
+              "$verb": "trigger-and-shim-rules.pack-dedup-shim-knapsack"
+            },
+            "when": "Deduplicate versioned provision markers across conversation turns and solve a submodular 0/1 context knapsack."
+          },
+          {
+            "verb": {
+              "$verb": "trigger-and-shim-rules.route-regime-and-match-which-fits"
+            },
+            "when": "Compute step-slicing HarnessTax break-even skip rates, route Shim/Code/LoRA regimes and rank privacy-safe Pareto winners."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.verified-provisions-and-anti-trigger-veto"
+          },
+          {
+            "$pin": "guardrail.refuse-contributor-training-on-non-public-data"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.trigger-shim"
+        },
+        "worked_example": "Synthetic 4-rule trigger, 4-provision conversation knapsack, 4-regime intervention router and 3-entry compatibility bundle recomputed in test_trigger_shim.py: routes a high-confidence status check to 0-token respond_directly and a frame-isomorphic 409 conflict to shim_context, vetoes exclude_keywords and quarantined candidates, packs 155 <= 180 tokens, computes 0.6 HarnessTax break-even skip rate and disqualifies contributor-training cloud memory on confidential data."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.verified-provisions-and-anti-trigger-veto"
+        ],
+        [
+          "requires_noun",
+          "guardrail.refuse-contributor-training-on-non-public-data"
+        ],
+        [
+          "requires_noun",
+          "spec.trigger-knapsack-and-regime-equations"
+        ],
+        [
+          "requires_noun",
+          "rules.which-fits-and-dedup-markers"
+        ],
+        [
+          "requires_noun",
+          "tool.trigger-shim"
+        ],
+        [
+          "requires_noun",
+          "template.trigger-shim-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.verified-provisions-and-anti-trigger-veto",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: anti-trigger exclude_keywords veto at Tier 1 and quarantined provisions fail closed at Tier 3",
+      "category_reason": "Prevents over-triggering on excluded contexts and blocks unreviewed or quarantined shims.",
+      "value": {
+        "rule": "Any rule matching exclude_keywords aborts at Tier 1, and any rule with governance_status quarantined or not verified aborts at Tier 3 when require_verified_governance is active.",
+        "how_it_is_checked": "ThreeTierTriggerEngine.evaluate_rule returns matched false with tier1_exclude_veto or tier3_quarantined_governance."
+      }
+    },
+    {
+      "slug": "guardrail.refuse-contributor-training-on-non-public-data",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: memory or harness entries with contributor training enabled are refused on non-public workloads",
+      "category_reason": "Prevents internal or confidential context from leaking into external provider training corpora.",
+      "value": {
+        "rule": "Whenever workload data_privacy_tier is internal or confidential, candidate entries with contributor_training_enabled true are disqualified before Pareto scoring.",
+        "how_it_is_checked": "WhichFitsCompatibilityMatcher.recommend_which_fits records contributor_training_refused_for_non_public_data."
+      }
+    },
+    {
+      "slug": "spec.trigger-knapsack-and-regime-equations",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: three-tier trigger scoring, redundancy-penalized knapsack DP and HarnessTax break-even formulas",
+      "category_reason": "Defines deterministic scoring, deduplication and routing equations governed by default_grid_spec.json.",
+      "value": {
+        "trigger_tiers": [
+          "tier1_trigram_bitmask_keywords_and_glob",
+          "tier2_sparse_tf_cosine_plus_role_filler_frame",
+          "tier3_confidence_intent_and_governance_lens"
+        ],
+        "submodular_penalty_formula": "u_prime = max(0, u * (1 - alpha * max_sim_to_higher_utility))",
+        "harness_tax_break_even_formula": "(k - 1) * P / (k * P + C)",
+        "routing_regimes": [
+          "deterministic_code_shim",
+          "ephemeral_context_shim",
+          "peft_lora_adapter",
+          "hybrid_lora_plus_pointer_shim"
+        ]
+      }
+    },
+    {
+      "slug": "rules.which-fits-and-dedup-markers",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Conversation marker deduplication and Pareto compatibility matching procedure",
+      "category_reason": "Zero-model procedure deduplicating versioned provisions and ranking compatible memory/harness entries.",
+      "value": {
+        "dedup_modes": [
+          "once_per_conversation",
+          "every_turn",
+          "on_error_signature"
+        ],
+        "marker_format": "[PROVISION: <id>@v<n>]",
+        "privacy_tiers": [
+          "public",
+          "internal",
+          "confidential"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.trigger-shim",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library ThreeTierTriggerEngine, ConversationDedupAndSubmodularKnapsack, HarnessTaxAndThreeRegimeRouter and WhichFitsCompatibilityMatcher",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "trigger and shim rules",
+        "code": {
+          "$code": "trigger-and-shim-rules"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m trigger_shim --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Evaluates three-tier triggers combining trigram bitmasks, anti-trigger vetoes, Role-Filler Frame isomorphism and verified governance checks.",
+          "Deduplicates versioned conversation markers and solves scaled integer 0/1 context knapsacks under token and character bounds.",
+          "Computes step-slicing HarnessTax break-even rates, routes four adaptation regimes and scores Pareto-compatible harness/memory entries."
+        ],
+        "does_not": [
+          "Admit quarantined provisions, allow contributor-training tiers on non-public data or embed inline magic numeric constants."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.trigger-knapsack-and-regime-equations"
+        ]
+      ]
+    },
+    {
+      "slug": "template.trigger-shim-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: three-tier trigger, dedup knapsack, HarnessTax routing and which-fits compatibility receipt",
+      "value": {
+        "describes": "a deterministic receipt of matched and vetoed trigger rules, deduplicated knapsack provisions, HarnessTax break-even math, regime routing and Pareto compatibility winners",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "matched_rule_ids",
+            "intent_by_rule",
+            "rejected_by_rule",
+            "selected_provision_ids",
+            "packed_tokens",
+            "break_even_skip_rate",
+            "slicing_saves_tokens",
+            "regime_decisions",
+            "pareto_winners",
+            "disqualified_entry_ids"
+          ],
+          "properties": {
+            "matched_rule_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "intent_by_rule": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rule.direct-status-reflex",
+                "rule.fencing-conflict-shim"
+              ],
+              "properties": {
+                "rule.direct-status-reflex": {
+                  "type": "string"
+                },
+                "rule.fencing-conflict-shim": {
+                  "type": "string"
+                }
+              }
+            },
+            "rejected_by_rule": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rule.vetoed-readonly",
+                "rule.quarantined-candidate"
+              ],
+              "properties": {
+                "rule.vetoed-readonly": {
+                  "type": "string"
+                },
+                "rule.quarantined-candidate": {
+                  "type": "string"
+                }
+              }
+            },
+            "selected_provision_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "packed_tokens": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 180
+            },
+            "break_even_skip_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "slicing_saves_tokens": {
+              "type": "boolean"
+            },
+            "regime_decisions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "json_validator",
+                "volatile_policy",
+                "stable_syntax",
+                "pinned_recipe"
+              ],
+              "properties": {
+                "json_validator": {
+                  "type": "string"
+                },
+                "volatile_policy": {
+                  "type": "string"
+                },
+                "stable_syntax": {
+                  "type": "string"
+                },
+                "pinned_recipe": {
+                  "type": "string"
+                }
+              }
+            },
+            "pareto_winners": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "disqualified_entry_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "example": {
+          "matched_rule_ids": [
+            "rule.direct-status-reflex",
+            "rule.fencing-conflict-shim"
+          ],
+          "intent_by_rule": {
+            "rule.direct-status-reflex": "respond_directly",
+            "rule.fencing-conflict-shim": "shim_context"
+          },
+          "rejected_by_rule": {
+            "rule.vetoed-readonly": "tier1_exclude_veto",
+            "rule.quarantined-candidate": "tier3_quarantined_governance"
+          },
+          "selected_provision_ids": [
+            "prov.cas-fencing-retry",
+            "prov.idempotency-envelope"
+          ],
+          "packed_tokens": 155,
+          "break_even_skip_rate": 0.6,
+          "slicing_saves_tokens": true,
+          "regime_decisions": {
+            "json_validator": "deterministic_code_shim",
+            "volatile_policy": "ephemeral_context_shim",
+            "stable_syntax": "peft_lora_adapter",
+            "pinned_recipe": "hybrid_lora_plus_pointer_shim"
+          },
+          "pareto_winners": [
+            "entry.local-verified-shim"
+          ],
+          "disqualified_entry_ids": [
+            "entry.contributor-cloud-memory",
+            "entry.static-baked-weights"
+          ]
+        }
+      }
+    },
+    {
+      "slug": "example.trigger-shim-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 3-tier trigger query, conversation provisions, HarnessTax interventions and compatibility entries",
+      "category_reason": "Synthetic fixture recomputed by test_trigger_shim.py.",
+      "value": {
+        "query": {
+          "text": "worker renewal failed on fencing lock conflict 409 during write",
+          "tool_name": "store.put_record",
+          "role_frame": {
+            "verb_frame": "acquire",
+            "object_slot": "lease",
+            "error_code_slot": "err_409"
+          },
+          "allow_direct_response": true
+        },
+        "trigger_rules": [
+          {
+            "rule_id": "rule.fencing-conflict-shim",
+            "exemplar_text": "claim lease token retry cas",
+            "trigram_anchor_text": "conflict 409",
+            "any_keywords": [
+              "fencing",
+              "conflict",
+              "409"
+            ],
+            "tool_globs": [
+              "store.*"
+            ],
+            "role_frame": {
+              "verb_frame": "claim",
+              "object_slot": "fencing",
+              "error_code_slot": "err_409"
+            },
+            "governance_status": "verified",
+            "provision_id": "prov.cas-fencing-retry",
+            "shim_tokens": 80
+          },
+          {
+            "rule_id": "rule.direct-status-reflex",
+            "exemplar_text": "worker renewal failed on fencing lock conflict 409 during write",
+            "all_keywords": [
+              "409"
+            ],
+            "role_frame": {
+              "verb_frame": "renew",
+              "object_slot": "lock",
+              "error_code_slot": "err_409"
+            },
+            "governance_status": "verified",
+            "direct_response": "Reload latest expected_version before retrying compare-and-set."
+          },
+          {
+            "rule_id": "rule.vetoed-readonly",
+            "exemplar_text": "fencing conflict 409",
+            "exclude_keywords": [
+              "write"
+            ],
+            "governance_status": "verified"
+          },
+          {
+            "rule_id": "rule.quarantined-candidate",
+            "exemplar_text": "worker renewal failed on fencing lock conflict 409 during write",
+            "governance_status": "quarantined"
+          }
+        ],
+        "conversation_history": [
+          "Turn 1 context:\n[PROVISION: prov.already-seen@v1]\nBaseline lease rules."
+        ],
+        "current_error_signature": "err_409",
+        "provisions": [
+          {
+            "provision_id": "prov.already-seen",
+            "version": 1,
+            "dedup_mode": "once_per_conversation",
+            "utility": 0.95,
+            "tokens": 60,
+            "text": "Baseline lease rules already injected."
+          },
+          {
+            "provision_id": "prov.cas-fencing-retry",
+            "version": 1,
+            "dedup_mode": "on_error_signature",
+            "error_signature": "err_409",
+            "utility": 0.92,
+            "tokens": 80,
+            "text": "Fetch latest expected_version and retry bounded CAS write with fresh fencing token."
+          },
+          {
+            "provision_id": "prov.cas-fencing-duplicate",
+            "version": 1,
+            "dedup_mode": "every_turn",
+            "utility": 0.85,
+            "tokens": 85,
+            "text": "Fetch latest expected_version and retry bounded CAS write with fresh fencing token."
+          },
+          {
+            "provision_id": "prov.idempotency-envelope",
+            "version": 1,
+            "dedup_mode": "once_per_conversation",
+            "utility": 0.78,
+            "tokens": 75,
+            "text": "Preserve deterministic idempotency_key across transient retry attempts."
+          }
+        ],
+        "harness_tax_input": {
+          "prefix_tokens_p": 1200,
+          "content_tokens_c": 1200,
+          "slice_count_k": 4,
+          "observed_skip_rate": 0.65
+        },
+        "interventions": [
+          {
+            "id": "json_validator",
+            "is_deterministic_validator_or_parser": true,
+            "shim_tokens": 120,
+            "train_tokens": 50000,
+            "expected_horizon_calls": 1000,
+            "churn_half_life_days": 90
+          },
+          {
+            "id": "volatile_policy",
+            "requires_instant_revocation": true,
+            "shim_tokens": 150,
+            "train_tokens": 20000,
+            "expected_horizon_calls": 500,
+            "churn_half_life_days": 5
+          },
+          {
+            "id": "stable_syntax",
+            "shim_tokens": 200,
+            "train_tokens": 20000,
+            "expected_horizon_calls": 300,
+            "churn_half_life_days": 60
+          },
+          {
+            "id": "pinned_recipe",
+            "has_volatile_sha256_pins": true,
+            "shim_tokens": 200,
+            "train_tokens": 20000,
+            "expected_horizon_calls": 300,
+            "churn_half_life_days": 45
+          }
+        ],
+        "workload_request": {
+          "data_privacy_tier": "confidential",
+          "churn_half_life_days": 20.0,
+          "requires_instant_revocation": true,
+          "token_budget": 180,
+          "slice_count_k": 3,
+          "task_content_tokens_c": 1000
+        },
+        "candidate_entries": [
+          {
+            "entry_id": "entry.local-verified-shim",
+            "max_privacy_tier": "confidential",
+            "contributor_training_enabled": false,
+            "supports_instant_revocation": true,
+            "entry_token_overhead": 60,
+            "harness_prefix_tokens_p": 400,
+            "age_days": 2.0,
+            "freshness_half_life_days": 30.0,
+            "optimal_half_life_days": 20.0,
+            "min_supported_half_life_days": 1.0
+          },
+          {
+            "entry_id": "entry.contributor-cloud-memory",
+            "max_privacy_tier": "confidential",
+            "contributor_training_enabled": true,
+            "supports_instant_revocation": true,
+            "entry_token_overhead": 40,
+            "harness_prefix_tokens_p": 200,
+            "age_days": 1.0,
+            "freshness_half_life_days": 30.0
+          },
+          {
+            "entry_id": "entry.static-baked-weights",
+            "max_privacy_tier": "confidential",
+            "contributor_training_enabled": false,
+            "supports_instant_revocation": false,
+            "entry_token_overhead": 10,
+            "harness_prefix_tokens_p": 200,
+            "age_days": 5.0,
+            "freshness_half_life_days": 30.0
+          }
+        ],
+        "shows": "Synthetic trigger, knapsack, HarnessTax, 4-regime routing and confidential compatibility matching bundle.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.trigger-shim-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed trigger, knapsack, HarnessTax routing and which-fits compatibility receipt",
+      "category_reason": "Synthetic receipt verified by test_trigger_shim.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.trigger-shim-receipt"
+        },
+        "instance": {
+          "matched_rule_ids": [
+            "rule.direct-status-reflex",
+            "rule.fencing-conflict-shim"
+          ],
+          "intent_by_rule": {
+            "rule.direct-status-reflex": "respond_directly",
+            "rule.fencing-conflict-shim": "shim_context"
+          },
+          "rejected_by_rule": {
+            "rule.vetoed-readonly": "tier1_exclude_veto",
+            "rule.quarantined-candidate": "tier3_quarantined_governance"
+          },
+          "selected_provision_ids": [
+            "prov.cas-fencing-retry",
+            "prov.idempotency-envelope"
+          ],
+          "packed_tokens": 155,
+          "break_even_skip_rate": 0.6,
+          "slicing_saves_tokens": true,
+          "regime_decisions": {
+            "json_validator": "deterministic_code_shim",
+            "volatile_policy": "ephemeral_context_shim",
+            "stable_syntax": "peft_lora_adapter",
+            "pinned_recipe": "hybrid_lora_plus_pointer_shim"
+          },
+          "pareto_winners": [
+            "entry.local-verified-shim"
+          ],
+          "disqualified_entry_ids": [
+            "entry.contributor-cloud-memory",
+            "entry.static-baked-weights"
+          ]
+        },
+        "shows": "Recomputes exact matched/rejected trigger tiers, 155-token deduplicated knapsack, 0.6 HarnessTax break-even, 4 regime routes and Pareto winner.",
+        "source": "Synthetic. Recomputed directly from example.trigger-shim-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.trigger-shim-bundle"
+        ],
+        [
+          "verifies",
+          "template.trigger-shim-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "evaluate-three-tier-triggers",
+      "kind": "verb.situate",
+      "title": "Evaluate three-tier trigger rules with Role-Filler Frame isomorphism and verified governance checks",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Screen candidate rules through trigram bitmasks and anti-trigger vetoes, score stem/synonym TF cosine plus Role-Filler Frame isomorphism and enforce verified governance status.",
+      "outcome": "Deterministic trigger match and rejection diagnostics.",
+      "ready_outcome": "triggers_evaluated",
+      "pinned": [
+        "spec.trigger-knapsack-and-regime-equations",
+        "guardrail.verified-provisions-and-anti-trigger-veto",
+        "tool.trigger-shim"
+      ],
+      "slots": [
+        {
+          "name": "trigger_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of query context and candidate trigger rules."
+        }
+      ],
+      "produces": [
+        {
+          "name": "trigger_receipt",
+          "template": "template.trigger-shim-receipt"
+        }
+      ],
+      "steps": [
+        "Apply Tier-1 exclude_keywords vetoes, tool globs, keyword filters and trigram bitmask overlap checks.",
+        "Compute Tier-2 sparse TF cosine plus Role-Filler Frame bonus and enforce Tier-3 verified governance status."
+      ],
+      "acceptance": [
+        {
+          "id": "anti-trigger-and-quarantine-blocked",
+          "check": "ThreeTierTriggerEngine rejects exclude_keywords at Tier 1 and quarantined rules at Tier 3.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "pack-dedup-shim-knapsack",
+      "kind": "verb.compile_dag",
+      "title": "Deduplicate conversation markers and pack context shims via redundancy-penalized integer DP",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Filter provisions using versioned conversation markers and solve a scaled integer 0/1 knapsack with submodular overlap discounting under strict token and character ceilings.",
+      "outcome": "Bounded context-shim payload with versioned deduplication markers.",
+      "ready_outcome": "shims_packed",
+      "pinned": [
+        "spec.trigger-knapsack-and-regime-equations",
+        "rules.which-fits-and-dedup-markers",
+        "tool.trigger-shim"
+      ],
+      "slots": [
+        {
+          "name": "candidate_provisions",
+          "category": "noun.eval_run",
+          "description": "Pin of conversation history and candidate shim provisions."
+        }
+      ],
+      "produces": [
+        {
+          "name": "packed_shim_receipt",
+          "template": "template.trigger-shim-receipt"
+        }
+      ],
+      "steps": [
+        "Parse [PROVISION: <id>@v<n>] markers across conversation history to skip already active provisions.",
+        "Discount overlapping provisions by redundancy_alpha and solve exact 0/1 DP within token_budget and max_total_chars."
+      ],
+      "acceptance": [
+        {
+          "id": "knapsack-respects-token-and-char-bounds",
+          "check": "ConversationDedupAndSubmodularKnapsack never exceeds token_budget or max_total_chars.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "trigger-and-shim-rules.evaluate-three-tier-triggers"
+      ]
+    },
+    {
+      "slug": "route-regime-and-match-which-fits",
+      "kind": "verb.verify_gate",
+      "title": "Compute step-slicing HarnessTax break-even rates, route adaptation regimes and rank Pareto-compatible entries",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Calculate HarnessTax step-slicing break-even skip rates, route repeatable interventions across code, context shim, LoRA or hybrid regimes and score compatible harness/memory entries while refusing contributor-training tiers on non-public data.",
+      "outcome": "Verified HarnessTax break-even, regime routing decisions and Pareto compatibility winners.",
+      "ready_outcome": "regime_and_compatibility_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.trigger-knapsack-and-regime-equations",
+        "rules.which-fits-and-dedup-markers",
+        "guardrail.refuse-contributor-training-on-non-public-data",
+        "tool.trigger-shim",
+        "template.trigger-shim-receipt"
+      ],
+      "slots": [
+        {
+          "name": "workload_and_entries",
+          "category": "noun.eval_run",
+          "description": "Pin of workload privacy/churn constraints, interventions and candidate entries."
+        }
+      ],
+      "produces": [
+        {
+          "name": "routing_and_compatibility_receipt",
+          "template": "template.trigger-shim-receipt"
+        }
+      ],
+      "steps": [
+        "Compute step-slicing break-even skip rate (k - 1) * P / (k * P + C) and select adaptation regimes.",
+        "Disqualify contributor-training entries on non-public data and rank surviving Pareto-optimal entries."
+      ],
+      "acceptance": [
+        {
+          "id": "privacy-and-regime-deterministic",
+          "check": "WhichFitsCompatibilityMatcher disqualifies contributor-training entries on non-public workloads and reproduces Pareto winners.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "trigger-and-shim-rules.pack-dedup-shim-knapsack"
+      ]
+    }
+  ]
+}

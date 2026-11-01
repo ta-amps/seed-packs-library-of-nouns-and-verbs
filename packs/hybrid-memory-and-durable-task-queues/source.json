@@ -1,0 +1,668 @@
+{
+  "pack_id": "hybrid-memory-and-durable-task-queues",
+  "title": "Hybrid memory matrices and durable task queues",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for inline-lease durable task queues, zero-sweeper crash reclamation, maker != checker verification, content-addressed step and rating idempotency, ADaPT decompose-on-failure with shared-prefix batch coalescing, and zero-OOM subspace memory matrix rotating-layer iterative training.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "loops-schedules-and-heuristics",
+    "execution-hooks-and-verifiers",
+    "dora-spinquant-and-adapter-merging"
+  ],
+  "boundaries": [
+    "Workers remain stateless claimants of Tessera durable tasks (things to do) and never introduce a competing production task authority.",
+    "Inline lease expiry, maker != checker checks and step-receipt hashes preserve idempotent replay with zero double-billing and zero self-approval.",
+    "Hybrid subspace memory matrix projection and rotating layer windows keep optimizer states bounded within configured memory budgets.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for inline-lease durable task queues, crash-replay step receipts, ADaPT prefix coalescing and zero-OOM subspace memory matrix training",
+      "value": {
+        "lets_workers": "Reclaim stalled durable tasks (things to do) inline via lease_expires_at without cron sweepers, enforce maker != checker principal separation and dead_letter poison routing, memoize paid model step outputs so retries consume 0 tokens, deduplicate ratings by content/ontology/rubric/prompt/model SHA-256, coalesce homogeneous items sharing prefix P while decomposing only on failure (ADaPT), and train open-weights adapters across time-bounded sessions via subspace memory matrices and rotating transformer layer windows.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "hybrid-memory-and-durable-task-queues.claim-and-replay-durable-task"
+            },
+            "when": "Reclaim expired leases inline without cron sweepers, replay completed step receipts in 0 tokens, block maker == checker self-reviews and route poison tasks to dead_letter."
+          },
+          {
+            "verb": {
+              "$verb": "hybrid-memory-and-durable-task-queues.coalesce-prefix-and-decompose-on-failure"
+            },
+            "when": "Coalesce homogeneous items sharing ontology/schema prefix P into K-item batches and trigger ADaPT subtask decomposition strictly when verification fails."
+          },
+          {
+            "verb": {
+              "$verb": "hybrid-memory-and-durable-task-queues.project-subspace-memory-and-verify-gates"
+            },
+            "when": "Compress optimizer states into rank-r subspace memory matrices across rotating layer sessions and enforce AST zero-magic-literal and domain-agnostic naming gates."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.inline-lease-and-distinct-reviewer"
+          },
+          {
+            "$pin": "guardrail.zero-oom-subspace-and-idempotent-replay"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.hybrid-durable"
+        },
+        "worked_example": "Deterministic evaluation bundle recomputed in test_hybrid_durable.py: reclaims an expired lease inline without cron sweepers, blocks maker == checker self-review while completing distinct worker-beta review, routes a 3-attempt poison task to dead_letter, replays a 420-token step in 0 tokens, deduplicates identical rating keys, saves 10,500 shared-prefix tokens via batch coalescing while triggering ADaPT on failure, achieves 4.0x subspace optimizer compression across all 16 transformer layers, and passes AST and domain-agnostic naming gates."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.inline-lease-and-distinct-reviewer"
+        ],
+        [
+          "requires_noun",
+          "guardrail.zero-oom-subspace-and-idempotent-replay"
+        ],
+        [
+          "requires_noun",
+          "spec.durable-queue-and-subspace-memory-grid"
+        ],
+        [
+          "requires_noun",
+          "rules.lease-idempotency-adapt-and-layer-rotation"
+        ],
+        [
+          "requires_noun",
+          "tool.hybrid-durable"
+        ],
+        [
+          "requires_noun",
+          "template.hybrid-durable-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.inline-lease-and-distinct-reviewer",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: inline timestamp lease expiry, dead-letter caps and maker != checker enforcement",
+      "category_reason": "Eliminates wedged doing rows on worker OOM/SIGKILL, infinite poison-task crash loops and self-approved agent outputs.",
+      "value": {
+        "rule": "Durable task claims evaluate lease_expires_at < now_epoch inline, transition tasks exceeding max_task_attempts to dead_letter and refuse review claims where worker_principal equals maker_principal.",
+        "how_it_is_checked": "test_hybrid_durable.py verifies inline_lease_reclaimed, self_review_blocked, distinct_review_completed and poison_routed_to_dead_letter."
+      }
+    },
+    {
+      "slug": "guardrail.zero-oom-subspace-and-idempotent-replay",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: 0-token step replay, content-addressed rating keys and bounded subspace optimizer memory",
+      "category_reason": "Prevents double-billing on retry, silent rating overwrites across rubric versions and GPU VRAM exhaustion during iterative fine-tuning.",
+      "value": {
+        "rule": "Paid model steps checkpoint outputs in step_receipts keyed by canonical SHA-256, ratings key by (source, content_sha256, ontology_ver, rubric_ver, prompt_ver, model_id), and iterative training projects gradients onto rank-r subspace matrices across rotating layer windows.",
+        "how_it_is_checked": "test_hybrid_durable.py asserts replay_step_tokens == 0, rating_idempotent_deduped == true, memory_reduction_ratio == 4.0 and full_model_layers_covered == true."
+      }
+    },
+    {
+      "slug": "spec.durable-queue-and-subspace-memory-grid",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: durable task lifecycle states, rating idempotency tuple, ADaPT granularity and subspace layer-window grid",
+      "category_reason": "Defines canonical durable task states, idempotency hash fields and bounded memory-matrix parameters.",
+      "value": {
+        "durable_task_states": [
+          "blocked_deps",
+          "ready",
+          "claimed",
+          "done",
+          "dead_letter"
+        ],
+        "rating_idempotency_fields": [
+          "source_id",
+          "content_sha256",
+          "ontology_ver",
+          "rubric_ver",
+          "prompt_ver",
+          "model_id"
+        ],
+        "decomposition_modes": [
+          "coalesce_shared_prefix",
+          "split_trust_or_tier_boundary",
+          "adapt_decompose_on_failure"
+        ],
+        "memory_matrix_axes": [
+          "subspace_rank",
+          "total_transformer_layers",
+          "active_layer_window",
+          "vocab_chunk_tokens"
+        ]
+      }
+    },
+    {
+      "slug": "rules.lease-idempotency-adapt-and-layer-rotation",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Inline lease reclamation, step-receipt replay, HarnessTax batch coalescing and rotating layer-session rules",
+      "category_reason": "Deterministic control rules governing durable task claiming, retry memoization, atomic decomposition and multi-session fine-tuning.",
+      "value": {
+        "inline_lease_rule": "Claim queries select ready tasks or claimed tasks with lease_expires_at < now_epoch, incrementing attempt_count or routing to dead_letter when max_task_attempts is exceeded.",
+        "prefix_coalescing_rule": "Coalesce up to prefix_coalesce_max_k homogeneous items sharing ontology/schema prefix P, saving (N - ceil(N/K)) * P input tokens, and invoke ADaPT decomposition strictly on verifier failure.",
+        "hybrid_memory_rule": "Project optimizer states into subspace_rank rows on CPU RAM and rotate active_layer_window across total_transformer_layers with chained SHA-256 session checkpoints.",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.hybrid-durable",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library InlineLeaseDurableQueue, AdaptAndCoalescePlanner and HybridSubspaceMemoryTrainer",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "hybrid memory matrices and durable task queues",
+        "code": {
+          "$code": "hybrid-memory-and-durable-task-queues"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m hybrid_durable --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Executes inline-lease durable task queues with DAG dependency unlocking, maker != checker enforcement, dead-letter caps, 0-token step replay and idempotent rating storage.",
+          "Plans shared-prefix batch coalescing paired with ADaPT failure-triggered subtask decomposition.",
+          "Compresses optimizer states via subspace memory matrices across rotating layer sessions and enforces AST and domain-agnostic naming gates."
+        ],
+        "does_not": [
+          "Create a competing production scheduler, allow self-review or retain hardcoded magic numbers."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.durable-queue-and-subspace-memory-grid"
+        ]
+      ]
+    },
+    {
+      "slug": "template.hybrid-durable-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: inline-lease durable queue, step replay, ADaPT coalescing and subspace memory verification receipt",
+      "value": {
+        "describes": "a deterministic receipt covering inline lease reclamation, maker != checker verification, dead-letter poison routing, 0-token step replay, rating deduplication, shared-prefix token savings, subspace compression ratio, full-layer coverage and AST/naming gate checks",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "inline_lease_reclaimed",
+            "self_review_blocked",
+            "distinct_review_completed",
+            "poison_routed_to_dead_letter",
+            "first_step_tokens",
+            "replay_step_tokens",
+            "rating_idempotent_deduped",
+            "prefix_tokens_saved",
+            "adapt_decompose_triggered",
+            "memory_reduction_ratio",
+            "full_model_layers_covered",
+            "engine_ast_violations",
+            "sample_magic_ast_violations",
+            "sample_domain_naming_violations"
+          ],
+          "properties": {
+            "inline_lease_reclaimed": {
+              "type": "boolean"
+            },
+            "self_review_blocked": {
+              "type": "boolean"
+            },
+            "distinct_review_completed": {
+              "type": "boolean"
+            },
+            "poison_routed_to_dead_letter": {
+              "type": "boolean"
+            },
+            "first_step_tokens": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "replay_step_tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rating_idempotent_deduped": {
+              "type": "boolean"
+            },
+            "prefix_tokens_saved": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "adapt_decompose_triggered": {
+              "type": "boolean"
+            },
+            "memory_reduction_ratio": {
+              "type": "number",
+              "minimum": 1.0
+            },
+            "full_model_layers_covered": {
+              "type": "boolean"
+            },
+            "engine_ast_violations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sample_magic_ast_violations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sample_domain_naming_violations": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "example": {
+          "inline_lease_reclaimed": true,
+          "self_review_blocked": true,
+          "distinct_review_completed": true,
+          "poison_routed_to_dead_letter": true,
+          "first_step_tokens": 420,
+          "replay_step_tokens": 0,
+          "rating_idempotent_deduped": true,
+          "prefix_tokens_saved": 10500,
+          "adapt_decompose_triggered": true,
+          "memory_reduction_ratio": 4.0,
+          "full_model_layers_covered": true,
+          "engine_ast_violations": 0,
+          "sample_magic_ast_violations": 1,
+          "sample_domain_naming_violations": 1
+        }
+      }
+    },
+    {
+      "slug": "example.hybrid-durable-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example input: inline lease crash recovery, maker != checker, poison task, step replay, ADaPT coalescing and 16x8 gradient matrix bundle",
+      "category_reason": "Authored evaluation fixture recomputed deterministically by test_hybrid_durable.py.",
+      "value": {
+        "task_payload": {
+          "artifact_id": "ART-DURABLE-01",
+          "schema_version": 1
+        },
+        "t0_epoch": 1000.0,
+        "t_expired_epoch": 1150.0,
+        "t_review_epoch": 1160.0,
+        "poison_claim_epochs": [
+          2000.0,
+          2200.0,
+          2400.0,
+          2600.0
+        ],
+        "step_signature": {
+          "task_id": "task-build-01",
+          "step": "rubric_eval_v1",
+          "input_sha256": "abc123def456"
+        },
+        "step_tokens": 420,
+        "rating_call": {
+          "source_id": "mcp-registry:filesystem",
+          "content_sha256": "9f86d081884c7d65",
+          "ontology_ver": "v1.2",
+          "rubric_ver": "v2.0",
+          "prompt_ver": "gepa-r4",
+          "model_id": "muse-spark-open",
+          "score_payload": {
+            "quality": 0.96,
+            "verified": true
+          }
+        },
+        "granularity_probe": {
+          "item_count": 16,
+          "shared_prefix_tokens": 750,
+          "per_item_tokens": 120,
+          "failed_verification": true,
+          "depth": 1
+        },
+        "grad_matrix": [
+          [
+            0.9,
+            0.4,
+            0.2,
+            0.1,
+            0.3,
+            0.2,
+            0.1,
+            0.5
+          ],
+          [
+            0.1,
+            0.1,
+            0.05,
+            0.02,
+            0.01,
+            0.03,
+            0.02,
+            0.01
+          ],
+          [
+            0.8,
+            0.5,
+            0.3,
+            0.2,
+            0.4,
+            0.1,
+            0.2,
+            0.3
+          ],
+          [
+            0.05,
+            0.02,
+            0.01,
+            0.04,
+            0.01,
+            0.02,
+            0.01,
+            0.02
+          ],
+          [
+            0.7,
+            0.6,
+            0.2,
+            0.3,
+            0.2,
+            0.4,
+            0.1,
+            0.2
+          ],
+          [
+            0.02,
+            0.03,
+            0.01,
+            0.01,
+            0.02,
+            0.01,
+            0.03,
+            0.01
+          ],
+          [
+            0.6,
+            0.5,
+            0.4,
+            0.2,
+            0.3,
+            0.2,
+            0.2,
+            0.4
+          ],
+          [
+            0.03,
+            0.01,
+            0.02,
+            0.02,
+            0.01,
+            0.02,
+            0.01,
+            0.02
+          ],
+          [
+            0.04,
+            0.02,
+            0.01,
+            0.03,
+            0.02,
+            0.01,
+            0.02,
+            0.01
+          ],
+          [
+            0.01,
+            0.02,
+            0.02,
+            0.01,
+            0.01,
+            0.02,
+            0.01,
+            0.01
+          ],
+          [
+            0.02,
+            0.01,
+            0.03,
+            0.01,
+            0.02,
+            0.01,
+            0.01,
+            0.02
+          ],
+          [
+            0.03,
+            0.02,
+            0.01,
+            0.02,
+            0.01,
+            0.01,
+            0.02,
+            0.01
+          ],
+          [
+            0.01,
+            0.01,
+            0.01,
+            0.02,
+            0.02,
+            0.01,
+            0.01,
+            0.01
+          ],
+          [
+            0.02,
+            0.02,
+            0.01,
+            0.01,
+            0.01,
+            0.02,
+            0.02,
+            0.01
+          ],
+          [
+            0.01,
+            0.03,
+            0.01,
+            0.01,
+            0.02,
+            0.01,
+            0.01,
+            0.01
+          ],
+          [
+            0.02,
+            0.01,
+            0.02,
+            0.01,
+            0.01,
+            0.01,
+            0.02,
+            0.02
+          ]
+        ],
+        "rotation_sessions": 4,
+        "magic_code_sample": "def bad_retry_cap(n: int) -> int:\n    return n + 25\n",
+        "industry_coupled_sample": "class FintechQueueRouter:\n    pass\n",
+        "shows": "Authored evaluation bundle exercising inline lease expiry without cron sweepers, maker != checker review gating, dead-letter poison routing, 0-token step replay, rating deduplication, shared-prefix coalescing + ADaPT decomposition, and 4.0x subspace memory-matrix compression across 16 layers.",
+        "source": "Authored example written for our tests in this pack."
+      }
+    },
+    {
+      "slug": "example.hybrid-durable-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "title": "Worked example output: recomputed durable queue, step replay, ADaPT coalescing and subspace memory receipt",
+      "category_reason": "Deterministic evaluation receipt verified by test_hybrid_durable.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.hybrid-durable-receipt"
+        },
+        "instance": {
+          "inline_lease_reclaimed": true,
+          "self_review_blocked": true,
+          "distinct_review_completed": true,
+          "poison_routed_to_dead_letter": true,
+          "first_step_tokens": 420,
+          "replay_step_tokens": 0,
+          "rating_idempotent_deduped": true,
+          "prefix_tokens_saved": 10500,
+          "adapt_decompose_triggered": true,
+          "memory_reduction_ratio": 4.0,
+          "full_model_layers_covered": true,
+          "engine_ast_violations": 0,
+          "sample_magic_ast_violations": 1,
+          "sample_domain_naming_violations": 1
+        },
+        "shows": "Recomputes inline lease reclamation, maker != checker gating, poison dead-lettering, 0-token crash replay, 10,500 saved prefix tokens, 4.0x subspace optimizer compression across all 16 layers, and 0 engine AST/naming violations.",
+        "source": "Recomputed directly from example.hybrid-durable-bundle in our tests."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.hybrid-durable-bundle"
+        ],
+        [
+          "verifies",
+          "template.hybrid-durable-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "claim-and-replay-durable-task",
+      "kind": "verb.generate_seed",
+      "title": "Reclaim expired leases inline, enforce maker != checker, dead-letter poison tasks and replay cached steps in 0 tokens",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Evaluate lease_expires_at inline during task claiming with zero external cron sweepers, enforce distinct maker != checker principals on review tasks, transition exhausted tasks to dead_letter and replay checkpointed paid steps from step_receipts.",
+      "outcome": "Verified durable task lifecycle transitions, 0-token step replay and deduplicated rating task objects.",
+      "ready_outcome": "durable_task_replayed",
+      "pinned": [
+        "spec.durable-queue-and-subspace-memory-grid",
+        "rules.lease-idempotency-adapt-and-layer-rotation",
+        "guardrail.inline-lease-and-distinct-reviewer",
+        "tool.hybrid-durable"
+      ],
+      "slots": [
+        {
+          "name": "durable_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of durable task, lease, step-signature and rating inputs."
+        }
+      ],
+      "produces": [
+        {
+          "name": "durable_stage_receipt",
+          "template": "template.hybrid-durable-receipt"
+        }
+      ],
+      "steps": [
+        "Claim ready or expired-lease tasks inline while blocking self-review and routing poison tasks exceeding max_task_attempts to dead_letter.",
+        "Replay checkpointed step_receipts in 0 tokens and deduplicate rating writes by canonical 6-field SHA-256."
+      ],
+      "acceptance": [
+        {
+          "id": "inline-lease-distinct-review-and-zero-token-replay",
+          "check": "InlineLeaseDurableQueue reclaims expired leases without cron sweepers, refuses maker == checker self-reviews, routes poison tasks to dead_letter and replays cached steps in 0 tokens.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "coalesce-prefix-and-decompose-on-failure",
+      "kind": "verb.generate_seed",
+      "title": "Coalesce homogeneous items sharing ontology/schema prefix P and decompose subtasks strictly on failure (ADaPT)",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Group homogeneous items into K-item batches sharing ontology/schema prefix P to eliminate redundant prefix token burn, and trigger recursive subtask decomposition only when a deterministic verifier fails.",
+      "outcome": "Computed batch count, saved prefix tokens and ADaPT failure-decomposition trigger verdict.",
+      "ready_outcome": "granularity_planned",
+      "pinned": [
+        "spec.durable-queue-and-subspace-memory-grid",
+        "rules.lease-idempotency-adapt-and-layer-rotation",
+        "tool.hybrid-durable"
+      ],
+      "slots": [
+        {
+          "name": "granularity_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of homogeneous batch counts, prefix token sizes and verification status."
+        }
+      ],
+      "produces": [
+        {
+          "name": "granularity_receipt",
+          "template": "template.hybrid-durable-receipt"
+        }
+      ],
+      "steps": [
+        "Compute naive atomic split token cost versus K-coalesced shared-prefix batch cost.",
+        "Trigger ADaPT decomposition strictly when failed_verification is true and depth < max_decomposition_depth."
+      ],
+      "acceptance": [
+        {
+          "id": "positive-prefix-savings-and-bounded-adapt",
+          "check": "AdaptAndCoalescePlanner saves shared-prefix tokens on homogeneous batches and bounds failure decomposition by max_decomposition_depth.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "hybrid-memory-and-durable-task-queues.claim-and-replay-durable-task"
+      ]
+    },
+    {
+      "slug": "project-subspace-memory-and-verify-gates",
+      "kind": "verb.verify_gate",
+      "title": "Compress optimizer states into subspace memory matrices across rotating layer windows and verify AST/naming gates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Project gradient matrices into rank-r subspace optimizer states, rotate active transformer layer windows across multi-session checkpoints with chained SHA-256 digests, and enforce zero magic literals and domain-agnostic naming.",
+      "outcome": "Verified subspace memory reduction ratio, full-model layer coverage and zero engine AST/naming violations.",
+      "ready_outcome": "hybrid_durable_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.durable-queue-and-subspace-memory-grid",
+        "rules.lease-idempotency-adapt-and-layer-rotation",
+        "guardrail.zero-oom-subspace-and-idempotent-replay",
+        "tool.hybrid-durable",
+        "template.hybrid-durable-receipt"
+      ],
+      "slots": [
+        {
+          "name": "subspace_trace_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of gradient matrices, layer-rotation sessions and engine source under conformance audit."
+        }
+      ],
+      "produces": [
+        {
+          "name": "hybrid_durable_receipt",
+          "template": "template.hybrid-durable-receipt"
+        }
+      ],
+      "steps": [
+        "Compress 16x8 gradient matrices to rank-4 subspace states (4.0x reduction) and rotate 4-layer windows across 4 sessions covering all 16 layers.",
+        "Scan operational Python AST for hardcoded numeric literals and industry-coupled identifiers."
+      ],
+      "acceptance": [
+        {
+          "id": "subspace-coverage-and-zero-ast-violations",
+          "check": "memory_reduction_ratio >= 4.0, full_model_layers_covered == true and engine_ast_violations == 0.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "hybrid-memory-and-durable-task-queues.coalesce-prefix-and-decompose-on-failure"
+      ]
+    }
+  ]
+}

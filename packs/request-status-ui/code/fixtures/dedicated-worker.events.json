@@ -1,0 +1,63 @@
+[
+ {
+  "seq": 1,
+  "type": "request.received",
+  "request_id": "rq-2",
+  "at": "2026-11-01T18:14:00Z",
+  "data": {}
+ },
+ {
+  "seq": 2,
+  "type": "request.split",
+  "request_id": "rq-2",
+  "data": {
+   "parts": [
+    {
+     "title": "Merge people who signed up twice",
+     "lane": "own_files"
+    }
+   ]
+  }
+ },
+ {
+  "seq": 3,
+  "type": "part.queued",
+  "request_id": "rq-2",
+  "data": {
+   "position": 1,
+   "volunteers_online": 0,
+   "fallback_at": "2026-11-01T18:30:00Z"
+  }
+ },
+ {
+  "seq": 4,
+  "type": "part.claimed",
+  "request_id": "rq-2",
+  "actor": {
+   "role": "maker",
+   "kind": "eranos_worker",
+   "run_by": "ta-amps team"
+  },
+  "data": {
+   "lease": {
+    "seconds": 1800,
+    "fencing_token": 1
+   }
+  }
+ },
+ {
+  "seq": 5,
+  "type": "part.submitted",
+  "request_id": "rq-2",
+  "data": {}
+ },
+ {
+  "seq": 6,
+  "type": "review.claimed",
+  "request_id": "rq-2",
+  "actor": {
+   "role": "checker",
+   "kind": "volunteer"
+  }
+ }
+]
