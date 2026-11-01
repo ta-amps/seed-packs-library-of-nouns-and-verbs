@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds one hundred and four proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds one hundred and five proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -124,10 +124,11 @@ activated**, and no worker has run them yet.
 | [Rule of Two and agent guardrails](packs/rule-of-two-and-agent-guardrails/README.md) | Enforcing monotone Rule of Two capability lattices across multi-step tool DAGs, bidirectional typed privacy placeholder vaults and model license-tier routing firewalls, with tested code |
 | [Seeded defect and proof-carrying review](packs/seeded-defect-and-proof-carrying-review/README.md) | Mutation-guided reviewer calibration across six seeded defect classes, proof-carrying refusal and approval verification and exact Wilson score plus paired bootstrap confidence intervals, with tested code |
 | [Self-rewarding and iterative DPO flywheel](packs/self-rewarding-and-iterative-dpo-flywheel/README.md) | Iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion, with tested code |
+| [Self-constructing node and waterfall](packs/self-constructing-node-and-waterfall/README.md) | Stateless contract-hydrated worker nodes, continuous per-step state profiling, <6h keyword resource hydration, five-rung deterministic-to-CLI-harness waterfalls, multi-persona vector ratings and quorum capability-spinout proposals, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1778
-nouns and 569 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1787
+nouns and 572 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

@@ -120,8 +120,9 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Rule of Two and agent guardrails](rule-of-two-and-agent-guardrails/README.md) | Enforcing monotone Rule of Two capability lattices across multi-step tool DAGs, bidirectional typed privacy placeholder vaults and model license-tier routing firewalls, with tested code | 9 | 3 |
 | [Seeded defect and proof-carrying review](seeded-defect-and-proof-carrying-review/README.md) | Mutation-guided reviewer calibration across six seeded defect classes, proof-carrying refusal and approval verification and exact Wilson score plus paired bootstrap confidence intervals, with tested code | 9 | 3 |
 | [Self-rewarding and iterative DPO flywheel](self-rewarding-and-iterative-dpo-flywheel/README.md) | Iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion, with tested code | 9 | 3 |
+| [Self-constructing node and waterfall](self-constructing-node-and-waterfall/README.md) | Stateless contract-hydrated worker nodes, continuous per-step state profiling, <6h keyword resource hydration, five-rung deterministic-to-CLI-harness waterfalls, multi-persona vector ratings and quorum capability-spinout proposals, with tested code | 9 | 3 |
 
-Together: 1778 nouns and 569 verb templates across one hundred and four packs. The
+Together: 1787 nouns and 572 verb templates across one hundred and five packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
