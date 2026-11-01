@@ -1,0 +1,135 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "request-status-ui",
+  "title": "Request status UI",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for rendering an event-driven request status page (/requests/:id) from receipt-backed event envelopes, mapping snapshot payloads, holding replay steps at human reading speed and keeping waiting states and dedicated-worker attributions honest.",
+  "license": "MIT",
+  "store": "seedpack.request-status-ui",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "e4e76e1b37c39fc2faea88272cb37e1cbd2e1dd6818ee6d282317d51fd1c8f13"
+    },
+    {
+      "path": "source.json",
+      "sha256": "50c9f0b595ff2ab2376fd77c47dc52e3f491884938d4ed485054f0bcf17b5701"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "104d9690a6d93e54e32b60c12a35a1f30c8ed191a41915f093b90dddc13e7560"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "7b872723486456caa64fee625f912f269b8c773b3d125694f2888272da808524"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "request-status-ui.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "1576ac47774eadbd4b2b6b424495c4dff244019eaa1025690180e4a583c6fe92"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.guardrail.plain-view-hygiene-and-honest-worker-labels",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "28c8ef4623623c4ec52fccc43c5ccc04a7c1048928ef25869206d116bfda42ed"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.guardrail.distinct-reviewer-on-status-view",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "510bce451b4076598a46602cebca2c7453fee3093d87678f4952ae6eb99533c6"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.spec.request-status-events-v1",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "ac888721a7e1b4cd4a896bba3353bf8309511a6de89ca9e043a9396de07c0de4"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.tool.request-status-ui",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "80a28a4e6986c26a92afce159ff9f87cc8da53f03d38cb2c01ce38088d150d5d"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.template.request-event-list",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "29d526f74b0484c0a9eb80354fa8dd17959e59efb1c8980d96761a42fe0cea01"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.template.request-view-receipt",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "3a551cb8c9c6e1599b6ac7f080ef928243c391c68c6e5a45b458876165d45466"
+    },
+    {
+      "key": "request-status-ui.v0.1.0.example.req-intake-07-view-receipt",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "d7f118f670c241bb32277c08061f9b22660bc8ef7bfaaee24392744cb97b8a30"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "request-status-ui.derive-events",
+      "kind": "verb.ingest",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:request-status-ui:derive-events:7121e3a04f224440483b8eb3ce1511941976a8d21bfcdc5cabd9e3b02c84afda",
+      "report_shape_sha256": "6ff28d6cb152a5281276d65e18216723164441856061fb637014a370c39ad61c"
+    },
+    {
+      "template_id": "request-status-ui.check-view",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:request-status-ui:check-view:7519fbc6abdfb69d8aa4800e536c53a1ee993afc61bf83c9edecd9fd4d689afc",
+      "report_shape_sha256": "1e878ce845a56abc36bbad7d8f0a69f804b75abd2c735893cda3fc337792a423"
+    }
+  ],
+  "code": {
+    "path": "packs/request-status-ui/code",
+    "files": 16,
+    "sha256": "3a520d8446ec735a2754b8da32c398cfa9b4b27c5aa6e8d3f7359e04576d9408",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "configuration-grids-and-bounds",
+      "keys": []
+    },
+    {
+      "pack_id": "public-good-kits",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Every strip state, status pill, band and story line derives deterministically from receipted events rather than decorative timers.",
+    "Plain views omit raw worker ids, request ids, SHA-256 digests and HTTP status codes while keeping dedicated workers distinct from volunteers.",
+    "Admitting a request status view receipt requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

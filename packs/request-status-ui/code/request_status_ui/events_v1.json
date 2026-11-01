@@ -1,0 +1,448 @@
+{
+ "kind": "wire-contract",
+ "id": "eranos.request-status-events.v1",
+ "version": 1,
+ "owner": "Claude Design (UI contract). Tessera receipts are the source of truth; Antigravity serves them; Claude Code builds the page.",
+ "created_at": "2026-10-31T23:58:00Z",
+ "answers": "FOR-CLAUDE-DESIGN.md ask 1 (event contract), ask 2 (the 'added to the library' moment) and ask 3 (honest empty and slow states).",
+ "principle": "The page animates only from these events. One event per receipt. Nothing loops, nothing pretends to progress, and a page never keeps its own copy of a request (MUST-FOLLOW 12: surfaces render nouns from Tessera).",
+ "transport": {
+  "snapshot": "GET /api/requests/:id -> { request: {...}, events: [ ...ordered by seq... ] }",
+  "stream": "GET /api/requests/:id/events?after=<seq> (Server-Sent Events, optional). Without it, poll the snapshot.",
+  "poll_s": {
+   "tab_visible": 5,
+   "tab_hidden": 30
+  },
+  "pause_rule": "After 3 failed polls show 'Live updates paused · Try again' and freeze all motion.",
+  "public_vs_private": "One public page per request (/requests/:id), in the third person. The nonprofit unlocks the 'you' wording and the decision buttons by typing its request code into the page (sent once as Authorization: Bearer, kept only in memory). No credential ever goes in a URL. See claude-design-signin-and-console.v1.json -> request_code."
+ },
+ "envelope": {
+  "type": "object",
+  "required": [
+   "seq",
+   "type",
+   "at",
+   "request_id"
+  ],
+  "properties": {
+   "seq": {
+    "type": "integer",
+    "minimum": 1,
+    "description": "Strictly increasing per request."
+   },
+   "type": {
+    "type": "string",
+    "enum": [
+     "request.received",
+     "request.split",
+     "part.queued",
+     "part.claimed",
+     "part.heartbeat",
+     "part.released",
+     "part.object_made",
+     "part.submitted",
+     "review.claimed",
+     "review.refused",
+     "review.verdict",
+     "person.signoff",
+     "request.ready",
+     "person.decision",
+     "library.added"
+    ]
+   },
+   "at": {
+    "type": "string",
+    "format": "date-time",
+    "description": "UTC time from the Tessera receipt."
+   },
+   "request_id": {
+    "type": "string",
+    "description": "The one id of the request noun. Used in the URL. Never a second display alias."
+   },
+   "part_id": {
+    "type": "string"
+   },
+   "actor": {
+    "type": "object",
+    "properties": {
+     "role": {
+      "enum": [
+       "requester",
+       "planner",
+       "maker",
+       "checker",
+       "person",
+       "system"
+      ]
+     },
+     "worker_id": {
+      "type": "string"
+     },
+     "key_id_hash": {
+      "type": "string"
+     },
+     "harness": {
+      "type": "string",
+      "description": "As declared by the worker. Shown as declared, never verified by the page."
+     },
+     "model": {
+      "type": "string",
+      "description": "As declared by the worker."
+     },
+     "kind": {
+      "enum": [
+       "volunteer",
+       "eranos_worker"
+      ],
+      "description": "Who runs the worker. 'volunteer' = anyone's agent on a volunteer key, using their spare capacity. 'eranos_worker' = one of the 1-3 dedicated workers the ta-amps team runs so no request waits forever. Both claim, do and report through Tessera like any worker; neither is a second queue."
+     },
+     "run_by": {
+      "type": "string",
+      "description": "For eranos_worker: 'ta-amps team'. Shown in the technical layer."
+     },
+     "allowance": {
+      "type": "object",
+      "description": "For eranos_worker (MUST-FOLLOW 8, server inference): {payer, provider, model, budget_usd_remaining, deadline}. Shown in the technical layer; every attempt keeps its receipt."
+     }
+    }
+   },
+   "receipt": {
+    "type": "object",
+    "properties": {
+     "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+     },
+     "kind": {
+      "type": "string"
+     }
+    }
+   },
+   "data": {
+    "type": "object"
+   }
+  }
+ },
+ "types": {
+  "request.received": {
+   "data": {
+    "title": "short plain title (<= 60 chars)",
+    "plain_need": "the request as typed",
+    "output_types": "['process'] | ['information'] | both",
+    "frequency": "{kind: 'once'|'recurring', every: 'week'|'month'|'quarter'|<text>}",
+    "privacy_check": "{passed: true, checked: ['email','phone','names','ids','addresses','keys']}",
+    "organization_label": "e.g. 'ta-amps team (example request)'",
+    "example_request": "boolean; true only for made-up example requests showing how the request page works"
+   },
+   "band": 1,
+   "track": "sent"
+  },
+  "request.split": {
+   "data": {
+    "parts": "[{part_id, title, lane: 'own_files'|'public_info', output_type: 'process'|'information'}]",
+    "lanes": "{own_files: {policy}, public_info: {policy}}"
+   },
+   "band": 1,
+   "track": "sorted",
+   "actor": "planner"
+  },
+  "part.queued": {
+   "data": {
+    "queue": "queue name",
+    "position": "1-based place in line",
+    "volunteers_online": "integer or null when unknown",
+    "estimate_min": "{p25, p75} or null (see estimates rule)",
+    "fallback_at": "date-time or null: when one of Eranos's own workers will claim it if no volunteer has. Volunteers get the first chance. Null when no dedicated worker is running."
+   },
+   "band": 2,
+   "track": "made (waiting)"
+  },
+  "part.claimed": {
+   "data": {
+    "lease": "{seconds, expires_at, fencing_token}"
+   },
+   "actor": "maker",
+   "band": 2,
+   "track": "made (working)",
+   "ui": "Label the helper by actor.kind: 'A volunteer's AI' or 'One of Eranos's own workers'."
+  },
+  "part.heartbeat": {
+   "data": {
+    "lease_expires_at": "date-time"
+   },
+   "band": 2,
+   "ui": "one ping on the helper ring; no text"
+  },
+  "part.released": {
+   "data": {
+    "reason": "'lease_expired'|'worker_released'",
+    "position": "new place in line"
+   },
+   "band": 2
+  },
+  "part.object_made": {
+   "data": {
+    "object": "{key, kind: 'plan'|'description'|'how_to'|'install'|'practice_examples'|'report'|'tests'|<text>, title}"
+   },
+   "band": 2
+  },
+  "part.submitted": {
+   "data": {
+    "objects": "[keys]",
+    "tests": "{passed, total} or null",
+    "reused": "[{key, title, kind: 'noun'|'verb'}]"
+   },
+   "actor": "maker",
+   "band": 2,
+   "track": "made (done)"
+  },
+  "review.claimed": {
+   "actor": "checker",
+   "band": 3,
+   "track": "checked (working)",
+   "ui": "Same labels. The checker must be a different worker and key from the maker, whatever its kind: with one dedicated worker it can make or check, never both."
+  },
+  "review.refused": {
+   "data": {
+    "attempted_by_worker_id": "the maker",
+    "rule": "maker_cannot_check",
+    "http_status": 409
+   },
+   "band": 3,
+   "ui": "The refusal card exists only when this event exists."
+  },
+  "review.verdict": {
+   "data": {
+    "verdict": "'approved'|'sent_back'",
+    "checks": "{passed, total}",
+    "notes": "[plain sentences] when sent back"
+   },
+   "actor": "checker",
+   "band": 3,
+   "track": "checked (done)"
+  },
+  "person.signoff": {
+   "data": {
+    "role": "steward",
+    "note": "plain sentence"
+   },
+   "actor": "person",
+   "band": 4,
+   "ui": "Only for work marked sensitive."
+  },
+  "request.ready": {
+   "data": {
+    "deliverables": "[{kind: 'process'|'information', title, url}]"
+   },
+   "band": 4,
+   "track": "ready"
+  },
+  "person.decision": {
+   "data": {
+    "decision": "'use'|'changes'",
+    "note": "optional"
+   },
+   "actor": "requester",
+   "band": 4
+  },
+  "library.added": {
+   "data": {
+    "task_objects": "[{key, title, url}]",
+    "tasks": "[{key, title, url}]",
+    "eranos_library_url": "/catalog/<id> (the Eranos 'Library' nav item keeps the existing /catalog routes)",
+    "agora_library_url": "https://agora.ta-amps.workers.dev/library/#<key>"
+   },
+   "band": 4,
+   "track": "in the library"
+  }
+ },
+ "plain_copy": {
+  "rule": "Two voices. 'you' only when the page holds the request code (the tab that sent the request, or after the code is typed into band 4); 'the nonprofit' or the organization label otherwise. No worker ids, request ids, hashes or HTTP codes in the plain view.",
+  "request.received": {
+   "you": "You sent your request. We found no private information in it.",
+   "public": "The nonprofit sent this request. No private information was found in it."
+  },
+  "request.split": {
+   "you": "We split it into {n_parts}.",
+   "public": "Split into {n_parts}."
+  },
+  "part.queued": {
+   "you": "Waiting for a volunteer · {ordinal} in line.",
+   "public": "Waiting for a volunteer · {ordinal} in line."
+  },
+  "part.queued.no_volunteers": {
+   "you": "No volunteer is online right now. Your request keeps its place in line.",
+   "public": "No volunteer is online right now. It keeps its place in line."
+  },
+  "part.claimed": {
+   "you": "A volunteer's AI started making “{part}”.",
+   "public": "A volunteer's AI started making “{part}”."
+  },
+  "part.object_made": {
+   "you": "“{object}” is made.",
+   "public": "“{object}” is made."
+  },
+  "part.submitted": {
+   "you": "“{part}” is made. Next, a different helper checks it.",
+   "public": "“{part}” is made. Next, a different helper checks it."
+  },
+  "part.released": {
+   "you": "The volunteer stopped. “{part}” is back in line ({ordinal}).",
+   "public": "The volunteer stopped. “{part}” is back in line ({ordinal})."
+  },
+  "review.claimed": {
+   "you": "A second volunteer's AI started checking it.",
+   "public": "A second volunteer's AI started checking it."
+  },
+  "review.refused": {
+   "you": "Blocked: the volunteer who made it tried to approve it. A different volunteer has to check it.",
+   "public": "Blocked: the volunteer who made it tried to approve it. A different volunteer has to check it."
+  },
+  "review.verdict.approved": {
+   "you": "Checked by a different volunteer. All {passed} checks passed.",
+   "public": "Checked by a different volunteer. All {passed} checks passed."
+  },
+  "review.verdict.sent_back": {
+   "you": "Sent back with {n} notes. The volunteer is fixing them.",
+   "public": "Sent back with {n} notes. The volunteer is fixing them."
+  },
+  "person.signoff": {
+   "you": "A person at your organization signed off.",
+   "public": "A person at the nonprofit signed off."
+  },
+  "request.ready": {
+   "you": "Ready for your team to review.",
+   "public": "Ready for the nonprofit to review."
+  },
+  "person.decision.use": {
+   "you": "Your team decided to use it.",
+   "public": "The nonprofit decided to use it."
+  },
+  "person.decision.changes": {
+   "you": "Your team asked for changes.",
+   "public": "The nonprofit asked for changes."
+  },
+  "library.added": {
+   "you": "Added to the shared library. Free for any nonprofit to use.",
+   "public": "Added to the shared library. Free for any nonprofit to use."
+  },
+  "part.queued.fallback": {
+   "you": "Waiting for a volunteer · {ordinal} in line. If none is free by {fallback}, one of Eranos's own workers will pick it up.",
+   "public": "Waiting for a volunteer · {ordinal} in line. If none is free by {fallback}, one of Eranos's own workers will pick it up."
+  },
+  "part.claimed.eranos_worker": {
+   "you": "No volunteer was free, so one of Eranos's own workers started making it.",
+   "public": "No volunteer was free, so one of Eranos's own workers started making it."
+  },
+  "review.claimed.eranos_worker": {
+   "you": "One of Eranos's own workers, not the one that made it, started checking it.",
+   "public": "One of Eranos's own workers, not the one that made it, started checking it."
+  }
+ },
+ "estimates": {
+  "rule": "Show 'usually picked up in A–B min' only when the queue had at least 10 claims in the last 7 days and one in the last 24 h. A and B are the 25th and 75th percentile of the last 50 claim delays. Otherwise show no estimate.",
+  "no_volunteers_online": "When volunteers_online is 0 and fallback_at is set, show the fallback time ('If none is free by 2:30 PM, one of Eranos's own workers will pick it up'). When fallback_at is null too, say plainly that nobody is online, keep the place in line, and offer 'Share the I want to help page' and 'See a finished request like this'. Never animate a helper that is not there."
+ },
+ "motion": {
+  "send_to_page": "Cross-document View Transition from the form (view-transition-name: request) to the page header, 480 ms, cubic-bezier(0.2,0,0,1). Fallback: plain navigation.",
+  "request.split": "Part cards enter left to right, 60 ms stagger, opacity 0->1 and 4 px rise, 200 ms.",
+  "part.claimed": "The helper chip slides onto the part (320 ms); one orange dot carries the part title along the edge to the helper at 200 CSS px/s.",
+  "part.heartbeat": "One ring ping (opacity 0.4->0, scale 1->1.6, 600 ms). Never more than one per heartbeat.",
+  "part.object_made": "The checklist row turns from 'Not yet' to 'Made' (120 ms crossfade).",
+  "review.refused": "The refusal card enters with a 2 px rust outline; no shake, no red flash.",
+  "review.verdict": "Approved: the check card turns green with a check (200 ms). Sent back: amber with a return arrow.",
+  "library.added": "The deliverable chips travel to the 'Shared library' box (one at a time, 600 ms each), then the box shows the count.",
+  "reduced_motion": "No dots, slides or pings. State changes are 120 ms crossfades. The View Transition is skipped.",
+  "aria_live": "polite: one sentence per event, the plain_copy line."
+ },
+ "replay": {
+  "what": "Plays the recorded events in order on the same page. It is a replay of things that happened, labeled 'Replay' in the page's own controls.",
+  "start": "Button 'Replay' (finished requests and examples only) or ?replay=1 for capture.",
+  "hold_s": "for each event: max(2.0, 0.5 + words/3.0) of its plain_copy line; band changes add the scroll time",
+  "scroll": "Auto-scroll to the band that changes, <= 800 CSS px/s, then hold 2 s. A user scroll stops auto-scroll for the rest of the replay.",
+  "controls": "Replay · Stop · step dots (1-4). Escape stops.",
+  "never": "Faster than reading speed. The live page never uses the 1.35 s timer of the current build."
+ },
+ "from_current_snapshot": {
+  "note": "Until the events endpoint exists, the page derives events from the current GET /api/requests/:id payload (COORDINATION_CONTRACT.md section 2A). Times come from receipts when present; otherwise the events carry no time and the timeline shows no clock.",
+  "map": {
+   "submitted_at, plain_need, privacy_guarantee": "request.received",
+   "split.private_lane / split.public_lane (+ split.receipt)": "request.split (one part per lane item, lane own_files / public_info)",
+   "queue_build.claim_receipt, worker_id, harness, lease_minutes, fencing_token": "part.claimed",
+   "queue_build.reused_pieces": "part.submitted.reused",
+   "queue_build.build_receipt": "part.submitted",
+   "independent_review.self_approval_refusal": "review.refused",
+   "independent_review.reviewer_approval": "review.claimed + review.verdict(approved, checks_passed)",
+   "steward_and_delivery.steward_signed_off + steward_receipt": "person.signoff",
+   "steward_and_delivery.catalog_path": "request.ready.deliverables[process].url",
+   "steward_and_delivery.public_report_summary": "request.ready.deliverables[information].title"
+  },
+  "fixes_needed": [
+   "kit_id vs display_kit_code: one id. Keep kit_id, drop display_kit_code; URLs, catalog_path and the page use the same id (the contract has KIT-INTAKE-03 with alias KIT-TRANSCR-07, the page constant has KIT-TRANSCR-07).",
+   "SHOWCASE_REQUESTS in web/src/lib/requestStatus.ts is a page-side copy of a request. Move it to a Tessera noun served by /api/requests/:id.",
+   "Add 'at' times to each receipt so the timeline can show real times.",
+   "Add a library.added record (task object and task keys) when a result is accepted."
+  ]
+ },
+ "dedicated_workers": {
+  "owner_direction": "Nov 1: 1-3 dedicated server workers pick up tasks even when no volunteer worker is available; this also lets the film record real pickups.",
+  "rules": [
+   "They are ordinary authorized workers on Tessera: claim, do, report, leases, receipts. No second queue, no hidden server agent.",
+   "Volunteers get the first chance: a dedicated worker claims only after fallback_at (set per queue by the operator).",
+   "Every dedicated-worker attempt records purpose, payer (ta-amps team), provider and model, allowance and deadline (MUST-FOLLOW 8).",
+   "Maker and checker are always different workers and keys. With a single dedicated worker, a check waits for a volunteer or a second worker.",
+   "The page never calls a dedicated worker 'a volunteer'. The film's 'a volunteer's AI' lines are gated on the claim's worker kind."
+  ],
+  "estimates": "With dedicated workers running, the waiting state shows the fallback time instead of 'no volunteer online'."
+ },
+ "ui_grid": {
+  "strip": [
+   "Sent",
+   "Sorted",
+   "Being made",
+   "Being checked",
+   "Ready",
+   "In the library"
+  ],
+  "band_of": {
+   "request.received": 1,
+   "request.split": 1,
+   "part.queued": 2,
+   "part.claimed": 2,
+   "part.heartbeat": 2,
+   "part.released": 2,
+   "part.object_made": 2,
+   "part.submitted": 2,
+   "review.claimed": 3,
+   "review.refused": 3,
+   "review.verdict": 3,
+   "person.signoff": 4,
+   "request.ready": 4,
+   "person.decision": 4,
+   "library.added": 4
+  },
+  "ordinal_mod_hundred": 100,
+  "ordinal_mod_ten": 10,
+  "ordinal_teen_min": 10,
+  "ordinal_teen_max": 20,
+  "ordinal_suffixes": {
+   "1": "st",
+   "2": "nd",
+   "3": "rd"
+  },
+  "clock_half_day_hours": 12,
+  "step_library_added": 6,
+  "step_request_ready": 4,
+  "step_review": 3,
+  "step_build": 2,
+  "step_sorted": 1,
+  "track_ready_index": 4,
+  "track_library_index": 5,
+  "replay_min_hold_s": 2.0,
+  "replay_base_s": 0.5,
+  "replay_words_per_s": 3.0,
+  "replay_band_change_bonus_s": 1.0,
+  "replay_round_digits": 2,
+  "seconds_per_minute": 60
+ }
+}

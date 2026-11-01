@@ -1,0 +1,202 @@
+{
+  "schema_version": "ta-amps.partner-compute-cascade.v1",
+  "mode": "local_verified",
+  "credential_environment_status": {
+    "MODAL_TOKEN_ID": "unset",
+    "BASETEN_API_KEY": "unset",
+    "FIREWORKS_API_KEY": "unset",
+    "META_API_KEY": "unset"
+  },
+  "honesty_statement": "All partner API keys are unset in this build environment (or live calls were not invoked); every receipt below is deterministically executed and verified locally (mode=local_verified), never faking live cloud API responses.",
+  "modal_qlora_and_sandbox": {
+    "provider": "modal",
+    "mode": "local_verified",
+    "live_credentials_present": false,
+    "modal_sdk_installed": false,
+    "honesty_note": "MODAL_TOKEN_ID is not set in this local environment; dataset formatting, 4-gram leakage gating, QLoRA NF4 VRAM math and container sandbox isolation contracts were verified deterministically offline.",
+    "runnable_cloud_commands": [
+      "modal run packs/partner-compute-cascade/code/partner_cascade/modal_qlora_and_sandbox.py::sandbox_verify_pack --pack-id meta-are-scenario-matrix",
+      "modal run packs/partner-compute-cascade/code/partner_cascade/modal_qlora_and_sandbox.py::train_qlora --model-name Muse-Glimmer-30B",
+      "modal deploy packs/partner-compute-cascade/code/partner_cascade/modal_qlora_and_sandbox.py"
+    ],
+    "dataset_validation": {
+      "accepted_count": 1,
+      "rejected_count": 1,
+      "dataset_sha256": "25bd2319feb702450cc1eddabeae477ad726a2bf0ee7abecc45d3166add0fabd"
+    },
+    "qlora_configs": {
+      "Llama-3.2-3B-Instruct": {
+        "model_name": "Llama-3.2-3B-Instruct",
+        "hf_repo": "meta-llama/Llama-3.2-3B-Instruct",
+        "quantization": "nf4_double_quant_bf16_compute",
+        "lora_rank": 16,
+        "lora_alpha": 32,
+        "lora_scaling": 2.0,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "trainable_params": 24313856,
+        "total_params": 3212749824,
+        "trainable_pct": 0.7568,
+        "base_nf4_gib": 1.646,
+        "lora_and_optimizer_gib": 0.136,
+        "activation_and_cuda_gib": 2.306,
+        "estimated_peak_vram_gib": 4.088,
+        "recommended_modal_gpu": "L4",
+        "gpu_vram_gib": 24.0,
+        "fits_within_92pct_vram": true,
+        "modal_hourly_usd": 0.8,
+        "runs_per_100_usd_credits_20min_job": 375
+      },
+      "Muse-Glimmer-30B": {
+        "model_name": "Muse-Glimmer-30B",
+        "hf_repo": "meta-muse/Muse-Glimmer-30B",
+        "quantization": "nf4_double_quant_bf16_compute",
+        "lora_rank": 32,
+        "lora_alpha": 64,
+        "lora_scaling": 2.0,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "trainable_params": 204472320,
+        "total_params": 30450000000,
+        "trainable_pct": 0.6715,
+        "base_nf4_gib": 15.597,
+        "lora_and_optimizer_gib": 1.143,
+        "activation_and_cuda_gib": 2.962,
+        "estimated_peak_vram_gib": 19.702,
+        "recommended_modal_gpu": "A100-40GB",
+        "gpu_vram_gib": 40.0,
+        "fits_within_92pct_vram": true,
+        "modal_hourly_usd": 2.5,
+        "runs_per_100_usd_credits_20min_job": 120
+      }
+    },
+    "sandbox_contract": {
+      "contract_valid": true,
+      "violations": [],
+      "sandbox_spec_sha256": "64f841657554c46a6f201796790fb365804e3ca96d69de2469f5e906ec00f8c2"
+    }
+  },
+  "baseten_2m_tpm_swarm": {
+    "provider": "baseten",
+    "mode": "local_verified",
+    "live_credentials_present": false,
+    "max_tpm_ceiling": 2000000,
+    "peak_sliding_window_tokens": 1980000,
+    "respected_2m_tpm_ceiling": true,
+    "total_claims_submitted": 14,
+    "succeeded_claims": 12,
+    "pre_flight_fenced_or_ttl_blocked": 2,
+    "retried_429_preserved_in_ledger": true,
+    "pacing_waits_triggered": 1,
+    "virtual_seconds_paced": 60.001,
+    "total_tokens_processed": 2160000,
+    "receipt_sha256": "0f70ff7ab8ecac48d8faec1a54457d8881fe470c468b7d8402400211ccf0a943"
+  },
+  "fireworks_multilora_shim": {
+    "provider": "fireworks_ai",
+    "mode": "local_verified",
+    "live_credentials_present": false,
+    "pattern_attribution": "Sinan Ozdemir specialist multi-LoRA routing and explicit rubric verification behind <2ms edge shim",
+    "specialist_adapter_count": 4,
+    "initial_route": {
+      "tier": "fireworks_specialist_multilora",
+      "fingerprint": "4e038dc44ca72a7cd79b69d7adbae7228b8dd53c5ccb7200b0e7a6bdf597870d",
+      "selected_adapter": "statute-citation-extractor-lora",
+      "fireworks_model_id": "accounts/ta-amps/models/llama3p1-8b-statute-citation",
+      "verifier_adapter": "rubric-judge-verifier-lora",
+      "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "tessera_task_output",
+          "strict": true,
+          "required": [
+            "summary",
+            "citations",
+            "human_only"
+          ]
+        }
+      },
+      "shim_latency_ms": 0.03924,
+      "within_2ms_shim_budget": true
+    },
+    "memo_replay_tier": "edge_shim_zero_token",
+    "shim_within_2ms": true,
+    "good_candidate_passed": true,
+    "self_verification_blocked": true,
+    "pii_leak_escalated": true,
+    "receipt_sha256": "9b8ad34a6f1e5fe2810bdd098d0d61feffdae75c2f0556b6ad9d00d8a6c9713a"
+  },
+  "cascade_1000_request_simulation": {
+    "workload_requests": 1000,
+    "tiers": {
+      "tier_0_edge_shim_memo": {
+        "requests": 310,
+        "avg_tokens": 0,
+        "avg_latency_ms": 0.08,
+        "cost_per_request_usd": 0.0
+      },
+      "tier_1_fireworks_multilora": {
+        "requests": 410,
+        "avg_tokens": 2400,
+        "avg_latency_ms": 420.0,
+        "cost_per_request_usd": 0.00102
+      },
+      "tier_2_baseten_2m_tpm_swarm": {
+        "requests": 180,
+        "avg_tokens": 6200,
+        "avg_latency_ms": 1650.0,
+        "cost_per_request_usd": 0.0038
+      },
+      "tier_3_modal_qlora_and_sandbox": {
+        "requests": 70,
+        "avg_tokens": 4800,
+        "avg_latency_ms": 2850.0,
+        "cost_per_request_usd": 0.0064
+      },
+      "tier_4_meta_muse_spark_frontier": {
+        "requests": 30,
+        "avg_tokens": 5500,
+        "avg_latency_ms": 3900.0,
+        "cost_per_request_usd": 0.0095
+      }
+    },
+    "cascade_total_cost_usd": 1.8352,
+    "naive_all_frontier_cost_usd": 9.5,
+    "cost_savings_pct": 80.68,
+    "weighted_avg_latency_ms": 785.72,
+    "partner_credit_envelopes_300_usd": {
+      "modal_100_usd": {
+        "credit_usd": 100.0,
+        "llama3_3b_qlora_l4_20min_runs": 375,
+        "muse_glimmer_30b_qlora_a100_20min_runs": 120,
+        "isolated_pack_sandbox_verifications": 45000
+      },
+      "baseten_100_usd": {
+        "credit_usd": 100.0,
+        "rate_ceiling_tpm": 2000000,
+        "sustained_hourly_token_throughput": 120000000,
+        "estimated_public_statute_swarm_tasks": 26300
+      },
+      "fireworks_100_usd": {
+        "credit_usd": 100.0,
+        "8b_multilora_tokens_supported": 500000000,
+        "rubric_verified_triage_requests": 98000
+      }
+    }
+  },
+  "artifact_sha256": "1c37b813780cb6ce946cad0061b234634bd2088645557947fb343f7efbaa6f5e"
+}

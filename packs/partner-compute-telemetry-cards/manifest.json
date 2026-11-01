@@ -1,0 +1,129 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "partner-compute-telemetry-cards",
+  "title": "Partner compute telemetry cards",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for building and validating honest partner compute telemetry cards for Modal, Baseten and Fireworks AI from cascade records, showing measured numbers only on live credentialed runs with provider request ids and 64-hex receipts, and rendering CSP-safe HTML.",
+  "license": "MIT",
+  "store": "seedpack.partner-compute-telemetry-cards",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "6f0c81f5f14899ad827fdb89ed651c6041cda85d01ff5e44c83e16a49c7d22ab"
+    },
+    {
+      "path": "source.json",
+      "sha256": "f492267740ab84a74590e424a8b52a659e350ff17507ccaaf7a916f26b92c2db"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "af35d57e44410fba5fa8cea8d3cf84abedb9e2896b322d639f04035725a83dd7"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "bdacf11b0a700da85ef960b4e0a73d9deb02d7fc2b14b573781d4edc3448891d"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "33325e7cefef6c496d6ace125d0fcea81389af7d077a71835c653e5a2bfed476"
+    },
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.guardrail.no-unmeasured-numbers-logos-or-credits-on-cards",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "784398e8effff67548db9187b750b89c1d2d8a530be73ff316bdbac71cee4a0e"
+    },
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.guardrail.distinct-reviewer-on-telemetry-cards",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "5fa964796b83f79ba03c467721f52ceb4520f2154d695bd8efaad77cc917a1c3"
+    },
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.rules.card-honesty-and-csp",
+      "category_id": "noun.reflex_procedure",
+      "role": "rules",
+      "value_sha256": "0325eb7236def4eff114d2fff8d30afb61417b0014b403cd28e03f693f61cf2e"
+    },
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.tool.telemetry-cards",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "fcd9938b575db1a08066c83bfc277e4b2706d6bb8742ab045a92da481ebe321c"
+    },
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.template.partner-telemetry-card-bundle",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "1e7bb1167ffa9d3e8847eaee0e1115edf7795d70fab7fd60745a79e74b85aa11"
+    },
+    {
+      "key": "partner-compute-telemetry-cards.v0.1.0.example.oct31-offline-cascade-cards",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "fee593729e60ca45e1c553de2508cd562f942980ef86328422f5c48cdea6d694"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "partner-compute-telemetry-cards.build-cards",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:partner-compute-telemetry-cards:build-cards:2be5ede93e78b24c160ff5835e8805a23a9a5aad779ea062bbef77d75904b548",
+      "report_shape_sha256": "f3eb44124eda066ffc63907a8e39fb52d47f4294326e3458dc8eaa1018b36a7f"
+    },
+    {
+      "template_id": "partner-compute-telemetry-cards.verify-cards",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:partner-compute-telemetry-cards:verify-cards:b2c0d1b0968ddb8a0afa5f62772a7e1ff3ec5fca2b6b1d2ce82e83509498842b",
+      "report_shape_sha256": "271a90c54079fe165881e8c56315d108059a1993c50f502c67d78538972d02ef"
+    }
+  ],
+  "code": {
+    "path": "packs/partner-compute-telemetry-cards/code",
+    "files": 10,
+    "sha256": "5253fafd87e81f954edc145a06a0b6754de85ca17988f9022b36cf84eece9f4c",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "partner-compute-cascade",
+      "keys": []
+    },
+    {
+      "pack_id": "configuration-grids-and-bounds",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Offline checks carry zero cost, throughput, latency, speedup or accuracy claims and state plainly that no provider account was connected yet.",
+    "Cards never display credit dollar amounts, partner logos, partner_since badges or forbidden status-stamp words.",
+    "Admitting rendered partner telemetry cards requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

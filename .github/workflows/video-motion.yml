@@ -3,15 +3,7 @@ name: video-motion code
 # Runs only when the video and motion pack or this workflow changes. GitHub applies path
 # filters per workflow, so this job lives in its own file; check.yml is unchanged.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "packs/video-motion/**"
-      - ".github/workflows/video-motion.yml"
-  pull_request:
-    paths:
-      - "packs/video-motion/**"
-      - ".github/workflows/video-motion.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read

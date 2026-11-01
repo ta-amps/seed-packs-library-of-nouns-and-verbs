@@ -1,0 +1,184 @@
+[
+ {
+  "seq": 1,
+  "type": "request.received",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "plain_need": "We have a folder of handwritten intake statements. We need them typed up, keeping how people actually talk, plus a monthly report for our funders that cites this year's state shelter budget.",
+   "example_request": true
+  },
+  "at": "2026-10-31T19:00:00Z"
+ },
+ {
+  "seq": 2,
+  "type": "request.split",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "parts": [
+    {
+     "title": "Type up handwritten intake statements, keeping how people actually talk",
+     "lane": "own_files"
+    },
+    {
+     "title": "Monthly funder summary from internal shelter program counts",
+     "lane": "own_files"
+    },
+    {
+     "title": "This year's enacted state emergency shelter budget lines, cited line-by-line",
+     "lane": "public_info"
+    }
+   ]
+  },
+  "actor": {
+   "role": "planner"
+  },
+  "receipt": {
+   "sha256": "91c4e20b8f3a11d4c6e87a205b9f3c1e74d02a8b5c61e9f01234abcd5678ef90"
+  }
+ },
+ {
+  "seq": 3,
+  "type": "part.claimed",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "lease": {
+    "seconds": 1800,
+    "fencing_token": 1
+   }
+  },
+  "actor": {
+   "role": "maker",
+   "worker_id": "volunteer-a",
+   "harness": "Muse Code 1.4.14 (via Herma <2ms shim)"
+  },
+  "receipt": {
+   "sha256": "303ec10975484941132c8bf32019f94a173ad377d88bb1c9716e5569d7710d26"
+  }
+ },
+ {
+  "seq": 4,
+  "type": "part.submitted",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "reused": [
+    {
+     "name": "skills",
+     "kind": "noun",
+     "status": "checked"
+    },
+    {
+     "name": "connection",
+     "kind": "noun",
+     "status": "checked"
+    },
+    {
+     "name": "knowledge",
+     "kind": "noun",
+     "status": "checked"
+    },
+    {
+     "name": "working files",
+     "kind": "noun",
+     "status": "checked"
+    },
+    {
+     "name": "step map",
+     "kind": "verb",
+     "status": "checked"
+    },
+    {
+     "name": "made-up tests",
+     "kind": "noun",
+     "status": "checked"
+    }
+   ]
+  },
+  "actor": {
+   "role": "maker",
+   "worker_id": "volunteer-a"
+  },
+  "receipt": {
+   "sha256": "436bc9a8d2104e9b88a712c3f9015e4b77d21c6a9804b12e3f445566778899aa"
+  }
+ },
+ {
+  "seq": 5,
+  "type": "review.refused",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "rule": "maker_cannot_check",
+   "http_status": 409
+  },
+  "actor": {
+   "role": "maker",
+   "worker_id": "volunteer-a"
+  },
+  "receipt": {
+   "sha256": "7749158fe0192b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4"
+  }
+ },
+ {
+  "seq": 6,
+  "type": "review.claimed",
+  "request_id": "REQ-INTAKE-07",
+  "data": {},
+  "actor": {
+   "role": "checker",
+   "worker_id": "volunteer-b",
+   "harness": "Claude Code / OpenCode worker"
+  }
+ },
+ {
+  "seq": 7,
+  "type": "review.verdict",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "verdict": "approved",
+   "checks": {
+    "passed": 8,
+    "total": 8
+   }
+  },
+  "actor": {
+   "role": "checker",
+   "worker_id": "volunteer-b"
+  },
+  "receipt": {
+   "sha256": "2c97c1b6a584736251403928172635445566778899aabbccddeeff0011223344"
+  }
+ },
+ {
+  "seq": 8,
+  "type": "person.signoff",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "role": "steward",
+   "note": "Sensitive kits wait for human steward sign-off. Interviews, crisis planning, and individual eligibility decisions remain strictly person-only."
+  },
+  "actor": {
+   "role": "person"
+  },
+  "receipt": {
+   "sha256": "88e1f09a7c6b5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e"
+  }
+ },
+ {
+  "seq": 9,
+  "type": "request.ready",
+  "request_id": "REQ-INTAKE-07",
+  "data": {
+   "deliverables": [
+    {
+     "kind": "process",
+     "title": "Process",
+     "url": "/catalog/KIT-INTAKE-03"
+    },
+    {
+     "kind": "information",
+     "title": "FY2026 State Emergency Shelter & Supportive Housing Enacted Lines (12 cited appropriations verified).",
+     "url": "/requests/REQ-INTAKE-07/report"
+    }
+   ]
+  }
+ }
+]

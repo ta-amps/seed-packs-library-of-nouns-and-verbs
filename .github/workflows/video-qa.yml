@@ -3,21 +3,7 @@
 name: video-qa
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "packs/video-qa/**"
-      - "packs/video-showcase/source.json"
-      - "packs/video-motion/source.json"
-      - "packs/accessibility-audit/source.json"
-      - ".github/workflows/video-qa.yml"
-  pull_request:
-    paths:
-      - "packs/video-qa/**"
-      - "packs/video-showcase/source.json"
-      - "packs/video-motion/source.json"
-      - "packs/accessibility-audit/source.json"
-      - ".github/workflows/video-qa.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read

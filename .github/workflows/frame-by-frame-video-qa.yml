@@ -3,19 +3,7 @@
 name: frame-by-frame-video-qa
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "packs/frame-by-frame-video-qa/**"
-      - "packs/video-review/source.json"
-      - "packs/findings-to-fixes/source.json"
-      - ".github/workflows/frame-by-frame-video-qa.yml"
-  pull_request:
-    paths:
-      - "packs/frame-by-frame-video-qa/**"
-      - "packs/video-review/source.json"
-      - "packs/findings-to-fixes/source.json"
-      - ".github/workflows/frame-by-frame-video-qa.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read

@@ -1,0 +1,107 @@
+{
+ "request_id": "REQ-INTAKE-07",
+ "kit_id": "KIT-INTAKE-03",
+ "display_kit_code": "KIT-TRANSCR-07",
+ "status": "delivered",
+ "submitted_at": "2026-10-31T19:00:00Z",
+ "organization_type": "Community shelter & housing coalition",
+ "plain_need": "We have a folder of handwritten intake statements. We need them typed up, keeping how people actually talk, plus a monthly report for our funders that cites this year's state shelter budget.",
+ "privacy_guarantee": "Private intake statements stay on the nonprofit's own machine; donated volunteer agents never receive personal files.",
+ "split": {
+  "verb": "eranos.triage-and-split",
+  "receipt": "91c4e20b8f3a11d4c6e87a205b9f3c1e74d02a8b5c61e9f01234abcd5678ef90",
+  "private_lane": {
+   "label": "Their own files",
+   "policy": "Private files never leave the nonprofit",
+   "items": [
+    "Type up handwritten intake statements, keeping how people actually talk",
+    "Monthly funder summary from internal shelter program counts"
+   ],
+   "outcome": "Volunteer agents build and verify a local Agent Kit the nonprofit runs on its own computer"
+  },
+  "public_lane": {
+   "label": "Only public information",
+   "policy": "Donated volunteer agents finish and cite public sources",
+   "items": [
+    "This year's enacted state emergency shelter budget lines, cited line-by-line"
+   ],
+   "outcome": "Finished cited public budget report reviewed by a second volunteer agent; a person decides",
+   "checks": [
+    "Every budget figure linked to enacted public statute / table",
+    "Reviewed by an independent second volunteer agent",
+    "Nonprofit staff review and decide before sending to funders"
+   ]
+  }
+ },
+ "queue_build": {
+  "queue": "eq02",
+  "verb": "eranos.draft-and-verify-kit",
+  "worker_id": "volunteer-a",
+  "harness": "Muse Code 1.4.14 (via Herma <2ms shim)",
+  "lease_seconds": 1800,
+  "fencing_token": 1,
+  "claim_receipt": "303ec10975484941132c8bf32019f94a173ad377d88bb1c9716e5569d7710d26",
+  "reused_pieces": [
+   {
+    "name": "skills",
+    "kind": "noun",
+    "status": "checked"
+   },
+   {
+    "name": "connection",
+    "kind": "noun",
+    "status": "checked"
+   },
+   {
+    "name": "knowledge",
+    "kind": "noun",
+    "status": "checked"
+   },
+   {
+    "name": "working files",
+    "kind": "noun",
+    "status": "checked"
+   },
+   {
+    "name": "step map",
+    "kind": "verb",
+    "status": "checked"
+   },
+   {
+    "name": "made-up tests",
+    "kind": "noun",
+    "status": "checked"
+   }
+  ],
+  "build_receipt": "436bc9a8d2104e9b88a712c3f9015e4b77d21c6a9804b12e3f445566778899aa"
+ },
+ "independent_review": {
+  "queue": "eq03",
+  "rule": "drafter != reviewer across both worker_id and Tessera key_id",
+  "self_approval_refusal": {
+   "actor": "volunteer-a",
+   "role": "builder",
+   "http_status": 409,
+   "outcome": "refused",
+   "reason": "Refused: the builder cannot approve its own kit (two-step verification rule).",
+   "receipt": "7749158fe0192b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4"
+  },
+  "reviewer_approval": {
+   "actor": "volunteer-b",
+   "role": "independent reviewer",
+   "harness": "Claude Code / OpenCode worker",
+   "outcome": "approved",
+   "checks_passed": 8,
+   "summary": "Re-ran all 8 deterministic boundary, SPDX, citation, and made-up fixture checks independently.",
+   "receipt": "2c97c1b6a584736251403928172635445566778899aabbccddeeff0011223344"
+  }
+ },
+ "steward_and_delivery": {
+  "steward_signed_off": true,
+  "steward_note": "Sensitive kits wait for human steward sign-off. Interviews, crisis planning, and individual eligibility decisions remain strictly person-only.",
+  "steward_receipt": "88e1f09a7c6b5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e",
+  "catalog_path": "/catalog/KIT-INTAKE-03",
+  "public_report_summary": "FY2026 State Emergency Shelter & Supportive Housing Enacted Lines (12 cited appropriations verified)."
+ },
+ "example_request": true
+}

@@ -1,0 +1,139 @@
+{
+  "format": "ta-amps.seed-pack.proposal.v1",
+  "status": "proposal_only",
+  "pack_id": "website-first-walkthrough-capture",
+  "title": "Website-first walkthrough capture",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for checking website-first walkthrough shot lists and generating deterministic browser recorder plans in the v6 capture window (1280x613 CSS px at device scale 1.5) with real surface hosts, take ids, request-band anchors, 1.8 s minimum shots, reading-speed holds, no status stamps and zero camera drift.",
+  "license": "MIT",
+  "store": "seedpack.website-first-walkthrough-capture",
+  "queue_placeholder": "conformance-seed-packs",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "af274530c7a96f58a9f895a49d5aa7f7bdee6890e0c7b7fcb8b5c54778394e4e"
+    },
+    {
+      "path": "source.json",
+      "sha256": "2ea8452f438aa199711053bbab42f836b6dd794985736beb4e60673b90bd0ebf"
+    },
+    {
+      "path": "nouns.json",
+      "sha256": "14cfd6a74cc506cccecc9ead4c4c85bfe93ef2a3fc7fe0f24a3b3c05e14af416"
+    },
+    {
+      "path": "verbs.json",
+      "sha256": "4b59402fa687de2242fa8a0d53154e532c576d890fbb63a9aa76412440a3d846"
+    }
+  ],
+  "nouns": [
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.pack",
+      "category_id": "noun.skill_pack",
+      "role": "pack",
+      "value_sha256": "8ce3d04b37fd3a790f9a4575b8c181d2a123776a21fe56c4c526e3143b4785b4"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.guardrail.real-pages-no-url-credentials-or-ken-burns",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "35f0412266f689f1de990e1873d9865f92a2fa17814038164dbc9ebaef88f7a5"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.guardrail.distinct-reviewer-on-shot-list",
+      "category_id": "noun.skill_pack",
+      "role": "guardrail",
+      "value_sha256": "68648331e2024f6a11d2006fd2f84488bd9ce67349102b2c7ca984fe151b6abe"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.spec.film-frame-v6-footage-and-pacing",
+      "category_id": "noun.benchmark_suite",
+      "role": "spec",
+      "value_sha256": "fb148a5bc7cad3c130c9f43fd52f7ca6385f5e4193488cab18fd401def87eaaf"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.tool.walkthrough-capture",
+      "category_id": "noun.code_node",
+      "role": "tool_card",
+      "value_sha256": "da65663bee7bc4d27239c6d26c13959dae1f53f01d393ba255ec9296b3a7c872"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.template.storyboard-check-receipt",
+      "category_id": "noun.eval_run",
+      "role": "template",
+      "value_sha256": "644344fcfcbddea9d6be5e561b26564f2ff13dfdbf27ed17f5610aea05842c08"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.template.walkthrough-capture-plan",
+      "category_id": "noun.scene_recipe",
+      "role": "template",
+      "value_sha256": "f3823189663e8bf52aeaec216d377da77204d7bcfbc906f77be42efa7c641b56"
+    },
+    {
+      "key": "website-first-walkthrough-capture.v0.1.0.example.storyboard-v3-check-receipt",
+      "category_id": "noun.eval_run",
+      "role": "example",
+      "value_sha256": "3214131c6ea976535840d3cc8faa20e64c78d29e584c09e29797a6a74fbb3e77"
+    }
+  ],
+  "verbs": [
+    {
+      "template_id": "website-first-walkthrough-capture.check-shot-list",
+      "kind": "verb.verify_gate",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:website-first-walkthrough-capture:check-shot-list:03de70a13b1e1a305bb4be943f22f46a4c8ea97cc9a3c7b9da552fa66c7a4026",
+      "report_shape_sha256": "55e9d23d18e2abc9d32291a11d3f89ce5e36640a8652d3775e0873b31ed058b4"
+    },
+    {
+      "template_id": "website-first-walkthrough-capture.plan-takes",
+      "kind": "verb.compile_dag",
+      "claimant": "agent",
+      "idempotency_key": "seedpack:website-first-walkthrough-capture:plan-takes:d4ee31c45145bd6e46ae3cab0cfc50bdd75a03c6371f97a5927823f92f9d3280",
+      "report_shape_sha256": "7a389013dfac37f35885b0096752236ef8e89ba392a6b277df11dc4b76afb7bf"
+    }
+  ],
+  "code": {
+    "path": "packs/website-first-walkthrough-capture/code",
+    "files": 10,
+    "sha256": "991ac28c11c73c3db17f18a6bb9917e4416f8ef3e6e773b43453fb0e29775528",
+    "runs": "The library runs this code only in its own CI tests; workers run it under their own permissions. Reading, exporting or importing the pack runs none of it."
+  },
+  "dependencies": [
+    {
+      "pack_id": "frosted-widescreen-captions",
+      "keys": []
+    },
+    {
+      "pack_id": "film-and-surface-rule-evaluator",
+      "keys": []
+    },
+    {
+      "pack_id": "configuration-grids-and-bounds",
+      "keys": []
+    }
+  ],
+  "boundaries": [
+    "Walkthrough footage shots record real pages at scale 1.000 with 0 px drift, visible browser chrome, take ids and zero credentials in URLs.",
+    "Overlay callouts never carry forbidden status stamps, retired names or 'proven' lifecycle claims and stay within 8 words while narration speaks.",
+    "Admitting a storyboard check and recorder plan requires an independent distinct_reviewer.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "override_policy": {
+    "automatic_merge": false,
+    "on_conflict": "stop_and_clarify"
+  },
+  "importer": null,
+  "importer_reason": "No manifest endpoint or generic importer exists. Reading or exporting this pack writes no records, enqueues no verbs and activates nothing.",
+  "activation": {
+    "automatic": false,
+    "steps": [
+      "An owner assigns the namespace, store and queue.",
+      "Each noun is written create-only with existing grants and read back; its value SHA-256 must match the pin.",
+      "A verb template is filled with exact pins and enqueued explicitly by an authorized requester."
+    ]
+  },
+  "evaluation": {
+    "result": null,
+    "reason": "Offline shape, category and digest validation only. No worker has run these verbs."
+  }
+}

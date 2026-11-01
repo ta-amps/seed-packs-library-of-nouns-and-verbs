@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds one hundred and five proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds one hundred and nine proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -96,7 +96,7 @@ activated**, and no worker has run them yet.
 | [Hybrid retrieval context knapsack](packs/hybrid-retrieval-context-knapsack/README.md) | Fusing BM25 and dense cosine rankings via RRF (k=60), stripping untrusted prompt injections, pruning MinHash near-duplicates and solving a 0/1 token-budget context knapsack, with tested code |
 | [Leakage-safe regime backtesting](packs/leakage-safe-regime-backtesting/README.md) | Synthetic and historical statistical validation hygiene with purged walk-forward splits, causal volatility-regime Rank IC/ICIR, turnover drag and multiple-testing deflation, never as financial advice, with tested code |
 | [Scene and cognitive video QA](packs/scene-and-cognitive-video-qa/README.md) | Multi-frame shot dwell and text-crossfade transition checks, static-slide Ken Burns zoom stability, reading-speed and split-attention prose conflict checks, desktop web-journey provenance and widescreen frosted-caption geometry, with tested code |
-| [Meta ARE scenario matrix](packs/meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate Tasks and Task Objects, with tested code |
+| [Meta ARE scenario matrix](packs/meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate tasks (things to do) and task objects, with tested code |
 | [SIRA self-learning RAG](packs/sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code |
 | [Partner compute cascade](packs/partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api receipts, with tested code |
 | [Combinatorial niche spider](packs/combinatorial-niche-spider/README.md) | Minting combinatorial multi-domain search cells, advancing non-repeating page cursors, expanding a persistent BFS spider frontier, refreshing star-surge movers and HTTP 404 rot, and scoring candidates on 8 separate 0-100 axes with query-family yield benchmarks, with tested code |
@@ -125,10 +125,14 @@ activated**, and no worker has run them yet.
 | [Seeded defect and proof-carrying review](packs/seeded-defect-and-proof-carrying-review/README.md) | Mutation-guided reviewer calibration across six seeded defect classes, proof-carrying refusal and approval verification and exact Wilson score plus paired bootstrap confidence intervals, with tested code |
 | [Self-rewarding and iterative DPO flywheel](packs/self-rewarding-and-iterative-dpo-flywheel/README.md) | Iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion, with tested code |
 | [Self-constructing node and waterfall](packs/self-constructing-node-and-waterfall/README.md) | Stateless contract-hydrated worker nodes, continuous per-step state profiling, <6h keyword resource hydration, five-rung deterministic-to-CLI-harness waterfalls, multi-persona vector ratings and quorum capability-spinout proposals, with tested code |
+| [Frosted widescreen captions](packs/frosted-widescreen-captions/README.md) | Laying out, bridging, contrast-checking and rendering two-line frosted caption pills inside a 1920x1080 widescreen lower caption band, with tested code |
+| [Partner compute telemetry cards](packs/partner-compute-telemetry-cards/README.md) | Verifying partner compute receipts and formatting truthful local_verified vs live_api telemetry cards with honest speed-ratio attribution, with tested code |
+| [Request status UI](packs/request-status-ui/README.md) | Reducing append-only request lifecycle events into plain-language status timelines, replay schedules and identifier-free requester views, with tested code |
+| [Website-first walkthrough capture](packs/website-first-walkthrough-capture/README.md) | Auditing widescreen walkthrough storyboards against footage, anchor and pacing gates and emitting headless viewport capture plans, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1787
-nouns and 572 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1819
+nouns and 581 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the
