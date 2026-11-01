@@ -1,0 +1,160 @@
+{
+  "grid_id": "coconut_latent_thought_budget_grid.v1",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 12,
+  "float_round_digits": 4,
+  "parameters": [
+    {
+      "name": "direct_score_ceiling",
+      "param_type": "choice",
+      "choices": [0.2, 0.25, 0.3],
+      "default": 0.25
+    },
+    {
+      "name": "sketch_score_ceiling",
+      "param_type": "choice",
+      "choices": [0.45, 0.52, 0.6],
+      "default": 0.52
+    },
+    {
+      "name": "checkpoint_score_ceiling",
+      "param_type": "choice",
+      "choices": [0.72, 0.78, 0.85],
+      "default": 0.78
+    },
+    {
+      "name": "latent_vector_dims",
+      "param_type": "integer_range",
+      "low": 8,
+      "high": 32,
+      "step": 8,
+      "default": 16
+    },
+    {
+      "name": "loop_cosine_threshold",
+      "param_type": "choice",
+      "choices": [0.85, 0.9, 0.95],
+      "default": 0.9
+    },
+    {
+      "name": "loop_shingle_jaccard_threshold",
+      "param_type": "choice",
+      "choices": [0.45, 0.55, 0.65],
+      "default": 0.55
+    },
+    {
+      "name": "stagnation_window",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "name": "max_reasoning_tokens",
+      "param_type": "integer_range",
+      "low": 128,
+      "high": 2048,
+      "step": 128,
+      "default": 1024
+    }
+  ],
+  "constraints": [
+    {
+      "when": {
+        "direct_score_ceiling": 0.3
+      },
+      "require_in": {
+        "sketch_score_ceiling": [0.52, 0.6]
+      }
+    },
+    {
+      "when": {
+        "sketch_score_ceiling": 0.6
+      },
+      "require_in": {
+        "checkpoint_score_ceiling": [0.78, 0.85]
+      }
+    }
+  ],
+  "regime_defaults": {
+    "interactive_low_latency": {
+      "direct_score_ceiling": 0.25,
+      "sketch_score_ceiling": 0.52,
+      "checkpoint_score_ceiling": 0.78,
+      "latent_vector_dims": 16,
+      "loop_cosine_threshold": 0.85,
+      "loop_shingle_jaccard_threshold": 0.45,
+      "stagnation_window": 2,
+      "max_reasoning_tokens": 384
+    },
+    "balanced_checkpoint": {
+      "direct_score_ceiling": 0.25,
+      "sketch_score_ceiling": 0.52,
+      "checkpoint_score_ceiling": 0.78,
+      "latent_vector_dims": 16,
+      "loop_cosine_threshold": 0.9,
+      "loop_shingle_jaccard_threshold": 0.55,
+      "stagnation_window": 3,
+      "max_reasoning_tokens": 1024
+    },
+    "audit_deliberative": {
+      "direct_score_ceiling": 0.2,
+      "sketch_score_ceiling": 0.45,
+      "checkpoint_score_ceiling": 0.72,
+      "latent_vector_dims": 32,
+      "loop_cosine_threshold": 0.9,
+      "loop_shingle_jaccard_threshold": 0.55,
+      "stagnation_window": 3,
+      "max_reasoning_tokens": 2048
+    }
+  },
+  "constants": {
+    "regimes": [
+      "zero_step_direct",
+      "fast_sketch",
+      "compressed_state_checkpoint",
+      "full_deliberative_verify"
+    ],
+    "feature_weights": {
+      "dependency_depth_norm": 0.28,
+      "branching_factor_norm": 0.22,
+      "ambiguity_entropy_norm": 0.3,
+      "constraint_density_norm": 0.2
+    },
+    "feature_normalizers": {
+      "max_dependency_depth": 8,
+      "max_branching_factor": 8,
+      "max_ambiguity_bits": 3.0,
+      "max_constraint_count": 8
+    },
+    "regime_min_tokens": {
+      "zero_step_direct": 0,
+      "fast_sketch": 128,
+      "compressed_state_checkpoint": 256,
+      "full_deliberative_verify": 512
+    },
+    "regime_token_fractions": {
+      "zero_step_direct": 0.0,
+      "fast_sketch": 0.25,
+      "compressed_state_checkpoint": 0.5,
+      "full_deliberative_verify": 1.0
+    },
+    "regime_latency_ceilings_ms": {
+      "zero_step_direct": 80,
+      "fast_sketch": 250,
+      "compressed_state_checkpoint": 600,
+      "full_deliberative_verify": 1500
+    },
+    "log_base_two": 2.0,
+    "sha256_hex_length": 64,
+    "shingle_size": 3,
+    "hash_byte_slice_len": 4,
+    "sign_bit_modulus": 2,
+    "min_token_chars": 3,
+    "min_compression_ratio_target": 3.0,
+    "round_digits": 4,
+    "json_indent": 2
+  }
+}

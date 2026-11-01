@@ -12,7 +12,7 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds ninety-six proposed seed packs. Each is a
+The [packs/](packs/README.md) folder holds one hundred and four proposed seed packs. Each is a
 collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
 authorized worker can claim), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
@@ -116,10 +116,18 @@ activated**, and no worker has run them yet.
 | [Social video reframe and hooks](packs/social-video-reframe-and-hooks/README.md) | Planning vertical 9:16 and square 1:1 video cutdowns from 16:9 demos with subject-safe crop trajectories, hook-beat scoring, caption-band reflow, and claim-preservation gates, backed by standard-library Python code, with tested code |
 | [Submission rubric and readiness audit](packs/submission-rubric-and-readiness-audit/README.md) | Auditing engineering repositories against weighted evaluation rubrics covering problem specificity, verified open-weight and multimodal model usage, modular source and CI depth, and live deployment plus video walkthrough completeness, with tested standard-library Python code, with tested code |
 | [Trigger and shim rules](packs/trigger-and-shim-rules/README.md) | Three-tier trigger compilation with Role-Filler Frame isomorphism, conversation-aware submodular context-shim knapsacks, step-slicing HarnessTax break-even routing and privacy-safe compatibility matching, with tested code |
+| [Byte latent patch and entropy chunker](packs/byte-latent-patch-and-entropy-chunker/README.md) | Segmenting byte streams into lossless variable-length patches at conditional Shannon entropy spikes and allocating downstream compute proportional to cumulative information surprise, with tested code |
+| [Coconut latent and thought budget routing](packs/coconut-latent-and-thought-budget-routing/README.md) | Routing reasoning tasks across four compute regimes, compressing verbose multi-turn traces into continuous latent state plus invariant checkpoints and halting repetitive overthinking cycles, with tested code |
+| [DoRA, SpinQuant and adapter merging](packs/dora-spinquant-and-adapter-merging/README.md) | Walsh-Hadamard outlier rotation quantization, weight-decomposed low-rank adapter analysis and subspace interference routing across static fusion and co-resident switching, with tested code |
+| [FAISS IVF-PQ and ANN index cascade](packs/faiss-ivf-pq-and-ann-index-cascade/README.md) | K-means++ Voronoi inverted-file partitioning, residual uint8 product quantization, asymmetric distance lookup tables and exact top-R reranking, with tested code |
+| [JEPA world-state and action simulator](packs/jepa-world-state-and-action-simulator/README.md) | Action-conditioned latent world-state prediction, representation-space epistemic energy anomaly gating and counterfactual multi-step rollout planning, with tested code |
+| [Rule of Two and agent guardrails](packs/rule-of-two-and-agent-guardrails/README.md) | Enforcing monotone Rule of Two capability lattices across multi-step tool DAGs, bidirectional typed privacy placeholder vaults and model license-tier routing firewalls, with tested code |
+| [Seeded defect and proof-carrying review](packs/seeded-defect-and-proof-carrying-review/README.md) | Mutation-guided reviewer calibration across six seeded defect classes, proof-carrying refusal and approval verification and exact Wilson score plus paired bootstrap confidence intervals, with tested code |
+| [Self-rewarding and iterative DPO flywheel](packs/self-rewarding-and-iterative-dpo-flywheel/README.md) | Iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1706
-nouns and 545 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1778
+nouns and 569 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

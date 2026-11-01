@@ -1,0 +1,571 @@
+{
+  "pack_id": "seeded-defect-and-proof-carrying-review",
+  "title": "Seeded defect and proof-carrying review",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for mutation-guided reviewer calibration across six seeded defect classes, proof-carrying refusal and approval verification and exact Wilson score plus paired bootstrap confidence intervals.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "checks-of-checks",
+    "evaluation-design",
+    "wiring-and-conformance-checks"
+  ],
+  "boundaries": [
+    "SeededDefectMutantSuite injects six deterministic defect classes (digest_mismatch, boundary_off_by_one, silent_exception_swallow, capability_tier_violation, self_approval_principal_reuse and ungrounded_citation_span) into candidate bundles.",
+    "ProofCarryingReviewVerifier enforces no refusal without a reproducible failing check and witness, and no approval unless reviewer mutant kill rate meets the grid threshold.",
+    "StatisticalIntervalAuditor computes exact Wilson score intervals and seeded paired bootstrap confidence intervals from default_grid_spec.json bounds without inline magic numbers.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for mutation-guided reviewer calibration across six seeded defect classes, proof-carrying refusal and approval verification and exact Wilson score plus paired bootstrap confidence intervals",
+      "value": {
+        "lets_workers": "Calibrate reviewers against clean-vs-mutant bundle twins across six universal defect classes, reject unfounded refusals that lack a reproducible failing check witness, reject rubber-stamp approvals below mutant kill thresholds and bound pass/kill rates and system deltas with Wilson score and paired bootstrap confidence intervals.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "seeded-defect-and-proof-carrying-review.generate-seeded-defect-mutant-twins"
+            },
+            "when": "Synthesize deterministic seeded-defect twins across six universal failure classes from clean candidate bundles."
+          },
+          {
+            "verb": {
+              "$verb": "seeded-defect-and-proof-carrying-review.verify-proof-carrying-review-verdicts"
+            },
+            "when": "Calibrate reviewer sensitivity and specificity on clean-vs-mutant twins and reject unfounded refusals or rubber-stamp approvals."
+          },
+          {
+            "verb": {
+              "$verb": "seeded-defect-and-proof-carrying-review.audit-wilson-and-paired-bootstrap-intervals"
+            },
+            "when": "Independently compute Wilson score and paired bootstrap confidence intervals and verify ZeroHardcodedValuesAstGate conformance."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.no-refusal-without-reproducible-witness"
+          },
+          {
+            "$pin": "guardrail.no-approval-without-mutant-kill-calibration"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.proof-carrying-review"
+        },
+        "worked_example": "Two clean candidate bundles expanded into 12 seeded-defect mutants across all 6 defect classes, calibrating a proof-carrying reviewer (1.0 kill rate, Wilson 95% CI [0.7575, 1.0], 0.0 clean FPR), rejecting unfounded refusals and rubber-stamp approvals and computing a paired bootstrap CI [0.215, 0.2263] in test_proof_carrying_review.py."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.no-refusal-without-reproducible-witness"
+        ],
+        [
+          "requires_noun",
+          "guardrail.no-approval-without-mutant-kill-calibration"
+        ],
+        [
+          "requires_noun",
+          "spec.seeded-defect-and-review-proof-grid"
+        ],
+        [
+          "requires_noun",
+          "rules.mutant-calibration-and-interval-audit"
+        ],
+        [
+          "requires_noun",
+          "tool.proof-carrying-review"
+        ],
+        [
+          "requires_noun",
+          "template.proof-carrying-review-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.no-refusal-without-reproducible-witness",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: review refusals must cite at least one reproducible failing check ID and matching witness",
+      "category_reason": "Eliminates hallucinated, nitpicky or ungrounded reviewer blocks on clean candidate artifacts.",
+      "value": {
+        "rule": "ProofCarryingReviewVerifier rejects any review refusal that fails to name an actual failing deterministic check_id and witness reproduced against the candidate bundle.",
+        "how_it_is_checked": "ProofCarryingReviewVerifier.verify_review_decision re-executes SeededDefectMutantSuite.run_checks and rejects empty or non-reproducing refusal claims."
+      }
+    },
+    {
+      "slug": "guardrail.no-approval-without-mutant-kill-calibration",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: review approvals require calibrated mutant kill rates and zero inline magic literals",
+      "category_reason": "Prevents rubber-stamp approvals and ensures statistical confidence parameters resolve strictly from default_grid_spec.json.",
+      "value": {
+        "rule": "ProofCarryingReviewVerifier rejects approvals when underlying deterministic checks fail or when reviewer mutant_kill_rate falls below min_mutant_kill_rate in default_grid_spec.json, and ZeroHardcodedValuesAstGate rejects inline magic numbers.",
+        "how_it_is_checked": "test_proof_carrying_review.py verifies rubber-stamp rejection, 6-class mutant detection, exact Wilson/bootstrap intervals and zero AST magic-literal violations."
+      }
+    },
+    {
+      "slug": "spec.seeded-defect-and-review-proof-grid",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: six universal seeded defect classes, proof-carrying verdict contract and interval estimators",
+      "category_reason": "Defines deterministic mutant operators, proof-carrying review invariants and statistical interval equations.",
+      "value": {
+        "structures": [
+          "SeededDefectMutantSuite",
+          "ProofCarryingReviewVerifier",
+          "StatisticalIntervalAuditor"
+        ],
+        "defect_classes": [
+          "digest_mismatch",
+          "boundary_off_by_one",
+          "silent_exception_swallow",
+          "capability_tier_violation",
+          "self_approval_principal_reuse",
+          "ungrounded_citation_span"
+        ],
+        "verdict_invariants": [
+          "no_refusal_without_failing_check",
+          "no_approval_without_mutant_kill_threshold"
+        ],
+        "interval_estimators": [
+          "wilson_score_interval",
+          "paired_bootstrap_interval"
+        ]
+      }
+    },
+    {
+      "slug": "rules.mutant-calibration-and-interval-audit",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic twin-mutant reviewer calibration, witness verification and confidence interval rules",
+      "category_reason": "Zero-model procedure scoring reviewer sensitivity/specificity and statistical confidence bounds.",
+      "value": {
+        "wilson_equation": "(p_hat + z^2/(2n) +- z * sqrt((p_hat*(1 - p_hat) + z^2/(4n))/n)) / (1 + z^2/n)",
+        "paired_delta_definition": "candidate_score[i] - baseline_score[i]",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.proof-carrying-review",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library SeededDefectMutantSuite, ProofCarryingReviewVerifier and StatisticalIntervalAuditor",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "seeded defect and proof carrying review",
+        "code": {
+          "$code": "seeded-defect-and-proof-carrying-review"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m proof_carrying_review --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Injects 6 deterministic defect classes into clean candidate bundles to form twin calibration suites.",
+          "Enforces proof-carrying review decisions so unfounded refusals and uncalibrated rubber-stamp approvals fail closed.",
+          "Computes exact Wilson score intervals and seeded paired bootstrap confidence intervals under ZeroHardcodedValuesAstGate."
+        ],
+        "does_not": [
+          "Perform network I/O, invoke external language models or embed inline magic numbers."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.seeded-defect-and-review-proof-grid"
+        ]
+      ]
+    },
+    {
+      "slug": "template.proof-carrying-review-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: seeded-defect calibration, proof-carrying review gate and Wilson/bootstrap interval receipt",
+      "value": {
+        "describes": "a deterministic receipt of 6-class seeded mutant calibration, proof-carrying refusal/approval enforcement, Wilson score intervals and paired bootstrap confidence bounds",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "defect_class_count",
+            "generated_mutant_count",
+            "strong_reviewer_status",
+            "strong_mutant_kill_rate",
+            "strong_clean_fpr",
+            "strong_wilson_ci_low",
+            "strong_wilson_ci_high",
+            "rubber_stamp_status",
+            "unfounded_refusal_accepted",
+            "rubber_stamp_approval_accepted",
+            "proof_carrying_approval_accepted",
+            "proof_carrying_refusal_accepted",
+            "paired_bootstrap_mean_delta",
+            "paired_bootstrap_ci_low",
+            "paired_bootstrap_ci_high",
+            "paired_statistically_significant"
+          ],
+          "properties": {
+            "defect_class_count": {
+              "type": "integer",
+              "minimum": 6
+            },
+            "generated_mutant_count": {
+              "type": "integer",
+              "minimum": 6
+            },
+            "strong_reviewer_status": {
+              "type": "string",
+              "minLength": 1
+            },
+            "strong_mutant_kill_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "strong_clean_fpr": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "strong_wilson_ci_low": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "strong_wilson_ci_high": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "rubber_stamp_status": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unfounded_refusal_accepted": {
+              "type": "boolean"
+            },
+            "rubber_stamp_approval_accepted": {
+              "type": "boolean"
+            },
+            "proof_carrying_approval_accepted": {
+              "type": "boolean"
+            },
+            "proof_carrying_refusal_accepted": {
+              "type": "boolean"
+            },
+            "paired_bootstrap_mean_delta": {
+              "type": "number"
+            },
+            "paired_bootstrap_ci_low": {
+              "type": "number"
+            },
+            "paired_bootstrap_ci_high": {
+              "type": "number"
+            },
+            "paired_statistically_significant": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "defect_class_count": 6,
+          "generated_mutant_count": 12,
+          "strong_reviewer_status": "trusted_reviewer",
+          "strong_mutant_kill_rate": 1.0,
+          "strong_clean_fpr": 0.0,
+          "strong_wilson_ci_low": 0.7575,
+          "strong_wilson_ci_high": 1.0,
+          "rubber_stamp_status": "under_sensitive_reviewer",
+          "unfounded_refusal_accepted": false,
+          "rubber_stamp_approval_accepted": false,
+          "proof_carrying_approval_accepted": true,
+          "proof_carrying_refusal_accepted": true,
+          "paired_bootstrap_mean_delta": 0.22,
+          "paired_bootstrap_ci_low": 0.215,
+          "paired_bootstrap_ci_high": 0.2263,
+          "paired_statistically_significant": true
+        }
+      }
+    },
+    {
+      "slug": "example.proof-carrying-review-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: two clean candidate bundles and paired evaluation score vectors",
+      "category_reason": "Synthetic fixture recomputed by test_proof_carrying_review.py.",
+      "value": {
+        "regime": "release_admission_gate",
+        "clean_bundles": [
+          {
+            "bundle_id": "cand-01",
+            "artifact": {
+              "payload": {
+                "record": "cand-01",
+                "verified": true
+              },
+              "declared_sha256": "8ac8f677f97d085b21dcde25b003916674264225b956a3adb87ac034555d129c"
+            },
+            "boundary": {
+              "observed": 6,
+              "max_allowed": 8
+            },
+            "code_snippet": "def aggregate_counts(values: list[int]) -> int:\n    return sum(values)\n",
+            "capability": {
+              "requested_effect": "write-internal",
+              "granted_ceiling": "write-internal"
+            },
+            "attestation": {
+              "drafter_principal": "worker:drafter-cand-01",
+              "drafter_key_id": "key_drafter_cand-01",
+              "reviewer_principal": "worker:reviewer-cand-01",
+              "reviewer_key_id": "key_reviewer_cand-01"
+            },
+            "sources": {
+              "src-1": "Every review refusal requires a reproducible failing check identifier and witness string."
+            },
+            "citations": [
+              {
+                "source_id": "src-1",
+                "exact_quote": "reproducible failing check identifier and witness string"
+              }
+            ]
+          },
+          {
+            "bundle_id": "cand-02",
+            "artifact": {
+              "payload": {
+                "record": "cand-02",
+                "verified": true
+              },
+              "declared_sha256": "fa4b653d466a56dc359453244cd8448ecbf54cbd88548382b4df9b435bd3cc7f"
+            },
+            "boundary": {
+              "observed": 8,
+              "max_allowed": 8
+            },
+            "code_snippet": "def aggregate_counts(values: list[int]) -> int:\n    return sum(values)\n",
+            "capability": {
+              "requested_effect": "write-internal",
+              "granted_ceiling": "write-internal"
+            },
+            "attestation": {
+              "drafter_principal": "worker:drafter-cand-02",
+              "drafter_key_id": "key_drafter_cand-02",
+              "reviewer_principal": "worker:reviewer-cand-02",
+              "reviewer_key_id": "key_reviewer_cand-02"
+            },
+            "sources": {
+              "src-1": "Every review refusal requires a reproducible failing check identifier and witness string."
+            },
+            "citations": [
+              {
+                "source_id": "src-1",
+                "exact_quote": "reproducible failing check identifier and witness string"
+              }
+            ]
+          }
+        ],
+        "baseline_system_scores": [
+          0.62,
+          0.65,
+          0.6,
+          0.64,
+          0.61,
+          0.63,
+          0.59,
+          0.64
+        ],
+        "candidate_system_scores": [
+          0.84,
+          0.86,
+          0.82,
+          0.85,
+          0.83,
+          0.87,
+          0.81,
+          0.86
+        ],
+        "bootstrap_seed": 20261031,
+        "shows": "Synthetic clean candidate bundles for 6-class mutant expansion and paired system score vectors.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.proof-carrying-review-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed 12-mutant kill calibration, proof-carrying gate verdicts and confidence intervals",
+      "category_reason": "Synthetic receipt verified by test_proof_carrying_review.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.proof-carrying-review-receipt"
+        },
+        "instance": {
+          "defect_class_count": 6,
+          "generated_mutant_count": 12,
+          "strong_reviewer_status": "trusted_reviewer",
+          "strong_mutant_kill_rate": 1.0,
+          "strong_clean_fpr": 0.0,
+          "strong_wilson_ci_low": 0.7575,
+          "strong_wilson_ci_high": 1.0,
+          "rubber_stamp_status": "under_sensitive_reviewer",
+          "unfounded_refusal_accepted": false,
+          "rubber_stamp_approval_accepted": false,
+          "proof_carrying_approval_accepted": true,
+          "proof_carrying_refusal_accepted": true,
+          "paired_bootstrap_mean_delta": 0.22,
+          "paired_bootstrap_ci_low": 0.215,
+          "paired_bootstrap_ci_high": 0.2263,
+          "paired_statistically_significant": true
+        },
+        "shows": "Recomputes 12/12 mutant kills (Wilson 95% CI [0.7575, 1.0]), rejects unfounded refusals and rubber-stamp approvals and confirms paired bootstrap gain [0.215, 0.2263].",
+        "source": "Synthetic. Recomputed directly from example.proof-carrying-review-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.proof-carrying-review-bundle"
+        ],
+        [
+          "verifies",
+          "template.proof-carrying-review-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "generate-seeded-defect-mutant-twins",
+      "kind": "verb.generate_seed",
+      "title": "Generate deterministic 6-class seeded-defect mutant twins from clean candidate bundles",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Inject digest mismatch, boundary off-by-one, silent exception swallow, capability-tier violation, self-approval principal reuse and ungrounded citation span defects into clean candidate bundles.",
+      "outcome": "Deterministic twin calibration suite pairing clean candidate bundles with six targeted defect mutants each.",
+      "ready_outcome": "mutant_twins_generated",
+      "pinned": [
+        "spec.seeded-defect-and-review-proof-grid",
+        "rules.mutant-calibration-and-interval-audit",
+        "tool.proof-carrying-review"
+      ],
+      "slots": [
+        {
+          "name": "clean_candidate_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of clean candidate bundles for deterministic mutant synthesis."
+        }
+      ],
+      "produces": [
+        {
+          "name": "mutant_calibration_receipt",
+          "template": "template.proof-carrying-review-receipt"
+        }
+      ],
+      "steps": [
+        "Load mutant perturbation offsets and check definitions from default_grid_spec.json.",
+        "Apply all six deterministic defect operators to each clean bundle and confirm each mutant trips its exact target check."
+      ],
+      "acceptance": [
+        {
+          "id": "six-defect-classes-isolated",
+          "check": "Every generated mutant fails its exact expected check_id while leaving unrelated checks passing.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "verify-proof-carrying-review-verdicts",
+      "kind": "verb.verify_gate",
+      "title": "Verify proof-carrying review refusals and mutant-calibrated approvals",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Enforce no refusal without a reproducible failing check and witness, and no approval unless reviewer mutant kill rate meets the grid-configured threshold.",
+      "outcome": "Accepted or rejected review verdict backed by reproduced failing check witnesses and reviewer calibration.",
+      "ready_outcome": "review_verdicts_verified",
+      "pinned": [
+        "spec.seeded-defect-and-review-proof-grid",
+        "rules.mutant-calibration-and-interval-audit",
+        "guardrail.no-refusal-without-reproducible-witness",
+        "guardrail.no-approval-without-mutant-kill-calibration",
+        "tool.proof-carrying-review"
+      ],
+      "slots": [
+        {
+          "name": "review_decision_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of candidate artifacts, reviewer verdicts and calibration twin runs."
+        }
+      ],
+      "produces": [
+        {
+          "name": "proof_carrying_verdict_receipt",
+          "template": "template.proof-carrying-review-receipt"
+        }
+      ],
+      "steps": [
+        "Measure reviewer mutant kill rate and clean false-positive rate across the twin suite.",
+        "Re-execute cited check IDs on refusals and verify reviewer calibration thresholds on approvals."
+      ],
+      "acceptance": [
+        {
+          "id": "unfounded-refusal-and-rubber-stamp-blocked",
+          "check": "Refusals without a reproduced failing check witness and approvals from uncalibrated rubber-stamp reviewers both return accepted == false.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "seeded-defect-and-proof-carrying-review.generate-seeded-defect-mutant-twins"
+      ]
+    },
+    {
+      "slug": "audit-wilson-and-paired-bootstrap-intervals",
+      "kind": "verb.benchmark_harness",
+      "title": "Independently audit Wilson score intervals, paired bootstrap deltas and AST magic-literal gates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Recompute exact Wilson score pass/kill intervals, deterministic paired bootstrap confidence bounds and ZeroHardcodedValuesAstGate conformance under a distinct reviewer.",
+      "outcome": "Independent statistical interval and AST conformance verification receipt.",
+      "ready_outcome": "intervals_and_ast_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.seeded-defect-and-review-proof-grid",
+        "guardrail.no-refusal-without-reproducible-witness",
+        "guardrail.no-approval-without-mutant-kill-calibration",
+        "tool.proof-carrying-review",
+        "template.proof-carrying-review-receipt"
+      ],
+      "slots": [
+        {
+          "name": "interval_eval_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of twin calibration outcomes and paired baseline-vs-candidate score vectors."
+        }
+      ],
+      "produces": [
+        {
+          "name": "statistical_audit_receipt",
+          "template": "template.proof-carrying-review-receipt"
+        }
+      ],
+      "steps": [
+        "Recompute Wilson score confidence bounds and seeded paired bootstrap intervals on the evaluation fixture.",
+        "Run scan_directory_for_hardcoded_values across proof_carrying_review and confirm zero violations."
+      ],
+      "acceptance": [
+        {
+          "id": "intervals-and-ast-reproduced",
+          "check": "scan_directory_for_hardcoded_values returns [] and run_bundle reproduces the exact statistical receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "seeded-defect-and-proof-carrying-review.verify-proof-carrying-review-verdicts"
+      ]
+    }
+  ]
+}

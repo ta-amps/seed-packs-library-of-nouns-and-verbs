@@ -1,0 +1,483 @@
+{
+  "pack_id": "byte-latent-patch-and-entropy-chunker",
+  "title": "Byte latent patch and entropy chunker",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for segmenting byte streams into lossless variable-length patches at conditional Shannon entropy spikes and allocating downstream compute proportional to cumulative information surprise.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "probabilistic-filters-and-sketches",
+    "cost-optimization",
+    "wiring-and-conformance-checks"
+  ],
+  "boundaries": [
+    "DynamicByteEntropyPatcher segments byte streams losslessly whenever predictive conditional Shannon entropy H(b_t | context) exceeds global_entropy_threshold or delta_spike_threshold within grid-clamped [min_patch_bytes, max_patch_bytes] bounds.",
+    "SurpriseProportionalBudgetAllocator apportions downstream context or inspection slots proportional to cumulative patch surprise rather than raw byte length.",
+    "All entropy thresholds, context orders, patch byte ceilings and Dirichlet prior concentrations resolve from default_grid_spec.json under ZeroHardcodedValuesAstGate.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for segmenting byte streams into lossless variable-length patches at conditional Shannon entropy spikes and allocating downstream compute proportional to cumulative information surprise",
+      "value": {
+        "lets_workers": "Segment raw byte streams into lossless variable-length patches driven by conditional byte Shannon entropy H(b_t | context) and entropy delta spikes, allocate downstream inspection slots proportional to cumulative information surprise rather than byte length and re-synchronize patch boundaries after byte insertions or corruptions.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "byte-latent-patch-and-entropy-chunker.segment-dynamic-byte-entropy-patches"
+            },
+            "when": "Segment raw byte streams into variable-length patches at conditional entropy spikes and verify exact byte reconstruction."
+          },
+          {
+            "verb": {
+              "$verb": "byte-latent-patch-and-entropy-chunker.allocate-surprise-proportional-patch-budget"
+            },
+            "when": "Apportion downstream inspection slots across patches by cumulative information surprise and benchmark perturbation re-synchronization against fixed-stride chunks."
+          },
+          {
+            "verb": {
+              "$verb": "byte-latent-patch-and-entropy-chunker.verify-lossless-patching-and-ast-gate"
+            },
+            "when": "Independently verify lossless byte reconstruction, surprise focus gain, perturbation re-synchronization and ZeroHardcodedValuesAstGate conformance."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.lossless-bounded-byte-patch-reconstruction"
+          },
+          {
+            "$pin": "guardrail.surprise-weighted-budget-and-zero-magic-literals"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.entropy-byte-patcher"
+        },
+        "worked_example": "111-byte stream segmented into 9 variable-length patches (4 to 30 bytes, 100% lossless reconstruction), concentrating 90.62% of inspection slots on high-entropy patches (vs 21.88% by byte length) and preserving 77.78% of patches after a prefix byte insertion (vs 14.29% for 8-byte fixed stride) in test_entropy_byte_patcher.py."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.lossless-bounded-byte-patch-reconstruction"
+        ],
+        [
+          "requires_noun",
+          "guardrail.surprise-weighted-budget-and-zero-magic-literals"
+        ],
+        [
+          "requires_noun",
+          "spec.dynamic-byte-entropy-patching-grid"
+        ],
+        [
+          "requires_noun",
+          "rules.entropy-spike-cut-and-hamilton-apportionment"
+        ],
+        [
+          "requires_noun",
+          "tool.entropy-byte-patcher"
+        ],
+        [
+          "requires_noun",
+          "template.entropy-byte-patcher-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.lossless-bounded-byte-patch-reconstruction",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: dynamic byte patches must concatenate byte-for-byte identically to the source stream within grid length bounds",
+      "category_reason": "Prevents dropped bytes, UTF-8 corruption or unbounded patch growth during adaptive byte chunking.",
+      "value": {
+        "rule": "DynamicByteEntropyPatcher enforces min_patch_bytes and max_patch_bytes ceilings from default_grid_spec.json on interior patches and requires exact SHA-256 byte-stream reconstruction across concatenated patches.",
+        "how_it_is_checked": "DynamicByteEntropyPatcher.segment_stream verifies reconstructed == raw bytes and records stream_sha256."
+      }
+    },
+    {
+      "slug": "guardrail.surprise-weighted-budget-and-zero-magic-literals",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: compute slot apportionment follows cumulative surprise and operational code contains zero inline magic literals",
+      "category_reason": "Prevents wasting context budget on predictable boilerplate padding while enforcing declarative grid governance.",
+      "value": {
+        "rule": "SurpriseProportionalBudgetAllocator apportions exact integer slot budgets via largest-remainder weighting on cumulative_surprise_bits rather than byte length, and ZeroHardcodedValuesAstGate rejects inline magic literals.",
+        "how_it_is_checked": "test_entropy_byte_patcher.py verifies exact budget conservation, positive high-entropy focus gain, boundary re-synchronization and zero AST magic-literal violations."
+      }
+    },
+    {
+      "slug": "spec.dynamic-byte-entropy-patching-grid",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: conditional byte Shannon entropy patching, Hamilton surprise apportionment and shift-resync benchmark",
+      "category_reason": "Defines predictive byte entropy equations, boundary trigger predicates and corruption re-synchronization metrics.",
+      "value": {
+        "structures": [
+          "DynamicByteEntropyPatcher",
+          "SurpriseProportionalBudgetAllocator"
+        ],
+        "boundary_predicates": [
+          "H_t > global_entropy_threshold",
+          "H_t - H_{t-1} > delta_spike_threshold",
+          "H_{t-1} > global_entropy_threshold and H_{t-1} - H_t > delta_spike_threshold",
+          "patch_len >= max_patch_bytes"
+        ],
+        "byte_alphabet_size": 256
+      }
+    },
+    {
+      "slug": "rules.entropy-spike-cut-and-hamilton-apportionment",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic variable-order byte Markov entropy, pointwise surprise and largest-remainder budget rules",
+      "category_reason": "Zero-model procedure segmenting raw bytes and apportioning compute slots by information surprise.",
+      "value": {
+        "predictive_entropy_bits": "-sum_{b=0..255} P(b | ctx) * log2(P(b | ctx))",
+        "pointwise_surprise_bits": "-log2(P(b_t | ctx))",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.entropy-byte-patcher",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library DynamicByteEntropyPatcher and SurpriseProportionalBudgetAllocator",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "byte latent patch and entropy chunker",
+        "code": {
+          "$code": "byte-latent-patch-and-entropy-chunker"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m entropy_byte_patcher --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Computes Dirichlet-smoothed variable-order byte Shannon entropy and segments streams into lossless variable-length patches.",
+          "Allocates downstream inspection slots across patches proportional to cumulative information surprise via Hamilton apportionment.",
+          "Benchmarks boundary re-synchronization after byte insertions against fixed-stride chunking under ZeroHardcodedValuesAstGate."
+        ],
+        "does_not": [
+          "Perform network I/O, require tokenizer vocabularies or embed inline magic numbers."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.dynamic-byte-entropy-patching-grid"
+        ]
+      ]
+    },
+    {
+      "slug": "template.entropy-byte-patcher-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: lossless dynamic byte-entropy segmentation, surprise budget focus and perturbation resync receipt",
+      "value": {
+        "describes": "a deterministic receipt of variable-length byte-entropy patching, surprise-proportional slot allocation and perturbation boundary re-synchronization vs fixed-stride chunking",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total_bytes",
+            "patch_count",
+            "min_observed_patch_bytes",
+            "max_observed_patch_bytes",
+            "mean_patch_bytes",
+            "reconstructed_exact",
+            "boundary_reasons_triggered",
+            "total_allocated_slots",
+            "high_entropy_surprise_budget_share",
+            "high_entropy_byte_budget_share",
+            "high_entropy_focus_gain",
+            "dynamic_preserved_patch_fraction",
+            "fixed_stride_preserved_chunk_fraction",
+            "boundary_resync_gain"
+          ],
+          "properties": {
+            "total_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "patch_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "min_observed_patch_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_observed_patch_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mean_patch_bytes": {
+              "type": "number",
+              "minimum": 0.0
+            },
+            "reconstructed_exact": {
+              "type": "boolean"
+            },
+            "boundary_reasons_triggered": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "total_allocated_slots": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high_entropy_surprise_budget_share": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "high_entropy_byte_budget_share": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "high_entropy_focus_gain": {
+              "type": "number"
+            },
+            "dynamic_preserved_patch_fraction": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "fixed_stride_preserved_chunk_fraction": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "boundary_resync_gain": {
+              "type": "number"
+            }
+          }
+        },
+        "example": {
+          "total_bytes": 111,
+          "patch_count": 9,
+          "min_observed_patch_bytes": 4,
+          "max_observed_patch_bytes": 30,
+          "mean_patch_bytes": 12.3333,
+          "reconstructed_exact": true,
+          "boundary_reasons_triggered": [
+            "entropy_delta_spike",
+            "entropy_regime_resync",
+            "global_entropy_exceeded",
+            "stream_start"
+          ],
+          "total_allocated_slots": 64,
+          "high_entropy_surprise_budget_share": 0.9062,
+          "high_entropy_byte_budget_share": 0.2188,
+          "high_entropy_focus_gain": 0.6874,
+          "dynamic_preserved_patch_fraction": 0.7778,
+          "fixed_stride_preserved_chunk_fraction": 0.1429,
+          "boundary_resync_gain": 0.6349
+        }
+      }
+    },
+    {
+      "slug": "example.entropy-byte-patcher-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: calibration byte motifs, mixed predictable/high-entropy stream and prefix-corrupted twin",
+      "category_reason": "Synthetic fixture recomputed by test_entropy_byte_patcher.py.",
+      "value": {
+        "regime": "balanced_entropy_patch",
+        "online_update": false,
+        "calibration_corpus": [
+          "FRAME_SYNC::status=verified::",
+          "FRAME_SYNC::status=verified::",
+          "FRAME_SYNC::status=verified::",
+          "FRAME_SYNC::status=verified::",
+          "                         "
+        ],
+        "clean_stream": "Q7#!FRAME_SYNC::status=verified::Xq9!kZ7#vP2@mR8$FRAME_SYNC::status=verified::K9@$FRAME_SYNC::status=verified::",
+        "corrupted_stream": "XQ7#!FRAME_SYNC::status=verified::Xq9!kZ7#vP2@mR8$FRAME_SYNC::status=verified::K9@$FRAME_SYNC::status=verified::",
+        "shows": "Synthetic calibration motifs, clean mixed-entropy byte stream and 1-byte prefix insertion perturbation.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.entropy-byte-patcher-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed lossless variable byte patches, +68.74% surprise focus gain and +63.49% resync gain",
+      "category_reason": "Synthetic receipt verified by test_entropy_byte_patcher.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.entropy-byte-patcher-receipt"
+        },
+        "instance": {
+          "total_bytes": 111,
+          "patch_count": 9,
+          "min_observed_patch_bytes": 4,
+          "max_observed_patch_bytes": 30,
+          "mean_patch_bytes": 12.3333,
+          "reconstructed_exact": true,
+          "boundary_reasons_triggered": [
+            "entropy_delta_spike",
+            "entropy_regime_resync",
+            "global_entropy_exceeded",
+            "stream_start"
+          ],
+          "total_allocated_slots": 64,
+          "high_entropy_surprise_budget_share": 0.9062,
+          "high_entropy_byte_budget_share": 0.2188,
+          "high_entropy_focus_gain": 0.6874,
+          "dynamic_preserved_patch_fraction": 0.7778,
+          "fixed_stride_preserved_chunk_fraction": 0.1429,
+          "boundary_resync_gain": 0.6349
+        },
+        "shows": "Recomputes 9 lossless variable-length patches (4..30 bytes), +0.6874 high-entropy budget focus gain and +0.6349 boundary re-synchronization gain over fixed-stride chunking.",
+        "source": "Synthetic. Recomputed directly from example.entropy-byte-patcher-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.entropy-byte-patcher-bundle"
+        ],
+        [
+          "verifies",
+          "template.entropy-byte-patcher-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "segment-dynamic-byte-entropy-patches",
+      "kind": "verb.ingest",
+      "title": "Segment raw byte streams into lossless variable-length patches at conditional entropy spikes",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Compute predictive conditional byte Shannon entropy H(b_t | context) and segment streams into variable-length patches whenever global entropy or entropy delta spikes exceed grid thresholds.",
+      "outcome": "Lossless variable-length byte patches with per-patch entropy and cumulative surprise profiles.",
+      "ready_outcome": "byte_patches_segmented",
+      "pinned": [
+        "spec.dynamic-byte-entropy-patching-grid",
+        "rules.entropy-spike-cut-and-hamilton-apportionment",
+        "guardrail.lossless-bounded-byte-patch-reconstruction",
+        "tool.entropy-byte-patcher"
+      ],
+      "slots": [
+        {
+          "name": "byte_stream_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of calibration byte motifs and candidate byte stream."
+        }
+      ],
+      "produces": [
+        {
+          "name": "byte_patch_receipt",
+          "template": "template.entropy-byte-patcher-receipt"
+        }
+      ],
+      "steps": [
+        "Resolve global_entropy_threshold, delta_spike_threshold and [min_patch_bytes, max_patch_bytes] from default_grid_spec.json.",
+        "Evaluate backed-off byte Markov conditional entropy at each byte offset, emit patches on entropy spikes and confirm exact byte reconstruction."
+      ],
+      "acceptance": [
+        {
+          "id": "lossless-and-grid-bounded-patches",
+          "check": "Concatenated patch bytes equal the input stream identically and interior patch lengths respect [min_patch_bytes, max_patch_bytes].",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "allocate-surprise-proportional-patch-budget",
+      "kind": "verb.benchmark_harness",
+      "title": "Allocate downstream compute slots by cumulative surprise and benchmark perturbation re-synchronization",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Apportion inspection slots across patches proportional to cumulative information surprise via largest-remainder rounding and measure boundary re-synchronization under byte insertions vs fixed-stride chunking.",
+      "outcome": "Surprise-proportional slot schedule, high-entropy focus gain and perturbation re-synchronization metrics.",
+      "ready_outcome": "surprise_budget_allocated",
+      "pinned": [
+        "spec.dynamic-byte-entropy-patching-grid",
+        "rules.entropy-spike-cut-and-hamilton-apportionment",
+        "guardrail.surprise-weighted-budget-and-zero-magic-literals",
+        "tool.entropy-byte-patcher"
+      ],
+      "slots": [
+        {
+          "name": "perturbation_eval_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of clean and perturbed byte streams for surprise allocation and shift-resync comparison."
+        }
+      ],
+      "produces": [
+        {
+          "name": "surprise_allocation_receipt",
+          "template": "template.entropy-byte-patcher-receipt"
+        }
+      ],
+      "steps": [
+        "Apportion total_inspection_budget across segmented patches proportional to cumulative_surprise_bits and compare against byte-length weighting.",
+        "Measure preserved patch multiset overlap between clean and perturbed streams relative to fixed-stride chunking."
+      ],
+      "acceptance": [
+        {
+          "id": "positive-surprise-focus-and-resync-gain",
+          "check": "Surprise-proportional allocation assigns higher budget share to high-entropy patches than byte-length weighting and dynamic patching outperforms fixed-stride chunking under byte insertions.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "byte-latent-patch-and-entropy-chunker.segment-dynamic-byte-entropy-patches"
+      ]
+    },
+    {
+      "slug": "verify-lossless-patching-and-ast-gate",
+      "kind": "verb.verify_gate",
+      "title": "Independently verify lossless byte-entropy patching, surprise focus gain and AST magic-literal gates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Recompute dynamic byte-entropy segmentation, surprise-proportional slot allocation, perturbation re-synchronization and ZeroHardcodedValuesAstGate conformance under a distinct reviewer.",
+      "outcome": "Independent deterministic verification receipt for dynamic byte patching, surprise allocation and AST conformance.",
+      "ready_outcome": "byte_patching_and_ast_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.dynamic-byte-entropy-patching-grid",
+        "guardrail.lossless-bounded-byte-patch-reconstruction",
+        "guardrail.surprise-weighted-budget-and-zero-magic-literals",
+        "tool.entropy-byte-patcher",
+        "template.entropy-byte-patcher-receipt"
+      ],
+      "slots": [
+        {
+          "name": "patcher_eval_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of synthetic byte stream, calibration motifs and perturbation benchmark fixture."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verified_patcher_receipt",
+          "template": "template.entropy-byte-patcher-receipt"
+        }
+      ],
+      "steps": [
+        "Recompute run_bundle on the pinned evaluation fixture and confirm exact receipt match.",
+        "Run scan_directory_for_hardcoded_values across entropy_byte_patcher and confirm zero violations."
+      ],
+      "acceptance": [
+        {
+          "id": "ast-and-patcher-receipt-reproduced",
+          "check": "scan_directory_for_hardcoded_values returns [] and run_bundle reproduces the exact receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "byte-latent-patch-and-entropy-chunker.allocate-surprise-proportional-patch-budget"
+      ]
+    }
+  ]
+}

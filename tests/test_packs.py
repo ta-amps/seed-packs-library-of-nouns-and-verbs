@@ -137,7 +137,11 @@ class LibraryChecks(unittest.TestCase):
                      "brainstorm-chunking-and-situation-miner", "coding-session-trace-distiller",
                      "declarative-chart-and-diagram-svg", "multimodal-mask-and-transcript-alignment",
                      "portable-agent-persona-compiler", "social-video-reframe-and-hooks",
-                     "submission-rubric-and-readiness-audit"):
+                     "submission-rubric-and-readiness-audit",
+                     "byte-latent-patch-and-entropy-chunker", "coconut-latent-and-thought-budget-routing",
+                     "dora-spinquant-and-adapter-merging", "faiss-ivf-pq-and-ann-index-cascade",
+                     "jepa-world-state-and-action-simulator", "rule-of-two-and-agent-guardrails",
+                     "seeded-defect-and-proof-carrying-review", "self-rewarding-and-iterative-dpo-flywheel"):
             self.assertIn(pack, PACKS)
 
     def test_scenario_matrix_sira_rag_and_partner_cascade_have_code_and_distinct_review(self):
@@ -153,6 +157,14 @@ class LibraryChecks(unittest.TestCase):
             "execution-hooks-and-verifiers": "audit-verifier-mutation-sensitivity",
             "loops-schedules-and-heuristics": "evaluate-swappable-learner-advisors",
             "film-and-surface-rule-evaluator": "review-film-and-surface-readiness",
+            "byte-latent-patch-and-entropy-chunker": "verify-lossless-patching-and-ast-gate",
+            "coconut-latent-and-thought-budget-routing": "verify-invariant-recall-and-ast-gate",
+            "dora-spinquant-and-adapter-merging": "verify-quantization-merge-and-ast-gate",
+            "faiss-ivf-pq-and-ann-index-cascade": "verify-ivf-pq-compression-and-recall-receipt",
+            "jepa-world-state-and-action-simulator": "verify-world-state-simulator-receipt",
+            "rule-of-two-and-agent-guardrails": "verify-bidirectional-vault-and-ast-gate",
+            "seeded-defect-and-proof-carrying-review": "audit-wilson-and-paired-bootstrap-intervals",
+            "self-rewarding-and-iterative-dpo-flywheel": "verify-preregistered-flywheel-promotion",
         }
         for pack, review_slug in expected_review_verbs.items():
             manifest = IDX.docs[pack]["manifest.json"]

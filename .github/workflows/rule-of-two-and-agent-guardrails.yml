@@ -1,0 +1,29 @@
+name: rule-of-two-and-agent-guardrails
+
+on:
+  push:
+    paths:
+      - "packs/rule-of-two-and-agent-guardrails/**"
+      - ".github/workflows/rule-of-two-and-agent-guardrails.yml"
+  pull_request:
+    paths:
+      - "packs/rule-of-two-and-agent-guardrails/**"
+      - ".github/workflows/rule-of-two-and-agent-guardrails.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run rule-of-two-and-agent-guardrails unit tests
+        working-directory: packs/rule-of-two-and-agent-guardrails/code
+        run: |
+          make check
+          python3 -c "import rule_of_two_guardrails"

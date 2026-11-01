@@ -1,0 +1,29 @@
+name: byte-latent-patch-and-entropy-chunker
+
+on:
+  push:
+    paths:
+      - "packs/byte-latent-patch-and-entropy-chunker/**"
+      - ".github/workflows/byte-latent-patch-and-entropy-chunker.yml"
+  pull_request:
+    paths:
+      - "packs/byte-latent-patch-and-entropy-chunker/**"
+      - ".github/workflows/byte-latent-patch-and-entropy-chunker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run byte-latent-patch-and-entropy-chunker unit tests
+        working-directory: packs/byte-latent-patch-and-entropy-chunker/code
+        run: |
+          make check
+          python3 -c "import entropy_byte_patcher"

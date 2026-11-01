@@ -1,0 +1,108 @@
+{
+  "grid_id": "self-rewarding-and-iterative-dpo-flywheel-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 16,
+  "float_axis_round_digits": 6,
+  "parameters": [
+    {
+      "name": "dpo_beta",
+      "param_type": "float_range",
+      "low": 0.05,
+      "high": 0.5,
+      "step": 0.05,
+      "default": 0.1
+    },
+    {
+      "name": "rpo_nll_alpha",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 2.0,
+      "step": 0.5,
+      "default": 1.0
+    },
+    {
+      "name": "max_length_ratio",
+      "param_type": "float_range",
+      "low": 1.2,
+      "high": 2.4,
+      "step": 0.3,
+      "default": 1.8
+    },
+    {
+      "name": "min_cohens_kappa",
+      "param_type": "float_range",
+      "low": 0.6,
+      "high": 0.9,
+      "step": 0.1,
+      "default": 0.75
+    },
+    {
+      "name": "max_false_positive_rate",
+      "param_type": "float_range",
+      "low": 0.0,
+      "high": 0.15,
+      "step": 0.05,
+      "default": 0.05
+    },
+    {
+      "name": "allow_synthetic_rubric_pairs",
+      "param_type": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "synthetic-pairs-require-positive-rpo-alpha",
+      "when": { "allow_synthetic_rubric_pairs": true },
+      "require_in": { "rpo_nll_alpha": [0.5, 1.0, 1.5, 2.0] }
+    }
+  ],
+  "regime_defaults": {
+    "verified_iterative_rpo": {
+      "dpo_beta": 0.1,
+      "rpo_nll_alpha": 1.0,
+      "max_length_ratio": 1.8,
+      "min_cohens_kappa": 0.75,
+      "max_false_positive_rate": 0.05,
+      "allow_synthetic_rubric_pairs": true
+    },
+    "strict_deterministic_only": {
+      "dpo_beta": 0.2,
+      "rpo_nll_alpha": 1.0,
+      "max_length_ratio": 1.5,
+      "min_cohens_kappa": 0.85,
+      "max_false_positive_rate": 0.0,
+      "allow_synthetic_rubric_pairs": false
+    }
+  },
+  "numerics": {
+    "epsilon": 1e-12,
+    "round_digits": 6,
+    "softplus_Clip": 40.0
+  },
+  "rpo_curator": {
+    "default_dpo_beta": 0.1,
+    "default_rpo_alpha": 1.0,
+    "default_max_length_ratio": 1.8,
+    "min_chosen_logp_drift_per_token": -0.35,
+    "dedup_hash_chars": 24,
+    "structural_dedup_key_count": 3
+  },
+  "calibration_gate": {
+    "min_calibration_samples": 6,
+    "min_cohens_kappa": 0.75,
+    "min_exact_agreement": 0.85,
+    "max_false_positive_rate": 0.05
+  },
+  "flywheel_promoter": {
+    "min_sanity_retention": 0.95,
+    "max_regression_rate": 0.05,
+    "min_holdout_gain": 0.05,
+    "min_chosen_logp_drift_per_token": -0.35,
+    "require_distinct_reviewer": true
+  },
+  "formatting": {
+    "json_indent": 2
+  }
+}

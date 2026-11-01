@@ -1,0 +1,659 @@
+{
+  "pack_id": "rule-of-two-and-agent-guardrails",
+  "title": "Rule of Two and agent guardrails",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for enforcing monotone Rule of Two capability lattices across multi-step tool DAGs, bidirectional typed privacy placeholder vaults and model license-tier routing firewalls.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "agent-capability-and-tier-firewall",
+    "wiring-and-conformance-checks"
+  ],
+  "boundaries": [
+    "RuleOfTwoCapabilityLattice deterministically refuses with status 403 and a minimal witness path whenever local or transitive DAG taint combines untrusted_input, sensitive_access and external_mutation_or_egress without a scoped human_steward_approval token.",
+    "BidirectionalPrivacyPlaceholderGateway vaults sensitive entities into typed <ENTITY_TYPE_NNN> placeholders while preserving 64-character SHA-256 digests and coreference across turns.",
+    "All leg ceilings, placeholder index widths, DAG bounds and license-tier matrices resolve from default_grid_spec.json and pass ZeroHardcodedValuesAstGate.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for enforcing monotone Rule of Two capability lattices across multi-step tool DAGs, bidirectional typed privacy placeholder vaults and model license-tier routing firewalls",
+      "value": {
+        "lets_workers": "Track monotone capability taint across multi-step tool DAGs so unapproved combinations of untrusted_input, sensitive_access and external_mutation_or_egress fail closed with 403 and a minimal witness path, scrub sensitive entities into lossless <ENTITY_TYPE_001> placeholder vaults and route payloads across contributor_training_allowed, standard_zero_retention and local_open_weights license tiers.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "rule-of-two-and-agent-guardrails.evaluate-rule-of-two-tool-dag"
+            },
+            "when": "Propagate monotone capability taint across a proposed multi-step tool DAG and block unapproved three-leg combinations before execution."
+          },
+          {
+            "verb": {
+              "$verb": "rule-of-two-and-agent-guardrails.scrub-and-route-privacy-license-tier"
+            },
+            "when": "Vault outbound sensitive tokens into deterministic <ENTITY_TYPE_NNN> placeholders, route payloads across model license tiers and rehydrate inbound responses."
+          },
+          {
+            "verb": {
+              "$verb": "rule-of-two-and-agent-guardrails.verify-bidirectional-vault-and-ast-gate"
+            },
+            "when": "Independently audit 403 witness minimality, 100% outbound zero-leak recall, exact round-trip rehydration and ZeroHardcodedValuesAstGate conformance."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.monotone-rule-of-two-triad-refusal"
+          },
+          {
+            "$pin": "guardrail.lossless-placeholder-vault-and-license-tier"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.rule-of-two-guardrails"
+        },
+        "worked_example": "Synthetic 2-leg allow DAG, 5-node diamond 3-leg refusal DAG (403 with minimal witness path excluding distractor nodes), steward-approved override (200), bidirectional placeholder vaulting (1.0 zero-leak recall and 1.0 round-trip fidelity) and 3-tier license firewall routing recomputed in test_rule_of_two_guardrails.py."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.monotone-rule-of-two-triad-refusal"
+        ],
+        [
+          "requires_noun",
+          "guardrail.lossless-placeholder-vault-and-license-tier"
+        ],
+        [
+          "requires_noun",
+          "spec.rule-of-two-and-privacy-grid"
+        ],
+        [
+          "requires_noun",
+          "rules.triad-witness-and-license-routing"
+        ],
+        [
+          "requires_noun",
+          "tool.rule-of-two-guardrails"
+        ],
+        [
+          "requires_noun",
+          "template.rule-of-two-guardrails-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.monotone-rule-of-two-triad-refusal",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: unapproved transitive combinations of untrusted input, sensitive access and external mutation or egress fail closed with 403",
+      "category_reason": "Prevents prompt-injected exfiltration or unauthorized external state changes across multi-step tool chains.",
+      "value": {
+        "rule": "RuleOfTwoCapabilityLattice permits at most two capability legs across any topological tool path unless a human_steward_approval token explicitly authorizes the violating step, returning status 403 and the minimal ancestor witness subgraph otherwise.",
+        "how_it_is_checked": "RuleOfTwoCapabilityLattice.evaluate_dag computes monotone set-union taint across upstream parents and rejects agent-forged or missing steward approvals."
+      }
+    },
+    {
+      "slug": "guardrail.lossless-placeholder-vault-and-license-tier",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: sensitive entities require reversible typed placeholders and license-compatible retention tiers without inline magic numbers",
+      "category_reason": "Prevents raw PII/credential leakage to training-enabled APIs while keeping operational bounds externalized in default_grid_spec.json.",
+      "value": {
+        "rule": "BidirectionalPrivacyPlaceholderGateway replaces sensitive entities with coreference-preserving <ENTITY_TYPE_NNN> placeholders while leaving SHA-256 hex digests intact, ModelLicenseTierFirewall blocks non-public or restricted-license payloads from contributor training tiers and ZeroHardcodedValuesAstGate rejects inline magic literals.",
+        "how_it_is_checked": "test_rule_of_two_guardrails.py verifies 1.0 outbound zero-leak recall, 1.0 inbound round-trip fidelity, strict 3-tier license routing and zero AST magic-literal violations."
+      }
+    },
+    {
+      "slug": "spec.rule-of-two-and-privacy-grid",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: Rule of Two capability lattice legs, typed placeholder vault invariants and 3-tier model license firewall",
+      "category_reason": "Defines deterministic monotone taint equations, placeholder formatting and license-tier boundaries.",
+      "value": {
+        "structures": [
+          "RuleOfTwoCapabilityLattice",
+          "BidirectionalPrivacyPlaceholderGateway",
+          "ModelLicenseTierFirewall"
+        ],
+        "canonical_legs": [
+          "untrusted_input",
+          "sensitive_access",
+          "external_mutation_or_egress"
+        ],
+        "max_unapproved_legs": 2,
+        "refusal_status_code": 403,
+        "license_tiers": [
+          "contributor_training_allowed",
+          "standard_zero_retention",
+          "local_open_weights"
+        ]
+      }
+    },
+    {
+      "slug": "rules.triad-witness-and-license-routing",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic Rule of Two DAG taint join, placeholder coreference and 3-tier license routing rules",
+      "category_reason": "Zero-model procedure evaluating DAG capability combinations, placeholder vaults and model license tiers.",
+      "value": {
+        "regime_mapping": {
+          "public_synthetic_permissive": "contributor_training_allowed",
+          "internal_or_vaulted_commercial": "standard_zero_retention",
+          "secret_or_local_restricted": "local_open_weights"
+        },
+        "taint_propagation": "effective_legs(step) = own_legs(step) union_{parent in depends_on} effective_legs(parent)",
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.rule-of-two-guardrails",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library RuleOfTwoCapabilityLattice, BidirectionalPrivacyPlaceholderGateway and ModelLicenseTierFirewall",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path and SHA-256.",
+      "value": {
+        "name": "rule of two and agent guardrails",
+        "code": {
+          "$code": "rule-of-two-and-agent-guardrails"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python3 -m rule_of_two_guardrails --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Propagates monotone capability taint across multi-step tool DAGs, refusing unapproved 3-leg combinations with status 403 and minimal witness paths.",
+          "Scrubs sensitive outbound tokens into deterministic <ENTITY_TYPE_001> vaults while preserving SHA-256 digests and rehydrating inbound responses losslessly.",
+          "Routes payloads across contributor_training_allowed, standard_zero_retention and local_open_weights tiers under ZeroHardcodedValuesAstGate."
+        ],
+        "does_not": [
+          "Perform network I/O, mint steward approval tokens or embed inline magic numbers."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.rule-of-two-and-privacy-grid"
+        ]
+      ]
+    },
+    {
+      "slug": "template.rule-of-two-guardrails-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: Rule of Two DAG verdict, minimal witness path, bidirectional placeholder fidelity and license-tier receipt",
+      "value": {
+        "describes": "a deterministic receipt of multi-step Rule of Two capability lattice verdicts, minimal witness paths, bidirectional privacy placeholder recall/fidelity and 3-tier model license routing",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "safe_dag_status_code",
+            "safe_dag_verdict",
+            "three_leg_dag_status_code",
+            "three_leg_dag_verdict",
+            "three_leg_violating_step",
+            "three_leg_minimal_witness_path",
+            "steward_approved_status_code",
+            "steward_approved_verdict",
+            "sample_scrubbed_prompt",
+            "sample_round_trip_exact",
+            "outbound_zero_leak_recall",
+            "inbound_round_trip_fidelity",
+            "coreference_preserved_rate",
+            "license_tier_routes",
+            "license_tier_decisions"
+          ],
+          "properties": {
+            "safe_dag_status_code": {
+              "type": "integer",
+              "minimum": 200,
+              "maximum": 599
+            },
+            "safe_dag_verdict": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "refuse"
+              ]
+            },
+            "three_leg_dag_status_code": {
+              "type": "integer",
+              "minimum": 200,
+              "maximum": 599
+            },
+            "three_leg_dag_verdict": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "refuse"
+              ]
+            },
+            "three_leg_violating_step": {
+              "type": "string",
+              "minLength": 1
+            },
+            "three_leg_minimal_witness_path": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "steward_approved_status_code": {
+              "type": "integer",
+              "minimum": 200,
+              "maximum": 599
+            },
+            "steward_approved_verdict": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "refuse"
+              ]
+            },
+            "sample_scrubbed_prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sample_round_trip_exact": {
+              "type": "boolean"
+            },
+            "outbound_zero_leak_recall": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "inbound_round_trip_fidelity": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "coreference_preserved_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "license_tier_routes": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "synthetic_mit_benchmark",
+                "vaulted_internal_trace",
+                "unredacted_secret_bundle"
+              ],
+              "properties": {
+                "synthetic_mit_benchmark": {
+                  "type": "string"
+                },
+                "vaulted_internal_trace": {
+                  "type": "string"
+                },
+                "unredacted_secret_bundle": {
+                  "type": "string"
+                }
+              }
+            },
+            "license_tier_decisions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "synthetic_mit_benchmark",
+                "vaulted_internal_trace",
+                "unredacted_secret_bundle"
+              ],
+              "properties": {
+                "synthetic_mit_benchmark": {
+                  "type": "string"
+                },
+                "vaulted_internal_trace": {
+                  "type": "string"
+                },
+                "unredacted_secret_bundle": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "safe_dag_status_code": 200,
+          "safe_dag_verdict": "allow",
+          "three_leg_dag_status_code": 403,
+          "three_leg_dag_verdict": "refuse",
+          "three_leg_violating_step": "emit_external_webhook",
+          "three_leg_minimal_witness_path": [
+            "ingest_external_ticket",
+            "inspect_scoped_ledger",
+            "draft_triage_note",
+            "emit_external_webhook"
+          ],
+          "steward_approved_status_code": 200,
+          "steward_approved_verdict": "allow",
+          "sample_scrubbed_prompt": "Verify custodian <EMAIL_ADDR_001> and backup <EMAIL_ADDR_001> on host <IPV4_HOST_001> with key <API_SECRET_001> and sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.",
+          "sample_round_trip_exact": true,
+          "outbound_zero_leak_recall": 1.0,
+          "inbound_round_trip_fidelity": 1.0,
+          "coreference_preserved_rate": 1.0,
+          "license_tier_routes": {
+            "synthetic_mit_benchmark": "contributor_training_allowed",
+            "vaulted_internal_trace": "standard_zero_retention",
+            "unredacted_secret_bundle": "local_open_weights"
+          },
+          "license_tier_decisions": {
+            "synthetic_mit_benchmark": "allow",
+            "vaulted_internal_trace": "allow",
+            "unredacted_secret_bundle": "refuse"
+          }
+        }
+      }
+    },
+    {
+      "slug": "example.rule-of-two-guardrails-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: synthetic 2-leg and 3-leg tool DAGs, steward token, privacy corpus and license routing probes",
+      "category_reason": "Synthetic fixture recomputed by test_rule_of_two_guardrails.py.",
+      "value": {
+        "safe_two_leg_dag": [
+          {
+            "id": "ingest_external_ticket",
+            "legs": [
+              "untrusted_input"
+            ]
+          },
+          {
+            "id": "inspect_scoped_ledger",
+            "legs": [
+              "sensitive_access"
+            ],
+            "depends_on": [
+              "ingest_external_ticket"
+            ]
+          }
+        ],
+        "unapproved_three_leg_dag": [
+          {
+            "id": "health_heartbeat",
+            "legs": []
+          },
+          {
+            "id": "ingest_external_ticket",
+            "legs": [
+              "untrusted_input"
+            ]
+          },
+          {
+            "id": "draft_triage_note",
+            "legs": [],
+            "depends_on": [
+              "ingest_external_ticket",
+              "health_heartbeat"
+            ]
+          },
+          {
+            "id": "inspect_scoped_ledger",
+            "legs": [
+              "sensitive_access"
+            ]
+          },
+          {
+            "id": "emit_external_webhook",
+            "legs": [
+              "external_mutation_or_egress"
+            ],
+            "depends_on": [
+              "draft_triage_note",
+              "inspect_scoped_ledger"
+            ]
+          }
+        ],
+        "steward_approval": {
+          "principal_kind": "human_steward",
+          "approver_principal": "steward:reviewer-01",
+          "token": "steward_ack:approved_release_gate_0042",
+          "approved_steps": [
+            "emit_external_webhook"
+          ]
+        },
+        "sample_outbound_prompt": "Verify custodian lead@example.invalid and backup lead@example.invalid on host 10.42.7.9 with key tok_live_TestAlphaBeta123456 and sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.",
+        "privacy_cases": [
+          {
+            "text": "Route receipt to lead@example.invalid and confirm lead@example.invalid using tok_live_AlphaKey998877.",
+            "ground_truth_sensitive": [
+              "lead@example.invalid",
+              "tok_live_AlphaKey998877"
+            ],
+            "expect_coreference_symbol": "lead@example.invalid"
+          },
+          {
+            "text": "Audit node 172.16.9.40 phone +1-555-867-5309 id 123-45-6789 for operator Jordan.",
+            "explicit_entities": {
+              "OPERATOR_NAME": [
+                "Jordan"
+              ]
+            },
+            "ground_truth_sensitive": [
+              "172.16.9.40",
+              "+1-555-867-5309",
+              "123-45-6789",
+              "Jordan"
+            ]
+          }
+        ],
+        "license_requests": [
+          {
+            "id": "synthetic_mit_benchmark",
+            "sensitivity": "public",
+            "synthetic_provenance": true,
+            "license_tag": "MIT",
+            "requested_tier": "contributor_training_allowed"
+          },
+          {
+            "id": "vaulted_internal_trace",
+            "sensitivity": "confidential",
+            "placeholder_vaulted": true,
+            "license_tag": "internal-commercial-no-train",
+            "requested_tier": "standard_zero_retention"
+          },
+          {
+            "id": "unredacted_secret_bundle",
+            "sensitivity": "secret",
+            "contains_unredacted_entities": true,
+            "license_tag": "local-weights-only",
+            "requested_tier": "standard_zero_retention"
+          }
+        ],
+        "shows": "Synthetic Rule of Two DAGs, steward approval token, bidirectional privacy vault corpus and 3-tier model license probes.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.rule-of-two-guardrails-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed Rule of Two 403 witness, lossless placeholder round-trip and 3-tier license routing receipt",
+      "category_reason": "Synthetic receipt verified by test_rule_of_two_guardrails.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.rule-of-two-guardrails-receipt"
+        },
+        "instance": {
+          "safe_dag_status_code": 200,
+          "safe_dag_verdict": "allow",
+          "three_leg_dag_status_code": 403,
+          "three_leg_dag_verdict": "refuse",
+          "three_leg_violating_step": "emit_external_webhook",
+          "three_leg_minimal_witness_path": [
+            "ingest_external_ticket",
+            "inspect_scoped_ledger",
+            "draft_triage_note",
+            "emit_external_webhook"
+          ],
+          "steward_approved_status_code": 200,
+          "steward_approved_verdict": "allow",
+          "sample_scrubbed_prompt": "Verify custodian <EMAIL_ADDR_001> and backup <EMAIL_ADDR_001> on host <IPV4_HOST_001> with key <API_SECRET_001> and sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.",
+          "sample_round_trip_exact": true,
+          "outbound_zero_leak_recall": 1.0,
+          "inbound_round_trip_fidelity": 1.0,
+          "coreference_preserved_rate": 1.0,
+          "license_tier_routes": {
+            "synthetic_mit_benchmark": "contributor_training_allowed",
+            "vaulted_internal_trace": "standard_zero_retention",
+            "unredacted_secret_bundle": "local_open_weights"
+          },
+          "license_tier_decisions": {
+            "synthetic_mit_benchmark": "allow",
+            "vaulted_internal_trace": "allow",
+            "unredacted_secret_bundle": "refuse"
+          }
+        },
+        "shows": "Recomputes 2-leg allow (200), transitive 3-leg refusal (403) with minimal witness path, steward override (200), 100% zero-leak placeholder vaulting/rehydration and 3-tier license routing.",
+        "source": "Synthetic. Recomputed directly from example.rule-of-two-guardrails-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.rule-of-two-guardrails-bundle"
+        ],
+        [
+          "verifies",
+          "template.rule-of-two-guardrails-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "evaluate-rule-of-two-tool-dag",
+      "kind": "verb.verify_gate",
+      "title": "Evaluate monotone Rule of Two capability taint across a proposed multi-step tool DAG",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Propagate untrusted_input, sensitive_access and external_mutation_or_egress capability legs across a topological tool DAG and refuse unapproved three-leg combinations with status 403 and a minimal witness path.",
+      "outcome": "Deterministic Rule of Two DAG verdict and minimal witness path.",
+      "ready_outcome": "dag_guardrail_evaluated",
+      "pinned": [
+        "spec.rule-of-two-and-privacy-grid",
+        "rules.triad-witness-and-license-routing",
+        "guardrail.monotone-rule-of-two-triad-refusal",
+        "tool.rule-of-two-guardrails"
+      ],
+      "slots": [
+        {
+          "name": "dag_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of candidate tool DAG steps and optional human steward approval metadata."
+        }
+      ],
+      "produces": [
+        {
+          "name": "dag_guardrail_receipt",
+          "template": "template.rule-of-two-guardrails-receipt"
+        }
+      ],
+      "steps": [
+        "Resolve max_unapproved_legs and status codes from default_grid_spec.json via NodeGrid.",
+        "Order tool steps topologically, compute monotone taint unions and return 403 plus minimal witness path whenever three legs combine without a scoped human_steward_approval token."
+      ],
+      "acceptance": [
+        {
+          "id": "triad-refused-with-minimal-witness",
+          "check": "Any unapproved combination of all three capability legs returns status 403 and excludes unrelated distractor DAG nodes from minimal_witness_path.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "scrub-and-route-privacy-license-tier",
+      "kind": "verb.verify_gate",
+      "title": "Scrub outbound payloads into typed privacy placeholders and route across model license tiers",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Replace sensitive entities with coreference-preserving <ENTITY_TYPE_001> tokens, route payloads across contributor_training_allowed, standard_zero_retention and local_open_weights tiers and rehydrate inbound responses.",
+      "outcome": "Placeholder-vaulted payload, license-tier routing decision and round-trip rehydration check.",
+      "ready_outcome": "payload_vaulted_and_routed",
+      "pinned": [
+        "spec.rule-of-two-and-privacy-grid",
+        "rules.triad-witness-and-license-routing",
+        "guardrail.lossless-placeholder-vault-and-license-tier",
+        "tool.rule-of-two-guardrails"
+      ],
+      "slots": [
+        {
+          "name": "payload_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of outbound payload, sensitivity metadata and license tags."
+        }
+      ],
+      "produces": [
+        {
+          "name": "privacy_license_receipt",
+          "template": "template.rule-of-two-guardrails-receipt"
+        }
+      ],
+      "steps": [
+        "Vault sensitive entities into <ENTITY_TYPE_NNN> placeholders while preserving 64-character hexadecimal content digests.",
+        "Evaluate sensitivity, synthetic provenance and license tags with ModelLicenseTierFirewall and verify lossless inbound rehydration."
+      ],
+      "acceptance": [
+        {
+          "id": "zero-leak-and-license-tier-match",
+          "check": "Outbound scrubbed payloads retain zero ground-truth secrets, rehydrate losslessly and block secret or local-only licenses from remote tiers.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "rule-of-two-and-agent-guardrails.evaluate-rule-of-two-tool-dag"
+      ]
+    },
+    {
+      "slug": "verify-bidirectional-vault-and-ast-gate",
+      "kind": "verb.verify_gate",
+      "title": "Independently verify Rule of Two witness minimality, bidirectional vault fidelity and AST magic-literal gates",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Recompute Rule of Two DAG verdicts, bidirectional zero-leak and round-trip metrics, license-tier decisions and ZeroHardcodedValuesAstGate conformance under a distinct reviewer.",
+      "outcome": "Independent deterministic verification receipt for Rule of Two, placeholder vault and AST conformance.",
+      "ready_outcome": "guardrails_and_ast_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.rule-of-two-and-privacy-grid",
+        "guardrail.monotone-rule-of-two-triad-refusal",
+        "guardrail.lossless-placeholder-vault-and-license-tier",
+        "tool.rule-of-two-guardrails",
+        "template.rule-of-two-guardrails-receipt"
+      ],
+      "slots": [
+        {
+          "name": "guardrail_eval_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of synthetic DAG, placeholder vault and license-tier evaluation bundle."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verified_guardrail_receipt",
+          "template": "template.rule-of-two-guardrails-receipt"
+        }
+      ],
+      "steps": [
+        "Recompute run_bundle on the pinned evaluation fixture and confirm exact schema and value match.",
+        "Run scan_directory_for_hardcoded_values across rule_of_two_guardrails and confirm zero violations."
+      ],
+      "acceptance": [
+        {
+          "id": "ast-and-guardrail-receipt-reproduced",
+          "check": "scan_directory_for_hardcoded_values returns an empty list and run_bundle reproduces the exact receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "rule-of-two-and-agent-guardrails.scrub-and-route-privacy-license-tier"
+      ]
+    }
+  ]
+}

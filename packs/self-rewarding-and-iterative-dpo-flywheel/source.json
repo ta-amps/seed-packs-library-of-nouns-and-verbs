@@ -1,0 +1,693 @@
+{
+  "pack_id": "self-rewarding-and-iterative-dpo-flywheel",
+  "title": "Self-rewarding and iterative DPO flywheel",
+  "version": "0.1.0",
+  "summary": "A collection of nouns and verbs for iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion.",
+  "dependencies": [
+    "configuration-grids-and-bounds",
+    "evaluation-design",
+    "wiring-and-conformance-checks"
+  ],
+  "boundaries": [
+    "RubricJudgeCalibrationGate blocks synthetic self-rewarding preference pairs whenever Cohen's kappa, exact agreement or false-positive approval rates violate grid calibration bounds against deterministic verifiers.",
+    "IterativeRpoPairCurator enforces positive NLL_chosen regularization, length-ratio bias bounds and 3-key structural deduplication so iterative preference rounds do not collapse chosen log-probabilities or reward verbosity.",
+    "PreRegisteredFlywheelPromoter rejects candidate generation rounds upon any holdout SHA-256 mismatch, self-review, sanity retention drop or regression cap breach.",
+    "Importing the pack writes nothing, enqueues nothing and installs no code."
+  ],
+  "nouns": [
+    {
+      "slug": "pack",
+      "category": "noun.skill_pack",
+      "role": "pack",
+      "title": "A collection of nouns and verbs for iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion",
+      "value": {
+        "lets_workers": "Curate (prompt, chosen_verified, rejected_tombstone) preference pairs using Iterative RPO scoring (DPO logistic loss plus per-token NLL_chosen regularization to prevent chosen log-probability collapse), filter length-ratio verbosity bias and 3-key structural duplicates, gate synthetic self-rewarding rubric pairs against deterministic verifiers via Cohen's kappa and false-positive caps, and evaluate generation rounds against pre-registered holdout SHA-256 locks.",
+        "flow": [
+          {
+            "verb": {
+              "$verb": "self-rewarding-and-iterative-dpo-flywheel.calibrate-rubric-judge-against-verifiers"
+            },
+            "when": "Measure candidate self-rewarding rubric judge agreement (Cohen's kappa, exact agreement and false-positive approval rate) against deterministic verifiers before admitting synthetic pairs."
+          },
+          {
+            "verb": {
+              "$verb": "self-rewarding-and-iterative-dpo-flywheel.curate-iterative-rpo-preference-pairs"
+            },
+            "when": "Score verified and calibrated preference pairs with Iterative RPO (DPO margin + alpha * NLL_chosen), filter length-ratio bias and deduplicate across three structural keys."
+          },
+          {
+            "verb": {
+              "$verb": "self-rewarding-and-iterative-dpo-flywheel.verify-preregistered-flywheel-promotion"
+            },
+            "when": "Independently verify holdout SHA-256 locks, sanity retention bounds, regression caps, distinct reviewer identity and ZeroHardcodedValuesAstGate conformance."
+          }
+        ],
+        "guardrails": [
+          {
+            "$pin": "guardrail.block-uncalibrated-synthetic-rubric-pairs"
+          },
+          {
+            "$pin": "guardrail.preregistered-holdout-lock-and-zero-magic-literals"
+          }
+        ],
+        "tool": {
+          "$pin": "tool.iterative-rpo-flywheel"
+        },
+        "worked_example": "Synthetic rubric calibration, Iterative RPO pair curation and holdout promotion bundle recomputed in test_iterative_rpo_flywheel.py: approves calibrated judge (kappa 0.75, FPR 0.0) while blocking 100% of pairs from uncalibrated judge (kappa -0.2), rejects 1 length-biased pair, 1 chosen-logp-collapse trap and 1 3-key structural duplicate, curates 2 clean pairs (mean DPO margin 0.925, mean RPO loss 0.743994), and verifies SHA-256 holdout lock with +0.20 net gain and 0.0 regression rate."
+      },
+      "relations": [
+        [
+          "requires_noun",
+          "guardrail.block-uncalibrated-synthetic-rubric-pairs"
+        ],
+        [
+          "requires_noun",
+          "guardrail.preregistered-holdout-lock-and-zero-magic-literals"
+        ],
+        [
+          "requires_noun",
+          "spec.iterative-rpo-and-flywheel-grid"
+        ],
+        [
+          "requires_noun",
+          "rules.rpo-objective-and-calibration-gates"
+        ],
+        [
+          "requires_noun",
+          "tool.iterative-rpo-flywheel"
+        ],
+        [
+          "requires_noun",
+          "template.iterative-rpo-flywheel-receipt"
+        ]
+      ]
+    },
+    {
+      "slug": "guardrail.block-uncalibrated-synthetic-rubric-pairs",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: synthetic self-rewarding preference pairs are blocked unless rubric judges pass deterministic verifier calibration",
+      "category_reason": "Prevents self-reinforcing reward hacking and false-positive drift across iterative preference rounds.",
+      "value": {
+        "rule": "Admit synthetic rubric-judged preference pairs only when the rubric judge achieves cohens_kappa >= min_cohens_kappa, exact_agreement >= min_exact_agreement and false_positive_approval_rate <= max_false_positive_rate on deterministic ground-truth verifier checks.",
+        "how_it_is_checked": "RubricJudgeCalibrationGate.gate_synthetic_pairs returns zero admitted synthetic pairs whenever any calibration threshold fails."
+      }
+    },
+    {
+      "slug": "guardrail.preregistered-holdout-lock-and-zero-magic-literals",
+      "category": "noun.skill_pack",
+      "role": "guardrail",
+      "title": "Guardrail: flywheel promotion requires exact holdout SHA-256 match, distinct reviewer and zero inline magic scalars",
+      "category_reason": "Prevents holdout tampering, self-approval and hardcoded heuristic drift.",
+      "value": {
+        "rule": "Reject generation promotion if holdout SHA-256 differs from preregistered_holdout_sha256, proposer_id == reviewer_id, regression_rate > max_regression_rate or any operational module fails ZeroHardcodedValuesAstGate.",
+        "how_it_is_checked": "PreRegisteredFlywheelPromoter.evaluate_round and scan_directory_for_hardcoded_values run deterministically during make check."
+      }
+    },
+    {
+      "slug": "spec.iterative-rpo-and-flywheel-grid",
+      "category": "noun.benchmark_suite",
+      "role": "spec",
+      "title": "Specification: IterativeRpoPairCurator, RubricJudgeCalibrationGate and PreRegisteredFlywheelPromoter invariants",
+      "category_reason": "Defines Iterative RPO objective terms, 3-key deduplication, Cohen's kappa calibration and SHA-256 holdout promotion locks.",
+      "value": {
+        "components": [
+          "IterativeRpoPairCurator",
+          "RubricJudgeCalibrationGate",
+          "PreRegisteredFlywheelPromoter"
+        ],
+        "default_dpo_beta": 0.1,
+        "default_rpo_nll_alpha": 1.0,
+        "default_max_length_ratio": 1.8,
+        "structural_dedup_keys": 3,
+        "min_cohens_kappa": 0.75,
+        "max_false_positive_rate": 0.05
+      }
+    },
+    {
+      "slug": "rules.rpo-objective-and-calibration-gates",
+      "category": "noun.reflex_procedure",
+      "role": "rules",
+      "title": "Deterministic Iterative RPO scoring, 3-key structural deduplication and flywheel promotion gates",
+      "category_reason": "Zero-model curation and calibration formulas for safe iterative preference optimization.",
+      "value": {
+        "rpo_loss_formula": "L_RPO = softplus(-beta * ((logp_pi(y_w) - logp_ref(y_w)) - (logp_pi(y_l) - logp_ref(y_l)))) + alpha * (-logp_pi(y_w) / |y_w|)",
+        "dedup_keys": [
+          "prompt_normalized_sha256",
+          "chosen_structural_skeleton_sha256",
+          "joint_transition_pair_sha256"
+        ],
+        "promotion_checks": [
+          "holdout_sha256 == preregistered_holdout_sha256",
+          "proposer_id != reviewer_id",
+          "sanity_retention_rate >= min_sanity_retention",
+          "regression_rate <= max_regression_rate",
+          "chosen_logp_drift_per_token >= min_chosen_logp_drift_per_token"
+        ],
+        "model_calls": 0
+      }
+    },
+    {
+      "slug": "tool.iterative-rpo-flywheel",
+      "category": "noun.code_node",
+      "role": "tool_card",
+      "title": "Tool card: standard-library Iterative RPO pair curator, rubric calibration gate and holdout flywheel promoter",
+      "category_reason": "Tested Python 3.10+ standard-library package pinned by path, file count and SHA-256.",
+      "value": {
+        "name": "self-rewarding and iterative DPO flywheel",
+        "code": {
+          "$code": "self-rewarding-and-iterative-dpo-flywheel"
+        },
+        "runtime": "Python 3.10 or later, standard library only.",
+        "commands": [
+          "python -m iterative_rpo_flywheel --bundle BUNDLE.json"
+        ],
+        "does": [
+          "Implements IterativeRpoPairCurator with DPO margin + alpha * NLL_chosen objective scoring, chosen log-probability collapse filtering, length-ratio bounds and 3-key structural deduplication.",
+          "Implements RubricJudgeCalibrationGate computing Cohen's kappa, exact agreement and false-positive approval rates against deterministic verifiers.",
+          "Implements PreRegisteredFlywheelPromoter enforcing holdout SHA-256 locks, sanity retention bounds, regression caps and distinct-reviewer separation."
+        ],
+        "does_not": [
+          "Perform network I/O, self-approve synthetic pairs without verifier calibration or inline hardcoded numeric thresholds."
+        ],
+        "code_license": "MIT"
+      },
+      "relations": [
+        [
+          "verifies",
+          "spec.iterative-rpo-and-flywheel-grid"
+        ]
+      ]
+    },
+    {
+      "slug": "template.iterative-rpo-flywheel-receipt",
+      "category": "noun.scene_recipe",
+      "role": "template",
+      "title": "Template: rubric judge calibration, Iterative RPO pair curation and holdout promotion receipt",
+      "value": {
+        "describes": "a deterministic receipt recording Cohen's kappa judge calibration, Iterative RPO pair filtering counts, margin/loss metrics and pre-registered holdout promotion status",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "calibrated_judge_kappa",
+            "calibrated_judge_fpr",
+            "calibrated_judge_passed",
+            "uncalibrated_judge_kappa",
+            "uncalibrated_synthetic_admitted",
+            "admitted_pair_ids",
+            "admitted_pair_count",
+            "rejected_length_bias_count",
+            "rejected_logp_collapse_count",
+            "rejected_duplicate_count",
+            "mean_dpo_margin",
+            "mean_rpo_loss",
+            "holdout_lock_valid",
+            "net_holdout_gain",
+            "regression_rate",
+            "sanity_retention_rate",
+            "promote_round"
+          ],
+          "properties": {
+            "calibrated_judge_kappa": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "calibrated_judge_fpr": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "calibrated_judge_passed": {
+              "type": "boolean"
+            },
+            "uncalibrated_judge_kappa": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "uncalibrated_synthetic_admitted": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "admitted_pair_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "admitted_pair_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rejected_length_bias_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rejected_logp_collapse_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rejected_duplicate_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mean_dpo_margin": {
+              "type": "number"
+            },
+            "mean_rpo_loss": {
+              "type": "number",
+              "minimum": 0.0
+            },
+            "holdout_lock_valid": {
+              "type": "boolean"
+            },
+            "net_holdout_gain": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "regression_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "sanity_retention_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "promote_round": {
+              "type": "boolean"
+            }
+          }
+        },
+        "example": {
+          "calibrated_judge_kappa": 0.75,
+          "calibrated_judge_fpr": 0.0,
+          "calibrated_judge_passed": true,
+          "uncalibrated_judge_kappa": -0.2,
+          "uncalibrated_synthetic_admitted": 0,
+          "admitted_pair_ids": [
+            "pair-synth-calibrated-1",
+            "pair-rpo-clean-1"
+          ],
+          "admitted_pair_count": 2,
+          "rejected_length_bias_count": 1,
+          "rejected_logp_collapse_count": 1,
+          "rejected_duplicate_count": 1,
+          "mean_dpo_margin": 0.925,
+          "mean_rpo_loss": 0.743994,
+          "holdout_lock_valid": true,
+          "net_holdout_gain": 0.2,
+          "regression_rate": 0.0,
+          "sanity_retention_rate": 1.0,
+          "promote_round": true
+        }
+      }
+    },
+    {
+      "slug": "example.iterative-rpo-flywheel-bundle",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example input: calibrated vs uncalibrated rubric judges, RPO candidate pairs and SHA-256 locked holdout suite",
+      "category_reason": "Synthetic fixture recomputed by test_iterative_rpo_flywheel.py.",
+      "value": {
+        "calibrated_judge_records": [
+          {
+            "case_id": "c-01",
+            "rubric_approved": true,
+            "verifier_passed": true
+          },
+          {
+            "case_id": "c-02",
+            "rubric_approved": true,
+            "verifier_passed": true
+          },
+          {
+            "case_id": "c-03",
+            "rubric_approved": true,
+            "verifier_passed": true
+          },
+          {
+            "case_id": "c-04",
+            "rubric_approved": true,
+            "verifier_passed": true
+          },
+          {
+            "case_id": "c-05",
+            "rubric_approved": false,
+            "verifier_passed": false
+          },
+          {
+            "case_id": "c-06",
+            "rubric_approved": false,
+            "verifier_passed": false
+          },
+          {
+            "case_id": "c-07",
+            "rubric_approved": false,
+            "verifier_passed": false
+          },
+          {
+            "case_id": "c-08",
+            "rubric_approved": false,
+            "verifier_passed": true
+          }
+        ],
+        "uncalibrated_judge_records": [
+          {
+            "case_id": "u-01",
+            "rubric_approved": true,
+            "verifier_passed": true
+          },
+          {
+            "case_id": "u-02",
+            "rubric_approved": true,
+            "verifier_passed": false
+          },
+          {
+            "case_id": "u-03",
+            "rubric_approved": true,
+            "verifier_passed": false
+          },
+          {
+            "case_id": "u-04",
+            "rubric_approved": false,
+            "verifier_passed": true
+          },
+          {
+            "case_id": "u-05",
+            "rubric_approved": false,
+            "verifier_passed": false
+          },
+          {
+            "case_id": "u-06",
+            "rubric_approved": true,
+            "verifier_passed": false
+          }
+        ],
+        "verified_candidates": [
+          {
+            "pair_id": "pair-rpo-clean-1",
+            "prompt": "Validate fencing token monotonicity before committing record state",
+            "chosen_verified": "Check expected_version equals current_version and increment fencing token atomically",
+            "rejected_tombstone": "Overwrite record value directly without checking current_version or fencing token",
+            "policy_logp_chosen": -4.2,
+            "ref_logp_chosen": -4.6,
+            "policy_logp_rejected": -14.8,
+            "ref_logp_rejected": -6.0,
+            "chosen_token_count": 10,
+            "rejected_token_count": 10,
+            "chosen_verified_pass": true,
+            "rejected_tombstone_fail": true
+          },
+          {
+            "pair_id": "pair-collapse-trap",
+            "prompt": "Enforce strict schema keys on serialized configuration envelopes",
+            "chosen_verified": "Reject unknown envelope properties before executing downstream steps",
+            "rejected_tombstone": "Ignore extra unknown keys silently during deserialization",
+            "policy_logp_chosen": -12.5,
+            "ref_logp_chosen": -4.0,
+            "policy_logp_rejected": -32.0,
+            "ref_logp_rejected": -5.5,
+            "chosen_token_count": 9,
+            "rejected_token_count": 8,
+            "chosen_verified_pass": true,
+            "rejected_tombstone_fail": true
+          },
+          {
+            "pair_id": "pair-length-bias",
+            "prompt": "Summarize invariant check status across three worker shards",
+            "chosen_verified": "All three worker shards passed deterministic invariant verification with zero schema violations across every single sub-component and auxiliary diagnostic check in full verbose detail",
+            "rejected_tombstone": "Shards passed checks",
+            "policy_logp_chosen": -5.0,
+            "ref_logp_chosen": -5.2,
+            "policy_logp_rejected": -12.0,
+            "ref_logp_rejected": -6.0,
+            "chosen_token_count": 24,
+            "rejected_token_count": 3,
+            "chosen_verified_pass": true,
+            "rejected_tombstone_fail": true
+          },
+          {
+            "pair_id": "pair-skeleton-dup",
+            "prompt": "Confirm fencing token monotonicity prior to committing state version",
+            "chosen_verified": "Check expected_version equals current_version and increment fencing token atomically",
+            "rejected_tombstone": "Write state directly without version comparison",
+            "policy_logp_chosen": -4.3,
+            "ref_logp_chosen": -4.5,
+            "policy_logp_rejected": -13.0,
+            "ref_logp_rejected": -5.8,
+            "chosen_token_count": 10,
+            "rejected_token_count": 8,
+            "chosen_verified_pass": true,
+            "rejected_tombstone_fail": true
+          }
+        ],
+        "synthetic_pairs": [
+          {
+            "pair_id": "pair-synth-calibrated-1",
+            "prompt": "Compute residual subvector lookup distances for product quantization",
+            "chosen_verified": "Precompute subspace distance tables per probed centroid and sum M table lookups",
+            "rejected_tombstone": "Recompute full dense Euclidean inner products across every unquantized vector",
+            "policy_logp_chosen": -4.8,
+            "ref_logp_chosen": -5.1,
+            "policy_logp_rejected": -15.1,
+            "ref_logp_rejected": -6.1,
+            "chosen_token_count": 12,
+            "rejected_token_count": 11,
+            "chosen_verified_pass": true,
+            "rejected_tombstone_fail": true
+          }
+        ],
+        "holdout_suite": [
+          {
+            "id": "h-01",
+            "prompt": "Verify fencing token monotonicity on compare-and-set record update"
+          },
+          {
+            "id": "h-02",
+            "prompt": "Compute symmetric quantization MSE under orthogonal channel rotation"
+          },
+          {
+            "id": "h-03",
+            "prompt": "Reject self-approval when proposer identifier equals reviewer identifier"
+          },
+          {
+            "id": "h-04",
+            "prompt": "Preserve zero false negatives across partitioned membership bitsets"
+          },
+          {
+            "id": "h-05",
+            "prompt": "Bound length-ratio bias during iterative preference pair curation"
+          }
+        ],
+        "preregistered_holdout_sha256": "eff4e98fe25144431a21abdee67fd8a4fd7f9573d3192cad8c779957fb95d709",
+        "baseline_outcomes": {
+          "h-01": true,
+          "h-02": true,
+          "h-03": false,
+          "h-04": true,
+          "h-05": false
+        },
+        "candidate_outcomes": {
+          "h-01": true,
+          "h-02": true,
+          "h-03": true,
+          "h-04": true,
+          "h-05": false
+        },
+        "sanity_outcomes": {
+          "s-01": true,
+          "s-02": true,
+          "s-03": true,
+          "s-04": true
+        },
+        "proposer_id": "worker-curator-01",
+        "reviewer_id": "worker-verifier-02",
+        "shows": "Synthetic self-rewarding rubric calibration, Iterative RPO preference pair curation and SHA-256 locked flywheel promotion.",
+        "source": "Synthetic. Written for this pack."
+      }
+    },
+    {
+      "slug": "example.iterative-rpo-flywheel-receipt",
+      "category": "noun.eval_run",
+      "role": "example",
+      "synthetic": true,
+      "title": "Worked example output: recomputed rubric calibration, Iterative RPO curation and holdout promotion receipt",
+      "category_reason": "Synthetic receipt verified by test_iterative_rpo_flywheel.py.",
+      "value": {
+        "conforms_to": {
+          "$pin": "template.iterative-rpo-flywheel-receipt"
+        },
+        "instance": {
+          "calibrated_judge_kappa": 0.75,
+          "calibrated_judge_fpr": 0.0,
+          "calibrated_judge_passed": true,
+          "uncalibrated_judge_kappa": -0.2,
+          "uncalibrated_synthetic_admitted": 0,
+          "admitted_pair_ids": [
+            "pair-synth-calibrated-1",
+            "pair-rpo-clean-1"
+          ],
+          "admitted_pair_count": 2,
+          "rejected_length_bias_count": 1,
+          "rejected_logp_collapse_count": 1,
+          "rejected_duplicate_count": 1,
+          "mean_dpo_margin": 0.925,
+          "mean_rpo_loss": 0.743994,
+          "holdout_lock_valid": true,
+          "net_holdout_gain": 0.2,
+          "regression_rate": 0.0,
+          "sanity_retention_rate": 1.0,
+          "promote_round": true
+        },
+        "shows": "Recomputes Cohen's kappa calibration gating, NLL_chosen collapse rejection, length-ratio filtering, 3-key deduplication and pre-registered holdout round promotion.",
+        "source": "Synthetic. Recomputed directly from example.iterative-rpo-flywheel-bundle."
+      },
+      "relations": [
+        [
+          "derives_from",
+          "example.iterative-rpo-flywheel-bundle"
+        ],
+        [
+          "verifies",
+          "template.iterative-rpo-flywheel-receipt"
+        ]
+      ]
+    }
+  ],
+  "verbs": [
+    {
+      "slug": "calibrate-rubric-judge-against-verifiers",
+      "kind": "verb.probe_source",
+      "title": "Calibrate candidate self-rewarding rubric judges against deterministic ground-truth verifiers",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Evaluate rubric judge approvals against deterministic verifier outcomes using Cohen's kappa, exact agreement and false-positive approval rate bounds, blocking synthetic pairs when calibration fails.",
+      "outcome": "Rubric judge calibration scorecard and admitted/blocked synthetic pair counts.",
+      "ready_outcome": "rubric_judge_calibrated",
+      "pinned": [
+        "spec.iterative-rpo-and-flywheel-grid",
+        "rules.rpo-objective-and-calibration-gates",
+        "guardrail.block-uncalibrated-synthetic-rubric-pairs",
+        "tool.iterative-rpo-flywheel"
+      ],
+      "slots": [
+        {
+          "name": "calibration_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of paired rubric judge predictions, deterministic verifier verdicts and candidate synthetic pairs."
+        }
+      ],
+      "produces": [
+        {
+          "name": "calibration_receipt",
+          "template": "template.iterative-rpo-flywheel-receipt"
+        }
+      ],
+      "steps": [
+        "Load Cohen's kappa, exact agreement and false-positive rate bounds from default_grid_spec.json.",
+        "Evaluate candidate rubric judges on deterministic verifier labels and block synthetic pairs from uncalibrated judges."
+      ],
+      "acceptance": [
+        {
+          "id": "uncalibrated-judges-blocked",
+          "check": "Uncalibrated rubric judges admit zero synthetic pairs while calibrated judges satisfy kappa and false-positive bounds.",
+          "method": "deterministic"
+        }
+      ]
+    },
+    {
+      "slug": "curate-iterative-rpo-preference-pairs",
+      "kind": "verb.generate_seed",
+      "title": "Curate preference pairs with Iterative RPO NLL regularization, length bounds and 3-key deduplication",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Score (prompt, chosen_verified, rejected_tombstone) pairs with DPO logistic margin plus alpha * NLL_chosen regularization, drop chosen log-probability collapse and length-biased pairs, and deduplicate across three structural keys.",
+      "outcome": "Curated Iterative RPO preference dataset summary and rejection reason breakdown.",
+      "ready_outcome": "rpo_pairs_curated",
+      "pinned": [
+        "spec.iterative-rpo-and-flywheel-grid",
+        "rules.rpo-objective-and-calibration-gates",
+        "tool.iterative-rpo-flywheel"
+      ],
+      "slots": [
+        {
+          "name": "candidate_pairs_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of verified and calibrated preference pair candidates with policy and reference log-probabilities."
+        }
+      ],
+      "produces": [
+        {
+          "name": "curation_receipt",
+          "template": "template.iterative-rpo-flywheel-receipt"
+        }
+      ],
+      "steps": [
+        "Compute DPO implicit reward margins, per-token NLL_chosen regularizers and chosen log-probability drift for each candidate pair.",
+        "Filter unverified, length-biased, logp-collapsed and 3-key structurally duplicated pairs and rank survivors by Iterative RPO loss."
+      ],
+      "acceptance": [
+        {
+          "id": "rpo-collapse-length-and-dedup-guards",
+          "check": "All admitted pairs satisfy length-ratio bounds, non-collapsed chosen logp drift, positive DPO margin and 3-key uniqueness.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "self-rewarding-and-iterative-dpo-flywheel.calibrate-rubric-judge-against-verifiers"
+      ]
+    },
+    {
+      "slug": "verify-preregistered-flywheel-promotion",
+      "kind": "verb.verify_gate",
+      "title": "Independently verify holdout SHA-256 locks, regression caps and AST magic-literal gates before flywheel promotion",
+      "claimant": "agent",
+      "model_use": "none",
+      "summary": "Verify candidate generation rounds against pre-registered holdout SHA-256 digests, sanity retention floors, regression caps, distinct reviewer identity and ZeroHardcodedValuesAstGate conformance.",
+      "outcome": "Independent deterministic flywheel promotion receipt.",
+      "ready_outcome": "flywheel_round_verified",
+      "review": "distinct_reviewer",
+      "pinned": [
+        "spec.iterative-rpo-and-flywheel-grid",
+        "guardrail.block-uncalibrated-synthetic-rubric-pairs",
+        "guardrail.preregistered-holdout-lock-and-zero-magic-literals",
+        "tool.iterative-rpo-flywheel",
+        "template.iterative-rpo-flywheel-receipt"
+      ],
+      "slots": [
+        {
+          "name": "flywheel_eval_bundle",
+          "category": "noun.eval_run",
+          "description": "Pin of holdout suite, baseline/candidate outcomes, sanity canaries and curation bundle."
+        }
+      ],
+      "produces": [
+        {
+          "name": "verified_flywheel_receipt",
+          "template": "template.iterative-rpo-flywheel-receipt"
+        }
+      ],
+      "steps": [
+        "Verify canonical SHA-256 equality on the holdout suite, distinct proposer/reviewer identifiers, sanity retention and regression rate caps.",
+        "Run scan_directory_for_hardcoded_values across iterative_rpo_flywheel and confirm zero AST magic-literal violations."
+      ],
+      "acceptance": [
+        {
+          "id": "holdout-lock-and-ast-conformance",
+          "check": "scan_directory_for_hardcoded_values returns an empty list, holdout SHA-256 matches and run_bundle reproduces the exact template-conforming receipt.",
+          "method": "deterministic"
+        }
+      ],
+      "follows": [
+        "self-rewarding-and-iterative-dpo-flywheel.curate-iterative-rpo-preference-pairs"
+      ]
+    }
+  ]
+}

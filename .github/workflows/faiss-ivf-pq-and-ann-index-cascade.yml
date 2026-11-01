@@ -1,0 +1,26 @@
+name: faiss-ivf-pq-and-ann-index-cascade
+
+on:
+  push:
+    paths:
+      - "packs/faiss-ivf-pq-and-ann-index-cascade/**"
+      - ".github/workflows/faiss-ivf-pq-and-ann-index-cascade.yml"
+  pull_request:
+    paths:
+      - "packs/faiss-ivf-pq-and-ann-index-cascade/**"
+      - ".github/workflows/faiss-ivf-pq-and-ann-index-cascade.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run unit tests
+        working-directory: packs/faiss-ivf-pq-and-ann-index-cascade/code
+        run: make check

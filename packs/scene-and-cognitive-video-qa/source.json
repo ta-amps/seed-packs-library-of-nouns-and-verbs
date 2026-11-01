@@ -69,7 +69,7 @@
         "tool": {
           "$pin": "tool.scene-cognitive-qa"
         },
-        "worked_example": "Synthetic three-shot explainer bundle recomputed by test_scene_cognitive_qa.py: catches a 0.80 s flash section card, an 8-frame text-over-text crossfade, a 2.8 percent Ken Burns zoom drift on a static hero slide, a 19-word stage sentence competing with unrelated narration, a cropped 980 px mid-page web card with no landing click, and an un-rounded native fullscreen caption box sitting 19 px off the lower-band vertical center."
+        "worked_example": "Synthetic three-shot explainer bundle recomputed by test_scene_cognitive_qa.py: catches a 0.80 s flash section card, an 8-frame text-over-text crossfade, a 2.8 percent Ken Burns zoom drift on a static hero slide, a 19-word stage sentence competing with unrelated narration, a cropped 980 px mid-page web card with no landing click, and an un-rounded native fullscreen caption box sitting 15 px off the lower-band vertical center."
       },
       "relations": [
         [
@@ -143,7 +143,7 @@
       "category_reason": "Defines deterministic pass, warn and fail thresholds across multi-frame and cognitive checks.",
       "value": {
         "dwell_and_transitions": {
-          "min_shot_s": 1.6,
+          "min_shot_s": 1.8,
           "warn_text_shot_s": 2.0,
           "max_text_crossfade_frames": 4,
           "fps": 30
@@ -153,8 +153,8 @@
           "max_pan_drift_px": 2.0
         },
         "cognitive_load": {
-          "words_per_s_max": 3.5,
-          "base_orient_s": 0.45,
+          "words_per_s_max": 3.0,
+          "base_orient_s": 0.5,
           "prose_escape_min_words": 6,
           "conflict_min_words": 12,
           "min_lexical_overlap": 0.35
@@ -167,11 +167,11 @@
         },
         "caption_band": {
           "frame_width_px": 1920,
-          "band_top_y": 932,
+          "band_top_y": 924,
           "band_bottom_y": 1080,
           "expected_center_x": 960.0,
-          "expected_center_y": 1006.0,
-          "center_tolerance_px": 3.0,
+          "expected_center_y": 1002.0,
+          "center_tolerance_px": 2.0,
           "min_horizontal_margin_px": 24.0,
           "min_rounded_radius_px": 12.0,
           "max_lines": 2,
@@ -187,19 +187,19 @@
       "category_reason": "Zero-call geometry and linguistic line-breaking procedure for burned-in widescreen captions.",
       "value": {
         "band_y_px": [
-          932,
+          924,
           1080
         ],
         "pill_center_px": [
           960,
-          1006
+          1002
         ],
         "rounded_radius_px": 18,
         "backdrop_blur_sigma_px": 10.0,
         "specular_border_px": 1.5,
         "max_lines": 2,
         "max_chars_per_line": 42,
-        "bridge_cue_gap_s": 0.2,
+        "bridge_cue_gap_s": 0.5,
         "disable_fullscreen_native_track": true,
         "model_calls": 0
       }
@@ -321,7 +321,7 @@
           "cognitive_conflicts": 1,
           "unconvincing_journeys": 1,
           "caption_center_offset_x_px": 0.0,
-          "caption_center_offset_y_px": 19.0,
+          "caption_center_offset_y_px": 15.0,
           "overall_verdict": "fail"
         }
       }
@@ -464,7 +464,7 @@
           "cognitive_conflicts": 1,
           "unconvincing_journeys": 1,
           "caption_center_offset_x_px": 0.0,
-          "caption_center_offset_y_px": 19.0,
+          "caption_center_offset_y_px": 15.0,
           "overall_verdict": "fail"
         },
         "shows": "All six classes of multi-frame and cognitive defects are flagged deterministically and roll up to overall_verdict fail.",
@@ -489,7 +489,7 @@
       "title": "Audit multi-frame shot dwell and text-bearing transition overlaps",
       "claimant": "agent",
       "model_use": "none",
-      "summary": "Check shot durations across scene cuts for flash cards shorter than 1.6 s and flag crossfades longer than 4 frames between text-bearing shots.",
+      "summary": "Check shot durations across scene cuts for flash cards shorter than 1.8 s and flag crossfades longer than 4 frames between text-bearing shots.",
       "outcome": "Shot cadence statistics, flash-shot findings and ghosting transition findings.",
       "ready_outcome": "dwell_and_transitions_audited",
       "pinned": [
@@ -515,7 +515,7 @@
         }
       ],
       "steps": [
-        "Evaluate every shot window against min_shot_s (1.60 s) and warn_text_shot_s (2.00 s).",
+        "Evaluate every shot window against min_shot_s (1.80 s) and warn_text_shot_s (2.00 s).",
         "Flag crossfade or dissolve transitions exceeding 4 frames when both adjacent shots display text."
       ],
       "acceptance": [
@@ -575,7 +575,7 @@
       "title": "Audit on-screen reading speed and split-attention prose conflicts against narration",
       "claimant": "agent",
       "model_use": "none",
-      "summary": "Verify every stage text span stays up for at least 0.45 s plus words/3.5, reject must_read=False escapes on prose >= 6 words, and flag >= 12-word stage sentences that diverge lexically from concurrent speech.",
+      "summary": "Verify every stage text span stays up for at least 0.50 s plus words/3.0, reject must_read=False escapes on prose >= 6 words, and flag >= 12-word stage sentences that diverge lexically from concurrent speech.",
       "outcome": "Unreadable item count, cognitive conflict count, peak words-per-second and timestamped findings.",
       "ready_outcome": "cognitive_load_audited",
       "pinned": [
@@ -600,7 +600,7 @@
         }
       ],
       "steps": [
-        "Check every stage text item for positive duration, disallowed must_read=False prose escapes, and dwell >= 0.45 + words/3.5 s.",
+        "Check every stage text item for positive duration, disallowed must_read=False prose escapes, and dwell >= 0.50 + words/3.0 s.",
         "Compute content-word overlap between >= 12-word stage prose and overlapping narration cues, flagging overlap < 0.35."
       ],
       "acceptance": [
@@ -617,7 +617,7 @@
       "title": "Audit desktop website click-through provenance and widescreen frosted-caption geometry",
       "claimant": "agent",
       "model_use": "none",
-      "summary": "Verify web captures show >= 1280 px desktop browser chrome, landing-page entry and click navigation without live form submission, and check burned-in frosted-glass captions centered at (960, 1006) in the y=932..1080 lower band.",
+      "summary": "Verify web captures show >= 1280 px desktop browser chrome, landing-page entry and click navigation without live form submission, and check burned-in frosted-glass captions centered at (960, 1002) in the y=924..1080 lower band.",
       "outcome": "Web-journey provenance findings, caption centroid offsets and line-break hygiene findings.",
       "ready_outcome": "journey_and_captions_audited",
       "pinned": [
@@ -645,7 +645,7 @@
       ],
       "steps": [
         "Run evaluate_live_web_journey_provenance to verify >= 1280 px viewport, browser chrome, homepage-to-route click navigation and form_submitted == False.",
-        "Run evaluate_frosted_caption_geometry to verify burned-in frosted-glass rounded pills centered at (960, 1006) +/- 3 px with zero native fullscreen ::cue leak and zero 1-word orphans."
+        "Run evaluate_frosted_caption_geometry to verify burned-in frosted-glass rounded pills centered at (960, 1002) +/- 2 px with zero native fullscreen ::cue leak and zero 1-word orphans."
       ],
       "acceptance": [
         {

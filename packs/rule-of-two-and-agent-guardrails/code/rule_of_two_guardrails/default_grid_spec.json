@@ -1,0 +1,152 @@
+{
+  "grid_id": "rule-of-two-and-agent-guardrails-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "sha256_prefix_chars": 12,
+  "float_round_digits": 6,
+  "parameters": [
+    {
+      "name": "max_unapproved_legs",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 2,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "name": "placeholder_index_width",
+      "param_type": "integer_range",
+      "low": 3,
+      "high": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "name": "allow_vaulted_confidential_zero_retention",
+      "param_type": "boolean",
+      "default": true
+    },
+    {
+      "name": "firewall_mode",
+      "param_type": "choice",
+      "choices": ["strict_fail_closed", "reroute_to_safe_tier"],
+      "default": "strict_fail_closed"
+    },
+    {
+      "name": "max_dag_steps",
+      "param_type": "integer_range",
+      "low": 8,
+      "high": 256,
+      "step": 8,
+      "default": 64
+    }
+  ],
+  "constraints": [
+    {
+      "id": "strict-mode-caps-legs-at-two",
+      "when": { "firewall_mode": "strict_fail_closed" },
+      "require_in": { "max_unapproved_legs": [1, 2] }
+    }
+  ],
+  "regime_defaults": {
+    "autonomous_unattended": {
+      "max_unapproved_legs": 2,
+      "placeholder_index_width": 3,
+      "allow_vaulted_confidential_zero_retention": false,
+      "firewall_mode": "strict_fail_closed",
+      "max_dag_steps": 64
+    },
+    "interactive_vaulted": {
+      "max_unapproved_legs": 2,
+      "placeholder_index_width": 3,
+      "allow_vaulted_confidential_zero_retention": true,
+      "firewall_mode": "reroute_to_safe_tier",
+      "max_dag_steps": 128
+    },
+    "high_assurance_single_leg": {
+      "max_unapproved_legs": 1,
+      "placeholder_index_width": 4,
+      "allow_vaulted_confidential_zero_retention": false,
+      "firewall_mode": "strict_fail_closed",
+      "max_dag_steps": 32
+    }
+  },
+  "constants": {
+    "allow_status_code": 200,
+    "refuse_status_code": 403,
+    "triad_leg_count": 3,
+    "canonical_legs": [
+      "untrusted_input",
+      "sensitive_access",
+      "external_mutation_or_egress"
+    ],
+    "leg_aliases": {
+      "A": "untrusted_input",
+      "B": "sensitive_access",
+      "C": "external_mutation_or_egress",
+      "untrusted_input": "untrusted_input",
+      "sensitive_access": "sensitive_access",
+      "external_mutation_or_egress": "external_mutation_or_egress"
+    },
+    "required_approval_kind": "human_steward",
+    "approval_token_prefix": "steward_ack:",
+    "min_approval_token_len": 16,
+    "hex_digest_min_chars": 32,
+    "hex_digest_max_chars": 64,
+    "round_digits": 4,
+    "json_indent": 2,
+    "entity_patterns": [
+      {
+        "entity_type": "API_SECRET",
+        "pattern": "\\b(?:sk-[A-Za-z0-9_-]{12,}|ghp_[A-Za-z0-9]{12,}|tok_live_[A-Za-z0-9_-]{8,})\\b"
+      },
+      {
+        "entity_type": "EMAIL_ADDR",
+        "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b"
+      },
+      {
+        "entity_type": "GOV_ID",
+        "pattern": "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+      },
+      {
+        "entity_type": "IPV4_HOST",
+        "pattern": "\\b(?:10|172|192)\\.(?:\\d{1,3}\\.){2}\\d{1,3}\\b"
+      },
+      {
+        "entity_type": "PHONE_NUM",
+        "pattern": "\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}\\b"
+      }
+    ],
+    "license_tiers": [
+      "contributor_training_allowed",
+      "standard_zero_retention",
+      "local_open_weights"
+    ],
+    "permissive_training_licenses": [
+      "MIT",
+      "Apache-2.0",
+      "BSD-3-Clause",
+      "CC0-1.0"
+    ],
+    "zero_retention_allowed_licenses": [
+      "MIT",
+      "Apache-2.0",
+      "BSD-3-Clause",
+      "CC0-1.0",
+      "CC-BY-4.0",
+      "internal-commercial-no-train"
+    ],
+    "local_only_licenses": [
+      "local-weights-only",
+      "sovereign-airgapped",
+      "restricted-derivative-no-api",
+      "GPL-3.0-internal"
+    ],
+    "sensitivity_levels": [
+      "public",
+      "internal",
+      "confidential",
+      "secret"
+    ]
+  }
+}
