@@ -1,0 +1,215 @@
+{
+  "grid_id": "capability-ontology-and-seed-benchmark-grid",
+  "generation": 1,
+  "expansion_factor": 2,
+  "http_ok_status": 200,
+  "http_conflict_status": 409,
+  "sha256_prefix_chars": 16,
+  "float_round_digits": 6,
+  "score_scale_max": 100.0,
+  "pareto_tie_epsilon": 1e-9,
+  "default_shingle_size": 2,
+  "high_priority": 1,
+  "default_priority": 2,
+  "low_priority": 3,
+  "half_weight": 0.5,
+  "allowed_ast_identities": [-1, 0, 1, -1.0, 0.0, 1.0],
+  "forbidden_domain_tokens": [
+    "real_estate",
+    "mortgage",
+    "healthcare",
+    "hospitality",
+    "ecommerce",
+    "fintech",
+    "parcel",
+    "clinic_billing",
+    "hotel_booking",
+    "retail_checkout"
+  ],
+  "allowed_subject_kinds": [
+    "ai_tool",
+    "mcp_server",
+    "feed_stream",
+    "durable_queue",
+    "architecture_pattern",
+    "oss_release"
+  ],
+  "allowed_execution_modes": [
+    "offline_local",
+    "hybrid_edge_cloud",
+    "cloud_api",
+    "container_cluster"
+  ],
+  "allowed_mcp_transports": [
+    "stdio",
+    "streamable_http",
+    "sse",
+    "none"
+  ],
+  "parameters": [
+    {
+      "name": "max_generation_depth",
+      "param_type": "integer_range",
+      "low": 1,
+      "high": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "name": "max_children_per_hop",
+      "param_type": "integer_range",
+      "low": 2,
+      "high": 8,
+      "step": 2,
+      "default": 4
+    },
+    {
+      "name": "dedup_jaccard_threshold",
+      "param_type": "float_range",
+      "low": 0.5,
+      "high": 0.9,
+      "step": 0.2,
+      "default": 0.7
+    },
+    {
+      "name": "ranking_regime",
+      "param_type": "choice",
+      "choices": [
+        "balanced_general",
+        "edge_small_footprint",
+        "ultra_low_latency",
+        "cost_frugal_batch",
+        "cluster_production"
+      ],
+      "default": "balanced_general"
+    },
+    {
+      "name": "require_reproducible_demo",
+      "param_type": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "cluster-production-requires-demo",
+      "when": {
+        "ranking_regime": "cluster_production"
+      },
+      "require_in": {
+        "require_reproducible_demo": [true]
+      }
+    },
+    {
+      "id": "deepest-hop-caps-fanout",
+      "when": {
+        "max_generation_depth": 5
+      },
+      "require_in": {
+        "max_children_per_hop": [2, 4]
+      }
+    }
+  ],
+  "regime_defaults": {
+    "balanced_general": {
+      "max_generation_depth": 3,
+      "max_children_per_hop": 4,
+      "dedup_jaccard_threshold": 0.7,
+      "ranking_regime": "balanced_general",
+      "require_reproducible_demo": true
+    },
+    "edge_small_footprint": {
+      "max_generation_depth": 2,
+      "max_children_per_hop": 4,
+      "dedup_jaccard_threshold": 0.7,
+      "ranking_regime": "edge_small_footprint",
+      "require_reproducible_demo": true
+    },
+    "ultra_low_latency": {
+      "max_generation_depth": 2,
+      "max_children_per_hop": 2,
+      "dedup_jaccard_threshold": 0.7,
+      "ranking_regime": "ultra_low_latency",
+      "require_reproducible_demo": true
+    },
+    "cost_frugal_batch": {
+      "max_generation_depth": 3,
+      "max_children_per_hop": 6,
+      "dedup_jaccard_threshold": 0.5,
+      "ranking_regime": "cost_frugal_batch",
+      "require_reproducible_demo": false
+    },
+    "cluster_production": {
+      "max_generation_depth": 3,
+      "max_children_per_hop": 4,
+      "dedup_jaccard_threshold": 0.7,
+      "ranking_regime": "cluster_production",
+      "require_reproducible_demo": true
+    }
+  },
+  "benchmark_normalization": {
+    "cost_per_1k_ops_ceiling_usd": 10.0,
+    "p99_latency_sub10ms_anchor_ms": 10.0,
+    "p99_latency_ceiling_ms": 500.0,
+    "small_laptop_ram_budget_mb": 4096.0,
+    "ram_ceiling_mb": 32768.0,
+    "dependency_count_ceiling": 25.0,
+    "small_laptop_fit_floor": 0.75,
+    "ergonomic_bonus_weight": 0.5
+  },
+  "rubric_axes": [
+    "cheapest_per_1k_ops",
+    "fastest_p99_sub10ms",
+    "runs_on_small_4gb_laptop",
+    "single_maintainer_zero_dep",
+    "kubernetes_production_ready",
+    "accuracy",
+    "reproducible_demo_walkthrough"
+  ],
+  "regime_rubric_weights": {
+    "balanced_general": {
+      "cheapest_per_1k_ops": 0.15,
+      "fastest_p99_sub10ms": 0.15,
+      "runs_on_small_4gb_laptop": 0.15,
+      "single_maintainer_zero_dep": 0.10,
+      "kubernetes_production_ready": 0.10,
+      "accuracy": 0.25,
+      "reproducible_demo_walkthrough": 0.10
+    },
+    "edge_small_footprint": {
+      "cheapest_per_1k_ops": 0.15,
+      "fastest_p99_sub10ms": 0.15,
+      "runs_on_small_4gb_laptop": 0.30,
+      "single_maintainer_zero_dep": 0.15,
+      "kubernetes_production_ready": 0.05,
+      "accuracy": 0.15,
+      "reproducible_demo_walkthrough": 0.05
+    },
+    "ultra_low_latency": {
+      "cheapest_per_1k_ops": 0.10,
+      "fastest_p99_sub10ms": 0.35,
+      "runs_on_small_4gb_laptop": 0.10,
+      "single_maintainer_zero_dep": 0.10,
+      "kubernetes_production_ready": 0.10,
+      "accuracy": 0.15,
+      "reproducible_demo_walkthrough": 0.10
+    },
+    "cost_frugal_batch": {
+      "cheapest_per_1k_ops": 0.35,
+      "fastest_p99_sub10ms": 0.10,
+      "runs_on_small_4gb_laptop": 0.15,
+      "single_maintainer_zero_dep": 0.10,
+      "kubernetes_production_ready": 0.05,
+      "accuracy": 0.20,
+      "reproducible_demo_walkthrough": 0.05
+    },
+    "cluster_production": {
+      "cheapest_per_1k_ops": 0.10,
+      "fastest_p99_sub10ms": 0.15,
+      "runs_on_small_4gb_laptop": 0.05,
+      "single_maintainer_zero_dep": 0.05,
+      "kubernetes_production_ready": 0.30,
+      "accuracy": 0.25,
+      "reproducible_demo_walkthrough": 0.10
+    }
+  }
+}
