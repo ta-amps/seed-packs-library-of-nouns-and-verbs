@@ -1,0 +1,166 @@
+{
+  "schema_id": "dag_stemcell_pack_grid_spec/v1",
+  "json_indent": 2,
+  "round_digits": 6,
+  "digest_hex_chars": 16,
+  "sandbox_dir_mode": 448,
+  "subprocess_rlimit_cpu_seconds": 2,
+  "subprocess_timeout_seconds": 3.0,
+  "half_factor": 0.5,
+  "percentage_scale": 100.0,
+  "allowed_identity_numbers": [
+    -1,
+    0,
+    1,
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "forbidden_industry_tokens": [
+    "real_estate",
+    "realestate",
+    "mortgage",
+    "parcel",
+    "homeowner",
+    "realtor",
+    "healthcare",
+    "hospitality",
+    "fintech",
+    "ecommerce",
+    "clinical",
+    "patient",
+    "insurance",
+    "banking"
+  ],
+  "dag_profiles": [
+    "linear_waterfall",
+    "hedged_staggered_dag",
+    "parallel_first_verified_race_dag",
+    "diamond_scatter_gather_dag",
+    "quorum_adjudication_dag",
+    "voi_branch_and_bound_dag",
+    "hybrid_staged_adaptive_dag"
+  ],
+  "harness_families": {
+    "muse": {
+      "config_filename": ".muse-settings.json",
+      "affinity": 0.96
+    },
+    "nanomuse": {
+      "config_filename": ".nanomuse.json",
+      "affinity": 0.97
+    },
+    "opencode": {
+      "config_filename": ".opencode.json",
+      "affinity": 0.98
+    },
+    "pi": {
+      "config_filename": ".pi-session.json",
+      "affinity": 0.94
+    },
+    "codex": {
+      "config_filename": "codex.config.json",
+      "affinity": 0.95
+    }
+  },
+  "grid_axes": {
+    "max_dag_parallel_width": [
+      1,
+      2,
+      4
+    ],
+    "max_dag_wave_depth": [
+      2,
+      5
+    ],
+    "hedge_stagger_quantile_ms": [
+      8,
+      20
+    ],
+    "coalesce_batch_cap": [
+      1,
+      4
+    ],
+    "canary_audit_rate": [
+      0.1,
+      0.5
+    ],
+    "demand_gap_quorum": [
+      2,
+      3
+    ]
+  },
+  "parameter_bounds": {
+    "max_dag_parallel_width": {
+      "minimum": 1,
+      "maximum": 16
+    },
+    "max_dag_wave_depth": {
+      "minimum": 2,
+      "maximum": 16
+    },
+    "hedge_stagger_quantile_ms": {
+      "minimum": 2,
+      "maximum": 120
+    },
+    "coalesce_batch_cap": {
+      "minimum": 1,
+      "maximum": 16
+    },
+    "canary_audit_rate": {
+      "minimum": 0.01,
+      "maximum": 1.0
+    }
+  },
+  "morphogenesis_policy": {
+    "upper_growth_multiplier": 2,
+    "lower_contraction_divisor": 5.0,
+    "prune_dominated_canary_rate": 0.5
+  },
+  "manifold_physics": {
+    "blend_weights": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "synergy_quality_bonus": 0.035,
+    "synergy_latency_factor": 0.35,
+    "synergy_cost_factor": 0.78,
+    "vcg_base_price_usd": 0.0004,
+    "vcg_congestion_exponent": 2.0,
+    "vcg_clean_utilization": 0.25,
+    "evsi_subtree_cost_usd": 0.0024,
+    "evsi_subtree_ms": 26.0,
+    "evsi_usd_weight": 100.0,
+    "evsi_ms_weight": 0.005,
+    "shared_prefix_tokens": 360.0,
+    "per_task_unique_tokens": 90.0,
+    "interference_slope_homogeneous": 0.015,
+    "interference_ceiling": 0.09,
+    "prefix_savings_floor": 0.25,
+    "fresh_resource_max_age_hours": 6.0
+  },
+  "fresh_delta_catalog": [
+    {
+      "rule_id": "delta_recalibration_6h",
+      "keywords": [
+        "recalibration",
+        "drift_6h",
+        "updated_feed"
+      ],
+      "age_hours": 2.5
+    },
+    {
+      "rule_id": "cohort_regime_index_6h",
+      "keywords": [
+        "regime_shift",
+        "surge_window"
+      ],
+      "age_hours": 4.0
+    }
+  ],
+  "subprocess_dag_join_kernel": {
+    "expected_sha256": "565b506f93b5df9ae9936e95f48c5a6e5d66d0970b75b3ac9c443d96ec40ebba",
+    "script_source": "import json, sys\nreq = json.loads(sys.stdin.read())\nvals = [float(x) for x in req.get('branch_values', [])]\nweights = [float(w) for w in req.get('branch_weights', [])]\nagg = sum(v * w for v, w in zip(vals, weights))\nsys.stdout.write(json.dumps({'ok': True, 'merged_value': round(agg, 6), 'fan_in': len(vals)}))\n"
+  }
+}

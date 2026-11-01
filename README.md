@@ -12,9 +12,9 @@ storage, queues, leases and receipts.
 
 ## Seed pack library
 
-The [packs/](packs/README.md) folder holds one hundred and nine proposed seed packs. Each is a
-collection of nouns (knowledge, templates, tool cards and examples) and verbs (work an
-authorized worker can claim), named in plain English and kept separate from any surface.
+The [packs/](packs/README.md) folder holds one hundred and eleven proposed seed packs. Each is a
+collection of nouns (task objects: knowledge, templates, tool cards and examples) and verbs (durable tasks, things to do that an
+authorized worker can claim from a durable task queue), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
 activated**, and no worker has run them yet.
 
@@ -129,10 +129,12 @@ activated**, and no worker has run them yet.
 | [Partner compute telemetry cards](packs/partner-compute-telemetry-cards/README.md) | Verifying partner compute receipts and formatting truthful local_verified vs live_api telemetry cards with honest speed-ratio attribution, with tested code |
 | [Request status UI](packs/request-status-ui/README.md) | Reducing append-only request lifecycle events into plain-language status timelines, replay schedules and identifier-free requester views, with tested code |
 | [Website-first walkthrough capture](packs/website-first-walkthrough-capture/README.md) | Auditing widescreen walkthrough storyboards against footage, anchor and pacing gates and emitting headless viewport capture plans, with tested code |
+| [Autonomous DAG stem-cell and answer generalizer](packs/autonomous-dag-and-answer-generalizer/README.md) | Compiling tasks (things to do) and task objects across seven Kahn-wave DAG profiles, lifting discrete decision forks into answer manifolds, vaporizing ephemeral CLI harness workspaces, recovering from canary blueprint drift and computing causal Shapley step credits, with tested code |
+| [Hybrid memory matrices and durable task queues](packs/hybrid-memory-and-durable-task-queues/README.md) | Inline-lease durable task queues, zero-sweeper crash reclamation, maker != checker verification, content-addressed step and rating idempotency, ADaPT decompose-on-failure with shared-prefix batch coalescing and zero-OOM subspace memory matrix rotating-layer iterative training, with tested code |
 
 Every noun is a Tessera `RecordWrite` body and every verb a `TaskSpec` template. Workers
-create nouns and propose follow-up verbs; they never enqueue their proposals. All 1819
-nouns and 581 verb templates were checked offline with Tessera's own models at a pinned
+create nouns and propose follow-up verbs; they never enqueue their proposals. All 1837
+nouns and 587 verb templates were checked offline with Tessera's own models at a pinned
 commit, and a two-key probe on a throwaway local Store showed a team surface can read,
 claim and update them while other keys see nothing; the [receipt](packs/VALIDATION.json)
 records exactly what was checked. The [pack inventory](docs/pack-inventory.md) maps the

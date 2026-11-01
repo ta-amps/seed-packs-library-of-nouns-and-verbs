@@ -125,8 +125,10 @@ None is installed, imported, admitted or activated, and no worker has run these 
 | [Partner compute telemetry cards](partner-compute-telemetry-cards/README.md) | Verifying partner compute receipts and formatting truthful local_verified vs live_api telemetry cards with honest speed-ratio attribution, with tested code | 7 | 2 |
 | [Request status UI](request-status-ui/README.md) | Reducing append-only request lifecycle events into plain-language status timelines, replay schedules and identifier-free requester views, with tested code | 8 | 2 |
 | [Website-first walkthrough capture](website-first-walkthrough-capture/README.md) | Auditing widescreen walkthrough storyboards against footage, anchor and pacing gates and emitting headless viewport capture plans, with tested code | 8 | 2 |
+| [Autonomous DAG stem-cell and answer generalizer](autonomous-dag-and-answer-generalizer/README.md) | Compiling tasks (things to do) and task objects across seven Kahn-wave DAG profiles, lifting discrete decision forks into answer manifolds, vaporizing ephemeral CLI harness workspaces, recovering from canary blueprint drift and computing causal Shapley step credits, with tested code | 9 | 3 |
+| [Hybrid memory matrices and durable task queues](hybrid-memory-and-durable-task-queues/README.md) | Inline-lease durable task queues, zero-sweeper crash reclamation, maker != checker verification, content-addressed step and rating idempotency, ADaPT decompose-on-failure with shared-prefix batch coalescing and zero-OOM subspace memory matrix rotating-layer iterative training, with tested code | 9 | 3 |
 
-Together: 1819 nouns and 581 verb templates across one hundred and nine packs. The
+Together: 1837 nouns and 587 verb templates across one hundred and eleven packs. The
 [pack inventory](../docs/pack-inventory.md) maps them onto three goals (making a video,
 building nonprofit kits and keeping knowledge fresh) and lists what is still missing.
 
