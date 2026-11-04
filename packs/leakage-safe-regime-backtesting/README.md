@@ -2,11 +2,11 @@
 
 ## What this pack lets workers do
 
-A collection of nouns and verbs for synthetic and historical statistical validation hygiene using
+A collection of nouns and verbs for made-up and historical statistical validation hygiene using
 purged and embargoed expanding-window walk-forward splits, causal volatility-regime Rank IC and
 ICIR, turnover cost accounting and multiple-testing deflation, strictly never as financial,
 investment or trading advice. In plain language, nouns are **task objects** (split specs, statistical
-formulas, pinned standard-library code, schemas and synthetic fixtures) and verbs are **tasks** a
+formulas, pinned standard-library code, schemas and made-up fixtures) and verbs are **tasks** a
 worker claims. Workers verify that multi-bar forward targets never leak across train/test boundaries,
 check whether rank correlation survives across calm and volatile regimes, deduct linear turnover
 costs, and penalize data-mined trial multiplicity via Deflated Sharpe probability. No task generates
@@ -21,7 +21,7 @@ orders, recommends trades or connects to any brokerage.
 | `rules.regime-and-turnover` | Tie-aware Spearman Rank IC, L1 turnover drag (`sum |w_t - w_{t-1}| * bps`) and Euler-Mascheroni trial deflation |
 | `tool.regime-backtest` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.validation-receipt` | JSON Schema for a non-advisory statistical hygiene receipt |
-| Worked example | Fictional 4-series synthetic panel (`example.synthetic-panel`, `SERIES_A.X..SERIES_D.X`) and recomputed receipt (`example.validation-receipt`) |
+| Worked example | Fictional 4-series made-up panel (`example.made-up-panel`, `SERIES_A.X..SERIES_D.X`) and recomputed receipt (`example.validation-receipt`) |
 
 ## Verbs
 
@@ -40,6 +40,6 @@ purged split hygiene, regime-stratified Rank IC, turnover cost drag and multiple
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
   activated, and no worker has claimed or run these tasks through Tessera.
-- Strictly statistical validation hygiene on synthetic or historical panel series: never financial,
+- Strictly statistical validation hygiene on made-up or historical panel series: never financial,
   investment or trading advice, with zero orders, trades or broker connections.
-- The worked example in `source.json` uses fictional `.X` series and synthetic numbers.
+- The worked example in `source.json` uses fictional `.X` series and made-up numbers.

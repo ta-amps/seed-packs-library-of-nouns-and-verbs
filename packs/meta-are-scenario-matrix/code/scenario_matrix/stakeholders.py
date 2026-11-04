@@ -230,7 +230,7 @@ def evaluate_and_digest_episode(
             },
             "public_donor_lane": {
                 "compute": method["compute_tier"],
-                "data_scope": "public statutes, enacted budgets, published bulletins and synthetic tests",
+                "data_scope": "public statutes, enacted budgets, published bulletins and made-up tests",
                 "policy": "Authorized volunteer workers claim, do and report cited public sub-tasks under distinct review.",
             },
         }

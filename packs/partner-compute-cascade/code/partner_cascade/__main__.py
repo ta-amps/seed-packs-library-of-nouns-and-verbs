@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("modal-dry-run", help="Run deterministic Modal QLoRA VRAM, trace holdout and sandbox validation")
 
-    p_worked = sub.add_parser("worked-example", help="Recompute synthetic worked example")
+    p_worked = sub.add_parser("worked-example", help="Recompute made-up worked example")
     p_worked.add_argument("--input", type=Path, required=True)
 
     args = parser.parse_args(argv)

@@ -86,7 +86,7 @@
             "$pin": "guardrail.no-generalizing"
           }
         ],
-        "worked_example": "Synthetic: ten people in two segments watch a fictional pantry's 2:30 film. The criteria were fixed a day before the first session; the decision meets the one-sentence task, misses the next-step and label tasks, leaves the who-is-it-for task unknown because nobody scored it, and proposes four findings: one per miss and one per moment viewers named.",
+        "worked_example": "Made-up: ten people in two segments watch a fictional pantry's 2:30 film. The criteria were fixed a day before the first session; the decision meets the one-sentence task, misses the next-step and label tasks, leaves the who-is-it-for task unknown because nobody scored it, and proposes four findings: one per miss and one per moment viewers named.",
         "complements": "The user acceptance testing pack owns criteria agreement and sign-off: this pack uses its agree-criteria and sign-off verbs rather than its own, and adds only what a video needs, one viewing, comprehension tasks with keys and the moments viewers point at. The video review pack judges the cut by rubric; the accessibility audit pack covers the page and player.",
         "provenance_notes": [
           "Written for ta-amps's own explainer film, whose review on October 30, 2026 could not say whether a first-time viewer understands what the marketplace does: a question only its intended viewers can answer."
@@ -275,7 +275,7 @@
             "kind": "read_label",
             "ask": "What did the small label in the corner say, and what does it mean?",
             "when": "after one viewing",
-            "key": "Says the voice is AI-generated, or that the data is synthetic.",
+            "key": "Says the voice is AI-generated, or that the data is made-up.",
             "scoring": "key_match"
           }
         ],
@@ -1079,19 +1079,19 @@
           "template.uat-decision"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for audience acceptance",
+      "title": "Made-up test cases for audience acceptance",
       "value": {
         "cases": [
           {
             "id": "UAT-CRITERIA-AFTER",
             "scenario": "A pass mark is lowered after the sessions",
-            "sample_input": "SYNTHETIC: T3's 0.6 becomes 0.4 after three of five missed.",
+            "sample_input": "MADE-UP: T3's 0.6 becomes 0.4 after three of five missed.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "new_plan_required",
@@ -1102,7 +1102,7 @@
           {
             "id": "UAT-WRONG-NUMBER",
             "scenario": "Viewers remember a number the film never showed",
-            "sample_input": "SYNTHETIC: two viewers recall '500 families'; the trace has 112 households.",
+            "sample_input": "MADE-UP: two viewers recall '500 families'; the trace has 112 households.",
             "expected_outcome": "answers_scored",
             "expected_indicators": [
               "trace_mismatch",
@@ -1113,7 +1113,7 @@
           {
             "id": "UAT-LABEL-UNSEEN",
             "scenario": "Nobody can say what the corner label meant",
-            "sample_input": "SYNTHETIC: zero of five read the AI-voice label.",
+            "sample_input": "MADE-UP: zero of five read the AI-voice label.",
             "expected_outcome": "acceptance_decided",
             "expected_indicators": [
               "T8_missed",
@@ -1124,7 +1124,7 @@
           {
             "id": "UAT-NO-CONSENT",
             "scenario": "A session starts before consent is read",
-            "sample_input": "SYNTHETIC: the notes for V07 have consent false.",
+            "sample_input": "MADE-UP: the notes for V07 have consent false.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "session_excluded",
@@ -1135,7 +1135,7 @@
           {
             "id": "UAT-ASKED-TO-GENERALIZE",
             "scenario": "A summary claims most viewers understand the film",
-            "sample_input": "SYNTHETIC: the draft says '80% of viewers get it' from ten sessions.",
+            "sample_input": "MADE-UP: the draft says '80% of viewers get it' from ten sessions.",
             "expected_outcome": "findings_written",
             "expected_indicators": [
               "scope_restated",
@@ -1145,7 +1145,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.uat-plan",
@@ -1153,7 +1153,7 @@
       "role": "example",
       "title": "Worked example: a plan for ten viewers in two segments",
       "value": {
-        "notice": "SYNTHETIC. No session took place.",
+        "notice": "MADE-UP. No session took place.",
         "conforms_to": {
           "$pin": "template.uat-plan"
         },
@@ -1208,7 +1208,7 @@
           "first_session_on": "2026-10-29"
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.scored-answers",
@@ -1216,7 +1216,7 @@
       "role": "example",
       "title": "Worked example: scored answers for three keyed tasks",
       "value": {
-        "notice": "SYNTHETIC. Viewers are invented ids; no person was asked.",
+        "notice": "MADE-UP. Viewers are invented ids; no person was asked.",
         "conforms_to": {
           "$pin": "template.scored-answers"
         },
@@ -1365,7 +1365,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.uat-decision",
@@ -1373,7 +1373,7 @@
       "role": "example",
       "title": "Worked example: the decision the fixed criteria give",
       "value": {
-        "notice": "SYNTHETIC. Recomputed exactly by the library's tests from the plan and the scores.",
+        "notice": "MADE-UP. Recomputed exactly by the library's tests from the plan and the scores.",
         "conforms_to": {
           "$pin": "template.uat-decision"
         },
@@ -1423,7 +1423,7 @@
           "findings_proposed": 4
         }
       },
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [

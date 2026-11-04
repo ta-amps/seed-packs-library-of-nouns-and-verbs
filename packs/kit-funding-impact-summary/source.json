@@ -5,7 +5,7 @@
   "summary": "A collection of nouns and verbs for a funding impact summary in a grant renewal: the grant period's results compared with the original targets, spending by budget line taken word for word from the finance lead's figures, missing numbers kept as unknown, and a traceable summary draft, while the finance lead checks the figures and the executive director approves and submits.",
   "dependencies": [],
   "boundaries": [
-    "Use only synthetic, clearly marked test data.",
+    "Use only made-up, clearly marked test data.",
     "Steps marked for a person never go to an agent.",
     "Outputs stay surface_only in the requester's scope.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -64,7 +64,7 @@
           "Submit the renewal application to the funder."
         ],
         "rules": [
-          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Use only made-up, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
           "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
           "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
         ],
@@ -83,7 +83,7 @@
             "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
             "path": "examples/runs/KIT-RENEWAL-10.json",
             "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
-            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+            "note": "One recorded example run of the kit on a desktop computer with made-up data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
           }
         ]
       },
@@ -385,13 +385,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for the funding impact summary kit",
+      "title": "Made-up test cases for the funding impact summary kit",
       "value": {
         "cases": [
           {
             "id": "FX-RENEWAL-ROUTINE",
             "scenario": "Two-year grant with every period reported and most targets met",
-            "sample_input": "SYNTHETIC: Grant period 2025-01-01 to 2026-12-31 with 8 quarterly results tables. Targets: 480 households served, 96 workshops. Totals: 512 households, 90 workshops. Finance lead's spending: staff USD 61,000, supplies USD 18,400.",
+            "sample_input": "MADE-UP: Grant period 2025-01-01 to 2026-12-31 with 8 quarterly results tables. Targets: 480 households served, 96 workshops. Totals: 512 households, 90 workshops. Finance lead's spending: staff USD 61,000, supplies USD 18,400.",
             "expected_indicators": [
               "period_table_complete",
               "spending_copied_from_finance_lead",
@@ -402,7 +402,7 @@
           {
             "id": "FX-RENEWAL-GAP",
             "scenario": "One quarter's results are missing and one measure is well below target",
-            "sample_input": "SYNTHETIC: The results table for 2026 Q2 is missing; workshops total 61 of a 96 target over the reported quarters.",
+            "sample_input": "MADE-UP: The results table for 2026 Q2 is missing; workshops total 61 of a 96 target over the reported quarters.",
             "expected_indicators": [
               "missing_period_reported_unknown",
               "below_target_flagged"
@@ -417,7 +417,7 @@
           "kit"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.request",
@@ -427,9 +427,9 @@
       "category_reason": "A need in an organization's own plain words frames what the kit should do.",
       "value": {
         "says": "We need a first draft of what our two-year grant achieved for the renewal application, comparing our results with the original targets and using our treasurer's spending figures. Our finance lead checks every number and our director submits it.",
-        "mark": "SYNTHETIC"
+        "mark": "MADE-UP"
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "template.period-table",

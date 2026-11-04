@@ -5,7 +5,7 @@
 A collection of nouns and verbs for authorized, local-only security review of code you
 own or are explicitly allowed to review. Workers first confirm the authorization, sketch
 a threat model, review one area at a time from a 16-area catalog, reproduce findings only
-in a local sandbox with synthetic data, propose a patch with a test, and have another
+in a local sandbox with made-up data, propose a patch with a test, and have another
 worker check the findings. Nothing is scanned, probed or exploited on a running system.
 
 ## Nouns

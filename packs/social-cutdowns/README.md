@@ -20,8 +20,8 @@ themselves through the platform's own app or site. Workers never post, schedule 
 | Reframe, caption and copy rules | Vertical crops per shot, burned-in caption sizes and places, and what a post's words must and must not say |
 | Templates | Platform profile, hook candidates, cut-down plan, meaning check, copy draft, approval |
 | Cut-down checks | Seven checks on a cut-down summary, with one good and seven bad summaries the validator recomputes |
-| Posting checklist, sources, test cases | What a person does before and after posting; 4 dated sources; 6 synthetic cases |
-| Worked examples | Synthetic: a profile, three ranked hooks, a 33.6-second teaser plan, a meaning check and its copy |
+| Posting checklist, sources, test cases | What a person does before and after posting; 4 dated sources; 6 made-up cases |
+| Worked examples | Made-up: a profile, three ranked hooks, a 33.6-second teaser plan, a meaning check and its copy |
 
 ## Verbs
 
@@ -52,5 +52,5 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 - Only YouTube's Shorts length and upload settings were verified, on 2026-10-30. Other platforms'
   limits change often and are left for a person to check on the day; nothing here is a current limit.
 - Hook ranking checks a closed list of devices; it does not predict how a post will perform.
-- The worked examples are synthetic; the library's tests recompute the teaser's length and rescan its
+- The worked examples are made-up; the library's tests recompute the teaser's length and rescan its
   copy. Sources were checked on 2026-10-30. Recheck them before relying on them.

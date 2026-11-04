@@ -182,7 +182,7 @@ class RuleOfTwoGuardrailsTests(unittest.TestCase):
         r_contrib = fw_strict.route_payload(
             {
                 "sensitivity": "public",
-                "synthetic_provenance": True,
+                "made_up_provenance": True,
                 "license_tag": "MIT",
                 "requested_tier": "contributor_training_allowed",
             }
@@ -193,7 +193,7 @@ class RuleOfTwoGuardrailsTests(unittest.TestCase):
         r_zero_ret = fw_strict.route_payload(
             {
                 "sensitivity": "internal",
-                "synthetic_provenance": False,
+                "made_up_provenance": False,
                 "license_tag": "internal-commercial-no-train",
                 "requested_tier": "contributor_training_allowed",
             }
@@ -215,7 +215,7 @@ class RuleOfTwoGuardrailsTests(unittest.TestCase):
         r_license_local = fw_strict.route_payload(
             {
                 "sensitivity": "public",
-                "synthetic_provenance": True,
+                "made_up_provenance": True,
                 "license_tag": "restricted-derivative-no-api",
             }
         )

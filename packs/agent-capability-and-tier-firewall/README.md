@@ -19,10 +19,10 @@ allow/block receipts.
 | Guardrails | Fail closed on effect ceiling breaches; block non-public payloads from training/contributor tiers; never dispatch secret-tier data |
 | Capability and tier rules | Ordered 5-level effect lattice, Shannon entropy threshold (`4.25` bits/char), and 4-tier endpoint retention matrix |
 | Templates | Firewall policy, pre-dispatch evaluation receipt, and redaction audit |
-| Record checks | Deterministic checks on firewall decision receipts with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on firewall decision receipts with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`tier_firewall`) |
 | Sources | 2 dated public sources: OWASP Top 10 for LLM Applications and NIST SP 800-53 Rev. 5 |
-| Worked examples | Synthetic blocked contributor-mode dispatch receipt and clean enterprise-tier allow receipt |
+| Worked examples | Made-up blocked contributor-mode dispatch receipt and clean enterprise-tier allow receipt |
 
 ## Verbs
 

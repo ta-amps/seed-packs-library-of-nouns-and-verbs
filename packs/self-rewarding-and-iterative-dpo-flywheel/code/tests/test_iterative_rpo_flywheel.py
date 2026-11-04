@@ -32,11 +32,11 @@ class IterativeRpoFlywheelTests(unittest.TestCase):
         self.assertTrue(report["passed"], f"Unexpected magic literals: {report}")
         self.assertGreaterEqual(report["files_scanned"], 6)
 
-    def test_node_grid_requires_positive_rpo_alpha_for_synthetic_pairs(self) -> None:
+    def test_node_grid_requires_positive_rpo_alpha_for_made_up_pairs(self) -> None:
         grid = NodeGrid(load_default_grid_spec())
         valid = grid.resolve_regime("verified_iterative_rpo")
         self.assertTrue(grid.is_applicable(valid))
-        invalid = {**valid, "allow_synthetic_rubric_pairs": True, "rpo_nll_alpha": 0.0}
+        invalid = {**valid, "allow_made_up_rubric_pairs": True, "rpo_nll_alpha": 0.0}
         self.assertFalse(grid.is_applicable(invalid))
 
     def test_rpo_nll_regularizer_prevents_chosen_logp_collapse_ranking_trap(self) -> None:
@@ -126,10 +126,10 @@ class IterativeRpoFlywheelTests(unittest.TestCase):
             {"rubric_approved": False, "verifier_passed": False},
             {"rubric_approved": False, "verifier_passed": False},
         ]
-        good_res = gate.gate_synthetic_pairs(synth, good_records)
+        good_res = gate.gate_made_up_pairs(synth, good_records)
         self.assertTrue(good_res["calibration"]["calibrated"])
         self.assertEqual(good_res["calibration"]["cohens_kappa"], 1.0)
-        self.assertEqual(good_res["admitted_synthetic_count"], 1)
+        self.assertEqual(good_res["admitted_made_up_count"], 1)
 
         bad_records = [
             {"rubric_approved": True, "verifier_passed": False},
@@ -139,10 +139,10 @@ class IterativeRpoFlywheelTests(unittest.TestCase):
             {"rubric_approved": True, "verifier_passed": True},
             {"rubric_approved": False, "verifier_passed": True},
         ]
-        bad_res = gate.gate_synthetic_pairs(synth, bad_records)
+        bad_res = gate.gate_made_up_pairs(synth, bad_records)
         self.assertFalse(bad_res["calibration"]["calibrated"])
-        self.assertEqual(bad_res["admitted_synthetic_count"], 0)
-        self.assertEqual(bad_res["blocked_synthetic_count"], 1)
+        self.assertEqual(bad_res["admitted_made_up_count"], 0)
+        self.assertEqual(bad_res["blocked_made_up_count"], 1)
 
     def test_preregistered_flywheel_promoter_rejects_tampering_self_review_and_regressions(self) -> None:
         promoter = PreRegisteredFlywheelPromoter()

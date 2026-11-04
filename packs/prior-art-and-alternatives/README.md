@@ -78,6 +78,6 @@ and enqueue the printed task yourself. Workers need keys on the same surface.
   execution memory and outside catalogs; the PII survey searched one outside source and
   ran no candidate, so detection and redaction quality stay unknown. Each says so.
 - Examples are checked against their templates' shapes only; the ledger and allowance
-  examples are synthetic, with placeholder digests.
+  examples are made-up, with placeholder digests.
 - Surveys only read; nothing signs up, logs in or contacts anyone.
 - No scheduler is activated; refreshes wait for an authorized schedule.

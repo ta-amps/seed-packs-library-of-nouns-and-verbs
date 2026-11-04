@@ -170,8 +170,8 @@
         "tool": {
           "$pin": "tool.explainer-checks"
         },
-        "worked_example": "Synthetic, recomputed by the code's tests: a 20-second cut with a crossfade, a hard cut and an end card; the voice narration pack's two placed lines; four caption cues showing a sentence split, pause snapping, a comma split and a closed blink gap; the WebVTT and SRT text; and a release manifest whose digests are real.",
-        "complements": "The video showcase pack makes demo videos from screen captures with a person's voice; the video and motion pack renders and checks sequences. This pack adds the frame clock, the HTML stage, captions timed to a synthetic voice, the receipts ledger and the release manifest.",
+        "worked_example": "Made-up, recomputed by the code's tests: a 20-second cut with a crossfade, a hard cut and an end card; the voice narration pack's two placed lines; four caption cues showing a sentence split, pause snapping, a comma split and a closed blink gap; the WebVTT and SRT text; and a release manifest whose digests are real.",
+        "complements": "The video showcase pack makes demo videos from screen captures with a person's voice; the video and motion pack renders and checks sequences. This pack adds the frame clock, the HTML stage, captions timed to a made-up voice, the receipts ledger and the release manifest.",
         "provenance_notes": [
           "Packages the production pipeline ta-amps was using for its own explainer video on October 29 and 30, 2026, still in draft runs when this pack was written: a cut plan shared by picture, voice and captions, scenes on a frame-addressable HTML stage rendered losslessly in headless Chromium, a locally synthesized voice with a phoneme override, captions timed to measured pauses and checked by a local recognizer, two variants per cut, and a ledger of every verb's receipt."
         ]
@@ -291,7 +291,7 @@
       "title": "Guardrail: every layer says what it is",
       "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
       "value": {
-        "rule": "Each layer says what it is: a capture of a real screen, a scene rendered from code, synthetic example data, an AI voice or procedural music. The disclosures travel in the sequences and the release manifest, and on screen wherever a viewer could be misled.",
+        "rule": "Each layer says what it is: a capture of a real screen, a scene rendered from code, made-up example data, an AI voice or procedural music. The disclosures travel in the sequences and the release manifest, and on screen wherever a viewer could be misled.",
         "how_it_is_checked": "The release manifest's disclosures name every kind of layer the sequences use, and the review confirms the on-screen labels."
       }
     },
@@ -1853,7 +1853,7 @@
       "value": {
         "items": [
           "Watch each variant start to finish at normal speed, with sound, once on headphones.",
-          "The AI-voice label is on screen whenever the voice plays, and synthetic data is labeled where it appears.",
+          "The AI-voice label is on screen whenever the voice plays, and made-up data is labeled where it appears.",
           "Every number on screen matches the compose record and its source record.",
           "Captions are readable, in sync and match what is said; every listed deviation has a decision.",
           "The frame sheet shows every clip as planned, with nothing private in any capture.",
@@ -1918,13 +1918,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for narrated explainer videos",
+      "title": "Made-up test cases for narrated explainer videos",
       "value": {
         "cases": [
           {
             "id": "NEV-CLOCK-SHORT",
             "scenario": "The clips do not add up to the cut's length",
-            "sample_input": "SYNTHETIC: The clips lay out 598 frames for a cut planned at 20 s and 30 fps.",
+            "sample_input": "MADE-UP: The clips lay out 598 frames for a cut planned at 20 s and 30 fps.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "clock_problem_named",
@@ -1935,7 +1935,7 @@
           {
             "id": "NEV-LINE-OUTSIDE-BEAT",
             "scenario": "A narration line starts after its beat ends",
-            "sample_input": "SYNTHETIC: Line l1 is planned at 9.9 s in beat check, which ends at 9.75 s.",
+            "sample_input": "MADE-UP: Line l1 is planned at 9.9 s in beat check, which ends at 9.75 s.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "line_outside_beat_named",
@@ -1946,7 +1946,7 @@
           {
             "id": "NEV-CSS-TRANSITION",
             "scenario": "A scene uses a CSS transition",
-            "sample_input": "SYNTHETIC: A card fades in with a CSS transition, so frame 120 differs between the in-order and shuffled renders.",
+            "sample_input": "MADE-UP: A card fades in with a CSS transition, so frame 120 differs between the in-order and shuffled renders.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "determinism_probe_failed",
@@ -1957,7 +1957,7 @@
           {
             "id": "NEV-REMOTE-FONT",
             "scenario": "The stage loads a web font from a public server while rendering",
-            "sample_input": "SYNTHETIC: The stage links a font stylesheet on a public font server; the browser logs 2 remote requests.",
+            "sample_input": "MADE-UP: The stage links a font stylesheet on a public font server; the browser logs 2 remote requests.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "remote_requests_counted",
@@ -1968,7 +1968,7 @@
           {
             "id": "NEV-FAST-CUE",
             "scenario": "A line has no pause or comma to split at and reads too fast",
-            "sample_input": "SYNTHETIC: A 78-character sentence is spoken in 3.9 s with no internal pause and no comma.",
+            "sample_input": "MADE-UP: A 78-character sentence is spoken in 3.9 s with no internal pause and no comma.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "rule_problem_named",
@@ -1979,7 +1979,7 @@
           {
             "id": "NEV-ASR-DEVIATION",
             "scenario": "The recognizer hears a different word",
-            "sample_input": "SYNTHETIC: The script says restock list; the recognizer hears restocked lists, an error rate of 0.08.",
+            "sample_input": "MADE-UP: The script says restock list; the recognizer hears restocked lists, an error rate of 0.08.",
             "expected_outcome": "unknown",
             "expected_indicators": [
               "deviation_listed",
@@ -1991,7 +1991,7 @@
           {
             "id": "NEV-UNVERIFIED-CLAIM",
             "scenario": "An on-screen number disagrees with its record",
-            "sample_input": "SYNTHETIC: The script shows 3 items running low; the restock list record has 4.",
+            "sample_input": "MADE-UP: The script shows 3 items running low; the restock list record has 4.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "claim_mismatch_named",
@@ -2002,7 +2002,7 @@
           {
             "id": "NEV-MISSING-RECEIPT",
             "scenario": "A step failed and was not retried before composing",
-            "sample_input": "SYNTHETIC: check-captions failed once with a timeout and has no accepted result; the full closing line says every step has a receipt.",
+            "sample_input": "MADE-UP: check-captions failed once with a timeout and has no accepted result; the full closing line says every step has a receipt.",
             "expected_outcome": "cut_composed",
             "expected_indicators": [
               "narrowed_closing_line",
@@ -2013,7 +2013,7 @@
           {
             "id": "NEV-HOME-PATH",
             "scenario": "The manifest lists an absolute local path",
-            "sample_input": "SYNTHETIC: The release manifest lists /home/someone/videos/explainer-20s.mp4.",
+            "sample_input": "MADE-UP: The release manifest lists /home/someone/videos/explainer-20s.mp4.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "relative_paths_required",
@@ -2023,7 +2023,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.cut-plan",
@@ -2031,7 +2031,7 @@
       "role": "example",
       "title": "Worked example: a 20-second cut with a crossfade, a hard cut and an end card",
       "value": {
-        "notice": "SYNTHETIC. A made-up street fridge; no real place or organization.",
+        "notice": "MADE-UP. A made-up street fridge; no real place or organization.",
         "conforms_to": {
           "$pin": "template.cut-plan"
         },
@@ -2051,7 +2051,7 @@
             {
               "beat_id": "end-card",
               "visual_intent": "The end card with the AI-voice label.",
-              "on_screen_text": "Velmora Street community fridge (synthetic example)"
+              "on_screen_text": "Velmora Street community fridge (made-up example)"
             }
           ],
           "cuts": [
@@ -2113,7 +2113,7 @@
                   "claim_id": "low-items",
                   "text": "3 items running low",
                   "beat_id": "check",
-                  "source_ref": "the example restock list (synthetic)",
+                  "source_ref": "the example restock list (made-up)",
                   "check": "count the items whose level is low"
                 }
               ]
@@ -2158,7 +2158,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.caption-cues",
@@ -2166,7 +2166,7 @@
       "role": "example",
       "title": "Worked example: cues for the voice pack's placed lines, with WebVTT and SRT",
       "value": {
-        "notice": "SYNTHETIC. Computed by the pack's code from voice-narration's example.narration-track and this pack's example.cut-plan; the code's tests recompute it.",
+        "notice": "MADE-UP. Computed by the pack's code from voice-narration's example.narration-track and this pack's example.cut-plan; the code's tests recompute it.",
         "conforms_to": {
           "$pin": "template.caption-cues"
         },
@@ -2252,7 +2252,7 @@
           "$pin": "voice-narration:example.narration-track"
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.caption-check",
@@ -2260,7 +2260,7 @@
       "role": "example",
       "title": "Worked example: a passing caption check",
       "value": {
-        "notice": "SYNTHETIC. The recognizer's results are illustrative; no audio exists.",
+        "notice": "MADE-UP. The recognizer's results are illustrative; no audio exists.",
         "conforms_to": {
           "$pin": "template.caption-check"
         },
@@ -2287,7 +2287,7 @@
           "passed": true
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.release-manifest",
@@ -2295,12 +2295,12 @@
       "role": "example",
       "title": "Worked example: a manifest of the files this example defines",
       "value": {
-        "notice": "SYNTHETIC. Every digest is real: of the cut plan JSON and the two sidecar texts.",
+        "notice": "MADE-UP. Every digest is real: of the cut plan JSON and the two sidecar texts.",
         "conforms_to": {
           "$pin": "template.release-manifest"
         },
         "instance": {
-          "title": "Velmora Street fridge restock, 20 s (synthetic example)",
+          "title": "Velmora Street fridge restock, 20 s (made-up example)",
           "cut_id": "20s",
           "files": [
             {
@@ -2327,19 +2327,19 @@
           ],
           "disclosures": [
             "AI-generated voice (an open text-to-speech model's stock voice), labeled on screen while it plays.",
-            "Scenes are rendered from code; the fridge, street and list are synthetic examples."
+            "Scenes are rendered from code; the fridge, street and list are made-up examples."
           ],
-          "ledger": "none: no verb ran for this synthetic example",
+          "ledger": "none: no verb ran for this made-up example",
           "every_step_has_receipt": false,
           "qa_passed": false,
           "released": false,
           "notes": [
-            "SYNTHETIC. No video was rendered, so the manifest lists only the files the example defines; a real manifest lists both MP4s, both sidecars, the QA reports and the frame sheets.",
+            "MADE-UP. No video was rendered, so the manifest lists only the files the example defines; a real manifest lists both MP4s, both sidecars, the QA reports and the frame sheets.",
             "cut-plan-20s.json is the cut plan instance as JSON with a one-space indent and a final newline."
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "release-checks",
@@ -2570,7 +2570,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -2624,7 +2624,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -2677,7 +2677,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -2730,7 +2730,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -2837,7 +2837,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": false,
@@ -2891,7 +2891,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -2945,7 +2945,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -2999,7 +2999,7 @@
               ],
               "disclosures": [
                 "AI-generated voice, labeled on screen.",
-                "Scenes rendered from code with synthetic data."
+                "Scenes rendered from code with made-up data."
               ],
               "ai_voice_used": true,
               "every_step_has_receipt": true,
@@ -3073,7 +3073,7 @@
           "guardrail.disclose-every-layer"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [
@@ -3201,7 +3201,7 @@
       "steps": [
         "Write each scene so renderFrame(t) sets every visible property from scene time alone: no clock reads, CSS animations or transitions, timers or unseeded randomness.",
         "Embed fonts from pinned files with their licenses and use only local images pinned by digest.",
-        "Label every layer that could mislead a viewer: synthetic data, captures and the AI voice.",
+        "Label every layer that could mislead a viewer: made-up data, captures and the AI voice.",
         "Run the determinism probe: render sampled frames in order, then shuffled and repeated, and compare their pixel digests."
       ],
       "acceptance": [

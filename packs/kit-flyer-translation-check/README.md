@@ -17,8 +17,8 @@ Check each translated service flyer against its English source: every fact prese
 | File: Flyer Fact List | One row per fact and language: the source text, the translated text and whether it matches, changed or is missing. |
 | Checklist | 3 checks a person runs with the kit |
 | Sources | 2 dated public sources |
-| Test cases | 2 synthetic cases; 1 must go to a person |
-| Need, in its own words | One or two plain sentences an organization might say about this work, marked synthetic |
+| Test cases | 2 made-up cases; 1 must go to a person |
+| Need, in its own words | One or two plain sentences an organization might say about this work, marked made-up |
 | Templates | facts compared across a flyer's languages, questions for the fluent reviewer of one language, and a person's step record |
 
 ## Verbs
@@ -46,6 +46,6 @@ their value digests, so the kit has one source.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The test cases are synthetic. Passing them shows the kit's shape, not that it helps a real organization.
+- The test cases are made-up. Passing them shows the kit's shape, not that it helps a real organization.
 - The tool cards describe read-only tools; this pack ships no tool code.
 - Sources were checked on 2026-10-30. Recheck them before relying on them.

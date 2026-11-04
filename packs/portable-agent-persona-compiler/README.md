@@ -17,10 +17,10 @@ descriptions, and compile one canonical spec cleanly across 8 coding-harness for
 | Guardrails | Hierarchy routes without authorizing; strip demographic/backstory fluff; re-anchor within 8 rounds |
 | Compilation and lint rules | Fluff regex classes, 4-part routing description rubric, and 8-harness target mappings |
 | Templates | Portable role spec, lint audit report, and multi-harness compiled bundle |
-| Record checks | Deterministic checks on compiled role bundles with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on compiled role bundles with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`persona_compiler`) |
 | Sources | 3 dated public arXiv sources on persona accuracy ablation, irrelevant details, and 8-round drift |
-| Worked examples | Synthetic read-only schema-auditor compiled across Claude Code, Codex, and OpenCode |
+| Worked examples | Made-up read-only schema-auditor compiled across Claude Code, Codex, and OpenCode |
 
 ## Verbs
 

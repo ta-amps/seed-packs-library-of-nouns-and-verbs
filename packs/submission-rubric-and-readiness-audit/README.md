@@ -17,10 +17,10 @@ weighted pillar totals, and rank remediations by recoverable points.
 | Guardrails | Code evidence beats prose claims; live endpoints require HTTP 200 + SHA-256 probe receipts |
 | Rubric scoring rules | Default 30/25/20/25 pillar weights (10.0 pts) and recoverable-point remediation ordering |
 | Templates | Repository manifest, weighted readiness scorecard, and remediation checklist |
-| Record checks | Deterministic checks on readiness scorecards with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on readiness scorecards with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`rubric_audit`) |
 | Sources | 2 dated public sources on OpenSSF Scorecard checks and SPDX repository metadata |
-| Worked examples | Synthetic 10.0-point evidence-backed repository readiness scorecard |
+| Worked examples | Made-up 10.0-point evidence-backed repository readiness scorecard |
 
 ## Verbs
 

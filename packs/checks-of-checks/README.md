@@ -15,7 +15,7 @@ for revision.
 | Method | The trust rule and where good and bad examples should come from |
 | Rule types | Eight deterministic rules: present, enum, min_items, each_has, pattern_absent, pattern_present, when, hosts_local_only |
 | Mutation operators | Five deterministic ways to break a good example: delete, clear, set, append_text, delete_item_field |
-| Worked example | Synthetic checks for source cards: a wrong check (rejected), a too-weak check (sent back) and six trusted ones |
+| Worked example | Made-up checks for source cards: a wrong check (rejected), a too-weak check (sent back) and six trusted ones |
 | Templates | Check suite, example set and check validation |
 
 ## Verbs
@@ -42,5 +42,5 @@ and enqueue the printed task yourself. Workers need keys on the same surface.
 
 - The rule language is small on purpose. Properties that need judgment become rubric
   items and need two judges or a person to agree before they are trusted.
-- The worked example is synthetic; real example sets should come from accepted outputs
+- The worked example is made-up; real example sets should come from accepted outputs
   with receipts and sanitized real failures.

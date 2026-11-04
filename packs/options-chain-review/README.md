@@ -24,8 +24,8 @@ order, or connects to a brokerage. The guardrails come from the
 | Tool card | The pack's tested code in [code/](code/README.md), pinned by digest |
 | Templates | Review request, chain snapshot, implied volatility history, chain measures, liquidity screen, roll candidates, chain review, review check |
 | Review checks | Ten checks on a review, with one good and ten bad reviews the validator recomputes |
-| Checklist, sources, test cases | What a person checks before delivery; 6 dated public sources; 10 synthetic cases |
-| Worked example | Synthetic: nine calls on a fictional underlying, FERN.X, from one delayed snapshot |
+| Checklist, sources, test cases | What a person checks before delivery; 6 dated public sources; 10 made-up cases |
+| Worked example | Made-up: nine calls on a fictional underlying, FERN.X, from one delayed snapshot |
 
 ## Verbs
 
@@ -44,7 +44,7 @@ Verbs for a person are claimed by people, never by an agent.
 
 ## Worked example
 
-All synthetic. In a snapshot of 2026-10-30 19:30 UTC, delayed 15 minutes, FERN.X trades at 48.62. The
+All made-up. In a snapshot of 2026-10-30 19:30 UTC, delayed 15 minutes, FERN.X trades at 48.62. The
 pack's code recomputes the greeks of nine calls and flags one provider delta 0.0313 above the model,
 finds one quote 1669 seconds older than the snapshot, fails five contracts on the person's screens and lists eight roll
 candidates for the 50-strike call expiring 2026-11-20. The 30-day implied volatility of 33.65% ranks
@@ -62,7 +62,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
 - Not financial advice. A review describes one snapshot; any decision about a position stays with a person.
-- The worked example is synthetic: its underlying ends in .X so it never matches a listed security, and
+- The worked example is made-up: its underlying ends in .X so it never matches a listed security, and
   its rate, dividend yield, quotes and history are made up. The code's tests recompute its numbers.
 - The model is for European options. American-style options can differ, so differences are recorded, never corrected.
 - Market data terms vary by provider and subscriber; the rules say to stop when they forbid the reading.

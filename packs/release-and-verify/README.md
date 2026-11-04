@@ -19,7 +19,7 @@ whose verdict follows from its parts. When something fails, they brief the owner
 | Authority boundaries | What only the release owner does, what workers do, and how holds stop a plan |
 | Parity methods | Comparing live and built bytes for static files, script bundles, container images and packages, and when the answer is unknown |
 | Smoke checklist | Five read-only checks for any live release, and when a write check needs the owner's named target |
-| Release checks | 10 deterministic checks with 2 synthetic good and 10 synthetic bad receipts, rechecked by `make check` |
+| Release checks | 10 deterministic checks with 2 made-up good and 10 made-up bad receipts, rechecked by `make check` |
 | Templates | Release plan, head check, release record, parity check, smoke report, rollback brief and release receipt |
 | Worked examples | A release plan for a small site fix and a verified receipt |
 
@@ -41,7 +41,7 @@ and receipts are the evidence a [status](../status-and-handoff/README.md) cites 
 
 ## Worked examples
 
-All synthetic. A plan for a small site fix names head `9c1e2d7a41b0`, two required checks and
+All made-up. A plan for a small site fix names head `9c1e2d7a41b0`, two required checks and
 the three acts only the release owner performs. Its receipt is verified: both checks ran on
 that head, the live bytes of two files match the build, five smoke checks pass and the previous
 version is kept. The release checks also hold a partial receipt where a cache hid the live bytes.

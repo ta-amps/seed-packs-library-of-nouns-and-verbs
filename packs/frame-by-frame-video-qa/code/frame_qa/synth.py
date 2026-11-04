@@ -1,4 +1,4 @@
-"""Synthetic test clips that FFmpeg draws: colour and test-pattern sources, ASS text placed near edges, filled
+"""Made-up test clips that FFmpeg draws: colour and test-pattern sources, ASS text placed near edges, filled
 boxes, crossfades, a white frame, black frames, a freeze, fast-moving text and a jump. No outside media.
 
 FFmpeg's drawtext filter is missing from the pinned static build, so text goes through its `ass` filter

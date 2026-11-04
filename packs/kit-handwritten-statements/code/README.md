@@ -1,9 +1,9 @@
 # Sample renderer for the handwritten statements kit
 
-Renders the kit's synthetic handwritten pages from the pack's own test-cases noun
+Renders the kit's made-up handwritten pages from the pack's own test-cases noun
 ([source.json](../source.json)), so the sample text has one source. Each page is drawn on lined
 paper with an openly licensed handwriting font (SIL Open Font License 1.1), fetched from a pinned
-commit and checked by SHA-256, then stamped SYNTHETIC. Crossed-out words are struck through and one
+commit and checked by SHA-256, then stamped MADE-UP. Crossed-out words are struck through and one
 word per page is smudged on purpose, so a transcription has to flag it.
 
 ```bash

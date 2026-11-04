@@ -19,14 +19,14 @@ result, evidence and canary to those findings.
 | --- | --- |
 | Guardrails | On a live path or a finding; a behavior is covered by its real path, not a mock; a canary for every rule |
 | Live path rules | Entry points, what counts as an import, five module statuses, runtime traces for leads |
-| Config round-trip rules | Set, save, load, compare; stable is not survived; unknown keys; synthetic values only |
+| Config round-trip rules | Set, save, load, compare; stable is not survived; unknown keys; made-up values only |
 | Health probe rules | Stop the dependency and the probe fails; hollow kinds; liveness apart from readiness |
 | Behavior coverage rules | Promises with their locators, real paths, and real_path, mock_only or untested |
 | Templates | Wiring scope, module map, round-trip report, probe report, behavior map, canary set and conformance report |
-| Wiring checks | 12 deterministic checks with 2 synthetic good and 12 synthetic bad conformance reports, rechecked by `make check` |
+| Wiring checks | 12 deterministic checks with 2 made-up good and 12 made-up bad conformance reports, rechecked by `make check` |
 | Tool card and code | Tested standard-library code in [code/](code/README.md): unused modules, mock-only tests, hollow probes |
 | Sources | 7 dated public sources |
-| Worked examples | A synthetic app's module map, behavior map, probe report, round trip, conformance report and one finding |
+| Worked examples | A made-up app's module map, behavior map, probe report, round trip, conformance report and one finding |
 
 ## Verbs
 
@@ -47,7 +47,7 @@ findings go on through triage, a fix, verification and a regression guard.
 
 ## Worked examples
 
-All synthetic: a food pantry's appointment app in `code/tests/fixtures/pantry`. The tools' real
+All made-up: a food pantry's appointment app in `code/tests/fixtures/pantry`. The tools' real
 output on it finds two dark modules, one only tests reach and one used only for type checking, and
 two that a computed export name loads, which the runtime trace confirms. A setting written as 48
 comes back as its default 24, yet load, save and load is stable. Three probes are hollow on their

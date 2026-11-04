@@ -18,10 +18,10 @@ subsequent passing check, and propose bounded prompt shims with exact step evide
 | Redaction and loop rules | Credential, address, and workstation-path scrubbing; normalized error signatures and wasted-step math |
 | Verification gate rules | Strict `failing_check -> edit -> passing_check` state machine rejecting untested edits |
 | Templates | Sanitized trace summary, failure tombstone, verified fix recipe, and prompt-shim candidate |
-| Record checks | Deterministic checks on distilled session reports with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on distilled session reports with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`session_distiller`) |
 | Sources | 2 dated public sources on JSON Lines and OpenTelemetry semantic conventions |
-| Worked examples | Synthetic distilled session report and conforming verified fix recipe |
+| Worked examples | Made-up distilled session report and conforming verified fix recipe |
 
 ## Verbs
 

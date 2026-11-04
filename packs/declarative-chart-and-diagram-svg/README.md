@@ -21,7 +21,7 @@ XML to guarantee zero scripts or external asset dependencies.
 | Contrast fixture | Deterministic WCAG contrast worked check recomputed by `validate_packs.py` |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`diagram_svg`) |
 | Sources | 2 dated public sources: W3C SVG 2 specification and W3C WCAG 2.1 contrast guidelines |
-| Worked examples | Synthetic edge-packet sequence specification and passing SVG audit receipt |
+| Worked examples | Made-up edge-packet sequence specification and passing SVG audit receipt |
 
 ## Verbs
 

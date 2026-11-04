@@ -1,4 +1,4 @@
-"""A synthetic food pantry appointment app."""
+"""A made-up food pantry appointment app."""
 
 from .version import __version__
 

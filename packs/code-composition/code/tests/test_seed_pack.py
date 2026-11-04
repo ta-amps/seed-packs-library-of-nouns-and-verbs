@@ -437,7 +437,7 @@ def test_seed_export_rejects_tampered_code_missing_inputs_and_invalid_scope() ->
         unknown = RecipeSpec.model_validate(
             {**load_example_recipes()[0].model_dump(mode="json"), "recipe_id": "unlisted-recipe"}
         )
-        with pytest.raises(SeedPackError, match="no synthetic sample inputs"):
+        with pytest.raises(SeedPackError, match="no made-up sample inputs"):
             build_seed_pack(db, namespace=NS, queue=NS, recipes=[unknown])
         db._conn.execute(
             "UPDATE nodes SET code_sha256=? WHERE node_id=?", ("f" * 64, "clean.dedupe_by_key")

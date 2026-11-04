@@ -1,4 +1,4 @@
-"""The parsers on log text FFmpeg 7.0.2 wrote while analysing synthetic test sources (testsrc2, sine, silence)."""
+"""The parsers on log text FFmpeg 7.0.2 wrote while analysing made-up test sources (testsrc2, sine, silence)."""
 
 from __future__ import annotations
 

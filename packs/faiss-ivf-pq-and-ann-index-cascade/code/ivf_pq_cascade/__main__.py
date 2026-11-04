@@ -20,7 +20,7 @@ def run_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         queries = [list(q) for q in bundle["queries"]]
         doc_ids = list(bundle["doc_ids"]) if "doc_ids" in bundle else None
     else:
-        corpus = generate_clustered_corpus(bundle.get("synthetic_corpus"), grid_spec=cfg)
+        corpus = generate_clustered_corpus(bundle.get("made_up_corpus"), grid_spec=cfg)
         vectors = corpus["vectors"]
         queries = corpus["queries"]
         doc_ids = corpus["doc_ids"]

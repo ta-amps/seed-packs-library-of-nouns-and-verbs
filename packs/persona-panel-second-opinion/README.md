@@ -27,8 +27,8 @@ instead of a vote. The person-decides guardrail is the policy and law watch pack
 | Synthesis rules | Quoted sides, four kinds of disagreement and their routes, no head counts, no recommendation |
 | Perspective cards | The person it serves, the skeptic, the operator, the steward, the newcomer, safety and privacy |
 | Templates | Panel, view, independence check, synthesis, synthesis audit and decision |
-| Panel checks | 12 deterministic checks with 2 synthetic good and 12 synthetic bad syntheses, rechecked by `make check` |
-| Checklist, test cases, sources | What a person reads before deciding; 7 synthetic cases; 4 dated public sources |
+| Panel checks | 12 deterministic checks with 2 made-up good and 12 made-up bad syntheses, rechecked by `make check` |
+| Checklist, test cases, sources | What a person reads before deciding; 7 made-up cases; 4 dated public sources |
 | Worked examples | A panel, three sealed views, their independence check, the synthesis, its audit and the decision |
 
 ## Verbs
@@ -47,7 +47,7 @@ of enqueueing them. Verbs for a person are claimed by people, never by an agent.
 
 ## Worked examples
 
-All synthetic: a literacy program's plan, drafted by a model run on family-a, to replace paper
+All made-up: a literacy program's plan, drafted by a model run on family-a, to replace paper
 sign-in sheets with tablet check-in at two tutoring sites. Three reviewers take it alone, on
 family-b, family-c and family-a, the last labeled with the reason. The views disagree on a fact,
 whether check-ins survive one site's evening wifi outages, and on a value, whether quicker check-in
@@ -66,7 +66,7 @@ enqueue the printed task yourself. Run one give-view verb per reviewer, each as 
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
 - Perspective cards are lenses, not people: a panel never replaces asking the people a decision
-  affects, and its synthetic reviewers speak for no one.
+  affects, and its made-up reviewers speak for no one.
 - Reviewers on different model families can still share blind spots, and a same-family reviewer is
   labeled, not excluded. The checks cannot tell how independent two models really are.
 - The panel checks catch missing perspectives, seals, quotes and routes, not a wrong judgment; the

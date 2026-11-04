@@ -105,7 +105,7 @@ HISTORICAL_EXECUTION_REPORTS: tuple[dict[str, Any], ...] = (
     },
     {
         "episode_id": "HIST-EXEC-008",
-        "query": "municipal water lab synthetic poisoned samples grading inspector",
+        "query": "municipal water lab made-up poisoned samples grading inspector",
         "target_pack_id": "checks-of-checks",
         "structural_frame": "adversarial-mutation-kill-check",
         "baseline_rounds": 4,
@@ -392,7 +392,7 @@ BENCHMARK_QUERIES_60: tuple[dict[str, Any], ...] = (
         "id": "Q40",
         "kind": "structural_analogy",
         "structural_frames": ["adversarial-mutation-kill-check"],
-        "query": "Municipal water lab synthetic poisoned samples graded by inspector kill operators",
+        "query": "Municipal water lab made-up poisoned samples graded by inspector kill operators",
         "relevant_packs": ["checks-of-checks"],
     },
     {
@@ -736,7 +736,7 @@ def run_79_pack_benchmark(packs_dir: Path) -> dict[str, Any]:
 
 
 def run_worked_example(bundle: dict[str, Any]) -> dict[str, Any]:
-    """Deterministic recomputation for the synthetic 4-pack worked example in source.json."""
+    """Deterministic recomputation for the made-up 4-pack worked example in source.json."""
     enricher = SiraNounEnricher(top_k_discriminative=15)
     enriched = enricher.enrich_corpus(bundle["mini_packs"])
     index = RaRftAnalogyIndex(enriched)

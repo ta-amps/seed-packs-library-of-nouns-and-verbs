@@ -13,7 +13,7 @@ A collection of nouns and verbs for Aho-Corasick literal scanning, portable grep
 | `rules.negation-entropy-and-caption-wrapping` | Zero-model rules for sentence-level outbound negation exemptions and orphan-free clause-balanced caption wrapping |
 | `tool.rule-engine` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.rule-engine-receipt` | JSON Schema for Aho-Corasick hits, regex portability, Tag smuggling decodes, entropy counts and canonical JSON/captions |
-| Worked example | Synthetic text, Unicode, JSON and caption bundle (`example.rule-engine-bundle`) and recomputed receipt (`example.rule-engine-receipt`) |
+| Worked example | Made-up text, Unicode, JSON and caption bundle (`example.rule-engine-bundle`) and recomputed receipt (`example.rule-engine-receipt`) |
 
 ## Verbs
 

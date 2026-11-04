@@ -13,7 +13,7 @@ stay drafts until the owner commits them.
 | Noun | What it holds |
 | --- | --- |
 | Doc rubric | Eight criteria: first screen, one reading order, task coverage, runnable examples, plain language, honest status, working links, accessible structure |
-| Templates | Reader persona (with a synthetic example), doc audit, doc gaps, rewrite, example run and review |
+| Templates | Reader persona (with a made-up example), doc audit, doc gaps, rewrite, example run and review |
 
 ## Verbs
 

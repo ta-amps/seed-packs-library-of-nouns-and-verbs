@@ -22,7 +22,7 @@ requirements; actual grants and harness controls enforce what may happen.
 
 Keep the full project definition as versioned nouns, with a small resolved packet
 for each verb. The planned general resolver must pin dependencies, detect
-conflicts and record provenance. This guide does not implement that resolver.
+conflicts and record source. This guide does not implement that resolver.
 Workers should not be required to reconcile competing category tables manually.
 
 ## Check the combined outcome
@@ -43,7 +43,7 @@ evidence and check the interfaces or constraints changed by the combination.
 Additional judgment remains a review verb only when the owning policy requires
 it. A shared public catalog can still require a distinct reviewer.
 
-For coupled settings, evaluate the tuple. A synthetic retry budget may include
+For coupled settings, evaluate the tuple. A made-up retry budget may include
 attempt count, timeout, backoff, overhead and the remaining lease interval.
 Testing only the new retry count misses the joint time bound. A formula using
 configured limits is not an observed latency or throughput measurement.
@@ -52,7 +52,7 @@ Current dependency readiness can follow terminal failure or cancellation as well
 as success. A downstream worker must inspect the actual predecessor outcome and
 required artifacts. Preserve these distinct facts: component check passed,
 combined check passed, authorized application occurred, parent outcome satisfied
-and public admission completed. A submit receipt alone proves none of the latter
+and public admission completed. A submit record alone proves none of the latter
 conditions beyond its own accepted output identity.
 
 ## Finish work once; deliver its result separately
@@ -60,7 +60,7 @@ conditions beyond its own accepted output identity.
 A useful completion update is short and specific:
 
 > Submitted the candidate. The required checks passed. Independent admission is
-> pending. The artifact and check receipt are linked in the task output.
+> pending. The artifact and check record are linked in the task output.
 
 Use the actual state and actual checks. Prefer status, outcome, next action and
 permitted evidence references over a long recap or an ambiguous "done". This can
@@ -72,7 +72,7 @@ noun. The version-1 execution report rejects unsupported top-level fields; use
 its documented summaries and artifact references where appropriate.
 
 If a future delivery adapter retries a notification, identify the delivery by
-run/receipt, destination and channel. Retrying delivery must not resubmit the
+run/record, destination and channel. Retrying delivery must not resubmit the
 work, repeat a payment, republish a file or replay another external effect. Keep
 delivery acknowledgment separate from task completion. A crash with an uncertain
 external effect needs reconciliation against the destination before another

@@ -2,10 +2,10 @@
   "pack_id": "public-good-kits",
   "title": "Public-good kits",
   "version": "0.1.0",
-  "summary": "A collection of nouns and verbs for building agent kits that nonprofits can use: need briefs, skill files, read-only tool definitions, prompts, synthetic test cases, self-checks, independent review, accessibility and translation checks, and a steward's release decision.",
+  "summary": "A collection of nouns and verbs for building agent kits that nonprofits can use: need briefs, skill files, read-only tool definitions, prompts, made-up test cases, self-checks, independent review, accessibility and translation checks, and a steward's release decision.",
   "dependencies": [],
   "boundaries": [
-    "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+    "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
     "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path.",
     "Steps that touch a person's safety, rights or records stay with people.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -17,7 +17,7 @@
       "role": "pack",
       "title": "A collection of nouns and verbs for building agent kits that nonprofits can use",
       "value": {
-        "lets_workers": "Turn a nonprofit's need into a small, tested kit of agent files: skill instructions, read-only tool definitions, prompts, ready-to-use files and synthetic test cases. The drafting worker checks its own work, a different worker reviews it, accessibility and translations are checked, and a person, the steward, decides whether to release it.",
+        "lets_workers": "Turn a nonprofit's need into a small, tested kit of agent files: skill instructions, read-only tool definitions, prompts, ready-to-use files and made-up test cases. The drafting worker checks its own work, a different worker reviews it, accessibility and translations are checked, and a person, the steward, decides whether to release it.",
         "flow": [
           {
             "verb": {
@@ -35,7 +35,7 @@
             "verb": {
               "$verb": "public-good-kits.write-test-cases"
             },
-            "when": "Synthetic cases, including hand-offs and refusals."
+            "when": "Made-up cases, including hand-offs and refusals."
           },
           {
             "verb": {
@@ -76,7 +76,7 @@
           "Contacting a person on the organization's behalf."
         ],
         "rules": [
-          "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+          "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
           "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path.",
           "Tools are read-only by default; anything with side effects stays a human step."
         ]
@@ -151,7 +151,7 @@
           "Solve one need well; a kit is small enough for a volunteer to understand in ten minutes.",
           "Keep every step in the human_only list with a person, and say so in the skill file.",
           "Tools read; people act. A tool that would write, send or file is a human step instead.",
-          "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+          "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
           "The worker that drafts a kit never reviews it.",
           "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path."
         ],
@@ -193,8 +193,8 @@
             "check": "Every skill names its human handoffs, and every boundary in the need brief appears in the manifest."
           },
           {
-            "id": "synthetic-only",
-            "check": "Test cases are marked synthetic and contain no real names, addresses, phone numbers or case numbers."
+            "id": "made-up-only",
+            "check": "Test cases are marked made-up and contain no real names, addresses, phone numbers or case numbers."
           },
           {
             "id": "test-cases-run",
@@ -320,7 +320,7 @@
           "Describe the organization by type, never by name or with real people's details."
         ],
         "example": {
-          "organization_type": "SYNTHETIC: a small tenant-rights hotline",
+          "organization_type": "MADE-UP: a small tenant-rights hotline",
           "problem": "Volunteers spend the first ten minutes of every call finding which local office handles a repair complaint.",
           "users": [
             "Hotline volunteers"
@@ -329,7 +329,7 @@
             "No client data leaves the call notes system.",
             "Works offline from a printed directory export."
           ],
-          "success_measure": "A volunteer finds the right office in under two minutes on 18 of 20 synthetic test calls.",
+          "success_measure": "A volunteer finds the right office in under two minutes on 18 of 20 made-up test calls.",
           "human_boundaries": [
             "Interviewing a client or collecting their story.",
             "Crisis and safety planning.",
@@ -730,18 +730,18 @@
       "slug": "template.test-cases",
       "category": "noun.benchmark_suite",
       "role": "template",
-      "title": "Template: synthetic test cases: normal, edge, must-hand-off, must-refuse and adversarial",
+      "title": "Template: made-up test cases: normal, edge, must-hand-off, must-refuse and adversarial",
       "value": {
-        "describes": "synthetic test cases: normal, edge, must-hand-off, must-refuse and adversarial",
+        "describes": "made-up test cases: normal, edge, must-hand-off, must-refuse and adversarial",
         "schema": {
           "type": "object",
           "additionalProperties": false,
           "required": [
             "cases",
-            "synthetic"
+            "made-up"
           ],
           "properties": {
-            "synthetic": {
+            "made-up": {
               "type": "boolean",
               "enum": [
                 true
@@ -798,7 +798,7 @@
           }
         },
         "rules": [
-          "synthetic is true.",
+          "made-up is true.",
           "At least one must_hand_off and one adversarial case."
         ]
       },
@@ -1215,7 +1215,7 @@
         "Name one need and how a volunteer would know the kit helped.",
         "List every step from the method's human_only list that the need touches.",
         "Propose a draft-kit verb with the need brief pinned.",
-        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
+        "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
       ],
       "acceptance": [
         {
@@ -1230,7 +1230,7 @@
         },
         {
           "id": "measurable",
-          "check": "The success measure can be checked with synthetic test cases.",
+          "check": "The success measure can be checked with made-up test cases.",
           "method": "judgment"
         }
       ],
@@ -1291,7 +1291,7 @@
         "Keep tools read-only. Never let a tool write, send or file anything; make those human hand-offs in the skill file.",
         "Pin every file by SHA-256 in the manifest.",
         "Propose a write-test-cases verb and a self-check verb.",
-        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
+        "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output.",
         "Kits stay in the requester's scope. Releasing a kit to others is the steward's separate decision, through the catalog's own reviewed path."
       ],
       "acceptance": [
@@ -1326,10 +1326,10 @@
     {
       "slug": "write-test-cases",
       "kind": "verb.generate_seed",
-      "title": "Write synthetic test cases",
+      "title": "Write made-up test cases",
       "claimant": "agent",
-      "summary": "Write synthetic test cases for the kit: normal, edge, must-hand-off, must-refuse and adversarial, each with the expected behavior.",
-      "outcome": "A synthetic test case set.",
+      "summary": "Write made-up test cases for the kit: normal, edge, must-hand-off, must-refuse and adversarial, each with the expected behavior.",
+      "outcome": "A made-up test case set.",
       "ready_outcome": "cases_written",
       "pinned": [
         "method"
@@ -1365,8 +1365,8 @@
       ],
       "steps": [
         "Verify the pins. Cover the success measure, every human hand-off and at least one adversarial input.",
-        "Mark the set synthetic and invent every detail; never adapt a real case.",
-        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
+        "Mark the set made-up and invent every detail; never adapt a real case.",
+        "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
       ],
       "acceptance": [
         {
@@ -1380,7 +1380,7 @@
           "method": "deterministic"
         },
         {
-          "id": "synthetic",
+          "id": "made-up",
           "check": "No case contains a real-looking phone number, address or case number.",
           "method": "deterministic"
         }
@@ -1619,7 +1619,7 @@
         "Record each translated file with the digest of its source.",
         "Leave fluent_review pending.",
         "Propose an independent review of the translation by a fluent reviewer.",
-        "Use only synthetic, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
+        "Use only made-up, clearly marked test data. Never put a real person's details into a kit, a test case or an output."
       ],
       "acceptance": [
         {

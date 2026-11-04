@@ -32,7 +32,7 @@ class ModelLicenseTierFirewall:
         """Classify permitted tiers and evaluate optional requested_tier."""
         sensitivity = str(descriptor.get("sensitivity", "unknown")).strip()
         license_tag = str(descriptor.get("license_tag", "unknown")).strip()
-        synthetic_provenance = bool(descriptor.get("synthetic_provenance", False))
+        made_up_provenance = bool(descriptor.get("made_up_provenance", False))
         placeholder_vaulted = bool(descriptor.get("placeholder_vaulted", False))
         has_raw_sensitive = bool(descriptor.get("contains_unredacted_entities", False))
         requested_tier = descriptor.get("requested_tier")
@@ -73,7 +73,7 @@ class ModelLicenseTierFirewall:
         else:
             # public sensitivity
             if license_tag in self.permissive_licenses and (
-                synthetic_provenance or bool(descriptor.get("public_redistribution_cleared", True))
+                made_up_provenance or bool(descriptor.get("public_redistribution_cleared", True))
             ):
                 reasons.append("public_permissive_eligible_for_contributor_training")
                 permitted = [

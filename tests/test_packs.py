@@ -55,13 +55,13 @@ def task(template_id: str) -> dict:
     raise KeyError(template_id)
 
 
-# A made-up product name. Inside synthetic_name() it joins the hashed surface-name list, so the
+# A made-up product name. Inside made_up_name() it joins the hashed surface-name list, so the
 # negative checks below can name a product without this repository naming a real one.
-SYNTHETIC_NAME = "acme"
+MADE_UP_NAME = "acme"
 
 
-def synthetic_name():
-    digest = hashlib.sha256(SYNTHETIC_NAME.encode()).hexdigest()
+def made_up_name():
+    digest = hashlib.sha256(MADE_UP_NAME.encode()).hexdigest()
     return mock.patch.object(vp, "SURFACE_NAME_HASHES", vp.SURFACE_NAME_HASHES | {digest})
 
 
@@ -456,7 +456,7 @@ class NegativeChecks(unittest.TestCase):
             lambda r: r["value"].update(padding="x" * 40000),
             lambda r: r.update(namespace="main"),
         ]
-        with synthetic_name():
+        with made_up_name():
             for mutate in cases:
                 with self.subTest(mutate=mutate):
                     self.assert_record_rejected(mutate)
@@ -503,7 +503,7 @@ class NegativeChecks(unittest.TestCase):
             lambda t: t["brief"]["instantiation"].update(status="instance"),
             lambda t: t["brief"].update(notes=["x" * 40000]),
         ]
-        with synthetic_name():
+        with made_up_name():
             for mutate in cases:
                 with self.subTest(mutate=mutate):
                     self.assert_task_rejected(mutate)
@@ -553,7 +553,7 @@ class NegativeChecks(unittest.TestCase):
                     good.replace("A collection of nouns and verbs for reviewing", "This pack reviews"),
                     good.replace("## Limits", "## Limits\n\nBuilt on Acme."),
                     good + "\n" * 100):
-            with self.assertRaises(bp.PackError), synthetic_name():
+            with self.assertRaises(bp.PackError), made_up_name():
                 vp.check_readme(bad, "Repository review", "repo-review")
 
     def test_template_examples_and_conforming_instances_must_match(self):
@@ -573,7 +573,7 @@ class NegativeChecks(unittest.TestCase):
         self.assertTrue(any(vp.surface_name_in(note) for note in descriptor["value"]["provenance_notes"]))
         check_record(descriptor)
         descriptor["value"]["lets_workers"] += " Uses Acme."
-        with self.assertRaises(bp.PackError), synthetic_name():
+        with self.assertRaises(bp.PackError), made_up_name():
             check_record(descriptor)
 
     def test_surface_names_are_stored_only_as_hashes(self):
@@ -588,7 +588,7 @@ class NegativeChecks(unittest.TestCase):
         for path in ("scripts/validate_packs.py", "scripts/build_packs.py", "tests/test_packs.py"):
             self.assertFalse(vp.surface_name_in((ROOT / path).read_text(encoding="utf-8")), path)
         self.assertFalse(vp.surface_name_in("Made with Acme."))
-        with synthetic_name():
+        with made_up_name():
             for text in ("Made with Acme.", "ACME tools", "acme-labs", "the acme_tool helper"):
                 self.assertTrue(vp.surface_name_in(text), text)
             for text in ("Acmeish", "academy"):
@@ -975,7 +975,7 @@ class TopicPackExamples(unittest.TestCase):
             self.assertEqual(item["value"], expected, item["fact_id"])
             values[item["fact_id"]] = item["value"]
         for fact in metrics["facts"]:
-            self.assertTrue(fact["cik"].startswith("X") and fact["accession"].startswith("X"), "synthetic identifiers")
+            self.assertTrue(fact["cik"].startswith("X") and fact["accession"].startswith("X"), "made-up identifiers")
         comparisons = self.instance(pack, "example.comparison")["comparisons"]
         for row in comparisons:
             self.assertEqual((row["from_value"], row["to_value"]), (values[row["from_fact"]], values[row["to_fact"]]))

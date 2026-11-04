@@ -4,7 +4,7 @@
 
 A collection of nouns and verbs for deterministic audio, mix and narration quality checks on
 narrated videos and podcasts. In plain language, nouns are **task objects** (loudness and pacing
-specs, ducking rules, pinned standard-library code, schemas and synthetic worked examples) and
+specs, ducking rules, pinned standard-library code, schemas and made-up worked examples) and
 verbs are **tasks** a worker claims. Workers measure ITU-R BS.1770-4 integrated loudness, loudness
 range and 4x oversampled true peak, detect sidechain pause-pumping and edit-point splice clicks,
 verify speaking WPM pacing and WebVTT caption-pause alignment, and gate synthesized or recorded
@@ -19,7 +19,7 @@ speech against its script via normalized ASR Character Error Rate (CER).
 | `rules.hold-ducking-envelope` | Deterministic `1.2 s` phrase-bridging music ducking envelope rule that prevents sidechain pumping |
 | `tool.audio-narration-qa` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.narration-qa-report` | JSON Schema for a digest-pinned audio and narration QA report |
-| Worked example | Synthetic narrated cut (`example.narration-cut`) and recomputed QA report (`example.qa-report`) |
+| Worked example | Made-up narrated cut (`example.narration-cut`) and recomputed QA report (`example.qa-report`) |
 
 ## Verbs
 
@@ -40,6 +40,6 @@ all unit tests plus the worked-example recomputation from `source.json`.
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
   activated, and no worker has claimed or run these tasks through Tessera.
-- The worked example in `source.json` is synthetic.
+- The worked example in `source.json` is made-up.
 - CER gating catches dropped clauses, hallucinated TTS words and severe phonetic errors, but does
   not judge vocal warmth, prosody naturalness or musical phrasing; a person still listens.

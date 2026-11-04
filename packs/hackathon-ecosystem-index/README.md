@@ -6,7 +6,7 @@ A collection of nouns and verbs for decomposing public AI repository metadata an
 searchable **Tasks** (`verb` signatures) and **Task Objects** (`noun` signatures) and serving
 hybrid Okapi BM25 plus facet and stack Reciprocal Rank Fusion (`k=60`) retrieval. In plain
 language, nouns are **task objects** (decomposition rules, RRF search specs, pinned
-standard-library code, schemas and synthetic catalog examples) and verbs are **tasks** a worker
+standard-library code, schemas and made-up catalog examples) and verbs are **tasks** a worker
 claims. Workers ingest read-only repository scan records, map entrypoints and artifacts into
 unverified candidate task and task-object signatures, build a hybrid index, and retrieve projects
 matching both free-text queries and structured stack or domain facets.
@@ -20,7 +20,7 @@ matching both free-text queries and structured stack or domain facets.
 | `tool.ecosystem-index` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.catalog-record` | JSON Schema for a decomposed repository record (`repo`, `track`, `domain`, `meta_stack`, `tasks`, `task_objects`, `summary`, `provenance`) |
 | `template.search-response` | JSON Schema for hybrid BM25 + facet RRF (`k=60`) ranked search results |
-| Worked example | Synthetic 4-repository scan (`example.raw-repo-scans`) and recomputed RRF search output (`example.search-results`) |
+| Worked example | Made-up 4-repository scan (`example.raw-repo-scans`) and recomputed RRF search output (`example.search-results`) |
 
 ## Verbs
 
@@ -41,4 +41,4 @@ repository decomposition, BM25 indexing, RRF (`k=60`) fusion and the worked exam
   activated, and no worker has claimed or run these tasks through Tessera.
 - Decomposed `tasks` and `task_objects` reflect static metadata and README scans
   (`candidate_unverified`), never sandboxed execution or security endorsement of third-party code.
-- The worked example in `source.json` is synthetic.
+- The worked example in `source.json` is made-up.

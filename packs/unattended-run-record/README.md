@@ -20,7 +20,7 @@ write a plain-language report that keeps every failure.
 | Outcome ladder | Thirteen rungs from already green to void, each with who establishes it |
 | Fallback ladder | Every layer degrades to a named, recorded result; containment is refused, never downgraded |
 | Verification strength | Eight rungs of checking beyond the task's own check, recorded separately |
-| Run checks | 11 deterministic checks with 2 synthetic good and 11 synthetic bad reports, rechecked by `make check` |
+| Run checks | 11 deterministic checks with 2 made-up good and 11 made-up bad reports, rechecked by `make check` |
 | Templates | Run plan, run approval, candidate, triage record, baseline, attempt record, grade and run report |
 | Worked examples | A seven-hour overnight plan and a triage that declines three candidates without a model call |
 
@@ -43,7 +43,7 @@ shortfalls become handoffs in [status and handoff](../status-and-handoff/README.
 
 ## Worked examples
 
-All synthetic. The good night report leads with "1 verified, 1 cause localised, 1 void, 1 already
+All made-up. The good night report leads with "1 verified, 1 cause localised, 1 void, 1 already
 green; 2 declined": one attempt changed its own check and was voided but kept as a branch, an
 unreported counter is left empty with the reason, and each shortfall has a next step. The empty
 night says nothing unresolved was found. Each bad report breaks one rule, such as a headline

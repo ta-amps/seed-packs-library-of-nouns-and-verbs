@@ -27,7 +27,7 @@ still not reach it; the scan catches replaced paths, not missing calls.
 calls. Constant and flag-only probes are hollow. A probe that calls something is a lead: stopping
 the dependency and watching the probe fail is what shows it probes.
 
-The tests cover every rule on small synthetic packages and on the synthetic pantry app in
+The tests cover every rule on small made-up packages and on the made-up pantry app in
 `tests/fixtures/pantry`, and recompute the pack's three worked examples from
 [source.json](../source.json). Nothing here opens a network connection, calls a model or writes a
 file. MIT license, written for this pack by ta-amps.

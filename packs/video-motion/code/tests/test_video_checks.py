@@ -42,7 +42,7 @@ PROBE = """Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'probe.mp4':
   Metadata:
     major_brand     : isom
     title           : probe
-    comment         : Synthetic visuals: test
+    comment         : Made-up visuals: test
   Duration: 00:00:04.00, start: 0.000000, bitrate: 162 kb/s
   Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 1361 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
       Metadata:
@@ -256,7 +256,7 @@ def test_evaluation_passes_good_measurements_and_flags_each_failure() -> None:
             update={"loudness": Loudness(integrated_lufs=-20.0, lra_lu=1.0, true_peak_dbfs=-11.0)}
         ),
         "caption_timing_coverage": good.model_copy(update={"narration_silences": []}),
-        "synthetic_disclosure": good.model_copy(
+        "made_up_disclosure": good.model_copy(
             update={"info": good.info.model_copy(update={"comment": "other"})}
         ),
     }

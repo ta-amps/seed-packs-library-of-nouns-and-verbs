@@ -22,7 +22,7 @@ encapsulate child objects into one deterministic `Feed` digest, and select a har
 | `recommendation.pareto-selection` | Non-dominated Pareto frontier and constrained harness recommendation |
 | `schedule.harness-feed-scan` | Unactivated daily scan proposal (`activation: not_activated`, `authority: none`) requiring an authorized schedule service |
 | `tool.harness-feeds` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
-| Templates and worked example | `template.feed-snapshot` schema and synthetic trial data (`example.raw-harness-runs`) recomputed in CI |
+| Templates and worked example | `template.feed-snapshot` schema and made-up trial data (`example.raw-harness-runs`) recomputed in CI |
 
 ## Verbs
 
@@ -46,4 +46,4 @@ Run `make check` in [code/](code/README.md) to compile with warnings treated as 
 - `schedule.harness-feed-scan` is `not_activated` (`authority: none`) and cannot schedule or
   authorize work by itself.
 - Benchmark figures inside `example.raw-harness-runs` and `benchmark.normalized-matrix` are
-  synthetic fixtures testing normalization and Pareto math, never live leaderboard claims.
+  made-up fixtures testing normalization and Pareto math, never live leaderboard claims.

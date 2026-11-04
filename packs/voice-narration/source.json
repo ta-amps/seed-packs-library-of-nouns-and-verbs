@@ -72,7 +72,7 @@
             "$pin": "guardrail.script-words-unchanged"
           }
         ],
-        "worked_example": "Synthetic: a two-line script with a coined street name and an acronym, five takes (one clipped, one tie, one truncated), the rule's choice and the placed track that the narrated explainer video pack captions.",
+        "worked_example": "Made-up: a two-line script with a coined street name and an acronym, five takes (one clipped, one tie, one truncated), the rule's choice and the placed track that the narrated explainer video pack captions.",
         "complements": "A person's own recorded voice uses the video showcase pack's record-narration verb instead.",
         "provenance_notes": [
           "Generalizes the narration steps of ta-amps's own explainer video production on October 29 and 30, 2026: a local open text-to-speech model with an explicit phoneme override for a coined name, seeded per line, measured with FFmpeg and checked by a local recognizer, with every line labeled as an AI voice."
@@ -1414,7 +1414,7 @@
           {
             "title": "European Commission AI Act Service Desk: Article 50, transparency obligations",
             "url": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50",
-            "used_for": "Why synthetic audio is marked and disclosed; a reading aid, not legal advice",
+            "used_for": "Why made-up audio is marked and disclosed; a reading aid, not legal advice",
             "checked_date": "2026-10-30"
           },
           {
@@ -1431,13 +1431,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for voice narration",
+      "title": "Made-up test cases for voice narration",
       "value": {
         "cases": [
           {
             "id": "VN-LEX-COINED",
             "scenario": "A coined street name is missing from the model's dictionary",
-            "sample_input": "SYNTHETIC: The script says Velmora Street; with no entry the fallback reads it VILL-more with the stress on the first syllable.",
+            "sample_input": "MADE-UP: The script says Velmora Street; with no entry the fallback reads it VILL-more with the stress on the first syllable.",
             "expected_outcome": "lexicon_ready",
             "expected_indicators": [
               "entry_with_ipa_override",
@@ -1449,7 +1449,7 @@
           {
             "id": "VN-LEX-NO-PHONEMES",
             "scenario": "The engine takes no phonemes, and a respelling is read as separate words",
-            "sample_input": "SYNTHETIC: The respelling Vel-more-ah is heard as VEL MORE AH in two of three takes.",
+            "sample_input": "MADE-UP: The respelling Vel-more-ah is heard as VEL MORE AH in two of three takes.",
             "expected_outcome": "lexicon_ready",
             "expected_indicators": [
               "auditions_recorded",
@@ -1461,7 +1461,7 @@
           {
             "id": "VN-TAKE-CLIP",
             "scenario": "One take clips and the other is clean",
-            "sample_input": "SYNTHETIC: Line 1, take 0 has 2 full-scale samples; take 1 has none and an error rate of 0.0.",
+            "sample_input": "MADE-UP: Line 1, take 0 has 2 full-scale samples; take 1 has none and an error rate of 0.0.",
             "expected_outcome": "takes_chosen",
             "expected_indicators": [
               "take_1_chosen",
@@ -1472,7 +1472,7 @@
           {
             "id": "VN-TAKE-TIE",
             "scenario": "Two clean takes tie on error rate",
-            "sample_input": "SYNTHETIC: Line 2, takes 0 and 1 both have an error rate of 0.0, at 172.3 and 156.4 words per minute; the target is 150.",
+            "sample_input": "MADE-UP: Line 2, takes 0 and 1 both have an error rate of 0.0, at 172.3 and 156.4 words per minute; the target is 150.",
             "expected_outcome": "takes_chosen",
             "expected_indicators": [
               "take_1_chosen_on_pace",
@@ -1483,7 +1483,7 @@
           {
             "id": "VN-FIT-LONG",
             "scenario": "A line runs past its beat",
-            "sample_input": "SYNTHETIC: Line 2 is 8.6 s long but its beat has 8.05 s from the line's start.",
+            "sample_input": "MADE-UP: Line 2 is 8.6 s long but its beat has 8.05 s from the line's start.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "not_sped_past_band",
@@ -1494,7 +1494,7 @@
           {
             "id": "VN-LOUD-SPREAD",
             "scenario": "Line loudness differs by 5.6 LU",
-            "sample_input": "SYNTHETIC: Chosen lines measure from -24.3 to -29.9 LUFS integrated.",
+            "sample_input": "MADE-UP: Chosen lines measure from -24.3 to -29.9 LUFS integrated.",
             "expected_outcome": "unknown",
             "expected_indicators": [
               "spread_over_limit_flagged",
@@ -1505,7 +1505,7 @@
           {
             "id": "VN-CLONE-ASK",
             "scenario": "A request to sound like a named public figure",
-            "sample_input": "SYNTHETIC: The brief asks for the narration to sound exactly like a famous news anchor.",
+            "sample_input": "MADE-UP: The brief asks for the narration to sound exactly like a famous news anchor.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "no_cloning",
@@ -1516,7 +1516,7 @@
           {
             "id": "VN-LABEL-MISSING",
             "scenario": "A track without the AI-voice disclosure",
-            "sample_input": "SYNTHETIC: The track's disclosure reads only: Narration for the 20-second cut.",
+            "sample_input": "MADE-UP: The track's disclosure reads only: Narration for the 20-second cut.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "disclosure_required",
@@ -1526,7 +1526,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.narration-script",
@@ -1534,7 +1534,7 @@
       "role": "example",
       "title": "Worked example: a two-line narration script for a 20-second explainer",
       "value": {
-        "notice": "SYNTHETIC. A made-up street and fridge; no real place or organization.",
+        "notice": "MADE-UP. A made-up street and fridge; no real place or organization.",
         "conforms_to": {
           "$pin": "template.narration-script"
         },
@@ -1559,7 +1559,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.lexicon",
@@ -1567,7 +1567,7 @@
       "role": "example",
       "title": "Worked example: a lexicon for a coined street name and an acronym",
       "value": {
-        "notice": "SYNTHETIC. Audition results are illustrative; no audio was made for this example.",
+        "notice": "MADE-UP. Audition results are illustrative; no audio was made for this example.",
         "conforms_to": {
           "$pin": "template.lexicon"
         },
@@ -1625,7 +1625,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.synthesis-log",
@@ -1633,7 +1633,7 @@
       "role": "example",
       "title": "Worked example: two lines, five takes, the lexicon applied",
       "value": {
-        "notice": "SYNTHETIC. No audio exists; each raw_sha256 is the SHA-256 of the UTF-8 text 'synthetic stand-in: <line> take <n>' so the field keeps its real shape.",
+        "notice": "MADE-UP. No audio exists; each raw_sha256 is the SHA-256 of the UTF-8 text 'made-up stand-in: <line> take <n>' so the field keeps its real shape.",
         "conforms_to": {
           "$pin": "template.synthesis-log"
         },
@@ -1695,7 +1695,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.line-measurements",
@@ -1703,7 +1703,7 @@
       "role": "example",
       "title": "Worked example: measurements of every take",
       "value": {
-        "notice": "SYNTHETIC. Plausible values, not measurements of real audio.",
+        "notice": "MADE-UP. Plausible values, not measurements of real audio.",
         "conforms_to": {
           "$pin": "template.line-measurements"
         },
@@ -1844,7 +1844,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.take-choice",
@@ -1852,7 +1852,7 @@
       "role": "example",
       "title": "Worked example: the rule applied: one clipped take, one tie, one truncated take",
       "value": {
-        "notice": "SYNTHETIC. Recomputed from example.line-measurements by the library's tests.",
+        "notice": "MADE-UP. Recomputed from example.line-measurements by the library's tests.",
         "conforms_to": {
           "$pin": "template.take-choice"
         },
@@ -1891,7 +1891,7 @@
           "loudness_spread_lu": 0.5
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.narration-track",
@@ -1899,7 +1899,7 @@
       "role": "example",
       "title": "Worked example: the chosen takes placed on a 20-second cut",
       "value": {
-        "notice": "SYNTHETIC. No audio file exists; file_sha256 is the SHA-256 of the UTF-8 text 'synthetic stand-in: narration-20s.wav'. The narrated explainer video pack times its worked example's captions from these placements.",
+        "notice": "MADE-UP. No audio file exists; file_sha256 is the SHA-256 of the UTF-8 text 'made-up stand-in: narration-20s.wav'. The narrated explainer video pack times its worked example's captions from these placements.",
         "conforms_to": {
           "$pin": "template.narration-track"
         },
@@ -1954,7 +1954,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "narration-checks",
@@ -2269,7 +2269,7 @@
           "guardrail.no-voice-cloning"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [
@@ -2411,7 +2411,7 @@
         "Load weights only from files whose SHA-256 matches the voice model card, with the network off.",
         "Apply the lexicon to each line whole-word and longest first, changing no word.",
         "Seed the model before every take and record the seed, the voice and the exact text sent.",
-        "Keep every take, valid or not, and mark every output synthetic with an AI-voice disclosure."
+        "Keep every take, valid or not, and mark every output made-up with an AI-voice disclosure."
       ],
       "acceptance": [
         {

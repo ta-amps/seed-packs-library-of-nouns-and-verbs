@@ -9,7 +9,7 @@
     "wiring-and-conformance-checks"
   ],
   "boundaries": [
-    "RubricJudgeCalibrationGate blocks synthetic self-rewarding preference pairs whenever Cohen's kappa, exact agreement or false-positive approval rates violate grid calibration bounds against deterministic verifiers.",
+    "RubricJudgeCalibrationGate blocks made-up self-rewarding preference pairs whenever Cohen's kappa, exact agreement or false-positive approval rates violate grid calibration bounds against deterministic verifiers.",
     "IterativeRpoPairCurator enforces positive NLL_chosen regularization, length-ratio bias bounds and 3-key structural deduplication so iterative preference rounds do not collapse chosen log-probabilities or reward verbosity.",
     "PreRegisteredFlywheelPromoter rejects candidate generation rounds upon any holdout SHA-256 mismatch, self-review, sanity retention drop or regression cap breach.",
     "Importing the pack writes nothing, enqueues nothing and installs no code."
@@ -21,13 +21,13 @@
       "role": "pack",
       "title": "A collection of nouns and verbs for iterative RPO preference curation, rubric-judge calibration gating against deterministic verifiers and pre-registered holdout flywheel promotion",
       "value": {
-        "lets_workers": "Curate (prompt, chosen_verified, rejected_tombstone) preference pairs using Iterative RPO scoring (DPO logistic loss plus per-token NLL_chosen regularization to prevent chosen log-probability collapse), filter length-ratio verbosity bias and 3-key structural duplicates, gate synthetic self-rewarding rubric pairs against deterministic verifiers via Cohen's kappa and false-positive caps, and evaluate generation rounds against pre-registered holdout SHA-256 locks.",
+        "lets_workers": "Curate (prompt, chosen_verified, rejected_tombstone) preference pairs using Iterative RPO scoring (DPO logistic loss plus per-token NLL_chosen regularization to prevent chosen log-probability collapse), filter length-ratio verbosity bias and 3-key structural duplicates, gate made-up self-rewarding rubric pairs against deterministic verifiers via Cohen's kappa and false-positive caps, and evaluate generation rounds against pre-registered holdout SHA-256 locks.",
         "flow": [
           {
             "verb": {
               "$verb": "self-rewarding-and-iterative-dpo-flywheel.calibrate-rubric-judge-against-verifiers"
             },
-            "when": "Measure candidate self-rewarding rubric judge agreement (Cohen's kappa, exact agreement and false-positive approval rate) against deterministic verifiers before admitting synthetic pairs."
+            "when": "Measure candidate self-rewarding rubric judge agreement (Cohen's kappa, exact agreement and false-positive approval rate) against deterministic verifiers before admitting made-up pairs."
           },
           {
             "verb": {
@@ -44,7 +44,7 @@
         ],
         "guardrails": [
           {
-            "$pin": "guardrail.block-uncalibrated-synthetic-rubric-pairs"
+            "$pin": "guardrail.block-uncalibrated-made-up-rubric-pairs"
           },
           {
             "$pin": "guardrail.preregistered-holdout-lock-and-zero-magic-literals"
@@ -53,12 +53,12 @@
         "tool": {
           "$pin": "tool.iterative-rpo-flywheel"
         },
-        "worked_example": "Synthetic rubric calibration, Iterative RPO pair curation and holdout promotion bundle recomputed in test_iterative_rpo_flywheel.py: approves calibrated judge (kappa 0.75, FPR 0.0) while blocking 100% of pairs from uncalibrated judge (kappa -0.2), rejects 1 length-biased pair, 1 chosen-logp-collapse trap and 1 3-key structural duplicate, curates 2 clean pairs (mean DPO margin 0.925, mean RPO loss 0.743994), and verifies SHA-256 holdout lock with +0.20 net gain and 0.0 regression rate."
+        "worked_example": "Made-up rubric calibration, Iterative RPO pair curation and holdout promotion bundle recomputed in test_iterative_rpo_flywheel.py: approves calibrated judge (kappa 0.75, FPR 0.0) while blocking 100% of pairs from uncalibrated judge (kappa -0.2), rejects 1 length-biased pair, 1 chosen-logp-collapse trap and 1 3-key structural duplicate, curates 2 clean pairs (mean DPO margin 0.925, mean RPO loss 0.743994), and verifies SHA-256 holdout lock with +0.20 net gain and 0.0 regression rate."
       },
       "relations": [
         [
           "requires_noun",
-          "guardrail.block-uncalibrated-synthetic-rubric-pairs"
+          "guardrail.block-uncalibrated-made-up-rubric-pairs"
         ],
         [
           "requires_noun",
@@ -83,14 +83,14 @@
       ]
     },
     {
-      "slug": "guardrail.block-uncalibrated-synthetic-rubric-pairs",
+      "slug": "guardrail.block-uncalibrated-made-up-rubric-pairs",
       "category": "noun.skill_pack",
       "role": "guardrail",
-      "title": "Guardrail: synthetic self-rewarding preference pairs are blocked unless rubric judges pass deterministic verifier calibration",
+      "title": "Guardrail: made-up self-rewarding preference pairs are blocked unless rubric judges pass deterministic verifier calibration",
       "category_reason": "Prevents self-reinforcing reward hacking and false-positive drift across iterative preference rounds.",
       "value": {
-        "rule": "Admit synthetic rubric-judged preference pairs only when the rubric judge achieves cohens_kappa >= min_cohens_kappa, exact_agreement >= min_exact_agreement and false_positive_approval_rate <= max_false_positive_rate on deterministic ground-truth verifier checks.",
-        "how_it_is_checked": "RubricJudgeCalibrationGate.gate_synthetic_pairs returns zero admitted synthetic pairs whenever any calibration threshold fails."
+        "rule": "Admit made-up rubric-judged preference pairs only when the rubric judge achieves cohens_kappa >= min_cohens_kappa, exact_agreement >= min_exact_agreement and false_positive_approval_rate <= max_false_positive_rate on deterministic ground-truth verifier checks.",
+        "how_it_is_checked": "RubricJudgeCalibrationGate.gate_made_up_pairs returns zero admitted made-up pairs whenever any calibration threshold fails."
       }
     },
     {
@@ -168,7 +168,7 @@
           "Implements PreRegisteredFlywheelPromoter enforcing holdout SHA-256 locks, sanity retention bounds, regression caps and distinct-reviewer separation."
         ],
         "does_not": [
-          "Perform network I/O, self-approve synthetic pairs without verifier calibration or inline hardcoded numeric thresholds."
+          "Perform network I/O, self-approve made-up pairs without verifier calibration or inline hardcoded numeric thresholds."
         ],
         "code_license": "MIT"
       },
@@ -194,7 +194,7 @@
             "calibrated_judge_fpr",
             "calibrated_judge_passed",
             "uncalibrated_judge_kappa",
-            "uncalibrated_synthetic_admitted",
+            "uncalibrated_made_up_admitted",
             "admitted_pair_ids",
             "admitted_pair_count",
             "rejected_length_bias_count",
@@ -227,7 +227,7 @@
               "minimum": -1.0,
               "maximum": 1.0
             },
-            "uncalibrated_synthetic_admitted": {
+            "uncalibrated_made_up_admitted": {
               "type": "integer",
               "minimum": 0
             },
@@ -289,7 +289,7 @@
           "calibrated_judge_fpr": 0.0,
           "calibrated_judge_passed": true,
           "uncalibrated_judge_kappa": -0.2,
-          "uncalibrated_synthetic_admitted": 0,
+          "uncalibrated_made_up_admitted": 0,
           "admitted_pair_ids": [
             "pair-synth-calibrated-1",
             "pair-rpo-clean-1"
@@ -312,9 +312,9 @@
       "slug": "example.iterative-rpo-flywheel-bundle",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example input: calibrated vs uncalibrated rubric judges, RPO candidate pairs and SHA-256 locked holdout suite",
-      "category_reason": "Synthetic fixture recomputed by test_iterative_rpo_flywheel.py.",
+      "category_reason": "Made-up fixture recomputed by test_iterative_rpo_flywheel.py.",
       "value": {
         "calibrated_judge_records": [
           {
@@ -448,7 +448,7 @@
             "rejected_tombstone_fail": true
           }
         ],
-        "synthetic_pairs": [
+        "made_up_pairs": [
           {
             "pair_id": "pair-synth-calibrated-1",
             "prompt": "Compute residual subvector lookup distances for product quantization",
@@ -509,17 +509,17 @@
         },
         "proposer_id": "worker-curator-01",
         "reviewer_id": "worker-verifier-02",
-        "shows": "Synthetic self-rewarding rubric calibration, Iterative RPO preference pair curation and SHA-256 locked flywheel promotion.",
-        "source": "Synthetic. Written for this pack."
+        "shows": "Made-up self-rewarding rubric calibration, Iterative RPO preference pair curation and SHA-256 locked flywheel promotion.",
+        "source": "Made-up. Written for this pack."
       }
     },
     {
       "slug": "example.iterative-rpo-flywheel-receipt",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed rubric calibration, Iterative RPO curation and holdout promotion receipt",
-      "category_reason": "Synthetic receipt verified by test_iterative_rpo_flywheel.py.",
+      "category_reason": "Made-up receipt verified by test_iterative_rpo_flywheel.py.",
       "value": {
         "conforms_to": {
           "$pin": "template.iterative-rpo-flywheel-receipt"
@@ -529,7 +529,7 @@
           "calibrated_judge_fpr": 0.0,
           "calibrated_judge_passed": true,
           "uncalibrated_judge_kappa": -0.2,
-          "uncalibrated_synthetic_admitted": 0,
+          "uncalibrated_made_up_admitted": 0,
           "admitted_pair_ids": [
             "pair-synth-calibrated-1",
             "pair-rpo-clean-1"
@@ -547,7 +547,7 @@
           "promote_round": true
         },
         "shows": "Recomputes Cohen's kappa calibration gating, NLL_chosen collapse rejection, length-ratio filtering, 3-key deduplication and pre-registered holdout round promotion.",
-        "source": "Synthetic. Recomputed directly from example.iterative-rpo-flywheel-bundle."
+        "source": "Made-up. Recomputed directly from example.iterative-rpo-flywheel-bundle."
       },
       "relations": [
         [
@@ -568,20 +568,20 @@
       "title": "Calibrate candidate self-rewarding rubric judges against deterministic ground-truth verifiers",
       "claimant": "agent",
       "model_use": "none",
-      "summary": "Evaluate rubric judge approvals against deterministic verifier outcomes using Cohen's kappa, exact agreement and false-positive approval rate bounds, blocking synthetic pairs when calibration fails.",
-      "outcome": "Rubric judge calibration scorecard and admitted/blocked synthetic pair counts.",
+      "summary": "Evaluate rubric judge approvals against deterministic verifier outcomes using Cohen's kappa, exact agreement and false-positive approval rate bounds, blocking made-up pairs when calibration fails.",
+      "outcome": "Rubric judge calibration scorecard and admitted/blocked made-up pair counts.",
       "ready_outcome": "rubric_judge_calibrated",
       "pinned": [
         "spec.iterative-rpo-and-flywheel-grid",
         "rules.rpo-objective-and-calibration-gates",
-        "guardrail.block-uncalibrated-synthetic-rubric-pairs",
+        "guardrail.block-uncalibrated-made-up-rubric-pairs",
         "tool.iterative-rpo-flywheel"
       ],
       "slots": [
         {
           "name": "calibration_bundle",
           "category": "noun.eval_run",
-          "description": "Pin of paired rubric judge predictions, deterministic verifier verdicts and candidate synthetic pairs."
+          "description": "Pin of paired rubric judge predictions, deterministic verifier verdicts and candidate made-up pairs."
         }
       ],
       "produces": [
@@ -592,12 +592,12 @@
       ],
       "steps": [
         "Load Cohen's kappa, exact agreement and false-positive rate bounds from default_grid_spec.json.",
-        "Evaluate candidate rubric judges on deterministic verifier labels and block synthetic pairs from uncalibrated judges."
+        "Evaluate candidate rubric judges on deterministic verifier labels and block made-up pairs from uncalibrated judges."
       ],
       "acceptance": [
         {
           "id": "uncalibrated-judges-blocked",
-          "check": "Uncalibrated rubric judges admit zero synthetic pairs while calibrated judges satisfy kappa and false-positive bounds.",
+          "check": "Uncalibrated rubric judges admit zero made-up pairs while calibrated judges satisfy kappa and false-positive bounds.",
           "method": "deterministic"
         }
       ]
@@ -656,7 +656,7 @@
       "review": "distinct_reviewer",
       "pinned": [
         "spec.iterative-rpo-and-flywheel-grid",
-        "guardrail.block-uncalibrated-synthetic-rubric-pairs",
+        "guardrail.block-uncalibrated-made-up-rubric-pairs",
         "guardrail.preregistered-holdout-lock-and-zero-magic-literals",
         "tool.iterative-rpo-flywheel",
         "template.iterative-rpo-flywheel-receipt"

@@ -8,19 +8,19 @@ and [current format limits](formats.md) before proposing a pilot.
 
 Each blueprint improves a reusable process, method or guidance noun across tasks.
 This is process learning, not model weight training. An exact code cache can reuse
-verified bytes only under matching contracts, versions and authority. Similar
+checked bytes only under matching contracts, versions and authority. Similar
 examples and method-selection hints require new applicability checks and execution.
 
 Existing catalog labels such as `verb.solve_draft`, `verb.verify_gate`,
 `verb.distill_reflex` and `verb.benchmark_harness` describe intended contract kinds;
 they do not guarantee an available worker or an enforced review gate. Blueprint
 titles below are semantic descriptions, not extra registered category identifiers.
-Keep one flat Tessera fabric: governed nouns, claimed verbs and source-bound
+Keep one flat Teleion Fabric fabric: governed nouns, claimed verbs and source-bound
 execution observations. No competing registry, scheduler or artifact library.
 
 ## Start with one small pilot
 
-After the foundation passes, select one recurring synthetic payload mismatch in
+After the foundation passes, select one recurring made-up payload mismatch in
 blueprint 1. Pin one baseline, one candidate, one authorized harness and separate
 development, holdout and adversarial fixtures. Fix the evaluator, acceptance
 thresholds, time/call/cost limits and stop conditions before evaluating. Then decide
@@ -51,13 +51,13 @@ flowchart LR
 
 - **Inputs:** authorized successful and failed `noun.eval_run` observations, exact artifact references, licenses, input/output schemas and environment identities.
 - **Bounded verbs:** one `verb.distill_reflex` candidate; use `verb.compile_dag` only through an actual compatible compiler, followed by `verb.verify_gate`.
-- **Outputs/checks:** candidate `noun.code_node` or `noun.reflex_procedure` with typed ports, preconditions, pinned bytes, provenance and positive/negative replay fixtures.
+- **Outputs/checks:** candidate `noun.code_node` or `noun.reflex_procedure` with typed ports, preconditions, pinned bytes, source and positive/negative replay fixtures.
 - **Applicability:** preserve source visibility and license restrictions. Capture new execution observations through submit; workers do not forge the protected history store.
-- **Reject:** missing rights, port mismatch, a dependency cycle, nondeterministic behavior claimed as deterministic, or failed held-out replay. A repeat receipt does not prove reusable code.
+- **Reject:** missing rights, port mismatch, a dependency cycle, nondeterministic behavior claimed as deterministic, or failed held-out replay. A repeat record does not prove reusable code.
 
 ### 3. Retrieval and ontology quality
 
-- **Inputs:** permitted source nouns, current category/facet definitions, a versioned query set and relevant/irrelevant judgments with their provenance.
+- **Inputs:** permitted source nouns, current category/facet definitions, a versioned query set and relevant/irrelevant judgments with their source.
 - **Bounded verbs:** `verb.situate`, one `verb.solve_draft` ranking or taxonomy proposal, then `verb.verify_gate` on an agreed query budget.
 - **Outputs/checks:** pinned mapping/ranking guidance and a scorecard for authorized recall, precision, empty results and category/facet consistency; unknown judgments stay unknown.
 - **Applicability:** one primary category plus descriptive facets and typed relations. Taxonomy does not inherit execution authority or dictate physical partitioning.
@@ -109,7 +109,7 @@ flowchart LR
 - **Bounded verbs:** `verb.audit_profile_parity`, one `verb.solve_draft` migration proposal and `verb.verify_gate` over the stated compatibility matrix.
 - **Outputs/checks:** explicit mapping/diff, supported and rejected versions, preserved references and rollback evidence where the owning runtime supports rollback.
 - **Applicability:** only sanctioned override slots may change; conflicts retain both source pins for an owner decision. The proposed manifest still has no generic importer here.
-- **Reject:** lost provenance, silently widened ACLs, breaking required ports, untested claimed compatibility or last-write-wins array merges. A migration label does not authorize data mutation.
+- **Reject:** lost source, silently widened ACLs, breaking required ports, untested claimed compatibility or last-write-wins array merges. A migration label does not authorize data mutation.
 
 ### 10. Knowledge freshness and contradiction
 
@@ -117,7 +117,7 @@ flowchart LR
 - **Bounded verbs:** capped `verb.probe_source` or `verb.fetch_feed`, `verb.recheck_fragility`, and `verb.reconcile_conflict` only when there is an actual disputed field.
 - **Outputs/checks:** a versioned source observation, affected-reference list and supported correction or unresolved contradiction; preserve prior evidence and timestamps.
 - **Applicability:** use authorized destinations and data scopes. Prefer a relevant primary source and distinguish changed content, temporary access failure and factual contradiction.
-- **Reject:** erasing contrary evidence, treating a 404 as proof of falsity, unsupported certainty, missing provenance or exceeding the fetch budget. Do not settle facts by raw majority vote.
+- **Reject:** erasing contrary evidence, treating a 404 as proof of falsity, unsupported certainty, missing source or exceeding the fetch budget. Do not settle facts by raw majority vote.
 
 ## Promotion and monitoring contract
 

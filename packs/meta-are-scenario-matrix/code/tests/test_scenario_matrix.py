@@ -40,7 +40,7 @@ class ScenarioMatrixTests(unittest.TestCase):
 
     def test_llm_extender_hook_enriches_environment_deterministically(self) -> None:
         env = generate_environments_1000(
-            llm_extender=lambda d: {"synthetic_vignette": f"Vignette for {d['env_id']}"}
+            llm_extender=lambda d: {"made_up_vignette": f"Vignette for {d['env_id']}"}
         )[0]
         self.assertEqual(env["worker_llm_vignette"], "Vignette for ENV-0001")
 

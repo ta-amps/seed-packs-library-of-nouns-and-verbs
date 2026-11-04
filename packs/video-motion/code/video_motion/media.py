@@ -135,7 +135,7 @@ class MediaAsset(BaseModel):
     creator: str = Field(min_length=1)
     source_uri: str = Field(min_length=1)
     provenance: MediaProvenance
-    synthetic: bool
+    made_up: bool
     disclosure: str = Field(min_length=1)
     generator: MediaGenerator | None = None
     object_ref: ObjectPin | None = None
@@ -151,8 +151,8 @@ class MediaAsset(BaseModel):
             raise ValueError(f"mime_type {self.mime_type} does not describe a {self.kind}")
         if (self.provenance == "generated") != (self.generator is not None):
             raise ValueError("generated media needs a generator; captured/licensed media has none")
-        if self.provenance == "generated" and not self.synthetic:
-            raise ValueError("generated media must be labeled synthetic")
+        if self.provenance == "generated" and not self.made_up:
+            raise ValueError("generated media must be labeled made-up")
         if self.kind in ("recording", "image") and (self.width is None or self.height is None):
             raise ValueError("visual media needs width and height")
         if self.kind in ("recording", "audio") and self.duration_s is None:
@@ -226,7 +226,7 @@ def media_noun_value(asset: MediaAsset) -> dict[str, Any]:
     basis = {
         "evidence_grounding": (
             "Generated placeholder media; rights and content are declared by this repository."
-            if asset.synthetic
+            if asset.made_up
             else "Declared capture or license metadata; rights are not independently attested."
         ),
         "verification_tier": "Bytes are checked against blob_sha256 when a worker reads them; writing this value reads no media.",
@@ -236,12 +236,12 @@ def media_noun_value(asset: MediaAsset) -> dict[str, Any]:
             "category_id": "noun.scene_recipe",
             "role": MEDIA_ROLE,
             **pack_labels(),
-            "synthetic": asset.synthetic,
+            "made-up": asset.made_up,
             "relations": [],
             "title": asset.title,
             "asset": asset.model_dump(mode="json"),
             "fabric_admission": "pending",
-            **dimensions(basis, synthetic=asset.synthetic, checked=False),
+            **dimensions(basis, made_up=asset.made_up, checked=False),
         }
     )
     return value
@@ -529,7 +529,7 @@ def describe_generated(
         "creator": "video-motion media generators",
         "source_uri": f"urn:video-motion:generated:{tool.partition(':')[2]}",
         "provenance": "generated",
-        "synthetic": True,
+        "made-up": True,
         "disclosure": disclosure,
         "generator": generator,
     }

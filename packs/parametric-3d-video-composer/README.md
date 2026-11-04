@@ -21,7 +21,7 @@ text-on-text crossfades, and compute subtle aura and edge-packet interpolation c
 | `rules.transitions-and-auras` | Zero-double-exposure transition rules plus quadratic Bezier edge-packet and clamped card aura curves |
 | `tool.parametric-composer` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.composition-check` | JSON Schema for a verified 3D camera, browser layout and transition report |
-| Worked example | Synthetic `1x3` Product Hub scene (`example.hub-scene-spec`) and recomputed verification (`example.composition-check`) |
+| Worked example | Made-up `1x3` Product Hub scene (`example.hub-scene-spec`) and recomputed verification (`example.composition-check`) |
 
 ## Verbs
 
@@ -41,6 +41,6 @@ camera projection, safe-area collision, transition and worked-example tests.
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
   activated, and no worker has claimed or run these tasks through Tessera.
-- The worked example in `source.json` is synthetic.
+- The worked example in `source.json` is made-up.
 - Geometric preflight guarantees coordinate bounds before render; encoded video output still needs
   post-render inspection via [frame-by-frame video QA](../frame-by-frame-video-qa/README.md).

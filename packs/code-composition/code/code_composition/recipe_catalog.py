@@ -1,4 +1,4 @@
-"""Authored recipe catalog and synthetic sample inputs, shared by checkouts and installed wheels.
+"""Authored recipe catalog and made-up sample inputs, shared by checkouts and installed wheels.
 
 The canonical JSON files live in `examples/recipes/`. The wheel ships the same files as package
 data at `code_composition/recipes/` (see `[tool.hatch.build.targets.wheel.force-include]`), so an
@@ -122,12 +122,12 @@ def load_example_recipes(directory: Path | None = None) -> list[RecipeSpec]:
 
 
 def has_sample_inputs(recipe_id: str) -> bool:
-    """True when the catalog defines synthetic sample inputs for this recipe identifier."""
+    """True when the catalog defines made-up sample inputs for this recipe identifier."""
     return recipe_id in _SAMPLE_INPUTS
 
 
 def sample_inputs_for_recipe(recipe_id: str) -> dict[str, Any]:
-    """Deterministic synthetic inputs for the reference recipes.
+    """Deterministic made-up inputs for the reference recipes.
 
     Unknown identifiers keep the historical tabular triage default used by the demo surfaces.
     Seed export checks `has_sample_inputs` and refuses a recipe without its own inputs.

@@ -17,17 +17,17 @@ def run_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
     cfg = spec if spec is not None else load_default_grid_spec()
 
     cal_gate = RubricJudgeCalibrationGate(spec=cfg)
-    calibrated_gate = cal_gate.gate_synthetic_pairs(
-        list(bundle["synthetic_pairs"]),
+    calibrated_gate = cal_gate.gate_made_up_pairs(
+        list(bundle["made_up_pairs"]),
         list(bundle["calibrated_judge_records"]),
     )
-    uncalibrated_gate = cal_gate.gate_synthetic_pairs(
-        list(bundle["synthetic_pairs"]),
+    uncalibrated_gate = cal_gate.gate_made_up_pairs(
+        list(bundle["made_up_pairs"]),
         list(bundle["uncalibrated_judge_records"]),
     )
 
     curator = IterativeRpoPairCurator(spec=cfg)
-    combined_candidates = list(bundle["verified_candidates"]) + calibrated_gate["admitted_synthetic_pairs"]
+    combined_candidates = list(bundle["verified_candidates"]) + calibrated_gate["admitted_made_up_pairs"]
     curated = curator.curate_pairs(combined_candidates)
 
     promoter = PreRegisteredFlywheelPromoter(spec=cfg)
@@ -57,7 +57,7 @@ def run_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         "calibrated_judge_fpr": calibrated_gate["calibration"]["false_positive_approval_rate"],
         "calibrated_judge_passed": calibrated_gate["calibration"]["calibrated"],
         "uncalibrated_judge_kappa": uncalibrated_gate["calibration"]["cohens_kappa"],
-        "uncalibrated_synthetic_admitted": uncalibrated_gate["admitted_synthetic_count"],
+        "uncalibrated_made_up_admitted": uncalibrated_gate["admitted_made_up_count"],
         "admitted_pair_ids": curated["admitted_ids"],
         "admitted_pair_count": curated["admitted_count"],
         "rejected_length_bias_count": curated["rejection_reasons"]["length_ratio_bias"],

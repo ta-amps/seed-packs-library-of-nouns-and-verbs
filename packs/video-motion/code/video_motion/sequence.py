@@ -648,9 +648,9 @@ def sequence_webvtt(sequence: VideoSequence, aspect: AspectId) -> str:
 
 
 def disclosure_text(sequence: VideoSequence, assets: Sequence[MediaAsset]) -> str:
-    """Plain-language label of what is synthetic or generated, for file metadata and manifests."""
-    parts = ["Synthetic visuals: procedural motion graphics rendered from code."]
-    generated = sorted({asset.disclosure for asset in assets if asset.synthetic})
+    """Plain-language label of what is made-up or generated, for file metadata and manifests."""
+    parts = ["Made-up visuals: procedural motion graphics rendered from code."]
+    generated = sorted({asset.disclosure for asset in assets if asset.made_up})
     if generated:
         parts.append("Generated media: " + " ".join(generated))
     parts += sequence.disclosures

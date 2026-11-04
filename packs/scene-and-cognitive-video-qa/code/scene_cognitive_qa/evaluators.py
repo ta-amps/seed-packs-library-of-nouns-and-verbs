@@ -364,7 +364,7 @@ def evaluate_live_web_journey_provenance(
                 "code": "live_form_submitted",
                 "severity": "blocker",
                 "item_id": jid,
-                "detail": f"Web journey '{jid}' submitted a live form; synthetic demos must clear without submitting.",
+                "detail": f"Web journey '{jid}' submitted a live form; made-up demos must clear without submitting.",
             })
         if vp_w < min_desktop_width_px:
             bad = True

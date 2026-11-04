@@ -19,7 +19,7 @@ an allowed context such as provenance or history. Each retired address gets a pl
 | Variant rules | Every case, separator, plural and address form of a name, and hashed search for names never written down |
 | Allowed contexts | Provenance fields, history written before the rename and the archive notice; everything else is a violation |
 | Link rules | Reach every target without a redirect, record failures, list links the team does not control |
-| Rename checks | 9 deterministic checks with 2 synthetic good and 9 synthetic bad sweeps, rechecked by `make check` |
+| Rename checks | 9 deterministic checks with 2 made-up good and 9 made-up bad sweeps, rechecked by `make check` |
 | Templates | Rename map, reference inventory, rewrite plan, rewrite, link check, host rename record, old-name sweep and archive notice |
 | Worked examples | A rename map for one repository and one site, and the notice at the retired address |
 
@@ -42,7 +42,7 @@ instead of enqueueing them. A name that keeps coming back goes to
 
 ## Worked examples
 
-All synthetic. A small program renames its tracker repository and its site, relying on no
+All made-up. A small program renames its tracker repository and its site, relying on no
 redirect. The rename checks hold a clean sweep, where the only old names left are a changelog
 line and a provenance field, and an honest sweep that still found an old name and a redirect.
 The notice at the retired address says where everything went and that it will not forward.

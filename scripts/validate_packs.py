@@ -241,9 +241,9 @@ def check_record(record: dict[str, Any], pack_id: str, contract: dict[str, Any],
     require(not tagging & set(value), f"{where}: value fields {sorted(tagging & set(value))} would become stored tags")
     for name, expected in (("pack", pack_id), ("status", "proposal"), ("admission", "not_admitted"), ("license", "MIT")):
         require(value.get(name) == expected, f"{where}: {name} must be {expected!r}")
-    require(value.get("content_kind") in {"authored_guidance", "synthetic_example"}, f"{where}: content kind")
-    synthetic = value["content_kind"] == "synthetic_example"
-    require(("synthetic:true" in record["tags"]) == synthetic, f"{where}: synthetic tag")
+    require(value.get("content_kind") in {"authored_guidance", "made_up_example"}, f"{where}: content kind")
+    made_up = value["content_kind"] == "made_up_example"
+    require(("made-up:true" in record["tags"]) == made_up, f"{where}: made-up tag")
     require(value.get("provenance") == bp.PROVENANCE, f"{where}: provenance")
     require(value.get("dimension_basis") == bp.DIMENSION_BASIS, f"{where}: unmeasured basis")
     check_dimensions(category, value.get("dimensions"), contract, where)
@@ -756,7 +756,7 @@ def check_doc_counts(root: Path, idx: "Index") -> None:
     require(rows == actual, f"packs/README.md table differs from the library: {rows} != {actual}")
     nouns, verbs = sum(n for n, _ in actual.values()), sum(v for _, v in actual.values())
     for name in ("README.md", "docs/status.md", "packs/README.md"):
-        stated = re.findall(r"(\d+)\s+nouns\s+and\s+(\d+)\s+verb\s+templates", (root / name).read_text(encoding="utf-8"))
+        stated = re.findall(r"(\d+)\s+(?:nouns|Task Objects)\s+and\s+(\d+)\s+(?:verb|Task)\s+templates", (root / name).read_text(encoding="utf-8"))
         require(stated, f"{name} states the library totals")
         require(all((int(n), int(v)) == (nouns, verbs) for n, v in stated), f"{name} totals differ from {nouns} nouns and {verbs} verb templates")
 

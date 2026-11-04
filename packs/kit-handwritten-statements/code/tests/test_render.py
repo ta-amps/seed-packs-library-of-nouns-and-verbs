@@ -1,4 +1,4 @@
-"""The sample pages match the pack's test-cases noun, carry the SYNTHETIC stamp and stay outside the tree."""
+"""The sample pages match the pack's test-cases noun, carry the MADE-UP stamp and stay outside the tree."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ def test_every_case_page_is_pinned_and_its_expected_text_follows_the_rules() -> 
     assert len(with_pages) == len(PAGES) >= 3
     for case in with_pages:
         page = case["page"]
-        assert "SYNTHETIC" in case["sample_input"]
+        assert "MADE-UP" in case["sample_input"]
         assert page["font"] in FONTS
         assert len(page.get("pixel_sha256", "")) == 64, page["file"]
         assert case["expected_transcription"] == [rs.expected_line(line) for line in page["lines"]]

@@ -13,7 +13,7 @@ A collection of nouns and verbs for enforcing monotone Rule of Two capability la
 | `rules.triad-witness-and-license-routing` | Zero-model DAG taint union equation and sensitivity/license tier routing matrix |
 | `tool.rule-of-two-guardrails` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.rule-of-two-guardrails-receipt` | JSON Schema for DAG status codes, minimal witness paths, bidirectional recall/fidelity and license-tier routes |
-| Worked example | Synthetic DAG, privacy and license bundle (`example.rule-of-two-guardrails-bundle`) and recomputed receipt (`example.rule-of-two-guardrails-receipt`) |
+| Worked example | Made-up DAG, privacy and license bundle (`example.rule-of-two-guardrails-bundle`) and recomputed receipt (`example.rule-of-two-guardrails-receipt`) |
 
 ## Verbs
 

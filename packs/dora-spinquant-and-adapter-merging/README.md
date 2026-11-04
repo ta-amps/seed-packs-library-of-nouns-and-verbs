@@ -25,7 +25,7 @@ A collection of nouns and verbs for Walsh-Hadamard outlier rotation quantization
 
 ## Worked example
 
-On the `16 x 64` heavy-tailed synthetic channel matrix (`outlier_scale = 32.0`), Walsh-Hadamard rotation reduces `max_abs_to_rms` from `12.578755` to `2.166179`, collapses excess kurtosis from `103.842906` to `-1.034782`, and cuts symmetric `4-bit` quantization MSE by `10.039322x` (`0.231252` to `0.023035`), while routing orthogonal adapters (`cosine = 0.0`) to `ties_static_merge` and sign-conflicting adapters (`conflict = 1.0`) to `dynamic_co_resident_switch`.
+On the `16 x 64` heavy-tailed made-up channel matrix (`outlier_scale = 32.0`), Walsh-Hadamard rotation reduces `max_abs_to_rms` from `12.578755` to `2.166179`, collapses excess kurtosis from `103.842906` to `-1.034782`, and cuts symmetric `4-bit` quantization MSE by `10.039322x` (`0.231252` to `0.023035`), while routing orthogonal adapters (`cosine = 0.0`) to `ties_static_merge` and sign-conflicting adapters (`conflict = 1.0`) to `dynamic_co_resident_switch`.
 
 ## Acceptance checks
 

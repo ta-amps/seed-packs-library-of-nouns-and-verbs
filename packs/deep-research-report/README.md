@@ -24,8 +24,8 @@ and person-decides guardrails this pack pins.
 | Evidence strength | Four levels for claims, with what cannot make a claim strong by itself |
 | Templates | Research question, search plan, source log, screening log, claim extract, synthesis, adversarial review, report |
 | Report checks | Eight checks on a report, with one good and eight bad reports the validator recomputes |
-| Checklist, sources, test cases | What a person checks before delivery; 8 dated public sources; 9 synthetic cases |
-| Worked example | Synthetic: do community fridges reduce household food waste? From question to report, on three stand-in sources |
+| Checklist, sources, test cases | What a person checks before delivery; 8 dated public sources; 9 made-up cases |
+| Worked example | Made-up: do community fridges reduce household food waste? From question to report, on three stand-in sources |
 
 ## Verbs
 
@@ -54,7 +54,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The worked example uses three synthetic stand-in sources and reads no real study. The library's
+- The worked example uses three made-up stand-in sources and reads no real study. The library's
   tests recheck its quotes, flow counts and citations, not the truth of any claim.
 - Evidence strength is a reading aid for the person who decides, not a certification.
 - Paywalled, private or login-only sources stay out unless the requester already has access.

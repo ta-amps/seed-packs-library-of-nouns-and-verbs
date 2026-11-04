@@ -8,7 +8,7 @@ A collection of nouns and verbs for compiling four-stage portable execution hook
 
 | Noun (task object) | What it holds |
 | --- | --- |
-| Guardrails | Enforce `disable_bypass_permissions=True`, block secret reads, destructive shell flags and unapproved spend, require distinct non-anonymous principals and gate verifiers on synthetic mutations |
+| Guardrails | Enforce `disable_bypass_permissions=True`, block secret reads, destructive shell flags and unapproved spend, require distinct non-anonymous principals and gate verifiers on made-up mutations |
 | `spec.four-stage-hooks-and-verifier-dag` | Four lifecycle phases (`pre_claim`, `pre_tool`, `post_step`, `pre_submit`), four harnesses and five built-in DAG verifier types |
 | `rules.mutation-gate-and-tombstone-normalization` | Checks-of-Checks `trusted`, `revise` and `reject` thresholds plus normalized `negative_tombstone` hashing |
 | `tool.hooks-verifiers` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |

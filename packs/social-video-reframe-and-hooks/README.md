@@ -18,10 +18,10 @@ that drops a required qualifier or visual evidence beat.
 | Guardrails | Never clip critical regions silently; never drop a claim's qualifiers; captions stay inside safe bands |
 | Reframe and hook rules | Crop dimensions, deadband stabilization, pan-velocity clamp, hook scoring, and 18 CPS reading cap |
 | Templates | Crop trajectory plan, hook beat ranking, caption reflow plan, and checked cutdown plan |
-| Record checks | Deterministic checks on cutdown plans with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on cutdown plans with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`social_reframe`) |
 | Sources | 2 dated public sources on WCAG timed-text readability and ITU-R BT.709 HD frame geometry |
-| Worked examples | Synthetic 9:16 cutdown plan preserving a benchmark qualifier and safe-zone captions |
+| Worked examples | Made-up 9:16 cutdown plan preserving a benchmark qualifier and safe-zone captions |
 
 ## Verbs
 

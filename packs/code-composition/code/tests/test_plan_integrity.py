@@ -15,9 +15,9 @@ def constant_node(value: int, tags: list[str] | None = None) -> PrewrittenNode:
     return PrewrittenNode(
         node_id="test.constant",
         category="test",
-        summary="Synthetic constant",
+        summary="Made-up constant",
         inputs=[],
-        outputs=[{"name": "data", "port_type": "json", "description": "Synthetic"}],
+        outputs=[{"name": "data", "port_type": "json", "description": "Made-up"}],
         function_name="constant",
         source_code=f'def constant(inputs, params):\n    return {{"data": {{"value": {value}}}}}\n',
         test_cases=[{"name": "constant", "expected": {"data": {"value": value}}}],

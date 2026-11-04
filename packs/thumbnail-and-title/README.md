@@ -21,8 +21,8 @@ fixed before any result is written for a person to run in the platform's own tes
 | Templates | Title candidates, thumbnail candidates, size check, honesty check, A/B plan, A/B result |
 | Title checks | Five checks on a title and cover, with one good and five bad pairs the validator recomputes |
 | Contrast example | Three covers' text colours with WCAG ratios the validator recomputes |
-| Checklist, sources, test cases | What a person checks before picking; 4 dated public sources; 5 synthetic cases |
-| Worked examples | Synthetic: titles, covers, their size and honesty checks, and an A/B plan |
+| Checklist, sources, test cases | What a person checks before picking; 4 dated public sources; 5 made-up cases |
+| Worked examples | Made-up: titles, covers, their size and honesty checks, and an A/B plan |
 
 ## Verbs
 
@@ -54,5 +54,5 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 - Display widths are inputs, not facts about any platform, and the 12 px floor comes from a web audit
   that Lighthouse has since removed. A banned-pattern list catches wording, not every misleading cover.
 - No test is run here, and a test's result says which variant won on one video, not why.
-- The worked examples are synthetic; the library recomputes their sizes and contrast. Sources were
+- The worked examples are made-up; the library recomputes their sizes and contrast. Sources were
   checked on 2026-10-30. Recheck them before relying on them.

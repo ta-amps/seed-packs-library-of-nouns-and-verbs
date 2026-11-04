@@ -93,7 +93,7 @@
         "tool": {
           "$pin": "tool.wiring-checks"
         },
-        "worked_example": "Synthetic: a food pantry's appointment app. The module map finds two dark modules, one only tests reach, one used only for type checking and two that a computed import name could load, which a runtime trace confirms. One setting is lost on reload and unknown keys vanish. Three probes are hollow on their face, and a fourth passes with its database stopped. Two documented behaviors are covered only by tests that patch their own path, and one has no test. Twelve findings follow."
+        "worked_example": "Made-up: a food pantry's appointment app. The module map finds two dark modules, one only tests reach, one used only for type checking and two that a computed import name could load, which a runtime trace confirms. One setting is lost on reload and unknown keys vanish. Three probes are hollow on their face, and a fourth passes with its database stopped. Two documented behaviors are covered only by tests that patch their own path, and one has no test. Twelve findings follow."
       },
       "relations": [
         [
@@ -275,7 +275,7 @@
           "A field the code never reads after loading is not_read: it is wired to nothing.",
           "An unknown key is rejected with an error or preserved; dropping it silently is a gap.",
           "Round-trip environment and command-line overrides separately.",
-          "Use synthetic values only; never put a real secret in a fixture."
+          "Use made-up values only; never put a real secret in a fixture."
         ],
         "results": [
           "survives",
@@ -1706,11 +1706,11 @@
       "slug": "wiring-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for conformance reports, with synthetic golden reports",
+      "title": "Record checks for conformance reports, with made-up golden reports",
       "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every conformance report must pass before anyone relies on it. The two synthetic good reports, one with gaps and their findings and one after the fixes, pass all of them; each synthetic bad report fails exactly the one check named in fails.",
+        "purpose": "Checks every conformance report must pass before anyone relies on it. The two made-up good reports, one with gaps and their findings and one after the fixes, pass all of them; each made-up bad report fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "commit-pinned",
@@ -1845,7 +1845,7 @@
           {
             "id": "good-open-gaps",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "report_id": "WC-2",
               "project": "tiny-svc",
@@ -1940,7 +1940,7 @@
           {
             "id": "good-after-fixes",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "report_id": "WC-3",
               "project": "tiny-svc",
@@ -3543,7 +3543,7 @@
           "Decide anything: static results are leads for the verbs' runtime checks."
         ],
         "code_license": "MIT",
-        "tests": "The code's tests cover every rule on small synthetic packages and on a synthetic pantry app, and recompute this pack's module map, behavior map and probe scan from source.json, in the library's CI job for the pack."
+        "tests": "The code's tests cover every rule on small made-up packages and on a made-up pantry app, and recompute this pack's module map, behavior map and probe scan from source.json, in the library's CI job for the pack."
       },
       "relations": [
         [
@@ -3617,15 +3617,15 @@
       "slug": "example.module-map",
       "category": "noun.eval_run",
       "role": "example",
-      "title": "Worked example: the synthetic pantry app's module map and runtime trace",
-      "synthetic": true,
-      "category_reason": "The finder's real output on the synthetic fixture, recomputed by the code's tests.",
+      "title": "Worked example: the made-up pantry app's module map and runtime trace",
+      "made-up": true,
+      "category_reason": "The finder's real output on the made-up fixture, recomputed by the code's tests.",
       "value": {
         "conforms_to": {
           "$pin": "template.module-map"
         },
         "instance": {
-          "project": "pantry-app (synthetic)",
+          "project": "pantry-app (made-up)",
           "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
           "checked_on": "2026-10-30",
           "command": "python -m wiring_checks modules src --tests tests --base .",
@@ -3766,7 +3766,7 @@
           }
         },
         "shows": "Eleven live modules, two dynamic candidates the trace loaded, one type-only, one test-only and two dark.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3774,14 +3774,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: four documented behaviors and what their tests patch",
-      "synthetic": true,
-      "category_reason": "The mock scan's real output on the synthetic fixture, recomputed by the code's tests.",
+      "made-up": true,
+      "category_reason": "The mock scan's real output on the made-up fixture, recomputed by the code's tests.",
       "value": {
         "conforms_to": {
           "$pin": "template.behavior-map"
         },
         "instance": {
-          "project": "pantry-app (synthetic)",
+          "project": "pantry-app (made-up)",
           "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
           "checked_on": "2026-10-30",
           "behaviors": [
@@ -3919,7 +3919,7 @@
           "command": "python -m wiring_checks mocks tests --behaviors behaviors.json --base ."
         },
         "shows": "Two behaviors covered only by tests that patch their path, one real path and one untested.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3927,14 +3927,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: four probes: three hollow on their face, one that ignores its answer",
-      "synthetic": true,
-      "category_reason": "The probe scan's real output on the synthetic fixture, recomputed by the code's tests; the stopped run is synthetic.",
+      "made-up": true,
+      "category_reason": "The probe scan's real output on the made-up fixture, recomputed by the code's tests; the stopped run is made-up.",
       "value": {
         "conforms_to": {
           "$pin": "template.probe-report"
         },
         "instance": {
-          "project": "pantry-app (synthetic)",
+          "project": "pantry-app (made-up)",
           "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
           "checked_on": "2026-10-30",
           "static": {
@@ -4008,7 +4008,7 @@
           ]
         },
         "shows": "The static scan flags three probes; readyz calls the store but passes with it stopped, so all four are hollow.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -4016,14 +4016,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: one setting lost on reload, and unknown keys dropped",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.round-trip-report"
         },
         "instance": {
-          "project": "pantry-app (synthetic)",
+          "project": "pantry-app (made-up)",
           "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
           "checked_on": "2026-10-30",
           "config": "pantry_app.config.Config",
@@ -4058,7 +4058,7 @@
           "output_sha256": "6c0d2b5e9a4f1873c2e6b0d9a5f4183e7c2b6d0a9f5e4183c7b2e6d0a9f5c418"
         },
         "shows": "reminder_hours is written as 48 and read back as its default, 24, though load, save and load is stable.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -4066,15 +4066,15 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the pantry app's conformance report, with twelve findings",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.conformance-report"
         },
         "instance": {
           "report_id": "WC-1",
-          "project": "pantry-app (synthetic)",
+          "project": "pantry-app (made-up)",
           "commit": "9b1f4e2c7a6d3b5e8f0a1c2d3e4f5a6b7c8d9e0f",
           "checked_on": "2026-10-30",
           "entry_points": [
@@ -4217,7 +4217,7 @@
           ]
         },
         "shows": "Every rule ran with its canary caught; twelve gaps each name a finding; one behavior is covered by its real path and no probe is verified.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -4225,8 +4225,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: the finding for a dark module, in the findings to fixes shape",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "findings-to-fixes:template.finding"
@@ -4243,7 +4243,7 @@
               "kind": "measurement",
               "detail": "wiring_checks modules: status dark, reached from nothing.",
               "location": "module map of 2026-10-30",
-              "sha256": "1b5565d127eb6b4d88d9fc38cfbbd75d454c964fe4b8e6a028d824646996060b",
+              "sha256": "eee6d6e0e74f0aba91ed54ad95a2ae2ef255d984e421ddd51e453845eb44cd46",
               "observed_at": "2026-10-30T09:00Z"
             },
             {
@@ -4272,7 +4272,7 @@
           ]
         },
         "shows": "An open issue with the finder's measurement and a runtime trace, proposing triage and a fix a person decides.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     }
   ],
@@ -4399,7 +4399,7 @@
       "kind": "verb.verify_gate",
       "title": "Check that every config field survives a save and a reload",
       "claimant": "agent",
-      "summary": "In a local copy, write one round-trip test per field of each config schema with synthetic values, run it through the project's own writer and reader, and record whether each field survives, is lost, changes or is never read, and what happens to unknown keys.",
+      "summary": "In a local copy, write one round-trip test per field of each config schema with made-up values, run it through the project's own writer and reader, and record whether each field survives, is lost, changes or is never read, and what happens to unknown keys.",
       "outcome": "A round-trip report for each config schema.",
       "ready_outcome": "round_trips_checked",
       "pinned": [
@@ -4425,7 +4425,7 @@
         }
       ],
       "steps": [
-        "Verify the pin. For each field, set a synthetic value that differs from its default, save with the project's writer, load with its reader and compare.",
+        "Verify the pin. For each field, set a made-up value that differs from its default, save with the project's writer, load with its reader and compare.",
         "Run load, save and load, and check what an unknown key does.",
         "Search the code for reads of each field after loading; a field nothing reads is not_read.",
         "Keep the tests in the copy's test tree and record their command and output digest."
@@ -4442,7 +4442,7 @@
           "method": "deterministic"
         },
         {
-          "id": "synthetic-values",
+          "id": "made-up-values",
           "check": "No value in the tests or the report is a real secret or personal data.",
           "method": "judgment"
         }

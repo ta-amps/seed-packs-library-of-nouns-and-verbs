@@ -1,6 +1,6 @@
 # Scenario matrix generator and stakeholder digester (`scenario_matrix`)
 
-Standard-library Python package for Seed Pack `meta-are-scenario-matrix` (inspired by Meta ARE / Gaia2 dynamic environments and Meta Matrix synthetic multi-agent scaling).
+Standard-library Python package for Seed Pack `meta-are-scenario-matrix` (inspired by Meta ARE / Gaia2 dynamic environments and Meta Matrix made-up multi-agent scaling).
 
 ## Capabilities
 - `environments.py`: 25 public-good and technical domains x 10 operational constraints x 4 sensitivity/connectivity regimes = 1,000 indexed situations (`ENV-0001..ENV-1000`), with an optional worker `llm_extender` callback.

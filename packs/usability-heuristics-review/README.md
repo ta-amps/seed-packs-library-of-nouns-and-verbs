@@ -19,7 +19,7 @@ is expert inspection: it complements testing with real people, never replaces it
 | Severity scale | 1 to 4 from impact, frequency and persistence, mapped to the findings levels |
 | Combine rules | When two findings are the same problem, median severity rounded up, spread and disagreement |
 | Evidence rules | A screenshot stored by SHA-256 and a region inside it, described in words |
-| Heuristic checks | 16 deterministic checks with 2 synthetic good and 16 synthetic bad findings, rechecked by `make check` |
+| Heuristic checks | 16 deterministic checks with 2 made-up good and 16 made-up bad findings, rechecked by `make check` |
 | Templates | Review scope, evaluation sheet, combined findings, finding review and fix plan |
 | Worked examples | A scope, one evaluator's sheet, two sheets combined with a disagreement and a fix plan |
 
@@ -41,7 +41,7 @@ or a measured layout rule, goes to [screenshot design review](../screenshot-desi
 
 ## Worked examples
 
-All synthetic, on a made-up pantry volunteer site. Two evaluators review three tasks at two widths.
+All made-up, on a made-up pantry volunteer site. Two evaluators review three tasks at two widths.
 A button labeled Engage capacity breaks H2, match with the real world, and is rated 3 by both. A visit
 page that drops the site's layout breaks H4, consistency, and is rated 2 and 4, so the combined
 severity is 3 with a disagreement for the reviewer. The fix plan routes the button's wording to a

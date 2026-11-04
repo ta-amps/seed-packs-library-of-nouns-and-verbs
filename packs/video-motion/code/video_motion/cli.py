@@ -145,7 +145,7 @@ def _cmd_demo(out_root: Path | None) -> int:
             }
         )
 
-    # 2. Learn MotionProfile from synthetic observation trace & retarget to a new 12.0s scene
+    # 2. Learn MotionProfile from made-up observation trace & retarget to a new 12.0s scene
     trace = load_sample_motion_trace()
     learned_profile = learn_motion_profile(trace)
     retargeted = retarget_motion(

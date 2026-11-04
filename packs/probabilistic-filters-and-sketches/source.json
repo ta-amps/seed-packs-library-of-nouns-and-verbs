@@ -53,7 +53,7 @@
         "tool": {
           "$pin": "tool.probabilistic-sketches"
         },
-        "worked_example": "Synthetic filter, multi-probe LSH, holdout decontamination and streaming sketch bundle recomputed in test_probabilistic_sketches.py: verifies 0% false negatives on unioned BlockedBloomFilter shards, O(1) 404 CuckooFilter deletion with 56-char base64 round-trip, 9.936 bits/key StaticXorFingerprintFilter over 1,000 static edges, 136-key 1-bit SimHash multi-probe recall recovery (0.18 -> 0.788 at Hamming distance 24 and 100% Pigeonhole recovery), holdout contamination detection and HeavyKeeper/HLL stream summarization."
+        "worked_example": "Made-up filter, multi-probe LSH, holdout decontamination and streaming sketch bundle recomputed in test_probabilistic_sketches.py: verifies 0% false negatives on unioned BlockedBloomFilter shards, O(1) 404 CuckooFilter deletion with 56-char base64 round-trip, 9.936 bits/key StaticXorFingerprintFilter over 1,000 static edges, 136-key 1-bit SimHash multi-probe recall recovery (0.18 -> 0.788 at Hamming distance 24 and 100% Pigeonhole recovery), holdout contamination detection and HeavyKeeper/HLL stream summarization."
       },
       "relations": [
         [
@@ -315,9 +315,9 @@
       "slug": "example.probabilistic-sketches-bundle",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
-      "title": "Worked example input: synthetic filter shards, 404 Cuckoo targets, 1,000 Xor edges, LSH pairs and stream events",
-      "category_reason": "Synthetic fixture recomputed by test_probabilistic_sketches.py.",
+      "made-up": true,
+      "title": "Worked example input: made-up filter shards, 404 Cuckoo targets, 1,000 Xor edges, LSH pairs and stream events",
+      "category_reason": "Made-up fixture recomputed by test_probabilistic_sketches.py.",
       "value": {
         "bloom_shard_a": [
           "record:alpha-01",
@@ -382,17 +382,17 @@
             "count": 1
           }
         ],
-        "shows": "Synthetic filter, multi-probe LSH, holdout decontamination and streaming sketch workload.",
-        "source": "Synthetic. Written for this pack."
+        "shows": "Made-up filter, multi-probe LSH, holdout decontamination and streaming sketch workload.",
+        "source": "Made-up. Written for this pack."
       }
     },
     {
       "slug": "example.probabilistic-sketches-receipt",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed probabilistic filter, multi-probe LSH and streaming sketch receipt",
-      "category_reason": "Synthetic receipt verified by test_probabilistic_sketches.py.",
+      "category_reason": "Made-up receipt verified by test_probabilistic_sketches.py.",
       "value": {
         "conforms_to": {
           "$pin": "template.probabilistic-sketches-receipt"
@@ -422,7 +422,7 @@
           "hll_distinct_estimate": 4.03
         },
         "shows": "Recomputes exact 0% false-negative filter guarantees, O(1) Cuckoo deletion, 9.936 bits/key static Xor compactness, 136-key SimHash multi-probe recall lift, holdout contamination hit and CMS/HeavyKeeper/HLL counts.",
-        "source": "Synthetic. Recomputed directly from example.probabilistic-sketches-bundle."
+        "source": "Made-up. Recomputed directly from example.probabilistic-sketches-bundle."
       },
       "relations": [
         [

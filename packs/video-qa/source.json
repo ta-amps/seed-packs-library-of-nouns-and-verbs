@@ -95,7 +95,7 @@
         "tool": {
           "$pin": "tool.video-qa-checks"
         },
-        "worked_example": "Synthetic, recomputed by the code's tests: a 12-second vertical cut with a declared end-card hold, pause and fade. The report finds a fast first caption and a 67 ms blink gap, a short black flash and a white frame, a 1.7 s freeze, a 4 s stretch with almost no visual change, a quiet window and a silence outside the declared pause, a file whose moov box comes after its media data, and an AI-voice label under the platform's caption overlay. Its verdict is fail.",
+        "worked_example": "Made-up, recomputed by the code's tests: a 12-second vertical cut with a declared end-card hold, pause and fade. The report finds a fast first caption and a 67 ms blink gap, a short black flash and a white frame, a 1.7 s freeze, a 4 s stretch with almost no visual change, a quiet window and a silence outside the declared pause, a file whose moov box comes after its media data, and an AI-voice label under the platform's caption overlay. Its verdict is fail.",
         "complements": "The video and motion pack's check-video runs eight checks every cut must pass. This pack adds the checks a reviewer otherwise does by eye or by hand, with tested standard-library code, and leaves the judgment to the video review pack.",
         "provenance_notes": [
           "Generalizes the automated gates of a working short-form video studio, which separates checks that block (frozen, silent, hookless, near-silent) from warnings a person weighs, and the every-frame, typography and audio checks of its audit question bank.",
@@ -1528,7 +1528,7 @@
           "template.extended-qa-report"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "checklist",
@@ -1616,13 +1616,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for extended video checks",
+      "title": "Made-up test cases for extended video checks",
       "value": {
         "cases": [
           {
             "id": "VQA-HOLD-UNDECLARED",
             "scenario": "An end card holds still for 2.4 s and the plan declares no hold",
-            "sample_input": "SYNTHETIC: freezedetect reports 57.6 to 60.0 s; the QA plan has no holds.",
+            "sample_input": "MADE-UP: freezedetect reports 57.6 to 60.0 s; the QA plan has no holds.",
             "expected_outcome": "rows_checked",
             "expected_indicators": [
               "frozen_stretches_fail",
@@ -1633,7 +1633,7 @@
           {
             "id": "VQA-WHITE-FRAME",
             "scenario": "One white frame flashes between two slides",
-            "sample_input": "SYNTHETIC: signalstats luma range 3 at 41.2 s for one frame; blackdetect is silent.",
+            "sample_input": "MADE-UP: signalstats luma range 3 at 41.2 s for one frame; blackdetect is silent.",
             "expected_outcome": "rows_checked",
             "expected_indicators": [
               "blank_frames_warn",
@@ -1644,7 +1644,7 @@
           {
             "id": "VQA-FRAMELOG-MISSING",
             "scenario": "The loudness log has a summary but no per-frame lines",
-            "sample_input": "SYNTHETIC: ebur128 ran at the default log level, so no t: lines were written.",
+            "sample_input": "MADE-UP: ebur128 ran at the default log level, so no t: lines were written.",
             "expected_outcome": "rows_checked",
             "expected_indicators": [
               "quietest_window_none",
@@ -1655,7 +1655,7 @@
           {
             "id": "VQA-SIDECARS-DIFFER",
             "scenario": "The SRT was edited by hand after the WebVTT was written",
-            "sample_input": "SYNTHETIC: cue 12 reads 'twelve' in the WebVTT and '12' in the SRT.",
+            "sample_input": "MADE-UP: cue 12 reads 'twelve' in the WebVTT and '12' in the SRT.",
             "expected_outcome": "rows_checked",
             "expected_indicators": [
               "captions_fail",
@@ -1666,7 +1666,7 @@
           {
             "id": "VQA-NOT-FAST-START",
             "scenario": "The master's moov box comes after its media data",
-            "sample_input": "SYNTHETIC: top-level boxes ftyp, free, mdat, moov; the export spec asks for fast start.",
+            "sample_input": "MADE-UP: top-level boxes ftyp, free, mdat, moov; the export spec asks for fast start.",
             "expected_outcome": "rows_checked",
             "expected_indicators": [
               "file_spec_fail",
@@ -1677,7 +1677,7 @@
           {
             "id": "VQA-SIZE-UNKNOWN",
             "scenario": "A captured page's text size is not known",
-            "sample_input": "SYNTHETIC: a full-page capture is scaled into the frame and nobody recorded its scale.",
+            "sample_input": "MADE-UP: a full-page capture is scaled into the frame and nobody recorded its scale.",
             "expected_outcome": "unknown",
             "expected_indicators": [
               "legibility_not_run_for_item",
@@ -1688,7 +1688,7 @@
           {
             "id": "VQA-WRONG-BYTES",
             "scenario": "The logs were measured on the caption-free master but the open-captions file ships",
-            "sample_input": "SYNTHETIC: the measurement set names digest a1..., the delivery manifest names c3....",
+            "sample_input": "MADE-UP: the measurement set names digest a1..., the delivery manifest names c3....",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "stale_measurements_named",
@@ -1698,7 +1698,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.qa-plan",
@@ -1706,7 +1706,7 @@
       "role": "example",
       "title": "Worked example: the QA plan for a 12-second cut",
       "value": {
-        "notice": "SYNTHETIC. A fictional pantry's 12-second vertical cut; no video exists.",
+        "notice": "MADE-UP. A fictional pantry's 12-second vertical cut; no video exists.",
         "conforms_to": {
           "$pin": "template.qa-plan"
         },
@@ -1736,7 +1736,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.qa-inputs",
@@ -1744,7 +1744,7 @@
       "role": "example",
       "title": "Worked example: the logs, sidecars and facts the checks read",
       "value": {
-        "notice": "SYNTHETIC. Logs are written in FFmpeg 7's own formats; scene scores and luma ranges are sampled twice per second for brevity, where a real run samples every frame. No video exists.",
+        "notice": "MADE-UP. Logs are written in FFmpeg 7's own formats; scene scores and luma ranges are sampled twice per second for brevity, where a real run samples every frame. No video exists.",
         "vtt": "WEBVTT\n\nc1\n00:00:00.300 --> 00:00:02.900 line:70%\nEvery evening, volunteers check\nthe pantry shelves.\n\nc2\n00:00:02.967 --> 00:00:05.600 line:70%\nThey log what is running low.\n\nc3\n00:00:06.900 --> 00:00:08.900 line:70%\nBy morning, the list is ready.\n\nc4\n00:00:09.100 --> 00:00:11.600 line:70%\nA person checks it\nbefore anyone shops.\n",
         "srt": "1\n00:00:00,300 --> 00:00:02,900\nEvery evening, volunteers check\nthe pantry shelves.\n\n2\n00:00:02,967 --> 00:00:05,600\nThey log what is running low.\n\n3\n00:00:06,900 --> 00:00:08,900\nBy morning, the list is ready.\n\n4\n00:00:09,100 --> 00:00:11,600\nA person checks it\nbefore anyone shops.\n",
         "speech_ms": [
@@ -2186,7 +2186,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.extended-qa-report",
@@ -2194,7 +2194,7 @@
       "role": "example",
       "title": "Worked example: the extended QA report the code computes",
       "value": {
-        "notice": "SYNTHETIC. Recomputed exactly by the pack code's tests from example.qa-inputs and example.qa-plan.",
+        "notice": "MADE-UP. Recomputed exactly by the pack code's tests from example.qa-inputs and example.qa-plan.",
         "conforms_to": {
           "$pin": "template.extended-qa-report"
         },
@@ -2742,7 +2742,7 @@
           "not_approval": "Passing these checks is not approval: a person still watches every frame and listens."
         }
       },
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [

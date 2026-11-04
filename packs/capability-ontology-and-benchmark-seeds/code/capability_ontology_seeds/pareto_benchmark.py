@@ -204,7 +204,7 @@ def synthesize_demo_walkthrough(
     raw_beats = [
         (
             "fixture_and_io_contract_lock",
-            f"Pin synthetic niche fixture for {niche_id} matching port signature {io_sig}.",
+            f"Pin made-up niche fixture for {niche_id} matching port signature {io_sig}.",
             "Input media_type and schema_ref validate offline with zero network calls.",
         ),
         (
@@ -219,7 +219,7 @@ def synthesize_demo_walkthrough(
         ),
         (
             "failure_mode_probe",
-            f"Inject synthetic malformed input to exercise failure mode '{failure_guard}'.",
+            f"Inject made-up malformed input to exercise failure mode '{failure_guard}'.",
             "Component fails closed with structured diagnostic and zero silent corruption.",
         ),
     ]

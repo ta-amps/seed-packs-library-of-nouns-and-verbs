@@ -13,7 +13,7 @@ A collection of nouns and verbs for cache-line blocked Bloom filters, deletable 
 | `rules.multiprobe-recall-and-sketch-selection` | Zero-model regime mapping across read shields, mutable spider frontiers, static edge tables, LSH lookup and streaming sketches |
 | `tool.probabilistic-sketches` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.probabilistic-sketches-receipt` | JSON Schema for filter false-negative checks, Cuckoo deletion, Xor bits/key, SimHash recall and sketch summaries |
-| Worked example | Synthetic filter, LSH and sketch bundle (`example.probabilistic-sketches-bundle`) and recomputed receipt (`example.probabilistic-sketches-receipt`) |
+| Worked example | Made-up filter, LSH and sketch bundle (`example.probabilistic-sketches-bundle`) and recomputed receipt (`example.probabilistic-sketches-receipt`) |
 
 ## Verbs
 

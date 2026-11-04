@@ -110,19 +110,19 @@ class RubricJudgeCalibrationGate:
             "calibrated": calibrated,
         }
 
-    def gate_synthetic_pairs(
+    def gate_made_up_pairs(
         self,
-        synthetic_pairs: list[dict[str, Any]],
+        made_up_pairs: list[dict[str, Any]],
         calibration_records: list[dict[str, Any]],
     ) -> dict[str, Any]:
-        """Admit synthetic rubric-judged preference pairs only when the judge passes calibration."""
+        """Admit made-up rubric-judged preference pairs only when the judge passes calibration."""
         cal_report = self.evaluate_judge(calibration_records)
-        admitted = list(synthetic_pairs) if cal_report["calibrated"] else []
+        admitted = list(made_up_pairs) if cal_report["calibrated"] else []
         return {
             "calibration": cal_report,
-            "admitted_synthetic_pairs": admitted,
-            "admitted_synthetic_count": len(admitted),
-            "blocked_synthetic_count": len(synthetic_pairs) - len(admitted),
+            "admitted_made_up_pairs": admitted,
+            "admitted_made_up_count": len(admitted),
+            "blocked_made_up_count": len(made_up_pairs) - len(admitted),
         }
 
 

@@ -22,7 +22,7 @@ its own change before handing it on.
 | Scope kinds and self-review rules | Repository paths, pages, video segments and docs pages with their checks; self-review steps |
 | Loop checks | 16 checks on a review run, with 2 good and 16 bad runs the validator recomputes |
 | Templates | Scope catalog, schedule proposal, scope pick, review run, review log, self-review and coverage review |
-| Test cases | 6 synthetic cases |
+| Test cases | 6 made-up cases |
 | Worked examples | A catalog, a schedule and its approval, a pick, a diffed run, the log, a self-review and a coverage review |
 
 ## Verbs
@@ -47,7 +47,7 @@ numbers against a baseline through [regression watch](../regression-watch/README
 
 ## Worked examples
 
-All synthetic: a pantry's repository, site and 45-second explainer, cut into eight scopes and
+All made-up: a pantry's repository, site and 45-second explainer, cut into eight scopes and
 reviewed weekly on Fridays under a person's approval that expires on 2026-12-31; earlier runs were
 manual. As of 2026-10-30 the rule picks the sign-up page, never reviewed; the API folder, which changed
 by 420 lines; and the docs, 58 days since their last review. The API run has one finding in each
@@ -68,5 +68,5 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
 - No scheduler is activated: windows run only when an authorized requester enqueues pick-scope, under
   a person's approval, until Tessera's flag-gated schedule support exists.
-- The examples are synthetic; the library's tests recompute the pick, the diff and the coverage only.
+- The examples are made-up; the library's tests recompute the pick, the diff and the coverage only.
 - A rotation reviews what the catalog lists; a scope nobody listed is never picked.

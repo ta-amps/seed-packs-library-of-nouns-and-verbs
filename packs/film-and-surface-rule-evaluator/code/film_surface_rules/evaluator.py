@@ -162,7 +162,7 @@ def scan_forbidden_stamps_and_chips(
     status_chips: list[str],
     grid_cell: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Detect forbidden synthetic/non-functional stamps at native frame resolution and non-functional chips."""
+    """Detect forbidden made-up/non-functional stamps at native frame resolution and non-functional chips."""
     cell = grid_cell or load_default_grid_cell()
     min_sim = float(cell["forbidden_stamp_min_similarity"])
     ngram_w = int(cell["ngram_width"])

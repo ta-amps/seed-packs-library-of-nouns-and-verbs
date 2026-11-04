@@ -21,7 +21,7 @@ def git(cwd: Path, *args: str, when: str | None = None) -> None:
     env = {**os.environ, **ISOLATED}
     if when:
         env.update(GIT_AUTHOR_DATE=when, GIT_COMMITTER_DATE=when)
-    subprocess.run(["git", "-c", "user.name=Synthetic Author", "-c", "user.email=synthetic@example.invalid",
+    subprocess.run(["git", "-c", "user.name=Made-up Author", "-c", "user.email=made-up@example.invalid",
                     "-c", "commit.gpgsign=false", "-c", "init.defaultBranch=main", *args],
                    cwd=cwd, env=env, check=True, capture_output=True, text=True)
 
@@ -36,5 +36,5 @@ def build(root: Path, commits: Iterable[dict]) -> Path:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text, encoding="utf-8")
         git(root, "add", "-A")
-        git(root, "commit", "-q", "-m", commit.get("message", "synthetic commit"), when=commit["date"])
+        git(root, "commit", "-q", "-m", commit.get("message", "made-up commit"), when=commit["date"])
     return root

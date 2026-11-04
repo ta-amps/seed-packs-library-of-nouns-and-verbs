@@ -19,7 +19,7 @@ has not been explored, with a proposed charter for every gap. Exploring is never
 | Test ideas | Product elements, quality criteria and six tours, such as keyboard-only and slow-network |
 | Session rules | Time box, timestamped notes, time split, bugs, issues, coverage and data |
 | Coverage model | Areas by quality criteria, with explored, partly, not explored and out of scope |
-| Session checks | 14 deterministic checks with 2 synthetic good and 14 synthetic bad session notes, rechecked by `make check` |
+| Session checks | 14 deterministic checks with 2 made-up good and 14 made-up bad session notes, rechecked by `make check` |
 | Templates | Charter, session notes, debrief and coverage notes |
 | Worked examples | A charter, its session notes with a bug and a question, the debrief and coverage after three sessions |
 
@@ -38,7 +38,7 @@ belong to [user acceptance testing](../user-acceptance-testing/README.md).
 
 ## Worked examples
 
-All synthetic. A 45-minute charter explores a volunteer sign-up form's error handling with only a
+All made-up. A 45-minute charter explores a volunteer sign-up form's error handling with only a
 keyboard and a slow connection, because an acceptance step failed there last week. The session runs
 five minutes over to reproduce a bug where going back clears the name fields, asks whether a shift
 is held during an error, and lists the screen reader and the dark theme as not covered. The debrief

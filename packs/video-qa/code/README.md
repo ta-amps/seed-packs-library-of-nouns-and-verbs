@@ -19,5 +19,5 @@ python -m video_qa_checks filespec --mp4 CUT.mp4 --spec SPEC.json
 The tests recompute the pack's worked example from [source.json](../source.json), check the caption
 limits against the video showcase style guide, the keep-out boxes against the video and motion
 pack's aspect rules and the contrast ratios against the accessibility audit pack's recorded example, and read MP4s built byte by byte in the tests. Log fixtures are text FFmpeg 7.0.2
-wrote while analysing synthetic test sources. Nothing here runs FFmpeg, calls a model, opens a network
+wrote while analysing made-up test sources. Nothing here runs FFmpeg, calls a model, opens a network
 connection or writes inside the seed-pack library. MIT license, written for this pack by ta-amps.

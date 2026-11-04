@@ -69,7 +69,7 @@
         "tool": {
           "$pin": "tool.scene-cognitive-qa"
         },
-        "worked_example": "Synthetic three-shot explainer bundle recomputed by test_scene_cognitive_qa.py: catches a 0.80 s flash section card, an 8-frame text-over-text crossfade, a 2.8 percent Ken Burns zoom drift on a static hero slide, a 19-word stage sentence competing with unrelated narration, a cropped 980 px mid-page web card with no landing click, and an un-rounded native fullscreen caption box sitting 15 px off the lower-band vertical center."
+        "worked_example": "Made-up three-shot explainer bundle recomputed by test_scene_cognitive_qa.py: catches a 0.80 s flash section card, an 8-frame text-over-text crossfade, a 2.8 percent Ken Burns zoom drift on a static hero slide, a 19-word stage sentence competing with unrelated narration, a cropped 980 px mid-page web card with no landing click, and an un-rounded native fullscreen caption box sitting 15 px off the lower-band vertical center."
       },
       "relations": [
         [
@@ -117,10 +117,10 @@
       "slug": "guardrail.no-live-form-submit",
       "category": "noun.skill_pack",
       "role": "guardrail",
-      "title": "Guardrail: live website recordings show landing and typing without ever submitting synthetic forms",
+      "title": "Guardrail: live website recordings show landing and typing without ever submitting made-up forms",
       "category_reason": "Prevents demo captures from polluting live intake queues.",
       "value": {
-        "rule": "Website recordings navigate from the real landing page to the target route and type synthetic text into inputs for illustration only, clearing without submitting.",
+        "rule": "Website recordings navigate from the real landing page to the target route and type made-up text into inputs for illustration only, clearing without submitting.",
         "how_it_is_checked": "evaluate_live_web_journey_provenance emits a blocker finding if form_submitted is true."
       }
     },
@@ -330,9 +330,9 @@
       "slug": "example.scene-cognitive-bundle",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
-      "title": "Worked example input: synthetic multi-frame shot list, zoom track, competing prose, cropped web card and off-center caption band",
-      "category_reason": "Synthetic fixture recomputed by test_scene_cognitive_qa.py.",
+      "made-up": true,
+      "title": "Worked example input: made-up multi-frame shot list, zoom track, competing prose, cropped web card and off-center caption band",
+      "category_reason": "Made-up fixture recomputed by test_scene_cognitive_qa.py.",
       "value": {
         "media_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         "shots": [
@@ -394,7 +394,7 @@
           },
           {
             "id": "competing-prose",
-            "text": "Synthetic held-out cases run through a local adapter checkpoint on twenty-four validation benchmarks before any reviewer promotes a candidate",
+            "text": "Made-up held-out cases run through a local adapter checkpoint on twenty-four validation benchmarks before any reviewer promotes a candidate",
             "start_s": 5.0,
             "end_s": 9.5,
             "must_read": true
@@ -439,17 +439,17 @@
             "text": "Unused token capacity helps community organizations finish\npackets."
           }
         ],
-        "shows": "Synthetic defective cut bundle combining fast flash cards, text-over-text crossfades, static-slide Ken Burns drift, competing stage prose, a narrow mid-page web card and off-center fullscreen native captions.",
-        "source": "Synthetic. Written for this pack; every identifier, URL and timestamp is made up."
+        "shows": "Made-up defective cut bundle combining fast flash cards, text-over-text crossfades, static-slide Ken Burns drift, competing stage prose, a narrow mid-page web card and off-center fullscreen native captions.",
+        "source": "Made-up. Written for this pack; every identifier, URL and timestamp is made up."
       }
     },
     {
       "slug": "example.qa-report",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed multi-frame scene and cognitive QA report",
-      "category_reason": "Synthetic QA report verified by test_scene_cognitive_qa.py.",
+      "category_reason": "Made-up QA report verified by test_scene_cognitive_qa.py.",
       "value": {
         "conforms_to": {
           "$pin": "template.scene-cognitive-qa-report"
@@ -468,7 +468,7 @@
           "overall_verdict": "fail"
         },
         "shows": "All six classes of multi-frame and cognitive defects are flagged deterministically and roll up to overall_verdict fail.",
-        "source": "Synthetic. Recomputed directly from example.scene-cognitive-bundle."
+        "source": "Made-up. Recomputed directly from example.scene-cognitive-bundle."
       },
       "relations": [
         [

@@ -21,7 +21,7 @@ draw a seeded stratified sample for human labelling, and compute Wilson precisio
 | `rules.safe-areas` | Title-safe (`5%`), action-safe (`3.5%`), caption-band (`18%`) and `390 px` phone legibility constants |
 | `tool.frame-qa` | Tested code in [code/](code/README.md), pinned by path, file count and SHA-256 digest |
 | Templates | `template.findings` for multi-cut QA reports and `template.review-labels` for human precision labels |
-| Worked example | Synthetic 90-frame 1080p measurements (`example.measurements`), recomputed clustered findings (`example.findings`) and labelled precision (`example.review-labels`) |
+| Worked example | Made-up 90-frame 1080p measurements (`example.measurements`), recomputed clustered findings (`example.findings`) and labelled precision (`example.review-labels`) |
 
 ## Verbs
 
@@ -38,14 +38,14 @@ draw a seeded stratified sample for human labelling, and compute Wilson precisio
 ## How to use it
 
 Run `make install && make check` in [code/](code/README.md) to compile with warnings as errors, run
-synthetic clip renders, test connected-component and SAM mask adapters, and recompute the worked
+made-up clip renders, test connected-component and SAM mask adapters, and recompute the worked
 example from `source.json`.
 
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
   activated, and no worker has claimed or run these tasks through Tessera.
-- The worked example in `source.json` is synthetic and tests deterministic agreement between the
+- The worked example in `source.json` is made-up and tests deterministic agreement between the
   pack schema and `code/frame_qa`.
 - Optional local OCR (`rapidocr-onnxruntime`) and optional local Meta SAM (`facebook/sam-vit-base`)
   adapters never download weights over the network; when absent, model-free OpenCV connected

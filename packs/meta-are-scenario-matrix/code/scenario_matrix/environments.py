@@ -52,7 +52,7 @@ DOMAINS_25: tuple[dict[str, Any], ...] = (
         "slug": "supply-chain-wage-theft-triage",
         "title": "Supply-chain timecard and piece-rate wage discrepancy triage",
         "sector": "public_good",
-        "input_artifact": "synthetic or worker-consented shift logs, pay stubs and statutory minimum-wage tables",
+        "input_artifact": "made-up or worker-consented shift logs, pay stubs and statutory minimum-wage tables",
         "deliverable": "arithmetic overtime and deduction discrepancy worksheet without legal accusations",
         "human_only_boundary": "Legal representation, agency complaints and settlement decisions stay human-only.",
         "tessera_noun_category": "noun.reflex_procedure",
@@ -129,10 +129,10 @@ DOMAINS_25: tuple[dict[str, Any], ...] = (
         "tessera_verb_category": "verb.solve_draft",
     },
     {
-        "slug": "elder-scam-synthetic-triage",
-        "title": "Synthetic elder-fraud message pattern analysis for helpline training",
+        "slug": "elder-scam-made-up-triage",
+        "title": "Made-up elder-fraud message pattern analysis for helpline training",
         "sector": "public_good",
-        "input_artifact": "redacted synthetic phishing transcripts, gift-card coercion scripts and helpline rubrics",
+        "input_artifact": "redacted made-up phishing transcripts, gift-card coercion scripts and helpline rubrics",
         "deliverable": "red-flag indicator cards and calm de-escalation rehearsal prompts without accusing anyone",
         "human_only_boundary": "Live caller crisis counseling, bank freezes and protective referrals stay human-only.",
         "tessera_noun_category": "noun.skill_pack",
@@ -192,7 +192,7 @@ DOMAINS_25: tuple[dict[str, Any], ...] = (
         "slug": "distributed-lease-fencing-audit",
         "title": "Work-queue lease expiry, fencing-token monotonicity and CAS replay verification",
         "sector": "technical_systems",
-        "input_artifact": "synthetic multi-worker claim/expire/submit event traces and idempotency ledgers",
+        "input_artifact": "made-up multi-worker claim/expire/submit event traces and idempotency ledgers",
         "deliverable": "linearizability check verifying expired workers cannot overwrite newer fenced leases",
         "human_only_boundary": "Namespace ACL grants, operator key issuance and storage migrations stay human-only.",
         "tessera_noun_category": "noun.recovery_playbook",
@@ -212,7 +212,7 @@ DOMAINS_25: tuple[dict[str, Any], ...] = (
         "slug": "purged-regime-statistical-hygiene",
         "title": "Purged walk-forward regime validation and multiple-testing deflation check",
         "sector": "technical_quant",
-        "input_artifact": "timestamped synthetic feature panels with embargo windows and trial-count ledgers",
+        "input_artifact": "timestamped made-up feature panels with embargo windows and trial-count ledgers",
         "deliverable": "non-advisory Rank IC, turnover drag and Deflated Sharpe Ratio audit report",
         "human_only_boundary": "Capital allocation, financial decisions and compliance sign-off stay human-only.",
         "tessera_noun_category": "noun.benchmark_suite",
@@ -232,7 +232,7 @@ DOMAINS_25: tuple[dict[str, Any], ...] = (
         "slug": "public-defender-transcript-indexing",
         "title": "Time-coded hearing transcript witness-statement cross-reference indexing",
         "sector": "public_good",
-        "input_artifact": "consented synthetic deposition transcripts, exhibit page tables and timestamp logs",
+        "input_artifact": "consented made-up deposition transcripts, exhibit page tables and timestamp logs",
         "deliverable": "page-and-line statement concordance flagging timeline contradictions for counsel review",
         "human_only_boundary": "Case strategy, motion drafting, witness examination and legal judgment stay human-only.",
         "tessera_noun_category": "noun.reflex_procedure",
@@ -424,8 +424,8 @@ def generate_environment(
     }
     if llm_extender is not None:
         ext = llm_extender(dict(base))
-        if isinstance(ext, dict) and ext.get("synthetic_vignette"):
-            base["worker_llm_vignette"] = str(ext["synthetic_vignette"])[:600]
+        if isinstance(ext, dict) and ext.get("made_up_vignette"):
+            base["worker_llm_vignette"] = str(ext["made_up_vignette"])[:600]
     digest = hashlib.sha256(
         json.dumps(base, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()

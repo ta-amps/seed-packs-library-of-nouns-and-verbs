@@ -20,29 +20,29 @@ from session_distiller import (
 )
 
 
-def _synthetic_openai_token() -> str:
+def _made_up_openai_token() -> str:
     return "sk" + "-" + ("x" * 28)
 
 
-def _synthetic_aws_key() -> str:
+def _made_up_aws_key() -> str:
     return "AK" + "IA" + ("7" * 16)
 
 
-def _synthetic_pem_header() -> str:
+def _made_up_pem_header() -> str:
     return "-----BEGIN " + "RSA PRIVATE KEY-----"
 
 
 class SessionDistillerTests(unittest.TestCase):
     def test_redactor_strips_secrets_emails_and_home_paths(self) -> None:
         raw = (
-            f"Authorization: Bearer {'b' * 24}; key={_synthetic_openai_token()}; "
-            f"aws={_synthetic_aws_key()}; hdr={_synthetic_pem_header()}; "
+            f"Authorization: Bearer {'b' * 24}; key={_made_up_openai_token()}; "
+            f"aws={_made_up_aws_key()}; hdr={_made_up_pem_header()}; "
             "author=alice.dev@corp-domain.org; file=/home/alice/repo/app.py"
         )
         stats: dict[str, int] = {}
         cleaned = redact_text(raw, stats)
-        self.assertNotIn(_synthetic_openai_token(), cleaned)
-        self.assertNotIn(_synthetic_aws_key(), cleaned)
+        self.assertNotIn(_made_up_openai_token(), cleaned)
+        self.assertNotIn(_made_up_aws_key(), cleaned)
         self.assertNotIn("alice.dev@corp-domain.org", cleaned)
         self.assertNotIn("/home/alice", cleaned)
         self.assertIn("<HOME>/repo/app.py", cleaned)

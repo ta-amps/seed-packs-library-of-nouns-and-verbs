@@ -109,7 +109,7 @@
             "$pin": "perspective.safety-and-privacy"
           }
         ],
-        "worked_example": "Synthetic: a literacy program's plan, drafted by a model run, to replace paper sign-in sheets with tablet check-in. Three reviewers on three families, one shared with the producer and labeled, take it alone. Their sealed views disagree on a fact, whether check-ins survive a site's evening wifi outages, and on a value, whether quicker check-in is worth a screen some learners cannot read. The program director proceeds with changes and leaves the factual question to a week-long test."
+        "worked_example": "Made-up: a literacy program's plan, drafted by a model run, to replace paper sign-in sheets with tablet check-in. Three reviewers on three families, one shared with the producer and labeled, take it alone. Their sealed views disagree on a fact, whether check-ins survive a site's evening wifi outages, and on a value, whether quicker check-in is worth a screen some learners cannot read. The program director proceeds with changes and leaves the factual question to a week-long test."
       },
       "relations": [
         [
@@ -1432,11 +1432,11 @@
       "slug": "panel-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for panel syntheses, with synthetic golden syntheses",
+      "title": "Record checks for panel syntheses, with made-up golden syntheses",
       "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every synthesis must pass before a person relies on it. The two synthetic good syntheses, one with a disagreement and one without, pass all of them; each synthetic bad synthesis fails exactly the one check named in fails.",
+        "purpose": "Checks every synthesis must pass before a person relies on it. The two made-up good syntheses, one with a disagreement and one without, pass all of them; each made-up bad synthesis fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "perspectives-stated",
@@ -1585,7 +1585,7 @@
           {
             "id": "good-split",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "synthesis_id": "PS-2",
               "panel_id": "PP-2",
@@ -1682,7 +1682,7 @@
           {
             "id": "good-agreed",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "synthesis_id": "PS-3",
               "panel_id": "PP-3",
@@ -3317,14 +3317,14 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for persona panels",
-      "synthetic": true,
+      "title": "Made-up test cases for persona panels",
+      "made-up": true,
       "value": {
         "cases": [
           {
             "id": "PP-PRODUCER-ASKS",
             "scenario": "The worker that drafted the plan asks to sit on its panel",
-            "sample_input": "SYNTHETIC: the reviewer key matches the draft's producer key.",
+            "sample_input": "MADE-UP: the reviewer key matches the draft's producer key.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "producer_excluded"
@@ -3334,7 +3334,7 @@
           {
             "id": "PP-PEEKED",
             "scenario": "A view quotes another reviewer's take",
-            "sample_input": "SYNTHETIC: r2's view says that r1 was right about the cost.",
+            "sample_input": "MADE-UP: r2's view says that r1 was right about the cost.",
             "expected_outcome": "independence_checked",
             "expected_indicators": [
               "view_excluded",
@@ -3345,7 +3345,7 @@
           {
             "id": "PP-ONE-FAMILY",
             "scenario": "Only the producer's model family is available",
-            "sample_input": "SYNTHETIC: the allowance covers one family, the producer's.",
+            "sample_input": "MADE-UP: the allowance covers one family, the producer's.",
             "expected_outcome": "panel_defined",
             "expected_indicators": [
               "same_family_reasons",
@@ -3356,7 +3356,7 @@
           {
             "id": "PP-ALL-AGREE",
             "scenario": "Every reviewer supports the plan",
-            "sample_input": "SYNTHETIC: three supporting views with no conflicting point.",
+            "sample_input": "MADE-UP: three supporting views with no conflicting point.",
             "expected_outcome": "disagreements_synthesized",
             "expected_indicators": [
               "why_no_disagreement"
@@ -3366,7 +3366,7 @@
           {
             "id": "PP-FACT-SPLIT",
             "scenario": "Reviewers disagree about something measurable",
-            "sample_input": "SYNTHETIC: one says the form takes a minute, another says five.",
+            "sample_input": "MADE-UP: one says the form takes a minute, another says five.",
             "expected_outcome": "disagreements_synthesized",
             "expected_indicators": [
               "route_evaluation",
@@ -3377,7 +3377,7 @@
           {
             "id": "PP-TASTE-SPLIT",
             "scenario": "Reviewers disagree about tone",
-            "sample_input": "SYNTHETIC: one finds the letter warm, another too casual.",
+            "sample_input": "MADE-UP: one finds the letter warm, another too casual.",
             "expected_outcome": "disagreements_synthesized",
             "expected_indicators": [
               "route_taste_palette",
@@ -3388,7 +3388,7 @@
           {
             "id": "PP-HEAD-COUNT",
             "scenario": "A draft synthesis settles a disagreement by counting",
-            "sample_input": "SYNTHETIC: the summary says most reviewers favor launching.",
+            "sample_input": "MADE-UP: the summary says most reviewers favor launching.",
             "expected_outcome": "synthesis_audited",
             "expected_indicators": [
               "head_count_language",
@@ -3439,8 +3439,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a three-reviewer panel on a tablet check-in plan",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.panel"
@@ -3486,7 +3486,7 @@
           "decision_owner_role": "program director"
         },
         "shows": "Three perspectives on three families; the operator shares the producer's family, with the reason.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3494,8 +3494,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the view of the person it serves",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.view"
@@ -3529,7 +3529,7 @@
           "sealed_at": "2026-10-30T10:12Z"
         },
         "shows": "Supports the plan with changes: keep paper beside the tablet, as some learners cannot read the screen yet.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3537,8 +3537,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the skeptic's view",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.view"
@@ -3572,7 +3572,7 @@
           "sealed_at": "2026-10-30T10:31Z"
         },
         "shows": "Opposes the plan: the east site's evening wifi outages would lose check-ins.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3580,8 +3580,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the operator's view",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.view"
@@ -3622,7 +3622,7 @@
           "sealed_at": "2026-10-30T10:44Z"
         },
         "shows": "Supports the plan: it saves typing, and the app keeps check-ins offline.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3630,8 +3630,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: three views checked and ordered before anyone read them",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.independence-check"
@@ -3677,7 +3677,7 @@
           "result": "passed"
         },
         "shows": "Each digest is the SHA-256 of its view; all used one packet and were sealed before the deadline.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3685,8 +3685,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: two disagreements, one factual and one of value",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.synthesis"
@@ -3807,12 +3807,12 @@
           "summary": "Two disagreements. Whether check-ins survive the east site's evening outages is a factual question a week-long test can settle. Whether quicker check-in is worth asking learners to use a screen in public is a value question for the program director. One reviewer shares the producer's model family, so part of the panel is correlated.",
           "decision_left_to": "person",
           "limits": [
-            "Three synthetic reviewers; no learner, coordinator or funder was asked.",
+            "Three made-up reviewers; no learner, coordinator or funder was asked.",
             "r3 shares the producer's model family, so its agreement with the plan may be correlated with it."
           ]
         },
         "shows": "Each side quoted from its view; the factual question goes to a test and the value one to the person.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3820,8 +3820,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: an audit that finds every quote and nothing dropped",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.synthesis-audit"
@@ -3838,7 +3838,7 @@
           "passed": true
         },
         "shows": "Four positions checked against their sealed views; no point dropped, misrouted or settled by a count.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -3846,8 +3846,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the program director proceeds with changes",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.decision"
@@ -3875,7 +3875,7 @@
           "decided_on": "2026-10-30"
         },
         "shows": "One disagreement settled with paper kept beside the tablet; the factual one left open for its test.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     }
   ],

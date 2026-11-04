@@ -5,7 +5,7 @@
   "summary": "A collection of nouns and verbs for a small nonprofit's policy research brief: a new public rule or ordinance summarized in plain language with a citation to the clause behind every point, quotes checked against the official text, and open questions where the text is unclear, while what a rule means for the organization or any person, and anything shared publicly, stays with staff and counsel.",
   "dependencies": [],
   "boundaries": [
-    "Use only synthetic, clearly marked test data.",
+    "Use only made-up, clearly marked test data.",
     "Steps marked for a person never go to an agent.",
     "Outputs stay surface_only in the requester's scope.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -63,7 +63,7 @@
           "Share the brief with staff, partners or the public."
         ],
         "rules": [
-          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Use only made-up, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
           "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
           "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
         ],
@@ -82,7 +82,7 @@
             "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
             "path": "examples/runs/KIT-POLICY-09.json",
             "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
-            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+            "note": "One recorded example run of the kit on a desktop computer with made-up data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
           }
         ]
       },
@@ -381,13 +381,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for the policy research brief kit",
+      "title": "Made-up test cases for the policy research brief kit",
       "value": {
         "cases": [
           {
             "id": "FX-POLICY-ROUTINE",
             "scenario": "A six-section city ordinance on registering food distributions",
-            "sample_input": "SYNTHETIC: Ordinance 2026-14 of the City of Example, 6 sections, effective 2027-01-01. Sec. 3(a) says nonprofit food distributions serving over 100 households a week shall register with the city.",
+            "sample_input": "MADE-UP: Ordinance 2026-14 of the City of Example, 6 sections, effective 2027-01-01. Sec. 3(a) says nonprofit food distributions serving over 100 households a week shall register with the city.",
             "expected_indicators": [
               "clauses_indexed",
               "every_point_cited",
@@ -398,7 +398,7 @@
           {
             "id": "FX-POLICY-CONFLICT",
             "scenario": "The ordinance uses a term two different ways",
-            "sample_input": "SYNTHETIC: Sec. 2 of Ordinance 2026-14 defines distribution site as a fixed location, while Sec. 5(c) applies the same term to mobile pantries.",
+            "sample_input": "MADE-UP: Sec. 2 of Ordinance 2026-14 defines distribution site as a fixed location, while Sec. 5(c) applies the same term to mobile pantries.",
             "expected_indicators": [
               "conflict_listed_as_open_question"
             ],
@@ -407,7 +407,7 @@
           {
             "id": "FX-POLICY-APPLY",
             "scenario": "A staff member asks whether the rule applies to one volunteer",
-            "sample_input": "SYNTHETIC: A staff member asks the agent whether Sec. 3(a) of Ordinance 2026-14 means one particular volunteer must register.",
+            "sample_input": "MADE-UP: A staff member asks the agent whether Sec. 3(a) of Ordinance 2026-14 means one particular volunteer must register.",
             "expected_indicators": [
               "refuse_individual_interpretation",
               "route_to_policy_lead"
@@ -422,7 +422,7 @@
           "kit"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.request",
@@ -432,9 +432,9 @@
       "category_reason": "A need in an organization's own plain words frames what the kit should do.",
       "value": {
         "says": "We need plain-language summaries of new city and state rules that touch our food and housing programs, with the exact section behind every point. Our policy lead and our lawyer decide what a rule means for us.",
-        "mark": "SYNTHETIC"
+        "mark": "MADE-UP"
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "template.clause-index",
@@ -675,7 +675,7 @@
           }
         },
         "example": {
-          "rule": "City of Example Ordinance 2026-14 (synthetic)",
+          "rule": "City of Example Ordinance 2026-14 (made-up)",
           "notice": "Not legal advice",
           "points": [
             {

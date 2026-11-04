@@ -21,11 +21,11 @@ def variable_node() -> PrewrittenNode:
     return PrewrittenNode(
         node_id="test.typed_output",
         category="test",
-        summary="Synthetic output validation",
+        summary="Made-up output validation",
         inputs=[{"name": "data", "port_type": "json", "description": "Switch fixture"}],
         outputs=[{"name": "values", "port_type": "series", "description": "Numbers"}],
         function_name="typed_output",
-        source_code='def typed_output(inputs, params):\n    return {"values": "SYNTHETIC wrong" if inputs["data"].get("invalid") else [1, 2]}\n',
+        source_code='def typed_output(inputs, params):\n    return {"values": "MADE-UP wrong" if inputs["data"].get("invalid") else [1, 2]}\n',
         test_cases=[{"inputs": {"data": {}}, "expected": {"values": [1, 2]}}],
     )
 
@@ -49,7 +49,7 @@ def test_output_types_checked_in_self_tests_runtime_cache_and_emitted_code() -> 
         recipe = RecipeSpec(
             recipe_id="typed",
             title="Typed",
-            goal="SYNTHETIC",
+            goal="MADE-UP",
             steps=[RecipeStep(step_id="one", node_id=node.node_id)],
         )
         plan = compiler.compile(recipe)
@@ -61,7 +61,7 @@ def test_output_types_checked_in_self_tests_runtime_cache_and_emitted_code() -> 
         with pytest.raises(ValueError, match=r"Entry input one\.data: expected json"):
             execute_emitted_python(source, {"data": "wrong"})
         with pytest.raises(CodeCompositionError, match=r"Cache write\.values"):
-            db.put_cached_subgraph("synthetic", "input", node.node_id, {"values": "wrong"})
+            db.put_cached_subgraph("made-up", "input", node.node_id, {"values": "wrong"})
         runtime.execute(plan, {"data": {}})
         # A valid checksum alone cannot turn malformed cached output into typed data.
         bad_cache = canonical_json({"values": "wrong"})

@@ -7,7 +7,7 @@ import unittest
 from csv_checks import digest, flag, read_csv, run_queries, run_query
 
 REQUEST = {
-    "dataset": {"name": "t", "sha256": "0" * 64, "delimiter": ",", "description": "synthetic"},
+    "dataset": {"name": "t", "sha256": "0" * 64, "delimiter": ",", "description": "made-up"},
     "columns": [
         {"name": "team", "type": "string", "required": True, "allowed": ["a", "b"]},
         {"name": "score", "type": "integer", "required": True, "min": 0, "max": 100},

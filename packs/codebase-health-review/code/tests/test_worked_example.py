@@ -1,4 +1,4 @@
-"""Rebuild the pack's synthetic repository at its recorded dates and recompute both scans exactly from source.json."""
+"""Rebuild the pack's made-up repository at its recorded dates and recompute both scans exactly from source.json."""
 
 from __future__ import annotations
 

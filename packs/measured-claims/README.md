@@ -19,7 +19,7 @@ on them, append corrections and state what the note does not establish.
 | Claim labels | Six labels and the evidence each needs; a claim without a label is unverified |
 | Reproduction rules | Tolerance first, n stated, not reproduced means a correction, could not run means unknown |
 | Comparison rules | Sample sizes that can separate options, isolated shared state, a frozen runner, honest exit statuses |
-| Claim checks | 12 deterministic checks with 2 synthetic good and 12 synthetic bad notes, rechecked by `make check` |
+| Claim checks | 12 deterministic checks with 2 made-up good and 12 made-up bad notes, rechecked by `make check` |
 | Templates | Note, reproduction, correction and note audit |
 | Worked examples | A reported number that did not reproduce, and the correction appended for it |
 
@@ -38,7 +38,7 @@ a comparison between options that needs to be fair goes to [evaluation design](.
 
 ## Worked examples
 
-All synthetic. The good note sorts six claims across all six labels, rests its two conclusions on
+All made-up. The good note sorts six claims across all six labels, rests its two conclusions on
 measured and read claims, lists one unmeasured value with its reason and keeps a correction: a
 reported 180 tokens per step measured 820, 820 and 821 against a 5 percent tolerance set first.
 Each bad note breaks one rule, such as a conclusion resting on that unreproduced number.

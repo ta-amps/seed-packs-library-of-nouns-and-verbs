@@ -24,8 +24,8 @@ placements; a person's own recorded voice uses the
 | Voice model card | An open 82-million-parameter model with phoneme input: license, revision and weight digests, checked against its publisher |
 | Templates | Voice model card, narration script, lexicon, synthesis log, line measurements, take choice, narration track, listening record |
 | Narration checks | Seven checks on a narration, with one good and seven bad candidates the validator recomputes |
-| Checklist, sources, test cases | A person's listening checklist; 8 dated public sources; 8 synthetic cases |
-| Worked example | Synthetic: two lines with a coined street name and an acronym, five takes, the rule's choice and the placed 20-second track |
+| Checklist, sources, test cases | A person's listening checklist; 8 dated public sources; 8 made-up cases |
+| Worked example | Made-up: two lines with a coined street name and an acronym, five takes, the rule's choice and the placed 20-second track |
 
 ## Verbs
 
@@ -53,7 +53,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 - A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
   through Tessera. They generalize the narration work for ta-amps's own explainer video on October 29
   and 30, 2026, which was still in production when this pack was written.
-- The worked example is synthetic and has no audio; its measurements are plausible values, and the
+- The worked example is made-up and has no audio; its measurements are plausible values, and the
   library's tests recompute only its arithmetic: pace, take choice, loudness spread and placements.
 - A recognizer's transcript is a proxy for intelligibility. It cannot hear stress, warmth or
   artifacts, so a person listens before anything is used.

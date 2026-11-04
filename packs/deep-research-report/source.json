@@ -94,7 +94,7 @@
             "$pin": "policy-and-law-watch:guardrail.person-decides"
           }
         ],
-        "worked_example": "Synthetic: whether community fridges reduce household food waste, from three stand-in sources: five claims with exact quotes, a contradiction kept, a passing adversarial review that proposes one more counter search, and a report with low confidence and its limits."
+        "worked_example": "Made-up: whether community fridges reduce household food waste, from three stand-in sources: five claims with exact quotes, a contradiction kept, a passing adversarial review that proposes one more counter search, and a report with low confidence and its limits."
       },
       "relations": [
         [
@@ -1500,13 +1500,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for deep research reports",
+      "title": "Made-up test cases for deep research reports",
       "value": {
         "cases": [
           {
             "id": "DRR-BUILD-QUESTION",
             "scenario": "The question is really a build or adopt decision",
-            "sample_input": "SYNTHETIC: Which open-source tool should we adopt to remove names from our case notes?",
+            "sample_input": "MADE-UP: Which open-source tool should we adopt to remove names from our case notes?",
             "expected_outcome": "no_change",
             "expected_indicators": [
               "pointer_to_prior_art_pack",
@@ -1517,7 +1517,7 @@
           {
             "id": "DRR-PAYWALL",
             "scenario": "The key study's full text is behind a paywall",
-            "sample_input": "SYNTHETIC: The measured study's full text needs a subscription the requester does not have.",
+            "sample_input": "MADE-UP: The measured study's full text needs a subscription the requester does not have.",
             "expected_outcome": "report_written",
             "expected_indicators": [
               "claims_from_the_abstract_only",
@@ -1529,7 +1529,7 @@
           {
             "id": "DRR-ROBOTS",
             "scenario": "A portal's robots.txt disallows the report folder",
-            "sample_input": "SYNTHETIC: The city portal's robots.txt disallows /reports/, and the portal offers an open data API.",
+            "sample_input": "MADE-UP: The city portal's robots.txt disallows /reports/, and the portal offers an open data API.",
             "expected_outcome": "sources_collected",
             "expected_indicators": [
               "robots_respected",
@@ -1541,7 +1541,7 @@
           {
             "id": "DRR-RETRACTED",
             "scenario": "An included study was retracted",
-            "sample_input": "SYNTHETIC: The retraction data marks one included study as retracted in 2025.",
+            "sample_input": "MADE-UP: The retraction data marks one included study as retracted in 2025.",
             "expected_outcome": "sources_screened",
             "expected_indicators": [
               "excluded_as_retracted",
@@ -1552,7 +1552,7 @@
           {
             "id": "DRR-QUOTE-MISMATCH",
             "scenario": "A quote does not match its source",
-            "sample_input": "SYNTHETIC: A claim quotes 11% less waste, but the source says 11 percent less food.",
+            "sample_input": "MADE-UP: A claim quotes 11% less waste, but the source says 11 percent less food.",
             "expected_outcome": "claims_extracted",
             "expected_indicators": [
               "quote_removed_and_extracted_again",
@@ -1563,7 +1563,7 @@
           {
             "id": "DRR-NO-COUNTER",
             "scenario": "The search plan has only supporting queries",
-            "sample_input": "SYNTHETIC: All six planned queries ask how fridges reduce waste.",
+            "sample_input": "MADE-UP: All six planned queries ask how fridges reduce waste.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "counter_queries_required",
@@ -1574,7 +1574,7 @@
           {
             "id": "DRR-SOCIAL-POSTS",
             "scenario": "The question needs public Facebook posts",
-            "sample_input": "SYNTHETIC: The requester wants public Facebook posts about a fridge network.",
+            "sample_input": "MADE-UP: The requester wants public Facebook posts about a fridge network.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "official_research_tool_only",
@@ -1585,7 +1585,7 @@
           {
             "id": "DRR-OVERREACH",
             "scenario": "A synthesis sentence claims more than its claims support",
-            "sample_input": "SYNTHETIC: The synthesis says fridges cut household waste by 11 percent, citing only the self-reported pilot.",
+            "sample_input": "MADE-UP: The synthesis says fridges cut household waste by 11 percent, citing only the self-reported pilot.",
             "expected_outcome": "review_done",
             "expected_indicators": [
               "overreach_listed",
@@ -1597,7 +1597,7 @@
           {
             "id": "DRR-PERSONAL-DATA",
             "scenario": "A source lists volunteers' names and phone numbers",
-            "sample_input": "SYNTHETIC: A fridge network's flyer lists three volunteers' names and mobile numbers.",
+            "sample_input": "MADE-UP: A fridge network's flyer lists three volunteers' names and mobile numbers.",
             "expected_outcome": "claims_extracted",
             "expected_indicators": [
               "no_personal_data_extracted",
@@ -1607,38 +1607,38 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.sources",
       "category": "noun.public_source",
       "role": "example",
-      "title": "Worked example: three synthetic stand-in sources on community fridges",
-      "category_reason": "Synthetic stand-in sources whose texts the worked example quotes exactly.",
+      "title": "Worked example: three made-up stand-in sources on community fridges",
+      "category_reason": "Made-up stand-in sources whose texts the worked example quotes exactly.",
       "value": {
-        "notice": "SYNTHETIC stand-ins made for offline worked examples. No real city, journal, newspaper or study.",
+        "notice": "MADE-UP stand-ins made for offline worked examples. No real city, journal, newspaper or study.",
         "sources": [
           {
             "id": "s1",
             "kind_of_source": "report by an organization",
-            "text": "SYNTHETIC stand-in. Community Fridge Pilot Evaluation, City of Example Sustainability Office, 2025. Section 3, paragraph 2: Households within 400 meters of a pilot fridge reported discarding 11 percent less food over six months than matched households farther away. Section 4, paragraph 1: The comparison relies on self-reported food diaries and was not randomized.",
-            "text_sha256": "75ad04d0c9f00ecaf6642c33612f019c2ba47e214dada1ec0d18de918ca470e0"
+            "text": "MADE-UP stand-in. Community Fridge Pilot Evaluation, City of Example Sustainability Office, 2025. Section 3, paragraph 2: Households within 400 meters of a pilot fridge reported discarding 11 percent less food over six months than matched households farther away. Section 4, paragraph 1: The comparison relies on self-reported food diaries and was not randomized.",
+            "text_sha256": "4462b70fbe5dac973ef2a849dbf9555a5bccad249ffea36ed5e711627afac48c"
           },
           {
             "id": "s2",
             "kind_of_source": "peer-reviewed study",
-            "text": "SYNTHETIC stand-in. Example Journal of Food Systems, 2024, Results, paragraph 3: Across 12 neighborhoods, measured household food waste did not change significantly after fridges opened (difference -2.1 percent, 95 percent interval -6.0 to 1.8). Discussion, paragraph 2: Most donated items came from grocery stores rather than households.",
-            "text_sha256": "de744c73a87d94801ea7632861910baf1c1c7540f505f8c35a39e887ae36ac63"
+            "text": "MADE-UP stand-in. Example Journal of Food Systems, 2024, Results, paragraph 3: Across 12 neighborhoods, measured household food waste did not change significantly after fridges opened (difference -2.1 percent, 95 percent interval -6.0 to 1.8). Discussion, paragraph 2: Most donated items came from grocery stores rather than households.",
+            "text_sha256": "02b7fa2fdff65ab089fa2831629a64d623889c566660a387eb49d07a33115d32"
           },
           {
             "id": "s3",
             "kind_of_source": "news report",
-            "text": "SYNTHETIC stand-in. Example Daily Post, 2026-03-14, paragraph 5: Volunteers say the fridges are emptied within hours on most days.",
-            "text_sha256": "ee0933c00d57fc48b31419057e6ce75bffbb357ba94cc7cf377f08d35c91f00c"
+            "text": "MADE-UP stand-in. Example Daily Post, 2026-03-14, paragraph 5: Volunteers say the fridges are emptied within hours on most days.",
+            "text_sha256": "2cc6f6579300cf1216910d50409be5dd4c7d791c122cad74c8f4646d21a8efea"
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.research-question",
@@ -1646,7 +1646,7 @@
       "role": "example",
       "title": "Worked example: do community fridges reduce household food waste?",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.research-question"
         },
@@ -1679,7 +1679,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.search-plan",
@@ -1687,26 +1687,26 @@
       "role": "example",
       "title": "Worked example: three sources and a counter query",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.search-plan"
         },
         "instance": {
           "sources": [
             {
-              "name": "stand-in city report archive (synthetic)",
+              "name": "stand-in city report archive (made-up)",
               "access": "official download",
               "terms_url": "https://example.invalid/terms",
               "rate_rule": "one request every three seconds"
             },
             {
-              "name": "stand-in journal index (synthetic)",
+              "name": "stand-in journal index (made-up)",
               "access": "official API",
               "terms_url": "https://example.invalid/journal/terms",
               "rate_rule": "filters, cached results, back off on 429"
             },
             {
-              "name": "stand-in local news archive (synthetic)",
+              "name": "stand-in local news archive (made-up)",
               "access": "official site search",
               "terms_url": "https://example.invalid/news/terms",
               "rate_rule": "one request every three seconds"
@@ -1752,7 +1752,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.source-log",
@@ -1760,7 +1760,7 @@
       "role": "example",
       "title": "Worked example: five sources found, one retracted",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read. s4 and s5 have no text here; their digests are of the text 'synthetic stand-in: <id>'.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read. s4 and s5 have no text here; their digests are of the text 'made-up stand-in: <id>'.",
         "conforms_to": {
           "$pin": "template.source-log"
         },
@@ -1768,19 +1768,19 @@
           "searched": [
             {
               "query_id": "q1",
-              "source": "stand-in journal index (synthetic)",
+              "source": "stand-in journal index (made-up)",
               "run_on": "2026-10-30",
               "results": 3
             },
             {
               "query_id": "q2",
-              "source": "stand-in journal index (synthetic)",
+              "source": "stand-in journal index (made-up)",
               "run_on": "2026-10-30",
               "results": 2
             },
             {
               "query_id": "q3",
-              "source": "stand-in city report archive (synthetic)",
+              "source": "stand-in city report archive (made-up)",
               "run_on": "2026-10-30",
               "results": 1
             }
@@ -1788,45 +1788,45 @@
           "sources": [
             {
               "id": "s1",
-              "title": "Community Fridge Pilot Evaluation (synthetic)",
-              "publisher": "City of Example Sustainability Office (synthetic)",
+              "title": "Community Fridge Pilot Evaluation (made-up)",
+              "publisher": "City of Example Sustainability Office (made-up)",
               "published": "2025",
               "url": "https://example.invalid/fridge-pilot",
               "access": "official download",
               "retrieved_on": "2026-10-30",
-              "text_sha256": "75ad04d0c9f00ecaf6642c33612f019c2ba47e214dada1ec0d18de918ca470e0",
+              "text_sha256": "4462b70fbe5dac973ef2a849dbf9555a5bccad249ffea36ed5e711627afac48c",
               "retracted": false,
               "license_note": "A public report, quoted for research."
             },
             {
               "id": "s2",
-              "title": "Community fridges and measured household waste (synthetic)",
-              "publisher": "Example Journal of Food Systems (synthetic)",
+              "title": "Community fridges and measured household waste (made-up)",
+              "publisher": "Example Journal of Food Systems (made-up)",
               "published": "2024",
               "url": "https://example.invalid/journal/fridges",
-              "doi": "10.5555/synthetic-fridges-2024",
+              "doi": "10.5555/made-up-fridges-2024",
               "access": "official API",
               "retrieved_on": "2026-10-30",
-              "text_sha256": "de744c73a87d94801ea7632861910baf1c1c7540f505f8c35a39e887ae36ac63",
+              "text_sha256": "02b7fa2fdff65ab089fa2831629a64d623889c566660a387eb49d07a33115d32",
               "retracted": false,
               "license_note": "Open access under its stated license; quoted for research."
             },
             {
               "id": "s3",
-              "title": "Volunteers keep the fridges full (synthetic)",
-              "publisher": "Example Daily Post (synthetic)",
+              "title": "Volunteers keep the fridges full (made-up)",
+              "publisher": "Example Daily Post (made-up)",
               "published": "2026",
               "url": "https://example.invalid/daily-post/fridges",
               "access": "official site search",
               "retrieved_on": "2026-10-30",
-              "text_sha256": "ee0933c00d57fc48b31419057e6ce75bffbb357ba94cc7cf377f08d35c91f00c",
+              "text_sha256": "2cc6f6579300cf1216910d50409be5dd4c7d791c122cad74c8f4646d21a8efea",
               "retracted": false,
               "license_note": "A news report, quoted briefly."
             },
             {
               "id": "s4",
-              "title": "Commercial food waste in grocery chains (synthetic)",
-              "publisher": "Example Retail Review (synthetic)",
+              "title": "Commercial food waste in grocery chains (made-up)",
+              "publisher": "Example Retail Review (made-up)",
               "published": "2023",
               "url": "https://example.invalid/retail-waste",
               "access": "official API",
@@ -1837,11 +1837,11 @@
             },
             {
               "id": "s5",
-              "title": "Fridge sharing and household waste (synthetic, retracted)",
-              "publisher": "Example Letters in Sustainability (synthetic)",
+              "title": "Fridge sharing and household waste (made-up, retracted)",
+              "publisher": "Example Letters in Sustainability (made-up)",
               "published": "2022",
               "url": "https://example.invalid/letters/fridge-sharing",
-              "doi": "10.5555/synthetic-retracted-2022",
+              "doi": "10.5555/made-up-retracted-2022",
               "access": "official API",
               "retrieved_on": "2026-10-30",
               "text_sha256": "7d14a2d151460346535da47f1805c143ecdd28a1101f6f1ebccdd18c51dece42",
@@ -1851,7 +1851,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.screening-log",
@@ -1859,7 +1859,7 @@
       "role": "example",
       "title": "Worked example: a flow that adds up, with a retracted source excluded",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.screening-log"
         },
@@ -1904,7 +1904,7 @@
           }
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.claim-extract",
@@ -1912,7 +1912,7 @@
       "role": "example",
       "title": "Worked example: five claims with exact quotes, one contradicting",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.claim-extract"
         },
@@ -1999,7 +1999,7 @@
           "$pin": "example.sources"
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.synthesis",
@@ -2007,7 +2007,7 @@
       "role": "example",
       "title": "Worked example: every sentence labeled, the contradiction kept",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.synthesis"
         },
@@ -2067,7 +2067,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.adversarial-review",
@@ -2075,7 +2075,7 @@
       "role": "example",
       "title": "Worked example: a passing review that proposes one more counter search",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.adversarial-review"
         },
@@ -2093,7 +2093,7 @@
           "passed": true
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.report",
@@ -2101,12 +2101,12 @@
       "role": "example",
       "title": "Worked example: the report, with the evidence against and its limits",
       "value": {
-        "notice": "SYNTHETIC. Built on the three stand-in sources in example.sources; no real study was read.",
+        "notice": "MADE-UP. Built on the three stand-in sources in example.sources; no real study was read.",
         "conforms_to": {
           "$pin": "template.report"
         },
         "instance": {
-          "title": "Community fridges and household food waste (synthetic example)",
+          "title": "Community fridges and household food waste (made-up example)",
           "question": "In mid-sized cities, do community fridges reduce household food waste?",
           "short_answer": "The evidence does not show that community fridges reduce household food waste: a self-reported pilot found 11 percent less, but a study that measured waste in 12 neighborhoods found no significant change.",
           "confidence": "low",
@@ -2152,7 +2152,7 @@
           "method": {
             "searched_on": "2026-10-30",
             "sources_searched": [
-              "synthetic stand-in sources only"
+              "made-up stand-in sources only"
             ],
             "flow": {
               "identified": 6,
@@ -2160,7 +2160,7 @@
             }
           },
           "limits": [
-            "Three synthetic stand-in sources; no real study was read.",
+            "Three made-up stand-in sources; no real study was read.",
             "The supporting result is self-reported and not randomized.",
             "One retracted study was excluded from the evidence (s5)."
           ],
@@ -2173,23 +2173,23 @@
           "sources": [
             {
               "id": "s1",
-              "citation": "Community Fridge Pilot Evaluation, City of Example (synthetic), 2025",
+              "citation": "Community Fridge Pilot Evaluation, City of Example (made-up), 2025",
               "url": "https://example.invalid/fridge-pilot"
             },
             {
               "id": "s2",
-              "citation": "Example Journal of Food Systems (synthetic), 2024",
+              "citation": "Example Journal of Food Systems (made-up), 2024",
               "url": "https://example.invalid/journal/fridges"
             },
             {
               "id": "s3",
-              "citation": "Example Daily Post (synthetic), 2026-03-14",
+              "citation": "Example Daily Post (made-up), 2026-03-14",
               "url": "https://example.invalid/daily-post/fridges"
             }
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "report-checks",
@@ -2804,7 +2804,7 @@
           "guardrail.seek-counter-evidence"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [

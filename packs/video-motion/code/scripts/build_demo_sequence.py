@@ -224,7 +224,7 @@ def title_scene() -> SceneRecipe:
             ),
             _card(
                 "badge",
-                "Synthetic motion graphics",
+                "Made-up motion graphics",
                 (480, 80),
                 AMBER,
                 (960, 735, 1.2),

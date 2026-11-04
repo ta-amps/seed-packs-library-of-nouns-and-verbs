@@ -1,6 +1,6 @@
 # Opportunity Lab: seed alternative solutions
 
-The [Tessera Opportunity Lab](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/opportunity-lab.md)
+The [Teleion Fabric Opportunity Lab](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/opportunity-lab.md)
 provides a runnable seed-authoring example for eleven startup themes. It uses
 existing noun storage and verb queues; this contribution repository remains a
 guide. The initial pack creates two independent ideation attempts per theme.
@@ -8,7 +8,7 @@ guide. The initial pack creates two independent ideation attempts per theme.
 Nouns include the source, theme, project profile, output contract and procedures.
 Workers claim verbs to ideate, then save private candidate nouns. A shared input
 brief can produce different solutions: each attempt has its own lease, artifact
-key and receipt. A comparison verb can evaluate both, and a remix verb can produce
+key and record. A comparison verb can evaluate both, and a remix verb can produce
 a third proposal with parent references.
 
 The supplied procedures cover discovery, ideation, remixing, evaluation,
@@ -23,7 +23,7 @@ from a measured result. Scores need explicit dimensions and evidence; leave
 unknown values unknown. Hardware, model and harness context must accompany
 comparative performance claims.
 
-The showcase uses synthetic proposals and public source context. It does not
+The showcase uses made-up proposals and public source context. It does not
 verify the source's factual claims, certify businesses or authorize external
-effects. A worker receipt proves that a submission was recorded, not that its
+effects. A worker record proves that a submission was recorded, not that its
 idea is good. Admission remains a separate step under the owning policy.

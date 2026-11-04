@@ -1,11 +1,11 @@
-"""Render the handwritten statements kit's synthetic sample pages from its test-case noun.
+"""Render the handwritten statements kit's made-up sample pages from its test-case noun.
 
     uv run python render_samples.py --out DIR [--fonts DIR] [--check]
 
 The page text, marks, font and size of every sample live in the pack's source.json, in the
 test-cases noun, so the samples have one source. Each page is drawn on lined paper with an
 openly licensed handwriting font, fetched by pinned URL and checked by SHA-256, and stamped
-SYNTHETIC. `--check` compares each page's pixel digest with the digest the noun pins.
+MADE-UP. `--check` compares each page's pixel digest with the digest the noun pins.
 
 Inline marks in a line: {x:word} is drawn crossed out; {?:word} is smudged so it is hard to read.
 The output goes only where --out says, never into the library tree. Nothing here contacts a
@@ -110,11 +110,11 @@ def draw_line(image: Image.Image, font: ImageFont.FreeTypeFont, line: str, index
 def draw_stamp(image: Image.Image) -> Image.Image:
     header = ImageFont.load_default(size=22)
     draw = ImageDraw.Draw(image)
-    draw.text((LEFT - 14, 40), "SYNTHETIC SAMPLE: not a real person or statement", font=header, fill=STAMP)
+    draw.text((LEFT - 14, 40), "MADE-UP SAMPLE: not a real person or statement", font=header, fill=STAMP)
     layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
     stamp = ImageDraw.Draw(layer)
     big = ImageFont.load_default(size=150)
-    stamp.text((WIDTH // 2, HEIGHT // 2), "SYNTHETIC", font=big, fill=(*STAMP, 70), anchor="mm")
+    stamp.text((WIDTH // 2, HEIGHT // 2), "MADE-UP", font=big, fill=(*STAMP, 70), anchor="mm")
     layer = layer.rotate(30, resample=Image.Resampling.BICUBIC, center=(WIDTH // 2, HEIGHT // 2))
     return Image.alpha_composite(image.convert("RGBA"), layer).convert("RGB")
 

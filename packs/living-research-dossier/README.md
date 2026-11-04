@@ -27,7 +27,7 @@ guardrails, checklist and adversarial review are pinned, not redefined. The pers
 | Decay classes | Stable, slow, periodic, fast and volatile, from 365 days to 7, and what makes a fact due |
 | Trigger rules | Named triggers on public sources, cheap checks, fired versus changed, unreachable sources |
 | Templates | Dossier, cycle plan, answer, cycle log, trigger check and refresh record |
-| Dossier checks | 13 deterministic checks with 2 synthetic good and 13 synthetic bad dossiers, rechecked by `make check` |
+| Dossier checks | 13 deterministic checks with 2 made-up good and 13 made-up bad dossiers, rechecked by `make check` |
 | Checklist and sources | What a person checks before publishing; 3 dated public sources |
 | Worked examples | A cycle plan, an answer, a cycle log, a trigger check, a refresh record and the dossier they produce |
 
@@ -51,7 +51,7 @@ of enqueueing them. Verbs for a person are claimed by people, never by an agent.
 
 ## Worked examples
 
-All synthetic: a dossier on cold-storage grants for small food banks in a made-up state. Two cycles
+All made-up: a dossier on cold-storage grants for small food banks in a made-up state. Two cycles
 answer three questions and park one, and the dossier switches to watching three triggers. A closing
 date in the volatile class is read again on 2026-10-26 and refreshes by 2026-11-02. A changed
 guidelines page fires a trigger that reopens two questions, and a third cycle supersedes the award

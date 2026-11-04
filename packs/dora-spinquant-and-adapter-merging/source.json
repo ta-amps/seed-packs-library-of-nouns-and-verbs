@@ -53,7 +53,7 @@
         "tool": {
           "$pin": "tool.adapter-quant-and-merge"
         },
-        "worked_example": "Synthetic 64-channel heavy-tailed outlier matrix, 4x4 DoRA probe and orthogonal/conflicting adapter pairs recomputed in test_adapter_quant_and_merge.py: SpinQuant Walsh-Hadamard rotation lowers max-to-RMS from 12.578755 to 2.166179, collapses excess kurtosis from 103.842906 to -1.034782, reduces 4-bit symmetric quantization MSE by 10.039322x (0.231252 -> 0.023035), decomposes DoRA directional/magnitude deltas (ratio 0.857493), and routes orthogonal adapters to ties_static_merge while routing sign-conflicting adapters to dynamic_co_resident_switch."
+        "worked_example": "Made-up 64-channel heavy-tailed outlier matrix, 4x4 DoRA probe and orthogonal/conflicting adapter pairs recomputed in test_adapter_quant_and_merge.py: SpinQuant Walsh-Hadamard rotation lowers max-to-RMS from 12.578755 to 2.166179, collapses excess kurtosis from 103.842906 to -1.034782, reduces 4-bit symmetric quantization MSE by 10.039322x (0.231252 -> 0.023035), decomposes DoRA directional/magnitude deltas (ratio 0.857493), and routes orthogonal adapters to ties_static_merge while routing sign-conflicting adapters to dynamic_co_resident_switch."
       },
       "relations": [
         [
@@ -117,7 +117,7 @@
           "SubspaceInterferenceAndMergeRouter"
         ],
         "default_quant_bits": 4,
-        "synthetic_channel_dim": 64,
+        "made_up_channel_dim": 64,
         "ties_default_trim_density": 0.5,
         "max_cosine_for_static_merge": 0.3,
         "max_sign_conflict_for_static_merge": 0.25
@@ -298,17 +298,17 @@
       "slug": "example.adapter-quant-merge-bundle",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example input: 64-channel heavy-tailed outlier configuration, 4x4 DoRA probe and orthogonal/conflicting adapters",
-      "category_reason": "Synthetic fixture recomputed by test_adapter_quant_and_merge.py.",
+      "category_reason": "Made-up fixture recomputed by test_adapter_quant_and_merge.py.",
       "value": {
         "rotation_seed": 1729,
         "quant_bits": 4,
-        "synthetic_rows": 16,
-        "synthetic_cols": 64,
-        "synthetic_outlier_channels": 1,
-        "synthetic_outlier_scale": 32.0,
-        "synthetic_seed": 42,
+        "made_up_rows": 16,
+        "made_up_cols": 64,
+        "made_up_outlier_channels": 1,
+        "made_up_outlier_scale": 32.0,
+        "made_up_seed": 42,
         "dora_probe": {
           "base_weights": [
             [
@@ -478,17 +478,17 @@
             ]
           ]
         ],
-        "shows": "Synthetic heavy-tailed channel quantization, DoRA decomposition and multi-adapter interference routing workload.",
-        "source": "Synthetic. Written for this pack."
+        "shows": "Made-up heavy-tailed channel quantization, DoRA decomposition and multi-adapter interference routing workload.",
+        "source": "Made-up. Written for this pack."
       }
     },
     {
       "slug": "example.adapter-quant-merge-receipt",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed 10.04x SpinQuant 4-bit MSE reduction, DoRA ratio and TIES routing receipt",
-      "category_reason": "Synthetic receipt verified by test_adapter_quant_and_merge.py.",
+      "category_reason": "Made-up receipt verified by test_adapter_quant_and_merge.py.",
       "value": {
         "conforms_to": {
           "$pin": "template.adapter-quant-merge-receipt"
@@ -512,7 +512,7 @@
           "conflicting_route": "dynamic_co_resident_switch"
         },
         "shows": "Recomputes 10.039322x 4-bit quantization MSE reduction via Walsh-Hadamard outlier rotation, DoRA directional/magnitude update decomposition and interference-aware adapter routing.",
-        "source": "Synthetic. Recomputed directly from example.adapter-quant-merge-bundle."
+        "source": "Made-up. Recomputed directly from example.adapter-quant-merge-bundle."
       },
       "relations": [
         [

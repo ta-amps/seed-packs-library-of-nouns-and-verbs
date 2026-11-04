@@ -98,7 +98,7 @@
             "$pin": "guardrail.a-person-approves-release"
           }
         ],
-        "worked_example": "Synthetic: a 45-second explainer for a fictional pantry. The claim trace disputes one number, the review finds seven problems from a blocker to a note and decides revise, and the re-review of the fixed cut finds the blocker fixed, one minor not fixed and one new minor, and decides ready for the owner.",
+        "worked_example": "Made-up: a 45-second explainer for a fictional pantry. The claim trace disputes one number, the review finds seven problems from a blocker to a note and decides revise, and the re-review of the fixed cut finds the blocker fixed, one minor not fixed and one new minor, and decides ready for the owner.",
         "complements": "The video showcase pack's review-video decides whether a cut is ready; this pack gives that decision a fixed rubric, timestamped findings, routes to fix verbs and a re-review. The video QA pack measures; this pack judges with the measurements in hand.",
         "provenance_notes": [
           "Generalizes an adversarial review practice from a working short-form video studio: assume problems until the panels show otherwise, give a timestamp and what was seen for every claim, fixed question banks with scores, a second model on the same panels with disagreements looked at again, fixes routed to the template that caused them, and reviews bound to the exact master hash.",
@@ -376,7 +376,7 @@
             },
             {
               "id": "qualifiers-kept",
-              "question": "Are qualifiers kept wherever the evidence has them: synthetic, one task, a local run, a date?",
+              "question": "Are qualifiers kept wherever the evidence has them: made-up, one task, a local run, a date?",
               "answered_by": "judgment",
               "passes_when": "No claim reads stronger than its record.",
               "if_failed": "blocker"
@@ -428,8 +428,8 @@
               "if_failed": "blocker"
             },
             {
-              "id": "synthetic-labeled",
-              "question": "Are synthetic data, scripted stand-ins and illustrations labeled as such on screen?",
+              "id": "made-up-labeled",
+              "question": "Are made-up data, scripted stand-ins and illustrations labeled as such on screen?",
               "answered_by": "panel",
               "passes_when": "Each appears with its label in the same shot.",
               "if_failed": "blocker"
@@ -530,7 +530,7 @@
       "value": {
         "levels": {
           "blocker": {
-            "means": "A wrong or untraced number or claim, a missing or unreadable AI or synthetic-data label, private data on screen, a flash hazard, missing captions, or a broken file.",
+            "means": "A wrong or untraced number or claim, a missing or unreadable AI or made-up-data label, private data on screen, a flash hazard, missing captions, or a broken file.",
             "respond": "Fix before any release. Never accepted with a reason.",
             "findings_to_fixes": "P1, or P0 when the cut is already published"
           },
@@ -633,7 +633,7 @@
             "then": "narrated-explainer-video.render-slices"
           },
           {
-            "cause": "caption text or timing for a synthetic voice",
+            "cause": "caption text or timing for a made-up voice",
             "fix_verb": {
               "$verb": "narrated-explainer-video.time-captions"
             },
@@ -2260,7 +2260,7 @@
           "template.review-findings"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "checklist",
@@ -2330,13 +2330,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for video review",
+      "title": "Made-up test cases for video review",
       "value": {
         "cases": [
           {
             "id": "VR-OWN-CUT",
             "scenario": "The worker that composed the cut is asked to review it",
-            "sample_input": "SYNTHETIC: the reviewing key matches the compose-sequence receipt's key.",
+            "sample_input": "MADE-UP: the reviewing key matches the compose-sequence receipt's key.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "distinct_reviewer_required"
@@ -2346,7 +2346,7 @@
           {
             "id": "VR-NUMBER-DISPUTED",
             "scenario": "A number on screen differs from its record",
-            "sample_input": "SYNTHETIC: the cut says 120 households a week; the intake record says 112.",
+            "sample_input": "MADE-UP: the cut says 120 households a week; the intake record says 112.",
             "expected_outcome": "review_written",
             "expected_indicators": [
               "claim_disputed",
@@ -2358,7 +2358,7 @@
           {
             "id": "VR-STALE-BYTES",
             "scenario": "The QA report names a different digest from the file under review",
-            "sample_input": "SYNTHETIC: the QA report is for an earlier render.",
+            "sample_input": "MADE-UP: the QA report is for an earlier render.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "stale_report_named",
@@ -2369,7 +2369,7 @@
           {
             "id": "VR-CONTACT-SHEET-ONLY",
             "scenario": "A reviewer judges text size from a contact sheet",
-            "sample_input": "SYNTHETIC: a 480 px wide thumbnail makes 28 px body text look unreadable.",
+            "sample_input": "MADE-UP: a 480 px wide thumbnail makes 28 px body text look unreadable.",
             "expected_outcome": "review_written",
             "expected_indicators": [
               "full_frame_checked",
@@ -2380,7 +2380,7 @@
           {
             "id": "VR-REVIEWERS-DISAGREE",
             "scenario": "Two reviewers disagree about whether a label is readable",
-            "sample_input": "SYNTHETIC: one says the 20 px label reads; the other says it does not.",
+            "sample_input": "MADE-UP: one says the 20 px label reads; the other says it does not.",
             "expected_outcome": "reviews_compared",
             "expected_indicators": [
               "second_look_recorded",
@@ -2391,7 +2391,7 @@
           {
             "id": "VR-FIXED-BUT-REGRESSED",
             "scenario": "A fix for one finding breaks another",
-            "sample_input": "SYNTHETIC: enlarging the board pushed its counter under the AI-voice label.",
+            "sample_input": "MADE-UP: enlarging the board pushed its counter under the AI-voice label.",
             "expected_outcome": "re_reviewed",
             "expected_indicators": [
               "regressed_result",
@@ -2402,7 +2402,7 @@
           {
             "id": "VR-NO-LISTENER",
             "scenario": "No person has listened yet",
-            "sample_input": "SYNTHETIC: the review is complete but no listening record exists.",
+            "sample_input": "MADE-UP: the review is complete but no listening record exists.",
             "expected_outcome": "review_written",
             "expected_indicators": [
               "listening_not_done_stated",
@@ -2412,7 +2412,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.review-scope",
@@ -2420,7 +2420,7 @@
       "role": "example",
       "title": "Worked example: the scope of a review",
       "value": {
-        "notice": "SYNTHETIC. A fictional pantry's 45-second explainer; no video exists.",
+        "notice": "MADE-UP. A fictional pantry's 45-second explainer; no video exists.",
         "conforms_to": {
           "$pin": "template.review-scope"
         },
@@ -2449,7 +2449,7 @@
           "claim_trace": "example.claim-trace"
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.claim-trace",
@@ -2457,7 +2457,7 @@
       "role": "example",
       "title": "Worked example: a claim trace with one disputed number",
       "value": {
-        "notice": "SYNTHETIC. The records named are fictional.",
+        "notice": "MADE-UP. The records named are fictional.",
         "conforms_to": {
           "$pin": "template.claim-trace"
         },
@@ -2469,7 +2469,7 @@
               "time_s": 6.2,
               "where": "narration",
               "says": "Three volunteers check the shelves every evening.",
-              "evidence": "SYNTHETIC volunteer roster noun",
+              "evidence": "MADE-UP volunteer roster noun",
               "evidence_says": "3 volunteers on the evening rota",
               "result": "upheld"
             },
@@ -2478,7 +2478,7 @@
               "time_s": 21.0,
               "where": "on_screen",
               "says": "120 households a week",
-              "evidence": "SYNTHETIC intake log noun, week of 2026-10-19",
+              "evidence": "MADE-UP intake log noun, week of 2026-10-19",
               "evidence_says": "112 households",
               "result": "disputed",
               "note": "The cut rounds up and drops the week."
@@ -2488,7 +2488,7 @@
               "time_s": 30.5,
               "where": "caption",
               "says": "Every claim in the report is cited.",
-              "evidence": "SYNTHETIC report check noun",
+              "evidence": "MADE-UP report check noun",
               "evidence_says": "14 of 14 claims cited",
               "result": "upheld"
             },
@@ -2507,7 +2507,7 @@
           "numbers_traced": 3
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.review-findings",
@@ -2515,7 +2515,7 @@
       "role": "example",
       "title": "Worked example: seven findings from a blocker to a note",
       "value": {
-        "notice": "SYNTHETIC. Times, sizes and records are illustrative; the library's tests recheck their consistency.",
+        "notice": "MADE-UP. Times, sizes and records are illustrative; the library's tests recheck their consistency.",
         "conforms_to": {
           "$pin": "template.review-findings"
         },
@@ -2653,7 +2653,7 @@
           "published": false
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.re-review",
@@ -2661,7 +2661,7 @@
       "role": "example",
       "title": "Worked example: the re-review of the fixed cut",
       "value": {
-        "notice": "SYNTHETIC. The new digest stands for the fixed render.",
+        "notice": "MADE-UP. The new digest stands for the fixed render.",
         "conforms_to": {
           "$pin": "template.re-review"
         },
@@ -2727,7 +2727,7 @@
           "published": false
         }
       },
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [

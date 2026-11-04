@@ -1259,7 +1259,7 @@
             "threshold": "Captions cover at least caption_coverage_min of measured speech, no cue without speech, sidecars equal the track."
           },
           {
-            "id": "synthetic_disclosure",
+            "id": "made_up_disclosure",
             "threshold": "The file's title and disclosure comment are exactly what the render manifest records."
           }
         ],
@@ -1280,7 +1280,7 @@
             "frozen_frames",
             "integrated_loudness",
             "caption_timing_coverage",
-            "synthetic_disclosure"
+            "made_up_disclosure"
           ],
           "freeze_min_s": 2.0,
           "loudness_tolerance_lu": 1.0,
@@ -1334,7 +1334,7 @@
           "catalog.assets"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "recipe.kinetic-data-chart",
@@ -1371,7 +1371,7 @@
           "catalog.assets"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "recipe.algorithm-race",
@@ -1407,7 +1407,7 @@
           "catalog.assets"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "sequence.demo",
@@ -1481,15 +1481,15 @@
           "rules.captions"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "trace.sample-motion",
       "category": "noun.motion_profile",
       "role": "observation_trace",
-      "title": "Sample motion trace (synthetic)",
+      "title": "Sample motion trace (made-up)",
       "value": {
-        "summary": "A synthetic 16-second trace of motion energy, cuts, speakers and normalized positions: the input fit-motion reads.",
+        "summary": "A made-up 16-second trace of motion energy, cuts, speakers and normalized positions: the input fit-motion reads.",
         "use": "Fit it with fit-motion to see a learned profile, or use it as the shape for traces measured from your own footage. A trace holds numbers only, never media.",
         "tool_facts": {
           "file": {
@@ -1503,7 +1503,7 @@
         }
       },
       "category_reason": "Observations a motion profile is fitted from.",
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "template.scene-recipe",
@@ -1776,7 +1776,7 @@
             "mime_type",
             "provenance",
             "source_uri",
-            "synthetic",
+            "made-up",
             "title"
           ],
           "properties": {
@@ -1883,7 +1883,7 @@
                 "licensed"
               ]
             },
-            "synthetic": {
+            "made-up": {
               "type": "boolean"
             },
             "disclosure": {
@@ -1906,7 +1906,7 @@
         },
         "rules": [
           "render-sequence accepts only CC0-1.0, CC-BY-4.0, MIT and LicenseRef-Video-Motion-Procedural; record media under any other license as such and leave it out of rendering.",
-          "Generated media name the generator and parameters that rebuild the exact bytes and are labeled synthetic; captured and licensed media have no generator.",
+          "Generated media name the generator and parameters that rebuild the exact bytes and are labeled made-up; captured and licensed media have no generator.",
           "Visual media need width and height; timed media need duration_s; audio needs sample_rate_hz and channels.",
           "blob_sha256 is the SHA-256 of the stored bytes; object_ref names the stored object when there is one."
         ],
@@ -1934,7 +1934,7 @@
           "provenance": "generated",
           "sample_rate_hz": null,
           "source_uri": "urn:video-motion:generated:placeholder_card_png",
-          "synthetic": true,
+          "made-up": true,
           "title": "Placeholder for a screen capture",
           "width": 960
         },
@@ -1957,7 +1957,7 @@
             "provenance",
             "sample_rate_hz",
             "source_uri",
-            "synthetic",
+            "made-up",
             "title",
             "width"
           ],
@@ -1972,7 +1972,7 @@
             "mime_type",
             "provenance",
             "source_uri",
-            "synthetic",
+            "made-up",
             "title"
           ],
           "media_kinds": [
@@ -2492,10 +2492,10 @@
             "disclosure": {
               "type": "string"
             },
-            "synthetic_visuals": {
+            "made_up_visuals": {
               "type": "boolean"
             },
-            "synthetic_media": {
+            "made_up_media": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -2528,8 +2528,8 @@
             "scene_frames",
             "sequence_id",
             "sequence_sha256",
-            "synthetic_media",
-            "synthetic_visuals",
+            "made_up_media",
+            "made_up_visuals",
             "tool_source_files",
             "tool_version",
             "tools",
@@ -2652,7 +2652,7 @@
             "frozen_frames",
             "integrated_loudness",
             "caption_timing_coverage",
-            "synthetic_disclosure"
+            "made_up_disclosure"
           ]
         }
       },
@@ -3232,7 +3232,7 @@
         "Write a media noun in template.media's format for every file the sequence uses, with the exact bytes digest, and pin each media element by that noun's version and value digest.",
         "Use only media whose license the renderer accepts. Leave anything else out and list it in unknowns with the reason.",
         "Run video-motion video plan on the sequence and revise until the plan and pre-render QA pass for every output.",
-        "Keep the disclosure honest: label every generated or synthetic element as such."
+        "Keep the disclosure honest: label every generated or made-up element as such."
       ],
       "acceptance": [
         {
@@ -3355,7 +3355,7 @@
         "Run video-motion video probe-tools and keep the cards. Compare them with the reference builds and report every difference; do not hide one.",
         "Rebuild generated media from their generators and verify each blob digest; read captured media only from their pinned objects and verify the bytes.",
         "Run video-motion video render with the sequence and its media nouns. It refuses to render when pre-render QA, a pin or a digest fails.",
-        "Store the MP4s, sidecars and manifests as nouns in the requester's scope, labeled as synthetic wherever the manifest says so."
+        "Store the MP4s, sidecars and manifests as nouns in the requester's scope, labeled as made-up wherever the manifest says so."
       ],
       "preferred": [
         "Use the reference builds when available, so a second render can be byte-identical."

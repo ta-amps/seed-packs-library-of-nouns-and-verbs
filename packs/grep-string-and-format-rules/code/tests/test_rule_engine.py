@@ -60,7 +60,7 @@ class RuleEngineTests(unittest.TestCase):
         unnegated = "Worker " + "sends" + " external report to https://example.invalid/hook."
         self.assertEqual(len(runner.scan_outbound_effects(unnegated)), 1)
 
-        # Construct synthetic test credentials dynamically so source files hold zero literal keys
+        # Construct made-up test credentials dynamically so source files hold zero literal keys
         dyn_secrets = " ".join([
             "ghp_" + ("A" * 32),
             "github_pat_" + ("B" * 42),
@@ -80,7 +80,7 @@ class RuleEngineTests(unittest.TestCase):
 
         self.assertEqual(len(runner.scan_public_good_accusatory_copy("A corrupt and fraudulent report")), 2)
         stamps = runner.scan_visible_stamps(
-            "SYNTHETIC EXAMPLE | AI-generated voice | local run | planned | not running | coming soon"
+            "MADE-UP EXAMPLE | AI-generated voice | local run | planned | not running | coming soon"
         )
         self.assertEqual(len(stamps), 6)
 

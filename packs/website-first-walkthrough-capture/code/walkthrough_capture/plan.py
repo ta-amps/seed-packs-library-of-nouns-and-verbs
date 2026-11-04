@@ -21,7 +21,7 @@ RETIRED_SHA256 = frozenset(GRID["retired_name_sha256"])
 
 ALLOWED_HOSTS = ("eranos.ta-amps.workers.dev", "agora.ta-amps.workers.dev")
 ER03_ANCHORS = {"#step-split", "#step-build", "#step-review", "#step-ready"}
-STAMPS = ("PLANNED", "ILLUSTRATION", "SYNTHETIC EXAMPLE", "AI-GENERATED VOICE", "LOCAL RUN", "NOT YET", "COMING SOON", "NOT RUNNING", "SYNTHETIC DATA ONLY")
+STAMPS = ("PLANNED", "ILLUSTRATION", "MADE-UP EXAMPLE", "AI-GENERATED VOICE", "LOCAL RUN", "NOT YET", "COMING SOON", "NOT RUNNING", "MADE-UP DATA ONLY")
 WORD_RE = re.compile(r"[a-z0-9]+")
 COMPOUND_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)+")
 # Tessera access contract: credentials never go in URLs (query or fragment).

@@ -42,7 +42,7 @@ def pack_labels() -> dict[str, Any]:
 # Dimension rubric for the media and tool-card noun values this package writes:
 #   determinism: 1.0 = byte-identical repeat output is tested in this repository.
 #   evidence_grounding: 1.0 = every stated property was checked when the value was written; 0.5 =
-#     synthetic or declared properties (illustrative attributions, built-in formulas) not measured.
+#     made-up or declared properties (illustrative attributions, built-in formulas) not measured.
 #   token_efficiency: 1.0 = using the noun needs no model call.
 #   safety_compliance: 1.0 = the license/attribution and QA gates passed with no errors.
 #   verification_tier: "deterministic_gate" when a deterministic check in this package ran on this
@@ -91,11 +91,11 @@ def value_sha256(value: Any) -> str:
     return hashlib.sha256(encoded.encode()).hexdigest()
 
 
-def dimensions(basis: dict[str, str], *, synthetic: bool, checked: bool) -> dict[str, Any]:
+def dimensions(basis: dict[str, str], *, made_up: bool, checked: bool) -> dict[str, Any]:
     """Required Tessera dimensions under the shared rubric, with a short reason for each value."""
     dims: dict[str, Any] = {
         "determinism": 1.0,
-        "evidence_grounding": 0.5 if synthetic else 1.0,
+        "evidence_grounding": 0.5 if made_up else 1.0,
         "token_efficiency": 1.0,
         "safety_compliance": 1.0,
         "verification_tier": "deterministic_gate" if checked else "unverified",

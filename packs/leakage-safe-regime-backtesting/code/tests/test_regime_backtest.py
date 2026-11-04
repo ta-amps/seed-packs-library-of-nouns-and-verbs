@@ -81,7 +81,7 @@ class RegimeBacktestTest(unittest.TestCase):
     def test_pack_worked_example_recomputes_exactly(self) -> None:
         source = json.loads(PACK_SOURCE.read_text(encoding="utf-8"))
         nouns = {n["slug"]: n["value"] for n in source["nouns"]}
-        inp = nouns["example.synthetic-panel"]
+        inp = nouns["example.made-up-panel"]
         expected = nouns["example.validation-receipt"]["instance"]
 
         actual = run_validation_audit(inp)

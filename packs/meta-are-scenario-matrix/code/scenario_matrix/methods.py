@@ -126,7 +126,7 @@ PRIVACY_BOUNDARIES_5: tuple[dict[str, Any], ...] = (
         "redacts_pii_before_egress": False,
     },
     {
-        "slug": "synthetic-twin-redacted",
+        "slug": "made-up-twin-redacted",
         "allows_cloud_compute": True,
         "enforces_lane_split": True,
         "redacts_pii_before_egress": True,

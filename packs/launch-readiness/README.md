@@ -19,7 +19,7 @@ the release and verify pack.
 | Claim rules | Counts, states, versions, capabilities and absences, and how each is checked |
 | Analytics hosts | A starting list of analytics hosts and how to tell them from fonts and other third parties |
 | Error page rules | 404 for missing pages, no soft 404s, a way home and nothing leaked |
-| Go checks | 18 deterministic checks with 3 synthetic good and 18 synthetic bad reports, rechecked by `make check` |
+| Go checks | 18 deterministic checks with 3 made-up good and 18 made-up bad reports, rechecked by `make check` |
 | Templates | Readiness plan, page claims, analytics check, error page check, rollback review, readiness report and go decision |
 | Worked examples | A plan, a claims check with a contradicted count, a not-ready report and the owner's no-go |
 
@@ -43,7 +43,7 @@ through [release and verify](../release-and-verify/README.md).
 
 ## Worked examples
 
-All synthetic. A small volunteer site's home page says 40 volunteers this month while the roster
+All made-up. A small volunteer site's home page says 40 volunteers this month while the roster
 shows 38, and unknown addresses answer 200 with a not-found view. The report lists both as blockers
 and recommends not ready; the program manager records a no-go with a next step. The go checks also
 hold a ready-with-waiver report where the owner waived the soft 404 with a reason.

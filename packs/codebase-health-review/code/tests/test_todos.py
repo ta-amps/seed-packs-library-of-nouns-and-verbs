@@ -14,11 +14,11 @@ from health_checks import age_todos, bucket, markers, parse_porcelain
 
 PORCELAIN = """\
 1111111111111111111111111111111111111111 1 1 2
-author Synthetic Author
-author-mail <synthetic@example.invalid>
+author Made-up Author
+author-mail <made-up@example.invalid>
 author-time 1717408800
 author-tz +0000
-committer Synthetic Author
+committer Made-up Author
 committer-time 1717408800
 summary first
 filename roster/sync.py
@@ -26,7 +26,7 @@ filename roster/sync.py
 1111111111111111111111111111111111111111 2 2
 \t# TODO: retry
 2222222222222222222222222222222222222222 3 3 1
-author Synthetic Author
+author Made-up Author
 author-time 1777000000
 summary second
 filename roster/sync.py

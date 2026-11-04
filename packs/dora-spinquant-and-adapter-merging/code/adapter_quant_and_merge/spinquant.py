@@ -33,7 +33,7 @@ class FastWalshHadamardOutlierRotator:
         self._word_bytes = int(num["word_bytes"])
         self._unit_modulus = int(num["unit_modulus"])
         self._radix = int(sq["butterfly_radix"])
-        self._synthetic_cfg = dict(sq)
+        self._made_up_cfg = dict(sq)
 
         raw_bits = int(quant_bits if quant_bits is not None else sq["default_quant_bits"])
         raw_gran = str(quant_granularity if quant_granularity is not None else sq["default_granularity"])
@@ -228,14 +228,14 @@ class FastWalshHadamardOutlierRotator:
         outlier_scale: float | None = None,
         seed: int | None = None,
     ) -> list[list[float]]:
-        """Deterministic synthetic channel matrix with concentrated heavy-tailed outlier columns."""
-        n_rows = int(rows if rows is not None else self._synthetic_cfg["synthetic_rows"])
-        n_cols = int(cols if cols is not None else self._synthetic_cfg["synthetic_cols"])
+        """Deterministic made-up channel matrix with concentrated heavy-tailed outlier columns."""
+        n_rows = int(rows if rows is not None else self._made_up_cfg["made_up_rows"])
+        n_cols = int(cols if cols is not None else self._made_up_cfg["made_up_cols"])
         n_outliers = int(
-            outlier_channels if outlier_channels is not None else self._synthetic_cfg["synthetic_outlier_channels"]
+            outlier_channels if outlier_channels is not None else self._made_up_cfg["made_up_outlier_channels"]
         )
-        scale = float(outlier_scale if outlier_scale is not None else self._synthetic_cfg["synthetic_outlier_scale"])
-        gen_seed = int(seed if seed is not None else self._synthetic_cfg["synthetic_seed"])
+        scale = float(outlier_scale if outlier_scale is not None else self._made_up_cfg["made_up_outlier_scale"])
+        gen_seed = int(seed if seed is not None else self._made_up_cfg["made_up_seed"])
         mod = self._unit_modulus
 
         matrix: list[list[float]] = []

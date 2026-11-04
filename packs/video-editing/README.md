@@ -21,8 +21,8 @@ version with a revision note; a person watches and locks the cut. Nothing here r
 | Reframing, conform and export rules | Per-shot crops with text at full size; resolved events, totals and delivery profiles with budgets |
 | Templates | Edit list, pacing report, mix plan, colour report, reframe plan, export spec, conform record, revision note, lock record |
 | Edit checks | Seven checks on an edit summary, with one good and seven bad summaries the validator recomputes |
-| Checklist, sources, test cases | What a person checks before locking; 5 dated public sources; 7 synthetic cases |
-| Worked examples | Synthetic: a 30-second edit list, its pacing report, a mix plan, two export profiles and a revision note |
+| Checklist, sources, test cases | What a person checks before locking; 5 dated public sources; 7 made-up cases |
+| Worked examples | Made-up: a 30-second edit list, its pacing report, a mix plan, two export profiles and a revision note |
 
 ## Verbs
 
@@ -53,7 +53,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 - A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
   through Tessera.
-- The worked examples are synthetic; the library's tests recompute only the pacing arithmetic.
+- The worked examples are made-up; the library's tests recompute only the pacing arithmetic.
 - Pacing limits, duck depths and loudness targets are defaults from one production, not standards.
 - The pack plans and checks an edit; it ships no editor or renderer, and a pacing verdict cannot tell
   a deliberate pause from a slack one. A person decides.

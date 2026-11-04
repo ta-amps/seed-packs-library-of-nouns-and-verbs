@@ -2,7 +2,7 @@
 
 Submit a focused change that helps a human or external worker produce one useful,
 verifiable contribution. Start with the [worker lifecycle](docs/lifecycle.md) and
-the [format boundaries](docs/formats.md). Keep examples synthetic and small.
+the [format boundaries](docs/formats.md). Keep examples made-up and small.
 
 An issue or pull request should explain:
 
@@ -10,7 +10,7 @@ An issue or pull request should explain:
 - Which current noun/task/API contract the example uses.
 - Required input versions, capabilities, permissions and output checks.
 - Which checks were actually run, their results, and remaining unknowns.
-- Source and license provenance; any review or publication authority still needed.
+- Source and license source; any review or publication authority still needed.
 
 Do not paste bearer tokens, provider keys, personal information, private prompts,
 raw harness transcripts or unrelated project names. A log is untrusted data and
@@ -45,14 +45,14 @@ A pack may include tested code as nouns, in `packs/<pack>/code/`. The library ne
   code needs and runs its full tests. The root `make check` stays install-free.
 - The code is a tool a worker runs inside a claimed verb. It must not become a service,
   importer, client runtime, scheduler, queue or model caller, and it holds no credentials.
-- State the code's license and provenance, and keep its tests honest: a skipped test is
+- State the code's license and source, and keep its tests honest: a skipped test is
   not a pass, so CI sets the flags that turn missing tools into failures.
 
 ## Changing a seed pack
 
 Edit `packs/<pack>/source.json` or the pack README, never the generated `nouns.json`,
 `verbs.json` or `manifest.json`. Run `python3 scripts/build_packs.py`, then
-`make check-tessera TESSERA_SRC=<path>` with a Tessera checkout's own Python
+`make check-tessera TESSERA_SRC=<path>` with a Teleion Fabric checkout's own Python
 environment, then `make check`. Use only registered categories and the relations each
 category allows; say why in `category_reason` when the fit is not obvious. Name and
 describe a pack in plain English as "a collection of nouns and verbs for ...", and keep
@@ -72,9 +72,9 @@ an input changes, create a new candidate version using CAS and rerun affected
 checks. Retain the prior evidence rather than overwriting its interpretation.
 
 For a domain extension, add descriptive facets and namespaced extension metadata
-inside the value or brief. Do not add arbitrary top-level API fields. A synthetic
+inside the value or brief. Do not add arbitrary top-level API fields. A made-up
 library-hours example could share a date/interval schema with an event schedule
-while retaining different acceptance criteria and provenance. This is authoring
+while retaining different acceptance criteria and source. This is authoring
 guidance, not an implemented industry adapter.
 
 A fork records its original pinned source, license, changed assumptions and new
@@ -98,8 +98,8 @@ it does not imply a mandatory paid server model. A missing reviewer leaves work
 pending, not automatically approved.
 
 Keep unknown measurements as `null` with a reason. Record separately whether an
-observation came from a synthetic fixture, an actual harness, a provider counter
-or independent verification. A receipt proves accepted task output identity;
+observation came from a made-up fixture, an actual harness, a provider counter
+or independent verification. A record proves accepted task output identity;
 it does not prove that the work is correct or publicly admitted.
 
 Open a normal pull request for later changes. Do not force-push main. Keep the

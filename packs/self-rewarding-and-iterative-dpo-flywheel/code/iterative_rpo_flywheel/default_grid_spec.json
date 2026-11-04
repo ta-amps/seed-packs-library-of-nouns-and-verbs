@@ -46,15 +46,15 @@
       "default": 0.05
     },
     {
-      "name": "allow_synthetic_rubric_pairs",
+      "name": "allow_made_up_rubric_pairs",
       "param_type": "boolean",
       "default": true
     }
   ],
   "constraints": [
     {
-      "id": "synthetic-pairs-require-positive-rpo-alpha",
-      "when": { "allow_synthetic_rubric_pairs": true },
+      "id": "made-up-pairs-require-positive-rpo-alpha",
+      "when": { "allow_made_up_rubric_pairs": true },
       "require_in": { "rpo_nll_alpha": [0.5, 1.0, 1.5, 2.0] }
     }
   ],
@@ -65,7 +65,7 @@
       "max_length_ratio": 1.8,
       "min_cohens_kappa": 0.75,
       "max_false_positive_rate": 0.05,
-      "allow_synthetic_rubric_pairs": true
+      "allow_made_up_rubric_pairs": true
     },
     "strict_deterministic_only": {
       "dpo_beta": 0.2,
@@ -73,7 +73,7 @@
       "max_length_ratio": 1.5,
       "min_cohens_kappa": 0.85,
       "max_false_positive_rate": 0.0,
-      "allow_synthetic_rubric_pairs": false
+      "allow_made_up_rubric_pairs": false
     }
   },
   "numerics": {

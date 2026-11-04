@@ -25,15 +25,15 @@ def run_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         matrix = [[float(x) for x in row] for row in bundle["channel_matrix"]]
     else:
         matrix = rotator.generate_heavy_tailed_channel_matrix(
-            rows=int(bundle.get("synthetic_rows", cfg["spinquant"]["synthetic_rows"])),
-            cols=int(bundle.get("synthetic_cols", cfg["spinquant"]["synthetic_cols"])),
+            rows=int(bundle.get("made_up_rows", cfg["spinquant"]["made_up_rows"])),
+            cols=int(bundle.get("made_up_cols", cfg["spinquant"]["made_up_cols"])),
             outlier_channels=int(
-                bundle.get("synthetic_outlier_channels", cfg["spinquant"]["synthetic_outlier_channels"])
+                bundle.get("made_up_outlier_channels", cfg["spinquant"]["made_up_outlier_channels"])
             ),
             outlier_scale=float(
-                bundle.get("synthetic_outlier_scale", cfg["spinquant"]["synthetic_outlier_scale"])
+                bundle.get("made_up_outlier_scale", cfg["spinquant"]["made_up_outlier_scale"])
             ),
-            seed=int(bundle.get("synthetic_seed", cfg["spinquant"]["synthetic_seed"])),
+            seed=int(bundle.get("made_up_seed", cfg["spinquant"]["made_up_seed"])),
         )
     quant_report = rotator.evaluate_quantization(matrix)
 

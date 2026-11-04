@@ -22,7 +22,7 @@ annoyance becomes a finding with who it affects, how to reproduce it, a fix and 
 | Friction tours | Eighteen tours: five for websites, five for command lines, four for videos and four for docs |
 | Annoyance checks | 16 checks on a finding, with 3 good and 16 bad findings the validator recomputes |
 | Templates | Friction session, complaint extract, annoyance log and a person's ranking confirmation |
-| Sources, checklist and test cases | 3 dated public sources; what a person checks; 6 synthetic cases |
+| Sources, checklist and test cases | 3 dated public sources; what a person checks; 6 made-up cases |
 | Worked examples | Four charters, a session, a complaint extract, a ranked log, a confirmation and a finding |
 
 ## Verbs
@@ -45,7 +45,7 @@ A disputed pain rating can go to the [persona panel and second opinion](../perso
 
 ## Worked examples
 
-All synthetic: a volunteer site, its roster command line, its 45-second explainer and its docs.
+All made-up: a volunteer site, its roster command line, its 45-second explainer and its docs.
 Twelve sessions and forty permitted messages give ten annoyances. Signing up takes seven actions
 where three would do, in four of five sessions, at pain 3, so it scores 12, ranks first and is P2; a
 video that never shows where to sign up also scores 12 but rests on two viewers, so it is flagged low
@@ -62,7 +62,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The examples are synthetic; the library's tests recompute their levels, scores and ranks only.
+- The examples are made-up; the library's tests recompute their levels, scores and ranks only.
 - An agent walking a persona's path is not the person; its quotes are a tester's words, and real
   sessions with people need consent and the moderated testing this library does not yet hold.
 - Frequency is only as good as its opportunities; small counts are flagged, not hidden.

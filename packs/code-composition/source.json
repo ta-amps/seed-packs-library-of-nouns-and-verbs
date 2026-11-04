@@ -2589,7 +2589,7 @@
         "sample_inputs": {
           "raw_csv": "case_id,cohort,errors,requests,latency_ms,label\nc01,enterprise,18,100,420,1\nc02,enterprise,1,120,45,0\nc03,growth,22,90,510,1\nc04,growth,2,150,55,0\nc05,enterprise,15,80,390,1\nc06,starter,0,200,38,0\nc07,starter,19,85,460,1\nc08,growth,1,140,49,0\nc09,enterprise,25,95,530,1\nc10,starter,2,180,42,0\nc11,enterprise,12,100,480,1\nc12,growth,0,160,41,0\n"
         },
-        "sample_inputs_synthetic": true,
+        "sample_inputs_made_up": true,
         "sample_inputs_sha256": "b745c14bfdda0a14194ea4af648c74a7fe8516cfb53d175feb9aa09ffdcc0abe",
         "expected_run": {
           "conditions": "The recipe as stored here, its sample inputs, a fresh node database with an empty cache and the equivalence check on.",
@@ -2839,7 +2839,7 @@
         "sample_inputs": {
           "raw_text": "  [INC-101] gateway: Minor cache warm-up completed\n\n  [INC-102] payments: Critical timeout spike during checkout\n  [INC-102] payments: Critical timeout and degraded upstream outage\n  [INC-103] auth: Token refresh healthy\n  [INC-104] storage: Emergency rollback after critical latency timeout\n"
         },
-        "sample_inputs_synthetic": true,
+        "sample_inputs_made_up": true,
         "sample_inputs_sha256": "aa2fa2243389a227989dc2e009aea3d3ae1157f89fb99268927139c494a6f1c5",
         "expected_run": {
           "conditions": "The recipe as stored here, its sample inputs, a fresh node database with an empty cache and the equivalence check on.",
@@ -3199,7 +3199,7 @@
           "ingest_events.raw_csv": "event_id,service,errors,requests,latency_ms\nev1,checkout,1,200,48\nev1,checkout,1,200,48\nev2,checkout,2,210,52\nev3,search,0,300,39\nev4,checkout,28,120,490\nev5,billing,,150,44\nev6,billing,24,100,520\n",
           "ingest_owners.raw_csv": "service,team\ncheckout,commerce-core\nsearch,discovery\nbilling,ledger-ops\n"
         },
-        "sample_inputs_synthetic": true,
+        "sample_inputs_made_up": true,
         "sample_inputs_sha256": "5fcdb686acb449fa8f3376339f1be8ee17f2445e498c45c55657a9b0550cea9d",
         "expected_run": {
           "conditions": "The recipe as stored here, its sample inputs, a fresh node database with an empty cache and the equivalence check on.",
@@ -3677,7 +3677,7 @@
           "additionalProperties": false,
           "required": [
             "inputs",
-            "synthetic",
+            "made-up",
             "contains_personal_data"
           ],
           "properties": {
@@ -3688,7 +3688,7 @@
             "inputs": {
               "type": "object"
             },
-            "synthetic": {
+            "made-up": {
               "type": "boolean"
             },
             "contains_personal_data": {
@@ -3856,7 +3856,7 @@
         },
         "rules": [
           "Values come from the runtime's own receipt, unchanged.",
-          "With the recipe noun's synthetic sample inputs in an empty cache, output_sha256 must equal the recipe noun's expected value.",
+          "With the recipe noun's made-up sample inputs in an empty cache, output_sha256 must equal the recipe noun's expected value.",
           "Terminal outputs can contain input data; keep them in the requester's scope."
         ]
       }
@@ -4623,8 +4623,8 @@
       "slug": "example.prefix-reuse",
       "category": "noun.eval_run",
       "role": "example",
-      "title": "SYNTHETIC worked example: a variant that reuses the 7 unchanged upstream steps",
-      "synthetic": true,
+      "title": "MADE-UP worked example: a variant that reuses the 7 unchanged upstream steps",
+      "made-up": true,
       "value": {
         "conforms_to": {
           "$pin": "template.comparison"
@@ -4677,7 +4677,7 @@
           ],
           "finding": "The variant reused the 7 upstream steps it shares with the baseline and executed only the changed arm and the 4 steps downstream of it."
         },
-        "reading": "Measured with the pinned code and the recipe's synthetic sample inputs, baseline first and variant second in one fresh cache. The inputs are synthetic, so the numbers show reuse, not model quality."
+        "reading": "Measured with the pinned code and the recipe's made-up sample inputs, baseline first and variant second in one fresh cache. The inputs are made-up, so the numbers show reuse, not model quality."
       },
       "relations": [
         [
@@ -4953,7 +4953,7 @@
       "claimant": "agent",
       "model_use": "none",
       "summary": "Execute one pinned recipe with pinned inputs on the verified runtime, with no model calls, and check that the emitted standalone Python gives byte-identical outputs.",
-      "outcome": "A run receipt; with the recipe noun's synthetic sample inputs, its output digest equals the recorded one.",
+      "outcome": "A run receipt; with the recipe noun's made-up sample inputs, its output digest equals the recorded one.",
       "ready_outcome": "run_complete",
       "pinned": [
         "runtime",
@@ -4968,7 +4968,7 @@
         {
           "name": "inputs",
           "category": "noun.benchmark_suite",
-          "description": "Optional pin of entry inputs shaped by template.run-inputs. Without it the run uses the recipe noun's synthetic sample inputs.",
+          "description": "Optional pin of entry inputs shaped by template.run-inputs. Without it the run uses the recipe noun's made-up sample inputs.",
           "required": false
         },
         {

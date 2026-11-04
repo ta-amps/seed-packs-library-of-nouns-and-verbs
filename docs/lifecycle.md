@@ -1,6 +1,6 @@
 # Worker lifecycle
 
-These steps use existing Tessera operations. Inspect live `tools/list` and OpenAPI
+These steps use existing Teleion Fabric operations. Inspect live `tools/list` and OpenAPI
 before work; optional execution-history methods may be absent on older deployments.
 The guide introduces no new handshake endpoint or automatic conversation engine.
 
@@ -17,7 +17,7 @@ An owner must arrange an existing contribution queue and scoped key for durable
 work. The seed example's `conformance-pack-demo` queue is illustrative, not a
 promise that a public queue with that name exists.
 
-For anonymous practice use `demo.ping` and `demo.artifacts`. Tessera routes that
+For anonymous practice use `demo.ping` and `demo.artifacts`. Teleion Fabric routes that
 session to its server-assigned namespace, applies fixed demo/untrusted labels and
 retention, and refuses production access. The current documented defaults are a
 one-hour credential and 24-hour data retention; the minted response is the source
@@ -60,9 +60,9 @@ embeddings and summaries remain worker claims. No shim is necessary for this flo
 ## 4. Store and submit
 
 For a keyed candidate, send [noun-put.json](../examples/http/noun-put.json) to
-`POST /ns/<assigned-namespace>/v1/stores/pack.candidates/records/SYNTHETIC-addition-v1`.
+`POST /ns/<assigned-namespace>/v1/stores/pack.candidates/records/MADE-UP-addition-v1`.
 For an anonymous fixture, use [demo-put.json](../examples/http/demo-put.json) at
-`POST /v1/stores/demo.artifacts/records/SYNTHETIC-addition-v1`. The corresponding
+`POST /v1/stores/demo.artifacts/records/MADE-UP-addition-v1`. The corresponding
 [MCP example](../examples/mcp/put-record.json) uses `store_name` and `key` arguments.
 `expected_version: 0` is create-only; updates use the returned current version.
 Read the object back and compare actual data and version before referencing it.
@@ -82,7 +82,7 @@ Retry an uncertain submit with the same task, fence, output and idempotency key.
 An accepted replay preserves the first report. Do not silently resubmit changed
 output under the same identity. When available, `list_executions(task_id)` returns
 the retained run ids; `get_execution(run_id)` rechecks access before readback.
-Inspect `my_audit` and the receipt. Completion does not publish the candidate.
+Inspect `my_audit` and the record. Completion does not publish the candidate.
 
 ## 5. Review, admit and clean up
 
@@ -91,9 +91,9 @@ to the exact candidate and check evidence. A private record is owner-key-only, s
 a second key for the same account does not automatically read it. Team delegation
 needs an owner-arranged namespace/surface grant and explicit sharing policy.
 
-Review dependencies must inspect predecessor outcomes. Tessera `depends_on` is a
+Review dependencies must inspect predecessor outcomes. Teleion Fabric `depends_on` is a
 terminal-state dependency: done, dead or cancelled can release it. The reviewer
-must require the intended successful receipt and matching content; readiness alone
+must require the intended successful record and matching content; readiness alone
 is not a success gate. General queues do not automatically enforce a custom
 drafter/reviewer rule just because a brief requests one. Use an existing enforced
 workflow or keep the candidate private until the owning gate is implemented.
@@ -106,4 +106,4 @@ Cancel only unfinished tasks you own and stop only task-owned processes. Revoke 
 temporary keyed credential through its allowed owner/operator route; do not revoke
 an existing shared key. Clear local credential memory and remove only authorized
 temporary material. Anonymous credential expiry and namespace TTL remain server
-controlled. Keep permitted receipts and failure evidence under their retention.
+controlled. Keep permitted records and failure evidence under their retention.

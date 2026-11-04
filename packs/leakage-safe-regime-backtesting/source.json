@@ -2,14 +2,14 @@
   "pack_id": "leakage-safe-regime-backtesting",
   "title": "Leakage-safe regime backtesting",
   "version": "0.1.0",
-  "summary": "A collection of nouns and verbs for synthetic and historical statistical validation hygiene using purged and embargoed expanding-window walk-forward splits, volatility-regime Rank IC and ICIR, turnover cost accounting and multiple-testing deflation, strictly never as financial, investment or trading advice.",
+  "summary": "A collection of nouns and verbs for made-up and historical statistical validation hygiene using purged and embargoed expanding-window walk-forward splits, volatility-regime Rank IC and ICIR, turnover cost accounting and multiple-testing deflation, strictly never as financial, investment or trading advice.",
   "dependencies": [
     "checked-data-analysis",
     "evaluation-design",
     "measured-claims"
   ],
   "boundaries": [
-    "Strictly statistical validation hygiene on synthetic or historical panel series: never financial, investment or trading advice.",
+    "Strictly statistical validation hygiene on made-up or historical panel series: never financial, investment or trading advice.",
     "No orders, trades, position recommendations or brokerage connections exist anywhere in this pack.",
     "Training folds must purge forward-label horizon overlaps before test windows and enforce embargo buffers.",
     "Importing the pack writes nothing, enqueues nothing and installs no code."
@@ -57,7 +57,7 @@
         "tool": {
           "$pin": "tool.regime-backtest"
         },
-        "worked_example": "Synthetic 4-unit fictional panel (SERIES_A.X..SERIES_D.X) recomputed in test_regime_backtest.py: verifies 3 leakage-free purged walk-forward folds, stratifies Rank IC across low/mid/high volatility regimes, accounts for 10 bps turnover drag and evaluates 12-trial Deflated Sharpe probability."
+        "worked_example": "Made-up 4-unit fictional panel (SERIES_A.X..SERIES_D.X) recomputed in test_regime_backtest.py: verifies 3 leakage-free purged walk-forward folds, stratifies Rank IC across low/mid/high volatility regimes, accounts for 10 bps turnover drag and evaluates 12-trial Deflated Sharpe probability."
       },
       "relations": [
         [
@@ -97,7 +97,7 @@
       "title": "Guardrail: strictly statistical validation hygiene, never financial or trading advice",
       "category_reason": "Establishes the non-advisory statistical hygiene boundary across every task and artifact.",
       "value": {
-        "rule": "Outputs measure statistical out-of-sample hygiene on synthetic or historical panels only; no task recommends securities, sizes live capital, or connects to any broker or exchange.",
+        "rule": "Outputs measure statistical out-of-sample hygiene on made-up or historical panels only; no task recommends securities, sizes live capital, or connects to any broker or exchange.",
         "how_it_is_checked": "Pack boundaries, schema fields and CLI help enforce diagnostic-only statistical hygiene outputs."
       }
     },
@@ -284,14 +284,14 @@
       }
     },
     {
-      "slug": "example.synthetic-panel",
+      "slug": "example.made-up-panel",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
-      "title": "Worked example input: synthetic 4-series fictional panel (SERIES_A.X..SERIES_D.X) for hygiene checks",
-      "category_reason": "Purely synthetic statistical fixture recomputed by test_regime_backtest.py.",
+      "made-up": true,
+      "title": "Worked example input: made-up 4-series fictional panel (SERIES_A.X..SERIES_D.X) for hygiene checks",
+      "category_reason": "Purely made-up statistical fixture recomputed by test_regime_backtest.py.",
       "value": {
-        "synthetic_series_ids": [
+        "made_up_series_ids": [
           "SERIES_A.X",
           "SERIES_B.X",
           "SERIES_C.X",
@@ -571,7 +571,7 @@
       "slug": "example.validation-receipt",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed non-advisory statistical validation hygiene receipt",
       "category_reason": "Deterministic output conforming to template.validation-receipt.",
       "value": {
@@ -597,7 +597,7 @@
       "relations": [
         [
           "derives_from",
-          "example.synthetic-panel"
+          "example.made-up-panel"
         ],
         [
           "verifies",
@@ -652,7 +652,7 @@
       "title": "Compute regime-stratified Rank IC/ICIR and turnover cost drag",
       "claimant": "agent",
       "model_use": "none",
-      "summary": "Evaluate tie-aware Spearman Rank IC and ICIR across causal low, mid and high volatility regimes and deduct linear L1 turnover drag from synthetic periodic scores.",
+      "summary": "Evaluate tie-aware Spearman Rank IC and ICIR across causal low, mid and high volatility regimes and deduct linear L1 turnover drag from made-up periodic scores.",
       "outcome": "Regime-stratified Rank IC/ICIR table and net-of-turnover periodic series.",
       "ready_outcome": "regime_ic_and_costs_scored",
       "pinned": [

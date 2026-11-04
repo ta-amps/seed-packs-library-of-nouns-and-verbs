@@ -14,7 +14,7 @@ with earlier ones.
 | --- | --- |
 | Method | When two scores are comparable, and who reported each |
 | Staleness policy | Max ages per reporter, version changes, contradiction by our own run, missing setup |
-| Worked example | Synthetic: six scores and their flags, which the validator recomputes |
+| Worked example | Made-up: six scores and their flags, which the validator recomputes |
 | Templates | Score, benchmark, watch list, comparison and staleness report |
 | Daily refresh | A proposal: refresh and flag daily at 06:00 UTC; not activated |
 

@@ -82,7 +82,7 @@ RUNTIME_DIMENSION_BASIS = {
 }
 RECIPE_DIMENSION_BASIS = {
     "determinism": "1 when two compilations of this recipe produced the same plan digest during export.",
-    "evidence_grounding": "Fraction of required graph entry inputs supplied by the bundled synthetic sample inputs.",
+    "evidence_grounding": "Fraction of required graph entry inputs supplied by the bundled made-up sample inputs.",
     "token_efficiency": "1 - recipe JSON length / emitted standalone Python length.",
     "safety_compliance": "Fraction of recipe steps whose nodes passed the governance lens at compile time.",
 }
@@ -355,7 +355,7 @@ def _compile_recipes(
     compiled: list[_CompiledRecipe] = []
     for path, recipe in sorted(authored, key=lambda item: item[1].recipe_id):
         if not has_sample_inputs(recipe.recipe_id):
-            raise SeedPackError(f"Recipe {recipe.recipe_id!r} has no synthetic sample inputs.")
+            raise SeedPackError(f"Recipe {recipe.recipe_id!r} has no made-up sample inputs.")
         document: dict[str, Any] = canonical_value(recipe.model_dump(mode="json"))
         # Compile exactly the normalized JSON that a worker reads back from the recipe noun.
         plan = compiler.compile(RecipeSpec.model_validate(document))
@@ -435,7 +435,7 @@ def _recipe_payload(
         "title": item.document["title"],
         "recipe": item.document,
         "sample_inputs": inputs,
-        "sample_inputs_synthetic": True,
+        "sample_inputs_made_up": True,
         "local_checks": {
             "compiled_plan_sha256": item.plan.plan_sha256,
             "compile_replay_identical": item.replay_identical,
@@ -475,7 +475,7 @@ def _task_brief(
         "category_id": "verb.compile_dag",
         "project": "code-composition",
         "stage": "compile_execute_verify",
-        "outcome": "Compile and execute the pinned recipe with its synthetic sample inputs; retain outputs and Python equivalence evidence.",
+        "outcome": "Compile and execute the pinned recipe with its made-up sample inputs; retain outputs and Python equivalence evidence.",
         "recipe_ref": recipe_ref,
         "runtime_ref": runtime_ref,
         "input_refs": [recipe_ref, runtime_ref, *node_refs],
@@ -490,7 +490,7 @@ def _task_brief(
                 "Require the local compiler/runtime module SHA-256 values to equal the runtime_ref noun's pins.",
                 "Use only local verified PrewrittenNodes identical to the pinned tool nouns and rerun their built-in tests; never execute source code copied from a noun.",
                 "Recompile the pinned recipe and require its local_checks.compiled_plan_sha256 before executing.",
-                "Execute with the bundled synthetic sample inputs and verify emitted Python equivalence.",
+                "Execute with the bundled made-up sample inputs and verify emitted Python equivalence.",
                 "Keep outputs private; submit exact output noun references and the execution receipt.",
             ],
             "preferred": [

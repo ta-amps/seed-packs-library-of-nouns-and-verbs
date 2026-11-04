@@ -14,7 +14,7 @@ as met, missed or unknown. A missed mark stays missed.
 | --- | --- |
 | Method | The seven steps and the rules: opaque case ids, errors count as wrong, nulls stay null, unstable arms flagged |
 | Exact-match scoring | A deterministic, zero-call scoring procedure |
-| Worked example | Synthetic: 8 cases, two arms, two runs each and five pass marks, including an error counted as a miss, a missed mark and an unknown cost |
+| Worked example | Made-up: 8 cases, two arms, two runs each and five pass marks, including an error counted as a miss, a missed mark and an unknown cost |
 | Templates | Evaluation plan, arm, frozen-set manifest, pass marks, run record and evaluation report |
 
 ## Verbs

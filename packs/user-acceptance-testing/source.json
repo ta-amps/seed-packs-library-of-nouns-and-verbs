@@ -2,14 +2,14 @@
   "pack_id": "user-acceptance-testing",
   "title": "User acceptance testing",
   "version": "0.1.0",
-  "summary": "A collection of nouns and verbs for user acceptance testing: synthetic personas with goals, acceptance criteria a person agrees to before any test, scenario scripts, observed results recorded as they happen, every defect proposed as a finding, and a person's go or no-go kept as a noun.",
+  "summary": "A collection of nouns and verbs for user acceptance testing: made-up personas with goals, acceptance criteria a person agrees to before any test, scenario scripts, observed results recorded as they happen, every defect proposed as a finding, and a person's go or no-go kept as a noun.",
   "dependencies": [
     "accessibility-audit",
     "findings-to-fixes"
   ],
   "boundaries": [
     "A person agrees to the criteria before testing and signs off after it; an agent never records go or no-go.",
-    "Runs use synthetic data and read-only steps; a step that would submit, pay or create an account runs only on a test target a person named.",
+    "Runs use made-up data and read-only steps; a step that would submit, pay or create an account runs only on a test target a person named.",
     "Failed, blocked and not-run steps stay on the record; a rerun is a new session.",
     "Workers create nouns and propose verbs; an authorized requester enqueues the proposals worth doing.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -71,7 +71,7 @@
           "Record what was observed, as it happened. Never edit a result to match the expected one.",
           "Every failed or blocked step becomes a proposed finding with its evidence.",
           "Only a person signs off. A recommendation from the results is advice, not the decision.",
-          "Synthetic test data only. No real names, contact details or case details, ever."
+          "Made-up test data only. No real names, contact details or case details, ever."
         ],
         "worked_examples": [
           {
@@ -198,7 +198,7 @@
           "Write goals and situations, not demographics or stereotypes.",
           "Include at least one persona who uses only a keyboard or a screen reader, and one on a small screen, unless the brief says why not.",
           "Personas are assumptions. Each says what evidence would confirm or contradict it, and later evidence can replace it.",
-          "Synthetic only: a role label, never a real person's name, story, photo or contact details."
+          "Made-up only: a role label, never a real person's name, story, photo or contact details."
         ],
         "good_label_examples": [
           "Volunteer coordinator on a phone between shifts",
@@ -236,14 +236,14 @@
       "slug": "test-data-rules",
       "category": "noun.reflex_procedure",
       "role": "test_data_rules",
-      "title": "Synthetic test data for acceptance testing",
+      "title": "Made-up test data for acceptance testing",
       "category_reason": "A zero-call rule for which data a test may use.",
       "value": {
         "use": [
           "Names that are role labels or plainly invented, such as Test Volunteer A.",
           "Email addresses only at reserved example domains (example.com, example.org, example.net), and only on a test target.",
           "Phone numbers only from reserved fictional ranges, and only on a test target.",
-          "Organization names marked synthetic."
+          "Organization names marked made-up."
         ],
         "never": [
           "Real people's names, stories, contact details, case notes or photos.",
@@ -315,11 +315,11 @@
       "slug": "signoff-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for sign-offs, with synthetic golden sign-offs",
-      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes them.",
+      "title": "Record checks for sign-offs, with made-up golden sign-offs",
+      "category_reason": "Deterministic checks with made-up known-good and known-bad records; the validator recomputes them.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every sign-off must pass before anyone relies on its decision. The three synthetic good sign-offs (a no-go, a conditional go and a clean go) pass all of them; each synthetic bad sign-off fails exactly the one check named in fails.",
+        "purpose": "Checks every sign-off must pass before anyone relies on its decision. The three made-up good sign-offs (a no-go, a conditional go and a clean go) pass all of them; each made-up bad sign-off fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "decision-known",
@@ -684,7 +684,7 @@
           {
             "id": "good-no-go",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "signoff_id": "SO-12",
               "results_summary_ref": {
@@ -717,7 +717,7 @@
           {
             "id": "good-conditional-go",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "signoff_id": "SO-13",
               "results_summary_ref": {
@@ -760,7 +760,7 @@
           {
             "id": "good-clean-go",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "signoff_id": "SO-14",
               "results_summary_ref": {
@@ -1385,17 +1385,17 @@
       "slug": "template.persona",
       "category": "noun.seed_hypothesis",
       "role": "template",
-      "title": "Template: a synthetic persona with a goal, context, access needs and what success means",
+      "title": "Template: a made-up persona with a goal, context, access needs and what success means",
       "category_reason": "A persona is an assumption about users that later evidence can confirm or contradict.",
       "value": {
-        "describes": "a synthetic persona with a goal, context, access needs and what success means",
+        "describes": "a made-up persona with a goal, context, access needs and what success means",
         "schema": {
           "type": "object",
           "additionalProperties": false,
           "required": [
             "persona_id",
             "label",
-            "synthetic",
+            "made-up",
             "goal",
             "context",
             "device",
@@ -1420,7 +1420,7 @@
               "minLength": 1,
               "maxLength": 80
             },
-            "synthetic": {
+            "made-up": {
               "const": true
             },
             "goal": {
@@ -1531,7 +1531,7 @@
           }
         },
         "rules": [
-          "synthetic is always true.",
+          "made-up is always true.",
           "label is a role, never a real name.",
           "assumption_evidence says what would confirm or contradict the persona."
         ]
@@ -2613,8 +2613,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a keyboard-only volunteer persona",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.persona"
@@ -2622,7 +2622,7 @@
         "instance": {
           "persona_id": "P-2",
           "label": "Retired volunteer who uses only a keyboard",
-          "synthetic": true,
+          "made-up": true,
           "goal": "Pick a Saturday morning shift at the pantry without phoning anyone.",
           "context": "Volunteers twice a month. Uses a laptop at home with a screen magnifier, and never uses a mouse because of a hand tremor.",
           "device": "laptop",
@@ -2650,7 +2650,7 @@
           "assumption_evidence": "Confirmed if volunteer coordinators report keyboard-only volunteers; contradicted if none sign up this way in a season."
         },
         "shows": "A persona built from a goal and real constraints, with an access need that changes what the site must do.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -2658,15 +2658,15 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: acceptance criteria for picking a shift",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.acceptance-criteria"
         },
         "instance": {
           "criteria_set_id": "AC-SET-7",
-          "subject": "Picking a volunteer shift on the synthetic pantry site",
+          "subject": "Picking a volunteer shift on the made-up pantry site",
           "version_note": "Version 2, after the program manager split AC-3 in two.",
           "criteria": [
             {
@@ -2723,7 +2723,7 @@
           ]
         },
         "shows": "Testable criteria with priorities, personas, WCAG citations for the accessibility one and a stated time threshold.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -2731,8 +2731,8 @@
       "category": "noun.benchmark_suite",
       "role": "example",
       "title": "Worked example: a keyboard-only scenario script",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.scenario-script"
@@ -2784,12 +2784,12 @@
             }
           ],
           "test_data": [
-            "Volunteer name: Test Volunteer B (synthetic)"
+            "Volunteer name: Test Volunteer B (made-up)"
           ],
           "time_limit_minutes": 15
         },
         "shows": "A script whose steps name the criteria they check and mark the submitting step as needing a test target.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -2797,8 +2797,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a session with a failed step, a not-run step and the finding proposed",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.session-record"
@@ -2866,7 +2866,7 @@
           "not_run": 1
         },
         "shows": "Results recorded as observed, with a digest and region for the failure, a reason for the step not run, and the finding id the run proposed.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -2874,8 +2874,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: verdicts and a no-go recommendation",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.results-summary"
@@ -2951,7 +2951,7 @@
           "recommendation_reason": "Must criterion AC-3 is not met and P1 finding UAT-F-2 is open."
         },
         "shows": "Verdicts derived by the rules, an excluded session with its reason and a recommendation that is advice only.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -2959,8 +2959,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a person's no-go",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.sign-off"
@@ -2994,7 +2994,7 @@
           "next_step": "Fix UAT-F-2, rerun the keyboard-only script on the fixed build, and bring the new summary back."
         },
         "shows": "The decision is a person's, pinned to the exact summary and criteria, with reasons and a next step.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     }
   ],
@@ -3004,7 +3004,7 @@
       "kind": "verb.solve_draft",
       "title": "Draft personas",
       "claimant": "agent",
-      "summary": "Write two to five synthetic personas for the surface or change under test: each with one goal, context, device, access needs and what success means.",
+      "summary": "Write two to five made-up personas for the surface or change under test: each with one goal, context, device, access needs and what success means.",
       "outcome": "Persona nouns, each an assumption with the evidence that would test it.",
       "ready_outcome": "personas_drafted",
       "pinned": [
@@ -3040,7 +3040,7 @@
       "steps": [
         "Read the brief and write two to five personas with the fields the persona guide names.",
         "Include at least one persona who uses only a keyboard or a screen reader and one on a small screen, unless the brief says why not.",
-        "Keep every persona synthetic: a role label, never a real person's name, story or contact details.",
+        "Keep every persona made-up: a role label, never a real person's name, story or contact details.",
         "Say for each persona what evidence would confirm or contradict it."
       ],
       "acceptance": [
@@ -3060,7 +3060,7 @@
           "method": "deterministic"
         },
         {
-          "id": "synthetic-only",
+          "id": "made-up-only",
           "check": "No persona holds an email address or phone number.",
           "method": "deterministic"
         },
@@ -3259,7 +3259,7 @@
       "steps": [
         "Write one script per persona and task: preconditions, then numbered steps, each an action and the expected observation, naming the criteria it checks.",
         "Cover every must criterion with at least one step, and note where a keyboard-only or screen-reader persona acts differently.",
-        "Use only synthetic data from the test-data rules.",
+        "Use only made-up data from the test-data rules.",
         "Set needs_test_target on every step that would submit, pay or create an account, so a run without a named test target records it as not run."
       ],
       "acceptance": [

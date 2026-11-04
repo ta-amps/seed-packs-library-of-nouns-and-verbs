@@ -21,8 +21,8 @@ measurement, a fix and a regression guard. Tested code does the aging and the ex
 | Tool card | The TODO ager and the swallowed-exception finder in [code/](code/README.md), pinned by digest |
 | Health checks | 9 checks on a finding, with 3 good and 9 bad findings the validator recomputes |
 | Templates | Health plan, area result and health report |
-| Sources and test cases | 5 dated public sources; 6 synthetic cases |
-| Worked examples | A synthetic repository's dated history, its plan, two scans the code computes, a report and a finding |
+| Sources and test cases | 5 dated public sources; 6 made-up cases |
+| Worked examples | A made-up repository's dated history, its plan, two scans the code computes, a report and a finding |
 
 ## Verbs
 
@@ -47,7 +47,7 @@ to [freshness checks](../freshness-checks/README.md), documentation examples to
 
 ## Worked examples
 
-All synthetic: a small roster repository built in four commits dated from 2024-06-03 to 2026-10-26.
+All made-up: a small roster repository built in four commits dated from 2024-06-03 to 2026-10-26.
 As of 2026-10-30 the ager finds 6 markers: 2 ancient, 1 aging and 3 fresh, while a TODO
 inside a string is not one. The finder lists 2 swallowed handlers, a broad suppress, a logged-only
 and a fallback handler and a narrow ignore, and leaves a re-raise alone. The code's tests rebuild

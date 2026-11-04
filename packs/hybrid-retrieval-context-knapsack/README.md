@@ -6,7 +6,7 @@ A collection of nouns and verbs for fusing Okapi BM25 and dense cosine rankings 
 Fusion (`k=60`), stripping untrusted prompt-injection directives, pruning MinHash near-duplicates and
 packing context into a strict token budget via 0/1 dynamic-programming knapsack. In plain language,
 nouns are **task objects** (fusion and knapsack specs, sanitization rules, pinned standard-library
-code, schemas and synthetic worked examples) and verbs are **tasks** a worker claims. Instead of
+code, schemas and made-up worked examples) and verbs are **tasks** a worker claims. Instead of
 blindly concatenating top-k retrieved passages until the prompt overflows or repeats itself, workers
 fuse lexical and dense signals, redact untrusted directives, drop near-duplicate shingles and solve
 an exact token-budget knapsack with overlap penalties.
@@ -20,7 +20,7 @@ an exact token-budget knapsack with overlap penalties.
 | `rules.sanitization-and-minhash` | Zero-call untrusted directive redaction rules and universal-hash MinHash near-duplicate filter |
 | `tool.context-knapsack` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.packed-context` | JSON Schema for a ranked, sanitized and budget-packed context receipt |
-| Worked example | Synthetic 5-chunk candidate set (`example.retrieval-candidates`) and recomputed packed receipt (`example.packed-context`) |
+| Worked example | Made-up 5-chunk candidate set (`example.retrieval-candidates`) and recomputed packed receipt (`example.packed-context`) |
 
 ## Verbs
 
@@ -41,4 +41,4 @@ fusion, MinHash deduplication, prompt-injection stripping and exact 0/1 knapsack
   activated, and no worker has claimed or run these tasks through Tessera.
 - Heuristic directive stripping is one defense layer and never replaces strict tool-permission
   boundaries or capability sandboxing.
-- The worked example in `source.json` is synthetic.
+- The worked example in `source.json` is made-up.

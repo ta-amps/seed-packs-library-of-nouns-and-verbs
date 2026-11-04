@@ -17,8 +17,8 @@ Number a new public rule's sections and clauses as the official text does, pull 
 | File: Clause Citation Log | One row per point in the brief: the sentence, the clause it cites, the quoted words and whether they match the official text. |
 | Checklist | 4 checks a person runs with the kit |
 | Sources | 3 dated public sources |
-| Test cases | 3 synthetic cases; 1 must go to a person |
-| Need, in its own words | One or two plain sentences an organization might say about this work, marked synthetic |
+| Test cases | 3 made-up cases; 1 must go to a person |
+| Need, in its own words | One or two plain sentences an organization might say about this work, marked made-up |
 | Templates | an index of a rule's clauses, dates, definitions and duties, a plain-language rule brief with a citation for every point, a citation check of a brief against the official text, and a person's step record |
 
 ## Verbs
@@ -47,6 +47,6 @@ their value digests, so the kit has one source.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The test cases are synthetic. Passing them shows the kit's shape, not that it helps a real organization.
+- The test cases are made-up. Passing them shows the kit's shape, not that it helps a real organization.
 - The tool cards describe read-only tools; this pack ships no tool code.
 - Sources were checked on 2026-10-30. Recheck them before relying on them.

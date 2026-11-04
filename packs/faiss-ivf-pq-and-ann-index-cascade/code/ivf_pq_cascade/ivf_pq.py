@@ -30,7 +30,7 @@ def generate_clustered_corpus(
 ) -> dict[str, Any]:
     """Generate a deterministic clustered vector dataset and noisy cluster-sampled queries."""
     cfg = grid_spec if grid_spec is not None else load_default_grid_spec()
-    defaults = dict(cfg["synthetic_corpus_defaults"])
+    defaults = dict(cfg["made_up_corpus_defaults"])
     if corpus_spec is not None:
         defaults.update(corpus_spec)
 

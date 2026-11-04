@@ -9,25 +9,25 @@ The [reference meta-pack](../examples/meta/self-improvement.reference.json) is a
 authoring contract only. It creates no active pack, importer, evaluator service or
 background loop. Proposed packs live in the [packs/](../packs/README.md) library as
 validated examples; installing or activating them waits until the owning
-infrastructure and contributor path are ready. Existing Tessera nouns and verbs carry any authorized
+infrastructure and contributor path are ready. Existing Teleion Fabric nouns and verbs carry any authorized
 work; ordinary task reasoning happens in workers.
 
 ## One bounded improvement cycle
 
 | Stage | Worker outcome and evidence |
 | --- | --- |
-| Observe | Read permitted execution runs and pinned artifacts. Separate accepted receipts from self-reported claims and independent checks. |
+| Observe | Read permitted execution runs and pinned artifacts. Separate accepted records from self-reported claims and independent checks. |
 | Identify | State one recurring capability gap, its affected tasks and a falsifiable hypothesis. Check whether an existing permitted method addresses it. |
-| Propose | Draft one small versioned prompt, shim rule, category definition, procedure, code change or test change. Preserve source and license provenance. |
+| Propose | Draft one small versioned prompt, shim rule, category definition, procedure, code change or test change. Preserve source and license source. |
 | Evaluate | Run the fixed baseline and candidate on authorized development, holdout and adversarial cases with the same declared conditions and allowance. |
 | Compare | Report paired outcomes, failures, applicable sample counts, observed cost and latency, plus unknowns and confounders. |
 | Review | Request a capable independent reviewer when the owning policy requires it. Do not add a paid server reviewer to every iteration. |
-| Promote | An authorized actor uses the owning CAS/admission contract to advance an accepted version or activation pointer. A receipt alone cannot promote it. |
+| Promote | An authorized actor uses the owning CAS/admission contract to advance an accepted version or activation pointer. A record alone cannot promote it. |
 | Monitor | Observe the agreed regression signals and stop conditions. Roll back through an authorized versioned pointer change if the owning implementation supports it. |
 
 Each agentic outcome may be a bounded verb. Deterministic validation, arithmetic,
 authentication, storage and lease maintenance stay ordinary operations. Keep the
-candidate, source observations, evaluation contract and check receipts as distinct
+candidate, source observations, evaluation contract and check records as distinct
 versioned nouns. These names describe a workflow; they do not register new APIs.
 
 An explicitly configured shim may use an LLM routinely for interpretation or

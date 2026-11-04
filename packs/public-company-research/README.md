@@ -21,8 +21,8 @@ order. Reviews and delivery records reuse the [policy and law watch pack](../pol
 | Catalyst rules | Only dated events from official sources; filing deadlines by filer status; no rumors or price levels |
 | Templates | Research request, filing index, metric table, comparison, risk factor summary, catalyst calendar, cited brief, brief review |
 | Brief checks | Six checks on a brief, with one good and six bad briefs the validator recomputes |
-| Checklist, sources, test cases | What a person checks before delivery; 7 dated SEC sources; 9 synthetic cases |
-| Worked example | Synthetic: a fictional retailer and a peer, a derived fourth quarter, a restatement, risk factor changes, two dates due by rule and a cited brief |
+| Checklist, sources, test cases | What a person checks before delivery; 7 dated SEC sources; 9 made-up cases |
+| Worked example | Made-up: a fictional retailer and a peer, a derived fourth quarter, a restatement, risk factor changes, two dates due by rule and a cited brief |
 
 ## Verbs
 
@@ -52,7 +52,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
 - Not financial advice. Briefs describe what filings say; any decision about money stays with a person.
-- The worked example is synthetic: its companies and identifiers are made up and start with X so they
+- The worked example is made-up: its companies and identifiers are made up and start with X so they
   never match a real filer. The library's tests recompute its arithmetic and dates, not real filings.
 - The SEC's limits and endpoints can change. It may answer with a rate-limit page even at low rates,
   for example from a shared address; the rules say to stop and back off, never to rotate addresses.

@@ -19,7 +19,7 @@ a handoff whenever a session stops, and resume from a handoff by rechecking it.
 | Evidence rules | Which evidence supports which claim, such as a check run on the exact head, and when it goes stale |
 | Ranking rules | Deadline risk, then what unblocks most, then staleness, then size; at most three items for the person |
 | Resume playbook | Resuming after a usage limit, a context limit, a crash or a reassignment |
-| Status checks | 10 deterministic checks with 2 synthetic good and 10 synthetic bad status reports, rechecked by `make check` |
+| Status checks | 10 deterministic checks with 2 made-up good and 10 made-up bad status reports, rechecked by `make check` |
 | Templates | Snapshot, status report, claim check, next steps, handoff and resume check |
 | Worked examples | A status with every level and a handoff written when a usage limit stopped a session |
 
@@ -42,7 +42,7 @@ instead of enqueueing them. A contradicted claim or a stop without a handoff goe
 
 ## Worked examples
 
-All synthetic. A status for a small catalog site leads with "2 verified, 1 reported but not
+All made-up. A status for a small catalog site leads with "2 verified, 1 reported but not
 rechecked, 1 in progress, 1 blocked, 1 failed, 1 unknown"; the failed draft keeps its log, and
 the blocked backup carries one question about a credential. The handoff names what the next
 session owns, what belongs to another agent and the first check before any edit.

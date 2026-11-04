@@ -116,7 +116,7 @@
             "$pin": "guardrail.no-padding"
           }
         ],
-        "worked_example": "Synthetic: a 30-second explainer for a fictional tool library as an edit decision list of six shots with a J cut, an L cut, a b-roll insert, a dissolve and a punch-in; its pacing report flags a dense, unreadable shot and a rushed one, and a revision note answers three findings without overwriting the first version.",
+        "worked_example": "Made-up: a 30-second explainer for a fictional tool library as an edit decision list of six shots with a J cut, an L cut, a b-roll insert, a dissolve and a punch-in; its pacing report flags a dense, unreadable shot and a rushed one, and a revision note answers three findings without overwriting the first version.",
         "complements": "The narrated explainer video pack lays out one frame clock and composes cuts; the video and motion pack renders them. This pack adds the editorial layer between: the edit decision list, pacing against the words, audio and colour plans, reframes and the export spec.",
         "provenance_notes": [
           "Generalizes the editing rules of a working short-form video studio: a hook in the first 1.5 s, a beat every 1.5 to 3 s, length from beats rather than freezes or loops, no ghost dissolves, one bed under a joined piece, music 12 to 16 dB under the voice, every revision recording the issue seen and the change made, and fixes made in the template rather than on a frame.",
@@ -311,7 +311,7 @@
           "Hold an insert at least 1.5 s, or longer than the reading time of any text in it.",
           "Frame a screen capture so the element the line names fills enough of the frame to read; a whole page shown small is texture, not evidence.",
           "Never cover a person speaking their own words with an insert unless the insert is the point.",
-          "Label generated or synthetic inserts where they appear.",
+          "Label generated or made-up inserts where they appear.",
           "Each insert names its source noun, its licence and its digest."
         ],
         "model_calls": 0
@@ -388,7 +388,7 @@
           "Text keeps its size in the new aspect: re-render text layers rather than scaling baked-in text down.",
           "Text and labels stay inside the target aspect's safe canvas and clear of its keep-out boxes.",
           "A wider or taller crop can reveal what the original hid; look at every reframed shot on its own.",
-          "Labels for AI voice and synthetic data survive every reframe."
+          "Labels for AI voice and made-up data survive every reframe."
         ],
         "aspects": {
           "$pin": "video-motion:rules.aspects"
@@ -2096,7 +2096,7 @@
           "template.edit-list"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "checklist",
@@ -2110,7 +2110,7 @@
           "Every shot supports its words, and nothing shows a payoff or a number before the voice reaches it.",
           "No text sits past the frame edge, under a label or inside a dissolve.",
           "Every flagged shot in the pacing report is fixed or accepted with a reason in your own words.",
-          "Labels for AI voice and synthetic data are on screen wherever they apply, in every aspect.",
+          "Labels for AI voice and made-up data are on screen wherever they apply, in every aspect.",
           "Each revision note says what was seen and what changed; earlier versions are still there."
         ]
       }
@@ -2160,13 +2160,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for editing",
+      "title": "Made-up test cases for editing",
       "value": {
         "cases": [
           {
             "id": "VE-RUSHED",
             "scenario": "A 3-second shot carries an 18-word line",
-            "sample_input": "SYNTHETIC: shot E5 is 90 frames at 30 fps and carries line l5.",
+            "sample_input": "MADE-UP: shot E5 is 90 frames at 30 fps and carries line l5.",
             "expected_outcome": "pacing_checked",
             "expected_indicators": [
               "rushed_verdict",
@@ -2177,7 +2177,7 @@
           {
             "id": "VE-DENSE-LIST",
             "scenario": "A list of 22 words builds in 4 s while the voice speaks",
-            "sample_input": "SYNTHETIC: shot E3 adds 22 new on-screen words in 120 frames.",
+            "sample_input": "MADE-UP: shot E3 adds 22 new on-screen words in 120 frames.",
             "expected_outcome": "pacing_checked",
             "expected_indicators": [
               "unreadable_verdict",
@@ -2188,7 +2188,7 @@
           {
             "id": "VE-DISSOLVE-OVER-TEXT",
             "scenario": "An 18-frame dissolve joins two text-heavy frames",
-            "sample_input": "SYNTHETIC: E3 to E4 is a dissolve; both frames hold body text.",
+            "sample_input": "MADE-UP: E3 to E4 is a dissolve; both frames hold body text.",
             "expected_outcome": "edit_revised",
             "expected_indicators": [
               "hard_cut_on_action",
@@ -2199,7 +2199,7 @@
           {
             "id": "VE-WORD-SPLIT",
             "scenario": "A J cut would start the next line mid-word",
-            "sample_input": "SYNTHETIC: the requested 8-frame lead lands 3 frames into the word 'Tuesday'.",
+            "sample_input": "MADE-UP: the requested 8-frame lead lands 3 frames into the word 'Tuesday'.",
             "expected_outcome": "edit_list_drafted",
             "expected_indicators": [
               "edit_point_moved_to_pause"
@@ -2209,7 +2209,7 @@
           {
             "id": "VE-REFRAME-REVEALS",
             "scenario": "A taller crop reveals a person's screen notification",
-            "sample_input": "SYNTHETIC: the 9:16 crop of a capture shows a notification the 16:9 crop hid.",
+            "sample_input": "MADE-UP: the 9:16 crop of a capture shows a notification the 16:9 crop hid.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "recapture_needed",
@@ -2220,7 +2220,7 @@
           {
             "id": "VE-OFFLINE-MEDIA",
             "scenario": "An event points at media that has no pinned noun",
-            "sample_input": "SYNTHETIC: event B1 names broll.tools-on-wall, which was never written.",
+            "sample_input": "MADE-UP: event B1 names broll.tools-on-wall, which was never written.",
             "expected_outcome": "conform_checked",
             "expected_indicators": [
               "offline_event_named",
@@ -2231,7 +2231,7 @@
           {
             "id": "VE-LOCK-BY-AGENT",
             "scenario": "A worker is asked to lock the cut",
-            "sample_input": "SYNTHETIC: a lock task is enqueued for an agent.",
+            "sample_input": "MADE-UP: a lock task is enqueued for an agent.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "person_verb_named"
@@ -2240,7 +2240,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.edit-list",
@@ -2248,7 +2248,7 @@
       "role": "example",
       "title": "Worked example: a 30-second edit decision list",
       "value": {
-        "notice": "SYNTHETIC. A fictional tool library's explainer; the sources name nouns that do not exist.",
+        "notice": "MADE-UP. A fictional tool library's explainer; the sources name nouns that do not exist.",
         "conforms_to": {
           "$pin": "template.edit-list"
         },
@@ -2443,7 +2443,7 @@
           "l6": "Borrow a drill, not a mystery."
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.pacing-report",
@@ -2451,7 +2451,7 @@
       "role": "example",
       "title": "Worked example: the pacing report of that edit list",
       "value": {
-        "notice": "SYNTHETIC. Recomputed exactly by the library's tests from example.edit-list and its lines.",
+        "notice": "MADE-UP. Recomputed exactly by the library's tests from example.edit-list and its lines.",
         "conforms_to": {
           "$pin": "template.pacing-report"
         },
@@ -2549,7 +2549,7 @@
           "flagged": 2
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.mix-plan",
@@ -2557,7 +2557,7 @@
       "role": "example",
       "title": "Worked example: the mix plan for the 30-second cut",
       "value": {
-        "notice": "SYNTHETIC. No audio exists.",
+        "notice": "MADE-UP. No audio exists.",
         "conforms_to": {
           "$pin": "template.mix-plan"
         },
@@ -2620,7 +2620,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.export-spec",
@@ -2628,7 +2628,7 @@
       "role": "example",
       "title": "Worked example: two delivery profiles",
       "value": {
-        "notice": "SYNTHETIC. A web master and a vertical cut with open captions.",
+        "notice": "MADE-UP. A web master and a vertical cut with open captions.",
         "conforms_to": {
           "$pin": "template.export-spec"
         },
@@ -2685,7 +2685,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.revision-note",
@@ -2693,7 +2693,7 @@
       "role": "example",
       "title": "Worked example: a revision that answers three findings",
       "value": {
-        "notice": "SYNTHETIC. The finding ids stand for a review's findings.",
+        "notice": "MADE-UP. The finding ids stand for a review's findings.",
         "conforms_to": {
           "$pin": "template.revision-note"
         },
@@ -2733,7 +2733,7 @@
           "overwrites_previous": false
         }
       },
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [

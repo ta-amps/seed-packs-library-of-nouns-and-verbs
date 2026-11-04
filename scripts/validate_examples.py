@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline checks for this repository's narrow synthetic example profile.
+"""Offline checks for this repository's narrow made-up example profile.
 
 This is not a JSON Schema engine, Tessera SDK, importer or execution validator.
 It never calls a service, invokes a model or runs content from an example.
@@ -69,7 +69,7 @@ def noun(value: dict) -> None:
     require(isinstance(record, dict), "noun value must be an object, not encoded JSON")
     require(record.get("category_id") == "noun.reflex_procedure", "unexpected example noun category")
     governance(value, record["category_id"])
-    require(record.get("synthetic") is True and record.get("license") == "MIT", "synthetic/license marker required")
+    require(record.get("made-up") is True and record.get("license") == "MIT", "made-up/license marker required")
     require(isinstance(record.get("input_schema"), dict) and isinstance(record.get("output_schema"), dict), "schema objects required")
     require(isinstance(record.get("steps"), list) and bool(record["steps"]), "procedure steps required")
     checks = record.get("checks", [])
@@ -87,12 +87,12 @@ def verb(value: dict) -> None:
     require(isinstance(value["idempotency_key"], str) and bool(value["idempotency_key"]), "stable enqueue identity required")
     require(value["depends_on"] == [], "fixture must not pretend existing task dependencies")
     brief = value["brief"]
-    require(isinstance(brief, dict) and brief.get("synthetic") is True, "synthetic brief required")
+    require(isinstance(brief, dict) and brief.get("made-up") is True, "made-up brief required")
     require(brief.get("category_id") == value["kind"], "brief primary category mismatch")
     governance(value, brief["category_id"])
     require("status:quarantined" in value["tags"], "candidate seed must be quarantined")
     refs = brief.get("input_refs", [])
-    require(len(refs) == 1 and refs[0] == {"store": "pack.candidates", "key": "SYNTHETIC-addition-v1", "version": 1}, "pin the example input record")
+    require(len(refs) == 1 and refs[0] == {"store": "pack.candidates", "key": "MADE-UP-addition-v1", "version": 1}, "pin the example input record")
     require(brief.get("review", {}).get("publication_permitted") is False, "draft cannot publish")
     require(brief.get("review", {}).get("self_approval_permitted") is False, "draft cannot self-approve")
     require(brief.get("bounds") == {"max_attempts": 2, "max_elapsed_seconds": 300, "max_model_calls": 0}, "example bounds changed")
@@ -102,7 +102,7 @@ def submission(value: dict) -> None:
     require(set(value) == {"task_id", "fencing_token", "ok", "error", "output", "execution_report"}, "unexpected HTTP submit fields")
     require(isinstance(value["task_id"], str) and integer(value["fencing_token"], 1), "typed task and fence required")
     require(type(value["ok"]) is bool, "ok must be a JSON boolean")
-    require(isinstance(value["output"], dict) and value["output"].get("synthetic") is True, "synthetic output object required")
+    require(isinstance(value["output"], dict) and value["output"].get("made-up") is True, "made-up output object required")
     report = value["execution_report"]
     require(isinstance(report, dict) and type(report.get("version")) is int and report["version"] == 1, "report must be a version-1 object")
     require(set(report) == {"version", "harness", "summaries", "artifact_refs", "usage"}, "unexpected report example fields")
@@ -129,7 +129,7 @@ def mcp(value: dict) -> None:
         args = params["arguments"]
         require(isinstance(args, dict), "MCP arguments must be an object")
         if params["name"] == "put_record":
-            require(args.get("store_name") == "demo.artifacts" and args.get("key") == "SYNTHETIC-addition-v1", "use only the demo example target")
+            require(args.get("store_name") == "demo.artifacts" and args.get("key") == "MADE-UP-addition-v1", "use only the demo example target")
             noun({key: item for key, item in args.items() if key not in {"store_name", "key"}})
         elif params["name"] == "submit":
             require(isinstance(args.get("idempotency_key"), str) and bool(args["idempotency_key"]), "MCP submit requires idempotency argument")
@@ -140,7 +140,7 @@ def mcp(value: dict) -> None:
 
 def manifest(value: dict, examples: Path) -> None:
     require(value.get("format") == "ta-amps.pack-contribution.proposal.v1" and value.get("status") == "proposal_only", "manifest must stay proposed")
-    require(value.get("synthetic") is True and value.get("license") == "MIT", "synthetic manifest required")
+    require(value.get("made-up") is True and value.get("license") == "MIT", "made-up manifest required")
     require(value.get("importer") is None and bool(value.get("importer_reason")), "no importer may be claimed")
     require(value.get("override_policy") == {"automatic_merge": False, "on_conflict": "stop_and_clarify"}, "no implicit merges")
     paths = set()
@@ -175,8 +175,8 @@ def validate_repository(root: Path = ROOT) -> dict:
         "mcp/put-record.json", "mcp/submit.json", "pack-manifest.proposed.json",
         "meta/self-improvement.reference.json",
     }, "new example needs an explicit validation profile")
-    require(parsed["http/session.json"] == {"agent_label": "synthetic-pack-worker"}, "invalid session example")
-    require(parsed["http/claim.json"] == {"queue": "demo.ping", "worker": "synthetic-pack-worker"}, "invalid claim example")
+    require(parsed["http/session.json"] == {"agent_label": "made-up-pack-worker"}, "invalid session example")
+    require(parsed["http/claim.json"] == {"queue": "demo.ping", "worker": "made-up-pack-worker"}, "invalid claim example")
     noun(parsed["http/demo-put.json"])
     noun(parsed["http/noun-put.json"])
     require("status:quarantined" in parsed["http/noun-put.json"]["tags"], "keyed candidate quarantine required")

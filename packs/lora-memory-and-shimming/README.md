@@ -6,7 +6,7 @@ A collection of nouns and verbs for compiling post-cutoff Task Objects into leak
 parametric-memory LoRA training pairs, routing between prompt/context shimming, weight updates and
 hybrid setups, and evaluating pre-registered holdout paired bootstrap promotion gates. In plain
 language, nouns are **task objects** (routing policies, promotion gate specs, pinned
-standard-library code, schemas and synthetic worked examples) and verbs are **tasks** a worker
+standard-library code, schemas and made-up worked examples) and verbs are **tasks** a worker
 claims. Workers turn verified post-cutoff API or schema updates into direct-fact,
 supersession-contrast and scope-abstention pairs, verify n-gram disjointness against holdout
 prompts, calculate token-cost amortization before training, and gate adapter promotion on paired
@@ -21,7 +21,7 @@ bootstrap 95 percent confidence intervals.
 | `rules.pair-compilation` | Direct-recall, supersession-guard and scope-abstention pair generation plus 4-gram Jaccard (`<= 0.35`) holdout check |
 | `tool.lora-memory` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.gate-decision` | JSON Schema for a routing and paired-bootstrap holdout gate decision |
-| Worked example | Synthetic post-cutoff bundle (`example.post-cutoff-bundle`) and recomputed hybrid routing and gate result (`example.gate-decision`) |
+| Worked example | Made-up post-cutoff bundle (`example.post-cutoff-bundle`) and recomputed hybrid routing and gate result (`example.gate-decision`) |
 
 ## Verbs
 
@@ -40,6 +40,6 @@ pair compilation, holdout disjointness, strategy routing and paired bootstrap pr
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
   activated, and no worker has claimed or run these tasks through Tessera.
-- Compiling pairs or passing a synthetic fixture never constitutes a trained or deployed adapter;
+- Compiling pairs or passing a made-up fixture never constitutes a trained or deployed adapter;
   real promotion requires pre-registered holdouts and general-capability retention benchmarks.
-- The worked example in `source.json` is synthetic.
+- The worked example in `source.json` is made-up.

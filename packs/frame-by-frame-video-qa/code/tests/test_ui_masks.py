@@ -15,7 +15,7 @@ from frame_qa.ui_masks import (
 )
 
 
-def _synthetic_ui_frame() -> np.ndarray:
+def _made_up_ui_frame() -> np.ndarray:
     """1280x720 dark-slate frame with a content panel, an input bar, and a primary CTA button."""
     frame = np.full((720, 1280, 3), (24, 28, 36), dtype=np.uint8)
     # Main card panel: [120, 90, 820, 520]
@@ -29,7 +29,7 @@ def _synthetic_ui_frame() -> np.ndarray:
 
 class UIMasksTest(unittest.TestCase):
     def test_connected_components_segments_panel_input_and_button(self) -> None:
-        frame = _synthetic_ui_frame()
+        frame = _made_up_ui_frame()
         regions = segment_ui_regions(frame, min_area_px=300)
         roles = {r.role for r in regions}
         self.assertIn("panel", roles)
@@ -49,7 +49,7 @@ class UIMasksTest(unittest.TestCase):
         self.assertEqual(regions[0].source, "connected_components_stdlib")
 
     def test_sam_adapter_falls_back_cleanly_when_unconfigured(self) -> None:
-        frame = _synthetic_ui_frame()
+        frame = _made_up_ui_frame()
         adapter = SamMaskAdapter(model_id=SAM_MODEL_ID, local_model_path="/nonexistent/local/sam")
         self.assertFalse(adapter.sam_available())
         regions, backend = adapter.segment(frame)
@@ -57,7 +57,7 @@ class UIMasksTest(unittest.TestCase):
         self.assertGreaterEqual(len(regions), 3)
 
     def test_sam_adapter_normalizes_sam_masks_and_flags_caption_occlusion(self) -> None:
-        frame = _synthetic_ui_frame()
+        frame = _made_up_ui_frame()
         mask_btn = np.zeros((720, 1280), dtype=bool)
         mask_btn[620:668, 540:740] = True
         mask_input = np.zeros((720, 1280), dtype=bool)

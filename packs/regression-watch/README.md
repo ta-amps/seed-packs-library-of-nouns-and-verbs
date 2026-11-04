@@ -20,7 +20,7 @@ findings against the check, and every new baseline, even an improvement, waits f
 | Flake rules | Two reruns by default, the verdicts, and what happens to a check that keeps flaking |
 | Watch checks | 16 checks on a comparison, with 2 good and 16 bad comparisons the validator recomputes |
 | Templates | Baseline set, measurement, comparison, a person's acceptance and a flake review |
-| Test cases | 6 synthetic cases |
+| Test cases | 6 made-up cases |
 | Worked examples | A baseline set, a measurement, a comparison with every outcome, an acceptance, the next set and two findings |
 
 ## Verbs
@@ -45,7 +45,7 @@ the [screenshot design review](../screenshot-design-review/README.md) matrix. Fi
 
 ## Worked examples
 
-All synthetic: a pantry site, its shifts API and its 45-second explainer. Against an accepted set of
+All made-up: a pantry site, its shifts API and its 45-second explainer. Against an accepted set of
 ten items, one change gives four matches; a removed `ends_at` field and a lost caption cue that both
 reruns confirm; a lab LCP of 2480 ms against 2100 ms that reads 2150 and 2090 ms on reruns, so the
 check is flaky; an intended screenshot change and a smaller bundle for a person; and a true peak that
@@ -62,7 +62,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The examples are synthetic; the library's tests recompute their outcomes and counts only.
+- The examples are made-up; the library's tests recompute their outcomes and counts only.
 - Two reruns catch noise, not every intermittent fault; a flaky check still needs its own fix.
 - Tolerances are a person's call; the defaults here are starting points, not standards.
 - An exact screenshot digest is strict by design: fonts, masks and settings must be pinned to use it.

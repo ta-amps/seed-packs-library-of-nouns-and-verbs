@@ -82,7 +82,7 @@
             "$pin": "tool.csv-checks"
           }
         ],
-        "worked_example": "Synthetic: a fictional meal program's 25-row weekly log for three sites, with a misspelled site, a count written in words, an impossible date, a missing value, a value far above its maximum, a negative weight, an outlier that is valid, a repeated row and an identifying column whose values never leave the file. The pack's code recomputes every step."
+        "worked_example": "Made-up: a fictional meal program's 25-row weekly log for three sites, with a misspelled site, a count written in words, an impossible date, a missing value, a value far above its maximum, a negative weight, an outlier that is valid, a repeated row and an identifying column whose values never leave the file. The pack's code recomputes every step."
       },
       "relations": [
         [
@@ -1926,14 +1926,14 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for checked data analysis",
-      "synthetic": true,
+      "title": "Made-up test cases for checked data analysis",
+      "made-up": true,
       "value": {
         "cases": [
           {
             "id": "CDA-WHY",
             "scenario": "The request asks why a number changed",
-            "sample_input": "SYNTHETIC: Why did North serve more meals in October?",
+            "sample_input": "MADE-UP: Why did North serve more meals in October?",
             "expected_outcome": "findings_written",
             "expected_indicators": [
               "described_not_explained",
@@ -1944,7 +1944,7 @@
           {
             "id": "CDA-DROP-OUTLIERS",
             "scenario": "The request asks to delete outliers before summarizing",
-            "sample_input": "SYNTHETIC: Just delete the weird rows and give me the averages.",
+            "sample_input": "MADE-UP: Just delete the weird rows and give me the averages.",
             "expected_outcome": "summaries_computed",
             "expected_indicators": [
               "rows_kept_in_file",
@@ -1956,7 +1956,7 @@
           {
             "id": "CDA-WORDS-FOR-NUMBERS",
             "scenario": "A count is written in words",
-            "sample_input": "SYNTHETIC: volunteers = twelve",
+            "sample_input": "MADE-UP: volunteers = twelve",
             "expected_outcome": "validation_reported",
             "expected_indicators": [
               "type_violation_listed",
@@ -1967,7 +1967,7 @@
           {
             "id": "CDA-IMPOSSIBLE-DATE",
             "scenario": "A date does not exist",
-            "sample_input": "SYNTHETIC: week = 2026-09-31",
+            "sample_input": "MADE-UP: week = 2026-09-31",
             "expected_outcome": "validation_reported",
             "expected_indicators": [
               "type_violation_listed",
@@ -1978,7 +1978,7 @@
           {
             "id": "CDA-SENTINEL",
             "scenario": "A placeholder value sits far above the maximum",
-            "sample_input": "SYNTHETIC: meals_served = 9999",
+            "sample_input": "MADE-UP: meals_served = 9999",
             "expected_outcome": "flags_reported",
             "expected_indicators": [
               "max_violation_listed",
@@ -1990,7 +1990,7 @@
           {
             "id": "CDA-DUPLICATE-ROW",
             "scenario": "A row repeats an earlier row",
-            "sample_input": "SYNTHETIC: rows 23 and 25 are identical.",
+            "sample_input": "MADE-UP: rows 23 and 25 are identical.",
             "expected_outcome": "schema_profiled",
             "expected_indicators": [
               "duplicate_listed",
@@ -2001,7 +2001,7 @@
           {
             "id": "CDA-IDENTIFYING",
             "scenario": "A column holds contact addresses",
-            "sample_input": "SYNTHETIC: coordinator_email",
+            "sample_input": "MADE-UP: coordinator_email",
             "expected_outcome": "schema_profiled",
             "expected_indicators": [
               "no_values_shown",
@@ -2012,7 +2012,7 @@
           {
             "id": "CDA-BOM-RAGGED",
             "scenario": "The file starts with a byte order mark and one row has an extra field",
-            "sample_input": "SYNTHETIC: A spreadsheet export with a trailing comma on one line.",
+            "sample_input": "MADE-UP: A spreadsheet export with a trailing comma on one line.",
             "expected_outcome": "schema_profiled",
             "expected_indicators": [
               "bom_recorded",
@@ -2024,7 +2024,7 @@
           {
             "id": "CDA-CHART-IMAGE",
             "scenario": "The request asks for a picture of the chart",
-            "sample_input": "SYNTHETIC: Send me a PNG of the bar chart.",
+            "sample_input": "MADE-UP: Send me a PNG of the bar chart.",
             "expected_outcome": "charts_specified",
             "expected_indicators": [
               "vega_lite_spec_only",
@@ -2035,7 +2035,7 @@
           {
             "id": "CDA-TOO-FEW",
             "scenario": "A column has three values",
-            "sample_input": "SYNTHETIC: A numeric column with three present values.",
+            "sample_input": "MADE-UP: A numeric column with three present values.",
             "expected_outcome": "flags_reported",
             "expected_indicators": [
               "too_few_values",
@@ -2050,12 +2050,12 @@
       "slug": "example.dataset",
       "category": "noun.public_source",
       "role": "example",
-      "synthetic": true,
-      "title": "Worked example: a synthetic weekly meals log, held whole for offline checks",
-      "category_reason": "A synthetic stand-in dataset, held whole so the worked examples run offline.",
+      "made-up": true,
+      "title": "Worked example: a made-up weekly meals log, held whole for offline checks",
+      "category_reason": "A made-up stand-in dataset, held whole so the worked examples run offline.",
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up, and every address ends in example.invalid.",
-        "name": "weekly-meals-log.csv (synthetic)",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up, and every address ends in example.invalid.",
+        "name": "weekly-meals-log.csv (made-up)",
         "media_type": "text/csv",
         "text": "week,site,meals_served,volunteers,pounds_received,coordinator_email\r\n2026-09-07,North,412,12,980.5,north-lead@example.invalid\r\n2026-09-07,River,298,9,702,river-lead@example.invalid\r\n2026-09-07,Hill,187,6,455,hill-lead@example.invalid\r\n2026-09-14,North,431,13,1010,north-lead@example.invalid\r\n2026-09-14,River,305,twelve,715,river-lead@example.invalid\r\n2026-09-14,Hill,192,5,448,hill-lead@example.invalid\r\n2026-09-21,North,446,12,1032.5,north-lead@example.invalid\r\n2026-09-21,river,311,9,730,river-lead@example.invalid\r\n2026-09-21,Hill,201,6,470,hill-lead@example.invalid\r\n2026-09-31,North,438,14,1005,north-lead@example.invalid\r\n2026-09-28,River,296,8,690,river-lead@example.invalid\r\n2026-09-28,Hill,205,7,3150,hill-lead@example.invalid\r\n2026-10-05,North,452,13,1044,north-lead@example.invalid\r\n2026-10-05,River,318,10,742,river-lead@example.invalid\r\n2026-10-05,Hill,198,6,462,hill-lead@example.invalid\r\n2026-10-12,North,,12,1020,north-lead@example.invalid\r\n2026-10-12,River,322,9,760,river-lead@example.invalid\r\n2026-10-12,Hill,210,6,488,hill-lead@example.invalid\r\n2026-10-19,North,9999,13,1061,north-lead@example.invalid\r\n2026-10-19,River,327,10,771,river-lead@example.invalid\r\n2026-10-19,Hill,214,7,-40,hill-lead@example.invalid\r\n2026-10-26,North,468,14,1088,north-lead@example.invalid\r\n2026-10-26,River,331,10,785,river-lead@example.invalid\r\n2026-10-26,Hill,219,7,505,hill-lead@example.invalid\r\n2026-10-26,River,331,10,785,river-lead@example.invalid\r\n",
         "sha256": "a0ab47df607ed4555ec18a484e4a7badb36fd0493f44057487feb5b4a3a26a5e",
@@ -2067,15 +2067,15 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: the request, with its declared schema",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.analysis-request"
         },
         "instance": {
           "dataset": {
-            "name": "weekly-meals-log.csv (synthetic)",
+            "name": "weekly-meals-log.csv (made-up)",
             "sha256": "a0ab47df607ed4555ec18a484e4a7badb36fd0493f44057487feb5b4a3a26a5e",
             "delimiter": ",",
             "description": "A fictional meal program's weekly log for three sites over eight weeks."
@@ -2158,9 +2158,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the profile, with two mixed columns and one repeated row",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.schema-profile"
         },
@@ -2298,9 +2298,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: six violations in six rows, every one kept",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.validation-report"
         },
@@ -2363,9 +2363,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: one missing value and two outliers, flagged and kept",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.flag-report"
         },
@@ -2471,9 +2471,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: six queries with their filters, counts and digests",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.query-results"
         },
@@ -2948,9 +2948,9 @@
       "category": "noun.scene_recipe",
       "role": "example",
       "title": "Worked example: a bar chart and a line chart, as data",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.chart-specs"
         },
@@ -3150,9 +3150,9 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: five findings, every number traced",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.findings"
         },
@@ -3386,7 +3386,7 @@
             }
           ],
           "limits": [
-            "The data is synthetic: three fictional sites over eight weeks.",
+            "The data is made-up: three fictional sites over eight weeks.",
             "Rows that break a declared rule are left out of the queries that filter on that rule and stay in the file; the sites' own records decide the right values.",
             "These findings describe the log; they do not say why any number changed."
           ],
@@ -3401,9 +3401,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a passing check by a different worker",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.findings-check"
         },
@@ -3423,9 +3423,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the program lead's reading, in their own words",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A fictional meal program's log; its sites, people and numbers are made up.",
+        "notice": "MADE-UP. A fictional meal program's log; its sites, people and numbers are made up.",
         "conforms_to": {
           "$pin": "template.interpretation"
         },
@@ -3434,7 +3434,7 @@
           "check_passed": true,
           "decided_by_role": "program lead",
           "decided_on": "2026-10-30",
-          "meaning": "SYNTHETIC. In the program lead's words: the eight weeks look steady at all three sites; the North rows of 2026-10-12 and 2026-10-19 need checking against the sign-in sheets before these totals are used.",
+          "meaning": "MADE-UP. In the program lead's words: the eight weeks look steady at all three sites; the North rows of 2026-10-12 and 2026-10-19 need checking against the sign-in sheets before these totals are used.",
           "follow_ups": [
             "Check the two North rows against the site's sign-in sheets.",
             "Ask the River site whether the lower-case site name and the volunteer count written in words are one entry error."
@@ -3446,7 +3446,7 @@
       "slug": "findings-checks",
       "category": "noun.benchmark_suite",
       "role": "worked_example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Findings checks, with good and bad findings the validator recomputes",
       "category_reason": "A golden fixture: fixed findings and the recorded results of every check.",
       "value": {

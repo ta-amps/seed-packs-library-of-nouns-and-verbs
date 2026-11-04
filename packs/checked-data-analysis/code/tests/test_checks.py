@@ -1,4 +1,4 @@
-"""Reading, type inference, profiling, validation and outlier flags on small synthetic tables."""
+"""Reading, type inference, profiling, validation and outlier flags on small made-up tables."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import unittest
 from csv_checks import flag, kind_of, profile, read_csv, validate
 
 REQUEST = {
-    "dataset": {"name": "t", "sha256": "0" * 64, "delimiter": ",", "description": "synthetic"},
+    "dataset": {"name": "t", "sha256": "0" * 64, "delimiter": ",", "description": "made-up"},
     "columns": [
         {"name": "day", "type": "date", "required": True},
         {"name": "team", "type": "string", "required": True, "allowed": ["a", "b"]},

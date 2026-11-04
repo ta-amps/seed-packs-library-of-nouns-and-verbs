@@ -13,7 +13,7 @@ estimated and credit amounts never get mixed, and unknown amounts stay unknown.
 | Noun | What it holds |
 | --- | --- |
 | Method | Four kinds of numbers kept apart, dated prices, nulls not zeros, quality must hold, the caller's model settings kept |
-| Templates | Cost ledger, price card (with a synthetic example), saving hypothesis, saving result, recommendation and review |
+| Templates | Cost ledger, price card (with a made-up example), saving hypothesis, saving result, recommendation and review |
 
 ## Verbs
 

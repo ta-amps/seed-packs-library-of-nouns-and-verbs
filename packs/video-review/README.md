@@ -22,8 +22,8 @@ recommends; only a person approves publishing.
 | Fix routes | The verb that fixes each cause, from the edit to the script, the stage, a capture or the render |
 | Templates | Review scope, panel set, claim trace, review findings, review comparison, listening record, fix routing, re-review |
 | Review checks | Seven checks on a review, with one good and seven bad reviews the validator recomputes |
-| Checklist, sources, test cases | What a person does when watching; 6 dated public sources; 7 synthetic cases |
-| Worked examples | Synthetic: a scope, a claim trace with a disputed number, seven findings and the re-review of the fixed cut |
+| Checklist, sources, test cases | What a person does when watching; 6 dated public sources; 7 made-up cases |
+| Worked examples | Made-up: a scope, a claim trace with a disputed number, seven findings and the re-review of the fixed cut |
 
 ## Verbs
 
@@ -57,7 +57,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 - A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
   through Tessera. Its rubric was applied by hand to ta-amps's own 3:00 film while this pack was
   written; that review is kept privately and is not a run of these verbs.
-- The worked examples are synthetic; the library's tests recheck their counts and consistency only.
+- The worked examples are made-up; the library's tests recheck their counts and consistency only.
 - An agent cannot listen, and one reviewer is one opinion; the person's verb and the comparison exist
   for that reason. A rubric judges the cut, not an audience.
 - Sources were checked on 2026-10-30. Recheck them before relying on them.

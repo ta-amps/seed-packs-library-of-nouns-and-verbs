@@ -14,7 +14,7 @@ A collection of nouns and verbs for harvesting sanctioned public velocity signal
 | `rubric.breakout-utility-and-hype-filter` | 6-axis utility and anti-hype scoring rubric penalizing unlicensed, tiny or waitlist-shell repositories while rewarding runnable quickstarts and cross-source corroboration |
 | `tool.velocity-signal-radar` | Tested zero-dependency Python 3.10+ package in [code/](code/README.md), pinned by path, file count and SHA-256 |
 | `template.radar-evaluation-receipt` | Deterministic receipt schema for coalesced dossiers, refused unsanctioned wall probes, filtered hype keys and bounded follow-up proposals |
-| Worked example | Synthetic multi-source bundle (`example.velocity-radar-bundle`) and recomputed receipt (`example.velocity-radar-receipt`) |
+| Worked example | Made-up multi-source bundle (`example.velocity-radar-bundle`) and recomputed receipt (`example.velocity-radar-receipt`) |
 
 ## Verbs
 

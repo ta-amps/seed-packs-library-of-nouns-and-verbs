@@ -40,7 +40,7 @@ class Broken(unittest.TestCase):
 
     def test_stamp_overlay(self):
         def f(shots):
-            shots[3]["on_screen"] = [{"text": "SYNTHETIC EXAMPLE · typed into the live box", "must_read": False}]
+            shots[3]["on_screen"] = [{"text": "MADE-UP EXAMPLE · typed into the live box", "must_read": False}]
         self.assertTrue(any("stamp" in p[2] for p in self.mutate(f)))
 
     def test_ken_burns(self):

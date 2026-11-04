@@ -10,7 +10,7 @@
   "boundaries": [
     "Untrusted retrieved text never overrides system or developer instructions and has injection directives redacted before packing.",
     "Packed context strictly obeys the integer token_budget ceiling via exact 0/1 knapsack rather than unbounded top-k concatenation.",
-    "Synthetic retrieval fixtures are test inputs only and never represent live corpus claims.",
+    "Made-up retrieval fixtures are test inputs only and never represent live corpus claims.",
     "Importing the pack writes nothing, enqueues nothing and installs no code."
   ],
   "nouns": [
@@ -55,7 +55,7 @@
         "tool": {
           "$pin": "tool.context-knapsack"
         },
-        "worked_example": "Synthetic 5-chunk candidate bundle recomputed in test_context_knapsack.py: strips an injected line, drops a pure-injection chunk and a MinHash duplicate, and packs two complementary chunks (170 <= 180 tokens) beating a bloated 175-token overview."
+        "worked_example": "Made-up 5-chunk candidate bundle recomputed in test_context_knapsack.py: strips an injected line, drops a pure-injection chunk and a MinHash duplicate, and packs two complementary chunks (170 <= 180 tokens) beating a bloated 175-token overview."
       },
       "relations": [
         [
@@ -284,9 +284,9 @@
       "slug": "example.retrieval-candidates",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
-      "title": "Worked example input: synthetic 5-chunk candidate set with duplicate, bloated and injected passages",
-      "category_reason": "Synthetic retrieval fixture recomputed by test_context_knapsack.py.",
+      "made-up": true,
+      "title": "Worked example input: made-up 5-chunk candidate set with duplicate, bloated and injected passages",
+      "category_reason": "Made-up retrieval fixture recomputed by test_context_knapsack.py.",
       "value": {
         "query": "durable object sqlite alarm retry budget",
         "query_embedding": [
@@ -362,7 +362,7 @@
       "slug": "example.packed-context",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed RRF, MinHash dedup, sanitization and 0/1 knapsack selection",
       "category_reason": "Deterministic output conforming to template.packed-context.",
       "value": {

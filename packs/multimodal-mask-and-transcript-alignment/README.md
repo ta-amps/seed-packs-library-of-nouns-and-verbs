@@ -16,10 +16,10 @@ spoken-cue to mask-onset drift in milliseconds, and route each caption into a no
 | Guardrails | Captions must not occlude segmented subjects (`intrusion <= 0.05`); flag audio-visual drift `> 250 ms` |
 | Geometry and sync rules | Box IoU, Shoelace polygon area, intrusion ratio, and spoken-token to mask-onset delta |
 | Templates | Multimodal timeline input, safe-zone placement record, and alignment verification report |
-| Record checks | Deterministic checks on alignment reports with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on alignment reports with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`multimodal_align`) |
 | Sources | 2 dated public sources on W3C WebVTT cue positioning and ITU-R BT.1359-1 audio-visual sync |
-| Worked examples | Synthetic mask-aware caption reroute from `bottom_band` to `top_band` |
+| Worked examples | Made-up mask-aware caption reroute from `bottom_band` to `top_band` |
 
 ## Verbs
 

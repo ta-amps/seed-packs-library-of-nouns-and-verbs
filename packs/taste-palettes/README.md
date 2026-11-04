@@ -15,7 +15,7 @@ confirm or contradict it.
 | --- | --- |
 | Method | Change one to three settings at a time, two to four options, plain labels, shuffled order, always a none option |
 | Templates | Brief, option (embodiment), comparison sheet, preference and preference summary |
-| Example brief | Synthetic: the tone of a README's first screen, with formality and density as settings |
+| Example brief | Made-up: the tone of a README's first screen, with formality and density as settings |
 
 ## Verbs
 

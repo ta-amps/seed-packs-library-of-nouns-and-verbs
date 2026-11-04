@@ -12,7 +12,7 @@ Find a jurisdiction's official budget document, extract the line items for one p
 | --- | --- |
 | Guardrails | The five guardrails of the policy and law watch pack, pinned from it: public sources only, no scraping against terms, no personal data, a citation for every claim, a person decides |
 | Templates | Budget source, line items with pages and lines, cited budget report; reviews and delivery records use the policy and law watch templates |
-| Worked examples | Two pages of a synthetic stand-in city budget, its Library Services line items and a cited report, each checked against its template |
+| Worked examples | Two pages of a made-up stand-in city budget, its Library Services line items and a cited report, each checked against its template |
 
 ## Verbs
 
@@ -31,10 +31,10 @@ Each verb can also end with `no_change`, `unknown` or `blocked`, and can propose
 Write the nouns in [nouns.json](nouns.json) create-only with a key scoped to your team's surface, then
 fill a template from [verbs.json](verbs.json) with
 `scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>` and enqueue
-the printed task yourself. The worked examples use synthetic stand-in sources only and need no network.
+the printed task yourself. The worked examples use made-up stand-in sources only and need no network.
 
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
 - Reports describe figures; they are not financial or legal advice.
-- The stand-in budget is synthetic; real budgets are read only through access their publishers permit.
+- The stand-in budget is made-up; real budgets are read only through access their publishers permit.

@@ -19,9 +19,9 @@ work is checked against the directions in force, so the same correction is not n
 | Ask policy | Ask only about spending, licenses, credentials, private facts, irreversible or public actions and real taste calls; otherwise decide and record why |
 | Supersession policy | Newer wins in the same scope, narrower wins inside its scope, ambiguity goes to a person, nothing is deleted |
 | Term rule guide | Forbid, require and prefer rules a sweep can check, with variants and allowed contexts |
-| Direction checks | 11 deterministic checks with 3 synthetic good and 11 synthetic bad directions, rechecked by `make check` |
+| Direction checks | 11 deterministic checks with 3 made-up good and 11 made-up bad directions, rechecked by `make check` |
 | Templates | Message intake, direction, decision, work plan, conflict, confirmation and compliance report |
-| Worked examples | A synthetic message split into six routed parts, a vocabulary direction in force, and a three-item work plan |
+| Worked examples | A made-up message split into six routed parts, a vocabulary direction in force, and a three-item work plan |
 
 ## Verbs
 
@@ -44,7 +44,7 @@ large requests to [decomposition patterns](../decomposition-patterns/README.md),
 
 ## Worked examples
 
-All synthetic. A program director's chat message holds six parts: a vocabulary direction
+All made-up. A program director's chat message holds six parts: a vocabulary direction
 ("neighbors", not "clients"), a page that still uses the old word, a request for pickup times,
 a hosting-plan question that only the director can answer, an approval and a status question.
 The direction supersedes an older one that stays on the record, and the work plan gives each

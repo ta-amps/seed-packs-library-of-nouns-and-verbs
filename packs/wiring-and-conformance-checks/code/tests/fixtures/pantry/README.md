@@ -1,4 +1,4 @@
-# Synthetic pantry app
+# Made-up pantry app
 
 A made-up appointment app for a food pantry, used only as input to the wiring checks' tests and the
 pack's worked examples. Its files are read with `ast`; nothing here is installed, imported or run.

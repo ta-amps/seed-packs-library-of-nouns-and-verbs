@@ -16,7 +16,7 @@ measurements into a receipt-hashed report with one result per check:
 - integrated_loudness: EBU R128 integrated loudness near the target, true peak under the limit.
 - caption_timing_coverage: readable cues, sidecar timings equal the track, and narration speech
   (measured with silencedetect on the narration stem) covered by captions.
-- synthetic_disclosure: the file metadata states what is synthetic or generated.
+- made_up_disclosure: the file metadata states what is made-up or generated.
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ VideoCheck = Literal[
     "frozen_frames",
     "integrated_loudness",
     "caption_timing_coverage",
-    "synthetic_disclosure",
+    "made_up_disclosure",
 ]
 VIDEO_CHECKS: tuple[VideoCheck, ...] = (
     "container_and_streams",
@@ -50,7 +50,7 @@ VIDEO_CHECKS: tuple[VideoCheck, ...] = (
     "frozen_frames",
     "integrated_loudness",
     "caption_timing_coverage",
-    "synthetic_disclosure",
+    "made_up_disclosure",
 )
 SSIM_MIN = 0.95
 BLACK_MIN_S = 0.5
@@ -521,11 +521,11 @@ def evaluate_video(
     disclosure_ok = comment == m.expected_disclosure and info.title == sequence.title
     results.append(
         _result(
-            "synthetic_disclosure",
+            "made_up_disclosure",
             disclosure_ok,
             {"title": info.title, "comment": comment},
             {"comment": m.expected_disclosure},
-            "File metadata states what is synthetic or generated."
+            "File metadata states what is made-up or generated."
             if disclosure_ok
             else "File metadata does not carry the expected disclosure.",
         )

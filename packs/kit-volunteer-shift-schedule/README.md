@@ -18,8 +18,8 @@ Match registered volunteer codes to posted relief tasks by skills, availability 
 | File: Relief Site Shift Briefing | One-page briefing rules every volunteer hears before a relief shift, with check-in, check-out and the stop-work line. |
 | Checklist | 4 checks a person runs with the kit |
 | Sources | 2 dated public sources |
-| Test cases | 3 synthetic cases; 2 must go to a person |
-| Need, in its own words | One or two plain sentences an organization might say about this work, marked synthetic |
+| Test cases | 3 made-up cases; 2 must go to a person |
+| Need, in its own words | One or two plain sentences an organization might say about this work, marked made-up |
 | Templates | suggested volunteer matches and unmatched tasks, a one-page site shift briefing, and a person's step record |
 
 ## Verbs
@@ -48,6 +48,6 @@ their value digests, so the kit has one source.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The test cases are synthetic. Passing them shows the kit's shape, not that it helps a real organization.
+- The test cases are made-up. Passing them shows the kit's shape, not that it helps a real organization.
 - The tool cards describe read-only tools; this pack ships no tool code.
 - Sources were checked on 2026-10-30. Recheck them before relying on them.

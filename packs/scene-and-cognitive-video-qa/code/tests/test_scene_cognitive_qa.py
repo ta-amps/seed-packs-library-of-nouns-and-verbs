@@ -101,7 +101,7 @@ class SceneCognitiveQATests(unittest.TestCase):
         self.assertEqual(r_web["verdict"], "pass")
 
         wrapped = "\n".join(wrap_caption_clauses(
-            "It reuses checked pieces from seed packs, and tests the kit on synthetic cases."
+            "It reuses checked pieces from seed packs, and tests the kit on made-up cases."
         ))
         r_cap = evaluate_frosted_caption_geometry(
             caption_band={

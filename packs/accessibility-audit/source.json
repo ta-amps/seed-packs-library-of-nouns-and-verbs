@@ -945,12 +945,12 @@
       "slug": "example.contrast",
       "category": "noun.benchmark_suite",
       "role": "worked_example",
-      "title": "SYNTHETIC worked example: theme colors in light and dark",
-      "synthetic": true,
+      "title": "MADE-UP worked example: theme colors in light and dark",
+      "made-up": true,
       "category_reason": "A golden fixture the validator and the pack's contrast tool both recompute.",
       "value": {
         "fixture_kind": "contrast_ratio",
-        "purpose": "Synthetic theme colors checked in both themes, recomputed by the library validator and again by this pack's contrast tool in its own CI job.",
+        "purpose": "Made-up theme colors checked in both themes, recomputed by the library validator and again by this pack's contrast tool in its own CI job.",
         "formula": "Relative luminance L = 0.2126 R + 0.7152 G + 0.0722 B of linearized sRGB channels (c/12.92 at or below 0.04045, else ((c + 0.055) / 1.055) ^ 2.4); ratio = (L_lighter + 0.05) / (L_darker + 0.05).",
         "thresholds": {
           "normal_text": 4.5,
@@ -1041,15 +1041,15 @@
       "slug": "example.structure-lint",
       "category": "noun.benchmark_suite",
       "role": "worked_example",
-      "title": "SYNTHETIC worked example: landmark, heading and language lint",
-      "synthetic": true,
+      "title": "MADE-UP worked example: landmark, heading and language lint",
+      "made-up": true,
       "category_reason": "A golden fixture of pages and expected lint results.",
       "value": {
-        "purpose": "Five small synthetic pages and the rules the structure linter reports for each. The pack's code recomputes every result in its CI job.",
+        "purpose": "Five small made-up pages and the rules the structure linter reports for each. The pack's code recomputes every result in its CI job.",
         "pages": [
           {
             "id": "clean",
-            "html": "<!doctype html><html lang=\"en\"><head><title>Shifts | Synthetic pantry</title></head><body><a href=\"#main\">Skip to content</a><header><nav aria-label=\"Site\"><a href=\"/\">Home</a></nav></header><main id=\"main\"><h1>Volunteer shifts</h1><h2>Saturday</h2><p>Two places left.</p></main><footer><p>Synthetic pantry</p></footer></body></html>",
+            "html": "<!doctype html><html lang=\"en\"><head><title>Shifts | Made-up pantry</title></head><body><a href=\"#main\">Skip to content</a><header><nav aria-label=\"Site\"><a href=\"/\">Home</a></nav></header><main id=\"main\"><h1>Volunteer shifts</h1><h2>Saturday</h2><p>Two places left.</p></main><footer><p>Made-up pantry</p></footer></body></html>",
             "expected_rules": [],
             "expected_failures": 0,
             "expected_advisories": 0
@@ -1102,11 +1102,11 @@
       "slug": "audit-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for accessibility findings, with synthetic golden findings",
-      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes them.",
+      "title": "Record checks for accessibility findings, with made-up golden findings",
+      "category_reason": "Deterministic checks with made-up known-good and known-bad records; the validator recomputes them.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every accessibility finding must pass before it goes into an audit report: a cited criterion with its name and level, failure or advisory, where it was seen, evidence and a fix. The four synthetic good findings pass; each synthetic bad finding fails exactly the one check named in fails.",
+        "purpose": "Checks every accessibility finding must pass before it goes into an audit report: a cited criterion with its name and level, failure or advisory, where it was seen, evidence and a fix. The four made-up good findings pass; each made-up bad finding fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "sc-cited",
@@ -1502,7 +1502,7 @@
           {
             "id": "good-contrast",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "id": "A11Y-3",
               "title": "Muted footer text is too faint in the dark theme.",
@@ -1544,7 +1544,7 @@
           {
             "id": "good-captions",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "id": "A11Y-5",
               "title": "The intro video has no captions.",
@@ -1575,7 +1575,7 @@
           {
             "id": "good-target",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "id": "A11Y-7",
               "title": "Shift picker arrows are smaller than 24 by 24 pixels and touch each other.",
@@ -1606,7 +1606,7 @@
           {
             "id": "good-aaa-advisory",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "id": "A11Y-9",
               "title": "The banner animation ignores the reduced motion setting.",
@@ -3655,15 +3655,15 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: an audit plan for a small volunteer site",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.audit-plan"
         },
         "instance": {
           "plan_id": "AP-4",
-          "target": "The synthetic pantry volunteer site",
+          "target": "The made-up pantry volunteer site",
           "build": "site build 2026-10-30.3",
           "pages": [
             {
@@ -3776,7 +3776,7 @@
           "assistive_tech_session": "planned"
         },
         "shows": "A plan with every width and theme, both motion settings, the full checklist and what is out of scope with reasons.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -3784,8 +3784,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a keyboard walk with one invisible focus stop",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.check-result"
@@ -3866,7 +3866,7 @@
           "not_run_reasons": []
         },
         "shows": "Each result cites its criterion; the failure carries a digest and region; a trap is not reported for native video controls that let focus go.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -3874,8 +3874,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: an audit report with failures, an advisory and what was not checked",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.audit-report"
@@ -3889,7 +3889,7 @@
           },
           "standard": "WCAG 2.2",
           "target_level": "AA",
-          "scope": "Three pages of the synthetic pantry volunteer site at 1440, 390 and 320 pixels, light and dark.",
+          "scope": "Three pages of the made-up pantry volunteer site at 1440, 390 and 320 pixels, light and dark.",
           "checks_run": [
             "contrast",
             "structure",
@@ -4034,7 +4034,7 @@
           "statement_reason": "Two findings fail AA criteria. A screen reader session and the confirmation step were not checked."
         },
         "shows": "Findings that pass the audit checks, an AAA advisory that does not fail the page, a summary row per criterion and an honest statement.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     }
   ],
@@ -4645,7 +4645,7 @@
       "steps": [
         "Use the exact technology versions you name, with the browser each ran in.",
         "Do each planned task and record completed, completed_with_difficulty, not_completed or not_run, with what was announced where you got stuck.",
-        "Use only synthetic data, and never book, buy or create an account."
+        "Use only made-up data, and never book, buy or create an account."
       ],
       "acceptance": [
         {

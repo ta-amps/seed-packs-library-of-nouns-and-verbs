@@ -86,7 +86,7 @@ def tool_noun_value(card: ExternalToolCard) -> dict[str, Any]:
             "category_id": "noun.code_node",
             "role": "external_tool",
             **pack_labels(),
-            "synthetic": False,
+            "made-up": False,
             "relations": [],
             "title": f"{card.name} {card.version}",
             "tool": card.model_dump(mode="json"),
@@ -97,7 +97,7 @@ def tool_noun_value(card: ExternalToolCard) -> dict[str, Any]:
                     "evidence_grounding": "Version, license and capabilities were read from the binary by a worker probe.",
                     "verification_tier": "A recorded probe; this card was not re-probed when this value was written.",
                 },
-                synthetic=False,
+                made_up=False,
                 checked=False,
             ),
         }

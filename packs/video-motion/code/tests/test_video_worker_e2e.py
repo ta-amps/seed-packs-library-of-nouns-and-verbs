@@ -124,7 +124,7 @@ def _recording(ffmpeg: Path, folder: Path) -> tuple[MediaAsset, Path]:
         media_id="test-recording",
         kind="recording",
         mime_type="video/mp4",
-        title="Synthetic test-pattern recording",
+        title="Made-up test-pattern recording",
         blob_sha256=hashlib.sha256(payload).hexdigest(),
         byte_size=len(payload),
         width=640,
@@ -135,8 +135,8 @@ def _recording(ffmpeg: Path, folder: Path) -> tuple[MediaAsset, Path]:
         creator="Test fixture",
         source_uri="urn:video-motion:test:testsrc2",
         provenance="captured",
-        synthetic=True,
-        disclosure="Synthetic test pattern captured from ffmpeg testsrc2 for a test.",
+        made_up=True,
+        disclosure="Made-up test pattern captured from ffmpeg testsrc2 for a test.",
     )
     return asset, path
 
@@ -276,7 +276,7 @@ def test_render_produces_checked_mp4s_with_tool_cards(rendered: dict[str, Any]) 
         assert ffmpeg.sha256 == hashlib.sha256(Path(rendered["ffmpeg"]).read_bytes()).hexdigest()
         assert not ffmpeg.missing_capabilities and ffmpeg.license_spdx.startswith(("GPL", "LGPL"))
         assert manifest.total_frames == 54
-        assert manifest.synthetic_media == ["clip", "inset-card", "music", "narration", "pip"]
+        assert manifest.made_up_media == ["clip", "inset-card", "music", "narration", "pip"]
         assert "/" + "home" not in json.dumps(manifest.model_dump(mode="json"))
         report = video_worker.check_rendered_video(sequence, root / "render", manifest.aspect)
         failed = {c.check: c.measured for c in report.checks if not c.passed}

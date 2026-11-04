@@ -389,7 +389,7 @@
               "confidence": "high",
               "location": "app/routes/invoices.py:41-58",
               "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
-              "reproduction": "In a local sandbox build with two synthetic users, user B requested user A's invoice at http://localhost:8000/invoices/1 and received it.",
+              "reproduction": "In a local sandbox build with two made-up users, user B requested user A's invoice at http://localhost:8000/invoices/1 and received it.",
               "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
               "status": "reproduced_locally"
             },
@@ -449,7 +449,7 @@
               "confidence": "high",
               "location": "",
               "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
-              "reproduction": "In a local sandbox build with two synthetic users, user B requested user A's invoice at http://localhost:8000/invoices/1 and received it.",
+              "reproduction": "In a local sandbox build with two made-up users, user B requested user A's invoice at http://localhost:8000/invoices/1 and received it.",
               "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
               "status": "reproduced_locally"
             },
@@ -983,7 +983,7 @@
           "confidence": "high",
           "location": "app/routes/invoices.py:41-58",
           "explanation": "The handler loads the invoice by id and returns it without comparing its owner with the caller.",
-          "reproduction": "In a local sandbox build with two synthetic users, user B requested user A's invoice at http://localhost:8000/invoices/1 and received it.",
+          "reproduction": "In a local sandbox build with two made-up users, user B requested user A's invoice at http://localhost:8000/invoices/1 and received it.",
           "fix": "Compare invoice.owner_id with the caller's id before returning; add a test that user B is refused.",
           "status": "reproduced_locally"
         }
@@ -1424,7 +1424,7 @@
       "kind": "verb.verify_gate",
       "title": "Reproduce a finding locally",
       "claimant": "agent",
-      "summary": "Build the pinned commit in a sandbox with synthetic data and no credentials, and try to reproduce one finding.",
+      "summary": "Build the pinned commit in a sandbox with made-up data and no credentials, and try to reproduce one finding.",
       "outcome": "A reproduction record: reproduced, not reproduced or inconclusive.",
       "ready_outcome": "reproduction_recorded",
       "pinned": [
@@ -1455,7 +1455,7 @@
       ],
       "steps": [
         "Confirm reproduce_in_sandbox is an allowed activity; otherwise return blocked.",
-        "Run only inside the sandbox against services the sandbox starts, with synthetic users and data.",
+        "Run only inside the sandbox against services the sandbox starts, with made-up users and data.",
         "Record each step and the result; store artifacts by digest.",
         "Review only code the requester owns or is explicitly authorized to review, from a local copy. Never scan, probe, exploit or load-test any running system, including the requester's own production.",
         "Report where a secret is, never its value. Never try a found credential."

@@ -21,8 +21,8 @@ known. One report binds every row to the file's SHA-256. A person still watches 
 | Tool card | The pack's tested code in [code/](code/README.md), pinned by digest |
 | Templates | QA plan, measurement set, text items, check rows and the extended QA report |
 | Report checks | Six checks on a report, with one good and six bad summaries the validator recomputes |
-| Checklist, sources, test cases | What a person does with a report; 9 dated public sources; 7 synthetic cases |
-| Worked example | Synthetic: a 12-second vertical cut's logs, sidecars and MP4 facts, and the report the code computes from them |
+| Checklist, sources, test cases | What a person does with a report; 9 dated public sources; 7 made-up cases |
+| Worked example | Made-up: a 12-second vertical cut's logs, sidecars and MP4 facts, and the report the code computes from them |
 
 ## Verbs
 
@@ -58,7 +58,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 - A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
   through Tessera. The checks were run by hand on ta-amps's own 3:00 explainer film while this pack
   was written; that is a trial of the code, not a run of these verbs.
-- The worked example is synthetic. Its logs follow FFmpeg 7's formats, and its scene scores and luma
+- The worked example is made-up. Its logs follow FFmpeg 7's formats, and its scene scores and luma
   ranges are sampled twice per second for brevity, where a real run samples every frame.
 - Thresholds are defaults from one production, not standards. A dissolve or camera move rarely
   scores as a cut, so shot lengths are upper bounds and still stretches are only warnings.

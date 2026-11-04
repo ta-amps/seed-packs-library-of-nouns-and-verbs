@@ -15,7 +15,7 @@ version, provider and model, so runs can be compared later.
 | Lifecycle checklist | Ten steps with expected observations, two optional negative probes and the pass rule |
 | Connection guide | MCP and HTTP transport rules, argument rules and credential handling |
 | Recovery playbook | What to do for 401, 403, 404, 409, 413, 400 or 422, 429, 503 and an uncertain submit |
-| Templates | Connection, run record (with a synthetic example), diagnosis, compatibility summary and run review |
+| Templates | Connection, run record (with a made-up example), diagnosis, compatibility summary and run review |
 
 ## Verbs
 

@@ -13,7 +13,7 @@ decisions when they go stale.
 
 | Noun | What it holds |
 | --- | --- |
-| Profile template and a synthetic example | Topics, interfaces, observed hardware, hard constraints, ranked preferences, budgets and allowed licenses |
+| Profile template and a made-up example | Topics, interfaces, observed hardware, hard constraints, ranked preferences, budgets and allowed licenses |
 | 8 source cards | Suggested starting sources (five arXiv category feeds, a GitHub release-feed pattern, FFmpeg news, Blender releases), all untested |
 | Templates | Source card, scan batch, candidate card, trial result and decision |
 | 6 comparable-trial definitions | Motion graphics, video editing, video generation, 3D, agent memory and harnesses |
@@ -42,7 +42,7 @@ describes what a future, authorized schedule adapter would enqueue.
 
 ## How to use it
 
-Replace the synthetic profile with a pinned profile of your real project and machine. Write the nouns in [nouns.json](nouns.json) create-only with a key scoped to your team's
+Replace the made-up profile with a pinned profile of your real project and machine. Write the nouns in [nouns.json](nouns.json) create-only with a key scoped to your team's
 surface, then fill a template from [verbs.json](verbs.json) with
 `scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>`
 and enqueue the printed task yourself. Workers need keys on the same surface.

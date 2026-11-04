@@ -4,7 +4,7 @@
 
 A collection of nouns and verbs for tuning a small open model at one narrow task, round after round,
 and keeping a change only when a rule committed before any scoring says so. Workers generate owned
-synthetic examples, curate them against contamination, freeze a test set and register its hashes,
+made-up examples, curate them against contamination, freeze a test set and register its hashes,
 train a QLoRA or LoRA adapter on free or local GPUs, score it by strict exact match, check that it
 reloads to the same replies, and decide by the rule with a paired bootstrap. Keeping the champion is
 a valid outcome, and a promotion moves only a private pointer. It builds on the
@@ -19,10 +19,10 @@ a valid outcome, and a promotion moves only a private pointer. It builds on the
 | Promotion rule | The real pre-registered rule, version 1, with its source commit and digest `bf0fa821...` |
 | Tool cards | The pack's tested code in [code/](code/README.md), and the full loop in Tessera pinned by commit and file digests |
 | Templates | Promotion rule, learner spec, example batch, frozen test receipt, adapter card, run record, reload check, promotion decision, champion pointer, roll back record |
-| Measured results | Published results on one synthetic task each, with their limits |
+| Measured results | Published results on one made-up task each, with their limits |
 | Decision checks | Nine checks on a decision, with two good and nine bad decisions the validator recomputes |
-| Checklist, sources, test cases | What a person checks; 6 dated public sources; 8 synthetic cases |
-| Worked example | Synthetic: 40 frozen rows with a real receipt, and two rounds under the real rule |
+| Checklist, sources, test cases | What a person checks; 6 dated public sources; 8 made-up cases |
+| Worked example | Made-up: 40 frozen rows with a real receipt, and two rounds under the real rule |
 
 ## Verbs
 
@@ -42,10 +42,10 @@ Each verb can also end with `no_change`, `unknown` or `blocked`, and can propose
 
 ## Measured results
 
-On a frozen 150-row synthetic test of typed tool calls, Llama 3.2 1B Instruct rose from 12.0% to
+On a frozen 150-row made-up test of typed tool calls, Llama 3.2 1B Instruct rose from 12.0% to
 50.7% exact match over four rounds, and Llama 3.2 3B Instruct from 52.0% to 72.7% in one; a later 3B
 round scored 79.3% but broke a schema guard and was kept out. Glimmer 30B rose from 93.3% to 99.3%
-on a fresh holdout registered before scoring. Each is one synthetic task with one seed.
+on a fresh holdout registered before scoring. Each is one made-up task with one seed.
 
 ## How to use it
 
@@ -59,8 +59,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 - A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
   through Tessera. The measured results came from the loop's own code, not from these templates.
-- The worked example is synthetic; its rows, receipt digests and decisions are real computations on
+- The worked example is made-up; its rows, receipt digests and decisions are real computations on
   made-up data, and no model was trained or scored for it.
 - The pack's code recomputes decisions; training and scoring need the loop's GPU worker environment.
-- A gain on one synthetic task says nothing about other tasks or real traffic.
+- A gain on one made-up task says nothing about other tasks or real traffic.
 - Sources were checked on 2026-10-30. Recheck them before relying on them.

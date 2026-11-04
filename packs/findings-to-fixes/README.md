@@ -23,7 +23,7 @@ create nouns and propose verbs; they never enqueue.
 | Severity guide | P0 to P3, what each means and how fast to respond, with the security review pack's levels mapped onto them |
 | Evidence checklist | A minimal reproduction for an error, screenshots at named widths and themes for a visual design flaw, the person's words for an annoyance |
 | Disclosure rules | Never publish details of an unfixed security finding; fixed and non-sensitive findings may be published once the owner agrees |
-| Record checks | 20 deterministic checks with 11 known-good findings (8 real, 3 synthetic) and 20 synthetic known-bad ones, rechecked by `make check` |
+| Record checks | 20 deterministic checks with 11 known-good findings (8 real, 3 made-up) and 20 made-up known-bad ones, rechecked by `make check` |
 | Templates | Finding, reproduction, fix proposal, fix, verification, regression guard, public summary and pattern review |
 | Worked examples | Eight real public findings from October 29, 2026, and a pattern review written by hand from them |
 

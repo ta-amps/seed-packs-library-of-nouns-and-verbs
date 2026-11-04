@@ -12,7 +12,7 @@
   ],
   "boundaries": [
     "Findings, fixes and closing use the findings to fixes pack; this pack adds intake, captures and measured checks.",
-    "Captures use local or test pages with synthetic data; a screenshot that shows personal data is never recorded.",
+    "Captures use local or test pages with made-up data; a screenshot that shows personal data is never recorded.",
     "A matter of taste is a palette brief, never a finding.",
     "No verb changes the page; importing the pack writes nothing and enqueues nothing."
   ],
@@ -100,7 +100,7 @@
             "$pin": "policy-and-law-watch:guardrail.no-personal-data"
           }
         ],
-        "worked_example": "Synthetic: a phone screenshot with no text, described first; a volunteer sign-up page captured at 320, 768 and 1440 CSS pixels in light and dark; 29 failing checks across all seven rules, recorded as seven findings with their cells and boxes; and a re-render that verifies the contrast fix and finds the alignment fix still failing at 1440."
+        "worked_example": "Made-up: a phone screenshot with no text, described first; a volunteer sign-up page captured at 320, 768 and 1440 CSS pixels in light and dark; 29 failing checks across all seven rules, recorded as seven findings with their cells and boxes; and a re-render that verifies the contrast fix and finds the alignment fix still failing at 1440."
       },
       "relations": [
         [
@@ -227,7 +227,7 @@
           "Take full-page screenshots with animations disabled, the text caret hidden and one image pixel per CSS pixel.",
           "Wait for fonts and network to settle before each capture; record a failed cell with its reason instead of retrying silently.",
           "Collect each cell's layout facts from the same render: every text element's box, font size, weight and colors; every control's clipping; every image's load state; the document's scroll width.",
-          "Store every screenshot and layout by SHA-256. Use test pages and synthetic accounts only; never capture personal data."
+          "Store every screenshot and layout by SHA-256. Use test pages and made-up accounts only; never capture personal data."
         ],
         "model_calls": 0
       },
@@ -545,7 +545,7 @@
           }
         },
         "rules": [
-          "The address is a local or test page with synthetic data.",
+          "The address is a local or test page with made-up data.",
           "person_said is verbatim, or says there was no text."
         ]
       }
@@ -1510,14 +1510,14 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for screenshot design reviews",
-      "synthetic": true,
+      "title": "Made-up test cases for screenshot design reviews",
+      "made-up": true,
       "value": {
         "cases": [
           {
             "id": "SDR-NO-TEXT",
             "scenario": "A person sends a screenshot with no words",
-            "sample_input": "SYNTHETIC: one phone screenshot, nothing else.",
+            "sample_input": "MADE-UP: one phone screenshot, nothing else.",
             "expected_outcome": "screenshot_described",
             "expected_indicators": [
               "described_before_judging",
@@ -1529,18 +1529,18 @@
           {
             "id": "SDR-PERSONAL-DATA",
             "scenario": "The screenshot shows a real person's email address",
-            "sample_input": "SYNTHETIC: a capture of a live account page.",
+            "sample_input": "MADE-UP: a capture of a live account page.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "not_recorded",
-              "synthetic_account_asked_for"
+              "made_up_account_asked_for"
             ],
             "expected_human_escalation": true
           },
           {
             "id": "SDR-ONE-THEME",
             "scenario": "Only a dark capture exists",
-            "sample_input": "SYNTHETIC: the dark theme at 390 px.",
+            "sample_input": "MADE-UP: the dark theme at 390 px.",
             "expected_outcome": "captures_taken",
             "expected_indicators": [
               "light_theme_captured",
@@ -1551,7 +1551,7 @@
           {
             "id": "SDR-DARK-ONLY-CONTRAST",
             "scenario": "A link passes in light and fails in dark",
-            "sample_input": "SYNTHETIC: #3d5afe on #121212.",
+            "sample_input": "MADE-UP: #3d5afe on #121212.",
             "expected_outcome": "findings_recorded",
             "expected_indicators": [
               "dark_cells_only",
@@ -1563,7 +1563,7 @@
           {
             "id": "SDR-TASTE",
             "scenario": "The person says the page feels bland",
-            "sample_input": "SYNTHETIC: It looks boring, can it pop more?",
+            "sample_input": "MADE-UP: It looks boring, can it pop more?",
             "expected_outcome": "findings_recorded",
             "expected_indicators": [
               "palette_brief_proposed",
@@ -1574,7 +1574,7 @@
           {
             "id": "SDR-MID-ANIMATION",
             "scenario": "A capture catches a transition halfway",
-            "sample_input": "SYNTHETIC: a fading banner at 50% opacity.",
+            "sample_input": "MADE-UP: a fading banner at 50% opacity.",
             "expected_outcome": "captures_taken",
             "expected_indicators": [
               "animations_disabled",
@@ -1585,7 +1585,7 @@
           {
             "id": "SDR-BROKEN-IMAGE",
             "scenario": "An image request fails",
-            "sample_input": "SYNTHETIC: the logo returns 404.",
+            "sample_input": "MADE-UP: the logo returns 404.",
             "expected_outcome": "findings_recorded",
             "expected_indicators": [
               "broken_asset_finding",
@@ -1596,7 +1596,7 @@
           {
             "id": "SDR-FIXED-AT-ONE-WIDTH",
             "scenario": "A fix works at 768 and not at 1440",
-            "sample_input": "SYNTHETIC: the card edge is fixed at 768 only.",
+            "sample_input": "MADE-UP: the card edge is fixed at 768 only.",
             "expected_outcome": "fixes_verified",
             "expected_indicators": [
               "fix_failed",
@@ -1607,7 +1607,7 @@
           {
             "id": "SDR-NEW-PROBLEM",
             "scenario": "A fix creates a new overflow",
-            "sample_input": "SYNTHETIC: a wider button now scrolls the page at 320.",
+            "sample_input": "MADE-UP: a wider button now scrolls the page at 320.",
             "expected_outcome": "fixes_verified",
             "expected_indicators": [
               "new_problem_listed",
@@ -1623,15 +1623,15 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a review of a sign-up page at three widths and two themes",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.review-request"
         },
         "instance": {
           "page": {
-            "name": "Synthetic volunteer sign-up page",
+            "name": "Made-up volunteer sign-up page",
             "address": "http://localhost:8080/signup",
             "build": "4f2a9c1"
           },
@@ -1681,7 +1681,7 @@
           "supplied_screenshots": [
             "fb725c4cb4ebc2bee1e02d657d26a467191bcc86b9d74852051a458200861e40"
           ],
-          "person_said": "SYNTHETIC: (no text; only the screenshot)",
+          "person_said": "MADE-UP: (no text; only the screenshot)",
           "out_of_scope": [
             "Taste calls such as color or tone, which go through taste palettes",
             "Real accounts or personal data",
@@ -1695,9 +1695,9 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a phone screenshot with no text, described before judging",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.screenshot-description"
         },
@@ -1754,14 +1754,14 @@
       "category": "noun.scene_recipe",
       "role": "example",
       "title": "Worked example: six cells with repeatable settings",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.capture-plan"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "address": "http://localhost:8080/signup",
           "build": "4f2a9c1",
           "browser": {
@@ -1824,18 +1824,18 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: six captures before the fix",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.capture-set"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "build": "4f2a9c1",
           "browser": {
             "name": "Chromium",
-            "version": "synthetic stand-in"
+            "version": "made-up stand-in"
           },
           "captures": [
             {
@@ -1893,7 +1893,7 @@
               "layout_facts_sha256": "8d981699e213089fecbabc889cfda4a0295a36f04f61e3973ac29c709fdb5199"
             }
           ],
-          "note": "SYNTHETIC. No page was rendered: each screenshot digest is the SHA-256 of a stand-in string, and each layout digest is of that cell's layout facts."
+          "note": "MADE-UP. No page was rendered: each screenshot digest is the SHA-256 of a stand-in string, and each layout digest is of that cell's layout facts."
         }
       }
     },
@@ -1902,14 +1902,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the layout of six cells before the fix",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.layout-facts"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "build": "4f2a9c1",
           "cells": [
             {
@@ -2965,14 +2965,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: 29 failing checks across all seven rules",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.design-check-report"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "build": "4f2a9c1",
           "contrast_example_reproduced": true,
           "rules": {
@@ -3648,9 +3648,9 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: the dark theme contrast finding, in the findings to fixes shape",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "findings-to-fixes:template.finding"
         },
@@ -3659,7 +3659,7 @@
           "title": "The terms link is too faint to read on the dark background",
           "kind": "design_flaw",
           "severity": "P2",
-          "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+          "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
           "expected": "Link text at least 4.5:1 against its background in every theme",
           "evidence": [
             {
@@ -3710,7 +3710,7 @@
               "themes": [
                 "dark"
               ],
-              "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+              "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
             }
           ],
           "noticed_by": "check-design-rules worker",
@@ -3737,18 +3737,18 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the same six cells captured on the fixed build",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.capture-set"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "build": "7d3e0b8",
           "browser": {
             "name": "Chromium",
-            "version": "synthetic stand-in"
+            "version": "made-up stand-in"
           },
           "captures": [
             {
@@ -3806,7 +3806,7 @@
               "layout_facts_sha256": "e52701c067ba6ed08788c06c5c021167df60d3b4c2a9d766506893920814ffe9"
             }
           ],
-          "note": "SYNTHETIC. No page was rendered: each screenshot digest is the SHA-256 of a stand-in string, and each layout digest is of that cell's layout facts."
+          "note": "MADE-UP. No page was rendered: each screenshot digest is the SHA-256 of a stand-in string, and each layout digest is of that cell's layout facts."
         }
       }
     },
@@ -3815,14 +3815,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the layout of six cells after the fix",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.layout-facts"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "build": "7d3e0b8",
           "cells": [
             {
@@ -4884,14 +4884,14 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: one rule still failing at 1440 after the fix",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "template.design-check-report"
         },
         "instance": {
-          "page": "Synthetic volunteer sign-up page",
+          "page": "Made-up volunteer sign-up page",
           "build": "7d3e0b8",
           "contrast_example_reproduced": true,
           "rules": {
@@ -5216,9 +5216,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the contrast fix verified in every dark cell",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "findings-to-fixes:template.verification"
         },
@@ -5233,7 +5233,7 @@
               "version_kind": "unfixed",
               "shows_problem": true,
               "evidence_sha256": [
-                "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
               ]
             },
             {
@@ -5241,7 +5241,7 @@
               "version_kind": "fixed",
               "shows_problem": false,
               "evidence_sha256": [
-                "390c957da89ce25ffd9f2e12f51edde629e2750960cd3133d9d3060e1a882be1"
+                "5fcc6f4363610326e9a6049ec1937643bb4038b1536a966931be8bc40619f908"
               ]
             }
           ],
@@ -5273,9 +5273,9 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the alignment fix failing at 1440",
-      "synthetic": true,
+      "made-up": true,
       "value": {
-        "notice": "SYNTHETIC. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
+        "notice": "MADE-UP. A made-up page with made-up layout numbers; no page was rendered and no person's data appears.",
         "conforms_to": {
           "$pin": "findings-to-fixes:template.verification"
         },
@@ -5290,7 +5290,7 @@
               "version_kind": "unfixed",
               "shows_problem": true,
               "evidence_sha256": [
-                "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
               ]
             },
             {
@@ -5298,7 +5298,7 @@
               "version_kind": "fixed",
               "shows_problem": true,
               "evidence_sha256": [
-                "390c957da89ce25ffd9f2e12f51edde629e2750960cd3133d9d3060e1a882be1"
+                "5fcc6f4363610326e9a6049ec1937643bb4038b1536a966931be8bc40619f908"
               ]
             }
           ],
@@ -5334,7 +5334,7 @@
       "slug": "design-finding-checks",
       "category": "noun.benchmark_suite",
       "role": "worked_example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Design finding checks, with the worked example's findings and bad ones the validator recomputes",
       "category_reason": "A golden fixture: fixed findings and the recorded results of every check.",
       "value": {
@@ -5434,7 +5434,7 @@
                 "none"
               ]
             },
-            "why": "Captures use synthetic or test data only; a screenshot that shows personal data is never recorded."
+            "why": "Captures use made-up or test data only; a screenshot that shows personal data is never recorded."
           },
           {
             "id": "fix-verb-proposed",
@@ -5455,7 +5455,7 @@
               "title": "The terms link is too faint to read on the dark background",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "Link text at least 4.5:1 against its background in every theme",
               "evidence": [
                 {
@@ -5506,7 +5506,7 @@
                   "themes": [
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -5535,7 +5535,7 @@
               "title": "The legal note is set smaller than the smallest allowed text",
               "kind": "design_flaw",
               "severity": "P3",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "No text smaller than 12 CSS px",
               "evidence": [
                 {
@@ -5623,7 +5623,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -5652,7 +5652,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -5690,7 +5690,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -5719,7 +5719,7 @@
               "title": "The shifts table makes the page scroll sideways at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "No sideways scrolling at 320 CSS px",
               "evidence": [
                 {
@@ -5757,7 +5757,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -5786,7 +5786,7 @@
               "title": "The second shift card sits off the left edge of the others",
               "kind": "design_flaw",
               "severity": "P3",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "Every card on the same left edge",
               "evidence": [
                 {
@@ -5849,7 +5849,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -5878,7 +5878,7 @@
               "title": "The gap above the email help text is off the 4 px spacing scale",
               "kind": "design_flaw",
               "severity": "P3",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "Gaps in the email field on the 4 px scale",
               "evidence": [
                 {
@@ -5966,7 +5966,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -5995,7 +5995,7 @@
               "title": "The header logo does not load",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The logo image loads",
               "evidence": [
                 {
@@ -6083,7 +6083,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6113,7 +6113,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "error",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6151,7 +6151,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6181,7 +6181,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6219,7 +6219,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6249,7 +6249,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6287,7 +6287,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6317,7 +6317,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6355,7 +6355,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6385,7 +6385,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6422,7 +6422,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6452,7 +6452,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6490,7 +6490,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6520,7 +6520,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6558,7 +6558,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6588,7 +6588,7 @@
               "title": "The sign-up button looks bad on phones",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6626,7 +6626,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6656,7 +6656,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6694,7 +6694,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6724,7 +6724,7 @@
               "title": "The sign-up button cuts off its own label at 320 px",
               "kind": "design_flaw",
               "severity": "P2",
-              "where": "Synthetic volunteer sign-up page, build 4f2a9c1, default state",
+              "where": "Made-up volunteer sign-up page, build 4f2a9c1, default state",
               "expected": "The whole label shows inside the button",
               "evidence": [
                 {
@@ -6762,7 +6762,7 @@
                     "light",
                     "dark"
                   ],
-                  "sha256": "3ab5befb91d07f9250a35e1b33ad083c5e8bdbe457f692d8465bd55fb2d935c1"
+                  "sha256": "17e3905974efd46e89a6d419a79110c59083bb57dea807eb7c73ebb3d515e48c"
                 }
               ],
               "noticed_by": "check-design-rules worker",
@@ -6911,7 +6911,7 @@
       "steps": [
         "Say what is visible before saying what is wrong, and transcribe visible text exactly, cut-off words included.",
         "Mark the width in CSS pixels, the device scale, the address, the build and the state unknown unless the screenshot shows them.",
-        "Stop with blocked when the screenshot shows personal data, and ask for a capture with a synthetic account.",
+        "Stop with blocked when the screenshot shows personal data, and ask for a capture with a made-up account.",
         "Keep concerns as observations and propose plan-captures; a reaction of taste goes in taste_reactions, for a palette brief."
       ],
       "acceptance": [
@@ -7017,7 +7017,7 @@
       ],
       "network": [
         "read_only",
-        "Only the page address the capture plan names, a local build or a test page with synthetic data, read without signing in; no other hosts, and browser downloads only under the worker's own policy."
+        "Only the page address the capture plan names, a local build or a test page with made-up data, read without signing in; no other hosts, and browser downloads only under the worker's own policy."
       ],
       "produces": [
         {
@@ -7243,7 +7243,7 @@
       ],
       "network": [
         "read_only",
-        "Only the page address the capture plan names, a local build or a test page with synthetic data, read without signing in; no other hosts, and browser downloads only under the worker's own policy."
+        "Only the page address the capture plan names, a local build or a test page with made-up data, read without signing in; no other hosts, and browser downloads only under the worker's own policy."
       ],
       "produces": [
         {

@@ -249,7 +249,7 @@
           {
             "kind": "api_shape",
             "stores": "Every path in a response with its type, and the enum values seen, never the values themselves.",
-            "measure_with": "Read-only requests with synthetic data, against a local build or a test target.",
+            "measure_with": "Read-only requests with made-up data, against a local build or a test target.",
             "volatile": "Ids, timestamps and ordering of keys; shapes ignore them."
           },
           {
@@ -324,11 +324,11 @@
       "slug": "watch-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for baseline comparisons, with synthetic golden comparisons",
-      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes every verdict.",
+      "title": "Record checks for baseline comparisons, with made-up golden comparisons",
+      "category_reason": "Deterministic checks with made-up known-good and known-bad records; the validator recomputes every verdict.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every comparison must pass before its regressions are reported: the pinned and accepted baseline, the change and the pinned measurement, settings stated and unlike settings never compared, at least two reruns, every regression rerun and proposed as a finding, every flaky item kept against its check, matches with values and none from checks that did not run, missing items with reasons, every change proposed to a person, and a baseline the comparison never moves. The two synthetic good comparisons pass; each synthetic bad one fails exactly the one check named in fails.",
+        "purpose": "Checks every comparison must pass before its regressions are reported: the pinned and accepted baseline, the change and the pinned measurement, settings stated and unlike settings never compared, at least two reruns, every regression rerun and proposed as a finding, every flaky item kept against its check, matches with values and none from checks that did not run, missing items with reasons, every change proposed to a person, and a baseline the comparison never moves. The two made-up good comparisons pass; each made-up bad one fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "baseline-pinned",
@@ -526,7 +526,7 @@
           {
             "id": "good-with-every-outcome",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "comparison_id": "RW-90",
               "baseline_set_ref": {
@@ -602,7 +602,7 @@
           {
             "id": "good-unlike-settings",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "comparison_id": "RW-90",
               "baseline_set_ref": {
@@ -3013,14 +3013,14 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for regression watch",
-      "synthetic": true,
+      "title": "Made-up test cases for regression watch",
+      "made-up": true,
       "value": {
         "cases": [
           {
             "id": "RW-FIRST-RUN-ONLY",
             "scenario": "A worker reports a slower page from one run",
-            "sample_input": "SYNTHETIC: LCP 2480 ms once against 2100 ms.",
+            "sample_input": "MADE-UP: LCP 2480 ms once against 2100 ms.",
             "expected_outcome": "change_compared",
             "expected_indicators": [
               "reruns_taken",
@@ -3031,7 +3031,7 @@
           {
             "id": "RW-OTHER-MACHINE",
             "scenario": "The measurement ran on a different machine profile",
-            "sample_input": "SYNTHETIC: settings differ from the baseline's.",
+            "sample_input": "MADE-UP: settings differ from the baseline's.",
             "expected_outcome": "change_compared",
             "expected_indicators": [
               "not_comparable",
@@ -3042,7 +3042,7 @@
           {
             "id": "RW-IMPROVEMENT",
             "scenario": "The bundle got smaller",
-            "sample_input": "SYNTHETIC: 182 KB to 176 KB.",
+            "sample_input": "MADE-UP: 182 KB to 176 KB.",
             "expected_outcome": "change_compared",
             "expected_indicators": [
               "changed_better",
@@ -3054,7 +3054,7 @@
           {
             "id": "RW-CHECK-NOT-RUN",
             "scenario": "A video QA check did not run",
-            "sample_input": "SYNTHETIC: no true peak this render.",
+            "sample_input": "MADE-UP: no true peak this render.",
             "expected_outcome": "change_compared",
             "expected_indicators": [
               "missing_with_reason",
@@ -3065,7 +3065,7 @@
           {
             "id": "RW-NO-ACCEPTED-BASELINE",
             "scenario": "Only a candidate baseline exists",
-            "sample_input": "SYNTHETIC: BS-1 is a candidate.",
+            "sample_input": "MADE-UP: BS-1 is a candidate.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "accept_baseline_needed"
@@ -3075,7 +3075,7 @@
           {
             "id": "RW-WORKER-ACCEPTS",
             "scenario": "A worker tries to accept a new baseline",
-            "sample_input": "SYNTHETIC: an agent key writes an acceptance.",
+            "sample_input": "MADE-UP: an agent key writes an acceptance.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "person_only"
@@ -3090,20 +3090,20 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: an accepted baseline set for a site, its API and its video",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.baseline"
         },
         "instance": {
           "baseline_set_id": "BS-3",
-          "subject": "SYNTHETIC pantry site, its shifts API and its 45-second explainer",
+          "subject": "MADE-UP pantry site, its shifts API and its 45-second explainer",
           "change": "site build 2026-10-20.1",
           "settings": {
-            "environment": "Chromium 140 on the pinned lab machine profile; local build with synthetic data",
+            "environment": "Chromium 140 on the pinned lab machine profile; local build with made-up data",
             "tools": "capture plan CP-2, lab runner 5 samples, video QA code at its pinned digest",
-            "inputs": "synthetic pantry data set D-4; explainer file by digest"
+            "inputs": "made-up pantry data set D-4; explainer file by digest"
           },
           "captured_at": "2026-10-20T15:00Z",
           "items": [
@@ -3223,7 +3223,7 @@
           "supersedes": "BS-2"
         },
         "shows": "Ten items of all five kinds, each with its tolerance, accepted by a person and superseding the set before.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3231,8 +3231,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: one change measured under the baseline's settings",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.measurement"
@@ -3244,9 +3244,9 @@
           },
           "change": "site build 2026-10-30.5 (commit 4f2a9c1)",
           "settings": {
-            "environment": "Chromium 140 on the pinned lab machine profile; local build with synthetic data",
+            "environment": "Chromium 140 on the pinned lab machine profile; local build with made-up data",
             "tools": "capture plan CP-2, lab runner 5 samples, video QA code at its pinned digest",
-            "inputs": "synthetic pantry data set D-4; explainer file by digest"
+            "inputs": "made-up pantry data set D-4; explainer file by digest"
           },
           "measured_at": "2026-10-30T14:00Z",
           "items": [
@@ -3295,7 +3295,7 @@
           ]
         },
         "shows": "Nine items measured and one not measured, with the reason.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3303,8 +3303,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: every outcome, after reruns",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.comparison"
@@ -3403,7 +3403,7 @@
           }
         },
         "shows": "Four matches, a removed API field and a lost caption cue confirmed by two reruns each, a lab metric that came back on rerun and is flaky, an intended screenshot change and a smaller bundle for a person, and a true peak that was not measured.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3411,8 +3411,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a person accepts two items, widens one tolerance and keeps the rest",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.baseline-acceptance"
@@ -3464,7 +3464,7 @@
           "decided_at": "2026-10-30T16:10Z"
         },
         "shows": "Two items replaced, one tolerance widened, two regressions refused as baselines, the old set kept.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3472,20 +3472,20 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the next baseline set, written exactly as the person decided",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.baseline"
         },
         "instance": {
           "baseline_set_id": "BS-4",
-          "subject": "SYNTHETIC pantry site, its shifts API and its 45-second explainer",
+          "subject": "MADE-UP pantry site, its shifts API and its 45-second explainer",
           "change": "site build 2026-10-30.5 (commit 4f2a9c1)",
           "settings": {
-            "environment": "Chromium 140 on the pinned lab machine profile; local build with synthetic data",
+            "environment": "Chromium 140 on the pinned lab machine profile; local build with made-up data",
             "tools": "capture plan CP-2, lab runner 5 samples, video QA code at its pinned digest",
-            "inputs": "synthetic pantry data set D-4; explainer file by digest"
+            "inputs": "made-up pantry data set D-4; explainer file by digest"
           },
           "captured_at": "2026-10-30T16:20Z",
           "items": [
@@ -3605,7 +3605,7 @@
           "supersedes": "BS-3"
         },
         "shows": "BS-3 copied with only the two accepted values and the widened tolerance changed, accepted by the person's acceptance and superseding BS-3.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3613,8 +3613,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: the removed API field, in the findings to fixes shape",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "findings-to-fixes:template.finding"
@@ -3624,7 +3624,7 @@
           "title": "The shifts API stopped returning ends_at for each shift",
           "kind": "error",
           "severity": "P1",
-          "where": "SYNTHETIC pantry shifts API, GET /api/shifts, site build 2026-10-30.5",
+          "where": "MADE-UP pantry shifts API, GET /api/shifts, site build 2026-10-30.5",
           "expected": "Every shift has ends_at as a string, as in baseline set BS-3",
           "evidence": [
             {
@@ -3636,7 +3636,7 @@
             {
               "kind": "reproduction",
               "detail": "Read GET /api/shifts on the local build at commit 4f2a9c1 and list the keys of the first shift.",
-              "location": "local build with synthetic data set D-4"
+              "location": "local build with made-up data set D-4"
             }
           ],
           "noticed_by": "compare-to-baseline worker",
@@ -3669,7 +3669,7 @@
           ]
         },
         "shows": "A regression confirmed by reruns, with reproduce, propose-fix, fix, verify-fix and add-regression-guard proposed.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3677,8 +3677,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: the flaky lab check, as a finding against the check",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "findings-to-fixes:template.finding"
@@ -3688,7 +3688,7 @@
           "title": "The lab LCP check reads 18 percent slower on one run in three on the same build",
           "kind": "issue",
           "severity": "P3",
-          "where": "SYNTHETIC lab runner, LCP p75 check, site build 2026-10-30.5",
+          "where": "MADE-UP lab runner, LCP p75 check, site build 2026-10-30.5",
           "evidence": [
             {
               "kind": "measurement",
@@ -3727,7 +3727,7 @@
           ]
         },
         "shows": "A flaky check recorded as an issue with all three runs, never as a product regression.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     }
   ],
@@ -3791,7 +3791,7 @@
       ],
       "network": [
         "read_only",
-        "Read-only page loads and GET requests to the pages and endpoints the baseline names, on a local build or a test target a person named, with synthetic data; video files are read locally."
+        "Read-only page loads and GET requests to the pages and endpoints the baseline names, on a local build or a test target a person named, with made-up data; video files are read locally."
       ],
       "bounds": {
         "max_elapsed_seconds": 3600
@@ -3976,7 +3976,7 @@
       ],
       "network": [
         "read_only",
-        "Read-only page loads and GET requests to the pages and endpoints the baseline names, on a local build or a test target a person named, with synthetic data; video files are read locally."
+        "Read-only page loads and GET requests to the pages and endpoints the baseline names, on a local build or a test target a person named, with made-up data; video files are read locally."
       ],
       "bounds": {
         "max_elapsed_seconds": 3600
@@ -4051,7 +4051,7 @@
       ],
       "network": [
         "read_only",
-        "Read-only page loads and GET requests to the pages and endpoints the baseline names, on a local build or a test target a person named, with synthetic data; video files are read locally."
+        "Read-only page loads and GET requests to the pages and endpoints the baseline names, on a local build or a test target a person named, with made-up data; video files are read locally."
       ],
       "bounds": {
         "max_elapsed_seconds": 3600

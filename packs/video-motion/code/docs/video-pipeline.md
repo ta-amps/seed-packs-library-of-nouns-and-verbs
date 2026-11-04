@@ -63,7 +63,7 @@ match, or ffmpeg lacks a required component. Then it:
    with two linear ffmpeg `loudnorm` passes.
 3. Composites clips, crossfades, cuts, overlays and burned-in captions in one ffmpeg
    graph (BT.709, 4:4:4 internally) and encodes H.264 High 4:2:0 + AAC 48 kHz stereo,
-   with `title` and a `comment` that says what is synthetic or generated.
+   with `title` and a `comment` that says what is made-up or generated.
 4. Writes SRT and WebVTT sidecars and a `render-manifest.json` per aspect: every frame's
    scene-evaluation hash and PNG digest, caption digests, audio digests and loudness
    measurements, the exact commands, tool cards and the tool package's source digests.
@@ -92,7 +92,7 @@ must pass:
 | `frozen_frames` | `freezedetect` (runs ≥ 2 s) | Each freeze lies inside a planned hold (up to 0.75 s of easing tail) |
 | `integrated_loudness` | EBU R128 (`ebur128`) | Within 1 LU of the target; true peak at or below the limit |
 | `caption_timing_coverage` | `silencedetect` on the narration stem, sidecar SRT | Captions cover ≥ 95% of measured speech, no cue shows without speech, sidecar timings equal the track |
-| `synthetic_disclosure` | File metadata (`ffmetadata`) | Title and disclosure comment are exactly what the manifest records |
+| `made_up_disclosure` | File metadata (`ffmetadata`) | Title and disclosure comment are exactly what the manifest records |
 
 Pre-render QA (`audit_sequence()`) already ran every-frame scene QA and checked the
 caption track: safe zones, minimum size and contrast, reading speed (≤ 20 characters

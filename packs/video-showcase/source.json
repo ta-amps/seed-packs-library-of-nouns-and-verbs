@@ -7,7 +7,7 @@
     "video-motion"
   ],
   "boundaries": [
-    "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
+    "Use only made-up or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
     "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision.",
     "Narration is recorded by a person; any generated media is labeled.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -108,7 +108,7 @@
         "style_guide": {
           "$pin": "style-guide"
         },
-        "privacy": "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
+        "privacy": "Use only made-up or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
         "publication": "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision.",
         "showcase_checks": {
           "$pin": "showcase-checks"
@@ -207,7 +207,7 @@
           "captions": "A sidecar caption file (SRT or WebVTT) always; burned-in captions when the brief asks for them."
         },
         "content_rules": [
-          "Show the real product working with synthetic or demo data.",
+          "Show the real product working with made-up or demo data.",
           "Every number on screen links to its evidence: a test run, a counts record, an event log, a receipt or a dated public source.",
           "Label any generated still, voice or clip as generated.",
           "Prefer a human narrator reading the script in their own voice.",
@@ -223,7 +223,7 @@
           "Integrated loudness about -16 LUFS with true peak at or below -1 dBTP for web playback. Set it as the sequence's loudness target; the video and motion pack's render and check verbs apply and measure it.",
           "Music, if any, stays well under the narration."
         ],
-        "privacy": "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture."
+        "privacy": "Use only made-up or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture."
       }
     },
     {
@@ -256,7 +256,7 @@
           },
           {
             "id": "generated-media-labeled",
-            "threshold": "Every media noun marked synthetic is labeled on screen or in the description, not only in file metadata.",
+            "threshold": "Every media noun marked made-up is labeled on screen or in the description, not only in file metadata.",
             "method": "Deterministic join of sequence clips and media nouns, plus a visual check."
           }
         ],
@@ -673,7 +673,7 @@
           "Every number the video may show must come from a listed evidence source."
         ],
         "example": {
-          "audience": "SYNTHETIC: developers who want to try the project in five minutes.",
+          "audience": "MADE-UP: developers who want to try the project in five minutes.",
           "goal": "Show one task going from request to a checked result.",
           "must_show": [
             "The request being created",
@@ -1076,7 +1076,7 @@
                   "data": {
                     "type": "string",
                     "enum": [
-                      "synthetic",
+                      "made-up",
                       "demo_account"
                     ]
                   },
@@ -1166,7 +1166,7 @@
           }
         },
         "rules": [
-          "Use only synthetic or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
+          "Use only made-up or demo data on screen. No credentials, real personal data, private tabs or notifications may appear in any capture.",
           "Targets are local or demo deployments the requester controls."
         ],
         "example": {
@@ -1175,7 +1175,7 @@
               "capture_id": "result-page",
               "shot_id": "proof-1",
               "target": "http://localhost:<port>/result/demo",
-              "data": "synthetic",
+              "data": "made-up",
               "viewport": {
                 "width": 1920,
                 "height": 1080
@@ -1317,7 +1317,7 @@
           "unit": "checks",
           "source": {
             "kind": "test_run",
-            "ref": "SYNTHETIC: local test run log, run 7, summary line",
+            "ref": "MADE-UP: local test run log, run 7, summary line",
             "observed_at": "2026-10-29"
           },
           "check": {
@@ -1624,7 +1624,7 @@
       "steps": [
         "Verify the pins. Map every beat to at least one scene.",
         "Prefer real screen captures of the working product; use rendered scenes for titles, diagrams and transitions.",
-        "Write a capture plan step by step with viewport 1920x1080, synthetic or demo data and privacy checks.",
+        "Write a capture plan step by step with viewport 1920x1080, made-up or demo data and privacy checks.",
         "Mark which shots need a 9:16 variant when the brief asks for one.",
         "Propose one capture-screen verb per capture and a render-scenes verb for rendered shots.",
         "Keep every output inside the requester's scope. Publishing, uploading or posting the video is the owner's separate decision."
@@ -1708,7 +1708,7 @@
         "Verify the pins and the pinned Playwright and Chromium builds before running anything.",
         "Use a fresh browser profile, signed out of every account, with notifications off.",
         "Run each capture's steps exactly, at its viewport, against its local or demo target only. Set the recording size to the viewport explicitly; the default is smaller.",
-        "Store each recording as a blob, compute its SHA-256, and write a media noun in the video and motion pack's media format with provenance captured and synthetic false.",
+        "Store each recording as a blob, compute its SHA-256, and write a media noun in the video and motion pack's media format with provenance captured and made-up false.",
         "Stop and return blocked if any frame would show a credential, real personal data or an unplanned site."
       ],
       "acceptance": [
@@ -1782,8 +1782,8 @@
       "steps": [
         "Read the script aloud in a quiet room; small departures from the script are fine and will be captured by transcription.",
         "Record at 48 kHz, mono or stereo, without music.",
-        "Upload the take as a blob in your team's scope and write a media noun in the video and motion pack's media format with kind audio, provenance captured, synthetic false and the license the person grants. The renderer accepts CC0-1.0, CC-BY-4.0 or MIT for a person's recording.",
-        "Nobody else's voice and no synthetic voice is used in this verb.",
+        "Upload the take as a blob in your team's scope and write a media noun in the video and motion pack's media format with kind audio, provenance captured, made-up false and the license the person grants. The renderer accepts CC0-1.0, CC-BY-4.0 or MIT for a person's recording.",
+        "Nobody else's voice and no made-up voice is used in this verb.",
         "When the take is stored, propose a transcribe-captions verb with it pinned."
       ],
       "acceptance": [
@@ -1799,7 +1799,7 @@
         },
         {
           "id": "not-generated",
-          "check": "provenance is captured and synthetic is false.",
+          "check": "provenance is captured and made-up is false.",
           "method": "deterministic"
         },
         {

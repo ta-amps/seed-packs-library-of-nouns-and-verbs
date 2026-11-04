@@ -2,13 +2,13 @@
   "pack_id": "continuous-tuning",
   "title": "Continuous tuning",
   "version": "0.1.0",
-  "summary": "A collection of nouns and verbs for tuning a small open model at one narrow task, round after round, and keeping a change only when a rule committed before any scoring says so: owned synthetic examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
+  "summary": "A collection of nouns and verbs for tuning a small open model at one narrow task, round after round, and keeping a change only when a rule committed before any scoring says so: owned made-up examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
   "dependencies": [
     "evaluation-design"
   ],
   "boundaries": [
     "Keeping the champion is a valid outcome; a promotion moves only a private pointer, never a deployment, admission or serving change.",
-    "Owned synthetic data only, or data whose license and consent permit training.",
+    "Owned made-up data only, or data whose license and consent permit training.",
     "Training uses the worker's own or free GPUs within their terms; this pack grants no compute or spending.",
     "Importing the pack writes nothing and enqueues nothing."
   ],
@@ -19,7 +19,7 @@
       "role": "pack",
       "title": "A collection of nouns and verbs for tuning a small open model round after round, kept only when a rule fixed in advance says so",
       "value": {
-        "lets_workers": "Improve a small open model at one narrow task, round after round, keeping a change only when a rule committed before any scoring says so: owned synthetic examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
+        "lets_workers": "Improve a small open model at one narrow task, round after round, keeping a change only when a rule committed before any scoring says so: owned made-up examples, curation against contamination, a frozen test registered by its hashes, a QLoRA or LoRA adapter trained on free or local GPUs, strict exact-match evaluation with a paired bootstrap, a reload check, a recomputable decision, and a private champion pointer that moves or stays.",
         "flow": [
           {
             "verb": {
@@ -31,7 +31,7 @@
             "verb": {
               "$verb": "continuous-tuning.generate-examples"
             },
-            "when": "Owned synthetic rows from templates."
+            "when": "Owned made-up rows from templates."
           },
           {
             "verb": {
@@ -101,7 +101,7 @@
             "$pin": "tool.tuning-loop"
           }
         ],
-        "worked_example": "Synthetic, recomputed by the code's tests: 40 frozen rows and their real receipt, then two rounds under the real pre-registered rule. Round 1 promotes; round 2 keeps the champion because a guard holds against a real-looking gain.",
+        "worked_example": "Made-up, recomputed by the code's tests: 40 frozen rows and their real receipt, then two rounds under the real pre-registered rule. Round 1 promotes; round 2 keeps the champion because a guard holds against a real-looking gain.",
         "order_note": "check-reload runs before decide-promotion, because the rule's integrity checks need its result.",
         "provenance_notes": [
           "Generalizes Tessera's continuous tuning example (docs/continuous-tuning.md and examples/continuous_tuning at commit 2e7d6ab4d7e084a413ba0c3c83cebc10d81c9a98).",
@@ -224,7 +224,7 @@
       "title": "Guardrail: owned data only",
       "category_reason": "A guardrail is a reusable rule every verb in this work follows, with the check that proves it.",
       "value": {
-        "rule": "Train only on owned synthetic data, or on data whose license and the consent of the people in it permit training. Never train on a provider's outputs when its terms forbid it, on private history, on execution reports, or on personal data.",
+        "rule": "Train only on owned made-up data, or on data whose license and the consent of the people in it permit training. Never train on a provider's outputs when its terms forbid it, on private history, on execution reports, or on personal data.",
         "how_it_is_checked": "Every example batch records model_generated false and no external source, or names the license and consent that permit training on each source."
       }
     },
@@ -430,7 +430,7 @@
           "ablation": "When a round trains several strategies, dev selects one. Test results for the others are analysis only and never change the decision.",
           "caveats": [
             "The frozen test is evaluated once per round, so later rounds carry multiple-comparison risk; each round's fresh holdout is the check against that",
-            "Synthetic templates measure this task only; no claim about other tasks or real user traffic follows"
+            "Made-up templates measure this task only; no claim about other tasks or real user traffic follows"
           ]
         },
         "rule_sha256": "bf0fa821717c2400faab77652f067ea85f2616eea329c6e139af33a423e4b3b7",
@@ -930,7 +930,7 @@
       "slug": "template.example-batch",
       "category": "noun.benchmark_suite",
       "role": "template",
-      "title": "Template: a batch of owned synthetic examples, with digests and rejections",
+      "title": "Template: a batch of owned made-up examples, with digests and rejections",
       "value": {
         "describes": "an example batch: how it was generated, its origin, rows and families, the digests that pin its rows, its provenance, the contamination counts against every held-out set, and every rejected row with its reason",
         "schema": {
@@ -1946,14 +1946,14 @@
       "slug": "measured-results",
       "category": "noun.eval_run",
       "role": "cited_results",
-      "title": "Published results of this loop: three models, one synthetic task each",
+      "title": "Published results of this loop: three models, one made-up task each",
       "category_reason": "A fingerprinted evaluation summary: published, dated results with their sources.",
       "value": {
-        "summary": "Each result is one synthetic typed tool-call task with one seed per configuration. They show the loop measuring gains from little owned data and keeping out regressions by a rule fixed in advance; they do not show general improvement.",
+        "summary": "Each result is one made-up typed tool-call task with one seed per configuration. They show the loop measuring gains from little owned data and keeping out regressions by a rule fixed in advance; they do not show general improvement.",
         "results": [
           {
             "model": "Llama 3.2 1B Instruct",
-            "test": "frozen 150-row synthetic test over tool families never trained on",
+            "test": "frozen 150-row made-up test over tool families never trained on",
             "before": 0.12,
             "after": 0.507,
             "rounds": "4 rounds on one GPU, 2 promoted",
@@ -1971,17 +1971,17 @@
           },
           {
             "model": "Glimmer 30B",
-            "test": "a fresh 150-row synthetic holdout, its hashes registered before scoring",
+            "test": "a fresh 150-row made-up holdout, its hashes registered before scoring",
             "before": 0.933,
             "after": 0.993,
             "paired": "+0.060, paired bootstrap 95 percent interval +0.020 to +0.107; 10 rows improved, 1 regressed",
             "kept_out": "Nothing: 12 of 12 rule checks passed, and a fresh reload regenerated 8 of 8 rows exactly. Nothing was promoted, admitted or registered; the adapter weights are not published.",
-            "method": "A QLoRA adapter trained on free cloud GPUs with synthetic examples only.",
+            "method": "A QLoRA adapter trained on free cloud GPUs with made-up examples only.",
             "source": "Published evidence; its address is in this pack's descriptor provenance notes."
           }
         ],
         "limits": [
-          "One synthetic task per model and one seed per configuration; no variance across seeds was measured.",
+          "One made-up task per model and one seed per configuration; no variance across seeds was measured.",
           "The frozen test is reused across rounds; each round's fresh holdout guards against that.",
           "A gain here says nothing about other tasks, real traffic or a harness's end-to-end success."
         ]
@@ -2055,13 +2055,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for continuous tuning",
+      "title": "Made-up test cases for continuous tuning",
       "value": {
         "cases": [
           {
             "id": "CT-DEV-NOT-TEST",
             "scenario": "Dev improves but the frozen test does not",
-            "sample_input": "SYNTHETIC: A schema-augmented candidate lifts dev from 0.61 to 0.76, but frozen test exact match ties the champion at 0.51.",
+            "sample_input": "MADE-UP: A schema-augmented candidate lifts dev from 0.61 to 0.76, but frozen test exact match ties the champion at 0.51.",
             "expected_outcome": "promotion_decided",
             "expected_indicators": [
               "keep_champion",
@@ -2072,7 +2072,7 @@
           {
             "id": "CT-GUARD-HOLDS",
             "scenario": "A real-looking gain breaks a guard",
-            "sample_input": "SYNTHETIC: The candidate gains 0.067 on test with a lower bound above zero, but schema validity falls 0.025 against a 0.02 limit.",
+            "sample_input": "MADE-UP: The candidate gains 0.067 on test with a lower bound above zero, but schema validity falls 0.025 against a 0.02 limit.",
             "expected_outcome": "promotion_decided",
             "expected_indicators": [
               "keep_champion",
@@ -2083,7 +2083,7 @@
           {
             "id": "CT-SHAPE-OVERLAP",
             "scenario": "A training row shares a template shape with a test row",
-            "sample_input": "SYNTHETIC: A new training row reads List the objects in bucket demo-77 whose names start with logs/, the same template as test row t01 with other values.",
+            "sample_input": "MADE-UP: A new training row reads List the objects in bucket demo-77 whose names start with logs/, the same template as test row t01 with other values.",
             "expected_outcome": "dataset_curated",
             "expected_indicators": [
               "row_rejected_with_reason",
@@ -2094,7 +2094,7 @@
           {
             "id": "CT-LATE-RECEIPT",
             "scenario": "A fresh holdout is registered after a model was scored on it",
-            "sample_input": "SYNTHETIC: The receipt says 15:20; the first evaluation run on those rows says 15:10.",
+            "sample_input": "MADE-UP: The receipt says 15:20; the first evaluation run on those rows says 15:10.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "receipt_not_pre_registered",
@@ -2105,7 +2105,7 @@
           {
             "id": "CT-RELOAD-MISMATCH",
             "scenario": "A reloaded adapter regenerates 7 of 8 probe rows",
-            "sample_input": "SYNTHETIC: After reloading onto a fresh base, probe row 5 differs in one argument.",
+            "sample_input": "MADE-UP: After reloading onto a fresh base, probe row 5 differs in one argument.",
             "expected_outcome": "promotion_decided",
             "expected_indicators": [
               "keep_champion",
@@ -2116,7 +2116,7 @@
           {
             "id": "CT-PROVIDER-OUTPUTS",
             "scenario": "A batch built from a hosted model's replies whose terms forbid training on them",
-            "sample_input": "SYNTHETIC: A batch of 200 rows was written by a hosted model under terms that forbid training competing models.",
+            "sample_input": "MADE-UP: A batch of 200 rows was written by a hosted model under terms that forbid training competing models.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "owned_data_only",
@@ -2127,7 +2127,7 @@
           {
             "id": "CT-QUOTA-RUNS-OUT",
             "scenario": "The free GPU session ends mid-training",
-            "sample_input": "SYNTHETIC: The free GPU quota ends at minute 41 of a 45-minute round; the lease lapses.",
+            "sample_input": "MADE-UP: The free GPU quota ends at minute 41 of a 45-minute round; the lease lapses.",
             "expected_outcome": "unknown",
             "expected_indicators": [
               "attempt_recorded",
@@ -2139,7 +2139,7 @@
           {
             "id": "CT-ROLLBACK",
             "scenario": "A regression shows up after a promotion",
-            "sample_input": "SYNTHETIC: The next round's fresh holdout scores the champion 0.38 against the previous champion's 0.44.",
+            "sample_input": "MADE-UP: The next round's fresh holdout scores the champion 0.38 against the previous champion's 0.44.",
             "expected_outcome": "pointer_moved",
             "expected_indicators": [
               "person_records_rollback",
@@ -2149,16 +2149,16 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.frozen-test-rows",
       "category": "noun.benchmark_suite",
       "role": "example",
-      "title": "Worked example: 40 synthetic frozen test rows for a typed tool-call task",
+      "title": "Worked example: 40 made-up frozen test rows for a typed tool-call task",
       "category_reason": "A golden fixture set: fixed rows whose digests the receipt registers.",
       "value": {
-        "notice": "SYNTHETIC. Template draws for a stand-in task: list objects in a bucket, read a feed, or refuse an operation no offered tool performs. Every name is made up.",
+        "notice": "MADE-UP. Template draws for a stand-in task: list objects in a bucket, read a feed, or refuse an operation no offered tool performs. Every name is made up.",
         "rows": [
           {
             "id": "t01",
@@ -2890,7 +2890,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.frozen-test-receipt",
@@ -2898,7 +2898,7 @@
       "role": "example",
       "title": "Worked example: the 40 rows' receipt, registered before the first scoring",
       "value": {
-        "notice": "SYNTHETIC. The digests are real: of the rows in example.frozen-test-rows as canonical JSON lines and of their ordered ids.",
+        "notice": "MADE-UP. The digests are real: of the rows in example.frozen-test-rows as canonical JSON lines and of their ordered ids.",
         "conforms_to": {
           "$pin": "template.frozen-test-receipt"
         },
@@ -2914,7 +2914,7 @@
           ],
           "jsonl_sha256": "5e71972dc79dec429f5652ea289a04d33bbbb4874b20deb1e7656b77bc527e18",
           "ids_sha256": "0b64c04a49a9e07a432cb62f3f5f8e9b535b1f7578d4ee59c0e023940efdeed4",
-          "generator": "example templates, version 1 (synthetic)",
+          "generator": "example templates, version 1 (made-up)",
           "contamination": {
             "exact": 0,
             "request": 0,
@@ -2927,7 +2927,7 @@
           "$pin": "example.frozen-test-rows"
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.evaluations",
@@ -2936,7 +2936,7 @@
       "title": "Worked example: two rounds of evaluations, in the shape the decision reads",
       "category_reason": "Fixed evaluations whose decisions the pack's code recomputes.",
       "value": {
-        "notice": "SYNTHETIC. Per-row exact results on the 40 frozen rows for the base, candidate A (round 1) and candidate B (round 2), with aggregates, a 24-row fresh holdout and a sanity set.",
+        "notice": "MADE-UP. Per-row exact results on the 40 frozen rows for the base, candidate A (round 1) and candidate B (round 2), with aggregates, a 24-row fresh holdout and a sanity set.",
         "round_1": {
           "candidate": {
             "test": {
@@ -3326,7 +3326,7 @@
           "Round 2: B is right on 32 rows against A's 25 and its bootstrap lower bound is above zero, but its schema validity fell 0.025 against a 0.02 limit, so the champion stays."
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.decision-round-1",
@@ -3334,7 +3334,7 @@
       "role": "example",
       "title": "Worked example: round 1: promote candidate A",
       "value": {
-        "notice": "SYNTHETIC. Recomputed by the pack's code from example.evaluations with the real rule.",
+        "notice": "MADE-UP. Recomputed by the pack's code from example.evaluations with the real rule.",
         "conforms_to": {
           "$pin": "template.promotion-decision"
         },
@@ -3428,7 +3428,7 @@
           "effects": "Moves only the private local champion pointer that the next round compares against. No deployment, publication, admission or serving change."
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.decision-round-2",
@@ -3436,7 +3436,7 @@
       "role": "example",
       "title": "Worked example: round 2: keep the champion; a guard holds",
       "value": {
-        "notice": "SYNTHETIC. Recomputed by the pack's code from example.evaluations with the real rule.",
+        "notice": "MADE-UP. Recomputed by the pack's code from example.evaluations with the real rule.",
         "conforms_to": {
           "$pin": "template.promotion-decision"
         },
@@ -3530,7 +3530,7 @@
           "effects": "Moves only the private local champion pointer that the next round compares against. No deployment, publication, admission or serving change."
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "decision-checks",
@@ -4054,16 +4054,16 @@
           "guardrail.private-pointer-only"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [
     {
       "slug": "generate-examples",
       "kind": "verb.solve_draft",
-      "title": "Generate owned synthetic examples",
+      "title": "Generate owned made-up examples",
       "claimant": "agent",
-      "summary": "Generate a batch of owned synthetic examples from the generator's templates with seeded counter draws; each label is computed from its template and checked against the offered tool's schema, never written by a model.",
+      "summary": "Generate a batch of owned made-up examples from the generator's templates with seeded counter draws; each label is computed from its template and checked against the offered tool's schema, never written by a model.",
       "outcome": "An example batch with its digests.",
       "ready_outcome": "examples_generated",
       "model_use": "none",

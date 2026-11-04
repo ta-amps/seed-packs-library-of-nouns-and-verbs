@@ -383,11 +383,11 @@
       "slug": "loop-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for review runs, with synthetic golden runs",
-      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes every verdict.",
+      "title": "Record checks for review runs, with made-up golden runs",
+      "category_reason": "Deterministic checks with made-up known-good and known-bad records; the validator recomputes every verdict.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every review run must pass before it is appended to the log: the pinned scope and exact version, a person's approval for a scheduled run or a named requester for a manual one, the run it is compared with, checks that ran with their outputs and checks that did not with reasons, and every finding sorted with its follow-up: new ones recorded, fixed ones verified by someone other than the fixer, unverified and unexplained ones given a verification or a reproduction, unchecked ones kept open and reopened ones naming the closing they undid. The two synthetic good runs pass; each synthetic bad one fails exactly the one check named in fails.",
+        "purpose": "Checks every review run must pass before it is appended to the log: the pinned scope and exact version, a person's approval for a scheduled run or a named requester for a manual one, the run it is compared with, checks that ran with their outputs and checks that did not with reasons, and every finding sorted with its follow-up: new ones recorded, fixed ones verified by someone other than the fixer, unverified and unexplained ones given a verification or a reproduction, unchecked ones kept open and reopened ones naming the closing they undid. The two made-up good runs pass; each made-up bad one fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "scope-pinned",
@@ -594,7 +594,7 @@
           {
             "id": "good-scheduled",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "run_id": "RR-90",
               "scope_id": "repo:src/api",
@@ -680,7 +680,7 @@
           {
             "id": "good-first-manual",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "run_id": "RR-90",
               "scope_id": "repo:src/api",
@@ -3709,14 +3709,14 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for continuous self-review",
-      "synthetic": true,
+      "title": "Made-up test cases for continuous self-review",
+      "made-up": true,
       "value": {
         "cases": [
           {
             "id": "CSR-NO-APPROVAL",
             "scenario": "A window opens before any person approved the schedule",
-            "sample_input": "SYNTHETIC: schedule RS-1 with no approval.",
+            "sample_input": "MADE-UP: schedule RS-1 with no approval.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "approval_needed"
@@ -3726,7 +3726,7 @@
           {
             "id": "CSR-EXPIRED",
             "scenario": "The approval expired yesterday",
-            "sample_input": "SYNTHETIC: AP-1 expired 2026-12-31; today is 2027-01-01.",
+            "sample_input": "MADE-UP: AP-1 expired 2026-12-31; today is 2027-01-01.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "approval_expired",
@@ -3737,7 +3737,7 @@
           {
             "id": "CSR-GONE",
             "scenario": "A finding disappears with no fix on record",
-            "sample_input": "SYNTHETIC: the TODO at line 88 is no longer reported.",
+            "sample_input": "MADE-UP: the TODO at line 88 is no longer reported.",
             "expected_outcome": "run_diffed",
             "expected_indicators": [
               "gone_unexplained",
@@ -3749,7 +3749,7 @@
           {
             "id": "CSR-CHECK-DOWN",
             "scenario": "A check cannot run this window",
-            "sample_input": "SYNTHETIC: registry metadata unreachable.",
+            "sample_input": "MADE-UP: registry metadata unreachable.",
             "expected_outcome": "run_diffed",
             "expected_indicators": [
               "not_checked",
@@ -3760,7 +3760,7 @@
           {
             "id": "CSR-SELF-VERIFY",
             "scenario": "The worker that fixed a finding is asked to verify it",
-            "sample_input": "SYNTHETIC: the fixer's key claims verify-fix.",
+            "sample_input": "MADE-UP: the fixer's key claims verify-fix.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "distinct_reviewer_required"
@@ -3770,7 +3770,7 @@
           {
             "id": "CSR-STARVED",
             "scenario": "Busy scopes keep outranking a quiet one",
-            "sample_input": "SYNTHETIC: three busy scopes with open P1 findings and a quiet docs scope 61 days since review on a 30-day interval.",
+            "sample_input": "MADE-UP: three busy scopes with open P1 findings and a quiet docs scope 61 days since review on a 30-day interval.",
             "expected_outcome": "scopes_picked",
             "expected_indicators": [
               "urgent_tier",
@@ -3781,7 +3781,7 @@
           {
             "id": "CSR-WONT-FIX-SEEN",
             "scenario": "A finding a person closed as won't fix is seen again",
-            "sample_input": "SYNTHETIC: the cache count's broad suppress.",
+            "sample_input": "MADE-UP: the cache count's broad suppress.",
             "expected_outcome": "run_diffed",
             "expected_indicators": [
               "decided_seen",
@@ -3797,15 +3797,15 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: eight scopes across a repository, a site and a video",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.scope-catalog"
         },
         "instance": {
           "catalog_id": "SC-1",
-          "target": "SYNTHETIC pantry: its repository, its site and its 45-second explainer",
+          "target": "MADE-UP pantry: its repository, its site and its 45-second explainer",
           "version": "1",
           "scopes": [
             {
@@ -3928,7 +3928,7 @@
           ]
         },
         "shows": "Each scope with checks from other packs, a max interval and how its churn is measured.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3936,8 +3936,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a weekly rotation, proposed and not activated",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.review-schedule"
@@ -3969,7 +3969,7 @@
           "enqueue_identity": "SHA-256 of the schedule key, its version and the window start."
         },
         "shows": "Three scopes a week, an allowance per window, pick-scope as the only verb it would enqueue, and no start until a person approves.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -3977,8 +3977,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a person approves the rotation with changes and an expiry",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "unattended-run-record:template.run-approval"
@@ -4007,7 +4007,7 @@
           "expires": "2026-12-31T23:59Z"
         },
         "shows": "The unattended run record pack's approval, reused: scopes, allowance, changes and an expiry the scheduled runs name.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -4015,8 +4015,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the rotation rule picks three scopes",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.scope-pick"
@@ -4128,7 +4128,7 @@
           ]
         },
         "shows": "A scope never reviewed first, then the highest scores: an API folder that changed most and documentation overdue by four weeks.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -4136,7 +4136,7 @@
       "category": "noun.benchmark_suite",
       "role": "fixture",
       "title": "Worked example inputs: what the last run saw, what this run saw, and the fixes and verifications on record",
-      "synthetic": true,
+      "made-up": true,
       "category_reason": "A golden fixture: inputs a test sorts again.",
       "value": {
         "purpose": "The library's tests sort these by the diff rules and compare with the review run's diff.",
@@ -4218,7 +4218,7 @@
             "verified_by": "different_worker"
           }
         ],
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -4226,8 +4226,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: one run of an API folder, sorted against the last run",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.review-run"
@@ -4331,7 +4331,7 @@
           "reviewed_at": "2026-10-30T10:00Z"
         },
         "shows": "One finding in each class: new, still open, fixed and verified by another worker, fixed but unverified, gone with no fix, not checked because its check did not run, and reopened after it was closed; and one a person closed as won't fix, seen again and left alone.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -4339,8 +4339,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: twelve runs over two months, and coverage as of the end of the window",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.review-log"
@@ -4556,7 +4556,7 @@
           "open_findings": 20
         },
         "shows": "Every run appended in order, with coverage recomputed from the entries: seven of eight scopes within their intervals, and the forms folder overdue, so it leads the next pick.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -4564,8 +4564,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a worker reviews its own change before handing it on",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.self-review"
@@ -4611,7 +4611,7 @@
           "self_approval": false
         },
         "shows": "Two scopes touched, one check failing on the worker's own change and recorded at once, one that could not run, and the change handed to a different worker.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     },
     {
@@ -4619,8 +4619,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: two months of the log, read for what the loop misses",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.coverage-review"
@@ -4668,7 +4668,7 @@
           ]
         },
         "shows": "A check that never fails, a check that often cannot run and a fix that did not hold, each with a proposal.",
-        "source": "Synthetic. Written for this pack; every name, address, number, digest and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number, digest and identifier is made up."
       }
     }
   ],

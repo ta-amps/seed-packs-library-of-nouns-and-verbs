@@ -17,7 +17,7 @@ it. Findings stay in your team's scope, and nothing contacts the project's peopl
 | 5 family guides | Where to look, cautions and what is out of scope for each family |
 | Evidence standard | What counts as evidence, plus 8 deterministic checks and 9 golden findings the validator rechecks |
 | 7 templates | The snapshot you supply, the profile, review plan, finding, option comparison, report and review verdict |
-| Example snapshot | A synthetic stand-in for trying a verb template |
+| Example snapshot | A made-up stand-in for trying a verb template |
 
 ## Verbs
 

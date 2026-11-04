@@ -24,7 +24,7 @@ code except in CI tests; workers run it under their own permissions. Importing r
 | Recipes (3) | Telemetry anomaly triage, incident log digest and A/B candidate selection, with plan, output and receipt digests |
 | Method | How to compose without rewriting code, and how to repair each compiler refusal |
 | Templates (8) | Recipe candidate, compile report, run inputs, run receipt, verification report, comparison, node proposal and review notes |
-| Worked example | SYNTHETIC: a variant that changes one step reuses the 7 unchanged upstream steps from the cache |
+| Worked example | MADE-UP: a variant that changes one step reuses the 7 unchanged upstream steps from the cache |
 
 ## Verbs
 

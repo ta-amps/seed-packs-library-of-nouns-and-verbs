@@ -23,7 +23,7 @@ ratios and for landmark, heading-order and page-language lint.
 | Contrast method, layout rules, media and motion rules | How to measure contrast, reflow, text spacing, target size, captions, description and motion |
 | Structure rules | The linter's 15 rules, each with its criterion and failure or advisory, kept equal to the code by its tests |
 | Tool card | The tested code in [code/](code/README.md), pinned by digest |
-| Audit checks | 18 deterministic checks with 4 synthetic good and 18 synthetic bad findings, rechecked by `make check` |
+| Audit checks | 18 deterministic checks with 4 made-up good and 18 made-up bad findings, rechecked by `make check` |
 | Templates and worked examples | Plan, capture set, check result, assistive-technology session, report and review, with a plan, a keyboard walk and a report |
 
 ## Verbs
@@ -52,7 +52,7 @@ Measured design rules such as cropping, alignment and spacing belong to
 
 ## Worked examples
 
-All synthetic. Seven theme colors are measured in both themes; muted gray passes on white at 4.83:1
+All made-up. Seven theme colors are measured in both themes; muted gray passes on white at 4.83:1
 and fails on the dark background at 3.69:1. Five small pages show what the linter reports, including
 a broken skip link on a valid Spanish page. A keyboard walk finds 14 shift buttons with no visible
 focus and does not call native video controls a trap. The report carries two failures and one AAA

@@ -79,7 +79,7 @@ class WorkedExample(unittest.TestCase):
     def test_the_person_decides_on_a_passing_check(self) -> None:
         reading = NOUNS["example.interpretation"]["instance"]
         self.assertTrue(reading["check_passed"])
-        self.assertTrue(reading["meaning"].startswith("SYNTHETIC."))
+        self.assertTrue(reading["meaning"].startswith("MADE-UP."))
 
     def test_the_tool_card_names_this_code(self) -> None:
         card = NOUNS["tool.csv-checks"]

@@ -198,7 +198,7 @@ def test_media_pins_bind_value_digest_bytes_and_kind(tmp_path: Path) -> None:
 def test_generated_media_are_reproducible_and_labeled() -> None:
     _, assets = _demo()
     for asset in assets:
-        assert asset.provenance == "generated" and asset.synthetic and asset.disclosure
+        assert asset.provenance == "generated" and asset.made_up and asset.disclosure
         assert asset.license == "LicenseRef-Video-Motion-Procedural"
         assert asset.generator is not None
         payload = generate_media_bytes(asset.generator)
@@ -213,8 +213,8 @@ def test_generated_media_are_reproducible_and_labeled() -> None:
     assert worst < 1e-8
     with pytest.raises(ValidationError, match="generator"):
         MediaAsset.model_validate({**assets[0].model_dump(mode="json"), "generator": None})
-    with pytest.raises(ValidationError, match="synthetic"):
-        MediaAsset.model_validate({**assets[0].model_dump(mode="json"), "synthetic": False})
+    with pytest.raises(ValidationError, match="made-up"):
+        MediaAsset.model_validate({**assets[0].model_dump(mode="json"), "made-up": False})
 
 
 def test_media_store_retargeting_keeps_keys_and_digests() -> None:

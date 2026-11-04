@@ -17,7 +17,7 @@ A collection of nouns and verbs for building, expanding, searching, benchmarking
 | `tool.capability-ontology-seeds` | Tested zero-dependency Python 3.10+ package in [code/](code/README.md), pinned by path, file count and SHA-256 |
 | `template.ontology-benchmark-receipt` | Deterministic receipt schema for DAG checks, I/O clustering, 3-generation seed digestion, Pareto ranking and AST/naming gates |
 | `template.niche-demo-walkthrough` | Deterministic 4-beat component demo and verification walkthrough schema for top-ranked niche candidates |
-| Worked example | Synthetic ecosystem bundle (`example.ontology-seed-bundle`) and recomputed receipt (`example.ontology-seed-receipt`) |
+| Worked example | Made-up ecosystem bundle (`example.ontology-seed-bundle`) and recomputed receipt (`example.ontology-seed-receipt`) |
 
 ## Verbs
 

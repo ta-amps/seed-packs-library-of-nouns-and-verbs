@@ -20,8 +20,8 @@ decision use the guardrails of the [policy and law watch pack](../policy-and-law
 | Tool card | The pack's tested code in [code/](code/README.md), pinned by digest |
 | Templates | Analysis request, schema profile, validation report, flag report, query results, chart specs, findings, findings check, interpretation |
 | Findings checks | Eleven checks on findings, with one good and eleven bad sets the validator recomputes |
-| Checklist, sources, test cases | What a person checks before relying on findings; 8 dated public sources; 10 synthetic cases |
-| Worked example | Synthetic: a 25-row weekly meals log for three fictional sites, from file to the person's reading |
+| Checklist, sources, test cases | What a person checks before relying on findings; 8 dated public sources; 10 made-up cases |
+| Worked example | Made-up: a 25-row weekly meals log for three fictional sites, from file to the person's reading |
 
 ## Verbs
 
@@ -41,7 +41,7 @@ Verbs for a person are claimed by people, never by an agent.
 
 ## Worked example
 
-All synthetic. The log has a site written in lower case, a volunteer count written in words, a date
+All made-up. The log has a site written in lower case, a volunteer count written in words, a date
 that does not exist, a missing meals count, a meals count of 9999, a negative weight, a valid week far
 above the others, a repeated row and a column of contact addresses that never leaves the file. The
 profile, validation and flags list every one, six queries leave rows out only through named filters,
@@ -58,7 +58,7 @@ the printed task yourself. Workers need keys on the same surface.
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
-- The worked example is synthetic; its sites, people and numbers are made up, and every address ends
+- The worked example is made-up; its sites, people and numbers are made up, and every address ends
   in example.invalid. The code's tests recompute every step of it.
 - The query language is small on purpose: filters, groups and seven aggregates. Anything larger is a
   new verb with its own checks.

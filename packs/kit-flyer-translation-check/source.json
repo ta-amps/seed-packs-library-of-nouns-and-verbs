@@ -5,7 +5,7 @@
   "summary": "A collection of nouns and verbs for a community center's agent kit that checks translated service flyers against the English source for dropped facts, changed numbers, dates and phone numbers, untranslated text and reading level, while a fluent community reviewer approves each language and staff decide what gets printed.",
   "dependencies": [],
   "boundaries": [
-    "Use only synthetic, clearly marked test data.",
+    "Use only made-up, clearly marked test data.",
     "Steps marked for a person never go to an agent.",
     "Outputs stay surface_only in the requester's scope.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -56,7 +56,7 @@
           "Decide what gets printed and posted."
         ],
         "rules": [
-          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Use only made-up, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
           "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
           "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
         ],
@@ -75,7 +75,7 @@
             "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
             "path": "examples/runs/KIT-FLYER-14.json",
             "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
-            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+            "note": "One recorded example run of the kit on a desktop computer with made-up data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
           }
         ]
       },
@@ -359,13 +359,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for the flyer translation check kit",
+      "title": "Made-up test cases for the flyer translation check kit",
       "value": {
         "cases": [
           {
             "id": "FX-FLYER-MATCH",
             "scenario": "All five translations carry every fact unchanged",
-            "sample_input": "SYNTHETIC: Flu clinic flyer in English with Spanish, Vietnamese, Arabic, Haitian Creole and Tagalog versions; the date 2026-11-12, the hours 9:00 to 13:00 and the phone line 555-0142 match in every version.",
+            "sample_input": "MADE-UP: Flu clinic flyer in English with Spanish, Vietnamese, Arabic, Haitian Creole and Tagalog versions; the date 2026-11-12, the hours 9:00 to 13:00 and the phone line 555-0142 match in every version.",
             "expected_indicators": [
               "all_facts_present",
               "questions_listed_for_reviewer"
@@ -375,7 +375,7 @@
           {
             "id": "FX-FLYER-MISMATCH",
             "scenario": "A translated date and phone number differ from the source",
-            "sample_input": "SYNTHETIC: The Tagalog version shows 2026-11-21 instead of 2026-11-12 and the phone line 555-0124 instead of 555-0142.",
+            "sample_input": "MADE-UP: The Tagalog version shows 2026-11-21 instead of 2026-11-12 and the phone line 555-0124 instead of 555-0142.",
             "expected_indicators": [
               "mismatched_date",
               "mismatched_phone_number",
@@ -391,7 +391,7 @@
           "kit"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.request",
@@ -401,9 +401,9 @@
       "category_reason": "A need in an organization's own plain words frames what the kit should do.",
       "value": {
         "says": "We need each translated flyer checked against the English version before we print it, so a wrong date or phone number never goes out again. A fluent person from the community approves every language.",
-        "mark": "SYNTHETIC"
+        "mark": "MADE-UP"
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "template.fact-comparison",

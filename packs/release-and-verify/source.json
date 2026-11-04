@@ -1224,11 +1224,11 @@
       "slug": "release-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for release receipts, with synthetic golden receipts",
+      "title": "Record checks for release receipts, with made-up golden receipts",
       "category_reason": "A deterministic check suite with known-good and known-bad examples; the validator recomputes every verdict.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every release receipt must pass before a status may call a release verified. The two synthetic good receipts pass all of them; each synthetic bad receipt fails exactly the one check named in fails.",
+        "purpose": "Checks every release receipt must pass before a status may call a release verified. The two made-up good receipts pass all of them; each made-up bad receipt fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "tested-head-recorded",
@@ -1368,7 +1368,7 @@
           {
             "id": "good-verified",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "receipt_id": "R-21",
               "change": {
@@ -1463,7 +1463,7 @@
           {
             "id": "good-partial",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "receipt_id": "R-22",
               "change": {
@@ -2834,8 +2834,8 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a release plan for a small site fix",
-      "synthetic": true,
-      "category_reason": "A synthetic plan in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up plan in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.release-plan"
@@ -2870,7 +2870,7 @@
           ]
         },
         "shows": "The plan names the tested head, the two required checks, the rollback target, how parity is read and the three acts only the release owner performs.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     },
     {
@@ -2878,8 +2878,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a verified receipt whose verdict follows from its parts",
-      "synthetic": true,
-      "category_reason": "A synthetic receipt in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up receipt in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.release-receipt"
@@ -2975,7 +2975,7 @@
           "not_checked": []
         },
         "shows": "Both checks ran on the tested head, the owner recorded the landed commit and the live version, the live bytes match the build, five smoke checks pass and the previous version is kept for rollback.",
-        "source": "Synthetic. Written for this pack; every name, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, number and identifier is made up."
       }
     }
   ],

@@ -8,7 +8,7 @@ from frame_qa.captions import CaptionError, active_cue, caption_box, parse_time,
 
 VTT = """WEBVTT
 
-NOTE a synthetic sidecar
+NOTE a made-up sidecar
 
 c01
 00:00:00.167 --> 00:00:04.333 line:82% position:50% align:center

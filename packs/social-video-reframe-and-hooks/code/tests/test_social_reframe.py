@@ -98,7 +98,7 @@ class SocialReframeTests(unittest.TestCase):
             {
                 "claim_id": "CLM-1",
                 "headline_phrase": "42ms median latency",
-                "required_qualifiers": ["warm cache", "synthetic workload"],
+                "required_qualifiers": ["warm cache", "made-up workload"],
                 "evidence_timestamp_s": 15.0,
             }
         ]
@@ -108,12 +108,12 @@ class SocialReframeTests(unittest.TestCase):
             cutdown_captions=[{"start_s": 0.0, "end_s": 3.0, "text": "We achieved 42ms median latency in our warm cache test."}],
         )
         self.assertFalse(bad_gate["claim_preservation_passed"])
-        self.assertEqual(bad_gate["violations"][0]["dropped_qualifiers"], ["synthetic workload"])
+        self.assertEqual(bad_gate["violations"][0]["dropped_qualifiers"], ["made-up workload"])
 
         good_gate = check_claim_preservation(
             source_claims,
             retained_segments=[{"start_s": 14.0, "end_s": 18.0}],
-            cutdown_captions=[{"start_s": 0.0, "end_s": 4.0, "text": "42ms median latency on a warm cache synthetic workload."}],
+            cutdown_captions=[{"start_s": 0.0, "end_s": 4.0, "text": "42ms median latency on a warm cache made-up workload."}],
         )
         self.assertTrue(good_gate["claim_preservation_passed"])
 

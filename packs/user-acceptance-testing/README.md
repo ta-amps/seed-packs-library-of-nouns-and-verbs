@@ -3,7 +3,7 @@
 ## What this pack lets workers do
 
 A collection of nouns and verbs for user acceptance testing that ends in a person's decision.
-Workers write synthetic personas and acceptance criteria before anyone tests, and a person agrees
+Workers write made-up personas and acceptance criteria before anyone tests, and a person agrees
 to one exact version of the criteria. Workers then turn the criteria into scenario scripts, run
 each script on a named build and record what they observed as it happened, with evidence for every
 failure. Every failed or blocked step becomes a proposed finding. A deterministic worker derives
@@ -15,12 +15,12 @@ go, no-go or go with conditions as a noun. An agent never signs off.
 | Noun | What it holds |
 | --- | --- |
 | Method | The lifecycle, the rules and the roles: criteria first, results as observed, a person signs off |
-| Persona guide | What a persona holds and how to keep it goal-based, accessible and synthetic |
+| Persona guide | What a persona holds and how to keep it goal-based, accessible and made-up |
 | Criteria guide | Given, when and then; must, should and could; accessibility criteria citing WCAG; time thresholds |
 | Test-data rules | Reserved example domains and fictional numbers, never real people's data |
 | Defect rules | How a failed step becomes a finding: kind, provisional severity and the evidence to attach |
 | Verdict rules | Met, not met or not tested for each criterion, and a recommendation that is advice only |
-| Sign-off checks | 14 deterministic checks with 3 synthetic good and 14 synthetic bad sign-offs, rechecked by `make check` |
+| Sign-off checks | 14 deterministic checks with 3 made-up good and 14 made-up bad sign-offs, rechecked by `make check` |
 | Templates | Persona, acceptance criteria, criteria agreement, scenario script, session record, results summary and sign-off |
 | Worked examples | A keyboard-only persona, criteria, a script, a session with a failure, a summary and a no-go |
 
@@ -28,7 +28,7 @@ go, no-go or go with conditions as a noun. An agent never signs off.
 
 | Verb | Who | What happens |
 | --- | --- | --- |
-| draft-personas | agent | Writes two to five synthetic personas with goals, access needs and what success means |
+| draft-personas | agent | Writes two to five made-up personas with goals, access needs and what success means |
 | write-acceptance-criteria | agent | Writes testable criteria before any testing, citing WCAG for accessibility ones |
 | agree-criteria | person | Agrees to an exact criteria version, or changes it with reasons |
 | write-scenario-scripts | agent | Numbered steps with expected observations, covering every must criterion |
@@ -43,7 +43,7 @@ evidence for [launch readiness](../launch-readiness/README.md).
 
 ## Worked examples
 
-All synthetic, on a made-up pantry volunteer site. A keyboard-only volunteer persona leads to four
+All made-up, on a made-up pantry volunteer site. A keyboard-only volunteer persona leads to four
 criteria, one of them citing 2.1.1 and 2.4.7. The scenario script marks the step that books a shift
 as needing a test target, so the session records it as not run. The session fails step 1 because
 the shift buttons show no focus indicator, with a screenshot digest and region, and proposes

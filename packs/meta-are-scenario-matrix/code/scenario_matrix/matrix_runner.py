@@ -235,7 +235,7 @@ def run_latin_hypercube_sweep_1000(
         "mode": "local_verified" if llm_extender is None else "worker_llm_extended",
         "inspired_by": [
             "facebookresearch/meta-agents-research-environments (Meta ARE / Gaia2)",
-            "facebookresearch/matrix (Synthetic Multi-Agent Scenario Scaling)",
+            "facebookresearch/matrix (Made-up Multi-Agent Scenario Scaling)",
         ],
         "seed": seed,
         "addressable_tuple_space": ADDRESSABLE_TUPLES,
@@ -281,7 +281,7 @@ def run_latin_hypercube_sweep_1000(
 
 
 def run_worked_example(bundle: dict[str, Any]) -> dict[str, Any]:
-    """Deterministic recomputation for the pack's synthetic worked example."""
+    """Deterministic recomputation for the pack's made-up worked example."""
     tuples = bundle["tuples"]
     verdicts: list[str] = []
     digested_verbs: list[str] = []

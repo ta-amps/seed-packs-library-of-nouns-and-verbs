@@ -23,8 +23,8 @@ for the owner's decision. The script, storyboard, review and release record come
 | Tool card | The pack's tested code in [code/](code/README.md), pinned by digest: clock, captions, manifest and ledger checks |
 | Templates | Cut plan, stage, slice recordings, caption cues, caption check, compose record, frame sheet, receipts ledger, release manifest |
 | Release checks | Eight checks on a release manifest, with one good and eight bad manifests the validator recomputes |
-| Checklist, sources, test cases | What a person checks before release; 7 dated public sources; 9 synthetic cases |
-| Worked example | Synthetic: a 20-second cut, the voice pack's two placed lines, four cues with WebVTT and SRT, and a manifest with real digests |
+| Checklist, sources, test cases | What a person checks before release; 7 dated public sources; 9 made-up cases |
+| Worked example | Made-up: a 20-second cut, the voice pack's two placed lines, four cues with WebVTT and SRT, and a manifest with real digests |
 
 ## Verbs
 
@@ -59,7 +59,7 @@ enqueue the printed task yourself. Workers need keys on the same surface.
   through Tessera. They package the pipeline ta-amps is using for its own explainer video, run as
   local verbs on a local store; that production was still in draft runs when this pack was written,
   and nothing here claims its result.
-- The worked example is synthetic and renders no video; only its cut plan and sidecar digests are
+- The worked example is made-up and renders no video; only its cut plan and sidecar digests are
   real. The code checks timing, captions, manifests and ledgers; it renders nothing.
 - Pixel identity holds only for the same browser build, fonts and flags.
 - A round-trip recognizer is a proxy: it cannot hear stress or warmth, so a person still listens.

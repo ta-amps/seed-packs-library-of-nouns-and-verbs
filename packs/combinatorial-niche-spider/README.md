@@ -20,7 +20,7 @@ noisy wave families and gating curated admissions on an independent reviewer (`d
 | `rules.cursor-spider-and-refresh` | Rotating 8-path query plan (`base_grid`, `license_free`, `new_repo_radar`, `star_band_middle`, `in_readme_deep`, `awesome_list`, `dataset_benchmark`, `active_unknowns`) and anti-stall synonym mutations |
 | `tool.niche-spider` | Tested standard-library Python package in [code/](code/README.md), pinned by path, file count and digest |
 | `template.niche-spider-receipt` | JSON Schema for minted cell count, cursor advancement, spider edges, refresh movers/gone, retired noisy families and reviewed admissions |
-| Worked example | Five-domain synthetic sweep (`example.niche-spider-bundle`) and recomputed receipt (`example.niche-spider-receipt`) |
+| Worked example | Five-domain made-up sweep (`example.niche-spider-bundle`) and recomputed receipt (`example.niche-spider-receipt`) |
 
 ## Verbs
 

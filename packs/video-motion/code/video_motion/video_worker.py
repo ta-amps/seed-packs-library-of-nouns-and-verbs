@@ -329,7 +329,7 @@ class RenderedMedia(BaseModel):
     path: str
     kind: str
     provenance: str
-    synthetic: bool
+    made_up: bool
     license: str
     disclosure: str
 
@@ -358,8 +358,8 @@ class RenderManifest(BaseModel):
     commands: dict[str, list[str]]
     outputs: dict[str, Any]
     disclosure: str
-    synthetic_visuals: bool = True
-    synthetic_media: list[str] = Field(default_factory=list)
+    made_up_visuals: bool = True
+    made_up_media: list[str] = Field(default_factory=list)
     prerender_qa_receipt_sha256: str
 
 
@@ -431,7 +431,7 @@ def render_sequence(
                 path=relative,
                 kind=asset.kind,
                 provenance=asset.provenance,
-                synthetic=asset.synthetic,
+                made_up=asset.made_up,
                 license=asset.license,
                 disclosure=asset.disclosure,
             )
@@ -599,7 +599,7 @@ def render_sequence(
                     "vtt_sha256": file_sha256(vtt_path),
                 },
                 disclosure=disclosure,
-                synthetic_media=sorted(m.element_id for m in rendered_media if m.synthetic),
+                made_up_media=sorted(m.element_id for m in rendered_media if m.made_up),
                 prerender_qa_receipt_sha256=prerender[aspect].receipt_sha256,
             )
             _write_json(aspect_dir / "render-manifest.json", manifest.model_dump(mode="json"))

@@ -28,7 +28,7 @@ PATH_FIELDS = [
 
 @pytest.fixture
 def bundle(tmp_path: Path) -> tuple[VideoSequence, Path, dict[str, Any]]:
-    """A complete, hashed synthetic inventory; no browser, media decoder or network needed."""
+    """A complete, hashed made-up inventory; no browser, media decoder or network needed."""
     sequence, assets = load_bundled_sequence("hackathon-demo")
     plan = plan_sequence(sequence)
     root = tmp_path / "render"
@@ -37,7 +37,7 @@ def bundle(tmp_path: Path) -> tuple[VideoSequence, Path, dict[str, Any]]:
     def put(relative: str) -> str:
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
-        data = f"synthetic render file {relative}".encode()
+        data = f"made-up render file {relative}".encode()
         path.write_bytes(data)
         return hashlib.sha256(data).hexdigest()
 
@@ -66,7 +66,7 @@ def bundle(tmp_path: Path) -> tuple[VideoSequence, Path, dict[str, Any]]:
                 path=f"media/{asset.media_id}.wav",
                 kind=asset.kind,
                 provenance=asset.provenance,
-                synthetic=asset.synthetic,
+                made_up=asset.made_up,
                 license=asset.license,
                 disclosure=asset.disclosure,
             )
@@ -97,7 +97,7 @@ def bundle(tmp_path: Path) -> tuple[VideoSequence, Path, dict[str, Any]]:
         },
         commands={},
         outputs=outputs,
-        disclosure="Synthetic fixture, not playable media",
+        disclosure="Made-up fixture, not playable media",
         prerender_qa_receipt_sha256="0" * 64,
     ).model_dump(mode="json")
     return sequence, root, manifest
@@ -130,7 +130,7 @@ def test_each_manifest_path_rejects_traversal_before_asset_reads(
 ) -> None:
     sequence, root, manifest = bundle
     outside = root.parent / "outside.txt"
-    outside.write_text("synthetic outside data", encoding="utf-8")
+    outside.write_text("made-up outside data", encoding="utf-8")
     node, key = _field(manifest, field)
     node[key] = "../outside.txt"
     _save(root, manifest)
@@ -138,7 +138,7 @@ def test_each_manifest_path_rejects_traversal_before_asset_reads(
     with pytest.raises(video_worker.VideoRenderError, match="relative path inside"):
         video_worker.check_rendered_video(sequence, root, ASPECT, spot_count=0)
     assert not (root / ASPECT / "video-measurements.json").exists()
-    assert outside.read_text() == "synthetic outside data"
+    assert outside.read_text() == "made-up outside data"
 
 
 @pytest.mark.parametrize(

@@ -1,4 +1,4 @@
-"""Synthetic tests of the pantry app. The mock scan reads them; nothing runs them."""
+"""Made-up tests of the pantry app. The mock scan reads them; nothing runs them."""
 
 import unittest
 from unittest import mock

@@ -666,11 +666,11 @@
       "slug": "record-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for findings, with real and synthetic golden findings",
+      "title": "Record checks for findings, with real and made-up golden findings",
       "category_reason": "Deterministic checks with golden fixtures and recorded expected results that the validator recomputes.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every version of a finding must pass before triage, close or publish-finding accept it. The eight real public findings in this pack pass all of them; each synthetic known-bad finding fails exactly the one check named in fails. The validator recomputes every verdict.",
+        "purpose": "Checks every version of a finding must pass before triage, close or publish-finding accept it. The eight real public findings in this pack pass all of them; each made-up known-bad finding fails exactly the one check named in fails. The validator recomputes every verdict.",
         "deterministic_checks": [
           {
             "id": "kind-known",
@@ -1362,30 +1362,30 @@
             "label": "known_good",
             "finding": {
               "id": "S-101",
-              "title": "SYNTHETIC: the parser drops the last row of a file",
+              "title": "MADE-UP: the parser drops the last row of a file",
               "kind": "error",
               "severity": "P2",
-              "where": "SYNTHETIC parser module",
+              "where": "MADE-UP parser module",
               "evidence": [
                 {
                   "kind": "reproduction",
-                  "detail": "SYNTHETIC: a three-row file gave two rows."
+                  "detail": "MADE-UP: a three-row file gave two rows."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "error/synthetic-parser/drops-last-row",
+              "fingerprint": "error/made-up-parser/drops-last-row",
               "status": "closed",
               "sensitivity": "none",
               "public": true,
               "fix": {
-                "summary": "SYNTHETIC: keep the final row",
+                "summary": "MADE-UP: keep the final row",
                 "links": [
-                  "SYNTHETIC PR #2"
+                  "MADE-UP PR #2"
                 ]
               },
               "verification": {
-                "by": "SYNTHETIC verifier",
+                "by": "MADE-UP verifier",
                 "method": "reran the reproduction on the unfixed and fixed versions",
                 "distinct_from_fixer": true
               },
@@ -1405,19 +1405,19 @@
             "label": "known_good",
             "finding": {
               "id": "S-102",
-              "title": "SYNTHETIC: the last row is missing after import",
+              "title": "MADE-UP: the last row is missing after import",
               "kind": "error",
               "severity": "P2",
-              "where": "SYNTHETIC parser module",
+              "where": "MADE-UP parser module",
               "evidence": [
                 {
                   "kind": "log_excerpt",
-                  "detail": "SYNTHETIC: import finished with 2 of 3 rows."
+                  "detail": "MADE-UP: import finished with 2 of 3 rows."
                 }
               ],
-              "noticed_by": "SYNTHETIC person",
+              "noticed_by": "MADE-UP person",
               "noticed_at": "2026-10-29T13:00Z",
-              "fingerprint": "error/synthetic-parser/drops-last-row",
+              "fingerprint": "error/made-up-parser/drops-last-row",
               "status": "duplicate",
               "sensitivity": "none",
               "public": false,
@@ -1433,26 +1433,26 @@
             "label": "known_good",
             "finding": {
               "id": "S-103",
-              "title": "SYNTHETIC: the settings page title feels too formal",
+              "title": "MADE-UP: the settings page title feels too formal",
               "kind": "annoyance",
               "severity": "P3",
-              "where": "SYNTHETIC settings page",
+              "where": "MADE-UP settings page",
               "evidence": [
                 {
                   "kind": "quote",
-                  "detail": "SYNTHETIC person: 'this heading sounds stiff'"
+                  "detail": "MADE-UP person: 'this heading sounds stiff'"
                 }
               ],
-              "noticed_by": "SYNTHETIC person",
+              "noticed_by": "MADE-UP person",
               "noticed_at": "2026-10-29T14:00Z",
-              "fingerprint": "annoyance/synthetic-settings-page/title-too-formal",
+              "fingerprint": "annoyance/made-up-settings-page/title-too-formal",
               "status": "wont_fix",
               "sensitivity": "none",
               "public": true,
               "closure": {
                 "reason": "wont_fix",
                 "at": "2026-10-29T16:00Z",
-                "decision_ref": "SYNTHETIC: the person's palette choice of none"
+                "decision_ref": "MADE-UP: the person's palette choice of none"
               }
             }
           },
@@ -1463,19 +1463,19 @@
             "why": "A kind outside the four.",
             "finding": {
               "id": "S-201",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "bug",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1488,19 +1488,19 @@
             "why": "A severity outside the guide.",
             "finding": {
               "id": "S-202",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "urgent",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1513,19 +1513,19 @@
             "why": "A status outside the method.",
             "finding": {
               "id": "S-203",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "done",
               "sensitivity": "none",
               "public": false
@@ -1538,19 +1538,19 @@
             "why": "A sensitivity outside the rules.",
             "finding": {
               "id": "S-204",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "internal",
               "public": false
@@ -1563,14 +1563,14 @@
             "why": "No evidence at all.",
             "finding": {
               "id": "S-205",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1583,19 +1583,19 @@
             "why": "Nobody is named as the noticer.",
             "finding": {
               "id": "S-206",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
               "noticed_by": "",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1608,19 +1608,19 @@
             "why": "No date for when it was noticed.",
             "finding": {
               "id": "S-207",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "yesterday",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1633,17 +1633,17 @@
             "why": "A fingerprint triage cannot compare.",
             "finding": {
               "id": "S-208",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
               "fingerprint": "page broken",
               "status": "open",
@@ -1658,19 +1658,19 @@
             "why": "An error with only a quote.",
             "finding": {
               "id": "S-209",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "error",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "quote",
-                  "detail": "SYNTHETIC: 'it seems broken'"
+                  "detail": "MADE-UP: 'it seems broken'"
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "error/synthetic-help-page/returns-not-found",
+              "fingerprint": "error/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1683,19 +1683,19 @@
             "why": "A design flaw with only a quote.",
             "finding": {
               "id": "S-210",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "design_flaw",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "quote",
-                  "detail": "SYNTHETIC: 'it looks odd'"
+                  "detail": "MADE-UP: 'it looks odd'"
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "design_flaw/synthetic-help-page/returns-not-found",
+              "fingerprint": "design_flaw/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1708,19 +1708,19 @@
             "why": "An annoyance without the person's words.",
             "finding": {
               "id": "S-211",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "annoyance",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "annoyance/synthetic-help-page/returns-not-found",
+              "fingerprint": "annoyance/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false
@@ -1733,19 +1733,19 @@
             "why": "Marked fixed with no fix.",
             "finding": {
               "id": "S-212",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "fixed",
               "sensitivity": "none",
               "public": false
@@ -1758,36 +1758,36 @@
             "why": "Closed after the fixer verified their own fix.",
             "finding": {
               "id": "S-213",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "closed",
               "sensitivity": "none",
               "public": false,
               "fix": {
-                "summary": "SYNTHETIC: restore the page",
+                "summary": "MADE-UP: restore the page",
                 "links": [
-                  "SYNTHETIC PR #1"
+                  "MADE-UP PR #1"
                 ]
               },
               "verification": {
-                "by": "SYNTHETIC verifier",
+                "by": "MADE-UP verifier",
                 "method": "reran the reproduction on the unfixed and fixed versions",
                 "distinct_from_fixer": false
               },
               "guard": {
                 "kind": "page_check",
-                "location": "SYNTHETIC link check for the help page",
+                "location": "MADE-UP link check for the help page",
                 "state": "fails_without_fix"
               }
             }
@@ -1799,36 +1799,36 @@
             "why": "Closed with a guard never shown to fail without the fix.",
             "finding": {
               "id": "S-214",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "closed",
               "sensitivity": "none",
               "public": false,
               "fix": {
-                "summary": "SYNTHETIC: restore the page",
+                "summary": "MADE-UP: restore the page",
                 "links": [
-                  "SYNTHETIC PR #1"
+                  "MADE-UP PR #1"
                 ]
               },
               "verification": {
-                "by": "SYNTHETIC verifier",
+                "by": "MADE-UP verifier",
                 "method": "reran the reproduction on the unfixed and fixed versions",
                 "distinct_from_fixer": true
               },
               "guard": {
                 "kind": "page_check",
-                "location": "SYNTHETIC link check for the help page",
+                "location": "MADE-UP link check for the help page",
                 "state": "unproven"
               }
             }
@@ -1840,25 +1840,25 @@
             "why": "A waiver with no reason.",
             "finding": {
               "id": "S-215",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false,
               "guard": {
                 "kind": "page_check",
-                "location": "SYNTHETIC link check for the help page",
+                "location": "MADE-UP link check for the help page",
                 "state": "waived"
               }
             }
@@ -1870,19 +1870,19 @@
             "why": "A duplicate of nothing.",
             "finding": {
               "id": "S-216",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "duplicate",
               "sensitivity": "none",
               "public": false
@@ -1895,19 +1895,19 @@
             "why": "Won't fix with no person's decision.",
             "finding": {
               "id": "S-217",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "wont_fix",
               "sensitivity": "none",
               "public": false,
@@ -1923,19 +1923,19 @@
             "why": "A credential finding marked public.",
             "finding": {
               "id": "S-218",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "credential",
               "public": true
@@ -1948,19 +1948,19 @@
             "why": "An open security finding marked public.",
             "finding": {
               "id": "S-219",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "link",
-                  "detail": "SYNTHETIC: the help page returned 404."
+                  "detail": "MADE-UP: the help page returned 404."
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "security",
               "public": true
@@ -1973,19 +1973,19 @@
             "why": "A log excerpt that holds a key's value.",
             "finding": {
               "id": "S-220",
-              "title": "SYNTHETIC: a help page returns not found",
+              "title": "MADE-UP: a help page returns not found",
               "kind": "issue",
               "severity": "P3",
-              "where": "SYNTHETIC help page",
+              "where": "MADE-UP help page",
               "evidence": [
                 {
                   "kind": "log_excerpt",
-                  "detail": "SYNTHETIC log line: api_key=SYNTHETICPLACEHOLDER0000"
+                  "detail": "MADE-UP log line: api_key=MADE-UPPLACEHOLDER0000"
                 }
               ],
-              "noticed_by": "SYNTHETIC worker",
+              "noticed_by": "MADE-UP worker",
               "noticed_at": "2026-10-29T12:00Z",
-              "fingerprint": "issue/synthetic-help-page/returns-not-found",
+              "fingerprint": "issue/made-up-help-page/returns-not-found",
               "status": "open",
               "sensitivity": "none",
               "public": false

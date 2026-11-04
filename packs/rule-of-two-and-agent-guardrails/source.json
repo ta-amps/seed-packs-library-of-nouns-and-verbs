@@ -53,7 +53,7 @@
         "tool": {
           "$pin": "tool.rule-of-two-guardrails"
         },
-        "worked_example": "Synthetic 2-leg allow DAG, 5-node diamond 3-leg refusal DAG (403 with minimal witness path excluding distractor nodes), steward-approved override (200), bidirectional placeholder vaulting (1.0 zero-leak recall and 1.0 round-trip fidelity) and 3-tier license firewall routing recomputed in test_rule_of_two_guardrails.py."
+        "worked_example": "Made-up 2-leg allow DAG, 5-node diamond 3-leg refusal DAG (403 with minimal witness path excluding distractor nodes), steward-approved override (200), bidirectional placeholder vaulting (1.0 zero-leak recall and 1.0 round-trip fidelity) and 3-tier license firewall routing recomputed in test_rule_of_two_guardrails.py."
       },
       "relations": [
         [
@@ -138,7 +138,7 @@
       "category_reason": "Zero-model procedure evaluating DAG capability combinations, placeholder vaults and model license tiers.",
       "value": {
         "regime_mapping": {
-          "public_synthetic_permissive": "contributor_training_allowed",
+          "public_made_up_permissive": "contributor_training_allowed",
           "internal_or_vaulted_commercial": "standard_zero_retention",
           "secret_or_local_restricted": "local_open_weights"
         },
@@ -279,12 +279,12 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "synthetic_mit_benchmark",
+                "made_up_mit_benchmark",
                 "vaulted_internal_trace",
                 "unredacted_secret_bundle"
               ],
               "properties": {
-                "synthetic_mit_benchmark": {
+                "made_up_mit_benchmark": {
                   "type": "string"
                 },
                 "vaulted_internal_trace": {
@@ -299,12 +299,12 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "synthetic_mit_benchmark",
+                "made_up_mit_benchmark",
                 "vaulted_internal_trace",
                 "unredacted_secret_bundle"
               ],
               "properties": {
-                "synthetic_mit_benchmark": {
+                "made_up_mit_benchmark": {
                   "type": "string"
                 },
                 "vaulted_internal_trace": {
@@ -337,12 +337,12 @@
           "inbound_round_trip_fidelity": 1.0,
           "coreference_preserved_rate": 1.0,
           "license_tier_routes": {
-            "synthetic_mit_benchmark": "contributor_training_allowed",
+            "made_up_mit_benchmark": "contributor_training_allowed",
             "vaulted_internal_trace": "standard_zero_retention",
             "unredacted_secret_bundle": "local_open_weights"
           },
           "license_tier_decisions": {
-            "synthetic_mit_benchmark": "allow",
+            "made_up_mit_benchmark": "allow",
             "vaulted_internal_trace": "allow",
             "unredacted_secret_bundle": "refuse"
           }
@@ -353,9 +353,9 @@
       "slug": "example.rule-of-two-guardrails-bundle",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
-      "title": "Worked example input: synthetic 2-leg and 3-leg tool DAGs, steward token, privacy corpus and license routing probes",
-      "category_reason": "Synthetic fixture recomputed by test_rule_of_two_guardrails.py.",
+      "made-up": true,
+      "title": "Worked example input: made-up 2-leg and 3-leg tool DAGs, steward token, privacy corpus and license routing probes",
+      "category_reason": "Made-up fixture recomputed by test_rule_of_two_guardrails.py.",
       "value": {
         "safe_two_leg_dag": [
           {
@@ -445,9 +445,9 @@
         ],
         "license_requests": [
           {
-            "id": "synthetic_mit_benchmark",
+            "id": "made_up_mit_benchmark",
             "sensitivity": "public",
-            "synthetic_provenance": true,
+            "made_up_provenance": true,
             "license_tag": "MIT",
             "requested_tier": "contributor_training_allowed"
           },
@@ -466,17 +466,17 @@
             "requested_tier": "standard_zero_retention"
           }
         ],
-        "shows": "Synthetic Rule of Two DAGs, steward approval token, bidirectional privacy vault corpus and 3-tier model license probes.",
-        "source": "Synthetic. Written for this pack."
+        "shows": "Made-up Rule of Two DAGs, steward approval token, bidirectional privacy vault corpus and 3-tier model license probes.",
+        "source": "Made-up. Written for this pack."
       }
     },
     {
       "slug": "example.rule-of-two-guardrails-receipt",
       "category": "noun.eval_run",
       "role": "example",
-      "synthetic": true,
+      "made-up": true,
       "title": "Worked example output: recomputed Rule of Two 403 witness, lossless placeholder round-trip and 3-tier license routing receipt",
-      "category_reason": "Synthetic receipt verified by test_rule_of_two_guardrails.py.",
+      "category_reason": "Made-up receipt verified by test_rule_of_two_guardrails.py.",
       "value": {
         "conforms_to": {
           "$pin": "template.rule-of-two-guardrails-receipt"
@@ -501,18 +501,18 @@
           "inbound_round_trip_fidelity": 1.0,
           "coreference_preserved_rate": 1.0,
           "license_tier_routes": {
-            "synthetic_mit_benchmark": "contributor_training_allowed",
+            "made_up_mit_benchmark": "contributor_training_allowed",
             "vaulted_internal_trace": "standard_zero_retention",
             "unredacted_secret_bundle": "local_open_weights"
           },
           "license_tier_decisions": {
-            "synthetic_mit_benchmark": "allow",
+            "made_up_mit_benchmark": "allow",
             "vaulted_internal_trace": "allow",
             "unredacted_secret_bundle": "refuse"
           }
         },
         "shows": "Recomputes 2-leg allow (200), transitive 3-leg refusal (403) with minimal witness path, steward override (200), 100% zero-leak placeholder vaulting/rehydration and 3-tier license routing.",
-        "source": "Synthetic. Recomputed directly from example.rule-of-two-guardrails-bundle."
+        "source": "Made-up. Recomputed directly from example.rule-of-two-guardrails-bundle."
       },
       "relations": [
         [
@@ -597,7 +597,7 @@
       ],
       "steps": [
         "Vault sensitive entities into <ENTITY_TYPE_NNN> placeholders while preserving 64-character hexadecimal content digests.",
-        "Evaluate sensitivity, synthetic provenance and license tags with ModelLicenseTierFirewall and verify lossless inbound rehydration."
+        "Evaluate sensitivity, made-up provenance and license tags with ModelLicenseTierFirewall and verify lossless inbound rehydration."
       ],
       "acceptance": [
         {
@@ -631,7 +631,7 @@
         {
           "name": "guardrail_eval_bundle",
           "category": "noun.eval_run",
-          "description": "Pin of synthetic DAG, placeholder vault and license-tier evaluation bundle."
+          "description": "Pin of made-up DAG, placeholder vault and license-tier evaluation bundle."
         }
       ],
       "produces": [

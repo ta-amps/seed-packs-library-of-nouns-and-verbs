@@ -24,8 +24,8 @@ matter of taste becomes a [taste palettes](../taste-palettes/README.md) brief, n
 | Design rules | Seven measured checks with thresholds and their basis: WCAG 2.2 for contrast and reflow, team defaults for text size and spacing |
 | Templates | Review request, screenshot description, capture plan, capture set, layout facts, design check report; findings and verifications use the findings to fixes templates |
 | Design finding checks | Ten checks on a recorded finding, with the worked example's seven findings and ten bad ones the validator recomputes |
-| Checklist, sources, test cases | What a person checks before trusting a review; 9 dated public sources; 9 synthetic cases |
-| Worked example | Synthetic: a sign-up page in six cells, before and after a fix |
+| Checklist, sources, test cases | What a person checks before trusting a review; 9 dated public sources; 9 made-up cases |
+| Worked example | Made-up: a sign-up page in six cells, before and after a fix |
 
 ## Verbs
 
@@ -44,7 +44,7 @@ can propose follow-up verbs.
 
 ## Worked example
 
-All synthetic. A phone screenshot with no words is described first: a cut-off button label, a faint
+All made-up. A phone screenshot with no words is described first: a cut-off button label, a faint
 link, a broken logo and a table running off the edge. Captures of the page at three widths and two
 themes give 29 failing checks across all seven rules, recorded as seven findings with their cells and
 boxes. After a fix, the contrast finding is verified in every dark cell, and the alignment finding

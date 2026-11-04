@@ -20,7 +20,7 @@ packets, check every returned patch, review refusals and measure the overhead be
 | Refusal rules | Every refusal names the legal set; repeats get a reminder; the binding limit is named |
 | Patch rules | State returned as named fields, admitted or rejected by the runtime contract only |
 | Overhead model | The break-even hit rate for slicing a step into k: (k - 1)P / (kP + C), and how to measure P on the wire |
-| Step checks | 11 deterministic checks with 2 synthetic good and 11 synthetic bad packets, rechecked by `make check` |
+| Step checks | 11 deterministic checks with 2 made-up good and 11 made-up bad packets, rechecked by `make check` |
 | Templates | Step kind, step packet, grant audit, patch check, refusal review, overhead measurement and packet revision |
 | Worked examples | A step kind that changes one configuration value, and three harness configurations measured on the wire |
 
@@ -43,7 +43,7 @@ Reusing a step's earlier answer is covered by [retrieval triggers and reuse](../
 
 ## Worked examples
 
-All synthetic. The good repair packet carries a rejection that names the two legal field names;
+All made-up. The good repair packet carries a rejection that names the two legal field names;
 the bad packets each break one rule, such as a read-only step that holds a shell or a slice field
 that pastes back the earlier transcript. The measurement shows that with 500 content tokens and
 four slices, a configuration sending 8,200 prefix tokens needs a 73.9 percent hit rate to break

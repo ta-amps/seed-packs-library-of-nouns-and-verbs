@@ -8,7 +8,7 @@
     python -m frame_qa review-sample --findings findings.json --size 20 --seed 1 --out sample.json
     python -m frame_qa precision --labels labels.json
     python -m frame_qa spec                                        # the default detector spec
-    python -m frame_qa synth --out DIR                             # the synthetic test clips
+    python -m frame_qa synth --out DIR                             # the made-up test clips
 
 Nothing here publishes, uploads, enqueues or calls a model API; output goes only where --out points.
 """
@@ -118,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("spec", help="print the default detector spec")
 
-    syn = sub.add_parser("synth", help="render the synthetic test clips")
+    syn = sub.add_parser("synth", help="render the made-up test clips")
     syn.add_argument("--out", required=True, type=Path)
     syn.add_argument("--ffmpeg")
 

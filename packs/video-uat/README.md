@@ -19,8 +19,8 @@ timestamped finding about the cut. Results describe the people asked, never view
 | Task bank | Eight video-specific tasks with their keys and how each is scored |
 | Templates | Acceptance plan, session notes, scored answers, acceptance decision |
 | Acceptance checks | Five checks on a decision, with one good and five bad decisions the validator recomputes |
-| Test cases | 5 synthetic cases, from a criterion lowered after sessions to a summary that generalizes |
-| Worked examples | Synthetic: a plan for ten viewers in two segments, scored answers and the decision they give |
+| Test cases | 5 made-up cases, from a criterion lowered after sessions to a summary that generalizes |
+| Worked examples | Made-up: a plan for ten viewers in two segments, scored answers and the decision they give |
 
 ## Verbs
 
@@ -53,4 +53,4 @@ enqueue the printed task yourself. Workers need keys on the same surface.
   pack reports counts, never audience percentages.
 - Keys and pass marks are the planner's choices, fixed in advance, not standards.
 - General acceptance testing of a site or app, usability and accessibility are other packs' work. The worked examples are
-  synthetic; the library's tests recompute the decision from the plan and the scores.
+  made-up; the library's tests recompute the decision from the plan and the scores.

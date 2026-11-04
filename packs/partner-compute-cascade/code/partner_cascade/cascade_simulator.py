@@ -128,7 +128,7 @@ def run_full_cascade_report() -> dict[str, Any]:
 
 
 def run_worked_example(bundle: dict[str, Any]) -> dict[str, Any]:
-    """Deterministic recomputation for the synthetic worked example in source.json."""
+    """Deterministic recomputation for the made-up worked example in source.json."""
     vram_cfg = compute_qlora_vram_and_config(
         bundle["model_name"],
         lora_rank=bundle["lora_rank"],

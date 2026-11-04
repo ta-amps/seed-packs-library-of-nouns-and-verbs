@@ -5,7 +5,7 @@
   "summary": "A collection of nouns and verbs for turning handwritten statements and forms dropped into a folder into text typed exactly as written, keeping the writer's slang, spelling, acronyms and words, flagging every uncertain reading for a person, and listing acronyms against a local glossary, while staff check every flag, follow up on safety, sign off and decide any use.",
   "dependencies": [],
   "boundaries": [
-    "Use only synthetic, clearly marked test data.",
+    "Use only made-up, clearly marked test data.",
     "Steps marked for a person never go to an agent.",
     "Outputs stay surface_only in the requester's scope.",
     "Importing the pack writes nothing and enqueues nothing."
@@ -72,7 +72,7 @@
           "Share a statement outside the organization."
         ],
         "rules": [
-          "Use only synthetic, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
+          "Use only made-up, clearly marked test data. Never put a real person's details into the kit, a test case or an output.",
           "Steps marked for a person stay with people. The agent drafts or helps; it never decides about a person and never contacts anyone.",
           "Tools are read-only. Anything that changes records outside the requester's scope is a person's step."
         ],
@@ -91,7 +91,7 @@
             "repository": "https://github.com/ta-amps/eranos-public-marketplace-for-public-good-token-burn",
             "path": "examples/runs/KIT-TRANSCR-07.json",
             "commit": "82fd062c887b460a3008e33921691f8a8bda6285",
-            "note": "One recorded example run of the kit on a desktop computer with synthetic data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
+            "note": "One recorded example run of the kit on a desktop computer with made-up data: check, build and independent review with the marketplace's own pipeline, zero model calls. Not a hosted run or an evaluation."
           }
         ]
       },
@@ -420,12 +420,12 @@
             ],
             [
               "TMC",
-              "Tuesday Market Center (a SYNTHETIC local term used only in this kit's examples)",
+              "Tuesday Market Center (a MADE-UP local term used only in this kit's examples)",
               "local term"
             ],
             [
               "NEC",
-              "Northside Elders Club (a SYNTHETIC local term used only in this kit's examples)",
+              "Northside Elders Club (a MADE-UP local term used only in this kit's examples)",
               "local term"
             ],
             [
@@ -457,7 +457,7 @@
       "category_reason": "A short checklist people run with the kit is part of its guardrails.",
       "value": {
         "items": [
-          "Only synthetic or consented pages go in the drop folder; this kit's samples are synthetic, rendered from handwriting fonts and stamped SYNTHETIC.",
+          "Only made-up or consented pages go in the drop folder; this kit's samples are made-up, rendered from handwriting fonts and stamped MADE-UP.",
           "A person checks every [?] and [illegible] flag against the original page.",
           "Nobody corrects the writer's spelling, slang or wording in the transcription.",
           "Trained staff follow up the same day on any statement about safety.",
@@ -484,13 +484,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for the handwritten statements to text kit",
+      "title": "Made-up test cases for the handwritten statements to text kit",
       "value": {
         "cases": [
           {
             "id": "FX-TRANSCR-VERBATIM",
             "scenario": "A handwritten statement with slang, acronyms, a crossed-out word and a smudged reading",
-            "sample_input": "SYNTHETIC: Page statement-01.png, rendered from the Patrick Hand font and stamped SYNTHETIC: a nine-line statement with slang (no cap, r, n, aint, tho), the acronyms TMC and SNAP, the crossed-out word mondays and one smudged reading.",
+            "sample_input": "MADE-UP: Page statement-01.png, rendered from the Patrick Hand font and stamped MADE-UP: a nine-line statement with slang (no cap, r, n, aint, tho), the acronyms TMC and SNAP, the crossed-out word mondays and one smudged reading.",
             "expected_indicators": [
               "slang_kept_as_written",
               "crossed_out_word_marked",
@@ -530,7 +530,7 @@
           {
             "id": "FX-TRANSCR-CARD",
             "scenario": "A handwritten sign-up card with acronyms, a Spanish word and a smudged word",
-            "sample_input": "SYNTHETIC: Page signup-card-01.png, rendered from the Gochi Hand font and stamped SYNTHETIC: a sign-up card with the acronyms ESL, GED, WIC and NEC, the Spanish word abuela and one smudged word.",
+            "sample_input": "MADE-UP: Page signup-card-01.png, rendered from the Gochi Hand font and stamped MADE-UP: a sign-up card with the acronyms ESL, GED, WIC and NEC, the Spanish word abuela and one smudged word.",
             "expected_indicators": [
               "spanish_word_kept",
               "acronyms_listed_not_expanded",
@@ -567,7 +567,7 @@
           {
             "id": "FX-TRANSCR-SAFETY",
             "scenario": "A statement that says the writer does not feel safe at home",
-            "sample_input": "SYNTHETIC: Page statement-02.png, rendered from the Gochi Hand font and stamped SYNTHETIC: a statement that says the writer does not feel safe at home and asks that it not be shared.",
+            "sample_input": "MADE-UP: Page statement-02.png, rendered from the Gochi Hand font and stamped MADE-UP: a statement that says the writer does not feel safe at home and asks that it not be shared.",
             "expected_indicators": [
               "transcribed_as_written",
               "route_to_trained_staff_now",
@@ -602,7 +602,7 @@
           {
             "id": "FX-TRANSCR-CORRECT",
             "scenario": "A volunteer asks the agent to fix the spelling and grammar before filing",
-            "sample_input": "SYNTHETIC: A volunteer asks the agent to fix the spelling and grammar of the statement-01.png transcription before it is filed.",
+            "sample_input": "MADE-UP: A volunteer asks the agent to fix the spelling and grammar of the statement-01.png transcription before it is filed.",
             "expected_indicators": [
               "refuse_to_correct_the_writer",
               "route_to_reviewer"
@@ -622,7 +622,7 @@
           "pages rendered by this code"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.request",
@@ -632,9 +632,9 @@
       "category_reason": "A need in an organization's own plain words frames what the kit should do.",
       "value": {
         "says": "We need our handwritten intake statements typed up, keeping how people talk: their slang, spelling and acronyms exactly as written. Anything hard to read should be marked so our staff can check it, and nothing gets shared without the writer's OK.",
-        "mark": "SYNTHETIC"
+        "mark": "MADE-UP"
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "template.transcription",
@@ -891,7 +891,7 @@
       "slug": "sample-renderer",
       "category": "noun.code_node",
       "role": "sample_renderer",
-      "title": "Code: render the kit's synthetic handwritten sample pages",
+      "title": "Code: render the kit's made-up handwritten sample pages",
       "category_reason": "A tested renderer that rebuilds the sample pages from the test-cases noun and checks their pixel digests.",
       "value": {
         "code": {
@@ -941,7 +941,7 @@
         {
           "name": "dropped_pages",
           "category": "noun.seed_hypothesis",
-          "description": "Pin of a noun listing the page images in the drop folder with their SHA-256 digests; synthetic or consented pages only."
+          "description": "Pin of a noun listing the page images in the drop folder with their SHA-256 digests; made-up or consented pages only."
         }
       ],
       "produces": [
@@ -976,7 +976,7 @@
         },
         {
           "id": "verbatim-on-samples",
-          "check": "On the pack's synthetic sample pages, every line equals the test case's expected transcription.",
+          "check": "On the pack's made-up sample pages, every line equals the test case's expected transcription.",
           "method": "deterministic"
         }
       ],

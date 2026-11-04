@@ -88,7 +88,7 @@
             "$pin": "guardrail.tests-run-by-a-person"
           }
         ],
-        "worked_example": "Synthetic: three thumbnails and three titles for a fictional pantry's film. The size check finds one cover's text under 12 CSS px on both small displays, the contrast fixture shows its grey text fails the normal-text ratio that applies once it is that small, the title checks reject a clickbait title, and the A/B plan compares the two good covers by the platform's own measure.",
+        "worked_example": "Made-up: three thumbnails and three titles for a fictional pantry's film. The size check finds one cover's text under 12 CSS px on both small displays, the contrast fixture shows its grey text fails the normal-text ratio that applies once it is that small, the title checks reject a clickbait title, and the A/B plan compares the two good covers by the platform's own measure.",
         "complements": "The taste palettes pack shows options side by side and keeps a person's choice; this pack makes the candidates, checks them and plans the test. The video review pack's claim trace is what the honesty check reads.",
         "provenance_notes": [
           "Generalizes the cover and title practice of a working short-form video studio: a designed cover with the hook line rather than a random mid-video frame, covers that never give away a reveal, alt text for people who read rather than watch, honest hook words over keyword scores, and A/B tests of hook wording and covers run by a person."
@@ -1056,7 +1056,7 @@
           "template.title-candidates"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "contrast-example",
@@ -1112,7 +1112,7 @@
           "rules.small-sizes"
         ]
       ],
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "checklist",
@@ -1169,13 +1169,13 @@
       "slug": "test-cases",
       "category": "noun.benchmark_suite",
       "role": "test_cases",
-      "title": "Synthetic test cases for thumbnails and titles",
+      "title": "Made-up test cases for thumbnails and titles",
       "value": {
         "cases": [
           {
             "id": "TT-TINY-TEXT",
             "scenario": "A cover's 40 px text in a 1280 px master",
-            "sample_input": "SYNTHETIC: shown 246 px wide, the text is 7.69 CSS px.",
+            "sample_input": "MADE-UP: shown 246 px wide, the text is 7.69 CSS px.",
             "expected_outcome": "thumbnails_checked",
             "expected_indicators": [
               "unreadable_at_small_size",
@@ -1186,7 +1186,7 @@
           {
             "id": "TT-GREY-ON-WHITE",
             "scenario": "Grey text on a white panel at 40 px",
-            "sample_input": "SYNTHETIC: #777777 on #FFFFFF, a ratio of 4.48 to 1.",
+            "sample_input": "MADE-UP: #777777 on #FFFFFF, a ratio of 4.48 to 1.",
             "expected_outcome": "thumbnails_checked",
             "expected_indicators": [
               "contrast_fails_unrounded"
@@ -1196,7 +1196,7 @@
           {
             "id": "TT-CLICKBAIT",
             "scenario": "A drafted title uses a banned pattern",
-            "sample_input": "SYNTHETIC: 'You won't believe who feeds this town'.",
+            "sample_input": "MADE-UP: 'You won't believe who feeds this town'.",
             "expected_outcome": "honesty_checked",
             "expected_indicators": [
               "banned_pattern_named",
@@ -1207,7 +1207,7 @@
           {
             "id": "TT-SPOILER",
             "scenario": "A puzzle video's best frame shows the answer",
-            "sample_input": "SYNTHETIC: the highest-ranked frame is the reveal at 0:41.",
+            "sample_input": "MADE-UP: the highest-ranked frame is the reveal at 0:41.",
             "expected_outcome": "thumbnails_drafted",
             "expected_indicators": [
               "hook_frame_used",
@@ -1218,7 +1218,7 @@
           {
             "id": "TT-AUTO-TEST",
             "scenario": "A worker is asked to start the platform's test itself",
-            "sample_input": "SYNTHETIC: the brief asks the worker to switch thumbnails on the live video.",
+            "sample_input": "MADE-UP: the brief asks the worker to switch thumbnails on the live video.",
             "expected_outcome": "blocked",
             "expected_indicators": [
               "person_runs_test"
@@ -1227,7 +1227,7 @@
           }
         ]
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.title-candidates",
@@ -1235,7 +1235,7 @@
       "role": "example",
       "title": "Worked example: three titles, one of them clickbait",
       "value": {
-        "notice": "SYNTHETIC. A fictional pantry's film.",
+        "notice": "MADE-UP. A fictional pantry's film.",
         "conforms_to": {
           "$pin": "template.title-candidates"
         },
@@ -1270,7 +1270,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.thumbnail-candidates",
@@ -1278,7 +1278,7 @@
       "role": "example",
       "title": "Worked example: three cover candidates",
       "value": {
-        "notice": "SYNTHETIC. The digests stand for frames that do not exist.",
+        "notice": "MADE-UP. The digests stand for frames that do not exist.",
         "conforms_to": {
           "$pin": "template.thumbnail-candidates"
         },
@@ -1334,7 +1334,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.size-check",
@@ -1342,7 +1342,7 @@
       "role": "example",
       "title": "Worked example: the size check of those covers",
       "value": {
-        "notice": "SYNTHETIC. Recomputed exactly by the library's tests from example.thumbnail-candidates.",
+        "notice": "MADE-UP. Recomputed exactly by the library's tests from example.thumbnail-candidates.",
         "conforms_to": {
           "$pin": "template.size-check"
         },
@@ -1441,7 +1441,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.honesty-check",
@@ -1449,7 +1449,7 @@
       "role": "example",
       "title": "Worked example: the honesty check of every candidate",
       "value": {
-        "notice": "SYNTHETIC.",
+        "notice": "MADE-UP.",
         "conforms_to": {
           "$pin": "template.honesty-check"
         },
@@ -1517,7 +1517,7 @@
           ]
         }
       },
-      "synthetic": true
+      "made-up": true
     },
     {
       "slug": "example.ab-plan",
@@ -1525,7 +1525,7 @@
       "role": "example",
       "title": "Worked example: an A/B plan for the two good covers",
       "value": {
-        "notice": "SYNTHETIC. No test has run.",
+        "notice": "MADE-UP. No test has run.",
         "conforms_to": {
           "$pin": "template.ab-plan"
         },
@@ -1545,7 +1545,7 @@
           "fixed_before_results": true
         }
       },
-      "synthetic": true
+      "made-up": true
     }
   ],
   "verbs": [

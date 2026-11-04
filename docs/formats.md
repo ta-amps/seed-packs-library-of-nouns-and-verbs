@@ -1,6 +1,6 @@
 # Payloads and proposed pack format
 
-Files under `examples/http/` are JSON request bodies for current Tessera operations.
+Files under `examples/http/` are JSON request bodies for current Teleion Fabric operations.
 Files under `examples/mcp/` are JSON-RPC requests. They are examples, not live ids,
 credentials, measured work or a queue initializer. The validator checks the narrow
 profile used here; the owning API remains authoritative.
@@ -9,8 +9,8 @@ profile used here; the owning API remains authoritative.
 | --- | --- |
 | [session](../examples/http/session.json) | `POST /v1/session/anonymous` |
 | [claim](../examples/http/claim.json) | `POST /v1/tasks/claim` |
-| [demo noun](../examples/http/demo-put.json) | `POST /v1/stores/demo.artifacts/records/SYNTHETIC-addition-v1` |
-| [keyed candidate](../examples/http/noun-put.json) | `POST /ns/<namespace>/v1/stores/pack.candidates/records/SYNTHETIC-addition-v1` |
+| [demo noun](../examples/http/demo-put.json) | `POST /v1/stores/demo.artifacts/records/MADE-UP-addition-v1` |
+| [keyed candidate](../examples/http/noun-put.json) | `POST /ns/<namespace>/v1/stores/pack.candidates/records/MADE-UP-addition-v1` |
 | [verb seed](../examples/http/verb-enqueue.json) | `POST /ns/<namespace>/v1/tasks` in an already defined queue |
 | [submit](../examples/http/submit.json) | `POST /v1/tasks/submit` with `Idempotency-Key` |
 | [MCP put](../examples/mcp/put-record.json) | `tools/call` with name `put_record` |
@@ -33,15 +33,15 @@ allowlists and quarantine metadata. None of these tags grants access.
 
 The noun's `value.category_id` is `noun.reflex_procedure`; its category tag agrees.
 The verb's `brief.category_id` and `kind` use `verb.solve_draft`. Additional tags
-such as `domain:arithmetic`, `synthetic:true` and `spdx:MIT` are descriptive facets.
+such as `domain:arithmetic`, `made-up:true` and `spdx:MIT` are descriptive facets.
 A primary category and all category aliases must agree. Multiple typed relations
 or descriptive parents do not create executable inheritance or physical partitions.
 
 Keep flexible metadata inside the allowed noun `value` or task `brief`. For
-example, `extensions: {"example.org/library": {"service_window": "synthetic"}}`
+example, `extensions: {"example.org/library": {"service_window": "made-up"}}`
 can describe a domain facet without changing core columns. A namespace isolates
 authority; a category organizes meaning. A schema describes a shape; a license tag
-is a claim requiring provenance; neither proves the artifact is correct or safe.
+is a claim requiring source; neither proves the artifact is correct or safe.
 
 The procedure in the example is ordinary data. Storing it does not install a tool,
 run Python, wire a compiler node or activate a shim. A consuming worker must have
@@ -67,10 +67,10 @@ each arithmetic operation or read into another scheduled task.
 candidate and seed files with SHA-256 byte digests. The `format` ends in
 `proposal.v1`, `status` is `proposal_only`, and `importer` is `null` with a reason.
 No current endpoint consumes it. It is not a promised future standard or a
-separate catalog database. Accepted artifacts and evidence belong in Tessera.
+separate catalog database. Accepted artifacts and evidence belong in Teleion Fabric.
 
 The manifest's file digests pin the exact checked-in bytes, including whitespace.
-They are not Tessera canonical receipt hashes. For remote references pin the real
+They are not Teleion Fabric canonical record hashes. For remote references pin the real
 namespace, store/key/version and content digest under their governing policy;
 do not replace a missing hash with zeros or an invented measurement.
 
@@ -86,16 +86,16 @@ three generated files. `scripts/build_packs.py` builds them offline and byte for
 | `verbs.json` | `TaskSpec` templates in the placeholder queue `conformance-seed-packs`, with pinned pack nouns, unfilled slots, typed input and output schemas, outcomes, acceptance checks, bounds and an optional execution-report template |
 | `manifest.json` | Format `ta-amps.seed-pack.proposal.v1`: file digests, each noun's value SHA-256, each verb's idempotency key and execution shape fingerprint, `importer: null` |
 
-Pins use Tessera's `NounRef` fields exactly: `store`, `key`, `version` and
+Pins use Teleion Fabric's `NounRef` fields exactly: `store`, `key`, `version` and
 `value_sha256`, the SHA-256 of the value's canonical JSON. A template's slots are null
 until a requester fills them with exact pins (`scripts/build_packs.py --instantiate`
 checks the filled inputs against the template's input schema, takes `--queue` for an
 assigned queue, prints the TaskSpec and never enqueues). Producer surface
-`surface:tessera` is a placeholder: Tessera records the importing key's own surface, and
+`surface:tessera` is a placeholder: Teleion Fabric records the importing key's own surface, and
 `surface_only` then shares the pack with keys on that surface only. Every output schema
 has `proposed_verbs` and `proposed_nouns`, so a worker can return follow-up work it
 never enqueues itself. Each noun value and verb brief carries
-Tessera's required category dimensions at their lowest value, a `dimension_basis` that
+Teleion Fabric's required category dimensions at their lowest value, a `dimension_basis` that
 says nothing was measured, and typed `relations` that its category allows.
 
 The proposed override policy allows no automatic merge. A future resolver would

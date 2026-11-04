@@ -17,10 +17,10 @@ reserved subagent shadowing, and diff-gate self-edited memory before persistence
 | Guardrails | Treat clone configs as untrusted code; block hidden Unicode; diff-gate self-editing memory |
 | Signature and escalation rules | Bidi/Tag/zero-width codepoints, reserved built-in names, hook keys, and MCP checks |
 | Templates | Repository config scan report, supply-chain threat tombstone, and memory diff gate receipt |
-| Record checks | Deterministic checks on supply-chain scan reports with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on supply-chain scan reports with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`config_scanner`) |
 | Sources | 3 dated public sources on Trojan Source (CVE-2021-42574), NVD CVE-2025-54135, and Unicode TR36 |
-| Worked examples | Synthetic blocked scan catching Unicode Tag ASCII smuggling and MCP shell escalation |
+| Worked examples | Made-up blocked scan catching Unicode Tag ASCII smuggling and MCP shell escalation |
 
 ## Verbs
 

@@ -146,11 +146,11 @@ class AssetCatalog:
 
 
 def default_asset_catalog() -> AssetCatalog:
-    """Create the default synthetic catalog of procedural vector asset definitions.
+    """Create the default made-up catalog of procedural vector asset definitions.
 
     These assets are drawn by this package's own SVG renderer; there are no media files. Each `sha256`
     therefore covers the canonical definition (`digest_basis="procedural_definition"`), not media
-    bytes, and the creator names are synthetic example labels rather than verified rights holders.
+    bytes, and the creator names are made-up example labels rather than verified rights holders.
     """
     specs: list[tuple[str, ActorKind, str, str, str, str, str]] = [
         (

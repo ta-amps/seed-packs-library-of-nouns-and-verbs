@@ -37,10 +37,10 @@ make check                               # again, with the new receipt
 ```
 
 - `make check` rebuilds every pack byte for byte, validates it against a snapshot of
-  Tessera's contract, recomputes worked examples and scans for secrets and private names.
-- `make check-tessera` runs every noun and verb through Tessera's own models, using a
-  Tessera checkout at the commit named in [VALIDATION.json](../packs/VALIDATION.json) with its
-  `.venv` (run `uv sync --frozen` there). `--write` updates that receipt, which `make check`
+  Teleion Fabric's contract, recomputes worked examples and scans for secrets and private names.
+- `make check-tessera` runs every noun and verb through Teleion Fabric's own models, using a
+  Teleion Fabric checkout at the commit named in [VALIDATION.json](../packs/VALIDATION.json) with its
+  `.venv` (run `uv sync --frozen` there). `--write` updates that record, which `make check`
   requires to cover every pack.
 - Add your pack's row to the tables in [README.md](../README.md) and
   [packs/README.md](../packs/README.md), and update the totals there and in

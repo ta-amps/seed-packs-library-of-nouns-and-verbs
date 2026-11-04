@@ -22,7 +22,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_bench.add_argument("--out", type=Path, help="Optional JSON output path")
 
-    p_worked = sub.add_parser("worked-example", help="Recompute synthetic worked example")
+    p_worked = sub.add_parser("worked-example", help="Recompute made-up worked example")
     p_worked.add_argument("--input", type=Path, required=True)
 
     args = parser.parse_args(argv)

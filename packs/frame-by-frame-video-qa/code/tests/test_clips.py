@@ -1,4 +1,4 @@
-"""End to end on synthetic clips FFmpeg draws in the test: a layout clip (clean, text off an edge, text in the
+"""End to end on made-up clips FFmpeg draws in the test: a layout clip (clean, text off an edge, text in the
 action margin, small and tiny text, faint text, overlapping text and a chip, proof text under a caption, a
 panel cut by the frame) and a time clip (a crossfade between text slides, a white frame, black frames, a freeze,
 fast-moving text and a jump). FRAME_QA_REQUIRE_FFMPEG=1 and FRAME_QA_REQUIRE_OCR=1 turn a missing tool into a

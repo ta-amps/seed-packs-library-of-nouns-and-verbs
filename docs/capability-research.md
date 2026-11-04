@@ -27,7 +27,7 @@ contracts and preserve their owning scope.
 | Claim | The attributed statement, metric, unit, task, dataset/split, baseline, model/version, harness, hardware, precision/quantization, concurrency and measurement conditions; unknown fields stay unknown |
 | Project profile | Architecture and interfaces, target tasks, actual hardware/runtime, memory limits, data/privacy rules, allowed providers, license constraints, budgets and ranked preferences, with source and version for each requirement |
 | Evaluation contract | The decision to resolve, fixed baseline, candidate versions, paired fixtures, success thresholds, resource limits, failure conditions and required evidence |
-| Observation | Actual commands/tool events, environment and input hashes, outputs, failures, latency/quality/resource measurements and their provenance |
+| Observation | Actual commands/tool events, environment and input hashes, outputs, failures, latency/quality/resource measurements and their source |
 | Decision | A scoped recommendation, decisive evidence, unresolved questions, integration/maintenance cost, expiry or recheck triggers and the next useful verb |
 | Procedure or seed | A reusable research method, fixture generator, adapter proposal or future verb brief derived from accepted evidence, with its own tests and admission state |
 
@@ -46,7 +46,7 @@ the research contract.
 
 | Bounded outcome | Inputs | Output and acceptance check |
 | --- | --- | --- |
-| Collect permitted observations | Configured public feeds, authorized connectors, exports or a batch of URLs | Source nouns with attribution, dates and access provenance; never claim unread content was inspected |
+| Collect permitted observations | Configured public feeds, authorized connectors, exports or a batch of URLs | Source nouns with attribution, dates and access source; never claim unread content was inspected |
 | Consolidate a release | Source observations and existing candidates | One candidate plus attributed claims; preserve conflicts and distinct versions, and avoid merging unrelated projects with similar names |
 | Assess project relevance | Candidate, pinned project profile and earlier decisions | Explain the fit or mismatch and whether more evidence could change the decision; stop on a decisive hard constraint |
 | Resolve a consequential claim | Attributed claim and permitted primary sources | Supported, contradicted, unresolved or inaccessible evidence, with exact sources; a vendor claim stays vendor-reported until reproduced |
@@ -60,10 +60,10 @@ verification and benchmarking. Domain details belong inside the owning brief or
 record value. This table does not introduce new top-level TaskSpec fields.
 
 Deterministic URL canonicalization, hashing, ordinary retrieval, arithmetic and
-receipt checks stay tools inside these verbs. Workers perform interpretation,
+record checks stay tools inside these verbs. Workers perform interpretation,
 research planning and judgment. A request middleware can optionally provide scoped
 context. The [code composition pack](../packs/code-composition/README.md)'s tested code can
-supply verified deterministic experiment steps where available, and the
+supply checked deterministic experiment steps where available, and the
 [video and motion pack](../packs/video-motion/README.md) can supply frame and motion checks.
 Their availability does not establish that a proposed adapter or evaluation already exists.
 
@@ -78,7 +78,7 @@ precision, concurrency, warm/cold state and quality requirements as applicable.
 An irreconcilable difference is a reason to mark results non-comparable and define
 a paired local trial. Unknown memory or cost is not zero.
 
-For example, a synthetic post might report that Memory A is twice as fast as
+For example, a made-up post might report that Memory A is twice as fast as
 Memory B on an unspecified accelerator. That is an attributed claim. It does not
 establish latency, retrieval quality or privacy suitability for a CPU-only project.
 The first useful work may be checking whether A supports that deployment at all.
@@ -122,13 +122,13 @@ through links. Show screened/deferred/rejected counts without sending a summary
 of every post. Set a maximum number of recommendations per report in the profile;
 do not schedule messages or notifications without an authorized delivery contract.
 
-Synthetic report shape, for illustration only:
+Made-up report shape, for illustration only:
 
 ```json
 {
-  "synthetic": true,
-  "candidate": "SYNTHETIC-memory-a@revision-1",
-  "profile": "SYNTHETIC-project@version-1",
+  "made-up": true,
+  "candidate": "MADE-UP-memory-a@revision-1",
+  "profile": "MADE-UP-project@version-1",
   "recommendation": "watch",
   "reason": "Reported accelerator latency is not comparable to the CPU target.",
   "source_claim_status": "reported_not_reproduced",
@@ -152,7 +152,7 @@ recommendation. Test the same workflow later on harnesses, model nodes, 3D tools
 and motion systems using their own evaluation contracts.
 
 The first pilot should prove that duplicate claims collapse without losing
-provenance; incompatible candidates stop before costly work; non-comparable
+source; incompatible candidates stop before costly work; non-comparable
 numbers remain labeled; and any shortlisted trial produces an actual paired
 result. Include inaccessible sources, contradictory claims, missing hardware,
 failed trials and no-change decisions as acceptance cases.

@@ -20,7 +20,7 @@ retires them.
 | Duplicate rules | Four evidence levels; only a full hash with distinct inodes proves a duplicate |
 | Filesystem fit | Space, allocation units, permissions, links, live databases and mount health |
 | Secret exclusions | Paths listed by name and never opened, including key files |
-| Triage checks | 13 deterministic checks with 2 synthetic good and 13 synthetic bad move plans, rechecked by `make check` |
+| Triage checks | 13 deterministic checks with 2 made-up good and 13 made-up bad move plans, rechecked by `make check` |
 | Templates | Scan scope, inventory, placement register, duplicate set, move plan, plan approval, move journal, retirement record and index reconciliation |
 | Worked examples | A read-only inventory of two drives and three equal copies proven by full hash |
 
@@ -45,7 +45,7 @@ instead of enqueueing them. Drift and failed moves become findings in
 
 ## Worked examples
 
-All synthetic. The inventory covers an internal disk and an archive drive in bytes, keeps two
+All made-up. The inventory covers an internal disk and an archive drive in bytes, keeps two
 errors, lists three secret-bearing paths without opening them and changed nothing. The duplicate
 set holds three equal files with distinct inodes, so removing two frees 8,000,004,096 allocated
 bytes, but only after a report that reads one copy is pointed at the kept one. Each bad plan

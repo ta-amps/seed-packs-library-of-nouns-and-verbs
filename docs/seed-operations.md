@@ -4,11 +4,11 @@ Checked October 29, 2026. Three different things exist:
 
 | Layer | Current capability | Limit |
 | --- | --- | --- |
-| Tessera seed expansion | Local seed nouns, expansion, candidate enrichment, distinct review and canonical output in an executable synthetic demo | The demo does not establish unattended research quality or every hosted publication path |
-| Tessera research seed authoring | Four bounded task stages using pinned nouns and existing task APIs, with explicit enqueue and local task-loop tests | The tool does not research, collect mail, execute generated code or install recurring schedules |
+| Teleion Fabric seed expansion | Local seed nouns, expansion, candidate enrichment, distinct review and canonical output in an executable made-up demo | The demo does not establish unattended research quality or every hosted publication path |
+| Teleion Fabric research seed authoring | Four bounded task stages using pinned nouns and existing task APIs, with explicit enqueue and local task-loop tests | The tool does not research, collect mail, execute generated code or install recurring schedules |
 | This contribution repository | Ten reference meta-pack blueprints and capability research guidance | These are not automatically installed or activated packs |
 
-See [Tessera research seeds](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/research-seeds.md)
+See [Teleion Fabric research seeds](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/research-seeds.md)
 and [existing expansion](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine/blob/main/docs/expansion.md).
 Use the owning implementation's exact schema and current tests when preparing work.
 
@@ -16,7 +16,7 @@ Use the owning implementation's exact schema and current tests when preparing wo
 
 The initial verb can read a pinned project profile and find a bounded list of
 relevant publication sites, official release feeds, paper indexes or newsletters.
-Its output is source nouns with provenance and proposed future seed nouns. This
+Its output is source nouns with source and proposed future seed nouns. This
 is a useful meta-seed even though it does not install anything itself.
 
 | Verb outcome | Nouns it produces | Follow-up |
@@ -24,7 +24,7 @@ is a useful meta-seed even though it does not install anything itself.
 | Discover relevant sources | Publisher, endpoint, access method, topics, update cadence, restrictions and evidence | Test one shortlisted source |
 | Prepare a collector | Versioned tool/code candidate, input/output contract, license/source evidence and tests | Qualify the collector under the owning policy |
 | Propose daily work | Pinned source, collector and profile; UTC cadence; start/stop; queue; retry and resource limits | Activate through an authorized deterministic adapter |
-| Scan once | Deduplicated items, provenance, content hashes, dates and cursor/replay evidence | Enqueue justified analysis within the remaining allowance |
+| Scan once | Deduplicated items, source, content hashes, dates and cursor/replay evidence | Enqueue justified analysis within the remaining allowance |
 | Assess project fit | Attributed claims, comparable observations and a concise decision | Trial, watch, reject or separately authorized adoption |
 
 Use existing deterministic adapters before asking a worker to write a new one.
@@ -43,7 +43,7 @@ A schedule is versioned data. A deterministic tick reads an active authorized
 schedule and enqueues a due scan verb using a stable schedule/version/window
 identity. The worker runs the collector and stores results. The tick needs no LLM.
 
-Tessera's one-time `not_before` is not recurring cron. Its fragility planner and
+Teleion Fabric's one-time `not_before` is not recurring cron. Its fragility planner and
 the existing Frontier discovery cron do not install arbitrary research schedules.
 The general adapter remains to be built and tested. It needs duplicate-tick,
 missed-window, outstanding-work, pause, expiry, revocation and crash-recovery

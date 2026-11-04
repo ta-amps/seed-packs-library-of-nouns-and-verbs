@@ -91,7 +91,7 @@ def account_turnover_costs(
     *,
     cost_bps: float = 10.0,
 ) -> dict[str, Any]:
-    """Compute gross periodic synthetic scores, L1 weight turnover, linear cost drag and net series."""
+    """Compute gross periodic made-up scores, L1 weight turnover, linear cost drag and net series."""
     if len(weight_snapshots) != len(realized_outcomes) or not weight_snapshots:
         raise ValueError("weight_snapshots and realized_outcomes must be non-empty and equal length")
 

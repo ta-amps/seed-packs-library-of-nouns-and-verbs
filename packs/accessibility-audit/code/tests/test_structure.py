@@ -6,7 +6,7 @@ import unittest
 
 from a11y_checks.structure import RULES, lint, rule_ids
 
-HEAD = '<!doctype html><html lang="en"><head><title>Synthetic page</title></head><body>'
+HEAD = '<!doctype html><html lang="en"><head><title>Made-up page</title></head><body>'
 TAIL = "</body></html>"
 
 
@@ -18,12 +18,12 @@ GOOD = page('<a class="skip" href="#main">Skip to content</a>'
             '<header><nav aria-label="Site"><a href="/">Home</a></nav></header>'
             '<main id="main"><h1>Volunteer shifts</h1><h2>This week</h2><p>Text.</p><h3>Monday</h3><h2>Next week</h2>'
             '<nav aria-label="Pages"><a href="/2">Page 2</a></nav></main>'
-            '<footer><p>Synthetic footer.</p></footer>')
+            '<footer><p>Made-up footer.</p></footer>')
 
 # Each page breaks exactly one rule.
 ONE_RULE = {
     "page-lang": GOOD.replace('<html lang="en">', "<html>"),
-    "page-title": GOOD.replace("<title>Synthetic page</title>", "<title> </title>"),
+    "page-title": GOOD.replace("<title>Made-up page</title>", "<title> </title>"),
     "main-missing": page('<div role="region" aria-label="Content"><h1>No main</h1></div>'),
     "main-multiple": page('<main><h1>One</h1></main><main><p>Two</p></main>'),
     "main-nested": page('<aside aria-label="Side"><main><h1>Inside</h1></main></aside>'),

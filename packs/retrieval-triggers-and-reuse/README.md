@@ -21,7 +21,7 @@ of cost.
 | Fingerprint rules | Step keys, five levels with backoff, loose on the task and strict on the environment |
 | Qualification rules | Delete, replay alone, pass again, recitation guard; bars for each kind of memory |
 | Evidence types | Parsed, resolved, observed, reported or designed, carried by every retrieved fact |
-| Reuse checks | 9 deterministic checks with 2 synthetic good and 9 synthetic bad stored solutions, rechecked by `make check` |
+| Reuse checks | 9 deterministic checks with 2 made-up good and 9 made-up bad stored solutions, rechecked by `make check` |
 | Templates | Lookup record, qualified solution, reuse attempt, saved need, arrival match, reuse ledger and promotion decision |
 | Worked examples | A lookup that finds an exact match, an unmet need kept open and a month of reuse against the month before |
 
@@ -45,7 +45,7 @@ from the packets defined in the [atomic step contract](../atomic-step-contract/R
 
 ## Worked examples
 
-All synthetic. The lookup fires two triggers, searches three places and decides to try an exact
+All made-up. The lookup fires two triggers, searches three places and decides to try an exact
 match under the check before generating anything. The saved need keeps a resumable upload helper
 open with three constraints. The ledger shows 51 verified tasks for 340 model calls, 150.0 per
 thousand, against 86.3 the month before, with 11 rolled-back misses and 4 self-reuses not counted.

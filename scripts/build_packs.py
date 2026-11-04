@@ -346,7 +346,7 @@ def schema_errors(schema: dict[str, Any], value: Any, where: str = "$") -> list[
 # ---------------------------------------------------------------------------
 
 NOUN_FIELDS = {"slug", "category", "role", "title", "value"}
-NOUN_OPTIONAL = {"relations", "category_reason", "synthetic"}
+NOUN_OPTIONAL = {"relations", "category_reason", "made-up"}
 VERB_FIELDS = {"slug", "kind", "title", "claimant", "summary", "outcome", "ready_outcome", "produces", "steps", "acceptance"}
 VERB_OPTIONAL = {
     "pinned", "slots", "params", "preferred", "suggested", "discovery_requested", "capabilities",
@@ -541,7 +541,7 @@ class Library:
             {
                 "status": "proposal",
                 "admission": "not_admitted",
-                "content_kind": "synthetic_example" if noun.get("synthetic") else "authored_guidance",
+                "content_kind": "made_up_example" if noun.get("made-up") else "authored_guidance",
                 "license": "MIT",
                 "provenance": dict(PROVENANCE),
                 "dimensions": dict(FLOOR_DIMENSIONS),
@@ -1002,7 +1002,7 @@ def template_idempotency_key(pack_id: str, slug: str, queue: str, kind: str, bri
 
 def build_noun(lib: Library, pack_id: str, noun: dict[str, Any]) -> dict[str, Any]:
     tags = [f"category:{noun['category']}", f"pack:{pack_id}", f"role:{noun['role']}"]
-    tags.append("synthetic:true" if noun.get("synthetic") else "content:authored")
+    tags.append("made-up:true" if noun.get("made-up") else "content:authored")
     tags += ["spdx:MIT", "status:quarantined"]
     return {
         "store": lib.store(pack_id),

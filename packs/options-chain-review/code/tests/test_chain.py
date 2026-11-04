@@ -1,4 +1,4 @@
-"""Snapshot checks, measures, screens and roll candidates on a small synthetic chain."""
+"""Snapshot checks, measures, screens and roll candidates on a small made-up chain."""
 
 from __future__ import annotations
 
@@ -30,18 +30,18 @@ def contract(expiry: str, strike: float, sigma: float, spread: float, oi: int = 
 
 def fixture() -> tuple[dict, dict, dict]:
     request = {
-        "underlying": {"name": "Test (synthetic)", "symbol": "TEST.X"},
+        "underlying": {"name": "Test (made-up)", "symbol": "TEST.X"},
         "reference_contract": "TEST.X 261120C00100000",
         "expiries": ["2026-11-20", "2026-12-18"],
         "strike_window": {"min": 95.0, "max": 105.0},
         "screens": {"min_open_interest": 100, "min_volume": 10, "max_spread_pct_of_mid": 10.0, "max_quote_age_seconds": 120},
         "tolerances": {"delta": 0.02, "gamma": 0.005, "theta_per_day": 0.005, "vega_per_point": 0.01, "iv": 0.01},
-        "assumptions": {"rate": {"value": 0.04, "source": "synthetic", "as_of": "2026-10-29"},
-                        "dividend_yield": {"value": 0.0, "source": "synthetic", "as_of": "2026-10-29"}},
+        "assumptions": {"rate": {"value": 0.04, "source": "made-up", "as_of": "2026-10-29"},
+                        "dividend_yield": {"value": 0.0, "source": "made-up", "as_of": "2026-10-29"}},
         "iv_history": {"measure": "30-day at-the-money implied volatility", "lookback_observations": 5, "min_observations": 5},
     }
     snapshot = {
-        "source": {"provider": "synthetic", "product": "synthetic", "access": "requester_export_file",
+        "source": {"provider": "made-up", "product": "made-up", "access": "requester_export_file",
                    "terms_read_on": "2026-10-30", "automated_access_permitted": False, "storage_permitted": True,
                    "redistribution_permitted": False, "viewers": "requester_only", "delay_minutes": 15,
                    "brokerage_connection": False},
@@ -56,7 +56,7 @@ def fixture() -> tuple[dict, dict, dict]:
         ],
     }
     days = [date(2026, 10, 26) + timedelta(days=i) for i in range(5)]
-    history = {"symbol": "TEST.X", "measure": "30-day at-the-money implied volatility", "provider": "synthetic",
+    history = {"symbol": "TEST.X", "measure": "30-day at-the-money implied volatility", "provider": "made-up",
                "observations": [{"date": d.isoformat(), "iv": v} for d, v in zip(days, (0.25, 0.31, 0.28, 0.27, 0.30))]}
     return request, snapshot, history
 

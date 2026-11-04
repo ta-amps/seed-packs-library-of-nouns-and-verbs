@@ -17,10 +17,10 @@ by existing coverage.
 | Guardrails | Preserve unique text; pin every chunk by SHA-256; keep mined categories as proposals |
 | Deduplication and gap rules | Left-maximal 6-word anchor splitting, 5-word shingle Jaccard threshold, and gap formula |
 | Templates | Deduplication summary, content-addressed chunk, real-world situation, and category gap report |
-| Record checks | Deterministic checks on mined brainstorm reports with synthetic good and bad fixtures |
+| Record checks | Deterministic checks on mined brainstorm reports with made-up good and bad fixtures |
 | Tool card and code | Tested standard-library Python package in [code/](code/README.md) (`brainstorm_miner`) |
 | Sources | 2 dated public sources on Rabin/Broder shingling and RFC 6234 SHA-256 |
-| Worked examples | Synthetic 14:1 paste-collapse and situation-mining report |
+| Worked examples | Made-up 14:1 paste-collapse and situation-mining report |
 
 ## Verbs
 

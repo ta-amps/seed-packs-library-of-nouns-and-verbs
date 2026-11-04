@@ -63,7 +63,7 @@ class FilmSurfaceRulesTests(unittest.TestCase):
     def test_forbidden_stamps_captions_mirror_rewrite_and_mcp_parity(self) -> None:
         cell = load_default_grid_cell()
         dirty = scan_forbidden_stamps_and_chips(
-            [{"t_s": 12.5, "text": "SYNTHETIC EXAMPLE - typed into the live box"}, {"t_s": 40.0, "text": "AI-generated voice"}],
+            [{"t_s": 12.5, "text": "MADE-UP EXAMPLE - typed into the live box"}, {"t_s": 40.0, "text": "AI-generated voice"}],
             ["building", "live"],
             cell,
         )

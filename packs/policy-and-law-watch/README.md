@@ -16,7 +16,7 @@ Check official public sources for new laws and rules on a topic, extract each ne
 | Guardrail: a citation for every claim | Every point cites its clause, page or line; uncited claims are removed |
 | Guardrail: a person decides | Workers draft and review; a person decides what is delivered |
 | Templates | Watch profile, rule candidates, clause extract, cited summary marked not legal advice, citation review, delivery record |
-| Worked examples | A synthetic stand-in ordinance, its clause extract and a cited summary, each checked against its template |
+| Worked examples | A made-up stand-in ordinance, its clause extract and a cited summary, each checked against its template |
 
 ## Verbs
 
@@ -35,10 +35,10 @@ Each verb can also end with `no_change`, `unknown` or `blocked`, and can propose
 Write the nouns in [nouns.json](nouns.json) create-only with a key scoped to your team's surface, then
 fill a template from [verbs.json](verbs.json) with
 `scripts/build_packs.py --instantiate <template> --inputs inputs.json --queue <your queue>` and enqueue
-the printed task yourself. The worked examples use synthetic stand-in sources only and need no network.
+the printed task yourself. The worked examples use made-up stand-in sources only and need no network.
 
 ## Limits
 
 - A proposal: not installed, imported, admitted or activated, and no worker has run these verbs.
 - Summaries are marked not legal advice. Interpreting a rule for any person or organization stays with people.
-- The stand-in sources are synthetic; the pack names no real source and fetches nothing offline.
+- The stand-in sources are made-up; the pack names no real source and fetches nothing offline.

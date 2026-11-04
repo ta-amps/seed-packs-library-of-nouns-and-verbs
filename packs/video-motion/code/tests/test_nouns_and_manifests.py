@@ -86,7 +86,7 @@ def test_license_and_qa_gates_refuse_unlicensed_assets_and_failed_qa() -> None:
             kind="character",
             label="Unknown",
             license="UNKNOWN_RIGHTS",
-            creator="Synthetic",
+            creator="Made-up",
             sha256="9" * 64,
         )
     )

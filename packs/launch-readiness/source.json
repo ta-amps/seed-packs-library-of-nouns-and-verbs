@@ -191,7 +191,7 @@
           {
             "id": "status-claims-match",
             "required": true,
-            "what": "Every status claim on the pages, such as a count, a date, a version, live, measured or synthetic only, matches a live read-only check or a receipt.",
+            "what": "Every status claim on the pages, such as a count, a date, a version, live, measured or made-up only, matches a live read-only check or a receipt.",
             "evidence": "A page claims check.",
             "worker_verb": "check-page-claims",
             "pass": "No claim is contradicted; unverifiable claims are reworded or waived by the owner."
@@ -265,7 +265,7 @@
       "value": {
         "claim_kinds": {
           "count": "A number of things, such as packs, volunteers or tests. Check it against the source at a dated read.",
-          "state": "Words like live, deployed, measured, verified, reviewed or synthetic only. Check them with the evidence rules.",
+          "state": "Words like live, deployed, measured, verified, reviewed or made-up only. Check them with the evidence rules.",
           "version_or_date": "A version, commit or as-of date. Check it is the current one, or that the page says as of when.",
           "capability": "Something the product does, such as works with any agent. Check one real instance, or reword it as a goal.",
           "absence": "Something the product does not do, such as no analytics or no AI calls. Check it with the matching read, such as page-load requests."
@@ -346,11 +346,11 @@
       "slug": "go-checks",
       "category": "noun.benchmark_suite",
       "role": "record_checks",
-      "title": "Record checks for readiness reports, with synthetic golden reports",
-      "category_reason": "Deterministic checks with synthetic known-good and known-bad records; the validator recomputes them.",
+      "title": "Record checks for readiness reports, with made-up golden reports",
+      "category_reason": "Deterministic checks with made-up known-good and known-bad records; the validator recomputes them.",
       "value": {
         "fixture_kind": "finding_checks",
-        "purpose": "Checks every readiness report must pass before an owner decides on it. The three synthetic good reports (not ready, ready with a waiver and ready) pass all of them; each synthetic bad report fails exactly the one check named in fails.",
+        "purpose": "Checks every readiness report must pass before an owner decides on it. The three made-up good reports (not ready, ready with a waiver and ready) pass all of them; each made-up bad report fails exactly the one check named in fails.",
         "deterministic_checks": [
           {
             "id": "links-resolve-listed",
@@ -741,7 +741,7 @@
           {
             "id": "good-not-ready",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "report_id": "LR-6",
               "plan_ref": {
@@ -806,7 +806,7 @@
           {
             "id": "good-ready-with-waiver",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "report_id": "LR-7",
               "plan_ref": {
@@ -874,7 +874,7 @@
           {
             "id": "good-ready",
             "label": "known_good",
-            "provenance": "synthetic",
+            "provenance": "made-up",
             "finding": {
               "report_id": "LR-8",
               "plan_ref": {
@@ -3051,15 +3051,15 @@
       "category": "noun.seed_hypothesis",
       "role": "example",
       "title": "Worked example: a readiness plan for a small site",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.readiness-plan"
         },
         "instance": {
           "plan_id": "RP-6",
-          "target": "The synthetic pantry volunteer site",
+          "target": "The made-up pantry volunteer site",
           "build": "site build 2026-10-30.3",
           "launch_window": "2026-11-02, morning",
           "pages": [
@@ -3094,7 +3094,7 @@
           ]
         },
         "shows": "A plan that names every required item, the claims to check, the rollback target and the two people's roles.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -3102,8 +3102,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a contradicted count and a true absence claim",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.page-claims"
@@ -3140,7 +3140,7 @@
           "mismatches": 1
         },
         "shows": "Each claim quoted exactly, checked against a live read, with a mismatch, a match and an unverifiable claim to reword.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -3148,8 +3148,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: a not-ready report with two blockers",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.readiness-report"
@@ -3161,7 +3161,7 @@
             "version": 1,
             "value_sha256": "7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e"
           },
-          "target": "The synthetic pantry volunteer site, build 2026-10-30.3",
+          "target": "The made-up pantry volunteer site, build 2026-10-30.3",
           "checked_at": "2026-10-30T17:40Z",
           "items": [
             {
@@ -3215,7 +3215,7 @@
           "recommendation_reason": "Two required items fail: a contradicted count and soft 404s."
         },
         "shows": "Every required item with its evidence, the blockers named and a recommendation that follows the rule.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     },
     {
@@ -3223,8 +3223,8 @@
       "category": "noun.eval_run",
       "role": "example",
       "title": "Worked example: the owner's no-go",
-      "synthetic": true,
-      "category_reason": "A synthetic instance in the template's shape.",
+      "made-up": true,
+      "category_reason": "A made-up instance in the template's shape.",
       "value": {
         "conforms_to": {
           "$pin": "template.go-decision"
@@ -3247,7 +3247,7 @@
           "next_step": "Fix both blockers, rerun their checks and bring a new report."
         },
         "shows": "A person's decision pinned to the exact report, with deciding kept separate from releasing.",
-        "source": "Synthetic. Written for this pack; every name, address, number and identifier is made up."
+        "source": "Made-up. Written for this pack; every name, address, number and identifier is made up."
       }
     }
   ],
