@@ -42,8 +42,8 @@ Each verb can also end with `no_change`, `unknown` or `blocked`, and can propose
 
 ## Measured results
 
-On a frozen 150-row made-up test of typed tool calls, Llama 3.2 1B Instruct rose from 12.0% to
-50.7% exact match over four rounds, and Llama 3.2 3B Instruct from 52.0% to 72.7% in one; a later 3B
+On a frozen 150-row made-up test of typed tool calls, Meta open model (1B) rose from 12.0% to
+50.7% exact match over four rounds, and Meta open model (3B) from 52.0% to 72.7% in one; a later 3B
 round scored 79.3% but broke a schema guard and was kept out. Glimmer 30B rose from 93.3% to 99.3%
 on a fresh holdout registered before scoring. Each is one made-up task with one seed.
 
