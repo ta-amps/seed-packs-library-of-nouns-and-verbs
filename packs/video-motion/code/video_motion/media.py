@@ -152,7 +152,7 @@ class MediaAsset(BaseModel):
         if (self.provenance == "generated") != (self.generator is not None):
             raise ValueError("generated media needs a generator; captured/licensed media has none")
         if self.provenance == "generated" and not self.made_up:
-            raise ValueError("generated media must be labeled made-up")
+            raise ValueError("generated media must be labeled AI-generated")
         if self.kind in ("recording", "image") and (self.width is None or self.height is None):
             raise ValueError("visual media needs width and height")
         if self.kind in ("recording", "audio") and self.duration_s is None:

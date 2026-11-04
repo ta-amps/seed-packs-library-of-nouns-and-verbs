@@ -276,7 +276,7 @@ def test_render_produces_checked_mp4s_with_tool_cards(rendered: dict[str, Any]) 
         assert ffmpeg.sha256 == hashlib.sha256(Path(rendered["ffmpeg"]).read_bytes()).hexdigest()
         assert not ffmpeg.missing_capabilities and ffmpeg.license_spdx.startswith(("GPL", "LGPL"))
         assert manifest.total_frames == 54
-        assert manifest.made_up_media == ["clip", "inset-card", "music", "narration", "pip"]
+        assert manifest.ai_generated_media == ["clip", "inset-card", "music", "narration", "pip"]
         assert "/" + "home" not in json.dumps(manifest.model_dump(mode="json"))
         report = video_worker.check_rendered_video(sequence, root / "render", manifest.aspect)
         failed = {c.check: c.measured for c in report.checks if not c.passed}

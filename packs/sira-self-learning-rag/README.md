@@ -4,7 +4,7 @@
 
 A collection of nouns and verbs for offline corpus-discriminative Seed Pack enrichment (`SIRA`),
 cross-domain structural problem-isomorphism indexing (`RA-RFT`), execution-report reflection into
-sub-2ms edge shim rules (`MR-Search`), and bounded `DGM-H` self-improvement proposals gated by an
+edge shim rules (`MR-Search`), and bounded `DGM-H` self-improvement proposals gated by an
 independent verifier. Inspired by Meta `SIRA` (June 2026), `RA-RFT`, `MR-Search` and `HyperAgents /
 DGM-H` (March 2026), workers collapse multi-round exploratory catalog search into one single-shot
 retrieval action and retrieve structurally analogous packs across distinct surface domains.
@@ -25,7 +25,7 @@ retrieval action and retrieve structurally analogous packs across distinct surfa
 | Verb (task) | Who | What happens |
 | --- | --- | --- |
 | `enrich-corpus-and-analogy-frames` | agent, no model | Extract discriminative vocabulary, I/O signatures, predictive query expansions and `12` structural frames |
-| `compile-sub2ms-shim-rules` | agent, no model | Reflect over Task execution reports to emit zero-model `< 2 ms` routing and pruning shim rules |
+| `compile-sub2ms-shim-rules` | agent, no model | Reflect over Task execution reports to emit zero-model routing and pruning shim rules |
 | `verify-dgmh-proposal-independently` | agent, no model | Enforce `proposer != verifier`, zero holdout regressions and `surface_only` scope before owner review |
 
 ## How to use it

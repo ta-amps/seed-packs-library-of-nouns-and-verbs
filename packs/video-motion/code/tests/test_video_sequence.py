@@ -213,7 +213,7 @@ def test_generated_media_are_reproducible_and_labeled() -> None:
     assert worst < 1e-8
     with pytest.raises(ValidationError, match="generator"):
         MediaAsset.model_validate({**assets[0].model_dump(mode="json"), "generator": None})
-    with pytest.raises(ValidationError, match="made-up"):
+    with pytest.raises(ValidationError, match="AI-generated"):
         MediaAsset.model_validate({**assets[0].model_dump(mode="json"), "made-up": False})
 
 

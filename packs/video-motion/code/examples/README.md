@@ -1,6 +1,6 @@
 # Example Recipes & Motion Traces
 
-Clean-room, open-licensed (SPDX `LicenseRef-Video-Motion-Procedural`, `CC0-1.0`, `CC-BY-4.0`, `MIT`) scene recipes and made-up motion traces exercised by `make demo` and `pytest`. The video and motion seed pack pins each file below by SHA-256. The scenes are illustrative: chart values are examples, not measurements, and attribution digests are placeholders (`digest_basis: illustrative`) that attest no media bytes.
+Clean-room, open-licensed (SPDX `LicenseRef-Video-Motion-Procedural`, `CC0-1.0`, `CC-BY-4.0`, `MIT`) scene recipes and AI-generated motion traces exercised by `make demo` and `pytest`. The video and motion seed pack pins each file below by SHA-256. The scenes are illustrative: chart values are examples, not measurements, and attribution digests are placeholders (`digest_basis: illustrative`) that attest no media bytes.
 
 - [01-pov-role-skit.json](01-pov-role-skit.json) -- 16.0s two-character POV role skit demonstrating beat cadence, face keep-out protection, voiceover ducking, and dual-aspect framing.
 - [02-kinetic-data-chart.json](02-kinetic-data-chart.json) -- 12.0s animated benchmark chart with progressive `draw_progress` bar/polyline reveal and `4:5` lower-right canvas reclamation.

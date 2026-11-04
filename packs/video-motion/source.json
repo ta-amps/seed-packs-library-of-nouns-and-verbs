@@ -1259,7 +1259,7 @@
             "threshold": "Captions cover at least caption_coverage_min of measured speech, no cue without speech, sidecars equal the track."
           },
           {
-            "id": "made_up_disclosure",
+            "id": "ai_generated_disclosure",
             "threshold": "The file's title and disclosure comment are exactly what the render manifest records."
           }
         ],
@@ -1280,7 +1280,7 @@
             "frozen_frames",
             "integrated_loudness",
             "caption_timing_coverage",
-            "made_up_disclosure"
+            "ai_generated_disclosure"
           ],
           "freeze_min_s": 2.0,
           "loudness_tolerance_lu": 1.0,
@@ -1906,7 +1906,7 @@
         },
         "rules": [
           "render-sequence accepts only CC0-1.0, CC-BY-4.0, MIT and LicenseRef-Video-Motion-Procedural; record media under any other license as such and leave it out of rendering.",
-          "Generated media name the generator and parameters that rebuild the exact bytes and are labeled made-up; captured and licensed media have no generator.",
+          "Generated media name the generator and parameters that rebuild the exact bytes and are labeled AI-generated; captured and licensed media have no generator.",
           "Visual media need width and height; timed media need duration_s; audio needs sample_rate_hz and channels.",
           "blob_sha256 is the SHA-256 of the stored bytes; object_ref names the stored object when there is one."
         ],
@@ -2492,10 +2492,10 @@
             "disclosure": {
               "type": "string"
             },
-            "made_up_visuals": {
+            "ai_generated_visuals": {
               "type": "boolean"
             },
-            "made_up_media": {
+            "ai_generated_media": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -2528,8 +2528,8 @@
             "scene_frames",
             "sequence_id",
             "sequence_sha256",
-            "made_up_media",
-            "made_up_visuals",
+            "ai_generated_media",
+            "ai_generated_visuals",
             "tool_source_files",
             "tool_version",
             "tools",
@@ -2652,7 +2652,7 @@
             "frozen_frames",
             "integrated_loudness",
             "caption_timing_coverage",
-            "made_up_disclosure"
+            "ai_generated_disclosure"
           ]
         }
       },
@@ -3355,7 +3355,7 @@
         "Run video-motion video probe-tools and keep the cards. Compare them with the reference builds and report every difference; do not hide one.",
         "Rebuild generated media from their generators and verify each blob digest; read captured media only from their pinned objects and verify the bytes.",
         "Run video-motion video render with the sequence and its media nouns. It refuses to render when pre-render QA, a pin or a digest fails.",
-        "Store the MP4s, sidecars and manifests as nouns in the requester's scope, labeled as made-up wherever the manifest says so."
+        "Store the MP4s, sidecars and manifests as nouns in the requester's scope, labeled as AI-generated wherever the manifest says so."
       ],
       "preferred": [
         "Use the reference builds when available, so a second render can be byte-identical."

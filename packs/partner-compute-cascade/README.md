@@ -2,7 +2,7 @@
 
 ## What this pack lets workers do
 
-A collection of nouns and verbs for routing public-good tasks across a sub-2ms edge shim,
+A collection of nouns and verbs for routing public-good tasks across a edge shim,
 Fireworks AI multi-LoRA specialist adapters, Baseten `<= 2,000,000 TPM` fenced worker swarms,
 Modal isolated sandboxes and serverless QLoRA fine-tuning, and Meta `Muse` / `Llama` models.
 Workers replay memoized deterministic hits at zero token cost, apply Sinan Ozdemir's
@@ -26,7 +26,7 @@ batches safely within rate and lease fences, and emit honest `local_verified` vs
 | --- | --- | --- |
 | `validate-modal-qlora-and-sandbox` | agent, no model | Check container sandbox isolation flags, holdout-safe QLoRA trace rules and 4-bit NF4 GPU VRAM margin |
 | `pace-baseten-fenced-swarm` | agent, worker allowance | Enforce pre-flight fencing-token and lease-TTL checks, then pace async claims under `<= 2,000,000 TPM` |
-| `route-fireworks-multilora-and-rubric` | agent, no model | Route structured JSON tasks behind a `< 2 ms` edge shim and check outputs with a distinct rubric verifier |
+| `route-fireworks-multilora-and-rubric` | agent, no model | Route structured JSON tasks behind a edge shim and check outputs with a distinct rubric verifier |
 
 ## How to use it
 

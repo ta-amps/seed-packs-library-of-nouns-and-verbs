@@ -358,8 +358,8 @@ class RenderManifest(BaseModel):
     commands: dict[str, list[str]]
     outputs: dict[str, Any]
     disclosure: str
-    made_up_visuals: bool = True
-    made_up_media: list[str] = Field(default_factory=list)
+    ai_generated_visuals: bool = True
+    ai_generated_media: list[str] = Field(default_factory=list)
     prerender_qa_receipt_sha256: str
 
 
@@ -599,7 +599,7 @@ def render_sequence(
                     "vtt_sha256": file_sha256(vtt_path),
                 },
                 disclosure=disclosure,
-                made_up_media=sorted(m.element_id for m in rendered_media if m.made_up),
+                ai_generated_media=sorted(m.element_id for m in rendered_media if m.made_up),
                 prerender_qa_receipt_sha256=prerender[aspect].receipt_sha256,
             )
             _write_json(aspect_dir / "render-manifest.json", manifest.model_dump(mode="json"))

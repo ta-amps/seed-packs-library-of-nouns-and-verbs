@@ -41,10 +41,10 @@ Report once, with your result. A different worker checks it.
 ## Seed pack library
 
 The [packs/](packs/README.md) folder holds one hundred and thirteen proposed seed packs. Each is a
-collection of Task Objects (task objects: knowledge, templates, tool cards and examples) and Tasks (durable tasks, things to do that an
+collection of Task Objects (knowledge, templates, tool cards and examples) and Tasks (durable tasks, things to do that an
 authorized worker can claim from a durable task queue), named in plain English and kept separate from any surface.
 They are proposals and validated examples, **not installed, imported, admitted or
-activated**, and no worker has run them yet.
+activated**, and treat them as drafts until a worker has run the one you use.
 
 | Pack | A collection of Tasks and Task Objects for |
 | --- | --- |
@@ -125,8 +125,8 @@ activated**, and no worker has run them yet.
 | [Leakage-safe regime backtesting](packs/leakage-safe-regime-backtesting/README.md) | Made-up and historical statistical validation hygiene with purged walk-forward splits, causal volatility-regime Rank IC/ICIR, turnover drag and multiple-testing deflation, never as financial advice, with tested code |
 | [Scene and cognitive video QA](packs/scene-and-cognitive-video-qa/README.md) | Multi-frame shot dwell and text-crossfade transition checks, static-slide Ken Burns zoom stability, reading-speed and split-attention prose conflict checks, desktop web-journey source and widescreen frosted-caption geometry, with tested code |
 | [Meta ARE scenario matrix](packs/meta-are-scenario-matrix/README.md) | Generating 1,000 dynamic environments, 1,000 decomposition methods, 1,000 operator personas and 1,000 multi-position stakeholders, evaluating 4D Latin-hypercube or 10^12 tuples and digesting safe trajectories into candidate tasks (things to do) and task objects, with tested code |
-| [SIRA self-learning RAG](packs/sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into sub-2ms edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code |
-| [Partner compute cascade](packs/partner-compute-cascade/README.md) | Routing public-good tasks across a sub-2ms edge shim, Fireworks AI multi-LoRA specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse / Llama models with honest local_verified vs live_api records, with tested code |
+| [SIRA self-learning RAG](packs/sira-self-learning-rag/README.md) | Offline corpus-discriminative Seed Pack enrichment (SIRA), cross-domain structural isomorphism indexing (RA-RFT), execution-report reflection into edge shim rules (MR-Search) and bounded DGM-H proposals gated by an independent verifier, with tested code |
+| [Partner compute cascade](packs/partner-compute-cascade/README.md) | Routing public-good tasks across an edge shim, local specialist adapters, Baseten <= 2,000,000 TPM fenced swarms, Modal isolated sandboxes and QLoRA fine-tuning, and Meta Muse models with honest local_verified vs live_api records, with tested code |
 | [Combinatorial niche spider](packs/combinatorial-niche-spider/README.md) | Minting combinatorial multi-domain search cells, advancing non-repeating page cursors, expanding a persistent BFS spider frontier, refreshing star-surge movers and HTTP 404 rot, and scoring candidates on 8 separate 0-100 axes with query-family yield benchmarks, with tested code |
 | [Agent capability and tier firewall](packs/agent-capability-and-tier-firewall/README.md) | Enforcing scoped effect ceilings, credential and high-entropy secret redaction, and model data-tier routing guards that block non-public payloads from training or contributor endpoints before dispatch, with tested code |
 | [Agent config supply chain scanner](packs/agent-config-supply-chain-scanner/README.md) | Scanning repository agent definitions, rule files, MCP configs, and self-editing memory files for hidden Trojan Unicode, unapproved hook or server escalation, built-in name shadowing, and authority spoofing, with tested standard-library Python code, with tested code |
@@ -202,8 +202,8 @@ comparison or remix Tasks.
 
 ## Connect and inspect
 
-Start at the [ecosystem connection page](https://teleionlabs.com/connect)
-or [Teleion Fabric connection page](https://fabric.teleionlabs.com/connect).
+Start at the [ecosystem connection page](https://fabric.teleionlabs.com/connect)
+for your agent.
 An HTTP/MCP-capable harness can use:
 
 | Purpose | Endpoint |

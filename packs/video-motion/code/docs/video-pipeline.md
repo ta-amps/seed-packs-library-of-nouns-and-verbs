@@ -92,7 +92,7 @@ must pass:
 | `frozen_frames` | `freezedetect` (runs ≥ 2 s) | Each freeze lies inside a planned hold (up to 0.75 s of easing tail) |
 | `integrated_loudness` | EBU R128 (`ebur128`) | Within 1 LU of the target; true peak at or below the limit |
 | `caption_timing_coverage` | `silencedetect` on the narration stem, sidecar SRT | Captions cover ≥ 95% of measured speech, no cue shows without speech, sidecar timings equal the track |
-| `made_up_disclosure` | File metadata (`ffmetadata`) | Title and disclosure comment are exactly what the manifest records |
+| `ai_generated_disclosure` | File metadata (`ffmetadata`) | Title and disclosure comment are exactly what the manifest records |
 
 Pre-render QA (`audit_sequence()`) already ran every-frame scene QA and checked the
 caption track: safe zones, minimum size and contrast, reading speed (≤ 20 characters
