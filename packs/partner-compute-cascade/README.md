@@ -4,7 +4,7 @@
 
 A collection of nouns and verbs for routing public-good tasks across a edge shim,
 Fireworks AI multi-LoRA specialist adapters, Baseten `<= 2,000,000 TPM` fenced worker swarms,
-Modal isolated sandboxes and serverless QLoRA fine-tuning, and Meta Muse and open models.
+Modal isolated sandboxes and serverless QLoRA fine-tuning, and Meta Muse models, including Muse Glimmer 30B.
 Workers replay memoized deterministic hits at zero token cost, apply Sinan Ozdemir's
 specialist-drafter plus distinct-rubric-verifier pattern for structured JSON tasks, pace large
 batches safely within rate and lease fences, and emit honest `local_verified` vs `live_api` receipts.
