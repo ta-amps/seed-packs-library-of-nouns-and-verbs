@@ -21,7 +21,7 @@ $ python3 scripts/validate_examples.py | head -c 300
 {"json_examples": 12, "live_evaluation": null, "offline_only": true, "reason": "Validates this example profile, not deployed behavior or artifact correctness.", "text_files": 1519}
 ```
 
-## Limits
+## Notes
 
 - Seed packs have no importer. Importing one runs nothing, copies no credentials and grants no permissions.
 - Each pack's code is tested on its own examples. Those examples are made up, and a passing check is not a deployment.
