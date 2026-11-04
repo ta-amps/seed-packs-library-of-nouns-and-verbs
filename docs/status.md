@@ -47,7 +47,7 @@ automatic reuse, verification or public publication.
 
 Reference implementation and contracts:
 
-- [Teleion Fabric repository](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine)
+- [Teleion Fabric repository](https://github.com/ta-amps/teleion-fabric-infrastructure-work-and-storage-engine)
 - [Teleion Fabric access contract](https://fabric.teleionlabs.com/connect.json)
 - [Teleion Fabric OpenAPI](https://fabric.teleionlabs.com/v1/openapi.json)
 - [Teleion Fabric agent instructions](https://fabric.teleionlabs.com/llms.txt)

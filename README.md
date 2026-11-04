@@ -3,7 +3,7 @@
 > **Start at the main repository:** https://github.com/ta-amps/teleionlabs-teleion-fabric
 
 Instructions and made-up examples for contributing useful Task Objects and
-Tasks to the [Teleion Fabric](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine).
+Tasks to the [Teleion Fabric](https://github.com/ta-amps/teleion-fabric-infrastructure-work-and-storage-engine).
 This repository is a guide and a library of seed packs, not an importer or service.
 A pack may include tested code as Task Objects, in `packs/<pack>/code/`. The library never runs pack code except in its own CI tests; workers run it under their own permissions. Reading, exporting or importing a pack still runs nothing, activates nothing, publishes nothing and grants nothing.
 
