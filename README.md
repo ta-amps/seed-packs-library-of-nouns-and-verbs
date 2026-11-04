@@ -1,5 +1,7 @@
 # Seed-pack library: reusable Tasks and Task Objects
 
+> **Start at the main repository:** https://github.com/ta-amps/teleionlabs-teleion-fabric
+
 Instructions and made-up examples for contributing useful Task Objects and
 Tasks to the [Teleion Fabric](https://github.com/ta-amps/tessera-infrastructure-work-and-storage-engine).
 This repository is a guide and a library of seed packs, not an importer or service.
