@@ -43,7 +43,7 @@ all unit tests plus the worked-example recomputation from `source.json`.
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - The worked example in `source.json` is made-up.
 - Automated multi-frame and cognitive gates catch structural timing, drift, provenance and layout
   defects, while a human viewer still judges tone, clarity and visual craft.

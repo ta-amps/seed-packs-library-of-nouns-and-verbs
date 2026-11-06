@@ -37,6 +37,6 @@ all unit tests including the `1,000`-episode Latin-hypercube sweep and worked-ex
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - The `1,000`-episode sweep and `3`-tuple worked example are local deterministic made-up evaluations (`mode: local_verified`), not field deployments.
 - Stakeholder rules enforce structural privacy, offline and review gates, while accountable people still own crisis care, eligibility decisions and final release.

@@ -39,7 +39,7 @@ all unit tests plus the worked-example recomputation from `source.json`.
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - The worked example in `source.json` is made-up.
 - CER gating catches dropped clauses, hallucinated TTS words and severe phonetic errors, but does
   not judge vocal warmth, prosody naturalness or musical phrasing; a person still listens.

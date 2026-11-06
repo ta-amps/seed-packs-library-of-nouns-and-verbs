@@ -44,7 +44,7 @@ example from `source.json`.
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - The worked example in `source.json` is made-up and tests deterministic agreement between the
   pack schema and `code/frame_qa`.
 - Optional local OCR (`rapidocr-onnxruntime`) and optional local Meta SAM (`facebook/sam-vit-base`)

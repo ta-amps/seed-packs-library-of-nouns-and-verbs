@@ -54,8 +54,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
-  through Tessera. Its rubric was applied by hand to ta-amps's own 3:00 film while this pack was
+- A proposal: not installed, imported, admitted or activated, and no worker has claimed these Tasks
+  through the shared work queue. Its rubric was applied by hand to ta-amps's own 3:00 film while this pack was
   written; that review is kept privately and is not a run of these verbs.
 - The worked examples are made-up; the library's tests recheck their counts and consistency only.
 - An agent cannot listen, and one reviewer is one opinion; the person's verb and the comparison exist

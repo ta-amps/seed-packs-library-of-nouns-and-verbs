@@ -6,8 +6,8 @@ contains. A pack may include tested code as nouns, in `packs/<pack>/code/`. The 
 pack produces, but no pack is part of a surface, and packs carry plain-English names, not
 product names. A pack adds no new kind of entity, runtime, agent authority or scheduler.
 Reading, exporting or importing a pack runs nothing, activates nothing, admits or
-publishes nothing, copies no credential and grants no permission. Tessera stays the
-authority for identity, storage, leases and receipts.
+publishes nothing, copies no credential and grants no permission. The work engine (the `tessera` Python
+package) stays the authority for identity, storage, leases and receipts.
 
 **Status, October 29, 2026:** every pack here is a proposal and a validated example.
 None is installed, imported, admitted or activated, and no worker has run these verbs.
@@ -140,8 +140,8 @@ building nonprofit kits and keeping knowledge fresh) and lists what is still mis
 | --- | --- |
 | `README.md` | A short, plain explanation, starting with what the pack lets workers do |
 | `source.json` | The authored content. Edit this file |
-| `nouns.json` | Generated. One Tessera `RecordWrite` body per line: create-only, `surface_only`, quarantined |
-| `verbs.json` | Generated. One Tessera `TaskSpec` template per line, with unfilled input slots |
+| `nouns.json` | Generated. One engine `RecordWrite` body per line: create-only, `surface_only`, quarantined |
+| `verbs.json` | Generated. One engine `TaskSpec` template per line, with unfilled input slots |
 | `manifest.json` | Generated. File digests, each noun's value SHA-256 and each verb's identity |
 | `code/` | Optional. Tested code the pack's tool nouns point at, with its own tests. The manifest pins every file by digest; the library runs it only in CI |
 
@@ -159,7 +159,7 @@ and decomposition's breakdowns become child task previews.
 
 ## How the pieces fit
 
-- A **pin** is a Tessera `NounRef`: store, key, version and `value_sha256`, the SHA-256
+- A **pin** is an engine `NounRef`: store, key, version and `value_sha256`, the SHA-256
   of the value's canonical JSON. Keys carry the pack version, so a new version never
   collides with an old one. Version 1 pins assume a create-only write succeeded; read the
   noun back and compare the digest before relying on it.
@@ -169,25 +169,25 @@ and decomposition's breakdowns become child task previews.
   with a required explanation. `scripts/build_packs.py --instantiate` fills a template,
   checks the result against its input schema and prints it, optionally for your queue
   with `--queue`; it never enqueues.
-- Each template carries an optional **execution report** in Tessera's version-1 format.
+- Each template carries an optional **execution report** in the engine's version-1 format.
   Its contract copies the typed schemas, so runs of the same template share one shape
   fingerprint. What went right, what went wrong, next steps and ideas go in the task
   output's `run_notes`, because the version-1 report has no fields for them.
 - **Scope.** Payloads are `surface_only`. Import them with a key scoped to your team's
-  surface; Tessera records that surface as the producer. Workers, requesters and
+  surface; the engine records that surface as the producer. Workers, requesters and
   reviewers on the same surface can then read the nouns, claim the verbs and read each
   other's outputs, while keys on other surfaces, or with none, see nothing. Workers write
   their outputs the same way.
 
 ## Choices worth knowing
 
-- **Only registered categories.** Every noun and verb uses one of Tessera's 20 noun
-  and 18 verb categories, with `category_reason` where the fit is not obvious. Tessera
+- **Only registered categories.** Every noun and verb uses one of the engine's 20 noun
+  and 18 verb categories, with `category_reason` where the fit is not obvious. The engine
   has no category for profiles or preferences, so those use `noun.seed_hypothesis`: they
   are assumptions later evidence can confirm or contradict.
-- **No invented scores.** Tessera requires four quality dimensions on every category.
+- **No invented scores.** The engine requires four quality dimensions on every category.
   Each starts at its lowest value with tier `unverified` and a `dimension_basis` saying
-  nothing was measured. Success records keep `trials` and `successes` null, so Tessera's
+  nothing was measured. Success records keep `trials` and `successes` null, so the engine's
   rankings list them as unranked instead of scoring them from a prior.
 - **Typed relations only**, of the kinds each category allows.
 - **No branding.** Surface and product names appear only in a descriptor's
@@ -199,10 +199,10 @@ and decomposition's breakdowns become child task previews.
 | Check | What it does | Where it runs |
 | --- | --- | --- |
 | `scripts/build_packs.py --check` | Rebuilds every pack and fails if any committed byte differs | `make check`, CI |
-| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the forty-five worked examples, against [a snapshot](tessera-contract.json) of Tessera's contract | `make check`, CI |
-| `scripts/validate_against_tessera.py` | Every noun and verb through Tessera's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean Tessera checkout |
+| `scripts/validate_packs.py` | Shapes, categories, relations, pins, outcomes, scope, network modes, authority limits, instructions to contact or publish, branding, template and example conformance, README rules, the counts stated in these docs and the forty-five worked examples, against [a snapshot](tessera-contract.json) of the engine's contract | `make check`, CI |
+| `scripts/validate_against_tessera.py` | Every noun and verb through the engine's own `RecordWrite`, `TaskSpec`, tag projection, `validate_category_payload`, `NounRef` and execution-report code, ten negative probes, and a two-key lifecycle probe on a throwaway local Store | Locally, with a clean checkout of the engine |
 
-The last check writes [VALIDATION.json](VALIDATION.json) with the Tessera commit, whether
+The last check writes [VALIDATION.json](VALIDATION.json) with the engine commit, whether
 its files were clean, and the digests it validated. `make check` fails if a pack changed
 after that validation, so the receipt cannot silently go stale. None of these checks
 calls a service or a model or writes to a real fabric.
@@ -211,6 +211,6 @@ calls a service or a model or writes to a real fabric.
 
 1. Edit `packs/<pack>/source.json` or its README.
 2. Run `python3 scripts/build_packs.py` to regenerate the payloads.
-3. Run `make check-tessera TESSERA_SRC=<clean Tessera checkout> TESSERA_ARGS=--write`
+3. Run `make check-tessera TESSERA_SRC=<clean engine checkout> TESSERA_ARGS=--write`
    with that checkout's Python environment.
 4. Run `make check` before committing.

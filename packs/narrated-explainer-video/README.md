@@ -55,8 +55,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
-  through Tessera. They package the pipeline ta-amps is using for its own explainer video, run as
+- A proposal: not installed, imported, admitted or activated, and no worker has claimed these Tasks
+  through the shared work queue. They package the pipeline ta-amps is using for its own explainer video, run as
   local verbs on a local store; that production was still in draft runs when this pack was written,
   and nothing here claims its result.
 - The worked example is made-up and renders no video; only its cut plan and sidecar digests are

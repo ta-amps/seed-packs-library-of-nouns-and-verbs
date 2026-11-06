@@ -38,7 +38,7 @@ repository decomposition, BM25 indexing, RRF (`k=60`) fusion and the worked exam
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Decomposed `tasks` and `task_objects` reflect static metadata and README scans
   (`candidate_unverified`), never sandboxed execution or security endorsement of third-party code.
 - The worked example in `source.json` is made-up.

@@ -36,6 +36,6 @@ all unit tests including the `60`-query benchmark across all `79` Seed Packs and
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline enrichment, shim compilation and `DGM-H` verification run deterministically (`mode: local_verified`) and never promote changes without owner review.
 - Structural isomorphism retrieval surfaces candidate packs; accountable workers and people still verify domain fit before acting.

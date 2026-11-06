@@ -55,7 +55,7 @@ and enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: no worker has claimed these verbs through Tessera yet. The code itself is tested,
+- A proposal: no worker has claimed these Tasks through the shared work queue. The code itself is tested,
   including real FFmpeg and Chromium renders, locally and by this library's CI job for the pack.
 - The demo's narration, music bed and inset image are generated placeholders, labeled as such.
 - Pixels depend on the Chromium build and fonts; byte identity holds only for the same builds.

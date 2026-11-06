@@ -42,7 +42,7 @@ Run `make check` in [code/](code/README.md) to compile with warnings treated as 
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - `schedule.harness-feed-scan` is `not_activated` (`authority: none`) and cannot schedule or
   authorize work by itself.
 - Benchmark figures inside `example.raw-harness-runs` and `benchmark.normalized-matrix` are

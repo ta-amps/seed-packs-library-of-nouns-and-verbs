@@ -28,5 +28,5 @@ Run `make check` in [code/](code/README.md) to run all 15 Python unit tests, `Ze
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these tasks (things to do) through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline checks verify deterministic event reduction, parity and reading-time math; real screen-reader and layout review still belong on rendered pages.

@@ -29,5 +29,5 @@ Run `make check` in [code/](code/README.md) to verify inline lease expiry reclam
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these `tasks (things to do)` through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline SQLite queue simulation, subspace projection, AST verification and worked-example recomputation run deterministically with the Python standard library and no network calls.

@@ -36,6 +36,6 @@ all unit tests including Modal VRAM/sandbox checks, loopback `2M TPM` swarm paci
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - When `MODAL_TOKEN_ID`, `BASETEN_API_KEY`, `FIREWORKS_API_KEY` and `META_API_KEY` are unset, every receipt honestly reports `mode: local_verified` rather than claiming live cloud execution.
 - Partner templates grant no spending authority; workers run live jobs only under explicit owner-authorized credentials and budgets.

@@ -39,7 +39,7 @@ pair compilation, holdout disjointness, strategy routing and paired bootstrap pr
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Compiling pairs or passing a made-up fixture never constitutes a trained or deployed adapter;
   real promotion requires pre-registered holdouts and general-capability retention benchmarks.
 - The worked example in `source.json` is made-up.

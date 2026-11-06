@@ -29,6 +29,6 @@ Run `make check` in [code/](code/README.md) to verify all seven Kahn-wave DAG pr
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these `tasks (things to do)` through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline DAG compilation, isolated `python3 -I` subprocess fan-in joins, AST verification and worked-example recomputation run deterministically with the Python standard library and no network calls.
 - Follow-up subgoal and blueprint synthesis items stay inside `proposed_verbs`; an authorized requester and distinct reviewer govern admission before reuse.

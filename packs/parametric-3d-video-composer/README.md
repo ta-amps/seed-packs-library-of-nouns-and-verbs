@@ -40,7 +40,7 @@ camera projection, safe-area collision, transition and worked-example tests.
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - The worked example in `source.json` is made-up.
 - Geometric preflight guarantees coordinate bounds before render; encoded video output still needs
   post-render inspection via [frame-by-frame video QA](../frame-by-frame-video-qa/README.md).

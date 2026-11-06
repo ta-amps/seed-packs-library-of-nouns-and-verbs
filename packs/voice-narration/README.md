@@ -50,8 +50,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
-  through Tessera. They generalize the narration work for ta-amps's own explainer video on October 29
+- A proposal: not installed, imported, admitted or activated, and no worker has claimed these Tasks
+  through the shared work queue. They generalize the narration work for ta-amps's own explainer video on October 29
   and 30, 2026, which was still in production when this pack was written.
 - The worked example is made-up and has no audio; its measurements are plausible values, and the
   library's tests recompute only its arithmetic: pace, take choice, loudness spread and placements.

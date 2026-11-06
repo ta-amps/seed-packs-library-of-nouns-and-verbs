@@ -55,8 +55,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
-  through Tessera. The checks were run by hand on ta-amps's own 3:00 explainer film while this pack
+- A proposal: not installed, imported, admitted or activated, and no worker has claimed these Tasks
+  through the shared work queue. The checks were run by hand on ta-amps's own 3:00 explainer film while this pack
   was written; that is a trial of the code, not a run of these verbs.
 - The worked example is made-up. Its logs follow FFmpeg 7's formats, and its scene scores and luma
   ranges are sampled twice per second for brevity, where a real run samples every frame.

@@ -38,7 +38,7 @@ fusion, MinHash deduplication, prompt-injection stripping and exact 0/1 knapsack
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Heuristic directive stripping is one defense layer and never replaces strict tool-permission
   boundaries or capability sandboxing.
 - The worked example in `source.json` is made-up.

@@ -51,8 +51,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
-  through Tessera.
+- A proposal: not installed, imported, admitted or activated, and no worker has claimed these Tasks
+  through the shared work queue.
 - The worked examples are made-up; the library's tests recompute only the pacing arithmetic.
 - Pacing limits, duck depths and loudness targets are defaults from one production, not standards.
 - The pack plans and checks an edit; it ships no editor or renderer, and a pacing verdict cannot tell

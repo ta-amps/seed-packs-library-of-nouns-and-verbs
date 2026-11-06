@@ -29,6 +29,6 @@ Run `make check` in [code/](code/README.md) to run unit tests covering cross-par
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these tasks through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline grid compilation, regime selection and Python AST scanning run deterministically without network access or live service mutation.
 - Boundary auto-expansion proposes next-generation parameter ranges from observed saturation; accountable workers and reviewers still verify new cells on held-out workloads before promotion.

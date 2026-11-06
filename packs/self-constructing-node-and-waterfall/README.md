@@ -29,6 +29,6 @@ Run `make check` in [code/](code/README.md) to run unit tests covering exact-sig
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these tasks through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline waterfall simulation, AST verification and worked-example recomputation run deterministically with the Python standard library and no network calls.
 - Background capability-gap spinout proposals stay inside `proposed_verbs`; an authorized requester and distinct reviewer still govern admission before any synthesized block enters reuse.

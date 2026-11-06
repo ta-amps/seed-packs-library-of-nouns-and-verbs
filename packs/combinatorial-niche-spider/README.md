@@ -39,7 +39,7 @@ worked-example recomputation.
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline cell forging, BFS simulation and 8-axis scoring run deterministically without network calls
   or unauthenticated API rate-limit collisions.
 - Automated 8-axis scores filter false positives and surface candidates; accountable workers and

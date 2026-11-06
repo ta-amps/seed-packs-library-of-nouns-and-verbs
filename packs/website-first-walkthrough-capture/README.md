@@ -28,5 +28,5 @@ Run `make check` in [code/](code/README.md) to run all 10 unit tests covering th
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these tasks (things to do) through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Pre-recording checks validate shot-list contracts offline; real browser recording and frame inspection still run during production.

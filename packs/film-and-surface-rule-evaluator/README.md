@@ -29,6 +29,6 @@ Run `make check` in [code/](code/README.md) to run all unit tests covering all e
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these tasks through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Offline rule evaluation, link rewriting and parity checks run deterministically without network access or live service mutation.
 - Threshold pass verdicts verify measured geometric, loudness and parity constraints; people still watch cuts and inspect pages for editorial clarity.

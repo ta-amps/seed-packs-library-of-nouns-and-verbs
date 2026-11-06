@@ -30,5 +30,5 @@ Run `make check` in [code/](code/README.md) to run all 17 unit tests covering cl
 
 ## Limits
 
-- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these tasks (things to do) through Tessera.
+- Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Character-advance width estimates support offline planning without font binaries; final video compositors still verify rendered pixel bounds.

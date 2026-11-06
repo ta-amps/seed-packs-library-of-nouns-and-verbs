@@ -39,7 +39,7 @@ purged split hygiene, regime-stratified Rank IC, turnover cost drag and multiple
 ## Limits
 
 - Quarantined, unverified proposal until reviewed: this pack is not installed, imported, admitted or
-  activated, and no worker has claimed or run these tasks through Tessera.
+  activated, and no worker has claimed or run these Tasks through the shared work queue.
 - Strictly statistical validation hygiene on made-up or historical panel series: never financial,
   investment or trading advice, with zero orders, trades or broker connections.
 - The worked example in `source.json` uses fictional `.X` series and made-up numbers.

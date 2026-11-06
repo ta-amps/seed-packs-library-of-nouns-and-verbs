@@ -57,8 +57,8 @@ enqueue the printed task yourself. Workers need keys on the same surface.
 
 ## Limits
 
-- A proposal: not installed, imported, admitted or activated, and no worker has claimed these verbs
-  through Tessera. The measured results came from the loop's own code, not from these templates.
+- A proposal: not installed, imported, admitted or activated, and no worker has claimed these Tasks
+  through the shared work queue. The measured results came from the loop's own code, not from these templates.
 - The worked example is made-up; its rows, receipt digests and decisions are real computations on
   made-up data, and no model was trained or scored for it.
 - The pack's code recomputes decisions; training and scoring need the loop's GPU worker environment.
